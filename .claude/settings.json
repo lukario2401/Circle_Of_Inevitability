@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(./gradlew *)",
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git log *)",
+      "Bash(git push origin HEAD)",
+      "Bash(cp --no-preserve=mode *)",
+      "Bash(grep *)",
+      "Bash(javap *)"
+    ],
+    "deny": [
+      "Bash(git push --force *)",
+      "Bash(git push origin main*)",
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Edit(reference/**)"
+    ]
+  }
+}
