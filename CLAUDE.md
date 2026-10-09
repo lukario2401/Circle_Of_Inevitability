@@ -10,7 +10,7 @@ Dropped on purpose: every aspect, the expeditioner, every item. Never port those
 - Behaviour must stay identical to the old code: same damage, timings, costs, cooldowns, hit detection. Do not redesign, rename or add features.
 - Copy files from the old project with cp --no-preserve=mode, then edit only the lines that fail to compile. Do not retype whole files.
 - Keep the same package paths and class names (net.lukario.frogerealm...).
-- The mod id stays forgerealmmod. Assets live under assets/forgerealmmod.
+- The mod id is circle_of_inevitability (the old code's forgerealmmod is renamed to it). Assets live under assets/circle_of_inevitability.
 - Never modify anything under reference/. Work on the branch this session starts on. Never push to main and never force-push. Commit at the end of the stage and push that branch.
 - Verify with ./gradlew build. You cannot see the game, so for anything visible tell me what to check in ./gradlew runClient.
 - The shell is Linux in a cloud VM: use Unix-style commands and keep LF line endings. Run java -version first. It must say 25; if it does not, stop and tell me instead of porting.

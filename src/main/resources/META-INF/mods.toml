@@ -32,6 +32,6 @@ Newline characters can be used like this, and rendered on the mods screen proper
 [[dependencies.circle_of_inevitability]] #recommended
     modId="minecraft"
     mandatory=true
-    versionRange="[26.2,26.3,)"
+    versionRange="[26.2,26.3)"
     ordering="NONE"
     side="BOTH"
