@@ -1,0 +1,83 @@
+{
+  "item.forgerealmmod.soulessence": "Soul Essence",
+  "item.forgerealmmod.coin": "Coin",
+  "item.forgerealmmod.soulcoin": "Soul Coin",
+  "item.forgerealmmod.shadow_sword": "Shadow Sword",
+  "item.forgerealmmod.shepards_blade": "Shepards Blade",
+  "item.forgerealmmod.laser_staff": "Laser Staff",
+  "item.forgerealmmod.terminator": "Terminator",
+
+
+  "item.forgerealmmod.tarot_deck": "Tarot Deck",
+  "item.forgerealmmod.bone_definers_lens": "Bone Definers Lens",
+  "item.forgerealmmod.hollow_name": "Hollow Name",
+  "item.forgerealmmod.fractured_chorus": "Fractured Chorus",
+  "item.forgerealmmod.unfinished_hour_glass": "Unfinished Hour Glass",
+  "item.forgerealmmod.undying_canker": "Undying Canker",
+  "item.forgerealmmod.mirrorless_eye": "Mirrorless Eye",
+  "item.forgerealmmod.sunken_codex": "Sunken Codex",
+  "item.forgerealmmod.gravewarden_shroud": "Grave Warden Shroud",
+  "item.forgerealmmod.crystallized_prophecy_monocle": "Crystallized Prophecy Monocle",
+  "item.forgerealmmod.scarlet_suture": "Scarlet Suture",
+  "item.forgerealmmod.hanged_man_chord": "Hanged Man Chord",
+  "item.forgerealmmod.bone_fetish": "Bone Fetish",
+  "item.forgerealmmod.cracked_barometer": "Cracked Barometer",
+  "item.forgerealmmod.spliced_compass": "Spliced Compass",
+  "item.forgerealmmod.last_breath": "Last Breath",
+  "item.forgerealmmod.collapsar_bead": "Collapsar Bead",
+  "item.forgerealmmod.iron_coif": "Iron Coif",
+
+
+  "item.forgerealmmod.diamond_carrot": "Diamond Carrot",
+  "item.forgerealmmod.strength_elixir": "Strength Elixir",
+  "item.forgerealmmod.energy_shard": "Energy Shard",
+  "item.forgerealmmod.depleted_energy_shard": "Depleted Energy Shard",
+
+
+  "tooltip.forgerealmmod.terminator.tooltip.shift.1": "This weapon was forged in the depths of a star",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.2": "After shattering it split into several parts",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.3": "Now with all of its parts combined",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.4": "You can wield infinite strength",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.5": "------",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.6": "Damage: §432",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.7": "Range: §948",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.8": "§eRight Click:§r Soul Devourer",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.9": "This ability charges up the shoots with",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.10": "Energy of the stars and performs",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.11": "unstoppable and unblockable attack",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.12": "that damages soul directly",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.13": "§eLeft Click:§r Regular Shot",
+  "tooltip.forgerealmmod.terminator.tooltip.shift.14": "Shoots deadly beams",
+
+  "tooltip.forgerealmmod.terminator.tooltip": "§dTerminator §rthe strongest §4Weapon",
+  "tooltip.forgerealmmod.terminator.tooltip.2": "Hold shift for more info",
+
+
+  "creativetab.forgerealmmod.soul_tab": "Soul Tab",
+  "creativetab.forgerealmmod.extras_tab": "Extras Tab",
+  "creativetab.forgerealmmod.sealed_artifacts": "Sealed Artifacts",
+
+  "key.forgerealmmod.example_key": "Example Key",
+  "key.forgerealmmod.example_packet_key": "Example Packet Key",
+
+  "key.forgerealmmod.ability_one_packet_key": "Soul Ability One",
+  "key.forgerealmmod.ability_two_packet_key": "Soul Ability Two",
+  "key.forgerealmmod.ability_three_packet_key": "Soul Ability Three",
+  "key.forgerealmmod.ability_four_packet_key": "Soul Ability Four",
+  "key.forgerealmmod.ability_five_packet_key": "Soul Ability Five",
+  "key.forgerealmmod.ability_six_packet_key": "Soul Ability Six",
+  "key.forgerealmmod.ability_seven_packet_key": "Soul Ability Seven",
+
+  "message.forgerealmmod.example_key_pressed": "Example Key was pressed!",
+
+  "effect.forgerealmmod.shadow_mark": "Shadow Mark",
+  "effect.forgerealmmod.abyssal_monarch_mark": "Abyssal Monarch Mark",
+  "effect.forgerealmmod.ruin_blade_ruin": "Ruin Blade Mark",
+  "effect.forgerealmmod.ruin_blade_overload": "Ruin Blade Overload",
+  "effect.forgerealmmod.ruin_blade_cataclysm": "Ruin Blade Cataclysm",
+
+  "key.forgerealmmod.dash": "Dash",
+  "key.forgerealmmod.star_burst": "Star Burst",
+  "key.categories.forgerealmmod": "Forged Realm"
+
+}

@@ -1,0 +1,295 @@
+{
+  "credit": "ForgeRealm - pillar of flames (ModelFx), animated texture. 1 block wide, 2 tall, base 8,0,8. Use .seeThrough() and .scale(w, h, w)",
+  "texture_size": [
+    32,
+    32
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/flame_pillar",
+    "particle": "forgerealmmod:model_fx/flame_pillar"
+  },
+  "elements": [
+    {
+      "name": "inner",
+      "from": [
+        5,
+        0,
+        5
+      ],
+      "to": [
+        11,
+        32,
+        11
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "middle",
+      "from": [
+        3,
+        0,
+        3
+      ],
+      "to": [
+        13,
+        28,
+        13
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8,
+          0,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "turned_left",
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        25,
+        14
+      ],
+      "rotation": {
+        "angle": 22.5,
+        "axis": "y",
+        "origin": [
+          8,
+          0,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "turned_right",
+      "from": [
+        2,
+        0,
+        2
+      ],
+      "to": [
+        14,
+        24,
+        14
+      ],
+      "rotation": {
+        "angle": -22.5,
+        "axis": "y",
+        "origin": [
+          8,
+          0,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "outer",
+      "from": [
+        1,
+        0,
+        1
+      ],
+      "to": [
+        15,
+        21,
+        15
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

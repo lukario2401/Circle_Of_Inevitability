@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures":{
+    "layer0":"forgerealmmod:item/depleted_energy_shard"
+  }
+}

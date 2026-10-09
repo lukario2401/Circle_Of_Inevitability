@@ -1,0 +1,76 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made with Blockbench",
+	"textures": {
+		"0": "forgerealmmod:model_fx/pale_emperor/obsidian",
+		"2": "forgerealmmod:model_fx/pale_emperor/gold_block",
+		"3": "forgerealmmod:model_fx/pale_emperor/black_concrete",
+		"particle": "forgerealmmod:model_fx/pale_emperor/obsidian"
+	},
+	"elements": [
+		{
+			"from": [-14, 0.1, 3],
+			"to": [-10, 28, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [-14, 0.1, 3]},
+			"faces": {
+				"north": {"uv": [4, 0, 8, 16], "texture": "#0"},
+				"east": {"uv": [6, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 4, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 10, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 4, 10], "texture": "#0"},
+				"down": {"uv": [0, 6, 4, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [-10, 0, 8],
+			"to": [26, 28, 8],
+			"rotation": {"angle": 0, "axis": "y", "origin": [4, 0, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#3"},
+				"east": {"uv": [0, 0, 0, 16], "texture": "#3"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#3"},
+				"west": {"uv": [8, 0, 8, 16], "texture": "#3"},
+				"up": {"uv": [0, 0, 0, 16], "rotation": 270, "texture": "#3"},
+				"down": {"uv": [0, 0, 0, 16], "rotation": 90, "texture": "#3"}
+			}
+		},
+		{
+			"from": [24, 0.1, 3],
+			"to": [30, 28, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [26, 0.1, 3]},
+			"faces": {
+				"north": {"uv": [4, 0, 10, 16], "texture": "#0"},
+				"east": {"uv": [6, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 6, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 10, 16], "texture": "#0"},
+				"up": {"uv": [0, 0, 6, 10], "texture": "#0"},
+				"down": {"uv": [0, 6, 6, 16], "texture": "#0"}
+			}
+		},
+		{
+			"from": [-12, 28, 3],
+			"to": [28, 32, 13],
+			"rotation": {"angle": 0, "axis": "y", "origin": [22, 2, 3]},
+			"faces": {
+				"north": {"uv": [0, 0, 16, 4], "texture": "#2"},
+				"east": {"uv": [6, 0, 16, 4], "texture": "#2"},
+				"south": {"uv": [0, 0, 16, 4], "texture": "#2"},
+				"west": {"uv": [0, 0, 10, 4], "texture": "#2"},
+				"up": {"uv": [0, 0, 16, 10], "texture": "#2"},
+				"down": {"uv": [0, 6, 16, 16], "texture": "#2"}
+			}
+		},
+		{
+			"from": [-16, 0, -16],
+			"to": [32, 0, 32],
+			"faces": {
+				"north": {"uv": [0, 2, 16, 2], "texture": "#3"},
+				"east": {"uv": [0, 2, 16, 2], "texture": "#3"},
+				"south": {"uv": [0, 2, 16, 2], "texture": "#3"},
+				"west": {"uv": [0, 2, 16, 2], "texture": "#3"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#3"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#3"}
+			}
+		}
+	]
+}

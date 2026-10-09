@@ -1,0 +1,47 @@
+{
+  "credit": "ForgeRealm - the inner half of death_sigil: the feathers and the hourglass (ModelFx). Flat, 3 blocks wide, the serpent's head = north. Pivot 8,0,8 = its middle. Play it with .glow().unshaded().seeThrough(). Generated",
+  "texture_size": [
+    192,
+    192
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/pale_emperor/death_sigil_core",
+    "particle": "forgerealmmod:model_fx/pale_emperor/death_sigil_core"
+  },
+  "elements": [
+    {
+      "name": "core",
+      "from": [
+        -16,
+        0,
+        -16
+      ],
+      "to": [
+        32,
+        0,
+        32
+      ],
+      "shade": false,
+      "faces": {
+        "up": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

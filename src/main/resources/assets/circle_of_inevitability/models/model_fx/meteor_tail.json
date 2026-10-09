@@ -1,0 +1,175 @@
+{
+  "credit": "ForgeRealm - flames trailing behind the meteor (ModelFx, see-through). Same pivot as meteor: 8,6,8. Up = away from where it flies",
+  "texture_size": [
+    32,
+    32
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/flame_pillar",
+    "particle": "forgerealmmod:model_fx/flame_pillar"
+  },
+  "elements": [
+    {
+      "name": "inner",
+      "from": [
+        4.5,
+        8,
+        4.5
+      ],
+      "to": [
+        11.5,
+        32,
+        11.5
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "middle",
+      "from": [
+        3,
+        6.5,
+        3
+      ],
+      "to": [
+        13,
+        27,
+        13
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8,
+          6,
+          8
+        ]
+      },
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "outer",
+      "from": [
+        2,
+        6,
+        2
+      ],
+      "to": [
+        14,
+        21,
+        14
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            4.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            4.0,
+            0.0,
+            8.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            8.0,
+            0.0,
+            12.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            12.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

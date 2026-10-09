@@ -1,0 +1,82 @@
+{
+  "credit": "ForgeRealm - The Fool tarot card (ModelFx). Stands upright, face = north. 10 x 16 px; middle (pivot) 8,8,8",
+  "texture_size": [
+    64,
+    32
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/attendant_of_mysteries/fool_card",
+    "particle": "forgerealmmod:model_fx/attendant_of_mysteries/fool_card"
+  },
+  "elements": [
+    {
+      "name": "card",
+      "from": [
+        3,
+        0,
+        7.7
+      ],
+      "to": [
+        13,
+        16,
+        8.3
+      ],
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            5.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            5.5,
+            0.0,
+            10.5,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            11.0,
+            0.0,
+            11.5,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            11.0,
+            0.0,
+            11.5,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "up": {
+          "uv": [
+            11.0,
+            0.0,
+            11.5,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            11.0,
+            0.0,
+            11.5,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

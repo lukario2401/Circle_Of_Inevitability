@@ -1,0 +1,47 @@
+{
+  "credit": "ForgeRealm - gate to the underworld: the dark inside the doorway, animated (ModelFx). A flat plane in the same model space as underworld_gate (pivot 8,-16,8). Play it with .glow().unshaded()",
+  "texture_size": [
+    32,
+    32
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/pale_emperor/underworld_void",
+    "particle": "forgerealmmod:model_fx/pale_emperor/underworld_void"
+  },
+  "elements": [
+    {
+      "name": "void",
+      "from": [
+        -7.0,
+        -14.0,
+        8
+      ],
+      "to": [
+        23.0,
+        22.0,
+        8
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0,
+            0,
+            16,
+            16
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

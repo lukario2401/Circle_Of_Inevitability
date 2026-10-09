@@ -1,0 +1,55 @@
+{
+  "credit": "ForgeRealm - ring swirling around the Sphere of Entropy (ModelFx, see-through plate, 2 blocks wide, tilted). Middle 8,8,8",
+  "texture_size": [
+    64,
+    64
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/prince_of_abolition/entropy_disc",
+    "particle": "forgerealmmod:model_fx/prince_of_abolition/entropy_disc"
+  },
+  "elements": [
+    {
+      "name": "disc",
+      "from": [
+        -8,
+        8,
+        -8
+      ],
+      "to": [
+        24,
+        8,
+        24
+      ],
+      "rotation": {
+        "angle": 22.5,
+        "axis": "x",
+        "origin": [
+          8,
+          8,
+          8
+        ]
+      },
+      "faces": {
+        "up": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

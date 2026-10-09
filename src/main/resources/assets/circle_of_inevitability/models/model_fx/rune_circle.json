@@ -1,0 +1,46 @@
+{
+  "credit": "ForgeRealm - flat rune circle, 1 block wide, white (tint with .color). Pivot 8,0,8",
+  "texture_size": [
+    64,
+    64
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/rune_circle",
+    "particle": "forgerealmmod:model_fx/rune_circle"
+  },
+  "elements": [
+    {
+      "name": "plate",
+      "from": [
+        0,
+        0,
+        0
+      ],
+      "to": [
+        16,
+        0,
+        16
+      ],
+      "faces": {
+        "up": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "down": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}

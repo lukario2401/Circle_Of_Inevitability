@@ -1,0 +1,126 @@
+{
+  "credit": "ForgeRealm - a taut thread (ModelFx), white: tint it with .color. 3 blocks long, fades out toward its top. Pivot 8,-16,8 = its lower end. Stretch it with .scale(width, length, width)",
+  "texture_size": [
+    4,
+    32
+  ],
+  "textures": {
+    "0": "forgerealmmod:model_fx/attendant_of_mysteries/thread",
+    "particle": "forgerealmmod:model_fx/attendant_of_mysteries/thread"
+  },
+  "elements": [
+    {
+      "name": "strand",
+      "from": [
+        7.55,
+        -16,
+        7.55
+      ],
+      "to": [
+        8.45,
+        32,
+        8.45
+      ],
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    },
+    {
+      "name": "strand_turned",
+      "from": [
+        7.55,
+        -16,
+        7.55
+      ],
+      "to": [
+        8.45,
+        32,
+        8.45
+      ],
+      "rotation": {
+        "angle": 45,
+        "axis": "y",
+        "origin": [
+          8,
+          8,
+          8
+        ]
+      },
+      "shade": false,
+      "faces": {
+        "north": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "south": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "east": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        },
+        "west": {
+          "uv": [
+            0.0,
+            0.0,
+            16.0,
+            16.0
+          ],
+          "texture": "#0"
+        }
+      }
+    }
+  ]
+}
