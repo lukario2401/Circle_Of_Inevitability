@@ -70,48 +70,71 @@ public final class SwingAnimation {
      *   arm roll        rolls the arm around the forward axis, which turns the held blade
      *   body yaw        twists the upper body: positive = chest turns toward the sword arm
      * Rotations are degrees. In first person they are applied roll, then yaw, then pitch.
+     *
+     * weight (set for you, never typed): 0 for REST, 1 for every pose built from it with item/itemRot/scale/arm/body.
+     * Keyframes interpolate it (fast in at the start, late out at the end), so it says how far the item is "in the swing". First person uses it to fade in the
+     * global offset and scale (SwingAnimations.FIRST_PERSON_*) and to fade out vanilla's post-attack dip, so a swing
+     * leaves vanilla's resting spot and comes back to it without a jump.
      */
     public static final class Pose {
-        public static final Pose REST = new Pose(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0);
+        public static final Pose REST = new Pose(0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0);
 
         public final float itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, itemScale;
         public final float armPitch, armYaw, armRoll, bodyYaw;
+        /** 0 = vanilla's resting spot (REST), 1 = fully in the swing; see the class comment. */
+        public final float weight;
 
         private Pose(float itemX, float itemY, float itemZ, float itemPitch, float itemYaw, float itemRoll, float itemScale,
-                     float armPitch, float armYaw, float armRoll, float bodyYaw) {
+                     float armPitch, float armYaw, float armRoll, float bodyYaw, float weight) {
             this.itemX = itemX; this.itemY = itemY; this.itemZ = itemZ;
             this.itemPitch = itemPitch; this.itemYaw = itemYaw; this.itemRoll = itemRoll; this.itemScale = itemScale;
             this.armPitch = armPitch; this.armYaw = armYaw; this.armRoll = armRoll; this.bodyYaw = bodyYaw;
+            this.weight = weight;
         }
 
         /** Same pose, first-person item moved (blocks). */
         public Pose item(float x, float y, float z) {
-            return new Pose(x, y, z, itemPitch, itemYaw, itemRoll, itemScale, armPitch, armYaw, armRoll, bodyYaw);
+            return new Pose(x, y, z, itemPitch, itemYaw, itemRoll, itemScale, armPitch, armYaw, armRoll, bodyYaw, 1f);
         }
 
         /** Same pose, first-person item turned (degrees). */
         public Pose itemRot(float pitch, float yaw, float roll) {
-            return new Pose(itemX, itemY, itemZ, pitch, yaw, roll, itemScale, armPitch, armYaw, armRoll, bodyYaw);
+            return new Pose(itemX, itemY, itemZ, pitch, yaw, roll, itemScale, armPitch, armYaw, armRoll, bodyYaw, 1f);
         }
 
         /** Same pose, first-person item scaled (1 = normal). */
         public Pose scale(float scale) {
-            return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, scale, armPitch, armYaw, armRoll, bodyYaw);
+            return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, scale, armPitch, armYaw, armRoll, bodyYaw, 1f);
         }
 
         /** Same pose, third-person sword arm turned (degrees). */
         public Pose arm(float pitch, float yaw, float roll) {
-            return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, itemScale, pitch, yaw, roll, bodyYaw);
+            return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, itemScale, pitch, yaw, roll, bodyYaw, 1f);
         }
 
         /** Same pose, third-person upper body twisted (degrees). */
         public Pose body(float yaw) {
-            return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, itemScale, armPitch, armYaw, armRoll, yaw);
+            return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, itemScale, armPitch, armYaw, armRoll, yaw, 1f);
         }
 
         /** The same pose for the other side: left/right offsets, yaws and rolls change sign. */
         public Pose mirrored() {
-            return new Pose(-itemX, itemY, itemZ, itemPitch, -itemYaw, -itemRoll, itemScale, armPitch, -armYaw, -armRoll, -bodyYaw);
+            return new Pose(-itemX, itemY, itemZ, itemPitch, -itemYaw, -itemRoll, itemScale, armPitch, -armYaw, -armRoll, -bodyYaw, weight);
+        }
+
+        /** Same pose with another weight (only SwingAnimation sets it). */
+        Pose withWeight(float weight) {
+            return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, itemScale, armPitch, armYaw, armRoll, bodyYaw, weight);
+        }
+
+        /**
+         * The weight between a and b at raw (not eased) t: whatever the keyframe's easing, it rises fast (OUT) as a
+         * swing leaves REST and falls late (IN) as it comes back, so vanilla's post-attack dip, which starts the moment
+         * you click, never shows during the wind-up.
+         */
+        static float weightBetween(Pose a, Pose b, float t) {
+            if (b.weight == a.weight) return a.weight;
+            return a.weight + (b.weight - a.weight) * (b.weight > a.weight ? Easing.OUT : Easing.IN).apply(t);
         }
 
         /** Between a (t = 0) and b (t = 1); t may go a little past 1 (OUT_BACK). */
@@ -121,7 +144,8 @@ public final class SwingAnimation {
                     a.itemPitch + (b.itemPitch - a.itemPitch) * t, a.itemYaw + (b.itemYaw - a.itemYaw) * t,
                     a.itemRoll + (b.itemRoll - a.itemRoll) * t, a.itemScale + (b.itemScale - a.itemScale) * t,
                     a.armPitch + (b.armPitch - a.armPitch) * t, a.armYaw + (b.armYaw - a.armYaw) * t,
-                    a.armRoll + (b.armRoll - a.armRoll) * t, a.bodyYaw + (b.bodyYaw - a.bodyYaw) * t);
+                    a.armRoll + (b.armRoll - a.armRoll) * t, a.bodyYaw + (b.bodyYaw - a.bodyYaw) * t,
+                    a.weight + (b.weight - a.weight) * t);
         }
     }
 
@@ -193,13 +217,17 @@ public final class SwingAnimation {
     private Pose sampleUnmirrored(float progress) {
         if (keyframes.isEmpty() || Float.isNaN(progress)) return Pose.REST;
         Keyframe first = keyframes.get(0);
-        if (progress <= first.at()) return first.at() <= 0f ? first.pose() : Pose.lerp(Pose.REST, first.pose(), first.easing().apply(progress / first.at()));
+        if (progress <= first.at()) {
+            if (first.at() <= 0f) return first.pose();
+            float t = progress / first.at();
+            return Pose.lerp(Pose.REST, first.pose(), first.easing().apply(t)).withWeight(Pose.weightBetween(Pose.REST, first.pose(), t));
+        }
         for (int i = 1; i < keyframes.size(); i++) {
             Keyframe from = keyframes.get(i - 1), to = keyframes.get(i);
             if (progress <= to.at()) {
                 float span = to.at() - from.at();
                 float t = span <= 0f ? 1f : (progress - from.at()) / span;
-                return Pose.lerp(from.pose(), to.pose(), to.easing().apply(t));
+                return Pose.lerp(from.pose(), to.pose(), to.easing().apply(t)).withWeight(Pose.weightBetween(from.pose(), to.pose(), t));
             }
         }
         return keyframes.get(keyframes.size() - 1).pose();
