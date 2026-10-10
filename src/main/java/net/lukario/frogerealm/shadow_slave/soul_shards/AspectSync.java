@@ -1,6 +1,7 @@
 package net.lukario.frogerealm.shadow_slave.soul_shards;
 
 import net.lukario.frogerealm.ForgeRealm;
+import net.lukario.frogerealm.network.CPlayerAspectPacket;
 import net.lukario.frogerealm.network.CSyncAspectPacket;
 import net.lukario.frogerealm.network.PacketHandler;
 import net.minecraft.server.level.ServerPlayer;
@@ -31,6 +32,17 @@ public class AspectSync {
         if (!aspect.equals(LAST_SENT_ASPECT.get(player.getUUID()))) {
             LAST_SENT_ASPECT.put(player.getUUID(), aspect);
             PacketHandler.sendToPlayer(new CSyncAspectPacket(aspect), player);
+            // everyone else too, for this player's swing animations (client/animation/SwingRules)
+            PacketHandler.sendToAllClients(new CPlayerAspectPacket(player.getUUID(), aspect));
+        }
+    }
+
+    @SubscribeEvent
+    public static void onAspectSyncPlayerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer joined)) return;
+        // the players already online, for their swing animations (the joiner's own aspect goes out on its first tick)
+        for (ServerPlayer other : joined.level().getServer().getPlayerList().getPlayers()) {
+            if (other != joined) PacketHandler.sendToPlayer(new CPlayerAspectPacket(other.getUUID(), SoulCore.getAspect(other)), joined);
         }
     }
 

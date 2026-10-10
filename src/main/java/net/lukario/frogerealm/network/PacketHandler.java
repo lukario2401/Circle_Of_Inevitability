@@ -87,6 +87,13 @@ public class PacketHandler {
                 .consumerMainThread(CSyncAspectPacket::handle)
                 .add();
 
+        // Server -> Client: another player's aspect, for their swing animations (see client/animation/SwingRules)
+        INSTANCE.messageBuilder(CPlayerAspectPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CPlayerAspectPacket::encode)
+                .decoder(CPlayerAspectPacket::new)
+                .consumerMainThread(CPlayerAspectPacket::handle)
+                .add();
+
         INSTANCE.messageBuilder(CScreenImagePacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(CScreenImagePacket::encode)
                 .decoder(CScreenImagePacket::new)
