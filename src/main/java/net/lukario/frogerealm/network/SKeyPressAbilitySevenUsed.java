@@ -12,7 +12,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsCosmicPlague;
 // TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorWraiths;
-// TODO(stage5): HandOfOrder: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderBind;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderBind;
 // TODO(stage5): PrinceOfAbolition: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionAbolition;
 // TODO(stage5): AttendantOfMysteries: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesGrafting;
 
@@ -38,7 +38,7 @@ public class SKeyPressAbilitySevenUsed {
         }
 
         keyOfStarsCosmicPlague(player,level,serverLevel,false);
-        // TODO(stage5): HandOfOrder: handOfOrderBind(player,level,serverLevel,false);
+        handOfOrderBind(player,level,serverLevel,false);
         // TODO(stage5): PrinceOfAbolition: princeOfAbolitionAbolition(player,level,serverLevel,false);
         // TODO(stage5): AttendantOfMysteries: attendantOfMysteriesGrafting(player,level,serverLevel,false);
         // TODO(stage5): PaleEmperor: paleEmperorWraiths(player,level,serverLevel,false);
