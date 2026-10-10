@@ -14,7 +14,7 @@ import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_charac
 // TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorWings;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderWords;
 // TODO(stage5): PrinceOfAbolition: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionEntropy;
-// TODO(stage5): AttendantOfMysteries: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesHistoricalVoid;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesHistoricalVoid;
 
 public class SKeyPressAbilitySixUsed {
 
@@ -40,7 +40,7 @@ public class SKeyPressAbilitySixUsed {
         keyOfStarsOrbital(player,level,serverLevel,false);
         handOfOrderWords(player,level,serverLevel,false);
         // TODO(stage5): PrinceOfAbolition: princeOfAbolitionEntropy(player,level,serverLevel,false);
-        // TODO(stage5): AttendantOfMysteries: attendantOfMysteriesHistoricalVoid(player,level,serverLevel,false);
+        attendantOfMysteriesHistoricalVoid(player,level,serverLevel,false);
         // TODO(stage5): PaleEmperor: paleEmperorWings(player,level,serverLevel,false);
 
     }
