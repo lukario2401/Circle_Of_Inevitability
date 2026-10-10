@@ -1,7 +1,7 @@
 {
   "credit": "ForgeRealm - a black coffin standing upright, gold pictures on its lid, a skeleton inside with a coin on each eye. Frame 1 of 0..3. ModelFx: ModelFx.of(\"pale_emperor/coffin\").frames(4).smooth(), then keys with pose().frame(n). Frame 0 = shut, 3 = the lid swung wide open on its left edge. Lid = north (the front). Pivot 8,-16,8 = the middle of its foot. Generated",
   "texture_size": [256, 160],
-  "textures": {"0": "forgerealmmod:model_fx/pale_emperor/coffin", "particle": "forgerealmmod:model_fx/pale_emperor/coffin"},
+  "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/coffin", "particle": "circle_of_inevitability:model_fx/pale_emperor/coffin"},
   "elements": [
     {"name":"back0","from":[2.5,20.0,11.0],"to":[13.5,28.0,12.0],"faces":{"north":{"uv":[1.4375,0.0,2.8125,1.6],"texture":"#0"},"south":{"uv":[2.875,0.0,4.25,1.6],"texture":"#0"},"east":{"uv":[4.3125,0.0,4.4375,1.6],"texture":"#0"},"west":{"uv":[4.3125,0.0,4.4375,1.6],"texture":"#0"},"up":{"uv":[0.0,0.0,1.375,0.2],"texture":"#0","rotation":180},"down":{"uv":[0.0,0.0,1.375,0.2],"texture":"#0"}}},
     {"name":"wall0_a","from":[2.5,20.0,5.0],"to":[3.5,28.0,11.0],"faces":{"north":{"uv":[4.6875,0.0,4.8125,1.6],"texture":"#0"},"south":{"uv":[4.6875,0.0,4.8125,1.6],"texture":"#0"},"east":{"uv":[5.6875,0.0,6.4375,1.6],"texture":"#0"},"west":{"uv":[4.875,0.0,5.625,1.6],"texture":"#0"},"up":{"uv":[4.5,0.0,4.625,1.2],"texture":"#0","rotation":180},"down":{"uv":[4.5,0.0,4.625,1.2],"texture":"#0"}}},

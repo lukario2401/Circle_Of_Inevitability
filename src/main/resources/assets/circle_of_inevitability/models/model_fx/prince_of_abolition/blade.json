@@ -5,8 +5,8 @@
     64
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/prince_of_abolition/blade",
-    "particle": "forgerealmmod:model_fx/prince_of_abolition/blade"
+    "0": "circle_of_inevitability:model_fx/prince_of_abolition/blade",
+    "particle": "circle_of_inevitability:model_fx/prince_of_abolition/blade"
   },
   "elements": [
     {

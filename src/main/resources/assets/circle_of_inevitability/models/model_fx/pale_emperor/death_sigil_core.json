@@ -5,8 +5,8 @@
     192
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/pale_emperor/death_sigil_core",
-    "particle": "forgerealmmod:model_fx/pale_emperor/death_sigil_core"
+    "0": "circle_of_inevitability:model_fx/pale_emperor/death_sigil_core",
+    "particle": "circle_of_inevitability:model_fx/pale_emperor/death_sigil_core"
   },
   "elements": [
     {

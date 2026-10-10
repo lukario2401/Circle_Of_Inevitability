@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/attendant_of_mysteries/thread",
-    "particle": "forgerealmmod:model_fx/attendant_of_mysteries/thread"
+    "0": "circle_of_inevitability:model_fx/attendant_of_mysteries/thread",
+    "particle": "circle_of_inevitability:model_fx/attendant_of_mysteries/thread"
   },
   "elements": [
     {

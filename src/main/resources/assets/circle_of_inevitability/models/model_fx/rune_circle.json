@@ -5,8 +5,8 @@
     64
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/rune_circle",
-    "particle": "forgerealmmod:model_fx/rune_circle"
+    "0": "circle_of_inevitability:model_fx/rune_circle",
+    "particle": "circle_of_inevitability:model_fx/rune_circle"
   },
   "elements": [
     {

@@ -5,8 +5,8 @@
     64
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/order_hammer",
-    "particle": "forgerealmmod:model_fx/order_hammer"
+    "0": "circle_of_inevitability:model_fx/order_hammer",
+    "particle": "circle_of_inevitability:model_fx/order_hammer"
   },
   "elements": [
     {

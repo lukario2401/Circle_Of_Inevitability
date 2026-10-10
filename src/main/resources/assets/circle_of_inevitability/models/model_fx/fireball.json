@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/fireball",
-    "particle": "forgerealmmod:model_fx/fireball"
+    "0": "circle_of_inevitability:model_fx/fireball",
+    "particle": "circle_of_inevitability:model_fx/fireball"
   },
   "elements": [
     {

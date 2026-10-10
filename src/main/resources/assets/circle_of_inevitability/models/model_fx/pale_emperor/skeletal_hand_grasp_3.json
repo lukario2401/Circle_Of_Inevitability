@@ -5,8 +5,8 @@
     128
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/pale_emperor/skeletal_hand_bones",
-    "particle": "forgerealmmod:model_fx/pale_emperor/skeletal_hand_bones"
+    "0": "circle_of_inevitability:model_fx/pale_emperor/skeletal_hand_bones",
+    "particle": "circle_of_inevitability:model_fx/pale_emperor/skeletal_hand_bones"
   },
   "elements": [
     {

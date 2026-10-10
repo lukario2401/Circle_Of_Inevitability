@@ -1,7 +1,7 @@
 {
   "credit": "ForgeRealm - a weathered headstone with a glowing mark, a candle, and a grave mound in front of it (ModelFx). The carved face and the grave = north (the front). Pivot 8,-16,8 = under the stone. Generated",
   "texture_size": [256, 96],
-  "textures": {"0": "forgerealmmod:model_fx/pale_emperor/tombstone", "particle": "forgerealmmod:model_fx/pale_emperor/tombstone"},
+  "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/tombstone", "particle": "circle_of_inevitability:model_fx/pale_emperor/tombstone"},
   "elements": [
     {"name":"plinth","from":[0.0,-16.0,3.0],"to":[16.0,-13.0,13.0],"faces":{"north":{"uv":[2.0625,0.0,4.0625,1.0],"texture":"#0"},"south":{"uv":[4.125,0.0,6.125,1.0],"texture":"#0"},"east":{"uv":[6.1875,0.0,7.4375,1.0],"texture":"#0"},"west":{"uv":[6.1875,0.0,7.4375,1.0],"texture":"#0"},"up":{"uv":[0.0,0.0,2.0,3.3333],"texture":"#0","rotation":180},"down":{"uv":[0.0,0.0,2.0,3.3333],"texture":"#0"}}},
     {"name":"step","from":[1.5,-13.0,4.5],"to":[14.5,-11.5,11.5],"faces":{"north":{"uv":[9.1875,0.0,10.8125,0.5],"texture":"#0"},"south":{"uv":[10.875,0.0,12.5,0.5],"texture":"#0"},"east":{"uv":[12.5625,0.0,13.4375,0.5],"texture":"#0"},"west":{"uv":[12.5625,0.0,13.4375,0.5],"texture":"#0"},"up":{"uv":[7.5,0.0,9.125,2.3333],"texture":"#0","rotation":180},"down":{"uv":[7.5,0.0,9.125,2.3333],"texture":"#0"}}},

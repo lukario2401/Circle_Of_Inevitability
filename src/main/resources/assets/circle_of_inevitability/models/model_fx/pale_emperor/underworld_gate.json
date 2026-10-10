@@ -5,8 +5,8 @@
     128
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/pale_emperor/underworld_gate",
-    "particle": "forgerealmmod:model_fx/pale_emperor/underworld_gate"
+    "0": "circle_of_inevitability:model_fx/pale_emperor/underworld_gate",
+    "particle": "circle_of_inevitability:model_fx/pale_emperor/underworld_gate"
   },
   "elements": [
     {
