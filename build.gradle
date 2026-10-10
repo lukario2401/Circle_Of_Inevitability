@@ -55,6 +55,19 @@ dependencies {
     annotationProcessor 'net.minecraftforge:eventbus-validator:7.0.5'
 }
 
+tasks.named('jar', Jar) {
+    manifest {
+        attributes([
+            'Specification-Title'     : 'circle_of_inevitability',
+            'Specification-Vendor'    : 'Lukario2401',
+            'Specification-Version'   : '1',
+            'Implementation-Title'    : 'Circle Of Inevitability',
+            'Implementation-Version'  : version,
+            'Implementation-Vendor'   : 'Lukario2401'
+        ])
+    }
+}
+
 tasks.withType(JavaCompile).configureEach {
     // Use the UTF-8 charset for Java compilation
     // This is done by default in Java 18+, but this ensures it no matter the Java or Gradle version

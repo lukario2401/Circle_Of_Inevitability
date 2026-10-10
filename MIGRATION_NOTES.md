@@ -222,6 +222,14 @@ Rename script: scripts/renames.sh [files] (no arguments = every .java file under
 - Stage 7, checked in the real game (first time in this port): ./gradlew runServer (dedicated server, online-mode=false, eula=true written into the git-ignored run/ for the test) started ("Done"), loaded the mod and later stopped and saved; no class-loading error. Then ./gradlew runClient under Xvfb with Mesa llvmpipe (OpenGL 4.5 core), quick-play joined that dedicated server; a throwaway datapack in run/world (git-ignored) ran /palefx all and two /particle circle_of_inevitability:slash lines every tick. Screenshots showed the Pale Emperor models (skull, crown, coffin, wraiths, bone hand, the see-through rib cage) textured and lit, the additive arc slash and the translucent line slash. The client log has no error from the mod, the pipelines, the shaders or the event bus; the only mod warning is the known void_rift sprite (stage 6). Not done in the game: the seven classes' abilities and combos themselves (no input could be sent to the window), so those visuals were checked by the harnesses and by reading.
 - Stage 7, the first client run crashed (block-atlas mipmaps, above); fixed before the final commit. The crash report is in run/crash-reports (git-ignored).
 
+- Stage 6 (resources and metadata), scope: src/main/resources, build.gradle (jar manifest only), a new README.md and this file. No Java file changed. reference/ has no resources (Java only), so no asset could or had to be copied from it.
+- Stage 6, translation keys: the code uses 13 (key.category.circle_of_inevitability.main, the 11 key.circle_of_inevitability.* key names, message.circle_of_inevitability.example_key_pressed; every other text is Component.literal). All 13 were already in en_us.json, so no key was added and en_us.json is unchanged. The mod registers no sound, effect, item, block or entity, so there are no other name keys.
+- Stage 6, asset audit (scratchpad scripts, not committed): every texture / model name in the code resolves to a file (72 string literals plus the six attendant_of_mysteries/ models built by concatenation, glow_white, and the frame sets name_0..n-1, whose counts match .frames(n)); the 167 texture references in the model_fx JSONs all exist; all 259 JSON / .mcmeta files parse. Broken: particles/void_rift.json (old namespace; fixed, the texture already existed). Dead: the item / mob_effect assets and two particle JSONs (removed, see Removed). Kept although nothing in the code names them: particle/fx/ring.png (usable from /particle) and the unused model_fx/pale_emperor variants death_sigil, gate, skeletal_hand, skeletal_hand_grab, skeletal_hand_spread (they cost a little load time, nothing else). No sounds.json is needed (only vanilla SoundEvents are played).
+- Stage 6, pack.mcmeta: 26.2's version.json has resource pack format 88.0 and data pack format 107.1. The mod jar is both a resource pack and a data pack, so it declares min_format 88, max_format [107, 1] (checked against vanilla's PackFormat validation: both bounds are above the old-format limits 64 / 81, so no pack_format / supported_formats field is needed). Before, it declared only 107..107.1 (the MDK value), which the client marks as an incompatible format (it still loaded, mod packs are forced on).
+- Stage 6, mods.toml: issueTrackerURL and displayURL set to the GitHub repo; the commented example lines updateJSONURL (example.com) and logoFile (examplemod.png) removed. Kept as Luka set them: displayName, authors, description, version 1.0.0, license, the forge [65,) and minecraft [26.2,26.3) dependencies.
+- Stage 6, build.gradle: the jar manifest gets Specification-/Implementation-Title, -Version and -Vendor (shown in crash reports and Forge's mod list); nothing else in the build changed.
+- Stage 6, checks: ./gradlew build passes; the jar (build/libs/circle_of_inevitability-1.0.0.jar, 391 entries, 159 classes) holds mods.toml, pack.mcmeta, the manifest above, assets/circle_of_inevitability (lang, particles/void_rift.json, gui / particle / model_fx textures, 81 model_fx models) and assets/minecraft/atlases/particles.json, and nothing from the removed folders, reference/ or any .java. Dedicated server, twice (eula=true, online-mode=false): ./gradlew runServer (in the git-ignored run/), and the built jar in the mods folder of a real Forge 26.2-65.1.0 server installed with Forge's installer in the scratchpad (with -Deventbus.api.strictRuntimeChecks=true). Both found the mod, reached "Done", stopped on "stop" and saved, with no class-loading error, no client-class error and no error from the mod. The one ERROR in both logs ("Could not initialize class io.netty.channel.kqueue.Native", from log4j's debug-file appender) also appears with no mod installed: it is Forge / Netty on Linux. Client: ./gradlew runClient under Xvfb reached the title screen; the log has no mod, resource, pack or texture warning (no void_rift warning any more); sound was off only because the VM has no audio device. The Mods screen and Key Binds screen could not be opened (no input can be sent to the window). run/ was moved out of the repo afterwards; no logs/ folder was created in the repo.
+
 ## Removed (references to dropped classes and items)
 - ForgeRealm: import and call CreativeModTabs.register(modEventBus) (item/creative tab).
 - ForgeRealm: import and call ModItems.register(modEventBus) (items).
@@ -245,6 +253,7 @@ Rename script: scripts/renames.sh [files] (no arguments = every .java file under
 - Stage 5, PrinceOfAbolition: nothing removed.
 - Stage 5, PaleEmperor, PaleEmperorFx, Flight: nothing removed (they use no dropped class and no item).
 - Stage 7: nothing removed.
+- Stage 6 (assets of dropped items and effects; no code reference to any of them): assets/circle_of_inevitability/models/item/ (29 item model JSONs: bone_definers_lens ... unfinished_hour_glass), textures/item/ (43 files: the 29 item textures, 7 .mcmeta, the 6 headlesshorseman_* frames and headlesshorseman_texture_01), textures/mob_effect/ (7 files: the five effect icons of the stage-2 removed effects shadow_mark, abyssal_monarch_mark, ruin_blade_ruin/overload/cataclysm, 2 .mcmeta), particles/shadow_mark.json and particles/abyssal_monarch_mark.json (particle types never registered in this port; they named forgerealmmod textures that do not exist). 81 files. Their en_us.json entries were left (hand-polished file; see Still broken).
 
 ## Stubs (disabled until a later stage; grep "TODO(stage")
 - TODO(stage3) network: none left. Stage 3 re-enabled CommonModEvents' PacketHandler.register(), AspectSync's CSyncAspectPacket send and Concealment's two CConcealPacket sends.
@@ -494,8 +503,58 @@ Rename script: scripts/renames.sh [files] (no arguments = every .java file under
   - Concealment matching: a second entity of the same type drawn at exactly the hidden one's position would also be hidden; passengers and entities moved by the client between extraction and drawing are not expected to differ, but not tested.
   - No mipmaps on model textures (particle atlas); a texture pack that puts big textures into textures/model_fx/ grows the particle atlas.
   - The block-atlas mipmap crash: anything a later stage adds to the block atlas must have sides that are multiples of 16 (Forge 65 keeps mip level 4).
-- Stage 6: mods.toml displayName="Example Mod", authors, description and #logoFile="examplemod.png" are still MDK placeholders.
-- Stage 6: pack.mcmeta description uses ${mod_id} but build.gradle has no processResources expand, so it shows literally.
+- Stage 6: done: mods.toml has no MDK example value left (displayName / authors / description had already been set by Luka; issueTrackerURL and displayURL now point at the GitHub repo; the example updateJSONURL and logoFile lines are gone). pack.mcmeta has a plain description (no ${mod_id}).
+- Stage 6: done: particles/void_rift.json names circle_of_inevitability:void_rift (the client no longer warns about the void_rift sprite at start, checked in the stage 6 client run).
+- Stage 6, still open (Luka to decide, all outside stage 6's scope or Luka's own values):
+  - license="All Rights Reserved" is the MDK default; it is a valid choice, but pick it on purpose before publishing. LICENSE.txt and changelog.txt in the repo root are the Forge MDK's own files (Forge's LGPL notice, Forge's changelog), not the mod's; they are not in the jar.
+  - description='''COI''' is short for the Mods screen; kept because Luka set it.
+  - No logo: mods.toml has no logoFile, so the Mods screen shows Forge's default. Add a PNG to src/main/resources and logoFile="name.png" to give it one.
+  - en_us.json keeps 54 entries nothing uses (29 item.*, 16 tooltip.*, 5 effect.*, 3 creativetab.*, and key.categories.circle_of_inevitability "Forged Realm", the pre-26.2 category key); left untouched because the file is hand-polished. Harmless.
+  - Config (stage 1, code) still has the MDK example options logDirtBlock, magicNumber, magicNumberIntroduction, items in config/circle_of_inevitability-common.toml; nothing in the mod reads them.
+  - Keybindings P (example key, prints "Example Key was pressed!") and V (example packet key, spawns a random entity) are MDK/test leftovers from the old mod, kept because behaviour must stay identical; V lets any player spawn any entity type on a server.
+  - pack.mcmeta declares min_format 88, max_format [107, 1] (26.2: resource pack format 88.0, data pack format 107.1). Forge's own pack.mcmeta declares only 107; both load. Raise max_format when moving to a newer Minecraft.
+
+## Known gameplay bugs left for Luka to decide (all stages, one place)
+Behaviour had to stay identical to the old code, so these were kept on purpose. Details and test steps are in the per-stage sections above. Already fixed (crashes only, the /spawnfield kind): SpawnFieldCommand's Random cast, KeyOfStars Seal/Transport null targets and two unchecked casts, WormOfTime's null target, PaleEmperor.tether's null check order.
+- Shared / helpers:
+  - DashHandler (Z) and StarBurstHandler (C) read the local client's keys on the server thread: on a LAN host the host's key fires for every player; on a dedicated server they do nothing (stage 4 only stopped the crash).
+  - Example keys P and V are still bound; V spawns a random entity type for any player (SKeyPressSpawnEntityPacket, no permission check).
+  - Every class's "if (SoulCore.getAscensionStage(player) < 0)" check can never be true (stage is 1..8); KeyOfStars, WormOfTime, HandOfOrder, PrinceOfAbolition and PaleEmperor have one. Attendant Of Mysteries' ready(..., 0 / 1) is always true for the same reason.
+  - Most casts spend their essence before checking for a target or room (listed per class below).
+- Key Of Stars:
+  - Star icon id 0 never hides after Sneak+G; Orbital and the plague star gain change the count without touching the icons; icons are not re-sent after relog.
+  - Seal's stored damage is never reset: a second seal releases both seals' damage.
+  - Cosmic Plague adds +400 ticks every second to every neighbour, already infected ones too (unbounded in a crowd).
+  - collapseOrbitalStars' cooldown is 40 ticks (2 s); its comment says 10 s.
+- Worm Of Time:
+  - 250 essence is spent before every check (aiming at nothing, held in place, no room); the "nothing spent" comment is wrong.
+  - Life Theft prints the hit count in chat (a debug line) on every non-lethal cast.
+  - The per-mob hit count never resets, so the drain keeps growing (15, 30, 45...).
+  - Sneak+G on a mob never says "no room", even when the player does not fit there.
+- Hand Of Order:
+  - G's damage / defense boosts do nothing (the counters are only used for the icon offset).
+  - J without sneak spends 1250 for the sword model only (the cone damage is commented out in the old code).
+  - K spends 12000 for particles only.
+  - L spends 12000 before the menu (lost on Esc) and 1250 more on the pick; Sneak+L spends 12000 for "Wrong Button Buddy".
+  - Decree Judgement reaches 64 blocks (not 32) and goes through walls.
+  - Bind returns with no message and nothing spent when the target is just past 20 by centre distance.
+  - Judgement falls can hit the caster with the lightning splash.
+- Attendant Of Mysteries:
+  - Stacks, the juggle counter and the projection reset on death (not copied by SoulCore's Clone handler).
+  - L silently does nothing while any Countdown (also another class's) runs on the player.
+  - Damage Transfer drops the moved effects' ambient / particle / icon flags.
+- Prince Of Abolition:
+  - Spear of Abolition picks its victims at cast time (a mob walking off the line is still hit, one walking in is missed).
+  - Spells that land on a spot keep hitting after the caster dies, logs out or changes dimension (only Whirl, Entropy and Frenzy stop).
+  - Its own isEnemy has no team / ally check: team-mates and allied players are hit by every ability.
+  - G, H, K, L, N and M spend essence when aimed at nothing.
+- Pale Emperor:
+  - G's comments have the two casts the other way round (the code is what runs: Sneak+G is the Cursed Land).
+  - The gate (H) has no enemy check (pets, villagers, team-mates, armor stands are pulled and hurt), uses a 24-block box, and keeps going after the caster dies or logs out.
+  - G (no sneak), H (no sneak), J and K return silently when essence is short; the others say "Not enough soul essence.".
+  - Sneak+J spends 6000 when the serpent finds no one.
+  - PaleEmperor.tether draws about 1 block below the middles (offsets -0.95 / -1), unlike SpellFx.tether.
+  - PaleEmperor keeps its own copies of several models with slightly different numbers from PaleEmperorFx (/palefx shows PaleEmperorFx's).
 
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
@@ -511,3 +570,4 @@ Rename script: scripts/renames.sh [files] (no arguments = every .java file under
 | 5 PrinceOfAbolition | 2026-10-10 | about $3 | 1399 in 1 file (PrinceOfAbolition; reference had 1399: 5 lines changed by the script, 2 by hand, none added or removed) plus 16 TODO(stage5) lines re-enabled (14 in the seven SKeyPressAbility...Used packets, 2 in combat/MeleeCombos) | Stage 5: PrinceOfAbolition |
 | 5 PaleEmperor (last class) | 2026-10-10 | about $5 | 3625 in 3 files (PaleEmperor 2833, PaleEmperorFx 675, status/Flight 117; reference had 3625: -1 phase line each in PaleEmperor and Flight, +2 in PaleEmperor for the tether null fix) plus 16 TODO(stage5) lines re-enabled (14 in the seven SKeyPressAbility...Used packets, 2 in combat/MeleeCombos); no TODO(stage5) left | Stage 5: PaleEmperor |
 | 7 visuals (rendering redesign) | 2026-10-10 | (Luka fills in) | new code, not a port: +914 / -47 in 7 Java files (ModelFxRenderer 528 lines, new ModelFxModels 213, SlashRenderTypes 145, SlashParticle, ModelFxParticle, ClientParticleHandler, ClientConcealment); 1 new atlas file; 81 model_fx JSONs (namespace only, 137 lines) | Stage 7: slash shapes; Stage 7: model fx; Stage 7: remaining redesign stubs |
+| 6 resources and metadata | 2026-10-10 | (Luka fills in) | no Java ported or changed; 0 lang keys added (13 used, all present); 1 asset path fixed (particles/void_rift.json); 81 dead asset files removed (item models / textures, mob_effect icons, 2 particle JSONs); mods.toml (issueTrackerURL, displayURL, 2 example lines removed), pack.mcmeta (description, formats 88 .. 107.1), jar manifest in build.gradle, new README.md; dedicated server checked (dev run and the built jar on an installed Forge server) | Stage 6: resources and metadata |
