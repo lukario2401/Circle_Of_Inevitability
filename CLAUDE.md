@@ -22,6 +22,7 @@ Dropped on purpose: every aspect, the expeditioner, every item. Never port those
 - Use the current AttributeModifier constructors.
 - Every event subscriber inner class has a unique name.
 - Reusable pieces stay in the shared helpers. Animation durations are constants that can change without breaking hit detection.
+- Custom weapon swing animations (client/animation): read docs/ANIMATIONS.md before adding a swing, a rule, a weapon type or a class to them.
 
 ## Stages (one per session; I will say which)
 1 scaffold | 2 root, status, effects, handler, events, soul_shards | 3 combat, network, item/custom commands and other | 4 particles/fx, client, menu, screen, item/custom detection and abilitys (rendering and input) | 5 the seven classes, one at a time | 6 assets and cleanup

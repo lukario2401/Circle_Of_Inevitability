@@ -71,7 +71,15 @@ public final class SwingPlayer {
 
     /** Plays a swing on the local player now, 'slow' times slower (for /swinganim). False if there is no such id. */
     public static boolean preview(String id, int slow) {
-        Player player = Minecraft.getInstance().player;
+        return play(Minecraft.getInstance().player, id, slow);
+    }
+
+    /**
+     * Plays a swing on any player this client sees, now, 'slow' times slower (1 = normal), whatever the rules say.
+     * For code that knows better than the rules, e.g. a packet from a MeleeCombos step (see docs/ANIMATIONS.md).
+     * False (and nothing changes) if the player is null or there is no swing with that id.
+     */
+    public static boolean play(Player player, String id, int slow) {
         SwingAnimation animation = SwingAnimations.get(id);
         if (player == null || animation == null) return false;
         play(player, animation, Math.max(1, slow), false);
