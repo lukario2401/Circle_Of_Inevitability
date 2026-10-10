@@ -180,10 +180,10 @@ Goal: any player holding a spear (`minecraft:spears`) stabs twice, then cuts hor
            .key(0.00f, Easing.LINEAR, Pose.REST)
            // pull back further: hand close to the camera, blade levelled forward
            .key(0.35f, Easing.OUT, Pose.REST.item(0.05f, -0.05f, 0.25f).itemRot(-80, 10, 0)
-                   .arm(-55, 20, 0).body(15))
+                   .arm(-5, 20, 0).body(15))
            // thrust: hand far forward
            .key(0.60f, Easing.OUT_EXPO, Pose.REST.item(-0.05f, 0.02f, -0.60f).itemRot(-88, 5, 0)
-                   .arm(-90, -5, 0).body(-12))
+                   .arm(-30, -5, 0).body(-12))
            .key(1.00f, Easing.IN_OUT, Pose.REST);
    ```
 

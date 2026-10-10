@@ -63,7 +63,9 @@ public final class SwingAnimation {
      *   item roll       tilts the whole sweep: positive = counter-clockwise on screen (makes a sweep diagonal)
      *   item scale      1 = normal size
      * Third person (the player model, seen in F5 and by other players):
-     *   arm pitch       raises the arm: -90 = straight forward, -170 = overhead (added to half the walking swing)
+     *   arm pitch       raises the arm: -90 = straight forward, -170 = overhead (added to half the walking swing).
+     *                   The held item sticks out of the fist at a right angle: with the arm at -30..-45 the blade
+     *                   points forward, at -90 it points up. Flat cuts and stabs keep the arm low.
      *   arm yaw         positive = the arm swings outward (right arm to the right), negative = across the body
      *   arm roll        rolls the arm around the forward axis, which turns the held blade
      *   body yaw        twists the upper body: positive = chest turns toward the sword arm
