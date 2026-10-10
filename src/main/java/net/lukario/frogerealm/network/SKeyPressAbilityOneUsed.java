@@ -14,7 +14,7 @@ import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_charac
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderBuff;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsStarBurst;
 // TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorRoot;
-// TODO(stage5): PrinceOfAbolition: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionSpear;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionSpear;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.WormOfTime.wormOfTimeAbility1;
 
 public class SKeyPressAbilityOneUsed {
@@ -40,7 +40,7 @@ public class SKeyPressAbilityOneUsed {
 
         keyOfStarsStarBurst(player,level,serverLevel,false);
         attendantOfMysteriesPaperDagger(player,level,serverLevel,false);
-        // TODO(stage5): PrinceOfAbolition: princeOfAbolitionSpear(player,level,serverLevel,false);
+        princeOfAbolitionSpear(player,level,serverLevel,false);
         handOfOrderBuff(player,level,serverLevel,false);
         // TODO(stage5): PaleEmperor: paleEmperorRoot(player,serverLevel,false);
         wormOfTimeAbility1(player,level,serverLevel,false);

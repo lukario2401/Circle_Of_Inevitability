@@ -14,7 +14,7 @@ import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_charac
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility4;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsSeal;
 // TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
-// TODO(stage5): PrinceOfAbolition: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionHammer;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionHammer;
 
 public class SKeyPressAbilityFourUsed {
 
@@ -39,7 +39,7 @@ public class SKeyPressAbilityFourUsed {
 
         keyOfStarsSeal(player,level,serverLevel,false);
         attendantOfMysteriesAirCannon(player,level,serverLevel,false);
-        // TODO(stage5): PrinceOfAbolition: princeOfAbolitionHammer(player,level,serverLevel,false);
+        princeOfAbolitionHammer(player,level,serverLevel,false);
         handOfOrderAbility4(player,level,serverLevel,false);
         // TODO(stage5): PaleEmperor: paleEmperorSpearSkull(player,level,serverLevel,false);
     }
