@@ -5,7 +5,7 @@ import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristi
 import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder;
 import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars;
 // TODO(stage5): import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor;
-// TODO(stage5): import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition;
+import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition;
 import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,7 +30,7 @@ public final class MeleeCombos {
         register(HandOfOrder.MELEE_COMBO);
         register(AttendantOfMysteries.MELEE_COMBO);
         register(KeyOfStars.MELEE_COMBO);
-        // TODO(stage5): register(PrinceOfAbolition.MELEE_COMBO);
+        register(PrinceOfAbolition.MELEE_COMBO);
         // TODO(stage5): register(PaleEmperor.MELEE_COMBO);
     }
 
