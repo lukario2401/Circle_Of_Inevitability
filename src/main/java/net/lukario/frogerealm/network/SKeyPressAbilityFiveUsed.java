@@ -13,7 +13,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesCountdown;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
-// TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionMeteor;
 
 public class SKeyPressAbilityFiveUsed {
@@ -41,7 +41,7 @@ public class SKeyPressAbilityFiveUsed {
         attendantOfMysteriesCountdown(player,level,serverLevel, false);
         handOfOrderAbility5(player,level,serverLevel, false);
         princeOfAbolitionMeteor(player,level,serverLevel,false);
-        // TODO(stage5): PaleEmperor: paleEmperorSpikes(player,level,serverLevel,false);
+        paleEmperorSpikes(player,level,serverLevel,false);
 
 
     }

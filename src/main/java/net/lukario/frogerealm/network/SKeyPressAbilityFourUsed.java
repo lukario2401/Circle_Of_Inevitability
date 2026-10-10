@@ -13,7 +13,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesAirCannon;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility4;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsSeal;
-// TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionHammer;
 
 public class SKeyPressAbilityFourUsed {
@@ -41,7 +41,7 @@ public class SKeyPressAbilityFourUsed {
         attendantOfMysteriesAirCannon(player,level,serverLevel,false);
         princeOfAbolitionHammer(player,level,serverLevel,false);
         handOfOrderAbility4(player,level,serverLevel,false);
-        // TODO(stage5): PaleEmperor: paleEmperorSpearSkull(player,level,serverLevel,false);
+        paleEmperorSpearSkull(player,level,serverLevel,false);
     }
 
 }
