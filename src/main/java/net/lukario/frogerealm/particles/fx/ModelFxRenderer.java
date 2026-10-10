@@ -51,7 +51,7 @@ import java.util.List;
  * The models are every models/model_fx/**.json (ModelFxModels reads them).
  * You shouldn't need to edit this to make new effects — only to add new ModelFx options.
  * (26.2: the ModelFxParticles are a particle group of their own, MODELS; each frame it hands the game what to draw
- * with submitCustomGeometry, in the same render types as before: see-through entity models on the block atlas, and
+ * with submitCustomGeometry, in the same render types as before: see-through entity models (textures in the particle atlas), and
  * additive "eyes" for the auras.)
  */
 public final class ModelFxRenderer {
@@ -63,10 +63,15 @@ public final class ModelFxRenderer {
     /** The particle group every ModelFxParticle goes in. */
     static final ParticleRenderType MODELS = new ParticleRenderType("CIRCLE_OF_INEVITABILITY_MODEL_FX", "COIM");
 
-    /** Models: see-through entity models on the block atlas, faces seen from behind are left out (old translucentCullBlockSheet). */
+    /**
+     * Models: see-through entity models, faces seen from behind are left out (old translucentCullBlockSheet).
+     * Their textures are in the particle atlas, not the block atlas as before: Forge 65 never lowers the block atlas'
+     * mipmap level, so one texture whose sides are not multiples of 16 (thread.png is 4 x 32) crashed the game at
+     * resource load. The particle atlas has no mipmaps, so any size works.
+     */
     private static final RenderType MODEL_TYPE = RenderType.create("circle_of_inevitability_model_fx",
             RenderSetup.builder(RenderPipelines.ENTITY_TRANSLUCENT_CULL)
-                    .withTexture("Sampler0", TextureAtlas.LOCATION_BLOCKS)
+                    .withTexture("Sampler0", TextureAtlas.LOCATION_PARTICLES)
                     .useLightmap()
                     .useOverlay()
                     .sortOnUpload()
@@ -88,7 +93,7 @@ public final class ModelFxRenderer {
             .build();
     private static final RenderType AURA_TYPE = RenderType.create("circle_of_inevitability_model_fx_aura",
             RenderSetup.builder(AURA_PIPELINE)
-                    .withTexture("Sampler0", TextureAtlas.LOCATION_BLOCKS)
+                    .withTexture("Sampler0", TextureAtlas.LOCATION_PARTICLES)
                     .sortOnUpload()
                     .createRenderSetup());
 
@@ -250,12 +255,12 @@ public final class ModelFxRenderer {
     // Drawing
     // =========================
 
-    private static TextureAtlas blockAtlas() {
-        return (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS);
+    private static TextureAtlas atlas() {
+        return (TextureAtlas) Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_PARTICLES);
     }
 
     private static void drawPass(VertexConsumer consumer, List<Drawn> drawn, boolean seeThrough) {
-        TextureAtlas atlas = blockAtlas();
+        TextureAtlas atlas = atlas();
         for (Drawn d : drawn) {
             if (d.fx().isSeeThrough() != seeThrough) continue;
             int tint = d.fx().tintColor();
@@ -266,7 +271,7 @@ public final class ModelFxRenderer {
 
     // auras: additive light on top (doesn't hide anything)
     private static void drawAuras(VertexConsumer glow, List<Drawn> drawn) {
-        TextureAtlas atlas = blockAtlas();
+        TextureAtlas atlas = atlas();
         TextureAtlasSprite white = atlas.getSprite(WHITE);
         if (white == atlas.missingSprite()) return; // no white texture: no auras
         float whiteU = (white.getU0() + white.getU1()) * 0.5f;

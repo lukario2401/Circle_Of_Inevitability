@@ -25,6 +25,7 @@ public class SlashParticle extends Particle {
 
     private final SlashFx fx;
     private final TextureAtlasSprite sprite;
+    private final boolean textured;
 
     // orientation (unit vectors, world space)
     private final Vec3 forward;
@@ -56,6 +57,7 @@ public class SlashParticle extends Particle {
         TextureAtlas atlas = (TextureAtlas) Minecraft.getInstance().getTextureManager()
                 .getTexture(TextureAtlas.LOCATION_PARTICLES);
         this.sprite = atlas.getSprite(fx.texture());
+        this.textured = this.sprite != atlas.missingSprite(); // a missing texture draws nothing
 
         // forward from yaw/pitch like an entity's look; right/up rotated around it by roll (same math as the server)
         Vec3[] axes = fx.axes();
@@ -114,7 +116,7 @@ public class SlashParticle extends Particle {
     // (26.2: no Particle.render any more; SlashRenderTypes' group calls this with the camera position of the frame)
     public void render(VertexConsumer buffer, Vec3 cam, float partialTick) {
         float time = this.age + partialTick - fx.delayTicks();
-        if (time < 0) return;
+        if (time < 0 || !textured) return;
 
         float life = fx.lifetimeTicks();
         float sweep = Math.min(fx.sweepTicks(), life * 0.5f); // longer sweeps would never be fully visible

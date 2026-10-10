@@ -25,7 +25,7 @@ import java.util.Map;
 
 /**
  * The ModelFx models: every models/model_fx/**.json (any namespace), read again on every resource reload.
- * Their textures come from the block atlas (textures/model_fx/, added to it by assets/minecraft/atlases/blocks.json).
+ * Their textures come from the particle atlas (textures/model_fx/, added to it by assets/minecraft/atlases/particles.json).
  * (26.2: the game's model baker no longer takes standalone models (no ModelEvent.RegisterAdditional, no BakedModel),
  * so the parts of the block-model format these files use are read here: elements with from/to, an optional rotation
  * (origin with axis + angle, or x/y/z; rescale) and faces with uv, rotation and texture. The corners come out in the
