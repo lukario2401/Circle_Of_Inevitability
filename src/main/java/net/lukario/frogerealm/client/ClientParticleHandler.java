@@ -6,6 +6,7 @@ import net.lukario.frogerealm.particles.VoidRiftParticle;
 import net.lukario.frogerealm.particles.fx.ModelFxParticle;
 import net.lukario.frogerealm.particles.fx.ParticleFxParticle;
 import net.lukario.frogerealm.particles.fx.SlashParticle;
+import net.lukario.frogerealm.particles.fx.SlashRenderTypes;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterParticleProvidersEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
@@ -19,6 +20,9 @@ public class ClientParticleHandler {
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
+        // 26.2: slashes are drawn by their own particle group (fired once, on the main thread, from Minecraft's constructor)
+        SlashRenderTypes.register();
+
         event.registerSpriteSet(
                 ModParticles.VOID_RIFT.get(),
                 VoidRiftParticle.Provider::new
