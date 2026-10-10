@@ -11,7 +11,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
 // TODO(stage5): AttendantOfMysteries: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesCountdown;
-// TODO(stage5): HandOfOrder: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
 // TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
 // TODO(stage5): PrinceOfAbolition: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionMeteor;
@@ -39,7 +39,7 @@ public class SKeyPressAbilityFiveUsed {
 
         keyOfStarsTransport(player,level,serverLevel, false);
         // TODO(stage5): AttendantOfMysteries: attendantOfMysteriesCountdown(player,level,serverLevel, false);
-        // TODO(stage5): HandOfOrder: handOfOrderAbility5(player,level,serverLevel, false);
+        handOfOrderAbility5(player,level,serverLevel, false);
         // TODO(stage5): PrinceOfAbolition: princeOfAbolitionMeteor(player,level,serverLevel,false);
         // TODO(stage5): PaleEmperor: paleEmperorSpikes(player,level,serverLevel,false);
 

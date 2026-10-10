@@ -86,7 +86,13 @@ for f in "$@"; do
         -e 's/\.pose\(\)\.pushPose\(\)/.pose().pushMatrix()/g' \
         -e 's/\.pose\(\)\.popPose\(\)/.pose().popMatrix()/g' \
         -e 's/\bMinecraft\.getInstance\(\)\.setScreen\(/Minecraft.getInstance().gui.setScreen(/g' \
+        -e '/\bEntityType\.(STREAM_)?CODEC\b/!s/\bEntityType\.([A-Z][A-Z0-9_]*)\b/EntityTypes.\1/g' \
         "$abs"
+
+    # the EntityTypes rule above needs this import
+    if grep -q '\bEntityTypes\.' "$abs" && ! grep -q '^import net\.minecraft\.world\.entity\.EntityTypes;' "$abs"; then
+        sed -i -E '0,/^import /s//import net.minecraft.world.entity.EntityTypes;\nimport /' "$abs"
+    fi
 
     # the UUID rules above need this import
     if grep -q 'UUIDUtil\.CODEC' "$abs" && ! grep -q '^import net\.minecraft\.core\.UUIDUtil;' "$abs"; then
