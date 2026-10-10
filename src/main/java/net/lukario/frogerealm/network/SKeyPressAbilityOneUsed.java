@@ -15,7 +15,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsStarBurst;
 // TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorRoot;
 // TODO(stage5): PrinceOfAbolition: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionSpear;
-// TODO(stage5): WormOfTime: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.WormOfTime.wormOfTimeAbility1;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.WormOfTime.wormOfTimeAbility1;
 
 public class SKeyPressAbilityOneUsed {
 
@@ -43,6 +43,6 @@ public class SKeyPressAbilityOneUsed {
         // TODO(stage5): PrinceOfAbolition: princeOfAbolitionSpear(player,level,serverLevel,false);
         // TODO(stage5): HandOfOrder: handOfOrderBuff(player,level,serverLevel,false);
         // TODO(stage5): PaleEmperor: paleEmperorRoot(player,serverLevel,false);
-        // TODO(stage5): WormOfTime: wormOfTimeAbility1(player,level,serverLevel,false);
+        wormOfTimeAbility1(player,level,serverLevel,false);
     }
 }
