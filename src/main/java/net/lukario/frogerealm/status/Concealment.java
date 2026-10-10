@@ -1,8 +1,8 @@
 package net.lukario.frogerealm.status;
 
 import net.lukario.frogerealm.ForgeRealm;
-// TODO(stage3): import net.lukario.frogerealm.network.CConcealPacket;
-// TODO(stage3): import net.lukario.frogerealm.network.PacketHandler;
+import net.lukario.frogerealm.network.CConcealPacket;
+import net.lukario.frogerealm.network.PacketHandler;
 // TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleFx;
 // TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.minecraft.nbt.CompoundTag;
@@ -103,7 +103,7 @@ public final class Concealment {
         entity.getPersistentData().remove(TAG);
         if (!tag.getBooleanOr(HAD_INVISIBILITY, false)) entity.removeEffect(MobEffects.INVISIBILITY);
         if (entity.level() instanceof ServerLevel sl) {
-            // TODO(stage3): PacketHandler.sendToAllClients(new CConcealPacket(entity.getId(), 0));
+            PacketHandler.sendToAllClients(new CConcealPacket(entity.getId(), 0));
             if (entity.isAlive()) fog(sl, entity);
         }
     }
@@ -131,7 +131,7 @@ public final class Concealment {
             }
         }
         // told again every REFRESH ticks, so players who only just came near stop drawing it too
-        // TODO(stage3): PacketHandler.sendToAllClients(new CConcealPacket(entity.getId(), ticksLeft));
+        PacketHandler.sendToAllClients(new CConcealPacket(entity.getId(), ticksLeft));
     }
 
     private static void fog(ServerLevel sl, LivingEntity entity) {

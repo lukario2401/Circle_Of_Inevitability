@@ -7,6 +7,7 @@
 # Keep this list in sync with the API renames table in MIGRATION_NOTES.md.
 # Anything that changes code structure (cancelling events, kill/hurt needing a ServerLevel,
 # multi-line calls) is NOT done here: fix it by hand and note it in MIGRATION_NOTES.md.
+# The phase rules assume Phase.END only (TickEvent.X.Post); a Phase.START check would need .Pre by hand.
 set -eu
 
 root=$(cd "$(dirname "$0")/.." && pwd)
@@ -36,6 +37,14 @@ for f in "$@"; do
         -e '/^\s*if \(event\.phase != TickEvent\.Phase\.END\) return;\s*$/d' \
         -e 's/event\.phase != TickEvent\.Phase\.END \|\| //g' \
         -e 's/\bevent\.player\b([^(])/event.player()\1/g' \
+        -e 's/\bTickEvent\.LevelTickEvent event\b/TickEvent.LevelTickEvent.Post event/g' \
+        -e 's/(^|[^.])\bevent\.level\b([^(])/\1event.level()\2/g' \
+        -e 's/\bResourceLocationArgument\b/IdentifierArgument/g' \
+        -e 's/\.readResourceLocation\(\)/.readIdentifier()/g' \
+        -e 's/\.writeResourceLocation\(/.writeIdentifier(/g' \
+        -e 's/\bMobSpawnType\b/EntitySpawnReason/g' \
+        -e 's/\blevel\.random\b/level.getRandom()/g' \
+        -e 's/\.serverLevel\(\)/.level()/g' \
         -e 's/\bMobEffects\.MOVEMENT_SPEED\b/MobEffects.SPEED/g' \
         -e 's/\bMobEffects\.MOVEMENT_SLOWDOWN\b/MobEffects.SLOWNESS/g' \
         -e 's/\bMobEffects\.DIG_SPEED\b/MobEffects.HASTE/g' \
