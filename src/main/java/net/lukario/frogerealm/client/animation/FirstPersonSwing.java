@@ -45,13 +45,7 @@ public final class FirstPersonSwing {
         PoseStack poseStack = event.getPoseStack();
         poseStack.pushPose();
         try {
-            // vanilla's resting spot for a held item (ItemInHandRenderer.applyItemArmTransform), then the swing's offsets
-            poseStack.translate((right ? 1 : -1) * 0.56F, -0.52F + event.getEquipProgress() * -0.6F, -0.72F);
-            poseStack.translate(pose.itemX, pose.itemY, pose.itemZ);
-            poseStack.mulPose(Axis.ZP.rotationDegrees(pose.itemRoll));
-            poseStack.mulPose(Axis.YP.rotationDegrees(pose.itemYaw));
-            poseStack.mulPose(Axis.XP.rotationDegrees(pose.itemPitch));
-            if (pose.itemScale != 1f) poseStack.scale(pose.itemScale, pose.itemScale, pose.itemScale);
+            applyItemTransform(poseStack, pose, right, event.getEquipProgress());
             minecraft.getEntityRenderDispatcher().getItemInHandRenderer().renderItem(player, stack,
                     right ? ItemDisplayContext.FIRST_PERSON_RIGHT_HAND : ItemDisplayContext.FIRST_PERSON_LEFT_HAND,
                     poseStack, event.getNodeCollector(), event.getPackedLight());
@@ -63,6 +57,30 @@ public final class FirstPersonSwing {
         } finally {
             poseStack.popPose();
         }
+    }
+
+    /**
+     * Moves the pose stack from the hand origin to where the item is drawn for this pose (pivot = the hand).
+     * 'pose' is already mirrored for the left hand. 'equipProgress' is vanilla's inverse arm height: after every
+     * attack vanilla lowers the item by up to 0.6 blocks until the cooldown refills, which would push the whole
+     * swing below the screen. It is only applied at rest (pose.weight 0, where vanilla draws it too) and faded
+     * out as the swing starts, while the global offset and scale from SwingAnimations fade in.
+     */
+    static void applyItemTransform(PoseStack poseStack, SwingAnimation.Pose pose, boolean right, float equipProgress) {
+        float side = right ? 1 : -1;
+        float weight = Math.max(0f, Math.min(1f, pose.weight));
+        // vanilla's resting spot for a held item (ItemInHandRenderer.applyItemArmTransform), dip only at rest
+        poseStack.translate(side * 0.56F, -0.52F + equipProgress * -0.6F * (1f - weight), -0.72F);
+        // the global swing spot, the same for every swing (x mirrored for the left hand)
+        poseStack.translate(side * SwingAnimations.FIRST_PERSON_OFFSET_X * weight,
+                SwingAnimations.FIRST_PERSON_OFFSET_Y * weight, SwingAnimations.FIRST_PERSON_OFFSET_Z * weight);
+        // the swing's own offsets and turns
+        poseStack.translate(pose.itemX, pose.itemY, pose.itemZ);
+        poseStack.mulPose(Axis.ZP.rotationDegrees(pose.itemRoll));
+        poseStack.mulPose(Axis.YP.rotationDegrees(pose.itemYaw));
+        poseStack.mulPose(Axis.XP.rotationDegrees(pose.itemPitch));
+        float scale = pose.itemScale * (1f + (SwingAnimations.FIRST_PERSON_SCALE - 1f) * weight);
+        if (scale != 1f && scale > 0f) poseStack.scale(scale, scale, scale);
     }
 
     /** The cases where vanilla would draw this item with its plain attack swing (ItemInHandRenderer.submitArmWithItem). */

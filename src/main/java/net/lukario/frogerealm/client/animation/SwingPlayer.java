@@ -32,8 +32,11 @@ import java.util.Set;
 @Mod.EventBusSubscriber(modid = ForgeRealm.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public final class SwingPlayer {
 
-    /** One swing being played: what, for how many ticks, since when, and with which item in hand. */
-    private record Playing(SwingAnimation animation, int ticks, long start, Item item, boolean fromSwing) {}
+    /**
+     * One swing being played: what, for how many ticks, since when, with which item in hand, and the pose it
+     * blends from (where the previous swing was when this one interrupted it; null = start from rest).
+     */
+    private record Playing(SwingAnimation animation, float ticks, long start, Item item, boolean fromSwing, SwingAnimation.Pose from) {}
 
     /** Where a player is in their rule's sequence. */
     private static final class Cycle {
@@ -66,7 +69,7 @@ public final class SwingPlayer {
             // our swing is done but vanilla's (6 ticks, longer with Mining Fatigue) may still be running: hold the rest pose
             return playing.fromSwing() && player.swinging ? SwingAnimation.Pose.REST : null;
         }
-        return playing.animation().sample(elapsed / playing.ticks());
+        return playing.animation().sample(elapsed / playing.ticks(), playing.from());
     }
 
     /** Plays a swing on the local player now, 'slow' times slower (for /swinganim). False if there is no such id. */
@@ -87,8 +90,11 @@ public final class SwingPlayer {
     }
 
     private static void play(Player player, SwingAnimation animation, int slow, boolean fromSwing) {
-        PLAYING.put(player.getId(), new Playing(animation, animation.ticks() * slow, clientTicks,
-                player.getMainHandItem().getItem(), fromSwing));
+        // a swing still on screen: the new one winds up from where that one is now instead of snapping to rest
+        SwingAnimation.Pose from = poseFor(player, 0f);
+        float speed = SwingAnimations.SPEED > 0f ? SwingAnimations.SPEED : 1f;
+        PLAYING.put(player.getId(), new Playing(animation, animation.ticks() * slow / speed, clientTicks,
+                player.getMainHandItem().getItem(), fromSwing, from));
     }
 
     /** A new main-hand swing: the matching rule's next swing, or vanilla. */

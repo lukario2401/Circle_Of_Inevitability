@@ -18,11 +18,17 @@ public final class SwingRules {
     /** 30 ticks = 1.5 seconds without swinging, then the sequence starts over. */
     public static final int DEFAULT_RESET_TICKS = 30;
 
-    /** Worm Of Time with any sword (the minecraft:swords item tag): horizontal, diagonal, vertical, repeat. */
+    /**
+     * Worm Of Time with any sword (the minecraft:swords item tag): all eight swings, ordered so each one travels a
+     * different way from the one before (right-to-left, forward, down-left, up-right, left-to-right, down, up-left,
+     * the wide sweep) and no swing follows itself, also when the cycle wraps around. Starts over after the pause.
+     */
     public static final SwingRule WORM_OF_TIME_SWORD = SwingRule.of(
             (player, held) -> hasAspect(player, "Worm Of Time") && held.is(ItemTags.SWORDS),
             DEFAULT_RESET_TICKS,
-            SwingAnimations.HORIZONTAL, SwingAnimations.DIAGONAL_DOWN, SwingAnimations.VERTICAL_DOWN);
+            SwingAnimations.HORIZONTAL, SwingAnimations.STAB, SwingAnimations.DIAGONAL_DOWN, SwingAnimations.UPPERCUT,
+            SwingAnimations.HORIZONTAL_REVERSE, SwingAnimations.VERTICAL_DOWN, SwingAnimations.DIAGONAL_UP,
+            SwingAnimations.SPIN_SLASH);
 
     private static final List<SwingRule> RULES = new ArrayList<>();
 

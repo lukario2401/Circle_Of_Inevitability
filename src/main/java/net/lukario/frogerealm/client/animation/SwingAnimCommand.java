@@ -15,7 +15,7 @@ import net.minecraftforge.fml.common.Mod;
 
 /**
  * Client command to preview swings on yourself, no mobs needed (only you see it):
- *   /swinganim list              the ids
+ *   /swinganim list              every id with its length in ticks
  *   /swinganim horizontal        plays it once with whatever is in your main hand (F5 to see third person)
  *   /swinganim horizontal 5      five times slower, to tune keyframes
  */
@@ -28,7 +28,7 @@ public final class SwingAnimCommand {
     public static void onSwingAnimRegisterClientCommands(RegisterClientCommandsEvent event) {
         event.getDispatcher().register(Commands.literal("swinganim")
                 .then(Commands.literal("list").executes(ctx -> {
-                    ctx.getSource().sendSuccess(() -> Component.literal("Swings: " + String.join(", ", SwingAnimations.ids())), false);
+                    ctx.getSource().sendSuccess(() -> Component.literal(list()), false);
                     return 1;
                 }))
                 .then(Commands.argument("id", StringArgumentType.word())
@@ -36,6 +36,18 @@ public final class SwingAnimCommand {
                         .executes(ctx -> play(ctx, 1))
                         .then(Commands.argument("slow", IntegerArgumentType.integer(1, 20))
                                 .executes(ctx -> play(ctx, IntegerArgumentType.getInteger(ctx, "slow"))))));
+    }
+
+    /** "Swings (8): horizontal 14t, ..." with each length in ticks at the global speed. */
+    private static String list() {
+        float speed = SwingAnimations.SPEED > 0f ? SwingAnimations.SPEED : 1f;
+        StringBuilder text = new StringBuilder("Swings (" + SwingAnimations.ids().size() + "):");
+        String separator = " ";
+        for (String id : SwingAnimations.ids()) {
+            text.append(separator).append(id).append(' ').append(Math.round(SwingAnimations.get(id).ticks() / speed)).append('t');
+            separator = ", ";
+        }
+        return text.toString();
     }
 
     private static int play(CommandContext<CommandSourceStack> ctx, int slow) {
