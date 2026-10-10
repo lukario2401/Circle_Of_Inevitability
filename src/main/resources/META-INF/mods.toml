@@ -5,16 +5,14 @@
 modLoader="javafml"
 loaderVersion="[65,)"
 license="All Rights Reserved"
-#issueTrackerURL="https://github.com/MyOrganization/MyMod/" #optional
+issueTrackerURL="https://github.com/lukario2401/Circle_Of_Inevitability/issues"
 #clientSideOnly=true #optional, default=false
 
 [[mods]]
 modId="circle_of_inevitability"
 version="1.0.0"
 displayName="Circle Of Inevitability Mod"
-#updateJSONURL="https://example.com/updates.json" #optional
-#displayURL="https://example.com/" #optional
-#logoFile="examplemod.png" #optional
+displayURL="https://github.com/lukario2401/Circle_Of_Inevitability"
 #credits="" #optional
 authors="Lukario2401" #optional
 #displayTest="MATCH_VERSION" #optional, default=MATCH_VERSION when not clientSideOnly, else IGNORE_ALL_VERSION
