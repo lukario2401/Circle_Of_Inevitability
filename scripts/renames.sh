@@ -1,0 +1,74 @@
+#!/bin/sh
+# Mechanical 1.21/Forge 51 -> 26.2/Forge 65 renames for freshly copied files.
+# Usage: scripts/renames.sh [file.java ...]   (no arguments = every .java file under src/)
+#
+# Includes every rule of tools/apply_renames.sh, plus the renames found in later stages.
+# Every rule is idempotent: running the script twice changes nothing the second time.
+# Keep this list in sync with the API renames table in MIGRATION_NOTES.md.
+# Anything that changes code structure (cancelling events, kill/hurt needing a ServerLevel,
+# multi-line calls) is NOT done here: fix it by hand and note it in MIGRATION_NOTES.md.
+set -eu
+
+root=$(cd "$(dirname "$0")/.." && pwd)
+
+if [ "$#" -eq 0 ]; then
+    set -- $(find "$root/src" -name '*.java' | sort)
+fi
+
+# a single call argument with no comma, allowing one level of nested parentheses: TAG, restriction.name()
+ARG='(([^(),]|\([^()]*\))+)'
+
+for f in "$@"; do
+    abs=$(cd "$(dirname "$f")" && pwd)/$(basename "$f")
+    case "$abs" in
+        "$root"/reference/*|*/reference/*) echo "refusing to edit $f (reference/ is read-only)" >&2; exit 1 ;;
+    esac
+    [ -f "$abs" ] || { echo "no such file: $f" >&2; exit 1; }
+
+    sed -i -E \
+        -e 's/\bResourceLocation\b/Identifier/g' \
+        -e '/MOD_TAG *=/!s/\bforgerealmmod\b/circle_of_inevitability/g' \
+        -e 's/net\.minecraftforge\.eventbus\.api\.SubscribeEvent\b/net.minecraftforge.eventbus.api.listener.SubscribeEvent/g' \
+        -e 's/\bGuiGraphics\b/GuiGraphicsExtractor/g' \
+        -e 's/net\.minecraftforge\.eventbus\.api\.EventPriority\b/net.minecraftforge.eventbus.api.listener.Priority/g' \
+        -e 's/\bEventPriority\./Priority./g' \
+        -e 's/\bTickEvent\.PlayerTickEvent event\b/TickEvent.PlayerTickEvent.Post event/g' \
+        -e '/^\s*if \(event\.phase != TickEvent\.Phase\.END\) return;\s*$/d' \
+        -e 's/event\.phase != TickEvent\.Phase\.END \|\| //g' \
+        -e 's/\bevent\.player\b([^(])/event.player()\1/g' \
+        -e 's/\bMobEffects\.MOVEMENT_SPEED\b/MobEffects.SPEED/g' \
+        -e 's/\bMobEffects\.MOVEMENT_SLOWDOWN\b/MobEffects.SLOWNESS/g' \
+        -e 's/\bMobEffects\.DIG_SPEED\b/MobEffects.HASTE/g' \
+        -e 's/\bMobEffects\.DIG_SLOWDOWN\b/MobEffects.MINING_FATIGUE/g' \
+        -e 's/\bMobEffects\.DAMAGE_BOOST\b/MobEffects.STRENGTH/g' \
+        -e 's/\bMobEffects\.HEAL\b/MobEffects.INSTANT_HEALTH/g' \
+        -e 's/\bMobEffects\.HARM\b/MobEffects.INSTANT_DAMAGE/g' \
+        -e 's/\bMobEffects\.JUMP\b/MobEffects.JUMP_BOOST/g' \
+        -e 's/\bMobEffects\.CONFUSION\b/MobEffects.NAUSEA/g' \
+        -e 's/\bMobEffects\.DAMAGE_RESISTANCE\b/MobEffects.RESISTANCE/g' \
+        -e "/ArgumentType\./!s/\.getInt\($ARG\)/.getIntOr(\1, 0)/g" \
+        -e "/ArgumentType\./!s/\.getLong\($ARG\)/.getLongOr(\1, 0L)/g" \
+        -e "/ArgumentType\./!s/\.getFloat\($ARG\)/.getFloatOr(\1, 0f)/g" \
+        -e "/ArgumentType\./!s/\.getDouble\($ARG\)/.getDoubleOr(\1, 0.0)/g" \
+        -e "/ArgumentType\./!s/\.getBoolean\($ARG\)/.getBooleanOr(\1, false)/g" \
+        -e "/ArgumentType\./!s/\.getString\($ARG\)/.getStringOr(\1, \"\")/g" \
+        -e "s/\.getCompound\($ARG\)/.getCompoundOrEmpty(\1)/g" \
+        -e 's/\.getAllKeys\(\)/.keySet()/g' \
+        -e 's/\.isClientSide\b([^(])/.isClientSide()\1/g' \
+        -e 's/\.putUUID\(([^,()]+), /.store(\1, UUIDUtil.CODEC, /g' \
+        -e 's/\.hasUUID\(([^()]+)\)/.read(\1, UUIDUtil.CODEC).isPresent()/g' \
+        -e 's/\.getUUID\(([^()]+)\)/.read(\1, UUIDUtil.CODEC).orElseThrow()/g' \
+        -e 's/\.displayClientMessage\((.*), true\);/.sendOverlayMessage(\1);/' \
+        -e 's/\.displayClientMessage\((.*), false\);/.sendSystemMessage(\1);/' \
+        -e 's/\b([a-z]+) -> \1\.hasPermission\(0\)/Commands.hasPermission(Commands.LEVEL_ALL)/g' \
+        -e 's/\b([a-z]+) -> \1\.hasPermission\(1\)/Commands.hasPermission(Commands.LEVEL_MODERATORS)/g' \
+        -e 's/\b([a-z]+) -> \1\.hasPermission\(2\)/Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)/g' \
+        -e 's/\b([a-z]+) -> \1\.hasPermission\(3\)/Commands.hasPermission(Commands.LEVEL_ADMINS)/g' \
+        -e 's/\b([a-z]+) -> \1\.hasPermission\(4\)/Commands.hasPermission(Commands.LEVEL_OWNERS)/g' \
+        "$abs"
+
+    # the UUID rules above need this import
+    if grep -q 'UUIDUtil\.CODEC' "$abs" && ! grep -q '^import net\.minecraft\.core\.UUIDUtil;' "$abs"; then
+        sed -i -E '0,/^import /s//import net.minecraft.core.UUIDUtil;\nimport /' "$abs"
+    fi
+done
