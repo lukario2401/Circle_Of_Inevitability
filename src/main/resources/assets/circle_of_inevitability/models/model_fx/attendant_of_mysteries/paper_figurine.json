@@ -5,8 +5,8 @@
     64
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/attendant_of_mysteries/paper_figurine",
-    "particle": "forgerealmmod:model_fx/attendant_of_mysteries/paper_figurine"
+    "0": "circle_of_inevitability:model_fx/attendant_of_mysteries/paper_figurine",
+    "particle": "circle_of_inevitability:model_fx/attendant_of_mysteries/paper_figurine"
   },
   "elements": [
     {

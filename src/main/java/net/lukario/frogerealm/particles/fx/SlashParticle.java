@@ -1,11 +1,11 @@
 package net.lukario.frogerealm.particles.fx;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -25,6 +25,7 @@ public class SlashParticle extends Particle {
 
     private final SlashFx fx;
     private final TextureAtlasSprite sprite;
+    private final boolean textured;
 
     // orientation (unit vectors, world space)
     private final Vec3 forward;
@@ -56,6 +57,7 @@ public class SlashParticle extends Particle {
         TextureAtlas atlas = (TextureAtlas) Minecraft.getInstance().getTextureManager()
                 .getTexture(TextureAtlas.LOCATION_PARTICLES);
         this.sprite = atlas.getSprite(fx.texture());
+        this.textured = this.sprite != atlas.missingSprite(); // a missing texture draws nothing
 
         // forward from yaw/pitch like an entity's look; right/up rotated around it by roll (same math as the server)
         Vec3[] axes = fx.axes();
@@ -94,28 +96,27 @@ public class SlashParticle extends Particle {
         if (this.age++ >= this.lifetime) this.remove();
     }
 
-    // TODO(redesign): Particle has no shouldCull() on 26.2 (particle groups cull by frustum themselves); kept, unused.
-    public boolean shouldCull() {
-        return false; // the slash is much bigger than a normal particle's box
-    }
+    // (26.2: no shouldCull(); the SLASHES group never culls, the slash is much bigger than a normal particle's box)
 
-    // TODO(redesign): SlashRenderTypes is a placeholder (see its comment), so the slash ticks but draws nothing.
-    // Old line: return fx.isAdditive() ? SlashRenderTypes.ADDITIVE : SlashRenderTypes.TRANSLUCENT;
+    // (26.2: drawn by the SLASHES particle group; NO_RENDER only if that group could not be registered)
     @Override
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.NO_RENDER;
+        return SlashRenderTypes.isRegistered() ? SlashRenderTypes.SLASHES : ParticleRenderType.NO_RENDER;
+    }
+
+    /** How it is blended: the old getRenderType(). */
+    SingleQuadParticle.Layer layer() {
+        return fx.isAdditive() ? SlashRenderTypes.ADDITIVE : SlashRenderTypes.TRANSLUCENT;
     }
 
     // =========================
     // Drawing
     // =========================
 
-    // TODO(redesign): Particle.render(VertexConsumer, Camera, float) is gone on 26.2 (particles are extracted
-    // into render states by their ParticleGroup). Nothing calls this any more; it is kept, unchanged apart from
-    // camera.position(), as the drawing code a custom ParticleGroup would reuse.
-    public void render(VertexConsumer buffer, Camera camera, float partialTick) {
+    // (26.2: no Particle.render any more; SlashRenderTypes' group calls this with the camera position of the frame)
+    public void render(VertexConsumer buffer, Vec3 cam, float partialTick) {
         float time = this.age + partialTick - fx.delayTicks();
-        if (time < 0) return;
+        if (time < 0 || !textured) return;
 
         float life = fx.lifetimeTicks();
         float sweep = Math.min(fx.sweepTicks(), life * 0.5f); // longer sweeps would never be fully visible
@@ -142,7 +143,6 @@ public class SlashParticle extends Particle {
         lineRight = right.scale(cos).add(up.scale(sin));
         lineUp = up.scale(cos).subtract(right.scale(sin));
 
-        Vec3 cam = camera.position();
         Vec3 origin = new Vec3(this.x - cam.x, this.y - cam.y, this.z - cam.z);
 
         for (int i = 0; i < layerOffset.length; i++) {

@@ -2,13 +2,16 @@ package net.lukario.frogerealm.client;
 
 import net.lukario.frogerealm.ForgeRealm;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 /**
@@ -53,15 +56,37 @@ public class ClientConcealment {
 
     // Cancelling this skips the whole entity: body, armor, held items, name tag.
     // (The 3D models stuck to it are skipped in ModelFxRenderer.)
-    // TODO(redesign): on 26.2 RenderLivingEvent.Pre carries only the LivingEntityRenderState (entity type,
-    // interpolated x/y/z, size...), not the entity or its id, so isHidden(...) cannot be asked here and no other
-    // Forge 65 client event sees the entity at draw time. Finding the entity again (by type and position, or with
-    // a mixin on EntityRenderDispatcher) is a new mechanism, not a port. Until then concealed entities are only
-    // vanilla-invisible (armour, held items and name tag still show). Old listener:
-    // @SubscribeEvent
-    // public static void onClientConcealmentRender(RenderLivingEvent.Pre<?, ?> event) {
-    //     if (isHidden(event.getEntity())) event.setCanceled(true);
-    // }
+    // (26.2: returning true cancels. The event no longer carries the entity, only what will be drawn: its type and
+    // the spot it is drawn at this frame, which lies between where it was last tick and where it is now. A hidden
+    // entity of the same type drawn in that span is the one being drawn.)
+    @SubscribeEvent
+    public static boolean onClientConcealmentRender(RenderLivingEvent.Pre<?, ?, ?> event) {
+        return isHidden(event.getState());
+    }
+
+    private static boolean isHidden(EntityRenderState state) {
+        if (HIDDEN_UNTIL.isEmpty()) return false;
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null) return false;
+        long now = minecraft.level.getGameTime();
+        for (Iterator<Map.Entry<Integer, Long>> it = HIDDEN_UNTIL.entrySet().iterator(); it.hasNext(); ) {
+            Map.Entry<Integer, Long> hidden = it.next();
+            if (now > hidden.getValue()) { // ran out, same as isHidden(int)
+                it.remove();
+                continue;
+            }
+            Entity entity = minecraft.level.getEntity(hidden.getKey());
+            if (entity != null && entity.getType() == state.entityType
+                    && between(state.x, entity.xOld, entity.getX())
+                    && between(state.y, entity.yOld, entity.getY())
+                    && between(state.z, entity.zOld, entity.getZ())) return true;
+        }
+        return false;
+    }
+
+    private static boolean between(double value, double a, double b) {
+        return value >= Math.min(a, b) - 1.0E-4 && value <= Math.max(a, b) + 1.0E-4;
+    }
 
     @SubscribeEvent
     public static void onClientConcealmentTick(TickEvent.ClientTickEvent.Post event) {

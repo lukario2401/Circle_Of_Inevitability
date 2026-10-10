@@ -1,7 +1,7 @@
 {
   "credit": "ForgeRealm - the Feathered Serpent rearing out of the ground: gold mask, pale-green eyes, fangs, a collar of pale feathers. Frame 0 of 0..2. ModelFx: ModelFx.of(\"pale_emperor/feathered_serpent\").frames(3).smooth(), then keys with pose().frame(n). Frame 0 = mouth shut and collar laid back, 2 = jaws wide and collar flared. Front = north. Pivot 8,-16,12 = where the neck leaves the ground. Generated",
   "texture_size": [256, 176],
-  "textures": {"0": "forgerealmmod:model_fx/pale_emperor/feathered_serpent", "particle": "forgerealmmod:model_fx/pale_emperor/feathered_serpent"},
+  "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/feathered_serpent", "particle": "circle_of_inevitability:model_fx/pale_emperor/feathered_serpent"},
   "elements": [
     {"name":"neck0","from":[3.5,-16.0,8.5],"to":[12.5,-5.5,15.5],"rotation":{"angle":22.5,"axis":"x","origin":[8.0,-16.0,12.0]},"faces":{"north":{"uv":[1.1875,0.0,2.3125,1.9091],"texture":"#0"},"south":{"uv":[2.375,0.0,3.5,1.9091],"texture":"#0"},"east":{"uv":[3.5625,0.0,4.4375,1.9091],"texture":"#0"},"west":{"uv":[3.5625,0.0,4.4375,1.9091],"texture":"#0"},"up":{"uv":[0.0,0.0,1.125,1.2727],"texture":"#0","rotation":180},"down":{"uv":[0.0,0.0,1.125,1.2727],"texture":"#0"}}},
     {"name":"neck_ring1","from":[3.125,-7.2993,12.1432],"to":[12.875,-5.2993,19.8932],"faces":{"north":{"uv":[5.8125,0.0,7.0625,0.3636],"texture":"#0"},"south":{"uv":[5.8125,0.0,7.0625,0.3636],"texture":"#0"},"east":{"uv":[7.125,0.0,8.125,0.3636],"texture":"#0"},"west":{"uv":[7.125,0.0,8.125,0.3636],"texture":"#0"},"up":{"uv":[4.5,0.0,5.75,1.4545],"texture":"#0","rotation":180},"down":{"uv":[4.5,0.0,5.75,1.4545],"texture":"#0"}}},

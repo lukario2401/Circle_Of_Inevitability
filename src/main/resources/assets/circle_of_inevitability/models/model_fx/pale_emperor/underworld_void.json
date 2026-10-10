@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/pale_emperor/underworld_void",
-    "particle": "forgerealmmod:model_fx/pale_emperor/underworld_void"
+    "0": "circle_of_inevitability:model_fx/pale_emperor/underworld_void",
+    "particle": "circle_of_inevitability:model_fx/pale_emperor/underworld_void"
   },
   "elements": [
     {

@@ -3,10 +3,10 @@
 	"credit": "MadewithBlockbench",
 	"texture_size": [32, 32],
 	"textures": {
-		"1": "forgerealmmod:model_fx/hand_of_order/texture",
-		"2": "forgerealmmod:model_fx/hand_of_order/light",
-		"3": "forgerealmmod:model_fx/hand_of_order/sword",
-      "particle": "forgerealmmod:model_fx/hand_of_order/light"
+		"1": "circle_of_inevitability:model_fx/hand_of_order/texture",
+		"2": "circle_of_inevitability:model_fx/hand_of_order/light",
+		"3": "circle_of_inevitability:model_fx/hand_of_order/sword",
+      "particle": "circle_of_inevitability:model_fx/hand_of_order/light"
     },
 	"elements": [
 		{

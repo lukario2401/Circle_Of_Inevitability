@@ -5,8 +5,8 @@
     64
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/prince_of_abolition/hammer",
-    "particle": "forgerealmmod:model_fx/prince_of_abolition/hammer"
+    "0": "circle_of_inevitability:model_fx/prince_of_abolition/hammer",
+    "particle": "circle_of_inevitability:model_fx/prince_of_abolition/hammer"
   },
   "elements": [
     {

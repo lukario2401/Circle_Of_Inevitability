@@ -1,7 +1,7 @@
 {
   "credit": "ForgeRealm - one pale feather, stained yellow-green toward its tip, 1.5 blocks long (ModelFx). Tip up, its flat sides north and south. Pivot 8,8,8 = its middle. Generated",
   "texture_size": [256, 48],
-  "textures": {"0": "forgerealmmod:model_fx/pale_emperor/pale_feather", "particle": "forgerealmmod:model_fx/pale_emperor/pale_feather"},
+  "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/pale_feather", "particle": "circle_of_inevitability:model_fx/pale_emperor/pale_feather"},
   "elements": [
     {"name":"vane0","from":[7.55,19.4,7.82],"to":[8.45,20.6,8.18],"faces":{"north":{"uv":[0.1875,0.0,0.3125,0.6667],"texture":"#0"},"south":{"uv":[0.375,0.0,0.5,0.6667],"texture":"#0"},"east":{"uv":[0.5625,0.0,0.625,0.6667],"texture":"#0"},"west":{"uv":[0.5625,0.0,0.625,0.6667],"texture":"#0"},"up":{"uv":[0.0,0.0,0.125,0.3333],"texture":"#0","rotation":180},"down":{"uv":[0.0,0.0,0.125,0.3333],"texture":"#0"}}},
     {"name":"vane1","from":[7.1,17.5,7.83],"to":[9.1,19.4,8.17],"faces":{"north":{"uv":[1.0,0.0,1.25,1.3333],"texture":"#0"},"south":{"uv":[1.3125,0.0,1.5625,1.3333],"texture":"#0"},"east":{"uv":[1.625,0.0,1.6875,1.3333],"texture":"#0"},"west":{"uv":[1.625,0.0,1.6875,1.3333],"texture":"#0"},"up":{"uv":[0.6875,0.0,0.9375,0.3333],"texture":"#0","rotation":180},"down":{"uv":[0.6875,0.0,0.9375,0.3333],"texture":"#0"}}},

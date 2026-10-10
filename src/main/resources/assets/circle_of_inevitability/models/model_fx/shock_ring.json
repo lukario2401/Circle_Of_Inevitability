@@ -5,8 +5,8 @@
     64
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/shock_ring",
-    "particle": "forgerealmmod:model_fx/shock_ring"
+    "0": "circle_of_inevitability:model_fx/shock_ring",
+    "particle": "circle_of_inevitability:model_fx/shock_ring"
   },
   "elements": [
     {

@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/flame_pillar",
-    "particle": "forgerealmmod:model_fx/flame_pillar"
+    "0": "circle_of_inevitability:model_fx/flame_pillar",
+    "particle": "circle_of_inevitability:model_fx/flame_pillar"
   },
   "elements": [
     {

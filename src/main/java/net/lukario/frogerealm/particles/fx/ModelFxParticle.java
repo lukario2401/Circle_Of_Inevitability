@@ -10,7 +10,7 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Client-side life of one ModelFx: counts its ticks and follows its entity.
- * It is a NO_RENDER particle — ModelFxRenderer draws all of them in one go.
+ * It goes in ModelFxRenderer's particle group, which draws all of them in one go.
  * You shouldn't need to edit this to make new effects — only to add new ModelFx options.
  */
 public class ModelFxParticle extends Particle {
@@ -85,12 +85,12 @@ public class ModelFxParticle extends Particle {
         this.setPos(position.x, position.y, position.z);
     }
 
-    // (26.2: Particle has no render(VertexConsumer, Camera, float) or shouldCull() any more; a NO_RENDER particle
-    // is never drawn or culled, which is what both did here.)
+    // (26.2: Particle has no render(VertexConsumer, Camera, float) or shouldCull() any more; the MODELS group draws
+    // it and never culls it, which is what both did here. NO_RENDER only if that group could not be registered.)
 
     @Override
     public ParticleRenderType getGroup() {
-        return ParticleRenderType.NO_RENDER;
+        return ModelFxRenderer.isRegistered() ? ModelFxRenderer.MODELS : ParticleRenderType.NO_RENDER;
     }
 
     // ---------- used by ModelFxRenderer ----------

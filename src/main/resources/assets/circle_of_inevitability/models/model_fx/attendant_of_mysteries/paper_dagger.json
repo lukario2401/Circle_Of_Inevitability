@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/attendant_of_mysteries/paper_dagger",
-    "particle": "forgerealmmod:model_fx/attendant_of_mysteries/paper_dagger"
+    "0": "circle_of_inevitability:model_fx/attendant_of_mysteries/paper_dagger",
+    "particle": "circle_of_inevitability:model_fx/attendant_of_mysteries/paper_dagger"
   },
   "elements": [
     {

@@ -5,8 +5,8 @@
     16
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/marionette_cross",
-    "particle": "forgerealmmod:model_fx/marionette_cross"
+    "0": "circle_of_inevitability:model_fx/marionette_cross",
+    "particle": "circle_of_inevitability:model_fx/marionette_cross"
   },
   "elements": [
     {

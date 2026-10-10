@@ -2,10 +2,10 @@
 	"format_version": "1.9.0",
 	"credit": "Made with Blockbench",
 	"textures": {
-		"0": "forgerealmmod:model_fx/pale_emperor/obsidian",
-		"2": "forgerealmmod:model_fx/pale_emperor/gold_block",
-		"3": "forgerealmmod:model_fx/pale_emperor/black_concrete",
-		"particle": "forgerealmmod:model_fx/pale_emperor/obsidian"
+		"0": "circle_of_inevitability:model_fx/pale_emperor/obsidian",
+		"2": "circle_of_inevitability:model_fx/pale_emperor/gold_block",
+		"3": "circle_of_inevitability:model_fx/pale_emperor/black_concrete",
+		"particle": "circle_of_inevitability:model_fx/pale_emperor/obsidian"
 	},
 	"elements": [
 		{

@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/orb",
-    "particle": "forgerealmmod:model_fx/orb"
+    "0": "circle_of_inevitability:model_fx/orb",
+    "particle": "circle_of_inevitability:model_fx/orb"
   },
   "elements": [
     {

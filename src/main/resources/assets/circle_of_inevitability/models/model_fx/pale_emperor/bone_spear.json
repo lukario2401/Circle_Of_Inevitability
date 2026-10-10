@@ -1,7 +1,7 @@
 {
   "credit": "ForgeRealm - a spear of bone, 3 blocks long: a notched blade with barbs, a gold socket, two pale feathers (ModelFx). Tip up, for ParticleShapes.modelAlong. Pivot 8,8,8 = the middle of the shaft; the tip is at 8,32,8. Generated",
   "texture_size": [256, 64],
-  "textures": {"0": "forgerealmmod:model_fx/pale_emperor/bone_spear", "particle": "forgerealmmod:model_fx/pale_emperor/bone_spear"},
+  "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/bone_spear", "particle": "circle_of_inevitability:model_fx/pale_emperor/bone_spear"},
   "elements": [
     {"name":"shaft","from":[7.25,-12.0,7.25],"to":[8.75,17.0,8.75],"faces":{"north":{"uv":[0.5,0.0,0.6875,14.5],"texture":"#0"},"south":{"uv":[0.25,0.0,0.4375,14.5],"texture":"#0"},"east":{"uv":[0.75,0.0,0.9375,14.5],"texture":"#0"},"west":{"uv":[0.75,0.0,0.9375,14.5],"texture":"#0"},"up":{"uv":[0.0,0.0,0.1875,0.75],"texture":"#0"},"down":{"uv":[0.0,0.0,0.1875,0.75],"texture":"#0","rotation":180}}},
     {"name":"knot0","from":[6.9,11.0,6.9],"to":[9.1,12.5,9.1],"faces":{"north":{"uv":[1.3125,0.0,1.5625,0.75],"texture":"#0"},"south":{"uv":[1.3125,0.0,1.5625,0.75],"texture":"#0"},"east":{"uv":[1.3125,0.0,1.5625,0.75],"texture":"#0"},"west":{"uv":[1.3125,0.0,1.5625,0.75],"texture":"#0"},"up":{"uv":[1.0,0.0,1.25,1.0],"texture":"#0"},"down":{"uv":[1.0,0.0,1.25,1.0],"texture":"#0","rotation":180}}},

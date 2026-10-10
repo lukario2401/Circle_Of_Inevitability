@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/prince_of_abolition/spear",
-    "particle": "forgerealmmod:model_fx/prince_of_abolition/spear"
+    "0": "circle_of_inevitability:model_fx/prince_of_abolition/spear",
+    "particle": "circle_of_inevitability:model_fx/prince_of_abolition/spear"
   },
   "elements": [
     {

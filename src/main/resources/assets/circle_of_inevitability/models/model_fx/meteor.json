@@ -5,8 +5,8 @@
     32
   ],
   "textures": {
-    "0": "forgerealmmod:model_fx/meteor",
-    "particle": "forgerealmmod:model_fx/meteor"
+    "0": "circle_of_inevitability:model_fx/meteor",
+    "particle": "circle_of_inevitability:model_fx/meteor"
   },
   "elements": [
     {
