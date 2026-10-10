@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-// TODO(stage5): AttendantOfMysteries: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesPaperDagger;
+import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesPaperDagger;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderBuff;
 import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsStarBurst;
 // TODO(stage5): PaleEmperor: import static net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorRoot;
@@ -39,7 +39,7 @@ public class SKeyPressAbilityOneUsed {
         }
 
         keyOfStarsStarBurst(player,level,serverLevel,false);
-        // TODO(stage5): AttendantOfMysteries: attendantOfMysteriesPaperDagger(player,level,serverLevel,false);
+        attendantOfMysteriesPaperDagger(player,level,serverLevel,false);
         // TODO(stage5): PrinceOfAbolition: princeOfAbolitionSpear(player,level,serverLevel,false);
         handOfOrderBuff(player,level,serverLevel,false);
         // TODO(stage5): PaleEmperor: paleEmperorRoot(player,serverLevel,false);
