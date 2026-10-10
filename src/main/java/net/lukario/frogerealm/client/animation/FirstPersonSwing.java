@@ -64,7 +64,7 @@ public final class FirstPersonSwing {
      * 'pose' is already mirrored for the left hand. 'equipProgress' is vanilla's inverse arm height: after every
      * attack vanilla lowers the item by up to 0.6 blocks until the cooldown refills, which would push the whole
      * swing below the screen. It is only applied at rest (pose.weight 0, where vanilla draws it too) and faded
-     * out as the swing starts, while the global offset from SwingAnimations fades in.
+     * out as the swing starts, while the global offset and scale from SwingAnimations fade in.
      */
     static void applyItemTransform(PoseStack poseStack, SwingAnimation.Pose pose, boolean right, float equipProgress) {
         float side = right ? 1 : -1;
@@ -79,7 +79,8 @@ public final class FirstPersonSwing {
         poseStack.mulPose(Axis.ZP.rotationDegrees(pose.itemRoll));
         poseStack.mulPose(Axis.YP.rotationDegrees(pose.itemYaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pose.itemPitch));
-        if (pose.itemScale != 1f) poseStack.scale(pose.itemScale, pose.itemScale, pose.itemScale);
+        float scale = pose.itemScale * (1f + (SwingAnimations.FIRST_PERSON_SCALE - 1f) * weight);
+        if (scale != 1f && scale > 0f) poseStack.scale(scale, scale, scale);
     }
 
     /** The cases where vanilla would draw this item with its plain attack swing (ItemInHandRenderer.submitArmWithItem). */

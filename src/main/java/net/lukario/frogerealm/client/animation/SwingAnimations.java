@@ -13,12 +13,40 @@ import java.util.Set;
  * to tune one, change its numbers. Nothing in the rendering code needs to change. Preview with /swinganim <id>
  * (or /swinganim <id> 4 to watch it four times slower). See docs/ANIMATIONS.md.
  *
- * All swings follow the same rhythm, in the style of the "punchy" combat mods:
- *   wind-up (fast, OUT) -> the cut (very fast, OUT_EXPO) -> follow-through back to rest (IN_OUT).
- * Keyframe times are fractions of the swing (0 = start, 1 = end), so changing the length keeps the rhythm.
+ * Every swing has the same four phases (keyframe times are fractions of the swing, so a new length keeps them):
+ *   wind-up   0 -> ~0.28, easing OUT       the anticipation: the blade is drawn back and slows into the coil
+ *   cut       -> ~0.46,   easing OUT_EXPO  very fast, most of the travel in the first tick
+ *   hold      -> ~0.64,   easing OUT       a short stop at the impact pose (2 to 3 ticks) with a little drift
+ *   recovery  -> 1.00,    easing IN_OUT    smooth return to vanilla's resting pose
  * Pose numbers: see SwingAnimation.Pose for what each one does and which sign goes where.
  */
 public final class SwingAnimations {
+
+    // ---------------------------------------------------------------------------------------------------------------
+    // GLOBAL TUNING: these apply to every swing. Nudge them here; no definition below needs to change.
+    // ---------------------------------------------------------------------------------------------------------------
+
+    /**
+     * First person: where the sword sits while a swing plays, added to vanilla's resting spot (blocks, the camera
+     * looks along -z). x: + = right (mirrored for left-handed players), so negative moves it toward the screen
+     * centre; y: + = up; z: negative = further from the camera. Faded in during the wind-up and out during the
+     * recovery, so a swing still starts and ends exactly where vanilla holds the item.
+     * Typical: x -0.10 .. -0.25, y 0.10 .. 0.25, z -0.10 .. -0.30.
+     */
+    public static final float FIRST_PERSON_OFFSET_X = -0.18f;
+    public static final float FIRST_PERSON_OFFSET_Y = 0.24f;
+    public static final float FIRST_PERSON_OFFSET_Z = -0.25f;
+
+    /** First person: the sword's size during a swing (1 = vanilla), faded in and out like the offset. Typical 1.1 .. 1.4. */
+    public static final float FIRST_PERSON_SCALE = 1.2f;
+
+    /**
+     * Playback speed of every swing, first and third person: 1 = the lengths written below, 0.8 = 25% slower,
+     * 1.25 = 25% faster. Typical 0.75 .. 1.25. Visual only: attack speed, cooldown and damage never change.
+     */
+    public static final float SPEED = 1.0f;
+
+    // ---------------------------------------------------------------------------------------------------------------
 
     public static final String HORIZONTAL = "horizontal";
     public static final String HORIZONTAL_REVERSE = "horizontal_reverse";
@@ -26,16 +54,6 @@ public final class SwingAnimations {
     public static final String DIAGONAL_UP = "diagonal_up";
     public static final String VERTICAL_DOWN = "vertical_down";
     public static final String STAB = "stab";
-
-    /**
-     * First person: where the sword sits while a swing plays, added to vanilla's resting spot (blocks, the camera
-     * looks along -z). x: + = right (mirrored for left-handed players), so negative moves it toward the screen
-     * centre; y: + = up; z: negative = further from the camera. Faded in during the wind-up and out during the
-     * recovery, so a swing still starts and ends exactly where vanilla holds the item.
-     */
-    public static final float FIRST_PERSON_OFFSET_X = -0.18f;
-    public static final float FIRST_PERSON_OFFSET_Y = 0.24f;
-    public static final float FIRST_PERSON_OFFSET_Z = -0.25f;
 
     private static final Map<String, SwingAnimation> BY_ID = new LinkedHashMap<>();
 
@@ -47,70 +65,80 @@ public final class SwingAnimations {
     //  - Third person: arm(pitch, yaw, roll) and body(yaw) move the player model; the held sword follows the arm.
 
     /** Flat cut from right to left at chest height. */
-    public static final SwingAnimation HORIZONTAL_CUT = SwingAnimation.of(HORIZONTAL, 8)    // 8 ticks = 0.4 s
+    public static final SwingAnimation HORIZONTAL_CUT = SwingAnimation.of(HORIZONTAL, 14)       // 0.7 s
             .key(0.00f, Easing.LINEAR, Pose.REST)
             // wind-up: hand drawn to the right, blade level and pointing right;
             // arm low in front and swung outward, chest turned to the sword
-            .key(0.25f, Easing.OUT, Pose.REST.item(0.10f, 0.02f, 0.05f).itemRot(-110, -70, -5)
+            .key(0.28f, Easing.IN_OUT, Pose.REST.item(0.10f, 0.02f, 0.05f).itemRot(-110, -70, -5)
                     .arm(-40, 65, 0).body(20))
             // the cut: the hand crosses to the left of the centre, the blade sweeps through "straight ahead" and
             // ends level, pointing left; arm across the body, chest turned away
-            .key(0.60f, Easing.OUT_EXPO, Pose.REST.item(-0.30f, 0.0f, -0.06f).itemRot(-110, 80, 5)
+            .key(0.46f, Easing.OUT_EXPO, Pose.REST.item(-0.30f, 0.0f, -0.06f).itemRot(-110, 80, 5)
                     .arm(-45, -65, 0).body(-25))
-            // follow-through: settle back to vanilla's resting pose
+            // hold: a few degrees of follow-through, then back to rest
+            .key(0.64f, Easing.OUT, Pose.REST.item(-0.34f, -0.01f, -0.07f).itemRot(-110, 86, 6)
+                    .arm(-45, -72, 0).body(-28))
             .key(1.00f, Easing.IN_OUT, Pose.REST);
 
     /**
      * Backhand: flat cut from left to right. Its own keyframes, not HORIZONTAL_CUT.mirrored(...): a mirrored copy
      * mirrors around the hand, which sits right of the centre, so its cut would end with the tip off the screen.
      */
-    public static final SwingAnimation HORIZONTAL_REVERSE_CUT = SwingAnimation.of(HORIZONTAL_REVERSE, 8)
+    public static final SwingAnimation HORIZONTAL_REVERSE_CUT = SwingAnimation.of(HORIZONTAL_REVERSE, 14)
             .key(0.00f, Easing.LINEAR, Pose.REST)
             // wind-up: hand carried across to the left, blade level and pointing left (you see its other side);
             // arm across the body, chest turned away from the sword
-            .key(0.25f, Easing.OUT, Pose.REST.item(-0.40f, 0.03f, 0.04f).itemRot(-110, 75, 8)
+            .key(0.28f, Easing.IN_OUT, Pose.REST.item(-0.40f, 0.03f, 0.04f).itemRot(-110, 75, 8)
                     .arm(-40, -65, 0).body(-20))
             // the cut: hand back to the right, blade ends level, pointing right; arm swings outward
-            .key(0.60f, Easing.OUT_EXPO, Pose.REST.item(0.04f, -0.01f, -0.06f).itemRot(-110, -70, -5)
+            .key(0.46f, Easing.OUT_EXPO, Pose.REST.item(0.04f, -0.01f, -0.06f).itemRot(-110, -70, -5)
                     .arm(-45, 65, 0).body(25))
+            .key(0.64f, Easing.OUT, Pose.REST.item(0.07f, -0.02f, -0.07f).itemRot(-110, -76, -6)
+                    .arm(-45, 72, 0).body(28))
             .key(1.00f, Easing.IN_OUT, Pose.REST);
 
     /** From high on the right down to low on the left (the sweep tilted by roll +32). */
-    public static final SwingAnimation DIAGONAL_DOWN_CUT = SwingAnimation.of(DIAGONAL_DOWN, 8)
+    public static final SwingAnimation DIAGONAL_DOWN_CUT = SwingAnimation.of(DIAGONAL_DOWN, 14)
             .key(0.00f, Easing.LINEAR, Pose.REST)
             // wind-up: hand up and right, blade pointing up-right; arm high, chest turned to the sword
-            .key(0.25f, Easing.OUT, Pose.REST.item(0.12f, 0.16f, 0.04f).itemRot(-110, -70, 32)
+            .key(0.28f, Easing.IN_OUT, Pose.REST.item(0.12f, 0.16f, 0.04f).itemRot(-110, -70, 32)
                     .arm(-140, 35, 0).body(15))
             // the cut: hand drops to the lower left, blade ends pointing down-left; arm low and across
-            .key(0.60f, Easing.OUT_EXPO, Pose.REST.item(-0.26f, -0.04f, -0.06f).itemRot(-110, 80, 32)
+            .key(0.46f, Easing.OUT_EXPO, Pose.REST.item(-0.26f, -0.04f, -0.06f).itemRot(-110, 80, 32)
                     .arm(-40, -45, 0).body(-20))
+            .key(0.64f, Easing.OUT, Pose.REST.item(-0.29f, -0.06f, -0.07f).itemRot(-110, 86, 34)
+                    .arm(-35, -50, 0).body(-22))
             .key(1.00f, Easing.IN_OUT, Pose.REST);
 
     /** Rising cut from low on the right up to high on the left (roll -20 -> -40: the sweep climbs as it goes). */
-    public static final SwingAnimation DIAGONAL_UP_CUT = SwingAnimation.of(DIAGONAL_UP, 8)
+    public static final SwingAnimation DIAGONAL_UP_CUT = SwingAnimation.of(DIAGONAL_UP, 14)
             .key(0.00f, Easing.LINEAR, Pose.REST)
             // wind-up: hand low on the right, blade pointing down-right; arm low and out
-            .key(0.25f, Easing.OUT, Pose.REST.item(0.12f, -0.02f, 0.04f).itemRot(-110, -70, -20)
+            .key(0.28f, Easing.IN_OUT, Pose.REST.item(0.12f, -0.02f, 0.04f).itemRot(-110, -70, -20)
                     .arm(-25, 40, 0).body(15))
             // the cut: hand rises to the upper left, blade ends pointing up-left; arm high and across
-            .key(0.60f, Easing.OUT_EXPO, Pose.REST.item(-0.26f, 0.18f, -0.06f).itemRot(-110, 80, -40)
+            .key(0.46f, Easing.OUT_EXPO, Pose.REST.item(-0.26f, 0.18f, -0.06f).itemRot(-110, 80, -40)
                     .arm(-145, -40, 0).body(-20))
+            .key(0.64f, Easing.OUT, Pose.REST.item(-0.29f, 0.20f, -0.07f).itemRot(-110, 86, -42)
+                    .arm(-150, -45, 0).body(-22))
             .key(1.00f, Easing.IN_OUT, Pose.REST);
 
     /** Overhead chop straight down the middle (roll 85 turns the sweep upright). */
-    public static final SwingAnimation VERTICAL_DOWN_CUT = SwingAnimation.of(VERTICAL_DOWN, 8)
+    public static final SwingAnimation VERTICAL_DOWN_CUT = SwingAnimation.of(VERTICAL_DOWN, 14)
             .key(0.00f, Easing.LINEAR, Pose.REST)
             // wind-up: hand near the middle, blade raised upright (leaning a little forward so its flat stays lit);
             // arm overhead
-            .key(0.25f, Easing.OUT, Pose.REST.item(-0.06f, 0.02f, 0.0f).itemRot(-110, -75, 85)
+            .key(0.28f, Easing.IN_OUT, Pose.REST.item(-0.06f, 0.02f, 0.0f).itemRot(-110, -75, 85)
                     .arm(-165, 10, 0).body(5))
             // the cut: the blade falls forward until it points straight ahead, hand drops; arm ends low in front
-            .key(0.55f, Easing.OUT_EXPO, Pose.REST.item(-0.14f, -0.08f, -0.08f).itemRot(-110, -12, 85)
+            .key(0.46f, Easing.OUT_EXPO, Pose.REST.item(-0.14f, -0.08f, -0.08f).itemRot(-110, -12, 85)
                     .arm(-20, -10, 0).body(-5))
+            .key(0.58f, Easing.OUT, Pose.REST.item(-0.15f, -0.10f, -0.09f).itemRot(-110, -6, 85)
+                    .arm(-15, -12, 0).body(-6))
             .key(1.00f, Easing.IN_OUT, Pose.REST);
 
     /** Short pull back, then a straight thrust forward. */
-    public static final SwingAnimation STAB_THRUST = SwingAnimation.of(STAB, 7)            // a bit quicker: 0.35 s
+    public static final SwingAnimation STAB_THRUST = SwingAnimation.of(STAB, 12)           // 0.6 s
             .key(0.00f, Easing.LINEAR, Pose.REST)
             // pull back: blade levelled forward (pitch -80), hand drawn toward the camera; arm pulled back low
             .key(0.30f, Easing.OUT, Pose.REST.item(0.03f, -0.05f, 0.15f).itemRot(-80, 10, 0)

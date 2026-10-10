@@ -9,13 +9,15 @@ import java.util.List;
  * Pure data, no rendering: FirstPersonSwing and ThirdPersonSwing read the pose this returns for the current moment.
  * Define new ones in SwingAnimations (the one file to edit), see docs/ANIMATIONS.md.
  *
- *   SwingAnimation.of("my_cut", 8)                                     // id, length in ticks (20 ticks = 1 second)
- *           .key(0.00f, Easing.LINEAR, Pose.REST)                      // starts where vanilla holds the item
- *           .key(0.30f, Easing.OUT, Pose.REST.itemRot(-60, -50, 0))    // wind-up, reached 30% of the way in
- *           .key(0.60f, Easing.OUT_EXPO, Pose.REST.itemRot(-60, 70, 0))// the cut
- *           .key(1.00f, Easing.IN_OUT, Pose.REST);                     // back to rest
+ *   SwingAnimation.of("my_cut", 14)                                         // id, length in ticks (20 ticks = 1 second)
+ *           .key(0.00f, Easing.LINEAR, Pose.REST)                           // starts where vanilla holds the item
+ *           .key(0.28f, Easing.IN_OUT, Pose.REST.itemRot(-110, -70, 0))     // wind-up, reached 28% of the way in
+ *           .key(0.46f, Easing.OUT_EXPO, Pose.REST.itemRot(-110, 80, 0))    // the cut
+ *           .key(0.64f, Easing.OUT, Pose.REST.itemRot(-110, 86, 0))         // hold at the impact pose
+ *           .key(1.00f, Easing.IN_OUT, Pose.REST);                          // recovery back to rest
  *
  * The easing on a keyframe shapes the movement that ENDS at that keyframe.
+ * sample(progress, from) starts the swing from another pose (blending out of an interrupted swing).
  */
 public final class SwingAnimation {
 
@@ -210,26 +212,38 @@ public final class SwingAnimation {
      * after the last one, or if there are no keyframes; never null, never NaN for a finite progress.
      */
     public Pose sample(float progress) {
-        Pose pose = sampleUnmirrored(progress);
+        return sample(progress, null);
+    }
+
+    /**
+     * Like sample(progress), but the swing starts from 'from' (a pose as drawn, mirror included) instead of its own
+     * start pose: the first movement (the wind-up) travels from 'from' to the first keyframe after 0. This is the
+     * blend used when a new swing interrupts one that is still playing. from = null is the same as sample(progress).
+     */
+    public Pose sample(float progress, Pose from) {
+        Pose start = from == null ? null : mirror ? from.mirrored() : from;
+        Pose pose = sampleUnmirrored(progress, start);
         return mirror ? pose.mirrored() : pose;
     }
 
-    private Pose sampleUnmirrored(float progress) {
+    private Pose sampleUnmirrored(float progress, Pose from) {
         if (keyframes.isEmpty() || Float.isNaN(progress)) return Pose.REST;
-        Keyframe first = keyframes.get(0);
-        if (progress <= first.at()) {
-            if (first.at() <= 0f) return first.pose();
-            float t = progress / first.at();
-            return Pose.lerp(Pose.REST, first.pose(), first.easing().apply(t)).withWeight(Pose.weightBetween(Pose.REST, first.pose(), t));
-        }
-        for (int i = 1; i < keyframes.size(); i++) {
-            Keyframe from = keyframes.get(i - 1), to = keyframes.get(i);
-            if (progress <= to.at()) {
-                float span = to.at() - from.at();
-                float t = span <= 0f ? 1f : (progress - from.at()) / span;
-                return Pose.lerp(from.pose(), to.pose(), to.easing().apply(t)).withWeight(Pose.weightBetween(from.pose(), to.pose(), t));
+        // keyframes at 0 are the start pose (the last one wins); without one the swing starts at REST
+        Pose previous = from != null ? from : Pose.REST;
+        float previousAt = 0f;
+        for (Keyframe key : keyframes) {
+            if (key.at() <= 0f) {
+                if (from == null) previous = key.pose();
+                continue;
             }
+            if (progress <= key.at()) {
+                float span = key.at() - previousAt;
+                float t = span <= 0f ? 1f : (progress - previousAt) / span;
+                return Pose.lerp(previous, key.pose(), key.easing().apply(t)).withWeight(Pose.weightBetween(previous, key.pose(), t));
+            }
+            previous = key.pose();
+            previousAt = key.at();
         }
-        return keyframes.get(keyframes.size() - 1).pose();
+        return previous;
     }
 }
