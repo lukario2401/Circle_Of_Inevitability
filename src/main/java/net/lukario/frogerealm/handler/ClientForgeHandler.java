@@ -29,31 +29,31 @@ public class ClientForgeHandler {
         }
         if(Keybindings.INSTANCE.abilityOnePacketKey.consumeClick() && minecraft.player != null) {
 //            minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
-            // TODO(stage5): PacketHandler.sendToServer(new SKeyPressAbilityOneUsed());
+            PacketHandler.sendToServer(new SKeyPressAbilityOneUsed());
         }
         if(Keybindings.INSTANCE.abilityTwoPacketKey.consumeClick() && minecraft.player != null) {
 //            minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
-            // TODO(stage5): PacketHandler.sendToServer(new SKeyPressAbilityTwoUsed());
+            PacketHandler.sendToServer(new SKeyPressAbilityTwoUsed());
         }
         if(Keybindings.INSTANCE.abilityThreePacketKey.consumeClick() && minecraft.player != null) {
 //            minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
-            // TODO(stage5): PacketHandler.sendToServer(new SKeyPressAbilityThreeUsed());
+            PacketHandler.sendToServer(new SKeyPressAbilityThreeUsed());
         }
         if(Keybindings.INSTANCE.abilityFourPacketKey.consumeClick() && minecraft.player != null) {
 //            minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
-            // TODO(stage5): PacketHandler.sendToServer(new SKeyPressAbilityFourUsed());
+            PacketHandler.sendToServer(new SKeyPressAbilityFourUsed());
         }
         if(Keybindings.INSTANCE.abilityFivePacketKey.consumeClick() && minecraft.player != null) {
 //            minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
-            // TODO(stage5): PacketHandler.sendToServer(new SKeyPressAbilityFiveUsed());
+            PacketHandler.sendToServer(new SKeyPressAbilityFiveUsed());
         }
         if(Keybindings.INSTANCE.abilitySixPacketKey.consumeClick() && minecraft.player != null) {
 //            minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
-            // TODO(stage5): PacketHandler.sendToServer(new SKeyPressAbilitySixUsed());
+            PacketHandler.sendToServer(new SKeyPressAbilitySixUsed());
         }
         if(Keybindings.INSTANCE.abilitySevenPacketKey.consumeClick() && minecraft.player != null) {
 //            minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
-            // TODO(stage5): PacketHandler.sendToServer(new SKeyPressAbilitySevenUsed());
+            PacketHandler.sendToServer(new SKeyPressAbilitySevenUsed());
         }
     }
 }
