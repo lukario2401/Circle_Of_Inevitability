@@ -32,7 +32,7 @@ public class ForgeRealm
         // Register the commonSetup method for modloading
         FMLCommonSetupEvent.getBus(modEventBus).addListener(this::commonSetup);
         // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
+        ServerStartingEvent.BUS.addListener(this::onServerStarting);
 
         // TODO(stage4): ModParticles.PARTICLES.register(modEventBus);
         // TODO(stage2): ModEffects.register(modEventBus);
