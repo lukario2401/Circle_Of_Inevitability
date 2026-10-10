@@ -95,7 +95,7 @@ public class SpawnFieldCommand {
         int targetCount = (int) Math.min(area * density, maxCount);
 
         int spawned = 0;
-        Random random = (Random) level.getRandom();
+        var random = level.getRandom();
 
         for (int i = 0; i < targetCount; i++) {
 
