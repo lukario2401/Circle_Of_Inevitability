@@ -1,8 +1,8 @@
 package net.lukario.frogerealm.shadow_slave.soul_shards;
 
 import net.lukario.frogerealm.ForgeRealm;
-// TODO(stage3): import net.lukario.frogerealm.network.CSyncAspectPacket;
-// TODO(stage3): import net.lukario.frogerealm.network.PacketHandler;
+import net.lukario.frogerealm.network.CSyncAspectPacket;
+import net.lukario.frogerealm.network.PacketHandler;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
@@ -30,7 +30,7 @@ public class AspectSync {
         String aspect = SoulCore.getAspect(player);
         if (!aspect.equals(LAST_SENT_ASPECT.get(player.getUUID()))) {
             LAST_SENT_ASPECT.put(player.getUUID(), aspect);
-            // TODO(stage3): PacketHandler.sendToPlayer(new CSyncAspectPacket(aspect), player);
+            PacketHandler.sendToPlayer(new CSyncAspectPacket(aspect), player);
         }
     }
 

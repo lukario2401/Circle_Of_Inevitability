@@ -2,7 +2,7 @@ package net.lukario.frogerealm.events;
 
 
 import net.lukario.frogerealm.ForgeRealm;
-// TODO(stage3): import net.lukario.frogerealm.network.PacketHandler;
+import net.lukario.frogerealm.network.PacketHandler;
 import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraftforge.event.entity.EntityAttributeCreationEvent;
@@ -17,7 +17,7 @@ public class CommonModEvents {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-            // TODO(stage3): PacketHandler.register();
+            PacketHandler.register();
         });
     }
 }
