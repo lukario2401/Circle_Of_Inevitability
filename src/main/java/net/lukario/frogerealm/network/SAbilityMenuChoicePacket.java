@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.network;
 
-// TODO(stage4): import net.lukario.frogerealm.menu.AbilityMenu;
+import net.lukario.frogerealm.menu.AbilityMenu;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.network.CustomPayloadEvent;
@@ -31,6 +31,6 @@ public class SAbilityMenuChoicePacket {
     public void handle(CustomPayloadEvent.Context context) {
         ServerPlayer player = context.getSender();
         if (player == null) return;
-        // TODO(stage4): AbilityMenu.handleChoice(player, menuId, choice);
+        AbilityMenu.handleChoice(player, menuId, choice);
     }
 }

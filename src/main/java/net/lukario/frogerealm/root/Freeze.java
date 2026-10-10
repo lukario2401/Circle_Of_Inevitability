@@ -1,9 +1,9 @@
 package net.lukario.frogerealm.root;
 
 import net.lukario.frogerealm.ForgeRealm;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ModelFx;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleFx;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleShapes;
+import net.lukario.frogerealm.particles.fx.ModelFx;
+import net.lukario.frogerealm.particles.fx.ParticleFx;
+import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -48,26 +48,26 @@ public final class Freeze {
     // ---------- looks ----------
 
     /** See-through ice block, scaled to the entity's size. */
-    // TODO(stage4): public static final ModelFx ICE_SHELL = ModelFx.of("ice_shell")
-            // TODO(stage4): .seeThrough().glow().fadeIn(3).tag(MODEL_TAG);
+    public static final ModelFx ICE_SHELL = ModelFx.of("ice_shell")
+            .seeThrough().glow().fadeIn(3).tag(MODEL_TAG);
 
     /** Glowing crystal cluster that pops out of the ice. */
-    // TODO(stage4): public static final ModelFx ICE_CRYSTALS = ModelFx.of("ice_crystals")
-            // TODO(stage4): .glow().aura(0x5560D8FF, 0.05f, 2).fadeIn(2).tag(MODEL_TAG)
-            // TODO(stage4): .key(0, ModelFx.pose().scale(0.1f))
-            // TODO(stage4): .key(5, ModelFx.pose().scale(1f), ModelFx.Ease.OUT_BACK);
+    public static final ModelFx ICE_CRYSTALS = ModelFx.of("ice_crystals")
+            .glow().aura(0x5560D8FF, 0.05f, 2).fadeIn(2).tag(MODEL_TAG)
+            .key(0, ModelFx.pose().scale(0.1f))
+            .key(5, ModelFx.pose().scale(1f), ModelFx.Ease.OUT_BACK);
 
-    // TODO(stage4): private static final ParticleFx FROST = ParticleFx.of("fx/flake")
-            // TODO(stage4): .color(0xFFE8FBFF).fadeOut()
-            // TODO(stage4): .size(0.08f).endSize(0.03f)
-            // TODO(stage4): .lifetime(16, 8).friction(0.86f).gravity(0.02f)
-            // TODO(stage4): .glow().spin(8f).randomRotation();
+    private static final ParticleFx FROST = ParticleFx.of("fx/flake")
+            .color(0xFFE8FBFF).fadeOut()
+            .size(0.08f).endSize(0.03f)
+            .lifetime(16, 8).friction(0.86f).gravity(0.02f)
+            .glow().spin(8f).randomRotation();
 
-    // TODO(stage4): private static final ParticleFx ICE_SHARD = ParticleFx.of("fx/shard")
-            // TODO(stage4): .color(0xFFF2FCFF).endColor(0x0060D8FF)
-            // TODO(stage4): .size(0.12f).endSize(0.05f).sizeRandom(0.4f)
-            // TODO(stage4): .lifetime(18, 10).gravity(0.9f).friction(0.96f)
-            // TODO(stage4): .glow().collide().spin(25f).randomRotation();
+    private static final ParticleFx ICE_SHARD = ParticleFx.of("fx/shard")
+            .color(0xFFF2FCFF).endColor(0x0060D8FF)
+            .size(0.12f).endSize(0.05f).sizeRandom(0.4f)
+            .lifetime(18, 10).gravity(0.9f).friction(0.96f)
+            .glow().collide().spin(25f).randomRotation();
 
     private Freeze() {}
 
@@ -138,7 +138,7 @@ public final class Freeze {
         target.getPersistentData().remove(TAG);
         if (target instanceof Mob mob) mob.setNoAi(tag.getBooleanOr(WAS_NO_AI, false));
         if (target.level() instanceof ServerLevel sl) {
-            // TODO(stage4): ParticleShapes.clearModels(sl, target, MODEL_TAG);
+            ParticleShapes.clearModels(sl, target, MODEL_TAG);
             shatter(sl, target);
         }
     }
@@ -153,38 +153,38 @@ public final class Freeze {
         float facing = target.yBodyRot;
         RandomSource random = target.getRandom();
 
-        // TODO(stage4): ModelFx shell = ICE_SHELL.scale(width + 0.3f, height + 0.2f, width + 0.3f).lifetime(lifetime).delay(delay);
-        // TODO(stage4): ModelFx crystals = ICE_CRYSTALS.lifetime(lifetime).delay(delay);
-        // TODO(stage4): if (!fresh) {
-            // TODO(stage4): shell = shell.fadeIn(0);
-            // TODO(stage4): crystals = crystals.fadeIn(0).noKeys();
-        // TODO(stage4): }
+        ModelFx shell = ICE_SHELL.scale(width + 0.3f, height + 0.2f, width + 0.3f).lifetime(lifetime).delay(delay);
+        ModelFx crystals = ICE_CRYSTALS.lifetime(lifetime).delay(delay);
+        if (!fresh) {
+            shell = shell.fadeIn(0);
+            crystals = crystals.fadeIn(0).noKeys();
+        }
         float size = Mth.clamp(Math.min(width * 2f, height * 0.9f), 0.5f, 4f);
 
-        // TODO(stage4): ParticleShapes.modelOn(sl, shell, target, new Vec3(0, -0.05, 0), facing, 0, 0);
+        ParticleShapes.modelOn(sl, shell, target, new Vec3(0, -0.05, 0), facing, 0, 0);
 
         // a cluster around the feet, one on the head and one sticking out of each side
-        // TODO(stage4): ParticleShapes.modelOn(sl, crystals.scale(size), target, Vec3.ZERO, random.nextFloat() * 360f, 0, 0);
-        // TODO(stage4): ParticleShapes.modelOn(sl, crystals.scale(size * 0.45f), target, new Vec3(0, height - 0.08, 0),
-                // TODO(stage4): random.nextFloat() * 360f, 0, (random.nextFloat() - 0.5f) * 30f);
+        ParticleShapes.modelOn(sl, crystals.scale(size), target, Vec3.ZERO, random.nextFloat() * 360f, 0, 0);
+        ParticleShapes.modelOn(sl, crystals.scale(size * 0.45f), target, new Vec3(0, height - 0.08, 0),
+                random.nextFloat() * 360f, 0, (random.nextFloat() - 0.5f) * 30f);
         double yawRad = Math.toRadians(facing);
         Vec3 right = new Vec3(-Math.cos(yawRad), 0, -Math.sin(yawRad));
         for (int side = -1; side <= 1; side += 2) {
             Vec3 offset = new Vec3(0, height * 0.62, 0).add(right.scale(side * width * 0.5));
-            // TODO(stage4): ParticleShapes.modelOn(sl, crystals.scale(size * 0.38f), target, offset, facing, 0, side * 60f);
+            ParticleShapes.modelOn(sl, crystals.scale(size * 0.38f), target, offset, facing, 0, side * 60f);
         }
     }
 
     private static void frostBurst(ServerLevel sl, LivingEntity target) {
-        // TODO(stage4): ParticleShapes.burst(sl, FROST, target.getBoundingBox().getCenter(), 16, 0.05, 0.2);
+        ParticleShapes.burst(sl, FROST, target.getBoundingBox().getCenter(), 16, 0.05, 0.2);
         sl.playSound(null, target.blockPosition(), SoundEvents.AMETHYST_CLUSTER_PLACE, SoundSource.PLAYERS, 0.9f, 0.6f);
     }
 
     private static void shatter(ServerLevel sl, LivingEntity target) {
         Vec3 center = target.getBoundingBox().getCenter();
         int count = Mth.clamp((int) (target.getBbWidth() * target.getBbHeight() * 20), 12, 60);
-        // TODO(stage4): ParticleShapes.burst(sl, ICE_SHARD, center, count, 0.12, 0.35);
-        // TODO(stage4): ParticleShapes.burst(sl, FROST, center, count / 2, 0.05, 0.2);
+        ParticleShapes.burst(sl, ICE_SHARD, center, count, 0.12, 0.35);
+        ParticleShapes.burst(sl, FROST, center, count / 2, 0.05, 0.2);
         sl.playSound(null, target.blockPosition(), SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 1f, 1.2f);
         sl.playSound(null, target.blockPosition(), SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS, 0.8f, 0.8f);
     }

@@ -3,8 +3,8 @@ package net.lukario.frogerealm.status;
 import net.lukario.frogerealm.ForgeRealm;
 import net.lukario.frogerealm.network.CConcealPacket;
 import net.lukario.frogerealm.network.PacketHandler;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleFx;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleShapes;
+import net.lukario.frogerealm.particles.fx.ParticleFx;
+import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
@@ -58,11 +58,11 @@ public final class Concealment {
     private static final double FORGET_RANGE = 48.0;    // mobs this close that were hunting it lose track of it
     private static final int REFRESH = 10;              // ticks between reminders to mobs and to the players' games
 
-    // TODO(stage4): private static final ParticleFx FOG = ParticleFx.of("fx/smoke")
-            // TODO(stage4): .color(0xB0C8CCD4).endColor(0x00888C98)
-            // TODO(stage4): .size(0.45f).endSize(1.1f).sizeRandom(0.35f)
-            // TODO(stage4): .lifetime(26, 14).gravity(-0.01f).friction(0.9f)
-            // TODO(stage4): .spin(2f).randomRotation();
+    private static final ParticleFx FOG = ParticleFx.of("fx/smoke")
+            .color(0xB0C8CCD4).endColor(0x00888C98)
+            .size(0.45f).endSize(1.1f).sizeRandom(0.35f)
+            .lifetime(26, 14).gravity(-0.01f).friction(0.9f)
+            .spin(2f).randomRotation();
 
     private Concealment() {}
 
@@ -136,7 +136,7 @@ public final class Concealment {
 
     private static void fog(ServerLevel sl, LivingEntity entity) {
         if (!SHOW_PARTICLES) return;
-        // TODO(stage4): ParticleShapes.burst(sl, FOG, entity.getBoundingBox().getCenter(), 22, 0.02, 0.12);
+        ParticleShapes.burst(sl, FOG, entity.getBoundingBox().getCenter(), 22, 0.02, 0.12);
     }
 
     // =========================

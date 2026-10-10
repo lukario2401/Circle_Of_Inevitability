@@ -1,8 +1,8 @@
 package net.lukario.frogerealm.status;
 
 import net.lukario.frogerealm.ForgeRealm;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleFx;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleShapes;
+import net.lukario.frogerealm.particles.fx.ParticleFx;
+import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -70,11 +70,11 @@ public final class DamageLink {
     private static final Map<UUID, Bond> BONDS = new HashMap<>();           // each member -> the bond it is in
     private static boolean passing;                                         // true while WE are dealing passed-on damage
 
-    // TODO(stage4): private static final ParticleFx PASSED = ParticleFx.of("fx/spark")
-            // TODO(stage4): .color(0xFFFFE9C0).endColor(0x00FF7A5A)
-            // TODO(stage4): .size(0.1f).endSize(0.03f).sizeRandom(0.4f)
-            // TODO(stage4): .lifetime(10, 6).friction(0.88f)
-            // TODO(stage4): .glow().spin(18f).randomRotation();
+    private static final ParticleFx PASSED = ParticleFx.of("fx/spark")
+            .color(0xFFFFE9C0).endColor(0x00FF7A5A)
+            .size(0.1f).endSize(0.03f).sizeRandom(0.4f)
+            .lifetime(10, 6).friction(0.88f)
+            .glow().spin(18f).randomRotation();
 
     private DamageLink() {}
 
@@ -229,7 +229,7 @@ public final class DamageLink {
         } finally {
             passing = false;
         }
-        // TODO(stage4): if (SHOW_PARTICLES) ParticleShapes.burst(sl, PASSED, to.getBoundingBox().getCenter(), 8, 0.04, 0.18);
+        if (SHOW_PARTICLES) ParticleShapes.burst(sl, PASSED, to.getBoundingBox().getCenter(), 8, 0.04, 0.18);
     }
 
     @SubscribeEvent
