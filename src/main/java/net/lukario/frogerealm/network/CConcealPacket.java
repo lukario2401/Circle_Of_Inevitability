@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.network;
 
-// TODO(stage4): import net.lukario.frogerealm.client.ClientConcealment;
+import net.lukario.frogerealm.client.ClientConcealment;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -31,7 +31,7 @@ public class CConcealPacket {
 
     public void handle(CustomPayloadEvent.Context context) {
         if (FMLEnvironment.dist.isClient()) {
-            // TODO(stage4): ClientConcealment.set(entityId, ticks);
+            ClientConcealment.set(entityId, ticks);
         }
     }
 }

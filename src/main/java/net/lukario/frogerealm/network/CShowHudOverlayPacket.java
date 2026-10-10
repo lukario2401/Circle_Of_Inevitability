@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.network;
 
-// TODO(stage4): import net.lukario.frogerealm.client.AbilityHudOverlay;
+import net.lukario.frogerealm.client.AbilityHudOverlay;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -41,7 +41,7 @@ public class CShowHudOverlayPacket {
 
     public void handle(CustomPayloadEvent.Context context) {
         if (FMLEnvironment.dist.isClient()) {
-            // TODO(stage4): AbilityHudOverlay.showNumber(number, color, durationTicks);
+            AbilityHudOverlay.showNumber(number, color, durationTicks);
         }
     }
 }

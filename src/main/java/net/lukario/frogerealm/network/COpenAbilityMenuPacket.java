@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.network;
 
-// TODO(stage4): import net.lukario.frogerealm.client.AbilityMenuScreen;
+import net.lukario.frogerealm.client.AbilityMenuScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.event.network.CustomPayloadEvent;
@@ -54,7 +54,7 @@ public class COpenAbilityMenuPacket {
 
     public void handle(CustomPayloadEvent.Context context) {
         if (FMLEnvironment.dist.isClient()) {
-            // TODO(stage4): AbilityMenuScreen.open(menuId, title, iconSize, options);
+            AbilityMenuScreen.open(menuId, title, iconSize, options);
         }
     }
 }

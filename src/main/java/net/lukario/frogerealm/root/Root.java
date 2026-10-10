@@ -1,8 +1,8 @@
 package net.lukario.frogerealm.root;
 
 import net.lukario.frogerealm.ForgeRealm;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleFx;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleShapes;
+import net.lukario.frogerealm.particles.fx.ParticleFx;
+import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -57,11 +57,11 @@ public final class Root {
     private static final Identifier MOVE_MODIFIER = Identifier.fromNamespaceAndPath(ForgeRealm.MOD_ID, "root_move");
     private static final Identifier JUMP_MODIFIER = Identifier.fromNamespaceAndPath(ForgeRealm.MOD_ID, "root_jump");
 
-    // TODO(stage4): private static final ParticleFx ROOT_MARK = ParticleFx.of("fx/glow")
-            // TODO(stage4): .color(0xFFFFE08A).fadeOut()
-            // TODO(stage4): .size(0.12f).endSize(0.04f)
-            // TODO(stage4): .lifetime(12).friction(1f).gravity(-0.02f)
-            // TODO(stage4): .glow();
+    private static final ParticleFx ROOT_MARK = ParticleFx.of("fx/glow")
+            .color(0xFFFFE08A).fadeOut()
+            .size(0.12f).endSize(0.04f)
+            .lifetime(12).friction(1f).gravity(-0.02f)
+            .glow();
 
     private Root() {}
 
@@ -192,8 +192,8 @@ public final class Root {
 
         if (SHOW_PARTICLES && isRooted(entity) && entity.tickCount % 10 == 0
                 && entity.level() instanceof ServerLevel sl) {
-            // TODO(stage4): ParticleShapes.ring(sl, ROOT_MARK, entity.position().add(0, 0.1, 0),
-                    // TODO(stage4): Math.max(0.5, entity.getBbWidth() * 0.8), 10, 0.0);
+            ParticleShapes.ring(sl, ROOT_MARK, entity.position().add(0, 0.1, 0),
+                    Math.max(0.5, entity.getBbWidth() * 0.8), 10, 0.0);
         }
     }
 

@@ -2,9 +2,9 @@ package net.lukario.frogerealm.status;
 
 import net.minecraft.core.UUIDUtil;
 import net.lukario.frogerealm.ForgeRealm;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ModelFx;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleFx;
-// TODO(stage4): import net.lukario.frogerealm.particles.fx.ParticleShapes;
+import net.lukario.frogerealm.particles.fx.ModelFx;
+import net.lukario.frogerealm.particles.fx.ParticleFx;
+import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -84,16 +84,16 @@ public final class Marionette {
 
     // The model is 28 px (1.75 blocks) from the ends of the strings (its pivot) up to the bar.
     private static final float CROSS_HEIGHT = 28f / 16f;
-    // TODO(stage4): private static final ModelFx CONTROL_CROSS = ModelFx.of("marionette_cross")
-            // TODO(stage4): .glow().aura(0x50E8D8FF, 0.04f, 2).fade(4, 8).spin(1.5f).tag(MODEL_TAG)
-            // TODO(stage4): .key(0, ModelFx.pose().up(1.2f).alpha(0f))
-            // TODO(stage4): .key(8, ModelFx.pose().up(0f).alpha(1f), ModelFx.Ease.OUT_BACK);      // drops into place
+    private static final ModelFx CONTROL_CROSS = ModelFx.of("marionette_cross")
+            .glow().aura(0x50E8D8FF, 0.04f, 2).fade(4, 8).spin(1.5f).tag(MODEL_TAG)
+            .key(0, ModelFx.pose().up(1.2f).alpha(0f))
+            .key(8, ModelFx.pose().up(0f).alpha(1f), ModelFx.Ease.OUT_BACK);      // drops into place
 
-    // TODO(stage4): private static final ParticleFx STRING_SNAP = ParticleFx.of("fx/sliver")
-            // TODO(stage4): .color(0xFFE8E0F8).endColor(0x00786890)
-            // TODO(stage4): .size(0.14f).endSize(0.05f).sizeRandom(0.4f)
-            // TODO(stage4): .lifetime(14, 8).gravity(0.25f).friction(0.9f)
-            // TODO(stage4): .glow().randomRotation();
+    private static final ParticleFx STRING_SNAP = ParticleFx.of("fx/sliver")
+            .color(0xFFE8E0F8).endColor(0x00786890)
+            .size(0.14f).endSize(0.05f).sizeRandom(0.4f)
+            .lifetime(14, 8).gravity(0.25f).friction(0.9f)
+            .glow().randomRotation();
 
     private static final Map<UUID, Set<UUID>> HELD = new HashMap<>();   // master -> its marionettes
     private static boolean aiming;                                      // true while WE are setting a marionette's target
@@ -132,7 +132,7 @@ public final class Marionette {
         HELD.computeIfAbsent(master.getUUID(), id -> new HashSet<>()).add(mob.getUUID());
 
         aim(mob, null);                                     // it forgets whoever it was hunting (often its new master)
-        // TODO(stage4): ParticleShapes.clearModels(sl, mob, MODEL_TAG);     // taken again: one control bar, not two
+        ParticleShapes.clearModels(sl, mob, MODEL_TAG);     // taken again: one control bar, not two
         hangStrings(sl, mob, ticks);
         return true;
     }
@@ -192,8 +192,8 @@ public final class Marionette {
         float width = Mth.clamp(mob.getBbWidth() * 1.5f, 0.9f, 3.2f);
         double waist = mob.getBbHeight() * 0.55;
         float height = (float) ((mob.getBbHeight() - waist + 0.9) / CROSS_HEIGHT);   // the bar hangs 0.9 blocks above the head
-        // TODO(stage4): ModelFx cross = CONTROL_CROSS.scale(width, height, width).lifetime(ticks);
-        // TODO(stage4): ParticleShapes.modelOn(sl, cross, mob, new Vec3(0, waist, 0), mob.yBodyRot, 0f, 0f);
+        ModelFx cross = CONTROL_CROSS.scale(width, height, width).lifetime(ticks);
+        ParticleShapes.modelOn(sl, cross, mob, new Vec3(0, waist, 0), mob.yBodyRot, 0f, 0f);
         sl.playSound(null, mob.blockPosition(), SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 0.9f, 1.6f);
     }
 
@@ -210,11 +210,11 @@ public final class Marionette {
             }
         }
         if (!(mob.level() instanceof ServerLevel sl)) return;
-        // TODO(stage4): ParticleShapes.clearModels(sl, mob, MODEL_TAG);
+        ParticleShapes.clearModels(sl, mob, MODEL_TAG);
         if (!mob.isAlive()) return;
 
         aim(mob, null);
-        // TODO(stage4): ParticleShapes.burst(sl, STRING_SNAP, mob.position().add(0, mob.getBbHeight() + 0.6, 0), 12, 0.03, 0.14);
+        ParticleShapes.burst(sl, STRING_SNAP, mob.position().add(0, mob.getBbHeight() + 0.6, 0), 12, 0.03, 0.14);
         sl.playSound(null, mob.blockPosition(), SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 0.8f, 0.6f);
         if (dies) {
             Player master = holder == null ? null : sl.getPlayerByUUID(holder);

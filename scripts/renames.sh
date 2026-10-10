@@ -7,7 +7,8 @@
 # Keep this list in sync with the API renames table in MIGRATION_NOTES.md.
 # Anything that changes code structure (cancelling events, kill/hurt needing a ServerLevel,
 # multi-line calls) is NOT done here: fix it by hand and note it in MIGRATION_NOTES.md.
-# The phase rules assume Phase.END only (TickEvent.X.Post); a Phase.START check would need .Pre by hand.
+# The phase rules assume Phase.END only (TickEvent.X.Post); a Phase.START check (or a ClientTickEvent listener with
+# no phase check, which ran on both phases) needs .Pre by hand.
 set -eu
 
 root=$(cd "$(dirname "$0")/.." && pwd)
@@ -74,6 +75,17 @@ for f in "$@"; do
         -e 's/\b([a-z]+) -> \1\.hasPermission\(2\)/Commands.hasPermission(Commands.LEVEL_GAMEMASTERS)/g' \
         -e 's/\b([a-z]+) -> \1\.hasPermission\(3\)/Commands.hasPermission(Commands.LEVEL_ADMINS)/g' \
         -e 's/\b([a-z]+) -> \1\.hasPermission\(4\)/Commands.hasPermission(Commands.LEVEL_OWNERS)/g' \
+        -e 's/\bTickEvent\.ClientTickEvent event\b/TickEvent.ClientTickEvent.Post event/g' \
+        -e 's/\.getTimer\(\)\.getGameTimeDeltaPartialTick\(/.getDeltaTracker().getGameTimeDeltaPartialTick(/g' \
+        -e 's/\bTextureSheetParticle\b/SingleQuadParticle/g' \
+        -e 's/\bLightTexture\.FULL_BRIGHT\b/LightCoordsUtil.FULL_BRIGHT/g' \
+        -e 's/^import net\.minecraft\.client\.renderer\.LightTexture;/import net.minecraft.util.LightCoordsUtil;/' \
+        -e '/^\s*RenderSystem\.(enableBlend|disableBlend|defaultBlendFunc)\(\);\s*$/d' \
+        -e 's/\bguiGraphics\.drawString\(/guiGraphics.text(/g' \
+        -e 's/\bguiGraphics\.drawCenteredString\(/guiGraphics.centeredText(/g' \
+        -e 's/\.pose\(\)\.pushPose\(\)/.pose().pushMatrix()/g' \
+        -e 's/\.pose\(\)\.popPose\(\)/.pose().popMatrix()/g' \
+        -e 's/\bMinecraft\.getInstance\(\)\.setScreen\(/Minecraft.getInstance().gui.setScreen(/g' \
         "$abs"
 
     # the UUID rules above need this import

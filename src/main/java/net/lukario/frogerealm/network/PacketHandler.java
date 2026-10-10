@@ -87,11 +87,11 @@ public class PacketHandler {
                 .consumerMainThread(CSyncAspectPacket::handle)
                 .add();
 
-        // TODO(stage4): INSTANCE.messageBuilder(CScreenImagePacket.class, NetworkDirection.PLAY_TO_CLIENT)
-                // TODO(stage4): .encoder(CScreenImagePacket::encode)
-                // TODO(stage4): .decoder(CScreenImagePacket::new)
-                // TODO(stage4): .consumerMainThread(CScreenImagePacket::handle)
-                // TODO(stage4): .add();
+        INSTANCE.messageBuilder(CScreenImagePacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CScreenImagePacket::encode)
+                .decoder(CScreenImagePacket::new)
+                .consumerMainThread(CScreenImagePacket::handle)
+                .add();
 
         INSTANCE.messageBuilder(COpenAbilityMenuPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(COpenAbilityMenuPacket::encode)
@@ -112,11 +112,11 @@ public class PacketHandler {
                 .consumerMainThread(COpenTextPromptPacket::handle)
                 .add();
 
-        // TODO(stage4): INSTANCE.messageBuilder(STextPromptAnswerPacket.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage4): .encoder(STextPromptAnswerPacket::encode)
-                // TODO(stage4): .decoder(STextPromptAnswerPacket::new)
-                // TODO(stage4): .consumerMainThread(STextPromptAnswerPacket::handle)
-                // TODO(stage4): .add();
+        INSTANCE.messageBuilder(STextPromptAnswerPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(STextPromptAnswerPacket::encode)
+                .decoder(STextPromptAnswerPacket::new)
+                .consumerMainThread(STextPromptAnswerPacket::handle)
+                .add();
 
         // Server -> Client: who is hidden (see status/Concealment)
         INSTANCE.messageBuilder(CConcealPacket.class, NetworkDirection.PLAY_TO_CLIENT)

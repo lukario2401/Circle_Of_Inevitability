@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.network;
 
-// TODO(stage4): import net.lukario.frogerealm.client.HudTimerOverlay;
+import net.lukario.frogerealm.client.HudTimerOverlay;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -39,7 +39,7 @@ public class CHudTimerPacket {
 
     public void handle(CustomPayloadEvent.Context context) {
         if (FMLEnvironment.dist.isClient()) {
-            // TODO(stage4): HudTimerOverlay.show(name, label, ticks, color);
+            HudTimerOverlay.show(name, label, ticks, color);
         }
     }
 }

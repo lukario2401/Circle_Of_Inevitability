@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.network;
 
-// TODO(stage4): import net.lukario.frogerealm.client.TextPromptScreen;
+import net.lukario.frogerealm.client.TextPromptScreen;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
@@ -34,7 +34,7 @@ public class COpenTextPromptPacket {
 
     public void handle(CustomPayloadEvent.Context context) {
         if (FMLEnvironment.dist.isClient()) {
-            // TODO(stage4): TextPromptScreen.open(promptId, title, hint);
+            TextPromptScreen.open(promptId, title, hint);
         }
     }
 }
