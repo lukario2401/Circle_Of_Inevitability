@@ -1,7 +1,7 @@
 package net.lukario.frogerealm;
 
 import com.mojang.logging.LogUtils;
-// TODO(stage2): import net.lukario.frogerealm.effects.ModEffects;
+import net.lukario.frogerealm.effects.ModEffects;
 // TODO(stage4): import net.lukario.frogerealm.particles.ModParticles;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -35,7 +35,7 @@ public class ForgeRealm
         ServerStartingEvent.BUS.addListener(this::onServerStarting);
 
         // TODO(stage4): ModParticles.PARTICLES.register(modEventBus);
-        // TODO(stage2): ModEffects.register(modEventBus);
+        ModEffects.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
