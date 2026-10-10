@@ -3,7 +3,7 @@ package net.lukario.frogerealm.combat;
 import net.lukario.frogerealm.ForgeRealm;
 // TODO(stage5): import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries;
 // TODO(stage5): import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder;
-// TODO(stage5): import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars;
+import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars;
 // TODO(stage5): import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor;
 // TODO(stage5): import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition;
 import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
@@ -29,7 +29,7 @@ public final class MeleeCombos {
     static {
         // TODO(stage5): register(HandOfOrder.MELEE_COMBO);
         // TODO(stage5): register(AttendantOfMysteries.MELEE_COMBO);
-        // TODO(stage5): register(KeyOfStars.MELEE_COMBO);
+        register(KeyOfStars.MELEE_COMBO);
         // TODO(stage5): register(PrinceOfAbolition.MELEE_COMBO);
         // TODO(stage5): register(PaleEmperor.MELEE_COMBO);
     }

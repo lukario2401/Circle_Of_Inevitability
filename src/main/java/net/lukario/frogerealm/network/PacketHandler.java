@@ -24,48 +24,48 @@ public class PacketHandler {
                 .consumerMainThread(SKeyPressSpawnEntityPacket::handle)
                 .add();
 
-        // TODO(stage5): INSTANCE.messageBuilder(SKeyPressAbilityOneUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage5): .encoder(SKeyPressAbilityOneUsed::encode)
-                // TODO(stage5): .decoder(SKeyPressAbilityOneUsed::new)
-                // TODO(stage5): .consumerMainThread(SKeyPressAbilityOneUsed::handle)
-                // TODO(stage5): .add();
+        INSTANCE.messageBuilder(SKeyPressAbilityOneUsed.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SKeyPressAbilityOneUsed::encode)
+                .decoder(SKeyPressAbilityOneUsed::new)
+                .consumerMainThread(SKeyPressAbilityOneUsed::handle)
+                .add();
 
-        // TODO(stage5): INSTANCE.messageBuilder(SKeyPressAbilityTwoUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage5): .encoder(SKeyPressAbilityTwoUsed::encode)
-                // TODO(stage5): .decoder(SKeyPressAbilityTwoUsed::new)
-                // TODO(stage5): .consumerMainThread(SKeyPressAbilityTwoUsed::handle)
-                // TODO(stage5): .add();
+        INSTANCE.messageBuilder(SKeyPressAbilityTwoUsed.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SKeyPressAbilityTwoUsed::encode)
+                .decoder(SKeyPressAbilityTwoUsed::new)
+                .consumerMainThread(SKeyPressAbilityTwoUsed::handle)
+                .add();
 
-        // TODO(stage5): INSTANCE.messageBuilder(SKeyPressAbilityThreeUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage5): .encoder(SKeyPressAbilityThreeUsed::encode)
-                // TODO(stage5): .decoder(SKeyPressAbilityThreeUsed::new)
-                // TODO(stage5): .consumerMainThread(SKeyPressAbilityThreeUsed::handle)
-                // TODO(stage5): .add();
+        INSTANCE.messageBuilder(SKeyPressAbilityThreeUsed.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SKeyPressAbilityThreeUsed::encode)
+                .decoder(SKeyPressAbilityThreeUsed::new)
+                .consumerMainThread(SKeyPressAbilityThreeUsed::handle)
+                .add();
 
-        // TODO(stage5): INSTANCE.messageBuilder(SKeyPressAbilityFourUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage5): .encoder(SKeyPressAbilityFourUsed::encode)
-                // TODO(stage5): .decoder(SKeyPressAbilityFourUsed::new)
-                // TODO(stage5): .consumerMainThread(SKeyPressAbilityFourUsed::handle)
-                // TODO(stage5): .add();
+        INSTANCE.messageBuilder(SKeyPressAbilityFourUsed.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SKeyPressAbilityFourUsed::encode)
+                .decoder(SKeyPressAbilityFourUsed::new)
+                .consumerMainThread(SKeyPressAbilityFourUsed::handle)
+                .add();
 
-        // TODO(stage5): INSTANCE.messageBuilder(SKeyPressAbilityFiveUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage5): .encoder(SKeyPressAbilityFiveUsed::encode)
-                // TODO(stage5): .decoder(SKeyPressAbilityFiveUsed::new)
-                // TODO(stage5): .consumerMainThread(SKeyPressAbilityFiveUsed::handle)
-                // TODO(stage5): .add();
+        INSTANCE.messageBuilder(SKeyPressAbilityFiveUsed.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SKeyPressAbilityFiveUsed::encode)
+                .decoder(SKeyPressAbilityFiveUsed::new)
+                .consumerMainThread(SKeyPressAbilityFiveUsed::handle)
+                .add();
 
 
-        // TODO(stage5): INSTANCE.messageBuilder(SKeyPressAbilitySixUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage5): .encoder(SKeyPressAbilitySixUsed::encode)
-                // TODO(stage5): .decoder(SKeyPressAbilitySixUsed::new)
-                // TODO(stage5): .consumerMainThread(SKeyPressAbilitySixUsed::handle)
-                // TODO(stage5): .add();
+        INSTANCE.messageBuilder(SKeyPressAbilitySixUsed.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SKeyPressAbilitySixUsed::encode)
+                .decoder(SKeyPressAbilitySixUsed::new)
+                .consumerMainThread(SKeyPressAbilitySixUsed::handle)
+                .add();
 
-        // TODO(stage5): INSTANCE.messageBuilder(SKeyPressAbilitySevenUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                // TODO(stage5): .encoder(SKeyPressAbilitySevenUsed::encode)
-                // TODO(stage5): .decoder(SKeyPressAbilitySevenUsed::new)
-                // TODO(stage5): .consumerMainThread(SKeyPressAbilitySevenUsed::handle)
-                // TODO(stage5): .add();
+        INSTANCE.messageBuilder(SKeyPressAbilitySevenUsed.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SKeyPressAbilitySevenUsed::encode)
+                .decoder(SKeyPressAbilitySevenUsed::new)
+                .consumerMainThread(SKeyPressAbilitySevenUsed::handle)
+                .add();
 
         // Server -> Client
         INSTANCE.messageBuilder(CShowHudOverlayPacket.class, NetworkDirection.PLAY_TO_CLIENT)
