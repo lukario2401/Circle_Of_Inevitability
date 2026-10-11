@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a black coffin standing upright, gold pictures on its lid, a skeleton inside with a coin on each eye. Frame 0 of 0..3. ModelFx: ModelFx.of(\"pale_emperor/coffin\").frames(4).smooth(), then keys with pose().frame(n). Frame 0 = shut, 3 = the lid swung wide open on its left edge. Lid = north (the front). Pivot 8,-16,8 = the middle of its foot. Generated",
+  "credit": "Circle Of Inevitability - a black coffin standing upright, gold pictures on its lid, a skeleton inside with a coin on each eye. Frame 0 of 0..3. ModelFx: ModelFx.of(\"pale_emperor/coffin\").frames(4).smooth(), then keys with pose().frame(n). Frame 0 = shut, 3 = the lid swung wide open on its left edge. Lid = north (the front). Pivot 8,-16,8 = the middle of its foot. Generated",
   "texture_size": [256, 160],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/coffin", "particle": "circle_of_inevitability:model_fx/pale_emperor/coffin"},
   "elements": [

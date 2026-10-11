@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - one pale feather, stained yellow-green toward its tip, 1.5 blocks long (ModelFx). Tip up, its flat sides north and south. Pivot 8,8,8 = its middle. Generated",
+  "credit": "Circle Of Inevitability - one pale feather, stained yellow-green toward its tip, 1.5 blocks long (ModelFx). Tip up, its flat sides north and south. Pivot 8,8,8 = its middle. Generated",
   "texture_size": [256, 48],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/pale_feather", "particle": "circle_of_inevitability:model_fx/pale_emperor/pale_feather"},
   "elements": [

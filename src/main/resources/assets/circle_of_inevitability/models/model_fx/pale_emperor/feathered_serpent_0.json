@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - the Feathered Serpent rearing out of the ground: gold mask, pale-green eyes, fangs, a collar of pale feathers. Frame 0 of 0..2. ModelFx: ModelFx.of(\"pale_emperor/feathered_serpent\").frames(3).smooth(), then keys with pose().frame(n). Frame 0 = mouth shut and collar laid back, 2 = jaws wide and collar flared. Front = north. Pivot 8,-16,12 = where the neck leaves the ground. Generated",
+  "credit": "Circle Of Inevitability - the Feathered Serpent rearing out of the ground: gold mask, pale-green eyes, fangs, a collar of pale feathers. Frame 0 of 0..2. ModelFx: ModelFx.of(\"pale_emperor/feathered_serpent\").frames(3).smooth(), then keys with pose().frame(n). Frame 0 = mouth shut and collar laid back, 2 = jaws wide and collar flared. Front = north. Pivot 8,-16,12 = where the neck leaves the ground. Generated",
   "texture_size": [256, 176],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/feathered_serpent", "particle": "circle_of_inevitability:model_fx/pale_emperor/feathered_serpent"},
   "elements": [

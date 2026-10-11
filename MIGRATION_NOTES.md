@@ -615,6 +615,15 @@ The progression is now Pathway / Sequence 9..0 / digestion / Spirituality. Histo
   - relog and die/respawn: /sequence info unchanged, HUD line back.
   - no raw lang keys anywhere, none of the words aspect, stage, tier, essence, shard visible.
 
+## Project rename (2026-10-11)
+Everything outside reference/ and the history above now uses the project name Circle Of Inevitability (scripts/rename-project.sh, idempotent, refuses reference/):
+- package net.lukario.frogerealm -> net.lukario.circleofinevitability (folder moved with git mv; build.gradle group too); class ForgeRealm -> CircleOfInevitability.
+- persistent-data tag forgerealmmod (SoulCore.MOD_TAG) -> circle_of_inevitability, and every forgerealm_x key -> circle_of_inevitability_x (combo, root, freeze, blind, concealed, marks, marionette, flight, burial, fall guard, death ward, vulnerable). Old dev saves lose this data (no migration, as agreed). The Sequence rework section above names the keys as they were before this rename.
+- lang key.categories "Forged Realm" and the "ForgeRealm - ..." credits in models/model_fx -> "Circle Of Inevitability".
+- scripts/renames.sh still works for files copied from reference/: it now also maps the package, ForgeRealm and the forgerealm keys (copy into src/main/java/net/lukario/circleofinevitability/...).
+- Kept: reference/, ForgeRealm1 / lukario2401/ForgeRealm1, the old-source path and "the old code's forgerealmmod" in CLAUDE.md, the history in this file.
+- Checked: ./gradlew build, a dedicated GameTest server (runGameTestServer, strict event checks) loads the mod and passes, the resource audit. In game: rebind check (key category reads "Circle Of Inevitability" in Controls).
+
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
 | --- | --- | --- | --- | --- |
@@ -633,3 +642,4 @@ The progression is now Pathway / Sequence 9..0 / digestion / Spirituality. Histo
 | swing animations (feature) | 2026-10-10 | (Luka fills in) | new code, not a port: 10 new Java files (client/animation 9, network/CPlayerAspectPacket 1), about 950 lines; AspectSync +13, PacketHandler +7; docs/ANIMATIONS.md new; CLAUDE.md +1 line | Animations: definitions and registry; Animations: first person; Animations: third person; Animations: docs and debug command; Animations: tune presets after a headless client check; Animations: runtime check notes |
 | swing animations: tuning pass (feature) | 2026-10-10 | (Luka fills in) | new code, not a port: 6 Java files changed in client/animation (SwingAnimation, SwingAnimations, SwingPlayer, FirstPersonSwing, SwingRules, SwingAnimCommand), +2 swings (uppercut, spin_slash), stab rewritten, 5 cuts re-posed; docs/ANIMATIONS.md rewritten; this file | Animations: fix first-person flattening and lighting; Animations: speed and visibility; Animations: three new moves and docs |
 | Sequence rework (feature) | 2026-10-11 | (Luka fills in) | new code, not a port: aspect/stage/tier/essence/shards replaced by Pathway/Sequence/digestion/Spirituality in about 45 files; 7 new Java files (Beyonder, Digestion, DigestionRates, AdvancementRequirement, SequenceCommands, SequenceHudLine, plus SoulCommands trimmed); scripts/rename-sequence.sh; docs/SEQUENCES.md | Sequence: rename and storage / digestion and commands / spirituality and display text / docs |
+| Project rename | 2026-10-11 | (Luka fills in) | rename only: package net.lukario.circleofinevitability, class CircleOfInevitability, data keys circle_of_inevitability(_x), credits and lang text; scripts/rename-project.sh | Rename project name |

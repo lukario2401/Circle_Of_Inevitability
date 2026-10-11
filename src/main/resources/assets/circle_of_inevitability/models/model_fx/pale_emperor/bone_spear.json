@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a spear of bone, 3 blocks long: a notched blade with barbs, a gold socket, two pale feathers (ModelFx). Tip up, for ParticleShapes.modelAlong. Pivot 8,8,8 = the middle of the shaft; the tip is at 8,32,8. Generated",
+  "credit": "Circle Of Inevitability - a spear of bone, 3 blocks long: a notched blade with barbs, a gold socket, two pale feathers (ModelFx). Tip up, for ParticleShapes.modelAlong. Pivot 8,8,8 = the middle of the shaft; the tip is at 8,32,8. Generated",
   "texture_size": [256, 64],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/bone_spear", "particle": "circle_of_inevitability:model_fx/pale_emperor/bone_spear"},
   "elements": [

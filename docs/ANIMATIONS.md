@@ -3,7 +3,7 @@
 Custom weapon swings (horizontal, diagonal and vertical cuts, a stab, an uppercut, a wide spin slash)
 that replace vanilla's up-and-down arm swing, in first person and in third person. They are visual
 only: damage, cooldowns, attack speed and hit detection are untouched. All code is client-only and
-lives in `src/main/java/net/lukario/frogerealm/client/animation/`.
+lives in `src/main/java/net/lukario/circleofinevitability/client/animation/`.
 
 Today one rule uses it: a **Worm Of Time** player holding a sword (`minecraft:swords` item tag)
 cycles through all eight swings (see [The eight swings](#the-eight-swings)).

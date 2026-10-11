@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a giant skull: a band of pale-green mosaic edged in gold, a light in each eye, two gold teeth. Frame 2 of 0..2. ModelFx: ModelFx.of(\"pale_emperor/death_skull\").frames(3).smooth(), then keys with pose().frame(n). Frame 0 = teeth clenched, 2 = jaw dropped wide. Face = north. Pivot 8,8,8 = its middle. Generated",
+  "credit": "Circle Of Inevitability - a giant skull: a band of pale-green mosaic edged in gold, a light in each eye, two gold teeth. Frame 2 of 0..2. ModelFx: ModelFx.of(\"pale_emperor/death_skull\").frames(3).smooth(), then keys with pose().frame(n). Frame 0 = teeth clenched, 2 = jaw dropped wide. Face = north. Pivot 8,8,8 = its middle. Generated",
   "texture_size": [256, 240],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/death_skull", "particle": "circle_of_inevitability:model_fx/pale_emperor/death_skull"},
   "elements": [

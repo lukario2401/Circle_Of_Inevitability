@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - the hand of the Pale Emperor: bleached bone, gold talons and rings, a feathered serpent round the wrist. Frame 0 of 0..4 (0 = wide open, 4 = clenched). ModelFx: ModelFx.of(\"pale_emperor/emperor_hand\").frames(5).smooth(), then keys with pose().frame(n). Palm = north, thumb = +x. Pivot 8,-16,8 = the cut end of the forearm. Generated",
+  "credit": "Circle Of Inevitability - the hand of the Pale Emperor: bleached bone, gold talons and rings, a feathered serpent round the wrist. Frame 0 of 0..4 (0 = wide open, 4 = clenched). ModelFx: ModelFx.of(\"pale_emperor/emperor_hand\").frames(5).smooth(), then keys with pose().frame(n). Palm = north, thumb = +x. Pivot 8,-16,8 = the cut end of the forearm. Generated",
   "texture_size": [
     256,
     64

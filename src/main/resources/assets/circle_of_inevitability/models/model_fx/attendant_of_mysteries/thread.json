@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a taut thread (ModelFx), white: tint it with .color. 3 blocks long, fades out toward its top. Pivot 8,-16,8 = its lower end. Stretch it with .scale(width, length, width)",
+  "credit": "Circle Of Inevitability - a taut thread (ModelFx), white: tint it with .color. 3 blocks long, fades out toward its top. Pivot 8,-16,8 = its lower end. Stretch it with .scale(width, length, width)",
   "texture_size": [
     4,
     32

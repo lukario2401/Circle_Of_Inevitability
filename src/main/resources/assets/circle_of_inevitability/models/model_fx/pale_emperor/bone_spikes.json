@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a cluster of bone spikes breaking out of the ground, 3 blocks tall (ModelFx). Pivot 8,-16,8 = the base of the tallest spike. Generated",
+  "credit": "Circle Of Inevitability - a cluster of bone spikes breaking out of the ground, 3 blocks tall (ModelFx). Pivot 8,-16,8 = the base of the tallest spike. Generated",
   "texture_size": [256, 96],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/bone_spikes", "particle": "circle_of_inevitability:model_fx/pale_emperor/bone_spikes"},
   "elements": [

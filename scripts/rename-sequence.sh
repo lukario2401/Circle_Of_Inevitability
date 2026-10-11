@@ -18,7 +18,7 @@ root=$(cd "$(dirname "$0")/.." && pwd)
 cd "$root"
 case "$(pwd)" in */reference|*/reference/*) echo "refusing to run inside reference/" >&2; exit 1 ;; esac
 
-J=src/main/java/net/lukario/frogerealm
+J=src/main/java/net/lukario/circleofinevitability
 A=src/main/resources/assets/circle_of_inevitability
 
 mv_if() { # git mv only when the source still exists (idempotent)
@@ -101,7 +101,7 @@ find src -type f \( -name '*.java' -o -name '*.json' \) | sort | while read -r f
         # methods, fields, keys
         s/\bgetAspect\b/getPathway/g; s/\bsetAspect\b/setPathway/g; s/\bhasAspect\b/hasPathway/g;
         s/\baspectOf\b/pathwayOf/g; s/\bforAspect\b/forPathway/g;
-        s/\bASPECT_KEY\b/PATHWAY_KEY/g; s/forgerealm_combo_aspect/forgerealm_combo_pathway/g;
+        s/\bASPECT_KEY\b/PATHWAY_KEY/g; s/circle_of_inevitability_combo_aspect/circle_of_inevitability_combo_pathway/g;
         s/\bLAST_SENT_ASPECT\b/LAST_SENT_PATHWAY/g; s/onAspectSync/onPathwaySync/g;
         s/\bASPECTS\b/PATHWAYS/g; s/\bASPECT\b/PATHWAY/g;
         s/aspect_icons/pathway_icons/g;
@@ -120,8 +120,8 @@ find src -type f \( -name '*.java' -o -name '*.json' \) | sort | while read -r f
 done
 # the gates use Beyonder: import it next to SoulCore where needed
 grep -rl 'Beyonder\.' src --include='*.java' | while read -r f; do
-    grep -q '^package net.lukario.frogerealm.shadow_slave.beyonder;' "$f" && continue
-    grep -q '^import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;' "$f" && continue
-    sed -i '0,/^import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;/s//import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;\nimport net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;/' "$f"
+    grep -q '^package net.lukario.circleofinevitability.shadow_slave.beyonder;' "$f" && continue
+    grep -q '^import net.lukario.circleofinevitability.shadow_slave.beyonder.Beyonder;' "$f" && continue
+    sed -i '0,/^import net.lukario.circleofinevitability.shadow_slave.beyonder.SoulCore;/s//import net.lukario.circleofinevitability.shadow_slave.beyonder.Beyonder;\nimport net.lukario.circleofinevitability.shadow_slave.beyonder.SoulCore;/' "$f"
 done
 echo "rename-sequence: done"

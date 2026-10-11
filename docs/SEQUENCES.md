@@ -13,7 +13,7 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 | power level | The old ascension level, `9 - Sequence` kept within 1..8. Used only for scaling (maximum spirituality, regen, Key Of Stars star cap), never for gates. | `Beyonder.powerLevel` |
 | power scale | The old tier multiplier (1..7, used to be set by hand), now `9 - Sequence` at most 7. | `Beyonder.powerScale` |
 
-All of it is saved in the player's persistent data under the tag `forgerealmmod` (keys `pathway`, `sequence`, `digestion`, `spirituality`), which is copied on death (`SoulCore.onPlayerClone`) and saved with the player, so it survives death, respawn and relog. The client gets Pathway, Sequence and digestion (whole percent) through `CSyncPathwayPacket`, sent by `PathwaySync` whenever one of them changes.
+All of it is saved in the player's persistent data under the tag `circle_of_inevitability` (keys `pathway`, `sequence`, `digestion`, `spirituality`), which is copied on death (`SoulCore.onPlayerClone`) and saved with the player, so it survives death, respawn and relog. The client gets Pathway, Sequence and digestion (whole percent) through `CSyncPathwayPacket`, sent by `PathwaySync` whenever one of them changes.
 
 Ability gates read naturally: `if (!Beyonder.hasSequence(player, 6)) return;` means "needs Sequence 6 or stronger".
 

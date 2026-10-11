@@ -62,7 +62,7 @@
   "effect.circle_of_inevitability.ruin_blade_cataclysm": "Ruin Blade Cataclysm",
   "key.circle_of_inevitability.dash": "Dash",
   "key.circle_of_inevitability.star_burst": "Star Burst",
-  "key.categories.circle_of_inevitability": "Forged Realm",
+  "key.categories.circle_of_inevitability": "Circle Of Inevitability",
   "message.circle_of_inevitability.sequence.advanced": "You advance to Sequence %s of the %s Pathway. Your spirituality deepens.",
   "message.circle_of_inevitability.sequence.at_strongest": "You are already at Sequence 0. There is no Sequence beyond it.",
   "message.circle_of_inevitability.sequence.not_digested": "Your current Sequence is only %s%% digested. Reach 100%% before advancing.",
