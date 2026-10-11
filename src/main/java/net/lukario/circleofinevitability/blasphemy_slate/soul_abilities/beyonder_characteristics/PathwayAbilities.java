@@ -127,7 +127,7 @@ public final class PathwayAbilities {
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility1(player, level, sl, true)),
             new Ability("Worm Of Time", 2, "Theft", 8, SNEAK, OWN_PATHWAY_ONLY,           // the theft itself is not stolen
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility2(player, level, sl, true)),
-            new Ability("Worm Of Time", 3, "Parasite", 4, SNEAK, OWN_PATHWAY_ONLY,        // its sneak form is the way back out, and only this Pathway has that key
+            new Ability("Worm Of Time", 3, "Parasite", 4, NO_SNEAK, OWN_PATHWAY_ONLY,     // the same key is the way back out, and only this Pathway has it
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility3(player, level, sl, true)));
 
     private PathwayAbilities() {}
