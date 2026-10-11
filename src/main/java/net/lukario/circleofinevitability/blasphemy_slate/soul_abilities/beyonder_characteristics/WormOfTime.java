@@ -34,8 +34,8 @@ public class WormOfTime {
     private static final SlashFx COMBO_RING = SlashFx.arc("slash/band")
             .color(COMBO_MID).tailColor(COMBO_TAIL).headColor(COMBO_HEAD)
             .translucent()
-            .radius(2.6f).arc(320f).width(1.1f).taper(SlashFx.Taper.COMET)
-            .layers(3).spread(0.28f)
+            .radius(3.6f).arc(320f).width(1.2f).taper(SlashFx.Taper.COMET)
+            .layers(4).spread(0.48f)
             .lifetime(12).sweep(5).spin(10f);             // draws itself, keeps spinning, then wipes away
 
 
@@ -43,23 +43,7 @@ public class WormOfTime {
     private static final SlashFx COMBO_TILTED_RING = COMBO_RING
             .radius(2.4f).arc(-270f).width(1.2f)          // negative arc = sweeps the other way
             .sweep(4).spin(-8f)
-            .rotation(0f, 0, 0);                     // big arch over and around you, tilted
-
-    private static final SlashFx COMBO_TILTED_RING_2 = COMBO_RING
-            .radius(2.4f).arc(-270f).width(1.2f)          // negative arc = sweeps the other way
-            .sweep(4).spin(-8f)
-            .rotation(0f, 30f, 0);
-
-    private static final SlashFx COMBO_TILTED_RING_3 = COMBO_RING
-            .radius(2.4f).arc(-270f).width(1.2f)          // negative arc = sweeps the other way
-            .sweep(4).spin(-8f)
-            .rotation(0f, 0, 30f);
-
-    private static final SlashFx COMBO_TILTED_RING_4 = COMBO_RING
-            .radius(2.4f).arc(-270f).width(1.2f)          // negative arc = sweeps the other way
-            .sweep(4).spin(-8f)
-            .rotation(0f, 30f, 30f);
-
+            .rotation(0f, 0, -45);                     // big arch over and around you, tilted
 
 
     private static final SlashFx COMBO_GROUND_SPIRAL = COMBO_RING.flat()
@@ -78,13 +62,12 @@ public class WormOfTime {
     private static final ParticleFx COMBO_STAR_WHITE = COMBO_STAR.color(0xFFFFFFFF).fadeOut();
 
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
-//            .step(WormOfTime::comboRing)
+            .step(WormOfTime::comboRing)
             .step(WormOfTime::comboTiltedRing)
-            .step(WormOfTime::comboTiltedRing_2)
-            .step(WormOfTime::comboTiltedRing_3)
-            .step(WormOfTime::comboTiltedRing_4)
-//            .randomStep(WormOfTime::comboGroundSpiral, WormOfTime::comboCrystalCross)
-            ;
+            .step(WormOfTime::comboTiltedRing)
+            .step(WormOfTime::comboTiltedRing)
+            .step(WormOfTime::comboCrystalCross)
+            .randomStep(WormOfTime::comboGroundSpiral, WormOfTime::comboCrystalCross);
 
     public static void wormOfTimeAbility1(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
@@ -148,31 +131,11 @@ public class WormOfTime {
     private static void comboTiltedRing(ServerPlayer player, LivingEntity target, ServerLevel sl) {
         Vec3 center = player.position().add(0, 1.1, 0);
         // tilted to the left or right side (mirrored), leaning a bit more or less each time
-        SlashFx ring = COMBO_TILTED_RING.varied(player.getRandom(), 25f, 10f, 15f);
+        SlashFx ring = COMBO_TILTED_RING.varied(player.getRandom(), 45f, 45f, 45f);
         ParticleShapes.slash(sl, ring, center, player.getYRot(), 0f, 0f);
         sl.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1f, 1.1f);
     }
-    private static void comboTiltedRing_2(ServerPlayer player, LivingEntity target, ServerLevel sl) {
-        Vec3 center = player.position().add(0, 1.1, 0);
-        // tilted to the left or right side (mirrored), leaning a bit more or less each time
-        SlashFx ring = COMBO_TILTED_RING_2.varied(player.getRandom(), 25f, 10f, 15f);
-        ParticleShapes.slash(sl, ring, center, player.getYRot(), 0f, 0f);
-        sl.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1f, 1.1f);
-    }
-    private static void comboTiltedRing_3(ServerPlayer player, LivingEntity target, ServerLevel sl) {
-        Vec3 center = player.position().add(0, 1.1, 0);
-        // tilted to the left or right side (mirrored), leaning a bit more or less each time
-        SlashFx ring = COMBO_TILTED_RING_3.varied(player.getRandom(), 25f, 10f, 15f);
-        ParticleShapes.slash(sl, ring, center, player.getYRot(), 0f, 0f);
-        sl.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1f, 1.1f);
-    }
-    private static void comboTiltedRing_4(ServerPlayer player, LivingEntity target, ServerLevel sl) {
-        Vec3 center = player.position().add(0, 1.1, 0);
-        // tilted to the left or right side (mirrored), leaning a bit more or less each time
-        SlashFx ring = COMBO_TILTED_RING_4.varied(player.getRandom(), 25f, 10f, 15f);
-        ParticleShapes.slash(sl, ring, center, player.getYRot(), 0f, 0f);
-        sl.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1f, 1.1f);
-    }
+
 
     // Hit 3 (a): spiral whirling on the ground around the player
     private static void comboGroundSpiral(ServerPlayer player, LivingEntity target, ServerLevel sl) {
