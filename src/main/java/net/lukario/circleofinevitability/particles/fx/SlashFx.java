@@ -53,7 +53,9 @@ import java.util.Locale;
  *   pitch = tilt up/down: -90 stands the arc up so it faces the viewer (a "moon")
  *   roll  = tilt around the facing direction: 0 = flat/horizontal swing, 90 = vertical chop, -40 = rising diagonal
  *
- * Test in game:
+ * Test in game (docs/SLASH_FX.md): play a constant from the code and change its numbers on the spot
+ *   /slashfx WormOfTime.COMBO_TILTED_RING_4 pitch 45 roll 20
+ * or with the game's own command, every value written out:
  *   /particle circle_of_inevitability:slash{color:"E070F0E0",core_color:"FFFFFFFF",arc:170f,radius:1.8f,width:0.9f,layers:3} ~ ~1 ~ 0 0 0 0 1
  */
 public final class SlashFx implements ParticleOptions {

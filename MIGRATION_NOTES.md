@@ -641,6 +641,18 @@ Everything outside reference/ and the history above now uses the project name Ci
 - Checked by a script (scratchpad, not committed) against src: every Class.member the two files name exists (358), every call has an argument count the method takes (230), every bare method, constant, path and model name resolves, the model table lists every model file with the right .frames(n). Not checked in the game: nothing here was built or run (Java 21, no Forge access), and the lines about how things look (shading, the aura in front of water, shimmer, the 10% opacity cut) come from the code and the stage-7 notes, not from looking.
 - Left alone: the ModelFx class comment still says "Java models can only use ... -16..32 pixels, and per-cube rotations of -45/-22.5/0/22.5/45"; that is Blockbench's limit, not the loader's. Found while reading: HAND_OF_ORDER_SWORD's aura colour is 0xff0000 (alpha 0), so that aura never shows; it was the same in the 1.21 code.
 
+## /slashfx: trying slashes in the game (2026-10-11; how-to in docs/SLASH_FX.md)
+- New: particles/fx/SlashFxCommand (server command, op level 2 like /palefx). /slashfx <Class.CONSTANT> plays that SlashFx constant around the player, turned the way they look, three times; pairs after the name change its values for that showing only (radius 3 pitch 45 ...: the names of the SlashFx methods, plus yaw / pitch / roll), and slow / times / height / ahead say how it is shown. The changed part goes to chat as Java, the whole slash to the log. arc and line start a new one from the defaults.
+- The names come from the static SlashFx fields of the classes in SlashFxCommand.SOURCES (read with reflection, private ones too). A new Pathway class goes into that list.
+- No ability, constant or network code changed; SlashFx only got two comment lines. The command shows a slash and changes nothing.
+- NOT built: Java 21 and no Forge access in this session again. Compiled and run against stand-in classes with the real SlashFx and the real WormOfTime constants (names found, values parsed, mistakes refused, Java text, what is played and when, TAB). It uses only calls the mod already makes (Commands.literal / argument, StringArgumentType.word, SharedSuggestionProvider.suggest, sendSuccess / sendFailure, Later.run, ParticleShapes.slash) plus three from Brigadier that are new here: StringArgumentType.greedyString(), SuggestionsBuilder.getRemaining() / getStart() / createOffset(int). Run ./gradlew build.
+- In-game check list (runClient, cheats on):
+  - /slashfx then TAB: the names (AttendantOfMysteries.DAGGER_STREAK ... WormOfTime.COMBO_TILTED_RING_4, arc, line); typing COMBO narrows it.
+  - /slashfx WormOfTime.COMBO_TILTED_RING_4: the ring shows around you three times, about a second apart; walk away and it stays where you stood. Chat: "Playing ... as it is in the code."
+  - the same with "pitch 45 roll 20 slow 4": tilted differently and four times slower; chat shows .rotation(0f, 45f, 20f); the Run window has the whole SlashFx.arc(...) chain.
+  - TAB after the name lists the words; after "taper " it lists crescent, comet, uniform.
+  - "/slashfx WormOfTime.COMBO_RING radius big": one red line, nothing played.
+
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
 | --- | --- | --- | --- | --- |
@@ -662,3 +674,4 @@ Everything outside reference/ and the history above now uses the project name Ci
 | Project rename | 2026-10-11 | (Luka fills in) | rename only: package net.lukario.circleofinevitability, class CircleOfInevitability, data keys circle_of_inevitability(_x), credits and lang text; scripts/rename-project.sh | Rename project name |
 | Sequence passives (feature) | 2026-10-11 | (Luka fills in) | new code, not a port: 1 new Java file (blasphemy_slate/beyonder/SequencePassives, about 130 lines); docs/SEQUENCES.md (Passives, the table of numbers); this file | Sequence passives: Saturation from Sequence 4 |
 | Docs: SPELL_KIT.md, MODEL_FX.md | 2026-10-11 | (Luka fills in) | no Java: docs/SPELL_KIT.md (about 950 lines) and docs/MODEL_FX.md (about 560 lines), from the 1.21 guides, brought up to this code; this file | Docs: SPELL_KIT.md and MODEL_FX.md for the 26.2 code |
+| /slashfx (feature) | 2026-10-11 | (Luka fills in) | new code, not a port: 1 new Java file (particles/fx/SlashFxCommand, about 450 lines); 2 comment lines in SlashFx; docs/SLASH_FX.md; this file | Slash tuning: /slashfx plays a SlashFx constant with changed values |
