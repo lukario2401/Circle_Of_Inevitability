@@ -10,33 +10,35 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
-| power level | The old ascension level, `9 - Sequence` kept within 1..8. Used only for scaling (maximum spirituality, regen, Key Of Stars star cap), never for gates. | `Beyonder.powerLevel` |
-| power scale | The old tier multiplier (1..7, used to be set by hand), now `9 - Sequence` at most 7. | `Beyonder.powerScale` |
+| power level | 1 at Sequence 9 up to 8 at Sequence 2 (see the table below). Used only for scaling (Key Of Stars star cap), never for gates. | `Beyonder.powerLevel` |
+| power scale | The power level capped at 7. | `Beyonder.powerScale` |
 
 All of it is saved in the player's persistent data under the tag `circle_of_inevitability` (keys `pathway`, `sequence`, `digestion`, `spirituality`), which is copied on death (`SoulCore.onPlayerClone`) and saved with the player, so it survives death, respawn and relog. The client gets Pathway, Sequence and digestion (whole percent) through `CSyncPathwayPacket`, sent by `PathwaySync` whenever one of them changes.
 
 Ability gates read naturally: `if (!Beyonder.hasSequence(player, 6)) return;` means "needs Sequence 6 or stronger".
 
-## Old stage to Sequence
+## The numbers of every Sequence
 
-The old ascension stage ran 1..8 (default 1); Sequence = 9 - stage. A gate `stage >= N` became `Beyonder.hasSequence(player, 9 - N)`.
+One table in `Beyonder` (`SEQUENCES`, one row per Sequence) holds them. To rebalance a Sequence, change its row there and here.
 
-| Old stage | Sequence | Power level | Power scale | Max spirituality | Regen per tick |
-| --- | --- | --- | --- | --- | --- |
-| (none, 0) | 9 | 1 | 1 | 20 | 0.14 |
-| 1 | 8 | 1 | 1 | 20 | 0.14 |
-| 2 | 7 | 2 | 2 | 400 | 1.33 |
-| 3 | 6 | 3 | 3 | 1980 | 5.4 |
-| 4 | 5 | 4 | 4 | 6400 | 16 |
-| 5 | 4 | 5 | 5 | 15500 | 41.7 |
-| 6 | 3 | 6 | 6 | 32400 | 108 |
-| 7 | 2 | 7 | 7 | 59780 | 343 |
-| 8 | 1 | 8 | 7 | 78400 | refills at once |
-| (none, 9) | 0 | 8 | 7 | 78400 | refills at once |
+| Sequence | Power level | Power scale | Max spirituality | Regen per tick |
+| --- | --- | --- | --- | --- |
+| 9 | 1 | 1 | 20 | 0.14 |
+| 8 | 2 | 2 | 400 | 1.33 |
+| 7 | 3 | 3 | 1980 | 5.4 |
+| 6 | 4 | 4 | 6400 | 16 |
+| 5 | 5 | 5 | 15500 | 41.7 |
+| 4 | 6 | 6 | 32400 | 108 |
+| 3 | 7 | 7 | 59780 | 343 |
+| 2 | 8 | 7 | 78400 | refills at once |
+| 1 | 8 | 7 | 78400 | refills at once |
+| 0 | 8 | 7 | 78400 | refills at once |
 
-Maximum spirituality is the old formula with a full bar of the removed soul-shard resource: `((250 x scale x level) / 100) x (level x 10) x scale` (integer steps as before). Regen is the old `scale x scale x level / (8 - level)`. Sequences 2, 1 and 0 unlock no new abilities yet.
+Sequences 1 and 0 have no numbers of their own yet and repeat Sequence 2; they also unlock no new abilities yet. "Refills at once" is a full bar every tick.
 
-Note: most abilities cost 250 or more, so at Sequences 9 and 8 (maximum 20) they cannot be paid for. That is what the old formulas give at the old stage 1 and tier 1.
+Where the numbers come from: the old ascension stage ran 1..8. Sequence 9 has the numbers of old stage 1, Sequence 8 of stage 2, down to Sequence 2 with stage 8 (changed on 2026-10-11; before that Sequence 9 and 8 shared the stage 1 numbers). The ability gates did not move with them: a gate `stage >= N` is still `Beyonder.hasSequence(player, 9 - N)`.
+
+Note: most abilities cost 250 or more, so at Sequence 9 (maximum 20) they cannot be paid for. Sequence 8 (maximum 400) is the first that can.
 
 ## Required Sequence of every ability key
 
@@ -53,9 +55,34 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one).
 
+## Passives
+
+What a Beyonder always has from a Sequence on (that Sequence and every stronger one), with no key press and no spirituality cost. All of them are one list at the top of `blasphemy_slate/beyonder/SequencePassives.java`.
+
+| Passive | Who | From Sequence |
+| --- | --- | --- |
+| Saturation I (never hungry; vanilla also heals quickly while saturated) | every Pathway | 4 |
+
+To add one, add a line to that list (and a row here):
+
+```java
+effect(4, MobEffects.SATURATION);                           // every Pathway, from Sequence 4, level I
+effect(6, MobEffects.NIGHT_VISION, 1);                      // the last number is the level: 0 = I, 1 = II
+effect("Pale Emperor", 5, MobEffects.FIRE_RESISTANCE, 0);   // one Pathway only (the exact Pathway name)
+custom(3, player -> player.clearFire());                    // anything that is not a potion effect
+custom("Key Of Stars", 2, player -> { ... });               // the same for one Pathway
+```
+
+How they behave:
+- Checked once a second (`CHECK_EVERY_TICKS`) on the server for every living player. A `custom` action runs at every check while the player has the Sequence, so write it so that running it again changes nothing.
+- An effect is given for `EFFECT_TICKS` (30 seconds) and given again when half is left, with no particles; `SHOW_ICON` decides whether its icon shows. Milk, death or an ability that strips effects only removes it until the next check.
+- A stronger or longer effect of the same kind from somewhere else (a potion, an ability) is left alone.
+- When the player no longer has the Sequence or the Pathway (only commands can do that), the effect runs out on its own within `EFFECT_TICKS`. A `custom` action just stops, so use it for things that need no undoing.
+- A misspelt Pathway name stops the game with a message that lists the valid names, instead of a passive that silently never works.
+
 ## Digestion
 
-Digestion rises from three sources, all in `shadow_slave/beyonder/DigestionRates.java`:
+Digestion rises from three sources, all in `blasphemy_slate/beyonder/DigestionRates.java`:
 
 | Constant | Default | Meaning |
 | --- | --- | --- |

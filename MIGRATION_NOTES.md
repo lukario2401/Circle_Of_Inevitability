@@ -624,6 +624,17 @@ Everything outside reference/ and the history above now uses the project name Ci
 - Kept: reference/, ForgeRealm1 / lukario2401/ForgeRealm1, the old-source path and "the old code's forgerealmmod" in CLAUDE.md, the history in this file.
 - Checked: ./gradlew build, a dedicated GameTest server (runGameTestServer, strict event checks) loads the mod and passes, the resource audit. In game: rebind check (key category reads "Circle Of Inevitability" in Controls).
 
+## Sequence passives and the Beyonder table (2026-10-11; how-to in docs/SEQUENCES.md, "Passives")
+- Folder shadow_slave -> blasphemy_slate (Luka, in IntelliJ). The sections above keep the old folder name where they describe what was done then.
+- Beyonder is now one table (SEQUENCES, one row per Sequence) instead of the old formulas, and the numbers moved one Sequence up: Sequence 9 has the old stage 1 numbers, Sequence 2 the stage 8 numbers, Sequences 1 and 0 repeat Sequence 2. Sequence 9 and 8 are no longer the same; Sequence 8 (maximum 400) can pay for a 250-cost ability. Gates did not move. "Refills at once" is a full bar every tick, no longer a division by zero. This replaces the powerScale and maximum spirituality lines of the Sequence rework section above.
+- New: blasphemy_slate/beyonder/SequencePassives. One list of passives at the top of the file (effect(...) for potion effects, custom(...) for anything else, for every Pathway or one), checked once a second on the server. First passive: Saturation I from Sequence 4, every Pathway. Behaviour change on purpose: from Sequence 4 a player is never hungry, and vanilla heals quickly while saturated.
+- NOT built: this session had Java 21 and no access to the Forge and Gradle servers, so ./gradlew build did not run. SequencePassives was compiled and run against stand-in classes only (same calls as Spells.keepEffect and Digestion, which do build). Run ./gradlew build before anything else.
+- In-game check list (runClient, cheats on):
+  - /sequence set @s 5: no Saturation icon. /sequence set @s 4: within a second the Saturation icon shows (inventory and top right), no particles around the player; the hunger bar fills and stays full while sprinting and jumping.
+  - drink milk: the icon is back within a second. Die and respawn: the same.
+  - /sequence set @s 5 again: the effect runs out within 30 seconds and hunger drops again.
+  - /sequence set @s 0: still there.
+
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
 | --- | --- | --- | --- | --- |
@@ -643,3 +654,4 @@ Everything outside reference/ and the history above now uses the project name Ci
 | swing animations: tuning pass (feature) | 2026-10-10 | (Luka fills in) | new code, not a port: 6 Java files changed in client/animation (SwingAnimation, SwingAnimations, SwingPlayer, FirstPersonSwing, SwingRules, SwingAnimCommand), +2 swings (uppercut, spin_slash), stab rewritten, 5 cuts re-posed; docs/ANIMATIONS.md rewritten; this file | Animations: fix first-person flattening and lighting; Animations: speed and visibility; Animations: three new moves and docs |
 | Sequence rework (feature) | 2026-10-11 | (Luka fills in) | new code, not a port: aspect/stage/tier/essence/shards replaced by Pathway/Sequence/digestion/Spirituality in about 45 files; 7 new Java files (Beyonder, Digestion, DigestionRates, AdvancementRequirement, SequenceCommands, SequenceHudLine, plus SoulCommands trimmed); scripts/rename-sequence.sh; docs/SEQUENCES.md | Sequence: rename and storage / digestion and commands / spirituality and display text / docs |
 | Project rename | 2026-10-11 | (Luka fills in) | rename only: package net.lukario.circleofinevitability, class CircleOfInevitability, data keys circle_of_inevitability(_x), credits and lang text; scripts/rename-project.sh | Rename project name |
+| Sequence passives (feature) | 2026-10-11 | (Luka fills in) | new code, not a port: 1 new Java file (blasphemy_slate/beyonder/SequencePassives, about 130 lines); docs/SEQUENCES.md (Passives, the table of numbers); this file | Sequence passives: Saturation from Sequence 4 |
