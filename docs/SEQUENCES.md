@@ -6,7 +6,7 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 
 | Word | Meaning | Where |
 | --- | --- | --- |
-| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
@@ -52,6 +52,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |
 | Prince Of Abolition | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
 | Pale Emperor | Root 9 | Door 8 | Serpent 7 | Spear Skull 7 | Spikes 6 | Wings 5 | Wraiths 4 |
+| Conqueror | Hunter's Trap 9 | - | - | - | - | - | - |
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one).
 
@@ -108,7 +109,7 @@ Target: a full bar in about 45 minutes of normal active play, roughly 40% from t
 | --- | --- | --- |
 | `/sequence info` | everyone | Your Pathway, Sequence, digestion and spirituality (current of maximum). |
 | `/sequence advance` | everyone | Advance yourself (see above). |
-| `/sequence pathway <player> "<Pathway name>"` | op (level 2) | Set the Pathway. Tab completes the six names (quotes needed). `"none"` clears it. |
+| `/sequence pathway <player> "<Pathway name>"` | op (level 2) | Set the Pathway. Tab completes the seven names (quotes needed). `"none"` clears it. |
 | `/sequence set <player> <0-9>` | op | Set the Sequence. |
 | `/sequence digestion <player> <0-100>` | op | Set digestion. |
 | `/sequence spirituality <player> <amount>` | op | Set spirituality (clamped to the maximum). |

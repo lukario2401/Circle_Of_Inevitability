@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesPaperDagger;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.Conqueror.conquerorHuntersTrap;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderBuff;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsStarBurst;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorRoot;
@@ -50,5 +51,6 @@ public class SKeyPressAbilityOneUsed {
         handOfOrderBuff(player,level,serverLevel,false);
         paleEmperorRoot(player,serverLevel,false);
         wormOfTimeAbility1(player,level,serverLevel,false);
+        conquerorHuntersTrap(player,level,serverLevel,false);
     }
 }

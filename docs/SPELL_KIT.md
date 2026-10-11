@@ -12,6 +12,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | 5, 4, 3, 2, 1 on the screen and then something happens | [`Countdown`](#3-countdown) | `combat/` |
 | A small clock next to the hotbar ("Revive 27s") | [`HudTimer`](#hudtimer-a-small-clock-next-to-the-hotbar) | `combat/` |
 | Ground that keeps doing something to whoever stands on it, worse the longer they stay (cursed land, a healing circle, an aura) | [`Zone`](#zone-ground-that-keeps-doing-something) | `combat/` |
+| A hidden spot that springs once when an enemy steps on it (a snare, a mine, a rune) | [`Trap`](#trap-a-hidden-spot-that-springs-once) | `combat/` |
 | A potion effect kept up for as long as something lasts | [`Spells.keepEffect`](#1-spells-aiming-and-enemies) | `combat/` |
 | A line that keeps joining two moving things (thread, chain, beam) | [`SpellFx.tether`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
 | Rings, warning circles, a burst of fire or of any color | [`SpellFx`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
@@ -83,7 +84,9 @@ import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.b
 myPathwayIceLance(player, level, serverLevel, false);
 ```
 
-A new Pathway also goes into `SequenceCommands.PATHWAYS`, so that `/sequence pathway` offers its name.
+Give it a line in `PathwayAbilities.ALL` too (the same name and Sequence), so that it can be listed and stolen.
+
+A new Pathway also goes into `SequenceCommands.PATHWAYS`, so that `/sequence pathway` offers its name. `Conqueror.java` is the smallest Pathway class to copy: one ability, and a list at its top of every place the next one touches.
 
 Two habits worth keeping:
 
@@ -382,6 +385,50 @@ Good to know:
 - It ends by itself when its owner dies, logs out or changes dimension. It is not saved: a server restart drops it.
 - A zone has no look of its own. Draw it in `onPulse`, or play models when you open it. If it can end early, give those models a tag of their own and clear them in `onEnd` (see [tags](#6-several-models-on-one-entity-tags)).
 - Put potion effects on with `Spells.keepEffect`, not `addEffect`: a wither that is started afresh every half second never gets to hurt.
+
+---
+
+## Trap: a hidden spot that springs once
+
+A spot on the ground that waits and goes off under the first enemy to step on it. A snare, a mine, a tripwire, a rune.
+
+```java
+Trap.at(ground, 1.5)                                     // its middle on the ground, and how far it reaches
+        .armsAfter(20)                                   // it cannot spring during its first second
+        .lasts(1200)                                     // gone after a minute if nobody stepped on it
+        .onSpring(victim -> {
+            Spells.strike(player, victim, 40f);
+            Root.apply(victim, 60, RootRestriction.MOVEMENT);
+        })
+        .onWait(ticksLeft -> ParticleShapes.ring(sl, GLINT, ground.add(0, 0.1, 0), 0.9, 6, 0))
+        .set(player, sl, "my_pathway_trap", 3);          // this player may have 3 of these at once
+```
+
+| Part | What it does |
+|---|---|
+| `Trap.at(ground, radius)` | A trap lying on the ground. Nothing happens until `.set(...)` |
+| `.height(blocks)` | How far above its ground it still catches someone (default 2) |
+| `.armsAfter(ticks)` | How long after it was set it can spring (default 20). 0 = at once, also under someone standing there |
+| `.lasts(ticks)` | How long it waits before it is gone (default 1200) |
+| `.catches(entity -> ...)` | Who springs it, instead of the owner's enemies. The owner never does |
+| `.onSpring(victim -> ...)` | Runs once, with the one who stepped on it. The trap is gone by then |
+| `.onWait(ticksLeft -> ...)` | Runs every `showEvery` ticks while it lies armed: a glint, a hum |
+| `.showEvery(ticks)` | How often `onWait` runs (default 20) |
+| `.onExpire(() -> ...)` | It ended without springing: its time is up, a newer trap took its place, or its owner died or left |
+| `.set(player, sl, name, max)` | Sets it. `max` is how many traps with this name the player may have at once |
+
+`Trap.count(player, name, max)` and `Trap.clear(player, name, max)` work from anywhere.
+
+Good to know:
+
+- **One more than `max` replaces the oldest** (its `onExpire` runs). Always give the same `max` for the same name. Start the name with your Pathway.
+- **Only the one who stepped on it is handed to `onSpring`.** To catch everything standing on the trap, ask `Spells.enemiesAround(player, sl, ground.add(0, 0.5, 0), radius)` there (`springTrap` in `Conqueror.java`).
+- **It has no look of its own**, so that it can stay hidden. Draw the setting of it when you set it (`SpellFx.warningCircle` for as long as it takes to arm) and what gives it away in `onWait`.
+- Animals are enemies like everything else that is not on the caster's side, so a cow springs it too. `.catches(...)` narrows that.
+- Build a new one for every cast. Do not keep one in a constant: it remembers whether it sprang.
+- It is a `Zone` underneath (`set` returns that zone's name): it ends when its owner dies, logs out or changes dimension, and a server restart drops it.
+
+Something that goes off after a time instead of under a foot needs no trap: `Later.run(sl, ticks, () -> ...)` with a `SpellFx.warningCircle` of the same length (`plantCharge` in `Conqueror.java`).
 
 ---
 
@@ -839,6 +886,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `SpellFx.risingRings` | `risesAgain` in `PaleEmperor.java` |
 | Model tags | `stringUp`, `summonProjection` |
 | `PathwayAbilities`, `Beyonder.castUnbound`, `StolenAbilities` | `steal`, `pickToSteal`, `releaseStolen`, `castStolen` in `WormOfTime.java` |
+| `Trap`, a fuse with `Later.run`, a blast that is weaker at its rim | `setTrap`, `springTrap`, `plantCharge`, `burnFuse`, `fireBlast` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 
@@ -1062,4 +1110,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
