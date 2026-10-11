@@ -2749,7 +2749,7 @@ public class PaleEmperor {
 
         if (UNDERWORLD_DRAIN > 0 && player.tickCount % 20 == 0 && !player.isCreative()) {
             if (SoulCore.getSpirituality(player) < UNDERWORLD_DRAIN) {
-                player.sendSystemMessage(Component.literal("Your spirituality is spent."));
+                player.sendSystemMessage(Component.translatable("message.circle_of_inevitability.spirituality_spent"));
                 leaveUnderworld(player, sl);
                 return;
             }

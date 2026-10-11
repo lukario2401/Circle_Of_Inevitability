@@ -466,7 +466,7 @@ public final class Spells {
     /** Takes 'cost' spirituality. If the player has too little it takes nothing, tells them and returns false. */
     public static boolean paySpirituality(Player player, float cost) {
         if (SoulCore.getSpirituality(player) < cost) {
-            player.sendSystemMessage(Component.literal("Not enough spirituality."));
+            player.sendSystemMessage(Component.translatable("message.circle_of_inevitability.not_enough_spirituality"));
             return false;
         }
         SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - cost);

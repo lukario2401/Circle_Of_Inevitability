@@ -29,9 +29,16 @@ public class PathwaySync {
         if (!(event.player() instanceof ServerPlayer player)) return;
 
         String pathway = SoulCore.getPathway(player);
-        if (!pathway.equals(LAST_SENT_PATHWAY.get(player.getUUID()))) {
-            LAST_SENT_PATHWAY.put(player.getUUID(), pathway);
-            PacketHandler.sendToPlayer(new CSyncPathwayPacket(pathway), player);
+        int sequence = SoulCore.getSequence(player);
+        int digestion = Digestion.percent(player);
+        // the pathway alone decides what other players are told; the HUD line also needs Sequence and digestion
+        String sent = LAST_SENT_PATHWAY.get(player.getUUID());
+        String now = pathway + "|" + sequence + "|" + digestion;
+        if (!now.equals(sent)) {
+            LAST_SENT_PATHWAY.put(player.getUUID(), now);
+            PacketHandler.sendToPlayer(new CSyncPathwayPacket(pathway, sequence, digestion), player);
+        }
+        if (sent == null || !sent.startsWith(pathway + "|")) {
             // everyone else too, for this player's swing animations (client/animation/SwingRules)
             PacketHandler.sendToAllClients(new CPlayerPathwayPacket(player.getUUID(), pathway));
         }

@@ -70,5 +70,9 @@
   "message.circle_of_inevitability.sequence.pathway_set": "Pathway is set to: %s",
   "message.circle_of_inevitability.sequence.sequence_set": "Set Sequence to %s",
   "message.circle_of_inevitability.sequence.spirituality_set": "Set Spirituality to %s",
-  "message.circle_of_inevitability.sequence.info": "Pathway: %s / Sequence: %s / Digestion: %s%% / Spirituality: %s of %s"
+  "message.circle_of_inevitability.sequence.info": "Pathway: %s / Sequence: %s / Digestion: %s%% / Spirituality: %s of %s",
+  "hud.circle_of_inevitability.spirituality": "Spirituality: %s",
+  "hud.circle_of_inevitability.sequence_line": "Sequence %s - %s - Digestion %s%%",
+  "message.circle_of_inevitability.not_enough_spirituality": "Not enough spirituality.",
+  "message.circle_of_inevitability.spirituality_spent": "Your spirituality is spent."
 }

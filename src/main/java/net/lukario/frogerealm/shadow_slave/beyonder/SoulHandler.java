@@ -26,7 +26,7 @@ public class SoulHandler {
             SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + Beyonder.spiritualityRegenPerTick(player));
 
             player.sendOverlayMessage(
-                    Component.literal("Spirituality: " + SoulCore.getSpirituality(player))
+                    Component.translatable("hud.circle_of_inevitability.spirituality", String.valueOf(SoulCore.getSpirituality(player)))
             );
     }
 

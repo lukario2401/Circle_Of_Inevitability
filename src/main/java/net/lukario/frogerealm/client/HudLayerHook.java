@@ -28,6 +28,7 @@ public class HudLayerHook {
 
     private static void renderAll(GuiGraphicsExtractor guiGraphics) {
         PathwayHudIcon.render(guiGraphics);
+        SequenceHudLine.render(guiGraphics);
         ScreenImageRenderer.render(guiGraphics);
         AbilityHudOverlay.render(guiGraphics);
         HudTimerOverlay.render(guiGraphics);
@@ -39,6 +40,7 @@ public class HudLayerHook {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) {
             ClientPathwayData.setPathway("none"); // left the world
+            ClientPathwayData.setProgress(9, 0);
         }
     }
 

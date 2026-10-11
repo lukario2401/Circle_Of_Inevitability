@@ -8,6 +8,8 @@ package net.lukario.frogerealm.client;
 public class ClientPathwayData {
 
     private static String pathway = "none";
+    private static int sequence = 9;
+    private static int digestion = 0;
 
     public static String getPathway() {
         return pathway;
@@ -15,6 +17,20 @@ public class ClientPathwayData {
 
     public static void setPathway(String newPathway) {
         pathway = newPathway == null ? "none" : newPathway;
+    }
+
+    public static int getSequence() {
+        return sequence;
+    }
+
+    /** Digestion of the current Sequence, whole percent. */
+    public static int getDigestion() {
+        return digestion;
+    }
+
+    public static void setProgress(int newSequence, int newDigestion) {
+        sequence = newSequence;
+        digestion = newDigestion;
     }
 
     public static boolean is(String pathwayName) {
