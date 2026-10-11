@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - an arm from behind the Door to the Underworld: dead flesh torn to the bone, burial wrappings, the ferryman's coin. Frame 1 of 0..4 (0 = wide open, 4 = clenched). ModelFx: ModelFx.of(\"pale_emperor/underworld_arm\").frames(5).smooth(), then keys with pose().frame(n). Palm = north, thumb = +x. Pivot 8,-16,8 = the cut end of the forearm. Generated",
+  "credit": "Circle Of Inevitability - an arm from behind the Door to the Underworld: dead flesh torn to the bone, burial wrappings, the ferryman's coin. Frame 1 of 0..4 (0 = wide open, 4 = clenched). ModelFx: ModelFx.of(\"pale_emperor/underworld_arm\").frames(5).smooth(), then keys with pose().frame(n). Palm = north, thumb = +x. Pivot 8,-16,8 = the cut end of the forearm. Generated",
   "texture_size": [
     256,
     128

@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a wing of bleached bone and pale feathers stained yellow-green. Frame 1 of 0..4. ModelFx: ModelFx.of(\"pale_emperor/pale_wing\").frames(5).smooth(), then keys with pose().frame(n). Frame 0 = folded, 4 = spread. It grows toward +x; .mirrored() gives the other wing. Pivot -10,11.5,8 = the shoulder. Generated",
+  "credit": "Circle Of Inevitability - a wing of bleached bone and pale feathers stained yellow-green. Frame 1 of 0..4. ModelFx: ModelFx.of(\"pale_emperor/pale_wing\").frames(5).smooth(), then keys with pose().frame(n). Frame 0 = folded, 4 = spread. It grows toward +x; .mirrored() gives the other wing. Pivot -10,11.5,8 = the shoulder. Generated",
   "texture_size": [256, 80],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/pale_wing", "particle": "circle_of_inevitability:model_fx/pale_emperor/pale_wing"},
   "elements": [

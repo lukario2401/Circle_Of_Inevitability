@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a chain of dark iron, 3 blocks long, ending in a four-clawed grab (ModelFx). The grab is up, for ParticleShapes.modelAlong. Pivot 8,-14,8 = the far end of the chain, or 8,32,8 = the tips of the claws. Generated",
+  "credit": "Circle Of Inevitability - a chain of dark iron, 3 blocks long, ending in a four-clawed grab (ModelFx). The grab is up, for ParticleShapes.modelAlong. Pivot 8,-14,8 = the far end of the chain, or 8,32,8 = the tips of the claws. Generated",
   "texture_size": [256, 16],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/underworld_chain", "particle": "circle_of_inevitability:model_fx/pale_emperor/underworld_chain"},
   "elements": [

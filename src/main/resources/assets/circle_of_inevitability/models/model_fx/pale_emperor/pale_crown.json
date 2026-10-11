@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - the crown of the Pale Emperor: a gold band with pale-green stones, a serpent rearing at its front, a fan of pale feathers behind (ModelFx). The serpent = north (the front). Pivot 8,0,8 = the middle of the band, at its lower edge. The band is 10 px wide: at scale 1 it fits a player's head. Generated",
+  "credit": "Circle Of Inevitability - the crown of the Pale Emperor: a gold band with pale-green stones, a serpent rearing at its front, a fan of pale feathers behind (ModelFx). The serpent = north (the front). Pivot 8,0,8 = the middle of the band, at its lower edge. The band is 10 px wide: at scale 1 it fits a player's head. Generated",
   "texture_size": [256, 48],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/pale_crown", "particle": "circle_of_inevitability:model_fx/pale_emperor/pale_crown"},
   "elements": [

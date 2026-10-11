@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a cage of ribs: the spine lies along the ground from front to back, six pairs of ribs rise from it. Frame 3 of 0..4. ModelFx: ModelFx.of(\"pale_emperor/rib_cage\").frames(5).smooth(), then keys with pose().frame(n). Frame 0 = spread open, 4 = closed. Pivot 8,-16,8 = the middle of the spine. Generated",
+  "credit": "Circle Of Inevitability - a cage of ribs: the spine lies along the ground from front to back, six pairs of ribs rise from it. Frame 3 of 0..4. ModelFx: ModelFx.of(\"pale_emperor/rib_cage\").frames(5).smooth(), then keys with pose().frame(n). Frame 0 = spread open, 4 = closed. Pivot 8,-16,8 = the middle of the spine. Generated",
   "texture_size": [256, 96],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/rib_cage", "particle": "circle_of_inevitability:model_fx/pale_emperor/rib_cage"},
   "elements": [

@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - a weathered headstone with a glowing mark, a candle, and a grave mound in front of it (ModelFx). The carved face and the grave = north (the front). Pivot 8,-16,8 = under the stone. Generated",
+  "credit": "Circle Of Inevitability - a weathered headstone with a glowing mark, a candle, and a grave mound in front of it (ModelFx). The carved face and the grave = north (the front). Pivot 8,-16,8 = under the stone. Generated",
   "texture_size": [256, 96],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/tombstone", "particle": "circle_of_inevitability:model_fx/pale_emperor/tombstone"},
   "elements": [

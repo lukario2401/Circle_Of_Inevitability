@@ -1,5 +1,9 @@
 #!/bin/sh
 # Mechanical 1.21/Forge 51 -> 26.2/Forge 65 renames for freshly copied files.
+# Since the project rename the package is net.lukario.circleofinevitability: copy a file from
+# reference/java/net/lukario/frogerealm/<path> to src/main/java/net/lukario/circleofinevitability/<path>; the rules below
+# fix its package, imports, ForgeRealm and the forgerealm keys. Old progression words (aspect, stage, tier, essence,
+# shards) still need scripts/rename-sequence.sh, and that script's gates and storage are hand work (docs/SEQUENCES.md).
 # Usage: scripts/renames.sh [file.java ...]   (no arguments = every .java file under src/)
 #
 # Includes every rule of tools/apply_renames.sh, plus the renames found in later stages.
@@ -29,7 +33,10 @@ for f in "$@"; do
 
     sed -i -E \
         -e 's/\bResourceLocation\b/Identifier/g' \
-        -e '/MOD_TAG *=/!s/\bforgerealmmod\b/circle_of_inevitability/g' \
+        -e 's/\bforgerealmmod\b/circle_of_inevitability/g' \
+        -e 's/\bforgerealm_/circle_of_inevitability_/g' \
+        -e 's/net\.lukario\.frogerealm\b/net.lukario.circleofinevitability/g' \
+        -e 's/\bForgeRealm\b/CircleOfInevitability/g' \
         -e 's/net\.minecraftforge\.eventbus\.api\.SubscribeEvent\b/net.minecraftforge.eventbus.api.listener.SubscribeEvent/g' \
         -e 's/\bGuiGraphics\b/GuiGraphicsExtractor/g' \
         -e 's/net\.minecraftforge\.eventbus\.api\.EventPriority\b/net.minecraftforge.eventbus.api.listener.Priority/g' \

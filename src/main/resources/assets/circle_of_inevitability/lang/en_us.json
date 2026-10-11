@@ -1,13 +1,10 @@
 {
-  "item.circle_of_inevitability.soulessence": "Soul Essence",
   "item.circle_of_inevitability.coin": "Coin",
   "item.circle_of_inevitability.soulcoin": "Soul Coin",
   "item.circle_of_inevitability.shadow_sword": "Shadow Sword",
   "item.circle_of_inevitability.shepards_blade": "Shepards Blade",
   "item.circle_of_inevitability.laser_staff": "Laser Staff",
   "item.circle_of_inevitability.terminator": "Terminator",
-
-
   "item.circle_of_inevitability.tarot_deck": "Tarot Deck",
   "item.circle_of_inevitability.bone_definers_lens": "Bone Definers Lens",
   "item.circle_of_inevitability.hollow_name": "Hollow Name",
@@ -26,14 +23,8 @@
   "item.circle_of_inevitability.last_breath": "Last Breath",
   "item.circle_of_inevitability.collapsar_bead": "Collapsar Bead",
   "item.circle_of_inevitability.iron_coif": "Iron Coif",
-
-
   "item.circle_of_inevitability.diamond_carrot": "Diamond Carrot",
   "item.circle_of_inevitability.strength_elixir": "Strength Elixir",
-  "item.circle_of_inevitability.energy_shard": "Energy Shard",
-  "item.circle_of_inevitability.depleted_energy_shard": "Depleted Energy Shard",
-
-
   "tooltip.circle_of_inevitability.terminator.tooltip.shift.1": "This weapon was forged in the depths of a star",
   "tooltip.circle_of_inevitability.terminator.tooltip.shift.2": "After shattering it split into several parts",
   "tooltip.circle_of_inevitability.terminator.tooltip.shift.3": "Now with all of its parts combined",
@@ -48,20 +39,14 @@
   "tooltip.circle_of_inevitability.terminator.tooltip.shift.12": "that damages soul directly",
   "tooltip.circle_of_inevitability.terminator.tooltip.shift.13": "§eLeft Click:§r Regular Shot",
   "tooltip.circle_of_inevitability.terminator.tooltip.shift.14": "Shoots deadly beams",
-
   "tooltip.circle_of_inevitability.terminator.tooltip": "§dTerminator §rthe strongest §4Weapon",
   "tooltip.circle_of_inevitability.terminator.tooltip.2": "Hold shift for more info",
-
-
   "creativetab.circle_of_inevitability.soul_tab": "Soul Tab",
   "creativetab.circle_of_inevitability.extras_tab": "Extras Tab",
   "creativetab.circle_of_inevitability.sealed_artifacts": "Sealed Artifacts",
-
   "key.category.circle_of_inevitability.main": "Circle Of Inevitability",
-
   "key.circle_of_inevitability.example_key": "Example Key",
   "key.circle_of_inevitability.example_packet_key": "Example Packet Key",
-
   "key.circle_of_inevitability.ability_one_packet_key": "Soul Ability 1",
   "key.circle_of_inevitability.ability_two_packet_key": "Soul Ability 2",
   "key.circle_of_inevitability.ability_three_packet_key": "Soul Ability 3",
@@ -69,17 +54,25 @@
   "key.circle_of_inevitability.ability_five_packet_key": "Soul Ability 5",
   "key.circle_of_inevitability.ability_six_packet_key": "Soul Ability 6",
   "key.circle_of_inevitability.ability_seven_packet_key": "Soul Ability 7",
-
   "message.circle_of_inevitability.example_key_pressed": "Example Key was pressed!",
-
   "effect.circle_of_inevitability.shadow_mark": "Shadow Mark",
   "effect.circle_of_inevitability.abyssal_monarch_mark": "Abyssal Monarch Mark",
   "effect.circle_of_inevitability.ruin_blade_ruin": "Ruin Blade Mark",
   "effect.circle_of_inevitability.ruin_blade_overload": "Ruin Blade Overload",
   "effect.circle_of_inevitability.ruin_blade_cataclysm": "Ruin Blade Cataclysm",
-
   "key.circle_of_inevitability.dash": "Dash",
   "key.circle_of_inevitability.star_burst": "Star Burst",
-  "key.categories.circle_of_inevitability": "Forged Realm"
-
+  "key.categories.circle_of_inevitability": "Circle Of Inevitability",
+  "message.circle_of_inevitability.sequence.advanced": "You advance to Sequence %s of the %s Pathway. Your spirituality deepens.",
+  "message.circle_of_inevitability.sequence.at_strongest": "You are already at Sequence 0. There is no Sequence beyond it.",
+  "message.circle_of_inevitability.sequence.not_digested": "Your current Sequence is only %s%% digested. Reach 100%% before advancing.",
+  "message.circle_of_inevitability.sequence.digestion_set": "Set digestion to %s%%",
+  "message.circle_of_inevitability.sequence.pathway_set": "Pathway is set to: %s",
+  "message.circle_of_inevitability.sequence.sequence_set": "Set Sequence to %s",
+  "message.circle_of_inevitability.sequence.spirituality_set": "Set Spirituality to %s",
+  "message.circle_of_inevitability.sequence.info": "Pathway: %s / Sequence: %s / Digestion: %s%% / Spirituality: %s of %s",
+  "hud.circle_of_inevitability.spirituality": "Spirituality: %s",
+  "hud.circle_of_inevitability.sequence_line": "Sequence %s - %s - Digestion %s%%",
+  "message.circle_of_inevitability.not_enough_spirituality": "Not enough spirituality.",
+  "message.circle_of_inevitability.spirituality_spent": "Your spirituality is spent."
 }

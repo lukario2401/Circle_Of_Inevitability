@@ -1,5 +1,5 @@
 {
-  "credit": "ForgeRealm - the body of the Feathered Serpent, coiled in three rings on the ground (ModelFx). Pivot 8,-16,8 = the middle of the coils; the head (feathered_serpent, pivot 8,-16,12) rises from it. Generated",
+  "credit": "Circle Of Inevitability - the body of the Feathered Serpent, coiled in three rings on the ground (ModelFx). Pivot 8,-16,8 = the middle of the coils; the head (feathered_serpent, pivot 8,-16,12) rises from it. Generated",
   "texture_size": [256, 32],
   "textures": {"0": "circle_of_inevitability:model_fx/pale_emperor/feathered_serpent_coil", "particle": "circle_of_inevitability:model_fx/pale_emperor/feathered_serpent_coil"},
   "elements": [
