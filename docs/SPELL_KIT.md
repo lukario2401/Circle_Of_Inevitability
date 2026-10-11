@@ -32,6 +32,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | "The next hit does not land, this happens instead" | [`Substitute`](#substitute) | `status/` |
 | Take over a mob | [`Marionette`](#marionette) | `status/` |
 | Vanish: unseen, untargeted, unhurt | [`Concealment`](#concealment) | `status/` |
+| Leave your body and live inside a mob or a player, which carries you | [`Parasite`](#parasite) | `status/` |
 | Cheat death once | [`DeathWard`](#deathward) | `status/` |
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
@@ -672,6 +673,38 @@ PaleEmperorFx.wings(sl, player, 400, "my_pathway_wings");    // something to sho
 
 `Flight.has(player)`, `ticksLeft(player)`, `end(player)`. However it ends, the fall after it does no damage. Creative players and spectators keep their own flying; for them only the time is counted. Saved with the player, so a flight goes on after logging out and in. Models are not: show the wings again when they log in or change dimension (`wingsAgain` in `PaleEmperor.java`).
 
+### Parasite
+
+A player leaves their own body and lives inside another living thing, a mob or a player. The host carries them and keeps acting on its own. Worm Of Time's Parasite (`wormOfTimeAbility3`) uses it.
+
+```java
+Parasite.enter(serverPlayer, host, 2400, HOOKS);     // two minutes at most (0 = no limit). False if refused
+Parasite.leave(player, Parasite.End.LEFT);           // back out, standing behind the host
+```
+
+`Parasite.isInside(player)`, `hostOf(player)`, `ticksInside(player)`, `isHost(entity)`, `parasiteIn(entity)`, `canEnter(player, host)`.
+
+`Parasite` only moves the player in, carries them and puts them back out. **What the parasite does to its host is the `Hooks` you pass to `enter`.** Every method is optional:
+
+```java
+private static final Parasite.Hooks HOOKS = new Parasite.Hooks() {
+    @Override public void entered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) { ... }              // once
+    @Override public void tick(ServerPlayer parasite, LivingEntity host, ServerLevel sl, int ticksInside) { ... } // every tick
+    @Override public void left(ServerPlayer parasite, LivingEntity host, ServerLevel sl, Parasite.End why) { ... } // once
+    @Override public boolean allowsKey(int key) { return key == 3; }   // ability keys that work from inside
+};
+```
+
+- While inside, the parasite has no body: nobody sees it, nothing hurts it (except the void and `/kill`), nothing bumps into it, mobs forget it, and `Spells.isEnemy` passes over it. It sees through the host's eyes.
+- The ability keys do nothing from inside (`Parasite.blocksKey(player, key)`, asked by every key next to `StolenAbilities.blocksKey`), except the ones `allowsKey` names.
+- It ends by `leave(...)`, when the time is up, when the host dies or is gone, or when the parasite dies or logs out. `left(...)` is told which (`Parasite.End`: `LEFT`, `TIME_UP`, `OUT_OF_POWER`, `HOST_DIED`, `HOST_GONE`, `PARASITE_GONE`). The parasite already has its body back then, so `left` can hurt it. `host` is null there if it is no longer in the world.
+- `tick` may call `Parasite.leave(parasite, Parasite.End.OUT_OF_POWER)` itself (an upkeep that could not be paid).
+- One host carries one parasite. A parasite cannot be a host.
+- How it is done: the parasite is in spectator mode with its view on the host. Holding sneak takes the view off the host for as long as it is held; that is the game's doing. The game mode from before is kept in the player's saved data and given back however it ends, also at the next login if the server stopped without warning. Who is in whom is not saved: a restart ends every parasitism.
+- Settings: `Parasite.OUT_DISTANCE` (how far behind the host they come out), `Parasite.LANDING_TICKS` (no fall damage for that long afterwards).
+
+To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `WormOfTime.java`: `parasiteEntered`, `parasiteTick`, `parasiteLeft` and `parasiteRefusal` (who cannot be taken). Each has a `TODO(parasite)` line where new effects go; its numbers are the `PARASITE_` constants at the top of the file.
+
 ### Root and Freeze
 
 These were already there and go well with the rest: `Root.apply(target, 80, RootRestriction.EVERYTHING)` holds something in place (see `root/Root.java` for the single restrictions), `Freeze.apply(target, 80)` puts it in ice.
@@ -807,6 +840,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | Model tags | `stringUp`, `summonProjection` |
 | `PathwayAbilities`, `Beyonder.castUnbound`, `StolenAbilities` | `steal`, `pickToSteal`, `releaseStolen`, `castStolen` in `WormOfTime.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
+| `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 
 ## Tricks worth copying
 
@@ -949,7 +983,7 @@ The `@Mod.EventBusSubscriber` line is all the registering there is. `@SubscribeE
 | Keep it in | When | Example |
 |---|---|---|
 | `entity.getPersistentData()` | It is only numbers and should survive a reload | `FallGuard`, `Concealment`, `Marionette`, `Root`, `Freeze` |
-| A `Map<UUID, ...>` in the class | It carries code to run later (a `-> { }` you were given), which cannot be saved, or it ties several entities together for a short time | `Substitute`, `DeathWard`, `Countdown`, `Zone`, `DamageLink` |
+| A `Map<UUID, ...>` in the class | It carries code to run later (a `-> { }` you were given), which cannot be saved, or it ties several entities together for a short time | `Substitute`, `DeathWard`, `Countdown`, `Zone`, `DamageLink`, `Parasite` (plus one saved value: the game mode to give back) |
 
 A map needs cleaning up: remove the entry on `LivingDeathEvent` and on `PlayerEvent.PlayerLoggedOutEvent`.
 

@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.network;
 import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.StolenAbilities;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
+import net.lukario.circleofinevitability.status.Parasite;
 import net.minecraft.network.chat.Component;
 
 import net.minecraft.network.FriendlyByteBuf;
@@ -39,6 +40,8 @@ public class SKeyPressAbilityFourUsed {
         }
         // an ability that was stolen from this player (Worm Of Time) is not theirs to use meanwhile
         if (StolenAbilities.blocksKey(player, 4)) return;
+        // a player who lives inside a host (status/Parasite) has no body to use most abilities with
+        if (Parasite.blocksKey(player, 4)) return;
 
         keyOfStarsSeal(player,level,serverLevel,false);
         attendantOfMysteriesAirCannon(player,level,serverLevel,false);
