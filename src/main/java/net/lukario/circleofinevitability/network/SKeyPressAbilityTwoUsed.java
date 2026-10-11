@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.network;
 
+import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.StolenAbilities;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.minecraft.network.chat.Component;
@@ -15,6 +16,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.b
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsDash;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorDoor;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionFlame;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.WormOfTime.wormOfTimeAbility2;
 
 public class SKeyPressAbilityTwoUsed {
 
@@ -36,12 +38,15 @@ public class SKeyPressAbilityTwoUsed {
             player.sendOverlayMessage(Component.literal("You are bound by Order."));
             return;
         }
+        // an ability that was stolen from this player (Worm Of Time) is not theirs to use meanwhile
+        if (StolenAbilities.blocksKey(player, 2)) return;
 
         keyOfStarsDash(player,level,serverLevel, false);
         attendantOfMysteriesFlamingJump(player,level,serverLevel, false);
         handOfOrderDecree(player,level,serverLevel, false);
         princeOfAbolitionFlame(player,level,serverLevel,false);
         paleEmperorDoor(player,serverLevel,false);
+        wormOfTimeAbility2(player,level,serverLevel,false);
 
     }
 }

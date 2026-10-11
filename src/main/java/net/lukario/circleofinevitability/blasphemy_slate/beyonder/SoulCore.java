@@ -77,7 +77,15 @@ public class SoulCore {
     // =========================
     // Spirituality (the resource abilities spend)
     // =========================
+    /** What getSpirituality answers during Beyonder.castUnbound: more than any ability costs. */
+    private static final float UNBOUND_SPIRITUALITY = 10_000_000f;
+
     public static float getSpirituality(Player player) {
+        if (Beyonder.isCastingUnbound(player)) return UNBOUND_SPIRITUALITY;   // a stolen ability costs nothing
+        return storedSpirituality(player);
+    }
+
+    private static float storedSpirituality(Player player) {
         CompoundTag tag = getModData(player);
 
         if (!tag.contains("spirituality")) {
@@ -89,6 +97,11 @@ public class SoulCore {
 
     /** Sets spirituality (clamped to 0..max). A decrease counts as spirituality spent on an ability and feeds digestion. */
     public static void setSpirituality(Player player, float value) {
+        if (Beyonder.isCastingUnbound(player)) {
+            // a stolen ability: nothing is taken. A lower value is the ability paying, which tells castUnbound it went off
+            if (value < UNBOUND_SPIRITUALITY) Beyonder.costWaived();
+            return;
+        }
         float before = getSpirituality(player);
         float after = setSpiritualityQuietly(player, value);
         if (after < before) Digestion.onSpiritualitySpent(player, before - after);
@@ -96,6 +109,7 @@ public class SoulCore {
 
     /** Sets spirituality without feeding digestion (commands, a lower maximum after a Sequence change). Returns the stored value. */
     public static float setSpiritualityQuietly(Player player, float value) {
+        if (Beyonder.isCastingUnbound(player)) return storedSpirituality(player);   // nothing changes during a stolen cast
         float clamped = Math.min(Beyonder.maxSpirituality(player), Math.max(0, value));
         getModData(player).putFloat("spirituality", clamped);
         return clamped;
