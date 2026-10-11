@@ -101,6 +101,8 @@ public class WormOfTime {
     private static final int PARASITE_KEY = 3;                    // J
     private static final int PARASITE_SEQUENCE = 4;
     private static final int PARASITE_COST = 6000;                // for going in. Leaving costs nothing
+    private static final int PARASITE_KEY_REST = 20;              // the key does nothing for this long after going in and after coming out:
+                                                                  // a held key repeats itself, and would go in and straight back out
     private static final double PARASITE_RANGE = 6;               // how near the host has to be (blocks)
     private static final int PARASITE_MAX_TICKS = 2400;           // two minutes inside at most (0 = no limit)
     private static final int PARASITE_BEAT = 20;                  // ticks between two beats: each beat costs the upkeep and drains the host
@@ -115,6 +117,7 @@ public class WormOfTime {
     private static final int PARASITE_COLOR = 0x52E3C4;           // the clocks by the hotbar
     private static final String PARASITE_CLOCK = "worm_of_time_parasite";          // the parasite's clock (combat/HudTimer)
     private static final String PARASITE_HOST_CLOCK = "worm_of_time_parasitized";  // the host's clock
+    private static final String PARASITE_RESTING = "worm_of_time_parasite_rest";   // the mark (status/Marks) of someone who just came out
 
     /** Hands status/Parasite the four methods under "Parasite: what it does". */
     private static final Parasite.Hooks PARASITE_HOOKS = new Parasite.Hooks() {
@@ -313,10 +316,10 @@ public class WormOfTime {
 
     // =========================
     // Ability 3 - Parasite
-    // Normal: you leave your body and go into what you look at (a mob or a player). It carries you, you see
-    //         through its eyes, and nothing can see or hurt you. While you are inside: an upkeep and a life
-    //         drain at each beat, two minutes at most, and you are thrown out hurt if it dies.
-    // Sneak:  from inside a host, puts you back out, standing behind it.
+    // Outside a host: you leave your body and go into what you look at (a mob or a player). It carries you,
+    //         you see through its eyes, and nothing can see or hurt you. While you are inside: an upkeep and a
+    //         life drain at each beat, two minutes at most, and you are thrown out hurt if it dies.
+    // Inside a host: the same key puts you back out, standing behind it. Sneaking makes no difference.
     // Going in, being carried and coming out is status/Parasite. What the parasite does to its host is the
     // four methods under "Parasite: what it does": that is where new effects go.
     // =========================
@@ -325,18 +328,12 @@ public class WormOfTime {
         if (!Beyonder.hasSequence(player, PARASITE_SEQUENCE)) return;
 
         if (Parasite.isInside(player)) {
-            if (player.isShiftKeyDown()) {
-                Parasite.leave(player, Parasite.End.LEFT);
-            } else {
-                // TODO(parasite): the key pressed from inside without sneaking is free for something later
-                player.sendSystemMessage(Component.literal("You are inside a host. Sneak and press the key again to leave it."));
-            }
+            if (Parasite.ticksInside(player) < PARASITE_KEY_REST) return;    // still the press that took them in
+            // TODO(parasite): sneak + the key from inside does the same as the key alone for now: free for something later
+            Parasite.leave(player, Parasite.End.LEFT);
             return;
         }
-        if (player.isShiftKeyDown()) {
-            player.sendSystemMessage(Component.literal("You are in no host."));
-            return;
-        }
+        if (Marks.count(player, PARASITE_RESTING) > 0) return;               // still the press that took them out
         parasitize(player, sl);
     }
 
@@ -379,7 +376,7 @@ public class WormOfTime {
     /** Once, when the parasite has just gone in. */
     private static void parasiteEntered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
         parasite.sendSystemMessage(Component.literal("You are inside " + host.getName().getString()
-                + ". Sneak and press the key again to leave it."));
+                + ". Press the key again to leave it."));
         if (PARASITE_MAX_TICKS > 0) HudTimer.show(parasite, PARASITE_CLOCK, "Parasite", PARASITE_MAX_TICKS, PARASITE_COLOR);
         if (PARASITE_HOST_IS_TOLD && host instanceof Player carrier) {
             carrier.sendSystemMessage(Component.literal("Something has crawled into you."));
@@ -414,6 +411,7 @@ public class WormOfTime {
         }
         if (why == Parasite.End.PARASITE_GONE) return;              // died or logged out: nothing more to do or show
 
+        if (PARASITE_KEY_REST > 0) Marks.add(parasite, PARASITE_RESTING, 1, PARASITE_KEY_REST);
         leaveShows(parasite, sl, host);
         if (why == Parasite.End.HOST_DIED && PARASITE_THROWN_OUT_DAMAGE > 0) {
             parasite.invulnerableTime = 0;
