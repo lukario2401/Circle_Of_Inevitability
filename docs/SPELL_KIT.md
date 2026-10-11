@@ -36,6 +36,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
+| Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/soul_abilities/beyonder_characteristics/` |
+| Cast an ability without its Sequence and without its cost | [`Beyonder.castUnbound`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder/` |
+| Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/soul_abilities/beyonder_characteristics/` |
 | Something a Pathway always has from a Sequence on, with no key press (a potion effect, or code of your own once a second) | `SequencePassives` ([SEQUENCES.md](SEQUENCES.md#passives)) | `blasphemy_slate/beyonder/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
@@ -674,6 +677,78 @@ These were already there and go well with the rest: `Root.apply(target, 80, Root
 
 ---
 
+## Another Pathway's abilities: listing, casting and stealing them
+
+Three small parts. Worm Of Time's Theft (`wormOfTimeAbility2` in `WormOfTime.java`) uses all three.
+
+### PathwayAbilities: every ability as a list
+
+```java
+for (PathwayAbilities.Ability ability : PathwayAbilities.of("Key Of Stars")) { ... }     // its seven, in key order
+PathwayAbilities.Ability dash = PathwayAbilities.of("Key Of Stars", 2);                  // the one on key 2 (H), or null
+dash.cast().run(player, level, sl);                                                      // casts it for this player
+```
+
+| An ability has | Meaning |
+|---|---|
+| `pathway()` | The exact Pathway name |
+| `key()` | 1 to 7: the ability keys G H J K L N M |
+| `name()` | What players are told it is called |
+| `sequence()` | The weakest Sequence that can use it |
+| `sneakForm()` | `true` if it does something else when cast while sneaking |
+| `stealable()` | `false` if it only works for its own Pathway: it spends that Pathway's stars (Star Burst, Orbital), opens its menu (Decree, Ability 5, Words), or does nothing yet |
+| `cast()` | Casts it for a player, whatever their Pathway is |
+
+- `cast()` skips the "is this your Pathway" check and nothing else. The ability still needs its Sequence and its spirituality, and it still tells the player why it refuses.
+- Which form comes out depends on whether the player is sneaking at that moment, as with a key press.
+- `PathwayAbilities.ALL` is the whole list. The ability keys do not use it; they still call the methods from the `SKeyPressAbility...Used` packets.
+- A new ability gets one line in `PathwayAbilities.ALL`, with the Sequence its method checks.
+
+### Beyonder.castUnbound: no Sequence, no cost
+
+```java
+boolean wentOff = Beyonder.castUnbound(player, () -> ability.cast().run(player, level, sl));
+```
+
+While the part in the brackets runs, `Beyonder.hasSequence` is `true` for that player and nothing is taken from their spirituality. So a Sequence 8 player can cast a Sequence 3 ability once.
+
+- **It tells you whether the ability went off.** Every ability checks first and pays after, so one that tried to pay has been cast, and one that did not has refused (no target, no room). `false` means: nothing happened, do not use it up.
+- **Only what runs inside is free.** What the ability does later (`Later.run`, an upkeep each tick, like the Pale Emperor's underworld) is paid as usual.
+- It is for that one player only. Everyone else is gated and pays as always.
+- For this to work, a new ability must check its Sequence with `Beyonder.hasSequence` and pay through `SoulCore` or `Spells.paySpirituality`, as all of them do.
+
+### StolenAbilities: who holds what
+
+```java
+StolenAbilities.Held held = StolenAbilities.hold(thief, ability, false, victim, 1200);   // for a minute. null if the thief is full
+StolenAbilities.Held newest = StolenAbilities.newest(thief);                             // what a release casts, or null
+StolenAbilities.spend(thief, newest);                                                    // used up: the victim has it back
+```
+
+`false` is "its normal form"; `true` holds the sneak form. `victim` is the player it was taken from, or `null` when it was taken from a mob or from nobody.
+
+`StolenAbilities.count(thief)`, `isFull(thief)`, `holds(thief, held)`, `isTaken(victim, ability)` and `blocksKey(player, key)` work from anywhere.
+
+- **The victim cannot use that key meanwhile.** Each ability key asks `StolenAbilities.blocksKey(player, key)` before anything else; it tells the player and the key press does nothing. They get the ability back when it is spent, when its time is up, or when the holder dies or logs out.
+- A player holds `StolenAbilities.MAX_HELD` (3) at most. The same ability of the same player is never held twice at once: check `isTaken` before `hold`.
+- Each held ability has a `slot()` (0, 1, 2) that stays the same for as long as it is held. Use it to show each in a place and with a tag of its own, as the lights over the thief's head do.
+- Both players see a clock by the hotbar (`HudTimer`): the holder with the ability's name, the victim with `Lost: ...`.
+- Nothing is saved. A server restart gives everything back.
+
+To release a held ability in the form it was stolen in, whatever the player is doing, set the sneak for the length of the cast, as `castStolen` in `WormOfTime.java` does:
+
+```java
+boolean wasSneaking = player.isShiftKeyDown();
+player.setShiftKeyDown(held.sneakForm());
+try {
+    return Beyonder.castUnbound(player, () -> held.ability().cast().run(player, level, sl));
+} finally {
+    player.setShiftKeyDown(wasSneaking);
+}
+```
+
+---
+
 ## 6. Several models on one entity: tags
 
 A frozen mob can also carry a mark and a marionette's strings. `ParticleShapes.clearModels(sl, mob)` would wipe all of them. Give each effect its own tag and remove only that one:
@@ -684,7 +759,7 @@ ParticleShapes.clearModels(sl, target, "my_pathway_mark");       // cast again: 
 ParticleShapes.modelOn(sl, mark, target, new Vec3(0, target.getBbHeight() + 0.4, 0), 0f, 0f, 0f);
 ```
 
-Tags in use: `freeze`, `marionette`, the Attendant's `aom_strings`, `aom_transfer`, `aom_projection`, `aom_miracle`, and the Pale Emperor's `pale_emperor_hits`, `pale_emperor_wings`, `pale_emperor_crown`, `pale_emperor_curse` (the mark under those on cursed land), `pale_emperor_revive` (the mark of the second life), `pale_emperor_wraith_curse` (the mark under those the wraiths cursed), `pale_emperor_revive_wings` and `pale_emperor_land_<player UUID>` (what the cursed land put on the ground: seal, headstones, arms).
+Tags in use: `freeze`, `marionette`, Worm Of Time's `worm_of_time_stolen_<slot>` (one light over the thief's head for each stolen ability) and `worm_of_time_emptied` (the mark under a mob that was stolen from), the Attendant's `aom_strings`, `aom_transfer`, `aom_projection`, `aom_miracle`, and the Pale Emperor's `pale_emperor_hits`, `pale_emperor_wings`, `pale_emperor_crown`, `pale_emperor_curse` (the mark under those on cursed land), `pale_emperor_revive` (the mark of the second life), `pale_emperor_wraith_curse` (the mark under those the wraiths cursed), `pale_emperor_revive_wings` and `pale_emperor_land_<player UUID>` (what the cursed land put on the ground: seal, headstones, arms).
 
 A tag also lets you remove a model that is **not** on an entity before its time is up, for something that must vanish the moment it hits. An `AnimatedShot` does this by itself; this is for when you build something of your own. Give every cast a tag of its own, or one cast would remove the models of another:
 
@@ -729,6 +804,8 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Spells.groundNear` | `landGraves`, `landBeats` in `PaleEmperor.java` |
 | `SpellFx.risingRings` | `risesAgain` in `PaleEmperor.java` |
 | Model tags | `stringUp`, `summonProjection` |
+| `PathwayAbilities`, `Beyonder.castUnbound`, `StolenAbilities` | `steal`, `pickToSteal`, `releaseStolen`, `castStolen` in `WormOfTime.java` |
+| `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 
 ## Tricks worth copying
 

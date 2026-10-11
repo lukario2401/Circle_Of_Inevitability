@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.network;
 
+import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.StolenAbilities;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.minecraft.network.chat.Component;
@@ -36,6 +37,8 @@ public class SKeyPressAbilitySevenUsed {
             player.sendOverlayMessage(Component.literal("You are bound by Order."));
             return;
         }
+        // an ability that was stolen from this player (Worm Of Time) is not theirs to use meanwhile
+        if (StolenAbilities.blocksKey(player, 7)) return;
 
         keyOfStarsCosmicPlague(player,level,serverLevel,false);
         handOfOrderBind(player,level,serverLevel,false);

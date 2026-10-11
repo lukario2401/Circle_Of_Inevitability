@@ -48,7 +48,49 @@ public final class Beyonder {
 
     /** True if the player is at that Sequence or a stronger one (a lower number): hasSequence(p, 6) = "Sequence 6 or better". */
     public static boolean hasSequence(Player player, int sequence) {
+        if (isCastingUnbound(player)) return true;      // a stolen ability: see castUnbound below
         return SoulCore.getSequence(player) <= sequence;
+    }
+
+    // =========================
+    // Unbound casts: an ability cast with borrowed power (Worm Of Time's theft)
+    // =========================
+
+    private static Player unboundCaster;        // set only while castUnbound runs (abilities run on the server thread)
+    private static boolean unboundCostWaived;
+
+    /**
+     * Runs 'cast' as if this player had every Sequence and all the spirituality they need: while it runs,
+     * hasSequence is true for them and nothing is taken from their spirituality.
+     *
+     *   boolean wentOff = Beyonder.castUnbound(player, () -> ability.cast().run(player, level, sl));
+     *
+     * Returns true if the ability went off. That is known from its cost: every ability checks first and pays
+     * after, so one that tried to pay has been cast, and one that did not has refused (no target, no room).
+     * Only what runs inside 'cast' is free. What the ability does later (Later.run, an upkeep each tick) is paid as usual.
+     */
+    public static boolean castUnbound(Player player, Runnable cast) {
+        Player casterBefore = unboundCaster;
+        boolean waivedBefore = unboundCostWaived;
+        unboundCaster = player;
+        unboundCostWaived = false;
+        try {
+            cast.run();
+            return unboundCostWaived;
+        } finally {
+            unboundCaster = casterBefore;
+            unboundCostWaived = waivedBefore;
+        }
+    }
+
+    /** True while castUnbound is running for this player. */
+    public static boolean isCastingUnbound(Player player) {
+        return player != null && player == unboundCaster;
+    }
+
+    /** SoulCore calls this when it leaves a cost unpaid during castUnbound. */
+    static void costWaived() {
+        unboundCostWaived = true;
     }
 
     // =========================
