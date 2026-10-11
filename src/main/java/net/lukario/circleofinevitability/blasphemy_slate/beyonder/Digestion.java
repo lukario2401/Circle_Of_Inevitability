@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.shadow_slave.beyonder;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;

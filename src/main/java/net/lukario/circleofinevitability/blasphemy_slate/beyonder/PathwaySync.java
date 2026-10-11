@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.shadow_slave.beyonder;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.network.CPlayerPathwayPacket;

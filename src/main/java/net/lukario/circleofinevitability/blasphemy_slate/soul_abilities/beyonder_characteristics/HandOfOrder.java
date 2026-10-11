@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics;
 import net.minecraft.world.entity.EntityTypes;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.combat.Later;
@@ -15,8 +15,8 @@ import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.screen.ScreenAnchor;
 import net.lukario.circleofinevitability.screen.ScreenImages;
-import net.lukario.circleofinevitability.shadow_slave.beyonder.Beyonder;
-import net.lukario.circleofinevitability.shadow_slave.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -28,7 +28,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntitySpawnReason;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.Mob;
@@ -49,7 +48,6 @@ import java.util.EnumSet;
 import java.util.Set;
 import java.util.List;
 
-import java.util.List;
 public class HandOfOrder {
 //test
 

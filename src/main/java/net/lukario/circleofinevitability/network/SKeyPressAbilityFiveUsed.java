@@ -10,11 +10,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
-import static net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesCountdown;
-import static net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
-import static net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
-import static net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
-import static net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionMeteor;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesCountdown;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionMeteor;
 
 public class SKeyPressAbilityFiveUsed {
 

@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;

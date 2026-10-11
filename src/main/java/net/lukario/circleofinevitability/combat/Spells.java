@@ -1,6 +1,6 @@
 package net.lukario.circleofinevitability.combat;
 
-import net.lukario.circleofinevitability.shadow_slave.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.minecraft.core.Holder;

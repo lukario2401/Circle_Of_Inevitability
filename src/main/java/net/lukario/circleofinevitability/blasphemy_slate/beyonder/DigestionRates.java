@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.shadow_slave.beyonder;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 /**
  * Every digestion rate in one place (docs/SEQUENCES.md, "Tuning digestion").

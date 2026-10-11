@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.combat.Countdown;
@@ -15,8 +15,8 @@ import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.screen.ScreenAnchor;
 import net.lukario.circleofinevitability.screen.ScreenImages;
-import net.lukario.circleofinevitability.shadow_slave.beyonder.Beyonder;
-import net.lukario.circleofinevitability.shadow_slave.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.DamageLink;
 import net.lukario.circleofinevitability.status.DeathWard;

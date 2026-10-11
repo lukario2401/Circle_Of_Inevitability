@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.shadow_slave.soul_abilities.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics;
 
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;
@@ -7,8 +7,8 @@ import net.lukario.circleofinevitability.particles.fx.ParticleFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.lukario.circleofinevitability.root.Freeze;
-import net.lukario.circleofinevitability.shadow_slave.beyonder.Beyonder;
-import net.lukario.circleofinevitability.shadow_slave.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
