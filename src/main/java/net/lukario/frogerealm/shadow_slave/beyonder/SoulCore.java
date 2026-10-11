@@ -41,7 +41,7 @@ public class SoulCore {
         int clamped = Math.min(Beyonder.WEAKEST_SEQUENCE, Math.max(Beyonder.STRONGEST_SEQUENCE, value));
         getModData(player).putInt("sequence", clamped);
 
-        setSpirituality(player, getSpirituality(player)); // the maximum may have changed
+        setSpiritualityQuietly(player, getSpirituality(player)); // the maximum may have changed
     }
 
     // =========================
@@ -87,9 +87,29 @@ public class SoulCore {
         return tag.getFloatOr("spirituality", 0f);
     }
 
+    /** Sets spirituality (clamped to 0..max). A decrease counts as spirituality spent on an ability and feeds digestion. */
     public static void setSpirituality(Player player, float value) {
+        float before = getSpirituality(player);
+        float after = setSpiritualityQuietly(player, value);
+        if (after < before) Digestion.onSpiritualitySpent(player, before - after);
+    }
+
+    /** Sets spirituality without feeding digestion (commands, a lower maximum after a Sequence change). Returns the stored value. */
+    public static float setSpiritualityQuietly(Player player, float value) {
         float clamped = Math.min(Beyonder.maxSpirituality(player), Math.max(0, value));
         getModData(player).putFloat("spirituality", clamped);
+        return clamped;
+    }
+
+    // =========================
+    // Digestion of the current Sequence: 0..100 percent (Digestion, DigestionRates)
+    // =========================
+    public static float getDigestion(Player player) {
+        return getModData(player).getFloatOr("digestion", 0f);
+    }
+
+    public static void setDigestion(Player player, float percent) {
+        getModData(player).putFloat("digestion", Math.min(100f, Math.max(0f, percent)));
     }
 
     // =========================
