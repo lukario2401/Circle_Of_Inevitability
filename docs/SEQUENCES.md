@@ -1,0 +1,96 @@
+# Sequences, Pathways, digestion
+
+The progression system, Lord of the Mysteries style. Acting, potions, ingredients and rituals are **not** implemented yet; see "Extending" at the end.
+
+## The model
+
+| Word | Meaning | Where |
+| --- | --- | --- |
+| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
+| Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
+| Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
+| power level | The old ascension level, `9 - Sequence` kept within 1..8. Used only for scaling (maximum spirituality, regen, Key Of Stars star cap), never for gates. | `Beyonder.powerLevel` |
+| power scale | The old tier multiplier (1..7, used to be set by hand), now `9 - Sequence` at most 7. | `Beyonder.powerScale` |
+
+All of it is saved in the player's persistent data under the tag `forgerealmmod` (keys `pathway`, `sequence`, `digestion`, `spirituality`), which is copied on death (`SoulCore.onPlayerClone`) and saved with the player, so it survives death, respawn and relog. The client gets Pathway, Sequence and digestion (whole percent) through `CSyncPathwayPacket`, sent by `PathwaySync` whenever one of them changes.
+
+Ability gates read naturally: `if (!Beyonder.hasSequence(player, 6)) return;` means "needs Sequence 6 or stronger".
+
+## Old stage to Sequence
+
+The old ascension stage ran 1..8 (default 1); Sequence = 9 - stage. A gate `stage >= N` became `Beyonder.hasSequence(player, 9 - N)`.
+
+| Old stage | Sequence | Power level | Power scale | Max spirituality | Regen per tick |
+| --- | --- | --- | --- | --- | --- |
+| (none, 0) | 9 | 1 | 1 | 20 | 0.14 |
+| 1 | 8 | 1 | 1 | 20 | 0.14 |
+| 2 | 7 | 2 | 2 | 400 | 1.33 |
+| 3 | 6 | 3 | 3 | 1980 | 5.4 |
+| 4 | 5 | 4 | 4 | 6400 | 16 |
+| 5 | 4 | 5 | 5 | 15500 | 41.7 |
+| 6 | 3 | 6 | 6 | 32400 | 108 |
+| 7 | 2 | 7 | 7 | 59780 | 343 |
+| 8 | 1 | 8 | 7 | 78400 | refills at once |
+| (none, 9) | 0 | 8 | 7 | 78400 | refills at once |
+
+Maximum spirituality is the old formula with a full bar of the removed soul-shard resource: `((250 x scale x level) / 100) x (level x 10) x scale` (integer steps as before). Regen is the old `scale x scale x level / (8 - level)`. Sequences 2, 1 and 0 unlock no new abilities yet.
+
+Note: most abilities cost 250 or more, so at Sequences 9 and 8 (maximum 20) they cannot be paid for. That is what the old formulas give at the old stage 1 and tier 1.
+
+## Required Sequence of every ability key
+
+Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings).
+
+| Pathway | G (1) | H (2) | J (3) | K (4) | L (5) | N (6) | M (7) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| Key Of Stars | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
+| Worm Of Time | Ability 1: 9 | - | - | - | - | - | - |
+| Hand Of Order | Buff 9 | Decree 8 | Edict 7 | Ability 4: 6 | Ability 5: 5 | Words 4 | Bind 3 |
+| Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |
+| Prince Of Abolition | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
+| Pale Emperor | Root 9 | Door 8 | Serpent 7 | Spear Skull 7 | Spikes 6 | Wings 5 | Wraiths 4 |
+
+The number is the weakest Sequence that can use it (that Sequence and every stronger one).
+
+## Digestion
+
+Digestion rises from three sources, all in `shadow_slave/beyonder/DigestionRates.java`:
+
+| Constant | Default | Meaning |
+| --- | --- | --- |
+| `SPEED` | 1.0 | Multiplies every rate. 2.0 halves the time, 0.5 doubles it. |
+| `PERCENT_PER_MINUTE_PLAYED` | 0.9 | Time online, given every `TIME_STEP_TICKS` (20 = each second). |
+| `PERCENT_PER_FULL_BAR_SPENT` | 0.9 | Spirituality spent on abilities, proportional to the cost as a share of the maximum. |
+| `MAX_PERCENT_PER_SPEND` | 0.5 | Cap for a single spend. |
+| `PERCENT_PER_HOSTILE_KILL` | 0.25 | Killing a mob that is an `Enemy` (zombies, skeletons...). |
+
+Target: a full bar in about 45 minutes of normal active play, roughly 40% from time (0.9 x 45), 40% from spending about one full bar of spirituality a minute, 20% from a kill every 30 seconds. To tune, change `SPEED` first; change a single source to shift the balance. Any decrease of spirituality through `SoulCore.setSpirituality` counts as spending; commands and Sequence changes use `setSpiritualityQuietly` and give nothing.
+
+## Advancing
+
+`/sequence advance` (anyone, for themselves): at 100 percent the Sequence goes down by one, digestion resets to 0, the maximum spirituality follows the new Sequence, with a chat message and the level-up sound. Refused at Sequence 0 ("You are already at Sequence 0...") and below 100 percent ("Your current Sequence is only P% digested..."). There is no loss of control.
+
+## Commands
+
+| Command | Who | Does |
+| --- | --- | --- |
+| `/sequence info` | everyone | Your Pathway, Sequence, digestion and spirituality (current of maximum). |
+| `/sequence advance` | everyone | Advance yourself (see above). |
+| `/sequence pathway <player> "<Pathway name>"` | op (level 2) | Set the Pathway. Tab completes the six names (quotes needed). `"none"` clears it. |
+| `/sequence set <player> <0-9>` | op | Set the Sequence. |
+| `/sequence digestion <player> <0-100>` | op | Set digestion. |
+| `/sequence spirituality <player> <amount>` | op | Set spirituality (clamped to the maximum). |
+| `/soul corruption <player> [0-100]` | op | Show or set corruption (unchanged). |
+
+The old `/soul get, setAspect, setstage, settier, setshards, addshards, addSoulEssence` are gone.
+
+## Extending with acting or potions later
+
+`AdvancementRequirement` is the extension point; `Digestion.requirement` is the one `/sequence advance` checks (default `AdvancementRequirement.DIGESTED`: digestion at 100 percent). Look for `TODO(acting/potions)`. To add a potion step, write a requirement (for example "drank the potion of the next Sequence") and combine it:
+
+```java
+Digestion.requirement = AdvancementRequirement.DIGESTED.and(new DrankPotionRequirement());
+```
+
+Acting would add a fourth digestion source: call `Digestion.add(player, percent)` from wherever an acting rule is followed, with its rate in `DigestionRates`.

@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
-/** /soul corruption. The progression commands are /sequence (SequenceCommands). */
+/** /soul corruption <player> [amount]. The progression commands are /sequence (SequenceCommands). */
 public class SoulCommands {
 
     @SubscribeEvent
@@ -30,6 +30,12 @@ public class SoulCommands {
                 // =========================
                 .then(Commands.literal("corruption")
                         .then(Commands.argument("player", EntityArgument.player())
+                                // /soul corruption <player>: shows it (was part of the removed /soul get)
+                                .executes(ctx -> {
+                                    Player player = EntityArgument.getPlayer(ctx, "player");
+                                    ctx.getSource().sendSuccess(() -> Component.literal("Corruption of " + player.getName().getString() + ": " + SoulCore.getCorruption(player)), false);
+                                    return 1;
+                                })
                                 // Restrict command inputs to exactly 0 - 100
                                 .then(Commands.argument("amount", IntegerArgumentType.integer(0, 100))
                                         .executes(ctx -> {

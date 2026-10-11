@@ -19,7 +19,7 @@ cycles through all eight swings (see [The eight swings](#the-eight-swings)).
             SwingPlayer  (client tick: "did this player start a new main-hand swing?")
                   |
                   |  SwingRules.find(player, main-hand stack) -- first matching SwingRule, or none
-                  |        uses the player's aspect: ClientAspectData (you), PlayerAspectCache (others)
+                  |        uses the player's Pathway: ClientPathwayData (you), PlayerPathwayCache (others)
                   |
                   |  rule.sequence() -> next swing id (cycles; starts over after resetTicks)
                   |  SwingAnimations.get(id) -> SwingAnimation (keyframes)      missing id = vanilla
@@ -43,13 +43,13 @@ cycles through all eight swings (see [The eight swings](#the-eight-swings)).
 | `SwingAnimation` | One swing: id, length in ticks, mirror flag, keyframes. Also `Easing` and `Pose`. Pure data. |
 | `SwingAnimations` | The registry, the **global tuning constants** and **every definition**. The one file to edit for new swings and tuning. |
 | `SwingRule` | Interface: condition on (player, main-hand stack) + sequence of swing ids + reset time. |
-| `SwingRules` | The registered rules (first match wins) and helpers (`hasAspect`, `aspectOf`). |
+| `SwingRules` | The registered rules (first match wins) and helpers (`hasPathway`, `pathwayOf`). |
 | `SwingPlayer` | Notices swings, cycles sequences, remembers what plays and what it blends from; `poseFor`, `play`, `preview`. |
 | `FirstPersonSwing` | First-person drawing hook (`applyItemTransform` is the whole first-person transform). |
 | `ThirdPersonSwing` | Third-person posing hook. |
 | `SwingAnimCommand` | `/swinganim` client command. |
-| `PlayerAspectCache` | Other players' aspects on this client. |
-| `network/CPlayerAspectPacket` | Server -> client: one player's aspect (sent by `AspectSync`). |
+| `PlayerPathwayCache` | Other players' Pathways on this client. |
+| `network/CPlayerPathwayPacket` | Server -> client: one player's Pathway (sent by `PathwaySync`). |
 
 ### When vanilla still draws
 
@@ -73,9 +73,9 @@ just started (or restarted: `swingTime` went down) on the main hand is a new swi
 - **Other players**: vanilla sends their swings (`ClientboundAnimatePacket`); the client cannot tell
   an attack from "used a block", so any main-hand swing counts.
 
-Their aspect is the one thing the client did not know, so `AspectSync` (server) now also sends
-`CPlayerAspectPacket(uuid, aspect)` to everyone when a player's aspect changes, and sends a joining
-player the aspects of everyone already online. That is the only network change.
+Their Pathway is the one thing the client did not know, so `PathwaySync` (server) now also sends
+`CPlayerPathwayPacket(uuid, Pathway)` to everyone when a player's Pathway changes, and sends a joining
+player the Pathways of everyone already online. That is the only network change.
 
 ## The eight swings
 
@@ -210,7 +210,7 @@ One constant in `SwingRules`, one `register(...)` line in its `static` block:
 ```java
 /** Hand Of Order with an axe: two heavy overhead chops, then a horizontal cut. */
 public static final SwingRule HAND_OF_ORDER_AXE = SwingRule.of(
-        (player, held) -> hasAspect(player, "Hand Of Order") && held.is(ItemTags.AXES),
+        (player, held) -> hasPathway(player, "Hand Of Order") && held.is(ItemTags.AXES),
         DEFAULT_RESET_TICKS,                                   // 1.5 s pause -> back to the first
         SwingAnimations.VERTICAL_DOWN, SwingAnimations.HORIZONTAL, SwingAnimations.VERTICAL_DOWN,
         SwingAnimations.HORIZONTAL_REVERSE);
@@ -218,13 +218,13 @@ public static final SwingRule HAND_OF_ORDER_AXE = SwingRule.of(
 
 - The condition gets the player and their **main-hand** stack. Use any test: an item tag
   (`ItemTags.SWORDS`, `ItemTags.AXES`, `ItemTags.SPEARS`...), an item (`held.is(Items.MACE)`),
-  `held.isEmpty()` for fists, the aspect, a status, anything the client can see.
+  `held.isEmpty()` for fists, the Pathway, a status, anything the client can see.
 - Order the sequence so the same swing never comes twice in a row (also from the last id back to the
   first) and the direction changes from one swing to the next.
 - Fists: `held.isEmpty()` works for third person; first person keeps vanilla's punch (only items are
   redrawn, the bare arm is not).
 - Rules are checked in order; the first match wins. Put specific rules before general ones.
-- Any class works for remote players too, because every aspect is synced.
+- Any class works for remote players too, because every Pathway is synced.
 - A condition that throws counts as "no match"; it never crashes the game.
 
 ## Link a rule to a MeleeCombos step
@@ -241,7 +241,7 @@ Two ways to line the animations up with a combo's steps:
 2. **Exact (one small packet per step).** In the combo step (server), send a packet such as
    `CPlaySwingPacket(entityId, swingId)` to the players tracking the attacker; in its client handler
    (behind `FMLEnvironment.dist.isClient()`, like the other C-packets) call
-   `SwingPlayer.play(player, swingId, 1)`. Do not register a `SwingRule` for that aspect/weapon, or
+   `SwingPlayer.play(player, swingId, 1)`. Do not register a `SwingRule` for that Pathway/weapon, or
    register one with the first step only. Cost: the animation starts one round trip after the click.
 
 Either way the rule or packet only chooses the picture; the combo's effects stay on the server.
@@ -291,7 +291,7 @@ A client command, so it needs no op rights and only you see the result:
 - `/swinganim list` lists every id with its length in ticks at the current `SPEED`
   (`Swings (8): horizontal 14t, horizontal_reverse 14t, ...`).
 - `/swinganim horizontal` plays it on yourself once, with whatever is in your main hand, whatever
-  your aspect (F5 for third person). Tab completes every id, including `stab`, `uppercut` and
+  your Pathway (F5 for third person). Tab completes every id, including `stab`, `uppercut` and
   `spin_slash`.
 - `/swinganim horizontal 5` plays it five times slower (1 to 20) so you can see each keyframe.
 

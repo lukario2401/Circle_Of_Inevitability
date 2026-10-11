@@ -22,6 +22,7 @@ Dropped on purpose: every aspect, the expeditioner, every item. Never port those
 - Use the current AttributeModifier constructors.
 - Every event subscriber inner class has a unique name.
 - Reusable pieces stay in the shared helpers. Animation durations are constants that can change without breaking hit detection.
+- Progression (Pathway, Sequence 9..0, digestion, spirituality, /sequence): read docs/SEQUENCES.md before touching it. The old words aspect, stage, tier, soul essence and shards are gone from src; do not bring them back (they remain only in reference/ and in the history parts of MIGRATION_NOTES.md).
 - Custom weapon swing animations (client/animation): read docs/ANIMATIONS.md before adding a swing, a rule, a weapon type or a class to them.
 
 ## Stages (one per session; I will say which)
