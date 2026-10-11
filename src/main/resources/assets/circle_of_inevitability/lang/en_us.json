@@ -74,5 +74,7 @@
   "hud.circle_of_inevitability.spirituality": "Spirituality: %s",
   "hud.circle_of_inevitability.sequence_line": "Sequence %s - %s - Digestion %s%%",
   "message.circle_of_inevitability.not_enough_spirituality": "Not enough spirituality.",
-  "message.circle_of_inevitability.spirituality_spent": "Your spirituality is spent."
+  "message.circle_of_inevitability.spirituality_spent": "Your spirituality is spent.",
+  "message.circle_of_inevitability.damage_fx.on": "Damage fx on: the damage you deal shows above your target.",
+  "message.circle_of_inevitability.damage_fx.off": "Damage fx off."
 }

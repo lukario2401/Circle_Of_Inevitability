@@ -40,6 +40,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Cast an ability without its Sequence and without its cost | [`Beyonder.castUnbound`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder/` |
 | Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/soul_abilities/beyonder_characteristics/` |
 | Something a Pathway always has from a Sequence on, with no key press (a potion effect, or code of your own once a second) | `SequencePassives` ([SEQUENCES.md](SEQUENCES.md#passives)) | `blasphemy_slate/beyonder/` |
+| Damage that names no attacker (`damageSources().magic()`, an explosion or lightning with no owner) showing as the caster's damage number | `DamageFx.credit(player, target)` right before it ([DAMAGE_FX.md](DAMAGE_FX.md)) | `combat/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 

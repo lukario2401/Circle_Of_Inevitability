@@ -3,6 +3,8 @@ package net.lukario.circleofinevitability.client;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.particles.ModParticles;
 import net.lukario.circleofinevitability.particles.VoidRiftParticle;
+import net.lukario.circleofinevitability.particles.fx.DamageNumberParticle;
+import net.lukario.circleofinevitability.particles.fx.DamageNumberRenderer;
 import net.lukario.circleofinevitability.particles.fx.ModelFxParticle;
 import net.lukario.circleofinevitability.particles.fx.ModelFxRenderer;
 import net.lukario.circleofinevitability.particles.fx.ParticleFxParticle;
@@ -21,9 +23,10 @@ public class ClientParticleHandler {
 
     @SubscribeEvent
     public static void registerParticles(RegisterParticleProvidersEvent event) {
-        // 26.2: slashes and models are drawn by their own particle groups (fired once, on the main thread, from Minecraft's constructor)
+        // 26.2: slashes, models and damage numbers are drawn by their own particle groups (fired once, on the main thread, from Minecraft's constructor)
         SlashRenderTypes.register();
         ModelFxRenderer.register();
+        DamageNumberRenderer.register();
 
         event.registerSpriteSet(
                 ModParticles.VOID_RIFT.get(),
@@ -38,5 +41,8 @@ public class ClientParticleHandler {
                 (fx, level, x, y, z, xd, yd, zd, random) -> SlashParticle.create(fx, level, x, y, z, xd, yd, zd));
         event.registerSpecial(ModParticles.MODEL.get(),
                 (fx, level, x, y, z, xd, yd, zd, random) -> ModelFxParticle.create(fx, level, x, y, z, xd, yd, zd));
+        // the numbers of /damagefx
+        event.registerSpecial(ModParticles.DAMAGE_NUMBER.get(),
+                (number, level, x, y, z, xd, yd, zd, random) -> DamageNumberParticle.create(number, level, x, y, z, xd, yd, zd));
     }
 }

@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics;
 import net.minecraft.world.entity.EntityTypes;
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.DamageFx;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;
 import net.lukario.circleofinevitability.menu.AbilityMenu;
@@ -707,6 +708,8 @@ public class HandOfOrder {
         Vec3 center = player.position().add(0, 0.5, 0);
         ParticleShapes.ring(sl, ORDER_WAVE, center, 1.0, 120, 0.9);
         ParticleShapes.burst(sl, GOLD_SPLINTER, center, 80, 0.4, 1.2);
+        // only for /damagefx: the blast below names nobody (an explosion reaches twice its power)
+        for (LivingEntity near : livingAround(player, sl, GOD_EXPLOSION_POWER * 2f)) DamageFx.credit(player, near);
         // null source = nobody is excluded, so the caster takes the blast as well
         sl.explode(null, center.x, center.y, center.z, GOD_EXPLOSION_POWER, Level.ExplosionInteraction.NONE);
     }
@@ -769,6 +772,7 @@ public class HandOfOrder {
             if (bolt == null) continue;
             bolt.snapTo(target.getX(), target.getY(), target.getZ());
             bolt.setCause(player);
+            DamageFx.credit(player, target); // only for /damagefx: a lightning bolt names nobody
             sl.addFreshEntity(bolt);
         }
     }

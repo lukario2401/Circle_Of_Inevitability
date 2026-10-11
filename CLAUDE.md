@@ -24,6 +24,7 @@ Dropped on purpose: every aspect, the expeditioner, every item. Never port those
 - Reusable pieces stay in the shared helpers. Animation durations are constants that can change without breaking hit detection.
 - Progression (Pathway, Sequence 9..0, digestion, spirituality, /sequence): read docs/SEQUENCES.md before touching it. The old words aspect, stage, tier, soul essence and shards are gone from src; do not bring them back (they remain only in reference/ and in the history parts of MIGRATION_NOTES.md).
 - Custom weapon swing animations (client/animation): read docs/ANIMATIONS.md before adding a swing, a rule, a weapon type or a class to them.
+- Damage numbers (/damagefx, docs/DAMAGE_FX.md): damage that names the player shows by itself. Before a hurt whose source names nobody (damageSources().magic(), an explosion or lightning with no owner) call DamageFx.credit(player, target).
 
 ## Stages (one per session; I will say which)
 1 scaffold | 2 root, status, effects, handler, events, soul_shards | 3 combat, network, item/custom commands and other | 4 particles/fx, client, menu, screen, item/custom detection and abilitys (rendering and input) | 5 the seven classes, one at a time | 6 assets and cleanup
