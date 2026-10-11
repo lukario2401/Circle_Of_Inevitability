@@ -47,7 +47,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Pathway | G (1) | H (2) | J (3) | K (4) | L (5) | N (6) | M (7) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Key Of Stars | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
-| Worm Of Time | Life Theft 9 | Theft 8 | - | - | - | - | - |
+| Worm Of Time | Life Theft 9 | Theft 8 | Parasite 4 | - | - | - | - |
 | Hand Of Order | Buff 9 | Decree 8 | Edict 7 | Ability 4: 6 | Ability 5: 5 | Words 4 | Bind 3 |
 | Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |
 | Prince Of Abolition | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
@@ -56,6 +56,8 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 The number is the weakest Sequence that can use it (that Sequence and every stronger one).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
+
+Worm Of Time's Parasite (J) is the only key that works while its player is inside a host: sneak + J puts them back out (`status/Parasite`; see "Parasite" in [SPELL_KIT.md](SPELL_KIT.md)).
 
 ## Passives
 

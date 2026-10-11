@@ -34,7 +34,7 @@ public final class PathwayAbilities {
      * name:      what players are told it is called.
      * sequence:  the weakest Sequence that can use it.
      * sneakForm: true if it does something else when cast while sneaking.
-     * stealable: false if it only works for its own Pathway (it needs that Pathway's stars, opens its menu) or does nothing yet.
+     * stealable: false if it only works for its own Pathway (it needs that Pathway's stars, opens its menu, needs its key to end) or does nothing yet.
      */
     public record Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable, Cast cast) {}
 
@@ -126,7 +126,9 @@ public final class PathwayAbilities {
             new Ability("Worm Of Time", 1, "Life Theft", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility1(player, level, sl, true)),
             new Ability("Worm Of Time", 2, "Theft", 8, SNEAK, OWN_PATHWAY_ONLY,           // the theft itself is not stolen
-                    (player, level, sl) -> WormOfTime.wormOfTimeAbility2(player, level, sl, true)));
+                    (player, level, sl) -> WormOfTime.wormOfTimeAbility2(player, level, sl, true)),
+            new Ability("Worm Of Time", 3, "Parasite", 4, SNEAK, OWN_PATHWAY_ONLY,        // its sneak form is the way back out, and only this Pathway has that key
+                    (player, level, sl) -> WormOfTime.wormOfTimeAbility3(player, level, sl, true)));
 
     private PathwayAbilities() {}
 

@@ -4,7 +4,6 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.world.level.GameType;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
@@ -85,7 +84,7 @@ public class HudTimerOverlay {
 
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) return;
-        if (minecraft.gameMode != null && minecraft.gameMode.getPlayerMode() == GameType.SPECTATOR) return;
+        // (shown to spectators too: a player inside a host, status/Parasite, is one and has a clock to watch)
 
         Font font = minecraft.font;
         int x = guiGraphics.guiWidth() / 2 + 91 + GAP_FROM_HOTBAR;

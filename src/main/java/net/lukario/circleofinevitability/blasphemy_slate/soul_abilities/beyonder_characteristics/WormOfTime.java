@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.HudTimer;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;
 import net.lukario.circleofinevitability.combat.SpellFx;
@@ -15,6 +16,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Marks;
+import net.lukario.circleofinevitability.status.Parasite;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -91,6 +93,51 @@ public class WormOfTime {
     private static final ModelFx THEFT_LIGHT = ModelFx.of("orb")
             .pivot(8, 8, 8).glow().unshaded().seeThrough()
             .color(0xF08CFFE6);
+
+    // =========================
+    // Ability 3 - Parasite: the numbers and the looks
+    // (what it DOES to the host is further down: "Parasite: what it does")
+    // =========================
+    private static final int PARASITE_KEY = 3;                    // J
+    private static final int PARASITE_SEQUENCE = 4;
+    private static final int PARASITE_COST = 6000;                // for going in. Leaving costs nothing
+    private static final double PARASITE_RANGE = 6;               // how near the host has to be (blocks)
+    private static final int PARASITE_MAX_TICKS = 2400;           // two minutes inside at most (0 = no limit)
+    private static final int PARASITE_BEAT = 20;                  // ticks between two beats: each beat costs the upkeep and drains the host
+    private static final int PARASITE_UPKEEP = 2600;              // spirituality at each beat (0 = free). Sequence 4 regains 2160 a second,
+                                                                  // so it slowly runs dry; from Sequence 3 on only the time limit ends it
+    private static final float PARASITE_DRAIN = 2f;               // health the host loses at each beat (2 = one heart, 0 = no drain)
+    private static final float PARASITE_DRAIN_GAIN = 1f;          // how much of that the parasite gains (1 = all of it)
+    private static final float PARASITE_DRAIN_LEAVES = 2f;        // the drain never takes the host below this (0 = it can kill its host)
+    private static final float PARASITE_THROWN_OUT_DAMAGE = 8f;   // what the parasite takes when its host dies (0 = nothing)
+    private static final boolean PARASITE_HOST_IS_TOLD = true;    // a host that is a player gets a chat line and a clock
+    private static final int PARASITE_FLIGHT_TICKS = 8;           // looks only: how long the light takes to reach the host
+    private static final int PARASITE_COLOR = 0x52E3C4;           // the clocks by the hotbar
+    private static final String PARASITE_CLOCK = "worm_of_time_parasite";          // the parasite's clock (combat/HudTimer)
+    private static final String PARASITE_HOST_CLOCK = "worm_of_time_parasitized";  // the host's clock
+
+    /** Hands status/Parasite the four methods under "Parasite: what it does". */
+    private static final Parasite.Hooks PARASITE_HOOKS = new Parasite.Hooks() {
+        @Override
+        public void entered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
+            parasiteEntered(parasite, host, sl);
+        }
+
+        @Override
+        public void tick(ServerPlayer parasite, LivingEntity host, ServerLevel sl, int ticksInside) {
+            parasiteTick(parasite, host, sl, ticksInside);
+        }
+
+        @Override
+        public void left(ServerPlayer parasite, LivingEntity host, ServerLevel sl, Parasite.End why) {
+            parasiteLeft(parasite, host, sl, why);
+        }
+
+        @Override
+        public boolean allowsKey(int key) {
+            return key == PARASITE_KEY;               // the only ability key that works from inside a host
+        }
+    };
 
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
             .step(WormOfTime::comboRing)
@@ -264,6 +311,140 @@ public class WormOfTime {
         }
     }
 
+    // =========================
+    // Ability 3 - Parasite
+    // Normal: you leave your body and go into what you look at (a mob or a player). It carries you, you see
+    //         through its eyes, and nothing can see or hurt you. While you are inside: an upkeep and a life
+    //         drain at each beat, two minutes at most, and you are thrown out hurt if it dies.
+    // Sneak:  from inside a host, puts you back out, standing behind it.
+    // Going in, being carried and coming out is status/Parasite. What the parasite does to its host is the
+    // four methods under "Parasite: what it does": that is where new effects go.
+    // =========================
+    public static void wormOfTimeAbility3(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseCharacteristic(player, bypassClassCheck)) return;
+        if (!Beyonder.hasSequence(player, PARASITE_SEQUENCE)) return;
+
+        if (Parasite.isInside(player)) {
+            if (player.isShiftKeyDown()) {
+                Parasite.leave(player, Parasite.End.LEFT);
+            } else {
+                // TODO(parasite): the key pressed from inside without sneaking is free for something later
+                player.sendSystemMessage(Component.literal("You are inside a host. Sneak and press the key again to leave it."));
+            }
+            return;
+        }
+        if (player.isShiftKeyDown()) {
+            player.sendSystemMessage(Component.literal("You are in no host."));
+            return;
+        }
+        parasitize(player, sl);
+    }
+
+    private static void parasitize(Player player, ServerLevel sl) {
+        if (!(player instanceof ServerPlayer parasite)) return;
+        LivingEntity host = Spells.aimEnemy(player, sl, PARASITE_RANGE);
+        if (host == null) {
+            player.sendSystemMessage(Component.literal("There is no host close enough."));
+            return;                                                  // nothing spent
+        }
+        String refusal = parasiteRefusal(player, host);
+        if (refusal != null) {
+            player.sendSystemMessage(Component.literal(refusal));
+            return;
+        }
+        if (!Spells.paySpirituality(player, PARASITE_COST)) return;
+
+        Vec3 chest = player.position().add(0, 1.1, 0);              // where the body was, for the looks
+        if (!Parasite.enter(parasite, host, PARASITE_MAX_TICKS, PARASITE_HOOKS)) {
+            // (refused after all, e.g. by another mod: checked above, so this should not happen)
+            SoulCore.setSpiritualityQuietly(player, SoulCore.getSpirituality(player) + PARASITE_COST);
+            player.sendSystemMessage(Component.literal("You cannot enter that."));
+            return;
+        }
+        enterShows(sl, chest, host);
+    }
+
+    /**
+     * Why this player cannot take this host, as the text they are told, or null if they can.
+     * TODO(parasite): rules for later go here (a Beyonder of a stronger Sequence, a boss, a host taken too recently...).
+     */
+    private static String parasiteRefusal(Player player, LivingEntity host) {
+        if (Parasite.isHost(host)) return "Something lives in it already.";
+        if (!Parasite.canEnter(player, host)) return "You cannot enter that.";
+        return null;
+    }
+
+    // ---------- Parasite: what it does. New effects go into these four methods ----------
+
+    /** Once, when the parasite has just gone in. */
+    private static void parasiteEntered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
+        parasite.sendSystemMessage(Component.literal("You are inside " + host.getName().getString()
+                + ". Sneak and press the key again to leave it."));
+        if (PARASITE_MAX_TICKS > 0) HudTimer.show(parasite, PARASITE_CLOCK, "Parasite", PARASITE_MAX_TICKS, PARASITE_COLOR);
+        if (PARASITE_HOST_IS_TOLD && host instanceof Player carrier) {
+            carrier.sendSystemMessage(Component.literal("Something has crawled into you."));
+            if (PARASITE_MAX_TICKS > 0) HudTimer.show(carrier, PARASITE_HOST_CLOCK, "Parasitized", PARASITE_MAX_TICKS, 0xFF7A6A);
+        }
+        // TODO(parasite): what begins with it (a mark on the host, a first bite, a weakness...)
+    }
+
+    /** Every tick while inside (ticksInside starts at 1). Parasite.leave(parasite, ...) from here ends it. */
+    private static void parasiteTick(ServerPlayer parasite, LivingEntity host, ServerLevel sl, int ticksInside) {
+        if (ticksInside % PARASITE_BEAT != 0) return;               // everything below happens once a beat
+
+        if (PARASITE_UPKEEP > 0 && !Spells.paySpirituality(parasite, PARASITE_UPKEEP)) {
+            Parasite.leave(parasite, Parasite.End.OUT_OF_POWER);
+            return;
+        }
+        parasiteDrain(parasite, host, sl);
+        // TODO(parasite): more that happens while inside (stealing from the host without aiming, its spirituality,
+        //                 steering it, slowly taking it over...). 'host' may be a mob or a Player.
+    }
+
+    /**
+     * Once, when it is over, whatever ended it ('why'). The parasite has its body back and stands outside.
+     * 'host' is null if it is no longer in this world, and dead when why is HOST_DIED.
+     */
+    private static void parasiteLeft(ServerPlayer parasite, LivingEntity host, ServerLevel sl, Parasite.End why) {
+        HudTimer.hide(parasite, PARASITE_CLOCK);
+        parasite.sendSystemMessage(Component.literal(parasiteEndText(why)));
+        if (PARASITE_HOST_IS_TOLD && host instanceof Player carrier) {
+            HudTimer.hide(carrier, PARASITE_HOST_CLOCK);
+            if (why != Parasite.End.HOST_DIED) carrier.sendSystemMessage(Component.literal("Whatever was inside you is gone."));
+        }
+        if (why == Parasite.End.PARASITE_GONE) return;              // died or logged out: nothing more to do or show
+
+        leaveShows(parasite, sl, host);
+        if (why == Parasite.End.HOST_DIED && PARASITE_THROWN_OUT_DAMAGE > 0) {
+            parasite.invulnerableTime = 0;
+            parasite.hurt(sl.damageSources().magic(), PARASITE_THROWN_OUT_DAMAGE);
+        }
+        // TODO(parasite): what it leaves behind (a lasting mark or wound on the host, a time before the next host...)
+    }
+
+    /**
+     * The life drain of one beat: the host loses health, the parasite gains it. It takes health directly, as
+     * Life Theft does (no hurt flash, no knockback, armor does not help, the host does not turn on anyone).
+     */
+    private static void parasiteDrain(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
+        float take = Math.min(PARASITE_DRAIN, host.getHealth() - PARASITE_DRAIN_LEAVES);
+        if (take <= 0) return;
+        if (host.getHealth() > take) host.setHealth(host.getHealth() - take);
+        else host.kill(sl);                                          // only with PARASITE_DRAIN_LEAVES = 0
+        if (PARASITE_DRAIN_GAIN > 0) parasite.heal(take * PARASITE_DRAIN_GAIN);
+    }
+
+    private static String parasiteEndText(Parasite.End why) {
+        switch (why) {
+            case LEFT:          return "You leave your host.";
+            case TIME_UP:       return "You cannot stay inside any longer.";
+            case OUT_OF_POWER:  return "Your spirituality runs dry and your host casts you out.";
+            case HOST_DIED:     return "Your host died. You are thrown out of it.";
+            case HOST_GONE:     return "Your host is gone.";
+            default:            return "You are in no host any more.";
+        }
+    }
+
     // ---------- what is seen and heard (nothing below changes what happens) ----------
 
     /** The theft: a ring closes on the target, a thread joins it to the thief's hand and a light flies along it. */
@@ -305,6 +486,27 @@ public class WormOfTime {
         ParticleShapes.slash(sl, COMBO_RING.radius(1.6f).lifetime(8).sweep(3), chest, player.getYRot(), 0f, 0f);
         ParticleShapes.burst(sl, COMBO_STAR, chest.add(0, 0.9, 0), 22, 0.08, 0.3);
         Spells.sound(sl, player.position(), SoundEvents.BEACON_POWER_SELECT, 0.8f, 1.6f);
+    }
+
+    /** Going in: the body comes apart where it stood, and a thread and a light run from there into the host. */
+    private static void enterShows(ServerLevel sl, Vec3 chest, LivingEntity host) {
+        Vec3 heart = host.getBoundingBox().getCenter();
+        ParticleShapes.burst(sl, COMBO_STAR_WHITE, chest, 24, 0.06, 0.25);
+        SpellFx.closingRing(sl, chest.add(0, -1.1, 0), 1.4, COMBO_MID, 8, 0);
+        ParticleShapes.slashBetween(sl, THEFT_THREAD.lifetime(PARASITE_FLIGHT_TICKS + 4).sweep(3), chest, heart);
+        flyInto(sl, THEFT_LIGHT.scale(0.5f).spin(24f).lifetime(PARASITE_FLIGHT_TICKS + 3).fade(1, 3),
+                chest, host, host.getBbHeight() * 0.5, PARASITE_FLIGHT_TICKS);
+        SpellFx.closingRing(sl, host.position(), Math.max(1.0, host.getBbWidth() * 1.4), COMBO_MID, 8, PARASITE_FLIGHT_TICKS);
+        Spells.sound(sl, chest, SoundEvents.ILLUSIONER_CAST_SPELL, 0.7f, 0.8f);
+        Spells.sound(sl, host.position(), SoundEvents.ENCHANTMENT_TABLE_USE, 0.8f, 0.7f);
+    }
+
+    /** Coming out: sparks leave the host (if it is still there) and a ring bursts where the parasite stands again. */
+    private static void leaveShows(ServerPlayer parasite, ServerLevel sl, LivingEntity host) {
+        if (host != null) ParticleShapes.burst(sl, COMBO_STAR_WHITE, host.getBoundingBox().getCenter(), 18, 0.05, 0.22);
+        SpellFx.shockRing(sl, parasite.position(), 1.8, COMBO_HEAD, 8, 0);
+        ParticleShapes.burst(sl, COMBO_STAR, parasite.position().add(0, 1.1, 0), 22, 0.08, 0.3);
+        Spells.sound(sl, parasite.position(), SoundEvents.BEACON_POWER_SELECT, 0.8f, 1.2f);
     }
 
     /** Like SpellFx.homing, but the model ends 'height' blocks above the entity's feet instead of at them. */
