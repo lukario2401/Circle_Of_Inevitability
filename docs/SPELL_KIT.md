@@ -1,0 +1,953 @@
+# Spell kit: ready-made parts for abilities
+
+The Attendant Of Mysteries abilities are built from small tools that any Pathway can use: something that flies and hits, a countdown on the screen, a line between two moving things, damage that goes somewhere else, taking over a mob, vanishing, cheating death.
+
+Nothing needs registering. Call them from your ability method. The 3D models themselves are covered in [MODEL_FX.md](MODEL_FX.md).
+
+| I want | Use | Lives in |
+|---|---|---|
+| The enemy under the crosshair, everyone in a circle, the ground I aim at | [`Spells`](#1-spells-aiming-and-enemies) | `combat/` |
+| A model that flies and hits things (dagger, bolt, shell) | [`Shot`](#2-shot-a-model-that-flies-and-hits) | `combat/` |
+| A model with an animation of my own that hits what it reaches | [`AnimatedShot`](#animatedshot-a-model-that-hits-along-its-own-animation) | `combat/` |
+| 5, 4, 3, 2, 1 on the screen and then something happens | [`Countdown`](#3-countdown) | `combat/` |
+| A small clock next to the hotbar ("Revive 27s") | [`HudTimer`](#hudtimer-a-small-clock-next-to-the-hotbar) | `combat/` |
+| Ground that keeps doing something to whoever stands on it, worse the longer they stay (cursed land, a healing circle, an aura) | [`Zone`](#zone-ground-that-keeps-doing-something) | `combat/` |
+| A potion effect kept up for as long as something lasts | [`Spells.keepEffect`](#1-spells-aiming-and-enemies) | `combat/` |
+| A line that keeps joining two moving things (thread, chain, beam) | [`SpellFx.tether`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
+| Rings, warning circles, a burst of fire or of any color | [`SpellFx`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
+| A wave that spreads and hits each enemy as it gets there | [`Spells.wave`](#1-spells-aiming-and-enemies) + `SpellFx.steadyRing` | `combat/` |
+| Everyone the caster can see, or everyone in a cone | [`Spells.enemiesInSight`, `enemiesInCone`](#1-spells-aiming-and-enemies) | `combat/` |
+| Teleport to where the caster looks | [`Spells.blinkSpot`](#1-spells-aiming-and-enemies) | `combat/` |
+| A model that flies into an enemy and cannot miss | [`SpellFx.homing`](#models-on-an-entity) | `combat/` |
+| Count hits, stacks or charges on an entity, and show them | [`Marks`](#marks) + [`SpellFx.overHead`](#models-on-an-entity) | `status/` |
+| A mark under someone that follows them (cursed, warded), changing as it grows | [`SpellFx.circleUnder`](#models-on-an-entity) | `combat/` |
+| Put a ring or a field of things on uneven ground | [`Spells.groundNear`](#1-spells-aiming-and-enemies) | `combat/` |
+| Blind something (mobs too) | [`Blind`](#blind) | `status/` |
+| Make something take more damage for a while (a curse) | [`Vulnerable`](#vulnerable) | `status/` |
+| Drag something under the ground and give it back | [`Burial`](#burial) | `status/` |
+| Let a player fly for a while | [`Flight`](#flight) | `status/` |
+| Wings (or anything worn) that turn with the player | `ParticleShapes.modelOnTurning`, `PaleEmperorFx.wings(sl, player, ticks, tag)` ([MODEL_FX.md](MODEL_FX.md)) | `particles/fx/` |
+| A crown (or anything on the head) that looks where the head looks | `ParticleShapes.modelOnHead`, `PaleEmperorFx.crown(sl, player, ticks, tag)` ([MODEL_FX.md](MODEL_FX.md)) | `particles/fx/` |
+| Damage that lands on someone else, or is shared by a group | [`DamageLink`](#damagelink) | `status/` |
+| "The next hit does not land, this happens instead" | [`Substitute`](#substitute) | `status/` |
+| Take over a mob | [`Marionette`](#marionette) | `status/` |
+| Vanish: unseen, untargeted, unhurt | [`Concealment`](#concealment) | `status/` |
+| Cheat death once | [`DeathWard`](#deathward) | `status/` |
+| Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
+| Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
+| Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
+| Something a Pathway always has from a Sequence on, with no key press (a potion effect, or code of your own once a second) | `SequencePassives` ([SEQUENCES.md](SEQUENCES.md#passives)) | `blasphemy_slate/beyonder/` |
+
+All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
+
+---
+
+## The shape of an ability
+
+Every key press calls the ability method of **every** Pathway class, so each one starts by checking that the player follows its Pathway. After that: check the Sequence, check that the cast makes sense, take the cost, do it.
+
+```java
+private static final String PATHWAY = "My Pathway";             // the exact name the player's Pathway is set to
+
+public static void myPathwayIceLance(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return;
+    if (!Beyonder.hasSequence(player, 7)) return;               // needs Sequence 7 or a stronger one (a lower number)
+
+    LivingEntity target = Spells.aimEnemy(player, sl, 24);      // who am I looking at?
+    if (target == null) {
+        player.sendSystemMessage(Component.literal("No one stands before you."));
+        return;                                                 // nothing spent
+    }
+    if (!Spells.paySpirituality(player, 800)) return;           // says "Not enough spirituality." by itself
+
+    if (player.isShiftKeyDown()) {
+        // sneak cast
+    } else {
+        Spells.strike(player, target, 20f);
+    }
+}
+```
+
+`SoulCore` and `Beyonder` are in `blasphemy_slate/beyonder/`. Sequences, what each one can pay for and the Sequence every existing ability needs are in [SEQUENCES.md](SEQUENCES.md); add a new ability to its table.
+
+Then add it to the packet of the key it belongs to (`network/SKeyPressAbilityOneUsed` ... `SevenUsed`): one `import static` at the top and one line next to the others.
+
+```java
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.MyPathway.myPathwayIceLance;
+
+myPathwayIceLance(player, level, serverLevel, false);
+```
+
+A new Pathway also goes into `SequenceCommands.PATHWAYS`, so that `/sequence pathway` offers its name.
+
+Two habits worth keeping:
+
+- **Check first, pay after.** A cast that cannot work (no target, no room) should cost nothing.
+- **Messages go to chat** (`player.sendSystemMessage`). The line above the hotbar is rewritten every tick by the spirituality display, so a message there is gone at once.
+
+---
+
+## 1. Spells: aiming and enemies
+
+`Spells` answers the questions every ability asks.
+
+```java
+LivingEntity target = Spells.aimEnemy(player, sl, 24);            // the enemy under the crosshair, or null
+Vec3 spot = Spells.aimGround(player, sl, 24);                     // the ground being aimed at
+for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
+    Spells.strike(player, enemy, 12f);
+    Spells.push(enemy, spot, 0.9, 0.4);
+}
+```
+
+| Call | What you get |
+|---|---|
+| `aimEnemy(player, sl, range)` | The enemy the player is looking at (not through walls), or `null` |
+| `aimPoint(player, sl, range)` | Where the crosshair ends: on the first block in the way, else `range` blocks out |
+| `aimGround(player, sl, range)` | The ground being aimed at. Under the first enemy in the way, if there is one. Aimed at the open sky, with no ground within 24 blocks below, it is a point in the air |
+| `aimFrom(player, sl, from, range)` | The direction from `from` to what the crosshair is on. For things thrown from a hand or by a summon standing beside the player: thrown along the plain look direction they land a step to the side |
+| `groundAt(player, sl, point)` | Top of the blocks under a point |
+| `enemiesAround(player, sl, center, radius)` | Every enemy whose body is within `radius` of a point |
+| `enemiesOnLine(player, sl, from, to, grow)` | Every enemy the line passes through, nearest first. `grow` makes the line fatter |
+| `enemiesInSight(player, sl, range, halfAngle)` | Every enemy the caster can see: within `range`, at most `halfAngle` degrees from the crosshair (45 is about the whole screen), not behind blocks. Nearest first |
+| `enemiesInCone(player, sl, from, direction, range, halfAngle)` | Every enemy in a cone from any point along any direction (a breath, a roar out of a summon's mouth). Walls do not matter. Nearest first |
+| `wave(player, sl, ground, radius, ticks, height, enemy -> ...)` | A wave spreading from a spot: runs your code once for each enemy, at the moment the wave gets to it. Draw it with `SpellFx.steadyRing` and the same radius and ticks |
+| `blinkSpot(player, sl, range)` | Where the player's feet go to be at what the crosshair is on: on the ground they aim at, in front of a wall, or out in the open air. Never inside a block. `null` if there is no room |
+| `groundUnder(player, sl, entity)` | The ground an entity stands on or hangs just above: where spikes or hands for it should appear |
+| `groundNear(player, sl, spot, reach)` | The ground at a spot whose height you only roughly know: the top of the blocks within `reach` above or below it, or `null` (a cliff, a pit, open air). For a ring or a field of things on uneven land |
+| `spotAround(center, yaw, distance)` | The spot `distance` blocks from a point the way `yaw` looks. For rings: `spotAround(center, yaw + i * 360f / count, radius)` |
+| `firstEnemyOnLine(...)` | The nearest of those, or `null` |
+| `isEnemy(player, other)` | The rule itself (see below) |
+| `clearStart(player, sl, wanted)` | `wanted`, or just in front of the wall if a wall is between it and the player's eyes. For things that appear beside the player |
+| `clearLine(player, sl, from, to)` | `true` when nothing solid is between two points |
+| `freeSpotNear(player, sl, from, direction, distance)` | A spot to blink to: about `distance` blocks from `from`, in or near `direction`, where the player fits. `null` if walled in |
+| `fits(player, sl, feet)` | `true` if the player's body fits with their feet there. Check it before a teleport |
+| `strike(player, target, damage)` | Damage from the player that always counts, even right after another hit. The target becomes "what the player last hit", which marionettes and tamed wolves go after |
+| `push(target, from, strength, lift)` | Throws the target away from a point |
+| `pull(target, to, maxSpeed, lift)` | Drags it toward a point, slowing as it gets there. Call it every couple of ticks for a steady pull |
+| `keepEffect(entity, MobEffects.X, amplifier, ticks)` | A potion effect you put on again and again while something lasts (a zone, an aura, a beam). It leaves the effect alone while more than half of `ticks` is left, so wither and poison keep hurting (started afresh every few ticks they never would), and it never replaces a stronger effect by a weaker one |
+| `cleanse(entity)` | Removes every harmful potion effect and puts out fire |
+| `harmfulEffects(entity)` | The harmful effects on it right now |
+| `paySpirituality(player, cost)` | Takes the spirituality and returns `true`. If there is too little it takes nothing, tells the player and returns `false` |
+| `sound(sl, at, SoundEvents.X, volume, pitch)` | A sound at a spot |
+| `casterStillHere(player, sl)` | `false` once the player died, left or changed dimension. Check it in the later steps of a spell |
+| `yawOf(direction)`, `flatLook(player)`, `rightOf(player)`, `turned(direction, degrees)`, `UP` | Directions. `turned` is how you make a fan of projectiles |
+
+**Who is an enemy.** Anything alive except: the caster, what the caster rides or owns (pets, tamed horses), the caster's marionettes, team mates, armor stands, spectators and whoever is concealed.
+
+If a new Pathway has summons of its own, teach the rule about them once (for example in a `static { }` block of its class), and every spell built on `Spells` leaves them alone:
+
+```java
+Spells.addAllyCheck((caster, other) -> MySummons.belongsTo(other, caster));
+```
+
+---
+
+## 2. Shot: a model that flies and hits
+
+For thrown daggers, bolts, shells, cards. You describe it once, like a `ModelFx`, and fire it from an ability.
+
+**The model's top (up in Blockbench) must be its front.** A dagger is modelled standing on its handle, tip up.
+
+```java
+private static final ModelFx KNIFE_MODEL = ModelFx.of("my_pathway/knife")
+        .pivot(8, 8, 8).glow().spin(30f);                // spins around its own length as it flies
+
+private static final SlashFx KNIFE_STREAK = SlashFx.line("slash/smooth")
+        .color(0xA0C0E0FF).core(0xE0FFFFFF)
+        .width(0.12f).taper(SlashFx.Taper.COMET);
+
+private static final Shot KNIFE = Shot.of(KNIFE_MODEL)
+        .speed(3.0)              // blocks per tick
+        .range(32)               // how far it flies if nothing is in the way
+        .width(0.4)              // how close its path must pass to an enemy's body to hit it
+        .tip(0.5)                // blocks from the model's pivot to its tip (see below)
+        .trail(KNIFE_STREAK)     // a streak along its path
+        .stick(40);              // stays stuck in a block it hits for 2 seconds
+```
+
+In the ability:
+
+```java
+Vec3 hand = Spells.clearStart(player, sl, player.getEyePosition().add(Spells.rightOf(player).scale(0.35)).add(0, -0.25, 0));
+KNIFE
+        .onHit((target, at) -> Spells.strike(player, target, 12f))
+        .onEnd((at, hitBlock) -> {
+            if (hitBlock) Spells.sound(sl, at, SoundEvents.PLAYER_ATTACK_KNOCKBACK, 0.4f, 1.8f);
+        })
+        .fire(player, sl, hand, Spells.aimFrom(player, sl, hand, 32));
+```
+
+| Option | What it does |
+|---|---|
+| `Shot.of(model)` | A shot that looks like this `ModelFx`. Give it a model without keys of its own (`.spin(...)` is fine) |
+| `.model(other)` | Another look for the same shot (bigger, tinted...) |
+| `.speed(blocksPerTick)` | 1 = 20 blocks a second |
+| `.range(blocks)` | How far it flies when nothing stops it |
+| `.width(blocks)` | How fat its path is. `0.3` to `0.5` for small things, more for big shells |
+| `.tip(blocks)` | Distance from the model's pivot to its front end, at the scale you play it. With it, the tip stops at the target. Without it, the pivot does, and the model ends up half inside the wall |
+| `.pierce()` | Flies through every enemy on its path (each is hit once) instead of stopping at the first |
+| `.windup(ticks)` | Appears and hangs in the air this long before it leaves |
+| `.stick(ticks)` | Stays stuck in the block it hits. A model with `.spin(...)` stops turning there |
+| `.trail(line)` | A `SlashFx.line` drawn along its path as it flies |
+| `.onHit((target, at) -> ...)` | Runs for each enemy it reaches, when it gets there |
+| `.onEnd((at, hitBlock) -> ...)` | Runs where its flight ends. `hitBlock` is `true` on a block, `false` on an enemy or at the end of its range. This is where an explosion goes |
+| `.fire(player, sl, from, direction)` | Fires it. Returns how many ticks from now its flight ends |
+
+Every method returns a new copy, like `ModelFx`. `KNIFE.range(12)` on its own line does nothing; fire the result.
+
+**A fan of them:**
+
+```java
+Vec3 look = Spells.aimFrom(player, sl, hand, 32);
+for (int i = 0; i < 5; i++) {
+    double turn = (i / 4.0 - 0.5) * 40;                  // 5 knives spread over 40 degrees
+    KNIFE.onHit((target, at) -> Spells.strike(player, target, 12f))
+            .fire(player, sl, hand, Spells.turned(look, turn));
+}
+```
+
+**An exploding shell:** hit in `onHit`, splash in `onEnd` (see `airCannon` in `AttendantOfMysteries.java`).
+
+**How it works.** The whole flight is worked out the moment it is fired: where the first block is and which enemies are on the path. The model is told to fly exactly that far and the hits are delivered with `Later.run` when it gets there. An enemy that moved more than about 2 blocks off the path by then is missed. A mob that walks *into* the path after the shot was fired is not hit, so keep shots fast (2 blocks per tick or more).
+
+### AnimatedShot: a model that hits along its own animation
+
+A `Shot` flies in a straight line at one speed. When the model should do more than that (hover and turn before it leaves, swell up, start slowly, fly in a curve) you animate the `ModelFx` with keys as always, and an `AnimatedShot` plays it and hits whatever the model reaches.
+
+**The model's front (north in Blockbench) faces the target.** In its keys, `forward(...)` is "toward what was aimed at"; `up(...)` and `right(...)` are across it.
+
+```java
+// 1. the animation, like any other ModelFx
+private static final ModelFx SPEAR_MODEL = ModelFx.of("my_pathway/spear")
+        .pivot(8, 8, 8).glow().lifetime(80).fade(0, 4)
+        .during(8, 50, ModelFx.pose().spin(360), ModelFx.Ease.IN_OUT)        // turns once, standing on its end
+        .during(50, 60, ModelFx.pose().pitch(90), ModelFx.Ease.IN_OUT)       // tips over: the point looks forward
+        .during(64, 76, ModelFx.pose().forward(26f), ModelFx.Ease.IN);       // and flies
+
+// 2. what kind of shot it is
+private static final AnimatedShot SPEAR = AnimatedShot.of(SPEAR_MODEL)
+        .width(0.6)              // how close its path must pass to an enemy's body to hit it
+        .tip(1.8)                // blocks from the model's pivot to its front end
+        .pierce();               // goes through enemies instead of stopping at the first
+```
+
+In the ability:
+
+```java
+Vec3 from = Spells.clearStart(player, sl, player.position().add(0, 2.2, 0));     // above the caster's head
+SPEAR
+        .onHit((target, at) -> Spells.strike(player, target, 40f))
+        .fire(player, sl, from);                                                 // at what the crosshair is on
+```
+
+Something that bursts on the first thing it meets is the same without `.pierce()`, with the blast in `onStop`:
+
+```java
+SKULL.onStop((at, hitBlock) -> {
+            for (LivingEntity enemy : Spells.enemiesAround(player, sl, at, 4.5)) Spells.strike(player, enemy, 30f);
+            SpellFx.fireBurst(sl, at, 4.5);
+        })
+        .fire(player, sl, from);
+```
+
+| Option | What it does |
+|---|---|
+| `AnimatedShot.of(model)` | A shot that looks and moves like this `ModelFx` |
+| `.model(other)` | Another model for the same shot |
+| `.width(blocks)` | How fat its path is |
+| `.tip(blocks)` | Distance from the model's pivot to its front end, at the scale you play it. With it the point reaches the enemy and the wall; without it the pivot does |
+| `.pierce()` | Goes through enemies (each is hit once) instead of stopping at the first |
+| `.throughBlocks()` | Blocks do not stop it |
+| `.anyDirection()` | Also hits while it moves sideways or backward (a blade that swings round, something that comes back) |
+| `.onHit((target, at) -> ...)` | Runs for each enemy it reaches, at that moment |
+| `.onStop((at, hitBlock) -> ...)` | Runs where it is stopped: by a block, or by the first enemy when it does not pierce. The model is already gone |
+| `.onExpire(at -> ...)` | Runs when the animation ends and nothing stopped it |
+| `.onMove(at -> ...)` | Runs every tick it flies, with where it is: a trail of particles, a hum. Not while it hovers, turns on the spot or draws back. The first time it runs is the moment it is let fly, so that is where a "whoosh" goes |
+| `.fire(player, sl, from)` | Plays it aimed at what the crosshair is on, up and down too. Returns how many ticks the animation lasts |
+| `.fire(player, sl, from, direction)` | The same along a direction of your own |
+| `.ticks()`, `.reach()` | How long the animation lasts, and how far forward its front end gets |
+
+Every method returns a new copy, like `Shot`.
+
+Good to know:
+
+- **Nothing names a tick.** It asks the model where it is (`ModelFx.poseAt`) every tick from the first to the last. Change the keys, the timing or the lifetime of the model and the hits follow by themselves.
+- **It only hits while it moves forward.** Hovering, turning on the spot and drawing back before a throw hurt no one. `.anyDirection()` switches that off.
+- **It is stopped by blocks and by the first enemy**, and its model is taken away at that moment. It does not need a tag from you for that: every shot gets its own.
+- **It is aimed once, when it is fired.** A model cannot be turned after it appeared, so one that hovers for 3 seconds still flies at what the crosshair was on when the key was pressed.
+- It sees enemies that walk into its way while it flies, which a `Shot` does not.
+- The model's own turning (`pitch`, `spin`...) is only for the look. What counts for the hits is where its pivot goes.
+
+---
+
+## 3. Countdown
+
+Big numbers in the middle of the player's screen, then something happens.
+
+```java
+Countdown.seconds(5)
+        .colors(0xE8C872, 0xD83A4A)                      // the numbers, and the last one (the "1"). 0xRRGGBB
+        .onSecond(left -> Spells.sound(sl, player.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.9f, 1.6f - left * 0.2f))
+        .keepWhile(() -> target.isAlive() && player.distanceToSqr(target) < 32 * 32)
+        .onFinish(() -> Spells.strike(player, target, 60f))
+        .onCancel(() -> player.sendSystemMessage(Component.literal("It slipped away.")))
+        .start(player);
+```
+
+| Part | What it does |
+|---|---|
+| `Countdown.seconds(n)` | A countdown from `n`. Nothing happens until `.start(player)` |
+| `.color(rgb)` / `.colors(rgb, lastRgb)` | Color of the numbers; the second form gives the final "1" its own |
+| `.silent()` | Counts without showing numbers (when the ability shows a picture instead) |
+| `.onSecond(left -> ...)` | Runs each time a number shows: `n`, ..., 2, 1 |
+| `.onTick(ticksLeft -> ...)` | Runs every tick while it counts |
+| `.keepWhile(() -> ...)` | Checked every tick. The moment it is `false`, the countdown is cancelled |
+| `.onFinish(() -> ...)` | It reached 0 |
+| `.onCancel(() -> ...)` | It stopped early: `keepWhile` failed, the player died or left, or `Countdown.cancel(player)` |
+| `.start(player)` | Starts it |
+
+`Countdown.isRunning(player)`, `Countdown.ticksLeft(player)` and `Countdown.cancel(player)` work from anywhere.
+
+Good to know:
+
+- A player has **one countdown at a time**. Starting another cancels the one that is running. If your ability should not interrupt itself, begin with `if (Countdown.isRunning(player)) return;`.
+- Build a new one for every cast. Do not keep one in a constant: it holds its own count.
+- It is not saved. A server restart in the middle of one simply drops it.
+
+### HudTimer: a small clock next to the hotbar
+
+A word and the time that is left, to the right of the hotbar: `Revive` over `27s`. For anything that runs for a while and that the player should be able to keep an eye on: a ward, a buff, a transformation, a cooldown.
+
+```java
+HudTimer.show(player, "my_pathway_ward", "Ward", 600, 0x9CFFD2);     // 30 seconds, in this color (0xRRGGBB)
+HudTimer.hide(player, "my_pathway_ward");                            // it ended early
+```
+
+- The first text is its **name**. Showing a timer whose name is on screen already starts it again (new time, new word), so call `show` again to make it longer. Timers with different names stand above one another. Start the name with your Pathway.
+- It only **shows** time. It counts down on the player's screen by itself and goes away at 0, and nothing happens when it does. What the time is for is yours to do (`DeathWard`, `Flight`, `Zone`, `Later.run`...). Remember to `hide` it when the thing ends early.
+- Its last five seconds are red. Under a minute it reads `27s`, from a minute on `1:05`.
+- Only that player sees it. It is gone when they log out.
+
+`Countdown` or `HudTimer`? `Countdown` is loud, sits in the middle of the screen and runs your code at the end. `HudTimer` is quiet, sits by the hotbar and only shows.
+
+---
+
+## Zone: ground that keeps doing something
+
+A round piece of ground that acts, again and again, on whoever stands in it, and knows how long each of them has been there. Cursed land, a healing circle, a storm, a slowing field, an aura around a player.
+
+```java
+Zone.at(ground, 8)                                       // its middle on the ground, and how far it reaches
+        .height(5)                                       // how far above the ground it still catches someone
+        .lasts(300)                                      // 15 seconds
+        .every(10)                                       // it acts twice a second
+        .onInside((enemy, ticksInside) -> {
+            int depth = Math.min(5, 1 + ticksInside / 40);               // deeper every 2 seconds they stay
+            Spells.keepEffect(enemy, MobEffects.SLOWNESS, depth - 1, 60);
+        })
+        .onPulse(ticksLeft -> ParticleShapes.ring(sl, MIST, ground.add(0, 0.2, 0), 8, 28, 0))
+        .open(player, sl, "my_pathway_land");
+```
+
+| Part | What it does |
+|---|---|
+| `Zone.at(ground, radius)` | A zone lying on the ground. Nothing happens until `.open(...)` |
+| `Zone.around(entity, radius)` | A zone that goes with an entity (an aura). Its middle is always at that entity's feet. It ends when the entity dies |
+| `.height(blocks)` | How far above its ground it still catches someone (default 4). It always reaches 1.5 blocks below, for slopes |
+| `.lasts(ticks)` | How long it stays (default 200) |
+| `.every(ticks)` | How often it acts (default 10) |
+| `.affects(entity -> ...)` | Who it acts on, instead of the owner's enemies. The owner is never one of them |
+| `.countsTo(ticks)` | The time inside is not counted past this |
+| `.onEnter(entity -> ...)` | Someone stepped in (also those in it when it opens) |
+| `.onInside((entity, ticksInside) -> ...)` | Every beat, for each one in it. `ticksInside` is 0 when they have just come in |
+| `.onLeave(entity -> ...)` | Someone stepped out, or the zone ended with them in it |
+| `.onPulse(ticksLeft -> ...)` | Every beat, once: the look and the sound of the zone. The first time at once |
+| `.onEnd(() -> ...)` | It is over, however it ended |
+| `.open(player, sl, name)` | Opens it |
+
+`Zone.isOpen(player, name)`, `Zone.ticksLeft(player, name)`, `Zone.ticksInside(player, name, entity)` and `Zone.close(player, name)` work from anywhere.
+
+Good to know:
+
+- **Worse the longer they stay.** `ticksInside` grows while someone stays, so `1 + ticksInside / 40` is a depth that goes up every 2 seconds. Stepping out does not wipe it: it falls back as fast as it grew, so hopping out and in again does not help. `.countsTo(200)` stops the count at 200, so it starts falling from there the moment they leave.
+- **Who it acts on.** The owner's enemies, as every other spell. A zone for allies: `.affects(entity -> !Spells.isEnemy(player, entity))`. The owner themself is never in it; do the owner's part in `onPulse`.
+- **The name** tells one player's zones apart. Opening one with a name that player already has open closes the old one first (its `onEnd` runs), so casting again moves the zone. Start the name with your Pathway.
+- Build a new one for every cast. Do not keep one in a constant: it holds its own count.
+- It ends by itself when its owner dies, logs out or changes dimension. It is not saved: a server restart drops it.
+- A zone has no look of its own. Draw it in `onPulse`, or play models when you open it. If it can end early, give those models a tag of their own and clear them in `onEnd` (see [tags](#6-several-models-on-one-entity-tags)).
+- Put potion effects on with `Spells.keepEffect`, not `addEffect`: a wither that is started afresh every half second never gets to hurt.
+
+---
+
+## 4. SpellFx: looks that many abilities share
+
+Visual only. Nothing here hurts anyone. Colors are ARGB (`0xAARRGGBB`); the alpha is how strong it is.
+
+| Call | Looks like |
+|---|---|
+| `SpellFx.warningCircle(sl, ground, radius, color, ticks)` | A turning rune circle: "something lands here" |
+| `SpellFx.runeCircle(sl, ground, radius, color, ticks, spin)` | The same with your own turning speed (degrees per tick, negative = the other way) |
+| `SpellFx.shockRing(sl, ground, radius, color, ticks, delay)` | A ring racing outward along the ground |
+| `SpellFx.closingRing(sl, ground, radius, color, ticks, delay)` | A ring closing in on a point: something is drawn in |
+| `SpellFx.steadyRing(sl, ground, radius, color, ticks, delay)` | A ring growing at one speed all the way. `Spells.wave` with the same radius and ticks hurts each enemy exactly when it touches them |
+| `SpellFx.fireBurst(sl, center, radius)` | An explosion of fire: flash, ring, embers, smoke |
+| `SpellFx.blast(sl, center, radius, color, spark)` | The same in a color of your own, throwing your own particles (`null` = none) |
+| `SpellFx.risingRings(sl, ground, radius, height, count, color)` | Rings one above the other, each a little later and narrower: something rises, is lifted, comes back |
+| `SpellFx.homing(sl, model, from, target, ticks)` | A model that flies into an entity and cannot miss (see below) |
+| `SpellFx.circleUnder(sl, entity, radius, color, ticks, tag)` | A rune circle that stays under an entity and goes where it goes (see below) |
+| `SpellFx.overHead(sl, entity, model, count, tag)` | A ring of small models over a head, one for each mark (see below) |
+| `SpellFx.tether(sl, line, entityA, entityB, ticks)` | A line that keeps joining two entities |
+| `SpellFx.tether(sl, line, () -> pointA, () -> pointB, ticks)` | The same between any two moving points |
+
+Ready-made parts to build your own from: `SpellFx.RUNE_CIRCLE`, `SHOCK_RING`, `FIRE_BLAST`, `FLAMES` (models) and `FIRE_EMBER`, `FIRE_SMOKE` (particles).
+
+### Models on an entity
+
+**`homing`: something that cannot miss.** The model is stuck to the *target* and only its keys bring it in from where it started, so if the target runs, the model's whole way moves with it. It arrives after `ticks` ticks, slowly at first and then faster. The hit is yours to do:
+
+```java
+ModelFx ghost = GHOST.lifetime(18).fade(3, 6)
+        .during(12, 18, ModelFx.pose().forward(1f));           // goes on through the target as it fades
+SpellFx.homing(sl, ghost, from, target, 12);
+Later.run(sl, 12, () -> {
+    if (target.isAlive()) Spells.strike(player, target, 12f);
+});
+```
+
+Give it a model whose own keys do not move it (frames, turning and fading are fine) and a lifetime a little longer than `ticks`. Its front faces the target and its pivot ends at the target's feet. Good for spirits and curses; for something that should be dodgeable use a `Shot` or an `AnimatedShot`.
+
+**`overHead`: show a count.** One small model for each mark, in a ring over the entity's head. Call it again with the same tag and the ring is replaced; count 0 removes it. Give the model the lifetime of the marks and it vanishes with them:
+
+```java
+int hits = Marks.add(target, "my_pathway_hits", 10, 300);
+SpellFx.overHead(sl, target, hits >= 3 ? FEATHER.color(0xFFFFC83C) : FEATHER, hits, "my_pathway_hits");
+```
+
+**`circleUnder`: a mark that follows.** A turning rune circle under an entity, for as long as you say: someone is cursed, warded, chosen. Call it again with the same tag and it is replaced, so a mark can grow and change color as what it stands for gets worse. `ParticleShapes.clearModels(sl, entity, tag)` takes it away early:
+
+```java
+SpellFx.circleUnder(sl, enemy, 0.8 + depth * 0.12, COLORS[depth - 1], ticksLeft, "my_pathway_curse");
+```
+
+Everyone sees it, also under a player's own feet. It is not drawn under someone who is concealed.
+
+### Tethers
+
+A tether is a `SlashFx.line` that is drawn again every 2 ticks between two points you describe. Both ends are asked for each time, so the line follows whatever they are attached to.
+
+```java
+private static final SlashFx CHAIN = SlashFx.line("slash/smooth")
+        .color(0xC0FF4A5A).core(0xE0FFE0E0)              // outside and middle
+        .width(0.06f).taper(SlashFx.Taper.UNIFORM);
+
+SpellFx.tether(sl, CHAIN, player, target, 100);          // middle to middle, 5 seconds
+```
+
+**When an end returns `null`, the line is gone for good.** That is how you tie a tether to a condition:
+
+```java
+// from the caster's hand to the top of the target's head, for as long as the countdown runs
+SpellFx.tether(sl, CHAIN,
+        () -> Countdown.isRunning(player) ? SpellFx.handOf(player, sl) : null,
+        () -> SpellFx.topOf(target, sl), 100);
+```
+
+`SpellFx.middleOf(entity, sl)`, `topOf(entity, sl)` and `handOf(player, sl)` give the usual ends. Each returns `null` once the entity is dead, gone or in another dimension, so a tether between two entities ends by itself.
+
+Tips: `.translucent()` on the line makes dark colors possible (the default adds light, so black is invisible). A dark line with a pale `core` shows against the sky as well as in a cave. `"slash/dashed"` gives a stitched look.
+
+---
+
+## 5. Statuses
+
+Each of these is one class in `status/` that looks after itself: it counts its own time, reacts to the right events and cleans up when the entity dies or leaves. You only call it.
+
+### DamageLink
+
+Makes damage go somewhere else. Two kinds.
+
+**Redirect:** part of what one entity takes is dealt to another instead.
+
+```java
+DamageLink.redirect(player, target, 0.5f, 100);    // 5 seconds: half of every hit on the player lands on the target
+DamageLink.redirectTarget(player);                 // who it goes to right now, or null
+DamageLink.redirectTicksLeft(player);
+DamageLink.clearRedirect(player);
+```
+
+**Share:** a group feels each other's pain. When one is hurt, each of the others takes part of it too.
+
+```java
+DamageLink.share(enemies, 0.5f, 200, player);      // 10 seconds; 'player' gets the kills (may be null)
+DamageLink.isShared(entity);
+DamageLink.sharedWith(entity);                     // the others in its group that are still alive
+DamageLink.unshare(entity);                        // takes one out; the rest stay linked
+```
+
+- The amounts are what the entity really lost, after its armor.
+- Passed-on damage is never passed on again, so links cannot bounce damage around forever.
+- A link ends when its time is up or when either end dies. Not saved.
+- A small puff of sparks shows on whoever receives passed-on damage. `DamageLink.SHOW_PARTICLES = false` turns it off.
+- A share needs at least 2 in the group. An entity that joins a new group leaves its old one.
+
+### Substitute
+
+The next hit does not land, and you decide what happens instead.
+
+```java
+Substitute.arm(player, 200, 1, (saved, source, amount, level) -> {
+    // the hit was cancelled. source.getEntity() is the attacker (may be null), 'amount' is what it would have done
+    Vec3 away = Spells.freeSpotNear(player, level, saved.position(), Spells.flatLook(player).scale(-1), 5);
+    if (away != null) saved.teleportTo(away.x, away.y, away.z);
+});
+```
+
+`200` is how long it stays ready, `1` is how many hits it takes before it is used up.
+
+`Substitute.isArmed(entity)`, `charges(entity)`, `ticksLeft(entity)`, `disarm(entity)`.
+
+- **What counts as a hit:** damage from an attacker (melee, arrows, abilities), projectiles and explosions.
+- **What goes through without using it up:** fire, falling, drowning, poison and the like; anything in creative mode; the void and `/kill`.
+- Arming again replaces the old one. Gone on death, on logout and after a restart.
+
+### Marionette
+
+A mob whose strings a player holds. It stops hunting its master and fights for them.
+
+```java
+if (Marionette.control(mob, player, 600)) { ... }  // 30 seconds. false if it could not be taken
+Marionette.isMarionette(entity);
+Marionette.isMarionetteOf(entity, player);
+Marionette.of(player);                             // the marionettes that player holds right now
+Marionette.ticksLeft(entity);
+Marionette.release(mob);                           // lets go: it is its old self again
+Marionette.collapse(mob);                          // cuts the strings the way running out of time does
+```
+
+What a marionette does:
+
+- It attacks, in this order: what its master last hit, what last hit its master, the fight it is already in, what last hit the marionette, the nearest monster within 16 blocks. It never picks a target of its own.
+- With nothing to fight it walks back to its master.
+- It cannot target or hurt its master or the master's other marionettes, and spells built on `Spells` leave the caster's marionettes alone.
+- Mobs that cannot fight (a cow, a villager) are walked up to the enemy and made to hit it.
+
+When it ends: the time is up, the puppet dies, or its master dies, logs out or leaves the dimension. When the time runs out the puppet drops dead and its master gets the kill. In the other cases it is just let go.
+
+Settings (change them once, for everyone):
+
+| Setting | Default | Meaning |
+|---|---|---|
+| `Marionette.DIES_WHEN_TIME_RUNS_OUT` | `true` | `false` = it simply becomes itself again |
+| `Marionette.MAX_PER_MASTER` | `3` | Taking one more lets go of the one with the least time left |
+
+The look (a wooden control bar turning above it, strings down to its body) comes with it and is sized to the mob. The status is saved with the mob, so a marionette is still one after a reload; the control bar is not shown again, though.
+
+Limits: a marionette creeper still breaks blocks when it goes off. A few bosses choose their target in their own way (the warden) and can slip the strings, so put a health limit on what may be taken, as `takeHold` does.
+
+### Concealment
+
+An entity steps out of the world for a while.
+
+```java
+Concealment.hide(player, 80);      // 4 seconds
+Concealment.isHidden(entity);
+Concealment.ticksLeft(entity);
+Concealment.reveal(player);        // steps back out now
+```
+
+While hidden:
+
+- Nobody sees it: body, armor, held items, name and the 3D models stuck to it are not drawn at all, on anyone's screen.
+- Nothing can hurt it (except the void and `/kill`).
+- Mobs forget it and cannot pick it as a target. Spells built on `Spells` pass over it.
+- It can still move. A hidden player who hits something with a normal attack steps back out.
+
+Your abilities decide whether casting ends it. If it should, call `Concealment.reveal(player)` at the start of the cast (it does nothing when the player is not hidden).
+
+Settings: `Concealment.SHOW_PARTICLES` (the puff of fog), `Concealment.BREAKS_ON_ATTACK`.
+
+It works on mobs too, and it is saved with the entity.
+
+### DeathWard
+
+The next time this entity would die, it doesn't.
+
+```java
+DeathWard.arm(player, 1200, 0.5f, (saved, source, level) -> {
+    // runs at the moment death was cheated: a blast, a teleport, a message...
+    SpellFx.shockRing(level, saved.position(), 6, 0xF0FFE9A8, 12, 0);
+});
+```
+
+`1200` is how long the ward waits, `0.5f` is the health they come back with (half), and the last part may be `null`.
+
+`DeathWard.isArmed(entity)`, `ticksLeft(entity)`, `disarm(entity)`.
+
+- Saves from everything except the void and `/kill`. A totem of undying in the hand is used first.
+- For 2 seconds afterwards nothing can hurt the saved entity, so what killed it does not simply do it again (`DeathWard.GRACE_TICKS`).
+- Arming again replaces the old ward. Gone on logout and after a restart.
+- To let the player see how long it still waits: `HudTimer.show(player, "my_pathway_ward", "Ward", 1200, 0x9CFFD2)` when you arm it, and `HudTimer.hide(...)` in the part that runs when it saves them.
+
+### FallGuard
+
+The next landing does no fall damage. For abilities that throw their own caster, or a friend, into the air.
+
+```java
+player.setDeltaMovement(0, 2.0, 0);
+player.hurtMarked = true;              // makes the player's game accept the push
+FallGuard.protect(player, 400);        // safe until they land, for at most 20 seconds
+```
+
+`FallGuard.isProtected(entity)`, `FallGuard.remove(entity)`. It ends at the first landing or when the time runs out. Saved with the entity.
+
+### Marks
+
+A number an entity carries for a while: how often your spikes hit it, how many charges a player built up.
+
+```java
+int hits = Marks.add(target, "my_pathway_hits", 10, 300);    // one more, 10 at most. All of them last 15 seconds again
+float damage = 10f + 5f * (hits - 1);                      // the more it carries, the more this hurts
+
+int paid = Marks.take(target, "my_pathway_hits");            // a finisher: how many it carried, and they are gone
+Spells.strike(player, target, 15f * paid);
+```
+
+`Marks.count(entity, name)`, `ticksLeft(entity, name)`, `clear(entity, name)`, and `add(entity, name, amount, max, ticks)` for several at once.
+
+- Every name is its own counter. Start the name with your Pathway.
+- Each `add` makes all the marks of that name last their full time again. When the time runs out without a new one, they are forgotten together.
+- Saved with the entity. To show them, see `SpellFx.overHead` above.
+
+### Blind
+
+Blindness that works on mobs too.
+
+```java
+Blind.apply(target, 80);           // 4 seconds
+Blind.apply(target, 80, 5.0);      // ...and a mob still sees what is within 5 blocks
+```
+
+A player's screen goes dark (the normal effect). A mob does not care about that effect, so it also loses what it was hunting, and until it can see again it only goes after what is right next to it (`Blind.MOB_SEES`, 3 blocks). `Blind.isBlind(entity)`, `ticksLeft(entity)`, `remove(target)`. Saved with the entity.
+
+### Vulnerable
+
+An entity takes more damage from everything for a while: a curse, broken armor, a mark of weakness.
+
+```java
+Vulnerable.add(target, 0.10f, 0.60f, 200);     // 10% more, on top of what is there, 60% at most. Lasts 10 seconds from now
+Vulnerable.add(target, 0.25f, 0.25f, 100);     // a fixed 25% that does not stack: the same number twice
+```
+
+`Vulnerable.extra(entity)` (0.3 = it takes 30% more right now), `ticksLeft(entity)`, `remove(target)`. The damage is raised before armor is counted. Saved with the entity.
+
+An `add` never lowers or shortens what is already on the target, so two abilities can use it on the same enemy: a fixed 20% from one does not undo a stacked 60% from another.
+
+### Burial
+
+An entity is pulled down into the ground, held there and put back where it stood.
+
+```java
+if (Burial.bury(target, 20, 40)) { ... }       // under in 1 second, stays for 2. false if it cannot be buried
+```
+
+- While it is under it can do nothing (it is rooted for that time) and the ground chokes it the way it chokes anything buried: the game's own damage, about 2 a second.
+- When something visible drags it down, give that thing's depth and the two go down together: arms that sink 3.4 blocks with `Ease.IN` in 20 ticks are `Burial.bury(target, 20, 40, 3.4)`. The entity stops going down once all of it is under.
+- Not buried: what is buried already, anything taller than `Burial.MAX_HEIGHT` (4) or wider than `MAX_WIDTH` (3), creative players and spectators. `Burial.canBury(target)` tells you beforehand.
+- `Burial.isBuried(entity)`, `ticksLeft(entity)`, `release(target)`.
+- Saved with the entity: one that is under when the world closes still comes back up when it opens again.
+
+### Flight
+
+A player can fly for a while the way a creative player does.
+
+```java
+Flight.grant(player, 400);                                 // 20 seconds. They are lifted off the ground at once
+PaleEmperorFx.wings(sl, player, 400, "my_pathway_wings");    // something to show for it (any model works)
+```
+
+`Flight.has(player)`, `ticksLeft(player)`, `end(player)`. However it ends, the fall after it does no damage. Creative players and spectators keep their own flying; for them only the time is counted. Saved with the player, so a flight goes on after logging out and in. Models are not: show the wings again when they log in or change dimension (`wingsAgain` in `PaleEmperor.java`).
+
+### Root and Freeze
+
+These were already there and go well with the rest: `Root.apply(target, 80, RootRestriction.EVERYTHING)` holds something in place (see `root/Root.java` for the single restrictions), `Freeze.apply(target, 80)` puts it in ice.
+
+---
+
+## 6. Several models on one entity: tags
+
+A frozen mob can also carry a mark and a marionette's strings. `ParticleShapes.clearModels(sl, mob)` would wipe all of them. Give each effect its own tag and remove only that one:
+
+```java
+ModelFx mark = MARK.tag("my_pathway_mark");
+ParticleShapes.clearModels(sl, target, "my_pathway_mark");       // cast again: one mark, not two
+ParticleShapes.modelOn(sl, mark, target, new Vec3(0, target.getBbHeight() + 0.4, 0), 0f, 0f, 0f);
+```
+
+Tags in use: `freeze`, `marionette`, the Attendant's `aom_strings`, `aom_transfer`, `aom_projection`, `aom_miracle`, and the Pale Emperor's `pale_emperor_hits`, `pale_emperor_wings`, `pale_emperor_crown`, `pale_emperor_curse` (the mark under those on cursed land), `pale_emperor_revive` (the mark of the second life), `pale_emperor_wraith_curse` (the mark under those the wraiths cursed), `pale_emperor_revive_wings` and `pale_emperor_land_<player UUID>` (what the cursed land put on the ground: seal, headstones, arms).
+
+A tag also lets you remove a model that is **not** on an entity before its time is up, for something that must vanish the moment it hits. An `AnimatedShot` does this by itself; this is for when you build something of your own. Give every cast a tag of its own, or one cast would remove the models of another:
+
+```java
+String tag = "my_skull_" + UUID.randomUUID();
+ParticleShapes.model(sl, SKULL.tag(tag), from, yaw, 0f, 0f);
+// later, where it hit:
+ParticleShapes.clearModels(sl, where, tag);
+```
+
+---
+
+## 7. Where each tool is used
+
+Every tool has a worked example in `AttendantOfMysteries.java`:
+
+| Tool | Look at |
+|---|---|
+| `Shot` | `throwDagger` (a fan of them: `paperDaggers`), `airCannon` (a shell with a blast) |
+| `AnimatedShot` | `paleEmperorSpearSkull` in `PaleEmperor.java` (a spear that pierces, a skull that bursts; both leave a trail with `.onMove`) |
+| `Countdown` | `seizeThreads`, `threadWeb` (silent, with a picture) |
+| `SpellFx.tether` | `seizeThreads`, `damageTransfer`, `stitchTogether` |
+| `DamageLink.redirect` | `damageTransfer` |
+| `DamageLink.share` | `stitchTogether` |
+| `Substitute` | `readySubstitute` and `figurineEscape` |
+| `Marionette` | `takeHold` |
+| `Concealment` | `hideInHistory`, `miracleReturn`; kept up for as long as the caster wants in `enterUnderworld` / `underworldTick` (`PaleEmperor.java`) |
+| `DeathWard` | `miracle` and `miracleReturn` |
+| `FallGuard` | `attendantOfMysteriesAirCannon` |
+| `Spells.pull` | `graftImpact` |
+| `Spells.enemiesInSight`, `Marks`, `SpellFx.overHead`, `Blind` | `paleEmperorSpikes`, `spikesHit` in `PaleEmperor.java` |
+| `Burial` | `handsTake` in `PaleEmperor.java` |
+| `Spells.wave`, `SpellFx.steadyRing` | `screech` in `PaleEmperor.java` |
+| `SpellFx.blast` | `skullBursts` in `PaleEmperor.java` |
+| `Flight`, `PaleEmperorFx.wings` | `spreadWings`, `wingsTick` in `PaleEmperor.java` |
+| `Spells.blinkSpot` | `stepThere` in `PaleEmperor.java` |
+| `SpellFx.homing`, `Vulnerable` | `wraithFlies`, `curse` in `PaleEmperor.java` |
+| `Zone`, `Spells.keepEffect`, `PaleEmperorFx.crown` (`modelOnHead`) | `cursedLand`, `landCurses` in `PaleEmperor.java` |
+| `HudTimer` with `DeathWard` | `secondLife`, `secondLifeShows`, `risesAgain` in `PaleEmperor.java` |
+| `SpellFx.circleUnder` | `landCurses` (it grows and reddens with the depth), `secondLifeShows`, `curse` (brighter with every wraith) in `PaleEmperor.java` |
+| `SpellFx.tether` from a fixed point to many moving things | `gateDrags` in `PaleEmperor.java` (chains from the gate to those it pulls) |
+| `Spells.groundNear` | `landGraves`, `landBeats` in `PaleEmperor.java` |
+| `SpellFx.risingRings` | `risesAgain` in `PaleEmperor.java` |
+| Model tags | `stringUp`, `summonProjection` |
+
+## Tricks worth copying
+
+All in `AttendantOfMysteries.java`, with the method to look at in brackets.
+
+**Write a spell as a function of where it starts and how hard it hits** (`paperDaggers`, `airCannon`, `flameBurst`). Then the player can cast it and so can anything else: the Historical Void projection repeats them from its own hand at half power with one line each (`echo`). One thing to watch: a copy that repeats a *blast* should do it at once. A moment later it would only find what the first blast threw away.
+
+**Cast again to grow** (`juggle`). A counter and a timer in the player's persistent data. Every cast inside the window adds one; the timer is counted down in the class's tick event.
+
+**Jump points** (`conjureFlame`, `flameToJumpTo`, `aimAngle`). A list of spots you made, and "the one nearest to my crosshair, within 15 degrees" picks between them. Works for any "teleport to my mark" ability.
+
+**Something that keeps pulsing** (`burnInFlame`). A method that does one pulse and then asks `Later.run` to call it again, until its ticks are used up.
+
+**Two models, one flight** (`needleFlight`). The needle and its thread are two models that get the same keys from one method, so they move as one. Use it whenever a solid part and a glowing part belong together.
+
+**Strings on a held enemy** (`stringUp`). Three thin models stuck to the target with `modelOn`, two of them rolled a few degrees outward.
+
+**Timing from one set of numbers** (`draggingArm`, `handsTake` in `PaleEmperor.java`). A few constants (`HANDS_OUT`, `HANDS_GRASP`, `HANDS_PULL`, `HANDS_UNDER`) build the model's keys AND say when the damage lands and the burial starts. Change one number and the animation and what happens move together.
+
+**Stay hidden until something happens** (`enterUnderworld`, `underworldTick` in `PaleEmperor.java`). `Concealment.hide` for a short time, topped up every tick for as long as a flag on the player is set. The flag is cleared by casting again, by dealing damage (a `LivingHurtEvent` whose attacker carries the flag) or when the upkeep cannot be paid.
+
+**A zone that gets worse step by step** (`cursedLand`, `landCurses`, `curseDepth` in `PaleEmperor.java`). One small method turns the time someone has stood in the zone into a depth, and everything the zone does is written from that depth. "It just reached this depth" is `depth > curseDepth(ticksOnLand - LAND_BEAT)`: use it for what should happen once (a sound, a hand that grabs). What must happen once per zone for each enemy is remembered in a `Set<UUID>` made at the cast.
+
+**Everything one cast put down, under one name** (`cursedLand`, `landCloses` in `PaleEmperor.java`). The seal, the headstones and the arms of a cursed land all carry the same tag, made from the caster's id, so one `ParticleShapes.clearModels(sl, ground, tag)` takes all of it away when the land ends early or is cast again. What the cast has to remember (who was told, who was grabbed, which mark each one shows) lives in one small `record` that is handed to every method of the spell.
+
+**What is seen and heard, apart from what happens** (`gateShows` / `gateDrags`, `serpentShows`, `chainsBite` in `PaleEmperor.java`). The pull, the damage and the root are in one method; the rings, mist, sparks and sounds that go with them are in another that only shows things. Either can be changed, or switched off by removing one line, without touching the other. Their moments are the same named ticks the models are built from (`GATE_OPENS`, `SERPENT_BREAKS_OUT`, `SERPENT_BITES`...), so moving one number moves the animation and what is seen and heard at it together.
+
+**Small pictures for what is active** (`showStatus`). `ScreenImages.show(...)` with a duration fades by itself; `ScreenImages.hide(player, id)` removes it early when the effect is used up. The pictures are 16x16 PNGs in `textures/gui/attendant_of_mysteries/`.
+
+---
+
+## Recipe: a mark that goes off after 3 seconds
+
+```java
+private static void timeBomb(Player player, ServerLevel sl, LivingEntity target) {
+    SpellFx.tether(sl, CHAIN, () -> Countdown.isRunning(player) ? SpellFx.handOf(player, sl) : null,
+            () -> SpellFx.middleOf(target, sl), 60);
+
+    Countdown.seconds(3)
+            .color(0xFF7A2A)
+            .onSecond(left -> SpellFx.closingRing(sl, target.position(), 3, 0xD0FF7A2A, 10, 0))
+            .keepWhile(() -> target.isAlive() && target.level() == sl)
+            .onFinish(() -> {
+                Vec3 center = target.getBoundingBox().getCenter();
+                for (LivingEntity enemy : Spells.enemiesAround(player, sl, center, 4)) {
+                    Spells.strike(player, enemy, 30f);
+                    Spells.push(enemy, center, 1.0, 0.4);
+                }
+                SpellFx.fireBurst(sl, center, 4);
+                Spells.sound(sl, center, SoundEvents.GENERIC_EXPLODE.value(), 1f, 1.2f);
+            })
+            .start(player);
+}
+```
+
+## Recipe: chain everything in a circle together
+
+```java
+private static void chainGang(Player player, ServerLevel sl, Vec3 ground) {
+    List<LivingEntity> caught = Spells.enemiesAround(player, sl, ground, 6);
+    if (caught.size() < 2) return;
+
+    DamageLink.share(caught, 0.5f, 200, player);
+    Vec3 knot = ground.add(0, 1.2, 0);
+    for (LivingEntity enemy : caught) {
+        // each chain is there for as long as that one is still linked to the others
+        SpellFx.tether(sl, CHAIN, () -> knot,
+                () -> DamageLink.isShared(enemy) ? SpellFx.middleOf(enemy, sl) : null, 200);
+    }
+    SpellFx.runeCircle(sl, ground, 6, 0xA0FF4A5A, 200, 1.5f);
+}
+```
+
+## Recipe: slip away when hit, and leave a blast behind
+
+```java
+private static void smokeStep(Player player, ServerLevel sl) {
+    Substitute.arm(player, 200, 1, (saved, source, amount, level) -> {
+        Vec3 was = saved.position();
+        Vec3 away = Spells.freeSpotNear(player, level, was, Spells.flatLook(player).scale(-1), 6);
+        if (away != null) {
+            saved.teleportTo(away.x, away.y, away.z);
+            saved.fallDistance = 0;
+        }
+        Concealment.hide(saved, 40);                           // gone for 2 seconds
+        for (LivingEntity enemy : Spells.enemiesAround(player, level, was.add(0, 1, 0), 3)) {
+            Spells.strike(player, enemy, 15f);
+        }
+        SpellFx.shockRing(level, was, 3, 0xC0C8CCD4, 8, 0);
+    });
+}
+```
+
+---
+
+## Making a status of your own
+
+Copy `status/FallGuard.java`: it is the smallest one (about 70 lines) and has every part.
+
+```java
+@Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+public final class Bleeding {
+
+    private static final String TAG = "circle_of_inevitability_bleeding";      // ticks left, saved with the entity
+
+    private Bleeding() {}
+
+    public static void apply(LivingEntity target, int ticks) {
+        if (target.level().isClientSide() || ticks <= 0) return;
+        target.getPersistentData().putInt(TAG, Math.max(ticks, target.getPersistentData().getIntOr(TAG, 0)));
+    }
+
+    public static boolean has(Entity entity) {
+        return entity != null && entity.getPersistentData().getIntOr(TAG, 0) > 0;
+    }
+
+    public static void remove(LivingEntity target) {
+        target.getPersistentData().remove(TAG);
+    }
+
+    @SubscribeEvent
+    public static void onBleedingLivingTick(LivingEvent.LivingTickEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (entity.level().isClientSide() || !entity.getPersistentData().contains(TAG)) return;
+        int left = entity.getPersistentData().getIntOr(TAG, 0) - 1;
+        if (left <= 0) {
+            remove(entity);
+            return;
+        }
+        entity.getPersistentData().putInt(TAG, left);
+        if (left % 20 == 0) entity.hurt(entity.damageSources().magic(), 2f);      // once a second
+    }
+}
+```
+
+The `@Mod.EventBusSubscriber` line is all the registering there is. `@SubscribeEvent` is `net.minecraftforge.eventbus.api.listener.SubscribeEvent`.
+
+**Where to keep the status:**
+
+| Keep it in | When | Example |
+|---|---|---|
+| `entity.getPersistentData()` | It is only numbers and should survive a reload | `FallGuard`, `Concealment`, `Marionette`, `Root`, `Freeze` |
+| A `Map<UUID, ...>` in the class | It carries code to run later (a `-> { }` you were given), which cannot be saved, or it ties several entities together for a short time | `Substitute`, `DeathWard`, `Countdown`, `Zone`, `DamageLink` |
+
+A map needs cleaning up: remove the entry on `LivingDeathEvent` and on `PlayerEvent.PlayerLoggedOutEvent`.
+
+Reading from the persistent data is `getIntOr(TAG, 0)` (also `getLongOr`, `getFloatOr`, `getDoubleOr`, `getBooleanOr`, `getStringOr`): the second value is what you get when nothing is stored.
+
+**Which event does what:**
+
+| You want to | Event | How |
+|---|---|---|
+| Count time, do something every tick | `LivingEvent.LivingTickEvent` | |
+| Stop a hit before it lands | `LivingAttackEvent` | return `true` (see below) |
+| Change how much a hit does, before armor | `LivingHurtEvent` | `event.setAmount(...)`, as `Vulnerable` does |
+| See or change what gets through, after armor | `LivingDamageEvent` | `event.getAmount()`, `event.setAmount(...)`, as `DamageLink` does |
+| Stop a death | `LivingDeathEvent` | return `true` **and** give health back with `setHealth`, as `DeathWard` does |
+| Stop fall damage | `LivingFallEvent` | return `true` |
+| Stop a mob from picking a target | `LivingChangeTargetEvent` | return `true`. `getNewTarget()` is who it wanted |
+| React to a player's normal attack | `AttackEntityEvent` | `event.getEntity()` is the player |
+
+**Cancelling.** A handler that may stop its event returns `boolean` instead of `void`: `true` stops it, `false` lets it through. There is no `event.setCanceled(true)`. This is the one in `FallGuard`:
+
+```java
+@SubscribeEvent
+public static boolean onFallGuardLanding(LivingFallEvent event) {
+    LivingEntity entity = event.getEntity();
+    if (entity.level().isClientSide() || !isProtected(entity)) return false;      // not ours: let it through
+    remove(entity);
+    return true;                      // cancelled: no damage and no fall sound for this landing
+}
+```
+
+**Rules for handlers.** The dev runs have strict checks on (`eventbus.api.strictRuntimeChecks` in `build.gradle`), so the game stops at start with an error when one of these is broken:
+
+- Every handler is `static` and has `@SubscribeEvent`. A method that takes an event but has no `@SubscribeEvent` is an error too.
+- The class has at least one handler.
+- Only an event that can be stopped may have a `boolean` handler. A handler that never stops anything stays `void`.
+
+And one that gives no error: a handler for a parent event is not called for its child events (with a few exceptions, such as `PlayerInteractEvent`), so name the event you mean.
+
+Start every handler with a server check (`if (entity.level().isClientSide()) return;`, or `return false;`), and give handlers names nobody else has (`onBleedingLivingTick`, not `onTick`), as the other statuses do.
+
+If one status must get its say before another, add a priority: `@SubscribeEvent(priority = Priority.HIGH)` (`net.minecraftforge.eventbus.api.listener.Priority`). `Concealment` cancels hits at `HIGH`, so that a hit on someone hidden never uses up their `Substitute`, which listens at `LOW`.
+
+---
+
+## Troubleshooting
+
+| Problem | Fix |
+|---|---|
+| A shot flies sideways or tail first | Its model's top must be its front. Model it standing up, tip up |
+| A shot stops with its middle on the target, or sinks into the wall | Set `.tip(...)`: blocks from the pivot to the tip at the scale you play it |
+| A shot thrown from the hand lands beside the crosshair | Fire it along `Spells.aimFrom(player, sl, hand, range)` instead of `player.getLookAngle()` |
+| A shot starts inside the wall the player stands next to | Wrap the start in `Spells.clearStart(player, sl, ...)` |
+| `onHit` never runs for an enemy that was on the path | It moved more than 2 blocks out of the way before the shot arrived. Make the shot faster |
+| `KNIFE.range(12);` changed nothing | Every method returns a new copy. Fire the result |
+| An animated shot flies sideways or tail first | Its model's front must be north in Blockbench, and it must fly with `forward(...)`, not `up(...)` |
+| An animated shot hits nothing | It only hits while it moves forward. Moving with `up(...)` or `right(...)` alone needs `.anyDirection()` |
+| An animated shot vanishes the moment it starts to move | It started inside a block. Wrap the start in `Spells.clearStart(player, sl, ...)` |
+| I changed the animation and the hits are late or early | They should not be: they follow the model. Check that the `AnimatedShot` is made from the model you changed |
+| My spell hurts my own summons | `Spells.addAllyCheck(...)` |
+| Hits in a row only count once | Use `Spells.strike`, not `target.hurt` |
+| The countdown never shows numbers | `.silent()` is on, or another countdown replaced it |
+| A second countdown killed the first | One per player. Check `Countdown.isRunning(player)` first |
+| A tether never appears | One of its ends returned `null` at the very start |
+| A dark tether is invisible | Add `.translucent()` to the line |
+| A tether cannot be seen from far away | Slash trails are only sent within 32 blocks (models reach 512) |
+| The substitute did not react to fire or a fall | By design: attacks, projectiles and explosions only |
+| The death ward did not save from the void or `/kill` | By design |
+| A wither or poison I keep putting on never hurts | Every `addEffect` starts its clock again, and it only hurts on certain ticks of that clock. Use `Spells.keepEffect` |
+| A zone does nothing to my allies / to me | It acts on the owner's enemies. Give it `.affects(...)`; the owner's own part goes in `onPulse` |
+| The models of a zone stay when it ends early | Give them a tag of their own and clear it in `.onEnd(...)` |
+| A HudTimer still counts though the thing is over | It only shows time. Call `HudTimer.hide(player, name)` where the thing ends early |
+| A message I show above the hotbar never appears | The line above the hotbar is rewritten every tick by the spirituality display. Use chat (`sendSystemMessage`), a `HudTimer` or `ScreenImages` |
+| My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5 |
+| A marionette stands still | It only attacks what you hit, what hits you or it, or monsters within 16 blocks. Hit something |
+| Removing one model from a mob removed the others too | Give each a `.tag(...)` and clear by tag |
+| "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
+| Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
+
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
