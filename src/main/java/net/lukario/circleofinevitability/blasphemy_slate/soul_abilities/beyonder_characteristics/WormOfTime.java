@@ -34,8 +34,8 @@ public class WormOfTime {
     private static final SlashFx COMBO_RING = SlashFx.arc("slash/band")
             .color(COMBO_MID).tailColor(COMBO_TAIL).headColor(COMBO_HEAD)
             .translucent()
-            .radius(3.6f).arc(320f).width(1.2f).taper(SlashFx.Taper.COMET)
-            .layers(4).spread(0.48f)
+            .radius(3.6f).arc(320f).width(1f).taper(SlashFx.Taper.COMET)
+            .layers(4).spread(0.28f)
             .lifetime(12).sweep(5).spin(10f);             // draws itself, keeps spinning, then wipes away
 
 
