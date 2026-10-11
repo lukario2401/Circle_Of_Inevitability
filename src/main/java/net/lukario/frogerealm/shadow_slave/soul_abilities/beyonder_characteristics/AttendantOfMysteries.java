@@ -15,7 +15,8 @@ import net.lukario.frogerealm.root.Root;
 import net.lukario.frogerealm.root.RootRestriction;
 import net.lukario.frogerealm.screen.ScreenAnchor;
 import net.lukario.frogerealm.screen.ScreenImages;
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.lukario.frogerealm.status.Concealment;
 import net.lukario.frogerealm.status.DamageLink;
 import net.lukario.frogerealm.status.DeathWard;
@@ -76,10 +77,10 @@ import java.util.UUID;
  */
 public class AttendantOfMysteries {
 
-    private static final String ASPECT = "Attendant Of Mysteries";
+    private static final String PATHWAY = "Attendant Of Mysteries";
 
     // =========================
-    // Ability settings (cost = soul essence, ticks: 20 = 1 second, distances in blocks)
+    // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
     // =========================
 
     // Stacks: every ability used adds one picture next to the hotbar, the 5th one explodes
@@ -91,7 +92,7 @@ public class AttendantOfMysteries {
             "attendant_stack_orb"
     );
 
-    // Ability 1 - Paper Daggers (ascension stage 0)
+    // Ability 1 - Paper Daggers (Sequence 9)
     private static final int DAGGER_COST = 250;
     private static final int DAGGER_COUNT = 3;                   // an odd number, so one flies straight at the crosshair
     private static final double DAGGER_FAN = 30.0;               // degrees between the outermost daggers
@@ -108,7 +109,7 @@ public class AttendantOfMysteries {
     private static final double WIDE_FAN_RANGE = 12.0;
     private static final float WIDE_FAN_DAMAGE = 12f;
 
-    // Ability 2 - Flaming Jump (stage 1)
+    // Ability 2 - Flaming Jump (Sequence 8)
     private static final int FLAME_COST = 1250;
     private static final double JUMP_RANGE = 32.0;               // how far away a flame can be to jump to it
     private static final double JUMP_AIM = 15.0;                 // degrees: a flame this close to your crosshair is "the one you look at"
@@ -125,7 +126,7 @@ public class AttendantOfMysteries {
     private static final int FLAME_PULSE = 20;                   // ticks between burns
     private static final float FLAME_DAMAGE = 4f;                // per burn
 
-    // Ability 3 - Damage Transfer (stage 2)
+    // Ability 3 - Damage Transfer (Sequence 7)
     private static final int TRANSFER_COST = 1250;
     private static final double TRANSFER_RANGE = 16.0;
     private static final int TRANSFER_TICKS = 100;
@@ -136,7 +137,7 @@ public class AttendantOfMysteries {
     private static final int SUBSTITUTE_DAGGERS = 3;             // the torn figurine throws these back at the attacker
     private static final float SUBSTITUTE_DAGGER_DAMAGE = 12f;
 
-    // Ability 4 - Air Cannon (stage 3)
+    // Ability 4 - Air Cannon (Sequence 6)
     private static final int CANNON_COST = 2450;
     private static final double CANNON_RANGE = 24.0;
     private static final double CANNON_SPEED = 4.0;              // blocks per tick
@@ -150,7 +151,7 @@ public class AttendantOfMysteries {
     private static final float LEAP_DAMAGE = 20f;
     private static final int LEAP_GUARD_TICKS = 400;             // no fall damage until you land, for at most this long
 
-    // Ability 5 - Spirit Body Threads (stage 4)
+    // Ability 5 - Spirit Body Threads (Sequence 5)
     private static final int THREADS_COST = 3000;
     private static final int COUNTDOWN_SECONDS = 5;
     private static final int COUNTDOWN_COLOR = 0xE8C872;         // pale gold
@@ -168,7 +169,7 @@ public class AttendantOfMysteries {
     private static final float WEB_DAMAGE = 20f;
     private static final int WEB_BIND_TICKS = 80;
 
-    // Ability 6 - Historical Void (stage 5)
+    // Ability 6 - Historical Void (Sequence 4)
     private static final int HISTORY_COST = 6000;
     private static final int PROJECTION_TICKS = 300;             // how long your past self stays
     private static final float PROJECTION_POWER = 0.5f;          // how hard its copies of your spells hit
@@ -178,7 +179,7 @@ public class AttendantOfMysteries {
     private static final int FOG_TICKS = 80;                     // sneak: how long you stay hidden
     private static final int FOG_SPEED_LEVEL = 1;                // 0 = Speed I, 1 = Speed II while hidden
 
-    // Ability 7 - Grafting (stage 6)
+    // Ability 7 - Grafting (Sequence 3)
     private static final int GRAFT_COST = 12000;
     private static final double GRAFT_RANGE = 28.0;
     private static final double GRAFT_RADIUS = 8.0;
@@ -336,7 +337,7 @@ public class AttendantOfMysteries {
             .glow().spin(12f).randomRotation();
     private static final ParticleFx COMBO_STAR_WHITE = COMBO_STAR.color(0xFFFFFFFF).fadeOut();
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forAspect(ASPECT)
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
             .step(AttendantOfMysteries::comboRing)
             .step(AttendantOfMysteries::comboTiltedRing)
             .randomStep(AttendantOfMysteries::comboGroundSpiral, AttendantOfMysteries::comboCrystalCross);
@@ -349,12 +350,12 @@ public class AttendantOfMysteries {
             Player player = event.player();
             if (!(player.level() instanceof ServerLevel)) return;
 
-            // timers (they run out even if the aspect is taken away in the meantime)
+            // timers (they run out even if the pathway is taken away in the meantime)
             CompoundTag data = player.getPersistentData();
             countDown(data, JUGGLE_LEFT);
             countDown(data, PROJECTION_LEFT);
 
-            if (!SoulCore.getAspect(player).equals(ASPECT)) return;
+            if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
 
             // Flame Controlling: fire cannot hurt you. (No potion swirls: they would give you away when you hide in history.)
             player.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 60, 1, false, false, true));
@@ -388,8 +389,8 @@ public class AttendantOfMysteries {
     // Ability 1 - Paper Daggers
     // =========================
     public static void attendantOfMysteriesPaperDagger(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 0)) return;
-        if (!Spells.payEssence(player, DAGGER_COST)) return;
+        if (!ready(player, bypassClassCheck, 9)) return;
+        if (!Spells.paySpirituality(player, DAGGER_COST)) return;
         stepOutOfTheFog(player);
 
         boolean sneak = player.isShiftKeyDown();
@@ -460,7 +461,7 @@ public class AttendantOfMysteries {
     // Ability 2 - Flaming Jump
     // =========================
     public static void attendantOfMysteriesFlamingJump(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 1)) return;
+        if (!ready(player, bypassClassCheck, 8)) return;
 
         if (player.isShiftKeyDown()) {
             // Sneak - Flame Control: a flame on the spot you aim at. It burns what stands in it and you can jump to it.
@@ -469,7 +470,7 @@ public class AttendantOfMysteries {
                 player.sendSystemMessage(Component.literal("There is nothing there to set alight."));
                 return; // nothing spent
             }
-            if (!Spells.payEssence(player, FLAME_COST)) return;
+            if (!Spells.paySpirituality(player, FLAME_COST)) return;
             stepOutOfTheFog(player);
             conjureFlame(player, sl, spot);
             Spells.sound(sl, player.position(), SoundEvents.FIRECHARGE_USE, 0.8f, 1.4f);
@@ -490,7 +491,7 @@ public class AttendantOfMysteries {
                 player.sendSystemMessage(Component.literal("There is no room to step out of that flame."));
                 return; // nothing spent
             }
-            if (!Spells.payEssence(player, FLAME_COST)) return;
+            if (!Spells.paySpirituality(player, FLAME_COST)) return;
             stepOutOfTheFog(player);
             flamingJump(player, sl, destination, lit == null);
             echo(player, sl, PROJECTION_DELAY, () -> flameBurst(player, sl, destination, PROJECTION_POWER));
@@ -617,10 +618,10 @@ public class AttendantOfMysteries {
     // Ability 3 - Damage Transfer
     // =========================
     public static void attendantOfMysteriesDamageTransfer(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 2)) return;
+        if (!ready(player, bypassClassCheck, 7)) return;
 
         if (player.isShiftKeyDown()) {
-            if (!Spells.payEssence(player, TRANSFER_COST)) return;
+            if (!Spells.paySpirituality(player, TRANSFER_COST)) return;
             stepOutOfTheFog(player);
             readySubstitute(player, sl);
         } else {
@@ -629,7 +630,7 @@ public class AttendantOfMysteries {
                 player.sendSystemMessage(Component.literal("No one stands before you."));
                 return; // nothing spent
             }
-            if (!Spells.payEssence(player, TRANSFER_COST)) return;
+            if (!Spells.paySpirituality(player, TRANSFER_COST)) return;
             stepOutOfTheFog(player);
             damageTransfer(player, sl, target);
         }
@@ -756,8 +757,8 @@ public class AttendantOfMysteries {
     // Ability 4 - Air Cannon
     // =========================
     public static void attendantOfMysteriesAirCannon(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 3)) return;
-        if (!Spells.payEssence(player, CANNON_COST)) return;
+        if (!ready(player, bypassClassCheck, 6)) return;
+        if (!Spells.paySpirituality(player, CANNON_COST)) return;
         stepOutOfTheFog(player);
 
         if (player.isShiftKeyDown()) {
@@ -849,7 +850,7 @@ public class AttendantOfMysteries {
     // Ability 5 - Spirit Body Threads
     // =========================
     public static void attendantOfMysteriesCountdown(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 4)) return;
+        if (!ready(player, bypassClassCheck, 5)) return;
         if (!(player instanceof ServerPlayer)) return;
         if (Countdown.isRunning(player)) return; // already counting
 
@@ -859,7 +860,7 @@ public class AttendantOfMysteries {
                 player.sendSystemMessage(Component.literal("There are no threads within your reach."));
                 return; // nothing spent
             }
-            if (!Spells.payEssence(player, THREADS_COST)) return;
+            if (!Spells.paySpirituality(player, THREADS_COST)) return;
             stepOutOfTheFog(player);
             caught.sort((a, b) -> Double.compare(a.distanceToSqr(player), b.distanceToSqr(player)));
             threadWeb(player, sl, new ArrayList<>(caught.subList(0, Math.min(WEB_MAX_TARGETS, caught.size()))));
@@ -869,7 +870,7 @@ public class AttendantOfMysteries {
                 player.sendSystemMessage(Component.literal("No one stands before you."));
                 return; // nothing spent
             }
-            if (!Spells.payEssence(player, THREADS_COST)) return;
+            if (!Spells.paySpirituality(player, THREADS_COST)) return;
             stepOutOfTheFog(player);
             seizeThreads(player, sl, target);
         }
@@ -995,17 +996,17 @@ public class AttendantOfMysteries {
     // Ability 6 - Historical Void
     // =========================
     public static void attendantOfMysteriesHistoricalVoid(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 5)) return;
+        if (!ready(player, bypassClassCheck, 4)) return;
 
         if (player.isShiftKeyDown()) {
             if (Concealment.isHidden(player)) {
                 Concealment.reveal(player);                         // pressing it again steps back out early, for free
                 return;
             }
-            if (!Spells.payEssence(player, HISTORY_COST)) return;
+            if (!Spells.paySpirituality(player, HISTORY_COST)) return;
             hideInHistory(player, sl);
         } else {
-            if (!Spells.payEssence(player, HISTORY_COST)) return;
+            if (!Spells.paySpirituality(player, HISTORY_COST)) return;
             stepOutOfTheFog(player);
             summonProjection(player, sl);
         }
@@ -1084,8 +1085,8 @@ public class AttendantOfMysteries {
     // Ability 7 - Grafting
     // =========================
     public static void attendantOfMysteriesGrafting(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 6)) return;
-        if (!Spells.payEssence(player, GRAFT_COST)) return;
+        if (!ready(player, bypassClassCheck, 3)) return;
+        if (!Spells.paySpirituality(player, GRAFT_COST)) return;
         stepOutOfTheFog(player);
 
         if (player.isShiftKeyDown()) miracle(player, sl);
@@ -1286,10 +1287,10 @@ public class AttendantOfMysteries {
     // Helpers shared by the abilities
     // =========================
 
-    /** Has this aspect (or the check is skipped) and has reached the ascension stage the ability needs. */
-    private static boolean ready(Player player, boolean bypassClassCheck, int stage) {
-        if (!bypassClassCheck && !SoulCore.getAspect(player).equals(ASPECT)) return false;
-        return SoulCore.getAscensionStage(player) >= stage;
+    /** Has this pathway (or the check is skipped) and has reached the Sequence the ability needs. */
+    private static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
+        if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return false;
+        return Beyonder.hasSequence(player, sequence);
     }
 
     private static void countDown(CompoundTag data, String key) {
@@ -1351,7 +1352,7 @@ public class AttendantOfMysteries {
                 SlashFx blade = COMBO_CRYSTAL
                         .radius(1.5f + random.nextFloat() * 0.7f)
                         .width(0.24f + random.nextFloat() * 0.14f)
-                        .delay(bundle * 2 + i / 2);      // blades appear in quick stages
+                        .delay(bundle * 2 + i / 2);      // blades appear in quick steps
                 float yaw = player.getYRot() + (random.nextFloat() - 0.5f) * 20f;
                 float roll = baseRoll + (random.nextFloat() - 0.5f) * 16f;
                 ParticleShapes.slash(sl, blade, center, yaw, 0f, roll);

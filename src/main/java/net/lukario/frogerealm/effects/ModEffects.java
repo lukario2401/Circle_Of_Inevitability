@@ -10,7 +10,7 @@ public class ModEffects {
             DeferredRegister.create(Registries.MOB_EFFECT, "circle_of_inevitability");
 
     // Removed: SHADOW_MARK, Abyssal_Monarch_MARK, RuinBade_Ruin, RuinBade_Overload, RuinBade_cataclysm
-    // (their effect classes live in the dropped aspects; see MIGRATION_NOTES.md, Removed)
+    // (their effect classes live in classes of the old project that were dropped; see MIGRATION_NOTES.md, Removed)
 
 
 

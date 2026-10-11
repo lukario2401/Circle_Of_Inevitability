@@ -6,7 +6,7 @@ import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristi
 import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.KeyOfStars;
 import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PaleEmperor;
 import net.lukario.frogerealm.shadow_slave.soul_abilities.beyonder_characteristics.PrinceOfAbolition;
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * All melee combos, one per aspect. To give another aspect a combo, define a MeleeCombo in its
+ * All melee combos, one per pathway. To give another pathway a combo, define a MeleeCombo in its
  * class and add one register(...) line below.
  */
 @Mod.EventBusSubscriber(modid = ForgeRealm.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
@@ -37,7 +37,7 @@ public final class MeleeCombos {
     private MeleeCombos() {}
 
     public static void register(MeleeCombo combo) {
-        COMBOS.put(combo.aspect(), combo);
+        COMBOS.put(combo.pathway(), combo);
     }
 
     // LOW priority: runs after anything that cancels the attack (roots, protection...) had its say
@@ -46,7 +46,7 @@ public final class MeleeCombos {
         if (!(event.getEntity() instanceof ServerPlayer player)) return;
         if (!(event.getTarget() instanceof LivingEntity target) || !target.isAlive()) return;
 
-        MeleeCombo combo = COMBOS.get(SoulCore.getAspect(player));
+        MeleeCombo combo = COMBOS.get(SoulCore.getPathway(player));
         if (combo != null) combo.onHit(player, target);
     }
 }

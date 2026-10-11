@@ -135,7 +135,7 @@ public final class SwingPlayer {
             PLAYING.clear();
             CYCLES.clear();
             LAST_SWING_TIME.clear();
-            PlayerAspectCache.clear();
+            PlayerPathwayCache.clear();
             return;
         }
         if (minecraft.isPaused()) return;

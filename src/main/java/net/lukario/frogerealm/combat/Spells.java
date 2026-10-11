@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.combat;
 
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.lukario.frogerealm.status.Concealment;
 import net.lukario.frogerealm.status.Marionette;
 import net.minecraft.core.Holder;
@@ -37,7 +37,7 @@ import java.util.function.Consumer;
  *   Vec3 spot = Spells.aimGround(player, sl, 24);                   // the ground the player is aiming at
  *   Vec3 direction = Spells.aimFrom(player, sl, hand, 24);          // from the hand toward what the crosshair is on
  *   for (LivingEntity e : Spells.enemiesAround(player, sl, spot, 4)) Spells.strike(player, e, 12f);
- *   if (!Spells.payEssence(player, 1000)) return;                   // takes the soul essence, or says there is not enough
+ *   if (!Spells.paySpirituality(player, 1000)) return;                   // takes the spirituality, or says there is not enough
  *
  * "Enemy" means: anything alive except the caster, what the caster rides or owns (pets, tamed horses), the
  * caster's marionettes, team mates, armor stands, spectators and whoever is concealed. Add your own rule with
@@ -463,13 +463,13 @@ public final class Spells {
         sl.playSound(null, at.x, at.y, at.z, event, SoundSource.PLAYERS, volume, pitch);
     }
 
-    /** Takes 'cost' soul essence. If the player has too little it takes nothing, tells them and returns false. */
-    public static boolean payEssence(Player player, float cost) {
-        if (SoulCore.getSoulEssence(player) < cost) {
-            player.sendSystemMessage(Component.literal("Not enough soul essence."));
+    /** Takes 'cost' spirituality. If the player has too little it takes nothing, tells them and returns false. */
+    public static boolean paySpirituality(Player player, float cost) {
+        if (SoulCore.getSpirituality(player) < cost) {
+            player.sendSystemMessage(Component.literal("Not enough spirituality."));
             return false;
         }
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - cost);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - cost);
         return true;
     }
 

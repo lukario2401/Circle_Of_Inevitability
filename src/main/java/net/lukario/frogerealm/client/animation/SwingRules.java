@@ -1,6 +1,6 @@
 package net.lukario.frogerealm.client.animation;
 
-import net.lukario.frogerealm.client.ClientAspectData;
+import net.lukario.frogerealm.client.ClientPathwayData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.entity.player.Player;
@@ -24,7 +24,7 @@ public final class SwingRules {
      * the wide sweep) and no swing follows itself, also when the cycle wraps around. Starts over after the pause.
      */
     public static final SwingRule WORM_OF_TIME_SWORD = SwingRule.of(
-            (player, held) -> hasAspect(player, "Worm Of Time") && held.is(ItemTags.SWORDS),
+            (player, held) -> hasPathway(player, "Worm Of Time") && held.is(ItemTags.SWORDS),
             DEFAULT_RESET_TICKS,
             SwingAnimations.HORIZONTAL, SwingAnimations.STAB, SwingAnimations.DIAGONAL_DOWN, SwingAnimations.UPPERCUT,
             SwingAnimations.HORIZONTAL_REVERSE, SwingAnimations.VERTICAL_DOWN, SwingAnimations.DIAGONAL_UP,
@@ -56,17 +56,17 @@ public final class SwingRules {
         return null;
     }
 
-    /** True if this client believes the player has that aspect (exact name, as used by /soul setAspect). */
-    public static boolean hasAspect(Player player, String aspect) {
-        return aspect.equals(aspectOf(player));
+    /** True if this client believes the player has that pathway (exact name, as used by /soul setPathway). */
+    public static boolean hasPathway(Player player, String pathway) {
+        return pathway.equals(pathwayOf(player));
     }
 
     /**
-     * The player's aspect as this client knows it: the local player's from ClientAspectData, other players'
-     * from PlayerAspectCache (both synced by AspectSync). "none" if unknown.
+     * The player's pathway as this client knows it: the local player's from ClientPathwayData, other players'
+     * from PlayerPathwayCache (both synced by PathwaySync). "none" if unknown.
      */
-    public static String aspectOf(Player player) {
-        if (player == Minecraft.getInstance().player) return ClientAspectData.getAspect();
-        return PlayerAspectCache.get(player.getUUID());
+    public static String pathwayOf(Player player) {
+        if (player == Minecraft.getInstance().player) return ClientPathwayData.getPathway();
+        return PlayerPathwayCache.get(player.getUUID());
     }
 }

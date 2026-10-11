@@ -81,17 +81,17 @@ public class PacketHandler {
                 .consumerMainThread(CHudTimerPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(CSyncAspectPacket.class, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(CSyncAspectPacket::encode)
-                .decoder(CSyncAspectPacket::new)
-                .consumerMainThread(CSyncAspectPacket::handle)
+        INSTANCE.messageBuilder(CSyncPathwayPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CSyncPathwayPacket::encode)
+                .decoder(CSyncPathwayPacket::new)
+                .consumerMainThread(CSyncPathwayPacket::handle)
                 .add();
 
-        // Server -> Client: another player's aspect, for their swing animations (see client/animation/SwingRules)
-        INSTANCE.messageBuilder(CPlayerAspectPacket.class, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(CPlayerAspectPacket::encode)
-                .decoder(CPlayerAspectPacket::new)
-                .consumerMainThread(CPlayerAspectPacket::handle)
+        // Server -> Client: another player's pathway, for their swing animations (see client/animation/SwingRules)
+        INSTANCE.messageBuilder(CPlayerPathwayPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CPlayerPathwayPacket::encode)
+                .decoder(CPlayerPathwayPacket::new)
+                .consumerMainThread(CPlayerPathwayPacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(CScreenImagePacket.class, NetworkDirection.PLAY_TO_CLIENT)

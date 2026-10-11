@@ -12,9 +12,9 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
- * Run something a few ticks from now, on the server. Handy for attacks with stages:
+ * Run something a few ticks from now, on the server. Handy for attacks with steps:
  *
- *   Later.run(serverLevel, 5, () -> ParticleShapes.burst(serverLevel, SHARD, where, 20, 0.1, 0.3));
+ *   Later.run(serverLevel, 5, () -> ParticleShapes.burst(serverLevel, SPLINTER, where, 20, 0.1, 0.3));
  *
  * Capture positions (Vec3) rather than entities when you can — the entity may be dead by then.
  * Tasks for a level are dropped when it unloads.

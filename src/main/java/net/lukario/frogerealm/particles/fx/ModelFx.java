@@ -80,7 +80,7 @@ import java.util.Locale;
  * Go past 360 to keep turning: yaw(720) = two full turns. All rotations happen around the pivot.
  *
  * ---------- Models that change shape (a hand closing, wings beating) ----------
- * Make one model per stage of the movement and name them <name>_0, <name>_1, <name>_2 ... Then:
+ * Make one model per step of the movement and name them <name>_0, <name>_1, <name>_2 ... Then:
  *   ModelFx.of("pale_emperor/skeletal_hand_grasp").frames(5)       // the files skeletal_hand_grasp_0 .. _4
  *           .smooth()                                              // glide between the frames instead of jumping
  *           .key(8,  ModelFx.pose().frame(4), ModelFx.Ease.IN)     // ticks 0-8: frame 0 -> 4 (the hand closes)

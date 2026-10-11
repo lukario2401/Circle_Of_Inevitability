@@ -32,7 +32,7 @@ import net.minecraftforge.fml.common.Mod;
  * Players are rooted instead (see Root): can't move, attack, use items or abilities.
  *
  * Looks: a see-through ice block around it with ice crystals growing on it
- * (models/model_fx/ice_shell + ice_crystals), and it shatters into shards when the freeze ends or the
+ * (models/model_fx/ice_shell + ice_crystals), and it shatters into splinters when the freeze ends or the
  * entity dies. Freezing something that is already frozen only makes it last longer.
  * Saved with the entity, so a frozen mob still thaws properly after a reload.
  */
@@ -63,7 +63,7 @@ public final class Freeze {
             .lifetime(16, 8).friction(0.86f).gravity(0.02f)
             .glow().spin(8f).randomRotation();
 
-    private static final ParticleFx ICE_SHARD = ParticleFx.of("fx/shard")
+    private static final ParticleFx ICE_SPLINTER = ParticleFx.of("fx/splinter")
             .color(0xFFF2FCFF).endColor(0x0060D8FF)
             .size(0.12f).endSize(0.05f).sizeRandom(0.4f)
             .lifetime(18, 10).gravity(0.9f).friction(0.96f)
@@ -183,7 +183,7 @@ public final class Freeze {
     private static void shatter(ServerLevel sl, LivingEntity target) {
         Vec3 center = target.getBoundingBox().getCenter();
         int count = Mth.clamp((int) (target.getBbWidth() * target.getBbHeight() * 20), 12, 60);
-        ParticleShapes.burst(sl, ICE_SHARD, center, count, 0.12, 0.35);
+        ParticleShapes.burst(sl, ICE_SPLINTER, center, count, 0.12, 0.35);
         ParticleShapes.burst(sl, FROST, center, count / 2, 0.05, 0.2);
         sl.playSound(null, target.blockPosition(), SoundEvents.GLASS_BREAK, SoundSource.PLAYERS, 1f, 1.2f);
         sl.playSound(null, target.blockPosition(), SoundEvents.AMETHYST_CLUSTER_BREAK, SoundSource.PLAYERS, 0.8f, 0.8f);

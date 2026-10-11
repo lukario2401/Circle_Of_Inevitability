@@ -15,7 +15,8 @@ import net.lukario.frogerealm.root.Root;
 import net.lukario.frogerealm.root.RootRestriction;
 import net.lukario.frogerealm.screen.ScreenAnchor;
 import net.lukario.frogerealm.screen.ScreenImages;
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.chat.Component;
@@ -117,7 +118,7 @@ public class HandOfOrder {
 
 
     // Particles (textures in assets/circle_of_inevitability/textures/particle/fx/)
-    private static final ParticleFx GOLD_SHARD = ParticleFx.of("fx/shard")
+    private static final ParticleFx GOLD_SPLINTER = ParticleFx.of("fx/splinter")
             .color(0xFFFFD86B).endColor(0x00FF9A3C)
             .size(0.18f).endSize(0.06f).sizeRandom(0.3f)
             .lifetime(8, 3).friction(1f)
@@ -134,7 +135,7 @@ public class HandOfOrder {
             .glow().spin(-20f).randomRotation();
 
     private static final ParticleFx LANCE_CORE = GOLD_GLOW.size(0.22f).endSize(0.02f).lifetime(8, 4);
-    private static final ParticleFx HIT_SHARD = GOLD_SHARD.friction(0.8f).gravity(0.6f).lifetime(12, 6);
+    private static final ParticleFx HIT_SPLINTER = GOLD_SPLINTER.friction(0.8f).gravity(0.6f).lifetime(12, 6);
 
     // Ability 2 - Decree (menu with 3 choices)
     private static final int DECREE_COST = 1250;
@@ -192,14 +193,14 @@ public class HandOfOrder {
     private static final double BIND_RANGE = 20.0;
 
     /** Up to maxDistance blocks away -> rooted for ticks with these restrictions. Checked top to bottom. */
-    private record BindTier(double maxDistance, int ticks, Set<RootRestriction> restrictions) {}
+    private record BindLevel(double maxDistance, int ticks, Set<RootRestriction> restrictions) {}
 
-    private static final List<BindTier> BIND_TIERS = List.of(
-            new BindTier(4,  160, RootRestriction.EVERYTHING),        // 8s, can't do anything
-            new BindTier(8,  120, EnumSet.of(RootRestriction.MOVE, RootRestriction.JUMP, RootRestriction.TELEPORT,
+    private static final List<BindLevel> BIND_LEVELS = List.of(
+            new BindLevel(4,  160, RootRestriction.EVERYTHING),        // 8s, can't do anything
+            new BindLevel(8,  120, EnumSet.of(RootRestriction.MOVE, RootRestriction.JUMP, RootRestriction.TELEPORT,
                     RootRestriction.ATTACK, RootRestriction.ABILITIES)), // 6s
-            new BindTier(14, 100, RootRestriction.MOVEMENT),          // 5s, held in place
-            new BindTier(20,  80, EnumSet.of(RootRestriction.MOVE))   // 4s, can't walk
+            new BindLevel(14, 100, RootRestriction.MOVEMENT),          // 5s, held in place
+            new BindLevel(20,  80, EnumSet.of(RootRestriction.MOVE))   // 4s, can't walk
     );
 
     private static final ParticleFx BIND_CHAIN = ParticleFx.of("fx/glow")
@@ -245,7 +246,7 @@ public class HandOfOrder {
             .lifetime(12, 8).friction(0.85f)
             .glow().spin(20f).randomRotation();
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forAspect("Hand Of Order")
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Hand Of Order")
             .step(HandOfOrder::comboCrescent)
             .step(HandOfOrder::comboRisingClaws)
             .randomStep(HandOfOrder::comboMoon, HandOfOrder::comboVortex, HandOfOrder::comboThousandCuts);
@@ -284,16 +285,16 @@ public class HandOfOrder {
                     player.getPersistentData().putInt("Hand_Of_order_defense_boost", duration - 1);
                 }
             }
-            if (!SoulCore.getAspect(player).equals("Hand Of Order")) return;
+            if (!SoulCore.getPathway(player).equals("Hand Of Order")) return;
         }
     }
     //Ability 1
     public static void handOfOrderBuff(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 0) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 9)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
 
 
         if (player.isShiftKeyDown()){
@@ -422,23 +423,23 @@ public class HandOfOrder {
     //Ability 2
     public static void handOfOrderDecree(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < DECREE_COST) return;
-        if (SoulCore.getAscensionStage(player) < 1) return;
+        if (SoulCore.getSpirituality(player) < DECREE_COST) return;
+        if (!Beyonder.hasSequence(player, 8)) return;
 
-        // essence is only spent once an option is picked (Esc = free)
+        // spirituality is only spent once an option is picked (Esc = free)
         DECREE_MENU.open(player);
     }
 
     // Top: explosion around the caster. Caster is the explosion's source, so it isn't hurt;
     // ExplosionInteraction.NONE means no blocks break.
     private static void decreeExplosion(ServerPlayer player, ServerLevel sl) {
-        if (!payEssence(player, DECREE_COST)) return;
+        if (!paySpirituality(player, DECREE_COST)) return;
         sl.explode(player, player.getX(), player.getY() + 0.5, player.getZ(),
                 DECREE_EXPLOSION_POWER, Level.ExplosionInteraction.NONE);
     }
 
     private static void setJurisdiction(ServerPlayer player, ServerLevel sl, int range) {
-        if (!payEssence(player, DECREE_COST)) return;
+        if (!paySpirituality(player, DECREE_COST)) return;
 
         player.sendSystemMessage(Component.literal("Jurisdiction: " + range + " blocks"));
         sl.playSound(null, player.blockPosition(), SoundEvents.ANVIL_LAND, SoundSource.PLAYERS, 1.5f, 0.5f);
@@ -484,7 +485,7 @@ public class HandOfOrder {
 
     // Bottom left: speed boost
     private static void decreeSpeed(ServerPlayer player, ServerLevel sl) {
-        if (!payEssence(player, DECREE_COST)) return;
+        if (!paySpirituality(player, DECREE_COST)) return;
         player.addEffect(new MobEffectInstance(MobEffects.SPEED, DECREE_SPEED_TICKS, DECREE_SPEED_LEVEL));
         sl.sendParticles(ParticleTypes.CLOUD, player.getX(), player.getY() + 0.1, player.getZ(), 20, 0.4, 0.05, 0.4, 0.05);
         sl.playSound(null, player.blockPosition(), SoundEvents.BREEZE_JUMP, SoundSource.PLAYERS, 1f, 1.2f);
@@ -498,9 +499,9 @@ public class HandOfOrder {
         LivingEntity target = getTarget(player,sl,level,32);
         if (target == null) {
             player.sendSystemMessage(Component.literal("No one stands before you."));
-            return; // no essence spent
+            return; // no spirituality spent
         }
-        if (!payEssence(player, DECREE_COST)) return;
+        if (!paySpirituality(player, DECREE_COST)) return;
 
         if (player.getRandom().nextFloat() < DECREE_JUDGEMENT_CHANCE) {
             target.invulnerableTime = 0;
@@ -542,10 +543,10 @@ public class HandOfOrder {
     //Ability 3
     public static void handOfOrderEdict(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < EDICT_COST) return;
-        if (SoulCore.getAscensionStage(player) < 2) return;
+        if (SoulCore.getSpirituality(player) < EDICT_COST) return;
+        if (!Beyonder.hasSequence(player, 7)) return;
 
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - EDICT_COST);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - EDICT_COST);
 
         Vec3 look = player.getLookAngle().normalize();
         Vec3 origin = player.getEyePosition().add(look.scale(0.4)).add(0, -0.25, 0);
@@ -564,12 +565,12 @@ public class HandOfOrder {
 
             for (LivingEntity target : entitiesInCone(player, sl, EDICT_LONG_RANGE, EDICT_LONG_ANGLE)) {
                 target.hurt(player.damageSources().playerAttack(player), EDICT_LONG_DAMAGE);
-                ParticleShapes.burst(sl, HIT_SHARD, target.getBoundingBox().getCenter(), 14, 0.1, 0.3);
+                ParticleShapes.burst(sl, HIT_SPLINTER, target.getBoundingBox().getCenter(), 14, 0.1, 0.3);
             }
         } else {
 //            // Close range wide cone
-//            double speed = EDICT_CLOSE_RANGE / GOLD_SHARD.lifetimeTicks();
-//            ParticleShapes.cone(sl, GOLD_SHARD, origin, look, EDICT_CLOSE_ANGLE, 140, speed * 0.3, speed);
+//            double speed = EDICT_CLOSE_RANGE / GOLD_SPLINTER.lifetimeTicks();
+//            ParticleShapes.cone(sl, GOLD_SPLINTER, origin, look, EDICT_CLOSE_ANGLE, 140, speed * 0.3, speed);
 //            ParticleShapes.cone(sl, GOLD_GLOW, origin, look, EDICT_CLOSE_ANGLE, 40, speed * 0.4, speed);
 //
 //            sl.playSound(null, player.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1f, 0.8f);
@@ -577,7 +578,7 @@ public class HandOfOrder {
 //            for (LivingEntity target : entitiesInCone(player, sl, EDICT_CLOSE_RANGE, EDICT_CLOSE_ANGLE)) {
 //                target.hurt(player.damageSources().playerAttack(player), EDICT_CLOSE_DAMAGE);
 //                target.knockback(EDICT_CLOSE_KNOCKBACK, player.getX() - target.getX(), player.getZ() - target.getZ());
-//                ParticleShapes.burst(sl, HIT_SHARD, target.getBoundingBox().getCenter(), 10, 0.1, 0.25);
+//                ParticleShapes.burst(sl, HIT_SPLINTER, target.getBoundingBox().getCenter(), 10, 0.1, 0.25);
 //            }
 
             // A key only changes what it names; everything else stays where the earlier keys left it.
@@ -598,10 +599,10 @@ public class HandOfOrder {
     //Ability 3
     public static void handOfOrderAbility4(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 12000) return;
-        if (SoulCore.getAscensionStage(player) < 3) return;
+        if (SoulCore.getSpirituality(player) < 12000) return;
+        if (!Beyonder.hasSequence(player, 6)) return;
 
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - 12000);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - 12000);
 
         if (!player.isShiftKeyDown()) {
             ParticleShapes.sphere(sl, MUSHROOMS, getPos(player,3), 0.35, 16);
@@ -615,10 +616,10 @@ public class HandOfOrder {
     //Ability 4
     public static void handOfOrderAbility5(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 12000) return;
-        if (SoulCore.getAscensionStage(player) < 4) return;
+        if (SoulCore.getSpirituality(player) < 12000) return;
+        if (!Beyonder.hasSequence(player, 5)) return;
 
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - 12000);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - 12000);
 
         if (!player.isShiftKeyDown()) {
 
@@ -696,25 +697,25 @@ public class HandOfOrder {
     //Ability 6
     public static void handOfOrderWords(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < WORDS_COST) return;
-        if (SoulCore.getAscensionStage(player) < 5) return;
+        if (SoulCore.getSpirituality(player) < WORDS_COST) return;
+        if (!Beyonder.hasSequence(player, 4)) return;
 
-        WORDS.open(player); // essence is paid inside the phrase that works
+        WORDS.open(player); // spirituality is paid inside the phrase that works
     }
 
     // "The sentence was God" - huge explosion, no block damage, the caster is hit too
     private static void wordsTheSentenceWasGod(ServerPlayer player, ServerLevel sl) {
-        if (!payEssence(player, WORDS_COST)) return;
+        if (!paySpirituality(player, WORDS_COST)) return;
         Vec3 center = player.position().add(0, 0.5, 0);
         ParticleShapes.ring(sl, ORDER_WAVE, center, 1.0, 120, 0.9);
-        ParticleShapes.burst(sl, GOLD_SHARD, center, 80, 0.4, 1.2);
+        ParticleShapes.burst(sl, GOLD_SPLINTER, center, 80, 0.4, 1.2);
         // null source = nobody is excluded, so the caster takes the blast as well
         sl.explode(null, center.x, center.y, center.z, GOD_EXPLOSION_POWER, Level.ExplosionInteraction.NONE);
     }
 
     // "Bethel Abraham" - everything around except the caster: Slowness 120 for 20 seconds
     private static void wordsBethelAbraham(ServerPlayer player, ServerLevel sl) {
-        if (!payEssence(player, WORDS_COST)) return;
+        if (!paySpirituality(player, WORDS_COST)) return;
         for (LivingEntity target : livingAround(player, sl, BETHEL_RANGE)) {
             target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, BETHEL_SLOWNESS_TICKS, BETHEL_SLOWNESS_LEVEL));
             ParticleShapes.ring(sl, SEAL_MOTE, target.position().add(0, 0.2, 0), 0.8, 12, 0.0);
@@ -727,13 +728,13 @@ public class HandOfOrder {
 
     // "Kneel" - everything around is slammed down and weakened
     private static void wordsKneel(ServerPlayer player, ServerLevel sl) {
-        if (!payEssence(player, WORDS_COST)) return;
+        if (!paySpirituality(player, WORDS_COST)) return;
         for (LivingEntity target : livingAround(player, sl, KNEEL_RANGE)) {
             target.setDeltaMovement(target.getDeltaMovement().x * 0.2, -1.5, target.getDeltaMovement().z * 0.2);
             target.hurtMarked = true; // makes players' clients accept the push
             target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, KNEEL_TICKS, 3));
             target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, KNEEL_TICKS, 2));
-            ParticleShapes.cone(sl, HIT_SHARD, target.position().add(0, target.getBbHeight() + 0.5, 0),
+            ParticleShapes.cone(sl, HIT_SPLINTER, target.position().add(0, target.getBbHeight() + 0.5, 0),
                     new Vec3(0, -1, 0), 40, 10, 0.2, 0.4);
         }
         sl.playSound(null, player.blockPosition(), SoundEvents.ANVIL_LAND, SoundSource.PLAYERS, 1.5f, 0.5f);
@@ -741,7 +742,7 @@ public class HandOfOrder {
 
     // "Order restored" - caster fully healed and cleansed
     private static void wordsOrderRestored(ServerPlayer player, ServerLevel sl) {
-        if (!payEssence(player, WORDS_COST)) return;
+        if (!paySpirituality(player, WORDS_COST)) return;
         player.setHealth(player.getMaxHealth());
         player.clearFire();
         List<MobEffectInstance> harmful = new ArrayList<>();
@@ -761,7 +762,7 @@ public class HandOfOrder {
             player.sendSystemMessage(Component.literal("There is no one to judge."));
             return; // nothing spent
         }
-        if (!payEssence(player, WORDS_COST)) return;
+        if (!paySpirituality(player, WORDS_COST)) return;
 
         targets.sort((a, b) -> Double.compare(a.distanceToSqr(player), b.distanceToSqr(player)));
         for (int i = 0; i < Math.min(JUDGEMENT_FALLS_TARGETS, targets.size()); i++) {
@@ -777,8 +778,8 @@ public class HandOfOrder {
     //Ability 7
     public static void handOfOrderBind(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < BIND_COST) return;
-        if (SoulCore.getAscensionStage(player) < 6) return;
+        if (SoulCore.getSpirituality(player) < BIND_COST) return;
+        if (!Beyonder.hasSequence(player, 3)) return;
 
         LivingEntity target = findTargetInFront(player, sl, BIND_RANGE);
         if (target == null) {
@@ -787,17 +788,17 @@ public class HandOfOrder {
         }
 
         double distance = player.distanceTo(target);
-        BindTier tier = null;
-        for (BindTier t : BIND_TIERS) {
+        BindLevel bindLevel = null;
+        for (BindLevel t : BIND_LEVELS) {
             if (distance <= t.maxDistance()) {
-                tier = t;
+                bindLevel = t;
                 break;
             }
         }
-        if (tier == null) return;
-        if (!payEssence(player, BIND_COST)) return;
+        if (bindLevel == null) return;
+        if (!paySpirituality(player, BIND_COST)) return;
 
-        Root.apply(target, tier.ticks(), tier.restrictions());
+        Root.apply(target, bindLevel.ticks(), bindLevel.restrictions());
 
         // chain of light from caster to target + a ring around it
         ParticleShapes.line(sl, BIND_CHAIN, player.getEyePosition().add(0, -0.3, 0), target.getBoundingBox().getCenter(), 4);
@@ -805,7 +806,7 @@ public class HandOfOrder {
                 Math.max(0.8, target.getBbWidth()), 24, 0.0);
         sl.playSound(null, target.blockPosition(), SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 1.5f, 0.6f);
 
-        player.sendSystemMessage(Component.literal("Bound: " + describe(tier.restrictions())));
+        player.sendSystemMessage(Component.literal("Bound: " + describe(bindLevel.restrictions())));
         if (target instanceof Player boundPlayer) {
             boundPlayer.sendSystemMessage(Component.literal("You are bound by Order."));
         }
@@ -898,17 +899,17 @@ public class HandOfOrder {
         sl.playSound(null, target.blockPosition(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 0.6f, 1.8f);
     }
 
-    private static boolean payEssence(Player player, float cost) {
-        if (SoulCore.getSoulEssence(player) < cost) {
-            player.sendSystemMessage(Component.literal("Not enough soul essence."));
+    private static boolean paySpirituality(Player player, float cost) {
+        if (SoulCore.getSpirituality(player) < cost) {
+            player.sendSystemMessage(Component.literal("Not enough spirituality."));
             return false;
         }
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - cost);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - cost);
         return true;
     }
 
     private static boolean canUseCharacteristic(Player player, boolean dontCheck) {
         if (dontCheck) return true;
-        return SoulCore.getAspect(player).equals("Hand Of Order");
+        return SoulCore.getPathway(player).equals("Hand Of Order");
     }
 }

@@ -13,13 +13,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Small icon above the hunger bar showing the player's current aspect.
- * Drawn every frame by HudLayerHook; disappears when the aspect has no icon (or is "none").
+ * Small icon above the hunger bar showing the player's current pathway.
+ * Drawn every frame by HudLayerHook; disappears when the pathway has no icon (or is "none").
  *
- * To give another aspect an icon: add a PNG to assets/circle_of_inevitability/textures/gui/aspect_icons/
- * and one line in the static block below, using the exact name from /soul setAspect.
+ * To give another pathway an icon: add a PNG to assets/circle_of_inevitability/textures/gui/pathway_icons/
+ * and one line in the static block below, using the exact name from /soul setPathway.
  */
-public class AspectHudIcon {
+public class PathwayHudIcon {
 
     private static final int ICON_SIZE = 16; // on-screen size in GUI pixels (any square PNG works)
 
@@ -30,7 +30,7 @@ public class AspectHudIcon {
     }
 
     private static Identifier icon(String fileName) {
-        return Identifier.fromNamespaceAndPath(ForgeRealm.MOD_ID, "textures/gui/aspect_icons/" + fileName + ".png");
+        return Identifier.fromNamespaceAndPath(ForgeRealm.MOD_ID, "textures/gui/pathway_icons/" + fileName + ".png");
     }
 
     public static void render(GuiGraphicsExtractor guiGraphics) {
@@ -39,7 +39,7 @@ public class AspectHudIcon {
         if (player == null) return;
         if (minecraft.gameMode != null && minecraft.gameMode.getPlayerMode() == GameType.SPECTATOR) return;
 
-        Identifier texture = ICONS.get(ClientAspectData.getAspect());
+        Identifier texture = ICONS.get(ClientPathwayData.getPathway());
         if (texture == null) return;
 
         // Vanilla hunger bar: right edge at screen center + 91, top at 39 px above the bottom

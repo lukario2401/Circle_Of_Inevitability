@@ -47,7 +47,7 @@ import java.util.function.Predicate;
  *                                                           // do the owner's part in onPulse if you want one
  *
  * HOW LONG THEY HAVE BEEN IN IT. 'ticksInside' starts at 0 when someone steps in and grows while they stay, so
- * a zone can get worse (or better) the longer they stay:   int stage = 1 + ticksInside / 40;
+ * a zone can get worse (or better) the longer they stay:   int step = 1 + ticksInside / 40;
  * Stepping out does not wipe it: it falls back as fast as it grew, so someone who hops out and in again is
  * where they were. .countsTo(200) stops the count at 200, so it starts falling from there.
  *

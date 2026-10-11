@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A melee combo for one aspect: hit 1 does this, hit 2 does that, hit 3 does one of these...
+ * A melee combo for one pathway: hit 1 does this, hit 2 does that, hit 3 does one of these...
  * then it starts over. Stop hitting for a moment and it also starts over.
  *
- *   public static final MeleeCombo COMBO = MeleeCombo.forAspect("Hand Of Order")
+ *   public static final MeleeCombo COMBO = MeleeCombo.forPathway("Hand Of Order")
  *           .step(MyClass::firstHit)                                   // hit 1
  *           .step(MyClass::secondHit)                                  // hit 2
  *           .randomStep(MyClass::finisherA, MyClass::finisherB);       // hit 3 = one of these at random
@@ -31,20 +31,20 @@ public class MeleeCombo {
 
     private static final String STEP_KEY = "forgerealm_combo_step";
     private static final String LAST_HIT_KEY = "forgerealm_combo_last_hit";
-    private static final String ASPECT_KEY = "forgerealm_combo_aspect";
+    private static final String PATHWAY_KEY = "forgerealm_combo_pathway";
 
-    private final String aspect;
+    private final String pathway;
     private int resetTicks = 40;
     private float minCharge = 0.8f;
     private final List<List<Hit>> steps = new ArrayList<>();
 
-    private MeleeCombo(String aspect) {
-        this.aspect = aspect;
+    private MeleeCombo(String pathway) {
+        this.pathway = pathway;
     }
 
-    /** The combo only works for players with this aspect (exact name used by /soul setAspect). */
-    public static MeleeCombo forAspect(String aspect) {
-        return new MeleeCombo(aspect);
+    /** The combo only works for players with this pathway (exact name used by /soul setPathway). */
+    public static MeleeCombo forPathway(String pathway) {
+        return new MeleeCombo(pathway);
     }
 
     /** Ticks without hitting before the combo starts over at hit 1 (default 40 = 2 seconds). */
@@ -74,15 +74,15 @@ public class MeleeCombo {
         return this;
     }
 
-    public String aspect() {
-        return aspect;
+    public String pathway() {
+        return pathway;
     }
 
     /** Which hit (0 = first) the player's NEXT attack would be. */
     public int nextStep(ServerPlayer player) {
         CompoundTag data = player.getPersistentData();
         boolean expired = player.level().getGameTime() - data.getLongOr(LAST_HIT_KEY, 0L) > resetTicks
-                || !aspect.equals(data.getStringOr(ASPECT_KEY, ""));
+                || !pathway.equals(data.getStringOr(PATHWAY_KEY, ""));
         int step = data.getIntOr(STEP_KEY, 0);
         return expired || step >= steps.size() ? 0 : step;
     }
@@ -96,7 +96,7 @@ public class MeleeCombo {
         CompoundTag data = player.getPersistentData();
         data.putInt(STEP_KEY, (step + 1) % steps.size());
         data.putLong(LAST_HIT_KEY, player.level().getGameTime());
-        data.putString(ASPECT_KEY, aspect);
+        data.putString(PATHWAY_KEY, pathway);
 
         List<Hit> options = steps.get(step);
         Hit hit = options.get(player.getRandom().nextInt(options.size()));

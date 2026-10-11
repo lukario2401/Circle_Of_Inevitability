@@ -245,7 +245,7 @@ public final class SlashFx implements ParticleOptions {
         return c;
     }
 
-    // ---------- geometry (works on the server too, e.g. to spawn shards along a slash) ----------
+    // ---------- geometry (works on the server too, e.g. to spawn splinters along a slash) ----------
 
     /**
      * The slash's orientation as unit vectors {forward, right, up}, before any spin.

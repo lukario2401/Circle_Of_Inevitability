@@ -5,7 +5,8 @@ import net.lukario.frogerealm.root.Root;
 import net.lukario.frogerealm.root.RootRestriction;
 import net.lukario.frogerealm.screen.ScreenAnchor;
 import net.lukario.frogerealm.screen.ScreenImages;
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.lukario.frogerealm.status.FallGuard;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -21,10 +22,10 @@ public class WormOfTime {
 
     public static void wormOfTimeAbility1(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 0) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 9)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
 
 
         if (!player.isShiftKeyDown()){
@@ -72,6 +73,6 @@ public class WormOfTime {
 
     private static boolean canUseCharacteristic(Player player, boolean bypassClassCheck){
         if (bypassClassCheck) return true;
-        return "Worm Of Time".equals(SoulCore.getAspect(player));
+        return "Worm Of Time".equals(SoulCore.getPathway(player));
     }
 }

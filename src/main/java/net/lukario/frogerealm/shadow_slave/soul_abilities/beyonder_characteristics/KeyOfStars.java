@@ -4,7 +4,8 @@ import net.minecraft.core.UUIDUtil;
 import net.lukario.frogerealm.ForgeRealm;
 import net.lukario.frogerealm.screen.ScreenAnchor;
 import net.lukario.frogerealm.screen.ScreenImages;
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ColorParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -112,7 +113,7 @@ public class KeyOfStars {
             .lifetime(25, 10).gravity(-0.03f)  // floats up slowly
             .glow();
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forAspect("Key Of Stars")   // exact aspect name
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Key Of Stars")   // exact pathway name
             .step(KeyOfStars::starComboSwing)                          // hit 1
             .step(KeyOfStars::starComboRise)                           // hit 2
             .randomStep(KeyOfStars::starComboOrbit, KeyOfStars::starComboShootingStars) // hit 3: one at random
@@ -125,12 +126,12 @@ public class KeyOfStars {
         public static void onKeyOfStarsTick(TickEvent.PlayerTickEvent.Post event) {
             Player player = event.player();
             if (!(player.level() instanceof ServerLevel sl)) return;
-            if (!SoulCore.getAspect(player).equals("Key Of Stars")) return;
+            if (!SoulCore.getPathway(player).equals("Key Of Stars")) return;
 
-            int ascensionStage = SoulCore.getAscensionStage(player);
+            int powerLevel = Beyonder.powerLevel(player);
             int starCount = player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0);
 
-            if (starCount<ascensionStage){
+            if (starCount<powerLevel){
                 if (player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_NEW_STAR_CD, 0)==0){
 
                     player.getPersistentData().putInt(NBT_KEY_OF_STARS_STAR_COUNT,starCount+1);
@@ -138,7 +139,7 @@ public class KeyOfStars {
 
 //                    player.sendSystemMessage(Component.literal("New Star Added [" + (starCount+1) +"/7]"));
                     String starId = "key_of_stars_star_id_"+starCount;
-                    ScreenImages.show(player, starId, "aspect_icons/key_of_stars_star",
+                    ScreenImages.show(player, starId, "pathway_icons/key_of_stars_star",
                             ScreenAnchor.CENTER, -96+32*starCount, 200, 16,-1);
 
                 }else{
@@ -210,10 +211,10 @@ public class KeyOfStars {
                         for (LivingEntity targets : hits) {
                             // Only process actual players
                             if (!(targets instanceof Player player)) continue;
-                            if (!SoulCore.getAspect(player).equals("Key Of Stars")) continue;
+                            if (!SoulCore.getPathway(player).equals("Key Of Stars")) continue;
 
                             int current = player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0);
-                            int max = SoulCore.getAscensionStage(player); // stars cap at ascension stage
+                            int max = Beyonder.powerLevel(player); // stars cap at the power level (Beyonder.powerLevel)
                             if (current < max) {
                                 player.getPersistentData().putInt(NBT_KEY_OF_STARS_STAR_COUNT, current + 1);
 //                                player.sendSystemMessage(Component.literal("§bPlague feeds you a star §e[" + (current + 1) + "/" + max + "]"));
@@ -311,10 +312,10 @@ public class KeyOfStars {
     // Ability 1
     public static void keyOfStarsStarBurst(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 0) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 9)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
 
         if (player.isShiftKeyDown()){
             if (player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0)>=1){
@@ -386,10 +387,10 @@ public class KeyOfStars {
     // Ability 2
     public static void keyOfStarsDash(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 1) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 8)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
 
         if (player.isShiftKeyDown()){
             teleport(player,sl,16);
@@ -410,10 +411,10 @@ public class KeyOfStars {
     // Ability 3
     public static void keyOfStarsBuff(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 2) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 7)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
         playNotifySound(player, SoundEvents.ZOMBIE_VILLAGER_CURE,SoundSource.PLAYERS,1,1);
 
         if (player.isShiftKeyDown()) {
@@ -435,10 +436,10 @@ public class KeyOfStars {
     // Ability 4
     public static void keyOfStarsSeal(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 2) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 7)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
         playNotifySound(player, SoundEvents.ZOMBIE_VILLAGER_CURE,SoundSource.PLAYERS,1,1);
 
         if (player.isShiftKeyDown()) {
@@ -457,10 +458,10 @@ public class KeyOfStars {
     // Ability 5
     public static void keyOfStarsTransport(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 2) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 7)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
         playNotifySound(player, SoundEvents.ZOMBIE_VILLAGER_CURE,SoundSource.PLAYERS,1,1);
 
         if (player.isShiftKeyDown()) {
@@ -477,8 +478,8 @@ public class KeyOfStars {
     // Ability 6 — Orbital Stars: throw stars that orbit target, shift to collapse and explode
     public static void keyOfStarsOrbital(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 4) return;
-        if (SoulCore.getSoulEssence(player) < 500) return;
+        if (!Beyonder.hasSequence(player, 5)) return;
+        if (SoulCore.getSpirituality(player) < 500) return;
 
         net.minecraft.nbt.CompoundTag data = player.getPersistentData();
 
@@ -510,7 +511,7 @@ public class KeyOfStars {
             return;
         }
 
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - 500);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - 500);
 
         // Raycast forward to find hit target or block
         Vec3 start = player.getEyePosition();
@@ -566,8 +567,8 @@ public class KeyOfStars {
 
         if (!hitSomething) {
             player.sendSystemMessage(Component.literal("§8No target found."));
-            // Refund essence
-            SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) + 500);
+            // Refund spirituality
+            SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + 500);
         }
     }
 
@@ -712,10 +713,10 @@ public class KeyOfStars {
     // ability 7
     public static void keyOfStarsCosmicPlague(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 250) return;
-        if (SoulCore.getAscensionStage(player) < 6) return;
+        if (SoulCore.getSpirituality(player) < 250) return;
+        if (!Beyonder.hasSequence(player, 3)) return;
 
-        SoulCore.setSoulEssence(player,SoulCore.getSoulEssence(player)-250);
+        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
 
         if (player.isShiftKeyDown()){
 
@@ -793,7 +794,7 @@ public class KeyOfStars {
 
     private static boolean canUseClassKeyOfStars(Player player, boolean dontCheck) {
         if (dontCheck) return true;
-        return SoulCore.getAspect(player).equals("Key Of Stars");
+        return SoulCore.getPathway(player).equals("Key Of Stars");
     }
 
     // Player.playNotifySound is gone in 26.2; this sends what 1.21's ServerPlayer.playNotifySound sent (a sound only this player hears)

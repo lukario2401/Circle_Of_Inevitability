@@ -20,14 +20,14 @@ import net.minecraft.world.phys.Vec3;
  *   ParticleShapes.spiral(sl, GOLD_SPARK, feet, 4, 150, 0.5, 4.0, 0.8, 0.1);          // swirling galaxy
  *   ParticleShapes.slash(sl, SWING, target.getBoundingBox().getCenter(), player);   // SlashFx trails
  *   ParticleShapes.slashBetween(sl, CUT, from, to);                                 // straight cut from A to B
- *   ParticleShapes.alongSlash(sl, SHARD, SWING, center, yaw, 0, 0, 6, 20, 0.08, 0.03); // shards breaking off a slash
+ *   ParticleShapes.alongSlash(sl, SPLINTER, SWING, center, yaw, 0, 0, 6, 20, 0.08, 0.03); // splinters breaking off a slash
  *   ParticleShapes.model(sl, HAMMER, grip, player.getYRot(), 0, 0);                 // 3D model effect (ModelFx)
  *   ParticleShapes.modelOn(sl, CRYSTALS, mob, Vec3.ZERO, 0, 0, 0);                  // 3D model stuck to an entity
  *   ParticleShapes.modelOnTurning(sl, WING, player, shoulders, 0, 0, 0);            // ...that also turns with it (worn)
  *   ParticleShapes.modelAlong(sl, SPEAR, from, player.getLookAngle());              // 3D model pointing along a direction
  *   ParticleShapes.clearModels(sl, mob, "ice");                                     // remove the models tagged "ice" from it
  *
- * For effects in stages (this now, that 5 ticks later) use combat.Later.run(serverLevel, 5, () -> ...).
+ * For effects in steps (this now, that 5 ticks later) use combat.Later.run(serverLevel, 5, () -> ...).
  *
  * Speeds are in blocks per tick. With friction 1 and no gravity a particle travels
  * speed * lifetime blocks, so for a 10 block cone with a 20 tick particle use speed 0.5.
@@ -196,7 +196,7 @@ public final class ParticleShapes {
     }
 
     /**
-     * Spawns particles along a slash's path, e.g. shards breaking off it. Pass the same slash, center and
+     * Spawns particles along a slash's path, e.g. splinters breaking off it. Pass the same slash, center and
      * yaw/pitch/roll you played it with.
      * @param ticksIn      how long the slash has been visible (only matters if it spins)
      * @param outwardSpeed pushes them away from the arc's center (lines: off to either side), blocks per tick

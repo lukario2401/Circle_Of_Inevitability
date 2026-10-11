@@ -1,4 +1,4 @@
-package net.lukario.frogerealm.shadow_slave.soul_shards;
+package net.lukario.frogerealm.shadow_slave.beyonder;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.player.PlayerXpEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -20,30 +19,14 @@ import java.util.Random;
 public class SoulHandler {
 
     @SubscribeEvent
-    public static void onPlayerGainXp(PlayerXpEvent.XpChange event) {
-        Player player = event.getEntity();
-
-        if (player.level().isClientSide()) return; // server only
-
-        int xpGained = event.getAmount();
-        if (xpGained <= 0) return;
-
-        int soulShardsToAdd = xpGained * 2;
-
-        SoulCore.addSoulShards(player, soulShardsToAdd);
-        SoulShardPower.applySoulShardPowers(player);
-        player.sendSystemMessage(Component.literal("You have: "+ SoulCore.getSoulShards(player)));
-    }
-
-    @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {
         if (event.player().level().isClientSide()) return;
         Player player = event.player();
 
-            SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) + (float) (SoulCore.getAspectTier(player) * SoulCore.getAspectTier(player) * SoulCore.getAscensionStage(player)) /(8-SoulCore.getAscensionStage(player)));
+            SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + Beyonder.spiritualityRegenPerTick(player));
 
             player.sendOverlayMessage(
-                    Component.literal("Soul Essence: " + SoulCore.getSoulEssence(player))
+                    Component.literal("Spirituality: " + SoulCore.getSpirituality(player))
             );
     }
 

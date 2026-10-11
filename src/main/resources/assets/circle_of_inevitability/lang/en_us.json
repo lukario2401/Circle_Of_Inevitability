@@ -1,5 +1,4 @@
 {
-  "item.circle_of_inevitability.soulessence": "Soul Essence",
   "item.circle_of_inevitability.coin": "Coin",
   "item.circle_of_inevitability.soulcoin": "Soul Coin",
   "item.circle_of_inevitability.shadow_sword": "Shadow Sword",
@@ -30,8 +29,6 @@
 
   "item.circle_of_inevitability.diamond_carrot": "Diamond Carrot",
   "item.circle_of_inevitability.strength_elixir": "Strength Elixir",
-  "item.circle_of_inevitability.energy_shard": "Energy Shard",
-  "item.circle_of_inevitability.depleted_energy_shard": "Depleted Energy Shard",
 
 
   "tooltip.circle_of_inevitability.terminator.tooltip.shift.1": "This weapon was forged in the depths of a star",

@@ -27,7 +27,7 @@ public class HudLayerHook {
     private static final Identifier LAYER = Identifier.fromNamespaceAndPath(ForgeRealm.MOD_ID, "hud");
 
     private static void renderAll(GuiGraphicsExtractor guiGraphics) {
-        AspectHudIcon.render(guiGraphics);
+        PathwayHudIcon.render(guiGraphics);
         ScreenImageRenderer.render(guiGraphics);
         AbilityHudOverlay.render(guiGraphics);
         HudTimerOverlay.render(guiGraphics);
@@ -38,7 +38,7 @@ public class HudLayerHook {
 
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) {
-            ClientAspectData.setAspect("none"); // left the world
+            ClientPathwayData.setPathway("none"); // left the world
         }
     }
 

@@ -7,7 +7,8 @@ import net.lukario.frogerealm.particles.fx.ParticleFx;
 import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.lukario.frogerealm.particles.fx.SlashFx;
 import net.lukario.frogerealm.root.Freeze;
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -60,7 +61,7 @@ import java.util.function.Supplier;
 public class PrinceOfAbolition {
 
     // =========================
-    // Ability settings (cost = soul essence, ticks: 20 = 1 second, distances in blocks)
+    // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
     // =========================
 
     // Side effects kept from the old abilities
@@ -68,7 +69,7 @@ public class PrinceOfAbolition {
     private static final int CORROSION_TICKS = 180;              // old Corrosion: wither + poison
     private static final int CORROSION_CORRUPTION = 10;          // old sneak Corrosion: corruption added (100 kills)
 
-    // Ability 1 - Spear of Abolition (ascension stage 0)
+    // Ability 1 - Spear of Abolition (Sequence 9)
     private static final int SPEAR_COST = 250;
     private static final double SPEAR_RANGE = 28.0;
     private static final double SPEAR_SPEED = 3.0;               // blocks per tick
@@ -81,7 +82,7 @@ public class PrinceOfAbolition {
     private static final double SPEAR_RAIN_HIT = 1.8;            // radius hurt around each fallen spear
     private static final int SPEAR_FALL = 5;                     // ticks a falling spear takes to land
 
-    // Ability 2 - Corroding Flame (stage 1)
+    // Ability 2 - Corroding Flame (Sequence 8)
     private static final int FLAME_COST = 1000;
     private static final double FIREBALL_RANGE = 26.0;
     private static final double FIREBALL_SPEED = 1.3;            // blocks per tick
@@ -95,7 +96,7 @@ public class PrinceOfAbolition {
     private static final int PYRE_PULSE = 10;                    // ticks between burns
     private static final float PYRE_DAMAGE = 4f;                 // per burn
 
-    // Ability 3 - Frost (stage 2)
+    // Ability 3 - Frost (Sequence 7)
     private static final int FROST_COST = 1250;
     private static final int SPIKE_COUNT = 10;
     private static final double SPIKE_FIRST = 1.2;               // how far in front of you the first one comes up
@@ -108,7 +109,7 @@ public class PrinceOfAbolition {
     private static final int GLACIER_FREEZE_TICKS = 160;
     private static final float GLACIER_DAMAGE = 8f;
 
-    // Ability 4 - Gavel of Ruin (stage 3)
+    // Ability 4 - Gavel of Ruin (Sequence 6)
     private static final int HAMMER_COST = 2500;
     private static final double HAMMERFALL_RANGE = 24.0;
     private static final double HAMMERFALL_RADIUS = 4.5;
@@ -120,7 +121,7 @@ public class PrinceOfAbolition {
     private static final double WHIRL_RADIUS = 4.5;
     private static final float WHIRL_DAMAGE = 12f;               // per turn, two turns
 
-    // Ability 5 - Meteor (stage 4)
+    // Ability 5 - Meteor (Sequence 5)
     private static final int METEOR_COST = 5000;
     private static final double METEOR_RANGE = 28.0;
     private static final float METEOR_SIZE = 2.6f;
@@ -136,7 +137,7 @@ public class PrinceOfAbolition {
     private static final double SHOWER_RADIUS = 3.0;
     private static final float SHOWER_DAMAGE = 16f;
 
-    // Ability 6 - Entropy (stage 5)
+    // Ability 6 - Entropy (Sequence 4)
     private static final int ENTROPY_COST = 6000;
     private static final double ENTROPY_RANGE = 20.0;
     private static final float ENTROPY_SIZE = 2.2f;
@@ -151,7 +152,7 @@ public class PrinceOfAbolition {
     private static final double ENTROPY_BURST_RADIUS = 5.5;
     private static final float ENTROPY_BURST_DAMAGE = 22f;
 
-    // Ability 7 - Abolition (stage 6)
+    // Ability 7 - Abolition (Sequence 3)
     private static final int ABOLITION_COST = 12000;
     private static final double ABOLITION_RANGE = 28.0;
     private static final double ABOLITION_RADIUS = 8.0;
@@ -214,7 +215,7 @@ public class PrinceOfAbolition {
             .size(0.35f).endSize(1.0f).sizeRandom(0.3f)
             .lifetime(28, 14).gravity(-0.03f).friction(0.9f)
             .spin(2f).randomRotation();
-    private static final ParticleFx DEBRIS = ParticleFx.of("fx/shard")
+    private static final ParticleFx DEBRIS = ParticleFx.of("fx/splinter")
             .color(0xFF6A5648).endColor(0x00403028)
             .size(0.13f).endSize(0.06f).sizeRandom(0.4f)
             .lifetime(22, 10).gravity(0.9f).friction(0.96f)
@@ -224,7 +225,7 @@ public class PrinceOfAbolition {
             .size(0.08f).endSize(0.03f)
             .lifetime(16, 8).friction(0.86f).gravity(0.02f)
             .glow().spin(8f).randomRotation();
-    private static final ParticleFx ICE_SHARD = ParticleFx.of("fx/shard")
+    private static final ParticleFx ICE_SPLINTER = ParticleFx.of("fx/splinter")
             .color(0xFFF2FCFF).endColor(0x0060D8FF)
             .size(0.12f).endSize(0.05f).sizeRandom(0.4f)
             .lifetime(18, 10).gravity(0.9f).friction(0.96f)
@@ -365,7 +366,7 @@ public class PrinceOfAbolition {
             .lifetime(30, 10).friction(0.85f)
             .randomRotation();
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forAspect("Prince Of Abolition")
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Prince Of Abolition")
             .step(PrinceOfAbolition::edgeCrossCut)
             .step(PrinceOfAbolition::edgeGroundRend)
             .step(PrinceOfAbolition::edgeWideSweep)
@@ -379,8 +380,8 @@ public class PrinceOfAbolition {
     // =========================
     public static void princeOfAbolitionSpear(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 0) return;
-        if (!payEssence(player, SPEAR_COST)) return;
+        if (!Beyonder.hasSequence(player, 9)) return;
+        if (!paySpirituality(player, SPEAR_COST)) return;
 
         if (player.isShiftKeyDown()) spearRain(player, sl);
         else spearThrow(player, sl);
@@ -479,8 +480,8 @@ public class PrinceOfAbolition {
     // =========================
     public static void princeOfAbolitionFlame(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 1) return;
-        if (!payEssence(player, FLAME_COST)) return;
+        if (!Beyonder.hasSequence(player, 8)) return;
+        if (!paySpirituality(player, FLAME_COST)) return;
 
         if (player.isShiftKeyDown()) {
             pyre(player, sl, aimGround(player, sl, PYRE_RANGE));
@@ -559,7 +560,7 @@ public class PrinceOfAbolition {
     // =========================
     public static void princeOfAbolitionFrost(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 2) return;
+        if (!Beyonder.hasSequence(player, 7)) return;
 
         if (player.isShiftKeyDown()) {
             LivingEntity target = aimEnemy(player, sl, GLACIER_RANGE);
@@ -567,7 +568,7 @@ public class PrinceOfAbolition {
                 player.sendSystemMessage(Component.literal("No one stands before you."));
                 return; // nothing spent
             }
-            if (!payEssence(player, FROST_COST)) return;
+            if (!paySpirituality(player, FROST_COST)) return;
             glacier(player, sl, target);
         } else {
             List<Vec3> spots = spikeSpots(player, sl);
@@ -575,7 +576,7 @@ public class PrinceOfAbolition {
                 player.sendSystemMessage(Component.literal("There is no room for the ice."));
                 return; // nothing spent
             }
-            if (!payEssence(player, FROST_COST)) return;
+            if (!paySpirituality(player, FROST_COST)) return;
             iceSpikes(player, sl, spots);
         }
     }
@@ -629,7 +630,7 @@ public class PrinceOfAbolition {
                 Freeze.apply(target, freezeTicks);
             }
             ParticleShapes.burst(sl, FROST, ground.add(0, 0.5, 0), 8, 0.04, 0.16);
-            ParticleShapes.cone(sl, ICE_SHARD, ground.add(0, 0.2, 0), UP, 70, 6, 0.15, 0.35);
+            ParticleShapes.cone(sl, ICE_SPLINTER, ground.add(0, 0.2, 0), UP, 70, 6, 0.15, 0.35);
             sound(sl, ground, SoundEvents.AMETHYST_CLUSTER_BREAK, 0.7f, 0.9f + sl.getRandom().nextFloat() * 0.5f);
         });
     }
@@ -661,8 +662,8 @@ public class PrinceOfAbolition {
     // =========================
     public static void princeOfAbolitionHammer(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 3) return;
-        if (!payEssence(player, HAMMER_COST)) return;
+        if (!Beyonder.hasSequence(player, 6)) return;
+        if (!paySpirituality(player, HAMMER_COST)) return;
 
         if (player.isShiftKeyDown()) {
             hammerWhirl(player, sl);
@@ -732,8 +733,8 @@ public class PrinceOfAbolition {
     // =========================
     public static void princeOfAbolitionMeteor(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 4) return;
-        if (!payEssence(player, METEOR_COST)) return;
+        if (!Beyonder.hasSequence(player, 5)) return;
+        if (!paySpirituality(player, METEOR_COST)) return;
 
         Vec3 ground = aimGround(player, sl, METEOR_RANGE);
         if (player.isShiftKeyDown()) {
@@ -809,8 +810,8 @@ public class PrinceOfAbolition {
     // =========================
     public static void princeOfAbolitionEntropy(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 5) return;
-        if (!payEssence(player, ENTROPY_COST)) return;
+        if (!Beyonder.hasSequence(player, 4)) return;
+        if (!paySpirituality(player, ENTROPY_COST)) return;
 
         if (player.isShiftKeyDown()) {
             // Sneak: the sphere forms over your head and moves with you
@@ -912,8 +913,8 @@ public class PrinceOfAbolition {
     // =========================
     public static void princeOfAbolitionAbolition(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < 6) return;
-        if (!payEssence(player, ABOLITION_COST)) return;
+        if (!Beyonder.hasSequence(player, 3)) return;
+        if (!paySpirituality(player, ABOLITION_COST)) return;
 
         if (player.isShiftKeyDown()) frenzy(player, sl);
         else bladeOfAbolition(player, sl, aimGround(player, sl, ABOLITION_RANGE));
@@ -1014,7 +1015,7 @@ public class PrinceOfAbolition {
 
     private static boolean canUseClass(Player player, boolean dontCheck) {
         if (dontCheck) return true;
-        return SoulCore.getAspect(player).equals("Prince Of Abolition");
+        return SoulCore.getPathway(player).equals("Prince Of Abolition");
     }
 
     /** False once the caster died, logged out or went to another dimension: spells that stay around them stop then. */
@@ -1022,18 +1023,18 @@ public class PrinceOfAbolition {
         return player.isAlive() && player.level() == sl;
     }
 
-    private static boolean payEssence(Player player, float cost) {
-        if (SoulCore.getSoulEssence(player) < cost) {
-            player.sendSystemMessage(Component.literal("Not enough soul essence."));
+    private static boolean paySpirituality(Player player, float cost) {
+        if (SoulCore.getSpirituality(player) < cost) {
+            player.sendSystemMessage(Component.literal("Not enough spirituality."));
             return false;
         }
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - cost);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - cost);
         return true;
     }
 
     /**
      * What the spells hit: anything alive except the caster, what the caster rides or owns (pets, tamed horses),
-     * armor stands (decoration, and the invisible ones other aspects use as markers) and spectators.
+     * armor stands (decoration, and the invisible ones other pathways use as markers) and spectators.
      */
     private static boolean isEnemy(Player player, LivingEntity other) {
         // the UUID check also covers the caster's new body after dying and respawning while a spell is still running

@@ -14,7 +14,8 @@ import net.lukario.frogerealm.particles.fx.ParticleShapes;
 import net.lukario.frogerealm.particles.fx.SlashFx;
 import net.lukario.frogerealm.root.Root;
 import net.lukario.frogerealm.root.RootRestriction;
-import net.lukario.frogerealm.shadow_slave.soul_shards.SoulCore;
+import net.lukario.frogerealm.shadow_slave.beyonder.Beyonder;
+import net.lukario.frogerealm.shadow_slave.beyonder.SoulCore;
 import net.lukario.frogerealm.status.Blind;
 import net.lukario.frogerealm.status.Burial;
 import net.lukario.frogerealm.status.Concealment;
@@ -231,7 +232,7 @@ public class PaleEmperor {
     ) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
 
-        if (SoulCore.getAscensionStage(player) < 0) return;
+        if (!Beyonder.hasSequence(player, 9)) return;
 
         // =====================================================================
         // NORMAL CAST — THE CURSED LAND
@@ -246,7 +247,7 @@ public class PaleEmperor {
         // SHIFT CAST — SEAL + 4 CHAINS
         // =====================================================================
 
-        if (SoulCore.getSoulEssence(player) < 1250) return;
+        if (SoulCore.getSpirituality(player) < 1250) return;
 
         LivingEntity enemy = Spells.aimEnemy(
                 player,
@@ -258,9 +259,9 @@ public class PaleEmperor {
 
         int duration = 100;
 
-        SoulCore.setSoulEssence(
+        SoulCore.setSpirituality(
                 player,
-                SoulCore.getSoulEssence(player) - 1250
+                SoulCore.getSpirituality(player) - 1250
         );
 
         Root.apply(
@@ -356,22 +357,22 @@ public class PaleEmperor {
     // =====================================================================================
     //
     // The ground around the caster is cursed for LAND_TICKS, and for as long the caster wears the crown.
-    // Every enemy standing on it (mobs and other players) is cursed, and the curse goes one stage deeper
-    // every CURSE_DEEPENS ticks it stays, CURSE_STAGES at most:
+    // Every enemy standing on it (mobs and other players) is cursed, and the curse goes one step deeper
+    // every CURSE_DEEPENS ticks it stays, CURSE_DEPTHS at most:
     //
-    //   stage 1   slowed
-    //   stage 2   and weakened, and takes 10% more damage
-    //   stage 3   slowed more, takes 20% more damage, withers
-    //   stage 4   weakened more, takes 30% more damage, blind
-    //   stage 5   slowed more still, takes 40% more damage, withers faster,
+    //   depth 1   slowed
+    //   depth 2   and weakened, and takes 10% more damage
+    //   depth 3   slowed more, takes 20% more damage, withers
+    //   depth 4   weakened more, takes 30% more damage, blind
+    //   depth 5   slowed more still, takes 40% more damage, withers faster,
     //             and the hand of the emperor closes on it once and holds it where it stands
     //
-    // Stepping off the land does not wipe the curse: the stage sinks back as slowly as it rose, and what
+    // Stepping off the land does not wipe the curse: the depth sinks back as slowly as it rose, and what
     // is on them clings for a few seconds more. Casting again moves the land to where the caster stands now.
     //
     // What it looks like: the seal covers the land and headstones stand round its edge. Mist creeps along
     // the edge and rises inside, arms of the dead reach out of the ground, feathers fall. Under each of the
-    // cursed turns a mark that grows and reddens with the stage, and an arm rises beside them when it deepens.
+    // cursed turns a mark that grows and reddens with the depth, and an arm rises beside them when it deepens.
     //
     // Built from the kit: combat/Zone (the land, and who has stood on it for how long), Spells.keepEffect,
     // status/Vulnerable, status/Blind, SpellFx.circleUnder (the mark), Spells.groundNear (things on uneven
@@ -389,17 +390,17 @@ public class PaleEmperor {
     /** The land acts on those standing on it once every this many ticks. */
     private static final int LAND_BEAT = 10;
 
-    /** The curse goes a stage deeper every this many ticks on the land (2 seconds), up to this many stages. */
+    /** The curse goes a step deeper every this many ticks on the land (2 seconds), up to this many depths. */
     public static final int CURSE_DEEPENS = 40;
-    public static final int CURSE_STAGES = 5;
+    public static final int CURSE_DEPTHS = 5;
 
     /** What the land put on someone lasts this long after its last beat on them: up to 3 seconds after they got off it. */
     private static final int CURSE_CLINGS = 60;
 
-    /** How much more damage each stage after the first makes them take: 10%, 20%, 30%, 40%. */
+    /** How much more damage each depth after the first makes them take: 10%, 20%, 30%, 40%. */
     public static final float CURSE_WEAKENS = 0.10f;
 
-    /** At the deepest stage the hand holds them where they stand for this long, once per land. 0 = no hand. */
+    /** At the deepest depth the hand holds them where they stand for this long, once per land. 0 = no hand. */
     public static final int LAND_HAND_HOLDS = 50;
 
     /** How many headstones stand round the edge of the land. 0 = none. */
@@ -408,7 +409,7 @@ public class PaleEmperor {
     /** An arm of the dead reaches out of the land somewhere once every this many ticks. 0 = never. */
     public static final int LAND_ARM_EVERY = 30;
 
-    /** The color of the mark under the cursed at each stage, from pale green to red (0xAARRGGBB). */
+    /** The color of the mark under the cursed at each depth, from pale green to red (0xAARRGGBB). */
     private static final int[] CURSE_COLORS = {0x909CFFD2, 0xA0C8F08C, 0xB0F5C211, 0xC0F08A2A, 0xD0E03A3A};
 
     /** The name of the caster's land, of the crown on their head, and of the mark under the cursed. */
@@ -434,7 +435,7 @@ public class PaleEmperor {
     /** The tick the fingers of the hand below are shut. */
     private static final int HAND_SHUT = 32;
 
-    /** The hand that closes on whoever reaches the deepest stage. */
+    /** The hand that closes on whoever reaches the deepest depth. */
     private static final ModelFx EMPEROR_HAND = ModelFx.of("pale_emperor/emperor_hand")
             .frames(5)
             .smooth()
@@ -457,7 +458,7 @@ public class PaleEmperor {
             String tag,
             Set<UUID> told,                 // those who were told they stand on it (once each)
             Set<UUID> held,                 // those the hand has taken (once each)
-            Map<UUID, Integer> marked       // the stage whose mark each of them carries right now
+            Map<UUID, Integer> marked       // the depth whose mark each of them carries right now
     ) {}
 
     /** True while the land this player cursed is still there. */
@@ -465,9 +466,9 @@ public class PaleEmperor {
         return Zone.isOpen(player, LAND);
     }
 
-    /** The stage of the curse on someone who has stood on the land for this long: 1 to CURSE_STAGES. */
-    public static int curseStage(int ticksOnLand) {
-        return Math.min(CURSE_STAGES, 1 + ticksOnLand / CURSE_DEEPENS);
+    /** The depth of the curse on someone who has stood on the land for this long: 1 to CURSE_DEPTHS. */
+    public static int curseDepth(int ticksOnLand) {
+        return Math.min(CURSE_DEPTHS, 1 + ticksOnLand / CURSE_DEEPENS);
     }
 
     private static void cursedLand(Player player, ServerLevel sl) {
@@ -480,7 +481,7 @@ public class PaleEmperor {
             return;                                                  // nothing spent
         }
 
-        if (!Spells.payEssence(player, LAND_COST)) return;
+        if (!Spells.paySpirituality(player, LAND_COST)) return;
 
         float yaw = player.getYRot();
 
@@ -499,7 +500,7 @@ public class PaleEmperor {
                 .height(LAND_HEIGHT)
                 .lasts(LAND_TICKS)
                 .every(LAND_BEAT)
-                .countsTo(CURSE_DEEPENS * CURSE_STAGES)              // past the deepest stage there is nothing to count
+                .countsTo(CURSE_DEEPENS * CURSE_DEPTHS)              // past the deepest depth there is nothing to count
                 .onEnter(enemy -> landTakes(land, enemy))
                 .onInside((enemy, ticksOnLand) -> landCurses(land, enemy, ticksOnLand))
                 .onLeave(enemy -> landLetsGo(land, enemy))
@@ -613,7 +614,7 @@ public class PaleEmperor {
 
     /** Someone set foot on the land. */
     private static void landTakes(CursedLand land, LivingEntity enemy) {
-        // (in chat: the line above the hotbar is rewritten every tick by the soul essence display)
+        // (in chat: the line above the hotbar is rewritten every tick by the spirituality display)
         if (enemy instanceof Player victim && land.told().add(victim.getUUID())) {
             victim.sendSystemMessage(Component.literal("You stand on cursed land. The longer you stay, the deeper its curse."));
         }
@@ -630,58 +631,58 @@ public class PaleEmperor {
         ParticleShapes.clearModels(land.sl(), enemy, CURSE_MARK);
     }
 
-    /** One beat of the land on one of those standing on it: the curse of its stage is laid on it, or kept up. */
+    /** One beat of the land on one of those standing on it: the curse of its depth is laid on it, or kept up. */
     private static void landCurses(CursedLand land, LivingEntity enemy, int ticksOnLand) {
         ServerLevel sl = land.sl();
         Player player = land.caster();
 
-        int stage = curseStage(ticksOnLand);
+        int depth = curseDepth(ticksOnLand);
 
-        Spells.keepEffect(enemy, MobEffects.SLOWNESS, (stage - 1) / 2, CURSE_CLINGS);
+        Spells.keepEffect(enemy, MobEffects.SLOWNESS, (depth - 1) / 2, CURSE_CLINGS);
 
-        if (stage >= 2) {
-            Spells.keepEffect(enemy, MobEffects.WEAKNESS, (stage - 2) / 2, CURSE_CLINGS);
+        if (depth >= 2) {
+            Spells.keepEffect(enemy, MobEffects.WEAKNESS, (depth - 2) / 2, CURSE_CLINGS);
 
             // (the same number twice = it is set, not added again at every beat)
-            float more = CURSE_WEAKENS * (stage - 1);
+            float more = CURSE_WEAKENS * (depth - 1);
             Vulnerable.add(enemy, more, more, CURSE_CLINGS);
         }
 
-        if (stage >= 3) {
-            Spells.keepEffect(enemy, MobEffects.WITHER, stage >= CURSE_STAGES ? 1 : 0, CURSE_CLINGS);
+        if (depth >= 3) {
+            Spells.keepEffect(enemy, MobEffects.WITHER, depth >= CURSE_DEPTHS ? 1 : 0, CURSE_CLINGS);
         }
 
         // (Blind also makes a mob forget what it hunts, so only when it is about to see again, not at every beat)
-        if (stage >= 4 && Blind.ticksLeft(enemy) < CURSE_CLINGS / 2) {
+        if (depth >= 4 && Blind.ticksLeft(enemy) < CURSE_CLINGS / 2) {
             Blind.apply(enemy, CURSE_CLINGS);
         }
 
         Vec3 feet = enemy.position();
 
-        ParticleShapes.burst(sl, LAND_MIST, feet.add(0, 0.2, 0), stage, 0.01, 0.06);
+        ParticleShapes.burst(sl, LAND_MIST, feet.add(0, 0.2, 0), depth, 0.01, 0.06);
 
-        // the mark under it shows how deep the curse is: wider and redder with every stage.
-        // (It is put down again whenever the stage is not the one it shows: on stepping in, and at every change)
-        Integer shows = land.marked().put(enemy.getUUID(), stage);
+        // the mark under it shows how deep the curse is: wider and redder with every depth.
+        // (It is put down again whenever the depth is not the one it shows: on stepping in, and at every change)
+        Integer shows = land.marked().put(enemy.getUUID(), depth);
 
-        if (shows == null || shows != stage) {
+        if (shows == null || shows != depth) {
             SpellFx.circleUnder(
                     sl,
                     enemy,
-                    enemy.getBbWidth() * 0.5 + 0.45 + stage * 0.12,
-                    CURSE_COLORS[Math.min(stage, CURSE_COLORS.length) - 1],
+                    enemy.getBbWidth() * 0.5 + 0.45 + depth * 0.12,
+                    CURSE_COLORS[Math.min(depth, CURSE_COLORS.length) - 1],
                     Zone.ticksLeft(player, LAND),
                     CURSE_MARK
             );
         }
 
-        // the beat at which it reached this stage
-        boolean deepened = ticksOnLand > 0 && stage > curseStage(ticksOnLand - LAND_BEAT);
+        // the beat at which it reached this depth
+        boolean deepened = ticksOnLand > 0 && depth > curseDepth(ticksOnLand - LAND_BEAT);
 
         if (!deepened) return;
 
-        ParticleShapes.burst(sl, PALE_SPARK, enemy.getBoundingBox().getCenter(), 6 + stage * 3, 0.04, 0.2);
-        Spells.sound(sl, feet, SoundEvents.WITHER_HURT, 0.35f, 0.5f + stage * 0.08f);
+        ParticleShapes.burst(sl, PALE_SPARK, enemy.getBoundingBox().getCenter(), 6 + depth * 3, 0.04, 0.2);
+        Spells.sound(sl, feet, SoundEvents.WITHER_HURT, 0.35f, 0.5f + depth * 0.08f);
 
         // an arm of the dead comes up beside it and clutches at it
         Vec3 under = Spells.groundUnder(player, sl, enemy);
@@ -694,8 +695,8 @@ public class PaleEmperor {
                 land.tag()
         );
 
-        // the deepest stage: the hand of the emperor closes on it, once
-        if (stage >= CURSE_STAGES && LAND_HAND_HOLDS > 0 && land.held().add(enemy.getUUID())) {
+        // the deepest depth: the hand of the emperor closes on it, once
+        if (depth >= CURSE_DEPTHS && LAND_HAND_HOLDS > 0 && land.held().add(enemy.getUUID())) {
             Root.apply(enemy, LAND_HAND_HOLDS, RootRestriction.MOVEMENT);
 
             ParticleShapes.model(
@@ -754,7 +755,7 @@ public class PaleEmperor {
     ) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
 
-        if (SoulCore.getAscensionStage(player) < 1) return;
+        if (!Beyonder.hasSequence(player, 8)) return;
 
         // =====================================================================
         // SHIFT CAST — THE SECOND LIFE
@@ -769,11 +770,11 @@ public class PaleEmperor {
         // NORMAL CAST — THE GATE
         // =====================================================================
 
-        if (SoulCore.getSoulEssence(player) < 11250) return;
+        if (SoulCore.getSpirituality(player) < 11250) return;
 
-        SoulCore.setSoulEssence(
+        SoulCore.setSpirituality(
                 player,
-                SoulCore.getSoulEssence(player) - 11250
+                SoulCore.getSpirituality(player) - 11250
         );
 
         Vec3 position = player.position().add(
@@ -1039,7 +1040,7 @@ public class PaleEmperor {
             return;                                                  // nothing spent
         }
 
-        if (!Spells.payEssence(player, REVIVE_COST)) return;
+        if (!Spells.paySpirituality(player, REVIVE_COST)) return;
 
         DeathWard.arm(
                 player,
@@ -1224,7 +1225,7 @@ public class PaleEmperor {
             .width(0.09f).taper(SlashFx.Taper.CRESCENT)
             .lifetime(7).sweep(2);
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forAspect("Pale Emperor")
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Pale Emperor")
             .step(PaleEmperor::tollClaw)
             .step(PaleEmperor::tollArc)
             .step(PaleEmperor::tollGraveHand)
@@ -1385,7 +1386,7 @@ public class PaleEmperor {
         if (bypassClassCheck) return true;
 
         return "Pale Emperor".equals(
-                SoulCore.getAspect(player)
+                SoulCore.getPathway(player)
         );
     }
 
@@ -1737,10 +1738,10 @@ public class PaleEmperor {
 
     public static void paleEmperorSerpent(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 6000) return;
-        if (SoulCore.getAscensionStage(player) < 2) return;
+        if (SoulCore.getSpirituality(player) < 6000) return;
+        if (!Beyonder.hasSequence(player, 7)) return;
 
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - 6000);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - 6000);
 
         Vec3 direction = player.getLookAngle().normalize();
 
@@ -1837,10 +1838,10 @@ public class PaleEmperor {
 
     public static void paleEmperorSpearSkull(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSoulEssence(player) < 600) return;
-        if (SoulCore.getAscensionStage(player) < 2) return;
+        if (SoulCore.getSpirituality(player) < 600) return;
+        if (!Beyonder.hasSequence(player, 7)) return;
 
-        SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - 600);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - 600);
 
         if (!player.isShiftKeyDown()){
 
@@ -1943,7 +1944,7 @@ public class PaleEmperor {
     // (the feathers that show them), status/Blind, status/Burial (dragged under).
 
     private static final float SPIKES_COST = 2000;               // either cast
-    private static final int SPIKES_STAGE = 3;
+    private static final int SPIKES_SEQUENCE = 6;
 
     /** Who it reaches: every enemy in sight this far away, this many degrees to either side of the crosshair. */
     public static final double SIGHT_RANGE = 24;
@@ -1973,7 +1974,7 @@ public class PaleEmperor {
 
     public static void paleEmperorSpikes(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < SPIKES_STAGE) return;
+        if (!Beyonder.hasSequence(player, SPIKES_SEQUENCE)) return;
 
         List<LivingEntity> seen = Spells.enemiesInSight(player, sl, SIGHT_RANGE, SIGHT_ANGLE);
 
@@ -1988,7 +1989,7 @@ public class PaleEmperor {
                 return;                                             // nothing spent
             }
 
-            if (!Spells.payEssence(player, SPIKES_COST)) return;
+            if (!Spells.paySpirituality(player, SPIKES_COST)) return;
 
             // the caster calls them up
             SpellFx.shockRing(sl, player.position(), 2.2, 0xD09CFFD2, 8, 0);
@@ -2015,7 +2016,7 @@ public class PaleEmperor {
                 return;                                             // nothing spent
             }
 
-            if (!Spells.payEssence(player, SPIKES_COST)) return;
+            if (!Spells.paySpirituality(player, SPIKES_COST)) return;
 
             // the caster calls in what is owed
             SpellFx.closingRing(sl, player.position(), 2.2, 0xD0F5C211, 8, 0);
@@ -2270,7 +2271,7 @@ public class PaleEmperor {
 
     private static final float WINGS_COST = 4000;
     private static final float STEP_COST = 1500;
-    private static final int WINGS_STAGE = 4;
+    private static final int WINGS_SEQUENCE = 5;
 
     /** How long the wings carry: 20 seconds. */
     public static final int FLIGHT_TICKS = 400;
@@ -2289,7 +2290,7 @@ public class PaleEmperor {
 
     public static void paleEmperorWings(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < WINGS_STAGE) return;
+        if (!Beyonder.hasSequence(player, WINGS_SEQUENCE)) return;
 
         if (player.isShiftKeyDown()) {
             stepThere(player, sl);
@@ -2301,7 +2302,7 @@ public class PaleEmperor {
             return;
         }
 
-        if (!Spells.payEssence(player, WINGS_COST)) return;
+        if (!Spells.paySpirituality(player, WINGS_COST)) return;
 
         spreadWings(player, sl);
     }
@@ -2411,7 +2412,7 @@ public class PaleEmperor {
             return;                                                  // nothing spent
         }
 
-        if (!Spells.payEssence(player, STEP_COST)) return;
+        if (!Spells.paySpirituality(player, STEP_COST)) return;
 
         Vec3 left = player.position();
 
@@ -2444,14 +2445,14 @@ public class PaleEmperor {
     // Normal cast: wraiths rise around the caster, three for every enemy within WRAITH_RADIUS, fly at the
     //   enemies and slam into them. Each slam hurts and lays a curse: the cursed wither and take more damage.
     // Sneak cast: the caster steps into the underworld. Nothing sees or hurts them there. They come back
-    //   when they deal damage, cast it again, or run out of soul essence.
+    //   when they deal damage, cast it again, or run out of spirituality.
     //
     // Built from the kit: SpellFx.homing (a model that cannot miss), status/Vulnerable (the curse),
     // status/Concealment (the underworld).
 
     private static final float WRAITHS_COST = 5000;
     private static final float UNDERWORLD_COST = 3000;
-    private static final int WRAITHS_STAGE = 5;
+    private static final int WRAITHS_SEQUENCE = 4;
 
     /** Enemies this near are counted, each of them gets this many wraiths. */
     public static final double WRAITH_RADIUS = 12;
@@ -2468,7 +2469,7 @@ public class PaleEmperor {
     public static final float CURSE_DAMAGE = 0.10f;
     public static final float CURSE_DAMAGE_MAX = 0.60f;
 
-    /** Soul essence the underworld takes each second. With too little left the caster is thrown back. 0 = it is free. */
+    /** Spirituality the underworld takes each second. With too little left the caster is thrown back. 0 = it is free. */
     public static final float UNDERWORLD_DRAIN = 100f;
 
     /** Set while the player is in the underworld. Saved with the player. */
@@ -2476,7 +2477,7 @@ public class PaleEmperor {
 
     public static void paleEmperorWraiths(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getAscensionStage(player) < WRAITHS_STAGE) return;
+        if (!Beyonder.hasSequence(player, WRAITHS_SEQUENCE)) return;
 
         // =====================================================================
         // SHIFT CAST - INTO THE UNDERWORLD, OR BACK OUT OF IT
@@ -2489,7 +2490,7 @@ public class PaleEmperor {
                 return;
             }
 
-            if (!Spells.payEssence(player, UNDERWORLD_COST)) return;
+            if (!Spells.paySpirituality(player, UNDERWORLD_COST)) return;
 
             enterUnderworld(player, sl);
             return;
@@ -2508,7 +2509,7 @@ public class PaleEmperor {
             return;                                                 // nothing spent
         }
 
-        if (!Spells.payEssence(player, WRAITHS_COST)) return;
+        if (!Spells.paySpirituality(player, WRAITHS_COST)) return;
 
         enemies.sort(Comparator.comparingDouble(
                 (LivingEntity enemy) -> enemy.getBoundingBox().getCenter().distanceToSqr(middle)
@@ -2747,12 +2748,12 @@ public class PaleEmperor {
         if (Concealment.ticksLeft(player) < 40) Concealment.hide(player, 100);
 
         if (UNDERWORLD_DRAIN > 0 && player.tickCount % 20 == 0 && !player.isCreative()) {
-            if (SoulCore.getSoulEssence(player) < UNDERWORLD_DRAIN) {
-                player.sendSystemMessage(Component.literal("Your soul essence is spent."));
+            if (SoulCore.getSpirituality(player) < UNDERWORLD_DRAIN) {
+                player.sendSystemMessage(Component.literal("Your spirituality is spent."));
                 leaveUnderworld(player, sl);
                 return;
             }
-            SoulCore.setSoulEssence(player, SoulCore.getSoulEssence(player) - UNDERWORLD_DRAIN);
+            SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - UNDERWORLD_DRAIN);
         }
     }
 
@@ -2765,7 +2766,7 @@ public class PaleEmperor {
 
         /**
          * What goes with the wings of ability 6, the underworld of ability 7 is kept up, and the second life
-         * of ability 2 is watched (all run on even if the aspect is taken away meanwhile).
+         * of ability 2 is watched (all run on even if the pathway is taken away meanwhile).
          */
         @SubscribeEvent
         public static void onPaleEmperorPlayerTick(TickEvent.PlayerTickEvent.Post event) {

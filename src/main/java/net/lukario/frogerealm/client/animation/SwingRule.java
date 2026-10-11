@@ -11,7 +11,7 @@ import java.util.function.BiPredicate;
  * plus the swing ids played one after another (they cycle, and start over after a pause).
  * Register rules in SwingRules; the first rule that matches wins. No match = vanilla swing.
  *
- *   SwingRule.of((player, held) -> SwingRules.hasAspect(player, "Hand Of Order") && held.is(ItemTags.AXES),
+ *   SwingRule.of((player, held) -> SwingRules.hasPathway(player, "Hand Of Order") && held.is(ItemTags.AXES),
  *           SwingRules.DEFAULT_RESET_TICKS, SwingAnimations.VERTICAL_DOWN, SwingAnimations.HORIZONTAL);
  *
  * Client-side only: it runs for the local player and for every other player this client sees.
