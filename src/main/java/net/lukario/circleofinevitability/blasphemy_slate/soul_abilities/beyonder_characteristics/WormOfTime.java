@@ -36,9 +36,9 @@ public class WormOfTime {
 
     private static final String LIFE_THEFT_VULNERABILITY = "word_of_time_life_theft_vulnerability";
 
-    private static final int COMBO_HEAD = 0xF2F4F2C9;   // cream front
-    private static final int COMBO_MID = 0xEE52E3C4;    // mint cyan middle
-    private static final int COMBO_TAIL = 0xA05B3B33;   // dark brown fading tail
+    private static final int COMBO_HEAD = 0xF2F8FFFF;
+    private static final int COMBO_MID  = 0xEE1BB8E8;
+    private static final int COMBO_TAIL = 0xA00A1022;
 
     private static final SlashFx COMBO_RING = SlashFx.arc("slash/band")
             .color(COMBO_MID).tailColor(COMBO_TAIL).headColor(COMBO_HEAD)
