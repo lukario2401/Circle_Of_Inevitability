@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonde
 
 import net.minecraft.core.UUIDUtil;
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.DamageFx;
 import net.lukario.circleofinevitability.screen.ScreenAnchor;
 import net.lukario.circleofinevitability.screen.ScreenImages;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
@@ -610,6 +611,7 @@ public class KeyOfStars {
             // Tick damage to entity every 20 ticks per orbiting star
             if (tick % 20 == 0) {
                 float orbitDmg = 0.75f * starCount;
+                DamageFx.credit(player, target); // only for /damagefx: the source below names nobody
                 target.hurt(sl.damageSources().magic(), orbitDmg);
             }
         }
@@ -672,6 +674,7 @@ public class KeyOfStars {
             double dist = Math.sqrt(blastTarget.distanceToSqr(cx, cy, cz));
             float falloff = 1.0f - (float)(dist / explosionRadius);
             float actualDmg = Math.max(explosionDamage * falloff, 4.0f);
+            DamageFx.credit(player, blastTarget); // only for /damagefx: the source below names nobody
             blastTarget.hurt(sl.damageSources().magic(), actualDmg);
 
             // Knockback away from center

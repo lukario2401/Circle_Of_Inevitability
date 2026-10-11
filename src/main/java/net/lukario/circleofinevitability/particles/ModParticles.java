@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.particles;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.particles.fx.DamageNumberType;
 import net.lukario.circleofinevitability.particles.fx.ModelFxType;
 import net.lukario.circleofinevitability.particles.fx.ParticleFxType;
 import net.lukario.circleofinevitability.particles.fx.SlashFxType;
@@ -30,4 +31,8 @@ public class ModParticles {
     // One type for every ModelFx (see particles/fx/ModelFx) — 3D model effects, also no registering needed
     public static final RegistryObject<ModelFxType> MODEL =
             PARTICLES.register("model", ModelFxType::new);
+
+    // The numbers of /damagefx (see combat/DamageFx and particles/fx/DamageNumber)
+    public static final RegistryObject<DamageNumberType> DAMAGE_NUMBER =
+            PARTICLES.register("damage_number", DamageNumberType::new);
 }
