@@ -133,7 +133,7 @@ public class Conqueror {
     private static final double FLAME_RANGE_SEQ5 = 360.0;        // Sequence 5, fully digested
     private static final double FLAME_RANGE_SEQ4 = 3600.0;       // Sequence 4, fully digested
     private static final double LANCE_SPEED = 1.2;               // blocks per tick (you fly this fast: slower = easier to steer)
-    private static final double LANCE_TURN = 10.0;               // degrees a tick it turns toward where you look
+    private static final double LANCE_TURN = 15.0;               // degrees a tick it turns toward where you look
     private static final float LANCE_DAMAGE = 30f;               // on the enemy it flies into (it stops there)
     private static final double FLAME_BURST_RADIUS = 2.5;        // the bursts where you leave and where you arrive
     private static final float FLAME_BURST_DAMAGE = 16f;
