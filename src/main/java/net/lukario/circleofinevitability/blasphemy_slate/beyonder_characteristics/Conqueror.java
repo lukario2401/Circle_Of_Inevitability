@@ -141,8 +141,8 @@ public class Conqueror {
     private static final int DECOY_FUSE = 40;                    // ticks until the figure of flame goes off
     private static final double DECOY_RADIUS = 3.5;
     private static final float DECOY_DAMAGE = 36f;
-    private static final int DECOY_HIDE_TICKS = 60;              // how long you stay hidden
-    private static final int DECOY_SPEED_LEVEL = 1;              // 0 = Speed I, 1 = Speed II while hidden
+    private static final int DECOY_HIDE_TICKS = 100;              // how long you stay hidden
+    private static final int DECOY_SPEED_LEVEL = 2;              // 0 = Speed I, 1 = Speed II while hidden
 
     // Fire blasts (the Explosive Charge and Flame Transformation, the fire abilities later)
     private static final float BLAST_EDGE = 0.5f;                // part of the damage that is left at the rim
