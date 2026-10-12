@@ -135,6 +135,10 @@ public final class PathwayAbilities {
                     (player, level, sl) -> Conqueror.conquerorHuntersTrap(player, level, sl, true)),
             new Ability("Conqueror", 2, "Provocation", 8, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorProvocation(player, level, sl, true)),
+
+            new Ability("Conqueror", 3, "Dash", 6, NO_SNEAK, STEALABLE,
+                    (player, level, sl) -> Conqueror.conquerorDash(player, level, sl, true)),
+
             new Ability("Conqueror", 4, "Flame Transformation", 6, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorFlameTransformation(player, level, sl, true)));
 

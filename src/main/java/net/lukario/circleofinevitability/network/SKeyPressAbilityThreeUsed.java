@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesDamageTransfer;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorDash;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderEdict;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsBuff;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSerpent;
@@ -50,6 +51,7 @@ public class SKeyPressAbilityThreeUsed {
         princeOfAbolitionFrost(player,level,serverLevel,false);
         paleEmperorSerpent(player,level,serverLevel,false);
         wormOfTimeAbility3(player,level,serverLevel,false);
+        conquerorDash(player,level,serverLevel,false);
 
 
     }

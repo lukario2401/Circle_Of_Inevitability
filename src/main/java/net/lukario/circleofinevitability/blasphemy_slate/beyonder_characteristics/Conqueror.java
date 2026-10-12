@@ -9,10 +9,7 @@ import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
-import net.lukario.circleofinevitability.status.Concealment;
-import net.lukario.circleofinevitability.status.Marionette;
-import net.lukario.circleofinevitability.status.Taunt;
-import net.lukario.circleofinevitability.status.Vulnerable;
+import net.lukario.circleofinevitability.status.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -110,7 +107,7 @@ public class Conqueror {
     private static final int FLAME_SEQUENCE = 6;
     private static final int FLAME_COST = 1500;
     private static final double FLAME_RANGE_MIN = 10.0;          // how far the lance flies when the Sequence is new
-    private static final double FLAME_RANGE_MAX = 30.0;          // ...and once it is fully digested (and from Sequence 5)
+    private static final double FLAME_RANGE_MAX = 60.0;          // ...and once it is fully digested (and from Sequence 5)
     private static final double LANCE_SPEED = 1.2;               // blocks per tick (you fly this fast: slower = easier to steer)
     private static final double LANCE_TURN = 10.0;               // degrees a tick it turns toward where you look
     private static final float LANCE_DAMAGE = 30f;               // on the enemy it flies into (it stops there)
@@ -270,7 +267,7 @@ public class Conqueror {
             .lifetime(30, 10).friction(0.85f)
             .randomRotation();
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Prince Of Abolition")
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Conqueror")
             .step(Conqueror::edgeCrossCut)
             .step(Conqueror::edgeGroundRend)
             .step(Conqueror::edgeWideSweep)
@@ -407,6 +404,139 @@ public class Conqueror {
         Spells.sound(sl, player.position(), SoundEvents.WITHER_AMBIENT, 0.6f, 0.6f);
     }
 
+
+    //Ability 3
+    public static void conquerorDash(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, 7)) return;
+
+        if (player.isShiftKeyDown()) repugnantAura(player, sl);
+        else dash(player, sl);
+    }
+
+    private static void dash(Player player, ServerLevel sl){
+
+        if (player.isShiftKeyDown()) {
+            Vec3 look = player.getLookAngle().normalize();
+
+            player.setDeltaMovement(look.x * 4, look.y * 4 * 0.5 + 0.2, look.z * 4);
+            player.hurtMarked = true;
+        }
+
+        Vec3 middle = player.getBoundingBox().getCenter();
+        List<LivingEntity> enemies = Spells.enemiesAround(player, sl, middle, 24);
+
+
+        summonWraiths(player,sl,enemies);
+    }
+
+    private static void summonWraiths(Player player, ServerLevel sl, List<LivingEntity> enemies) {
+        int total = enemies.size() * 2;
+
+        Vec3 feet = player.position();
+        float yaw = player.getYRot();
+
+        for (int i = 0; i < total; i++) {
+
+            // going round the enemies again and again: each gets its first wraith before any gets its second
+            LivingEntity enemy = enemies.get(i % enemies.size());
+
+            Vec3 spot = Spells.spotAround(feet, yaw + i * 360f / total, 2.2 + (i % 3) * 0.8);
+
+            // on the ground there. A caster high in the air gets them at the height of their feet
+            Vec3 ground = Spells.groundAt(player, sl, spot);
+            Vec3 rises = Math.abs(ground.y - feet.y) <= 3.0 ? ground : spot;
+
+            Later.run(
+                    sl,
+                    i * WRAITHS_SPREAD / total,
+                    () -> wraithRises(player, sl, rises, enemy)
+            );
+        }
+
+        Spells.sound(sl, feet, SoundEvents.WITHER_SPAWN, 0.5f, 1.6f);
+    }
+
+    private static void wraithRises(Player player, ServerLevel sl, Vec3 ground, LivingEntity enemy) {
+        if (!Spells.casterStillHere(player, sl)) return;
+
+        Vec3 toEnemy = enemy.position().subtract(ground);
+
+        // it faces its enemy (one standing right on the spot has no direction: the way the caster looks, then)
+        float yaw = toEnemy.x * toEnemy.x + toEnemy.z * toEnemy.z < 0.01 ? player.getYRot() : Spells.yawOf(toEnemy);
+
+//        ParticleShapes.model(sl, WRAITH_RISING, ground, yaw, 0f, 0f);
+
+
+        // where it hangs when it has risen: that is where it flies from
+        Vec3 hangs = ground.add(0, 0.35, 0);
+
+        Later.run(
+                sl,
+                WRAITH_RISES,
+                () -> wraithFlies(player, sl, hangs, enemy)
+        );
+    }
+
+    /** The wraith goes for its enemy and cannot miss it (SpellFx.homing). */
+    private static void wraithFlies(Player player, ServerLevel sl, Vec3 from, LivingEntity wanted) {
+        if (!Spells.casterStillHere(player, sl)) return;
+
+        // its enemy may be dead by now (another wraith was faster): it takes the nearest one that is left
+        LivingEntity enemy = wanted;
+
+        if (!isPrey(player, sl, enemy)) {
+            enemy = null;
+
+            double nearest = Double.MAX_VALUE;
+
+            for (LivingEntity other : Spells.enemiesAround(player, sl, from, WRAITH_RADIUS)) {
+                double distance = other.position().distanceToSqr(from);
+                if (distance < nearest) {
+                    nearest = distance;
+                    enemy = other;
+                }
+            }
+
+            if (enemy == null) return;                              // no one left: it just fades
+        }
+
+        int flight = (int) Math.max(6, Math.min(18, Math.round(enemy.position().distanceTo(from) / WRAITH_SPEED)));
+
+        ModelFx flying = wraithModel()
+                .lifetime(flight + 6).fade(3, 6)
+                .key(0, pose().frame(1))
+                .during(0, Math.max(2, flight / 2), pose().frame(2), ModelFx.Ease.OUT)        // arms out
+                .during(flight, flight + 6, pose().forward(1.0f));                            // on through it as it fades
+
+        SpellFx.homing(sl, flying, from, enemy, flight);
+
+        Spells.sound(sl, from, SoundEvents.WITHER_SHOOT, 0.25f, 1.6f);
+
+        LivingEntity prey = enemy;
+
+        Later.run(
+                sl,
+                flight,
+                () -> wraithSlams(player, sl, prey)
+        );
+    }
+
+    private static void wraithSlams(Player player, ServerLevel sl, LivingEntity enemy) {
+        if (!Spells.casterStillHere(player, sl)) return;
+        if (!isPrey(player, sl, enemy)) return;
+
+        Vec3 middle = enemy.getBoundingBox().getCenter();
+
+        Spells.strike(player, enemy, WRAITH_DAMAGE);
+
+        ParticleShapes.burst(sl, PALE_SPARK, middle, 12, 0.05, 0.3);
+        ParticleShapes.burst(sl, SpellFx.FIRE_SMOKE, middle, 4, 0.02, 0.08);
+        SpellFx.shockRing(sl, enemy.position(), enemy.getBbWidth() * 0.5 + 1.1, 0xC0B48CFF, 6, 0);
+        Spells.sound(sl, middle, SoundEvents.WITHER_HURT, 0.5f, 1.4f);
+
+        if (enemy.isAlive()) curse(sl, enemy);
+    }
+
     // =========================
     // Ability 4 - Flame Transformation
     // Normal: become a flame lance and ride it (combat/Transit, steered): your body and camera fly with it and it
@@ -449,7 +579,7 @@ public class Conqueror {
     private static double flameRange(Player player) {
         if (Beyonder.hasSequence(player, FLAME_SEQUENCE - 1)) return FLAME_RANGE_MAX;
         float digested = Math.max(0f, Math.min(100f, SoulCore.getDigestion(player))) / 100f;
-        return FLAME_RANGE_MIN + (FLAME_RANGE_MAX - FLAME_RANGE_MIN) * digested;
+        return (FLAME_RANGE_MIN + (FLAME_RANGE_MAX - FLAME_RANGE_MIN) * digested) * (10-Beyonder.powerLevel(player));
     }
 
     /** Sneak: a figure of flame stands where you stood and goes off after its fuse; you are hidden and quick meanwhile. */
