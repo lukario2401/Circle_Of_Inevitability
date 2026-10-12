@@ -1,7 +1,7 @@
 package net.lukario.circleofinevitability.combat;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
-import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.*;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;

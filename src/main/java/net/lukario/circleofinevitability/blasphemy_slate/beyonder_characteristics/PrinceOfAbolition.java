@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;

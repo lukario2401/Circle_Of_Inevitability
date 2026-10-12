@@ -40,9 +40,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
-| Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/soul_abilities/beyonder_characteristics/` |
+| Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
 | Cast an ability without its Sequence and without its cost | [`Beyonder.castUnbound`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder/` |
-| Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/soul_abilities/beyonder_characteristics/` |
+| Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
 | Something a Pathway always has from a Sequence on, with no key press (a potion effect, or code of your own once a second) | `SequencePassives` ([SEQUENCES.md](SEQUENCES.md#passives)) | `blasphemy_slate/beyonder/` |
 | Damage that names no attacker (`damageSources().magic()`, an explosion or lightning with no owner) showing as the caster's damage number | `DamageFx.credit(player, target)` right before it ([DAMAGE_FX.md](DAMAGE_FX.md)) | `combat/` |
 
@@ -81,7 +81,7 @@ public static void myPathwayIceLance(Player player, Level level, ServerLevel sl,
 Then add it to the packet of the key it belongs to (`network/SKeyPressAbilityOneUsed` ... `SevenUsed`): one `import static` at the top and one line next to the others.
 
 ```java
-import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.MyPathway.myPathwayIceLance;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.MyPathway.myPathwayIceLance;
 
 myPathwayIceLance(player, level, serverLevel, false);
 ```
