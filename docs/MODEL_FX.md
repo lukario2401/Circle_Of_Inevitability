@@ -355,6 +355,32 @@ Later.run(sl, 18, () -> hammerImpact(player, sl, impact));   // 18 = the slam ke
 
 ---
 
+### Models the server moves
+
+A model can be steered tick by tick from the server, the way an entity moves: a raven that chases someone, a ghost that follows a path you work out as you go. Play it once with a tag of its own, then tell it where to be every tick:
+
+```java
+String tag = "my_ghost_" + UUID.randomUUID();                                  // its own tag
+ParticleShapes.modelFacing(sl, GHOST.tag(tag).lifetime(200), from, direction);   // front (north) looks along direction
+// every tick after that:
+ParticleShapes.moveModelFacing(sl, tag, where, heading);                        // it glides there during the next tick
+// when it is done:
+ParticleShapes.clearModels(sl, where, tag);
+```
+
+| Call | What it does |
+|---|---|
+| `ParticleShapes.modelFacing(level, model, position, direction)` | Plays a model with its front (north in Blockbench) looking along `direction`, tipped up or down with it |
+| `ParticleShapes.moveModelFacing(level, tag, position, direction)` | Moves the free models with this tag to `position`, front along `direction` |
+| `ParticleShapes.moveModelAlong(level, tag, position, direction)` | The same for models played with `modelAlong` (their top points the way) |
+| `ParticleShapes.moveModel(level, tag, position, yaw, pitch, roll)` | The same with the angles given yourself |
+
+- Only models that are **not** stuck to an entity move this way (not `modelOn`, `modelOnHead`...).
+- The model keeps playing its own keys and frames while it moves: offsets in its keys count from the spot it was moved to, so leave them out (or keep them small) and let the moves do the travelling.
+- Each move is one small message to every player in the level, so a few dozen models moved every tick are fine; hundreds are not.
+- Angles take the short way round: from yaw 170 to -170 it turns 20 degrees, not 340.
+- `combat/Seeker` does all of this for you (see docs/SPELL_KIT.md, "Seeker").
+
 ## Ready-made models
 
 These are in `models/model_fx/` and any Pathway can use them. Sizes are at `.scale(1)`.
@@ -407,6 +433,7 @@ These are in `models/model_fx/` and any Pathway can use them. Sizes are at `.sca
 | `pale_emperor/wraith` | A hooded spirit of the dead, 2.7 blocks tall: a skull deep in the hood with lights for eyes, a robe worn to rags, clawed arms of bare bone. 3 steps: 0 = arms hanging, 2 = reaching out | under it `(8, -16, 8)` | `.frames(3).smooth()`. Face = front |
 | `pale_emperor/death_sigil` | A flat seal for the ground, 3 blocks wide: a ring of runes, a feathered serpent biting its tail, eight feathers and an hourglass | default (its middle) | `.glow().unshaded().seeThrough()` |
 | `pale_emperor/death_sigil_ring`, `death_sigil_core` | The outer and the inner half of that seal | default | Play both and give them opposite `.spin(...)` |
+| `conqueror/fire_raven` | A raven of fire, 1.5 blocks from wing tip to wing tip: charred body, burning wings that brighten toward the tips, white-hot beak, eyes and talons. 3 steps: 0 = wings up, 1 = level, 2 = down | the middle of its body `(8, 2.5, 9)` | `.frames(3).smooth().glow().unshaded()`. Beak = front. Made for `combat/Seeker` with `.flap(...)` |
 
 The fire and light ones (`orb`, `thread` and `projection` too) want `.glow().unshaded().seeThrough()`; the solid ones `.glow()`.
 

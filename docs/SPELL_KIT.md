@@ -952,6 +952,62 @@ ParticleShapes.model(sl, SKULL.tag(tag), from, yaw, 0f, 0f);
 ParticleShapes.clearModels(sl, where, tag);
 ```
 
+## Seeker: a model that hunts an enemy
+
+A summoned thing that goes after someone: a raven, a ghost, a wisp, a homing bolt. It flies at its enemy, curves after it when it runs, and hits it on contact. A `Shot` is worked out once and flies straight; a `Seeker` is steered by the server every tick, so its path bends toward wherever its enemy is now.
+
+The one-line version (default speed, turn and life):
+
+```java
+Seeker.send(player, sl, GHOST_MODEL, from, target, 10f);     // flies from 'from' at 'target', 10 damage on contact
+```
+
+Or describe it once, like a `Shot` (every method returns a new copy):
+
+```java
+private static final ModelFx RAVEN_MODEL = ModelFx.of("conqueror/fire_raven").frames(3).smooth()
+        .scale(0.8f).pivot(8, 2.5f, 9).glow().unshaded().aura(0xFFFF6A1A, 0.07f, 3);
+private static final Seeker RAVEN = Seeker.of(RAVEN_MODEL)   // its FRONT (north in Blockbench) looks where it flies
+        .speed(0.9)              // blocks per tick
+        .turn(14)                // degrees a tick it can turn toward its enemy
+        .life(80)                // ticks before it gives up and bursts
+        .width(0.5)              // how close it must come to an enemy's body to hit it
+        .flap(6)                 // a model with frames: 0 -> last -> 0 every 6 ticks (wings beating)
+        .trail(SpellFx.FIRE_EMBER, 1)
+        .burst(SpellFx.FIRE_EMBER, 14);
+
+RAVEN.onHit((target, at) -> Spells.strike(player, target, 10f))
+     .launch(player, sl, from, startDirection, target);       // startDirection null = straight at it
+
+RAVEN.onHit(...).launchAt(player, sl, from, enemies, 6, 2);   // a flock of 6, 2 ticks apart, shared out over the enemies
+```
+
+| Part | What it does |
+|---|---|
+| `Seeker.of(model)` | A Seeker that looks like this `ModelFx`. Its front (north) looks the way it flies. A plain model: not `.following(...)` |
+| `.pointsWithTop()` | For models that point with their top (up in Blockbench), like a `Shot`: spears, bolts |
+| `.speed(blocksPerTick)` | How fast (default 0.8) |
+| `.turn(degreesPerTick)` | How sharply it can turn (default 12). Small = wide curves, a quick enemy can dodge it; 180 = turns on the spot |
+| `.life(ticks)` | How long it hunts before it bursts (`Ending.EXPIRED`, default 100) |
+| `.windup(ticks)` | Hangs in the air, drifting slowly the way it starts, before it goes |
+| `.width(blocks)` | How close it must come to a body to hit (default 0.5) |
+| `.seek(blocks)` | How far it looks for a new enemy when it has none (default 24); it gives up on one twice that far away |
+| `.keepTarget()` | Never takes another enemy: if its own is gone, it bursts (`Ending.LOST`) |
+| `.throughWalls()` | Flies through blocks (default: a block stops it, `Ending.WALL`) |
+| `.flap(ticks)` | For a model with `.frames(n)`: frame 0 -> last -> 0 every `ticks` ticks, smooth with `.smooth()` |
+| `.trail(particle, perTick)` / `.burst(particle, count)` | Particles left behind it / where it ends, whatever the reason |
+| `.onHit((target, at) -> ...)` | What happens to the enemy it reaches |
+| `.onEnd((at, why) -> ...)` | Runs where it ends: `why` is `HIT`, `WALL`, `LOST`, `EXPIRED` or `GONE` (`GONE` = the caster died or left; `onHit`/`onEnd` do not run then) |
+| `.launch(owner, sl, from, startDirection, target)` | Sends one. `target` may be `null`: it flies along `startDirection` and takes the first enemy it finds |
+| `.launchAt(owner, sl, from, enemies, count, everyTicks)` | A flock: `count` of them, `everyTicks` apart, fanned out left and right of the look and a little up, each enemy gets its first before any gets a second |
+
+Good to know:
+
+- It hits the **first enemy it touches**, not only its own. Then it is gone.
+- Its enemy dies, hides (`Concealment`) or gets too far away: it turns to the **nearest enemy left** that it can see. With none for 12 ticks it bursts.
+- It cannot turn on the spot, so an enemy that dodges sideways at the last moment can make it **miss and come round again**. Close to its enemy it turns much harder, so it never circles round one forever.
+- **How it is drawn:** the model is played once and then moved every tick with `ParticleShapes.moveModelFacing` (see docs/MODEL_FX.md, "Models the server moves"). The client glides it between those spots like an entity and keeps playing the model's own keys and frames. A model that should do something of its own while it flies (spin, wings) does it in its keys; `.flap(...)` adds the wing beats for you.
+
 ---
 
 ## 7. Where each tool is used
@@ -990,6 +1046,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Trap`, a fuse with `Later.run`, a blast that is weaker at its rim | `setTrap`, `springTrap`, `plantCharge`, `burnFuse`, `fireBlast` in `Conqueror.java` |
 | `Taunt` (on the caster, and `brawl`) with `Vulnerable` and `SpellFx.circleUnder` | `provoke`, `repugnantAura`, `provokeShows`, `auraShows` in `Conqueror.java` |
 | `Transit.steered` with a `Shot` whose range grows with digestion; `Concealment` with a decoy that blows up | `flameTransformation`, `flameRange`, `misdirection`, `fuseBlast` in `Conqueror.java` |
+| `Seeker.launchAt` (a flock of fire ravens with flapping wings), a dash with `FallGuard` | `fireRavens`, `ravenStrikes`, `dash`, `dashTrail` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 
@@ -1208,6 +1265,9 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | A HudTimer still counts though the thing is over | It only shows time. Call `HudTimer.hide(player, name)` where the thing ends early |
 | A message I show above the hotbar never appears | The line above the hotbar is rewritten every tick by the spirituality display. Use chat (`sendSystemMessage`), a `HudTimer` or `ScreenImages` |
 | My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5. For something held in front of the eyes on purpose, give the model `.seenByWearer()` (or use `ParticleShapes.modelInFront`) |
+| A Seeker shows up but never moves, or moves in jumps | Its model has `.following(...)` (Seeker removes it), or the game is not sending its moves: each one is a particle packet, so check that particles are not switched off for models. Jumps are lag: the client glides between the spots the server sends |
+| A Seeker flies tail first or belly up | Its model's front must be north in Blockbench and its top up. A model that points with its top needs `.pointsWithTop()` |
+| A Seeker circles round its enemy | It should not: close to its enemy it turns harder. A very fast one with a tiny `.turn(...)` can still overshoot once; raise the turn |
 | A model on someone concealed is gone | By design: what is stuck to a concealed entity is not drawn. Give it `.shownWhileHidden()` when it is what they turned into |
 | A steered transit ends at once | They looked at the ground or a wall close by (it hits it), are rooted, or were sneaking with `.letGoOnSneak()` (the first tick does not count) |
 | A transit leaves the caster behind | They are rooted with `TELEPORT` (`go` returned `false`), or they died or left on the way |

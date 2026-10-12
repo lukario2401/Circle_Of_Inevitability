@@ -35,7 +35,7 @@ import java.util.List;
  *
  *   1 Hunter's Trap        (Hunter)               a hidden trap that holds and hurts whoever steps on it       | sneak: Explosive Charge, a fuse and a blast
  *   2 Provocation          (Provoker)             a mob drops everything to come for you, and takes more damage | sneak: Repugnant Aura, the mobs around you fight each other
- *   3 Fire Ravens          (Pyromaniac)           not built yet
+ *   3 Fire Ravens          (Pyromaniac)           a flock of fire ravens hunts the enemies around you            | sneak: Dash, flung the way you look in a streak of fire
  *   4 Flame Transformation (Conspirer)            ride a flame lance, steer it with your look, step out at the end | sneak: Misdirection, vanish and leave a flame figure that blows up
  *   5 Cull                 (Reaper)               not built yet
  *   6 Galvanization        (Iron-blooded Knight)  not built yet
@@ -55,7 +55,8 @@ import java.util.List;
  *
  * What is reusable lives outside this class (see docs/SPELL_KIT.md): combat/Trap (the trap itself),
  * status/Taunt (a mob made to go after one entity: you, or another mob), combat/Transit (travel inside a Shot),
- * status/Vulnerable, status/Concealment, combat/Spells, combat/SpellFx, combat/Later, root/Root. fireBlast (where, how wide, how hard) and fuseBlast (the same
+ * combat/Seeker (a model that hunts an enemy: the ravens), status/Vulnerable, status/Concealment, combat/Spells,
+ * combat/SpellFx, combat/Later, root/Root. fireBlast (where, how wide, how hard) and fuseBlast (the same
  * after a fuse) below are written so the fire abilities to come can call them too.
  *
  * Nothing here breaks blocks or lights real fire. The numbers for every ability are right below.
@@ -102,6 +103,24 @@ public class Conqueror {
     private static final int AURA_MAX_TARGETS = 12;              // the nearest this many
     private static final int AURA_TICKS = 200;                   // how long they fight each other
     private static final int AURA_COLOR = 0xC0602A1E;            // murky red-brown
+
+    // Ability 3 - Fire Ravens (Sequence 7)
+    private static final int RAVENS_SEQUENCE = 7;
+    private static final int RAVENS_COST = 700;                  // Sequence 7 holds 1980
+    private static final double RAVENS_RANGE = 24.0;             // the enemies this close (and in sight) are hunted
+    private static final int RAVENS_COUNT = 6;                   // ravens in one flock, shared out over the enemies
+    private static final int RAVENS_EVERY = 2;                   // ticks between one raven leaving and the next
+    private static final float RAVEN_DAMAGE = 10f;               // each raven that reaches its prey
+    private static final int RAVEN_BURN_TICKS = 80;              // ...which then burns this long
+    private static final double RAVEN_SPEED = 0.9;               // blocks per tick
+    private static final double RAVEN_TURN = 14.0;               // degrees a tick it turns after its prey (less = easier to dodge)
+    private static final int RAVEN_LIFE = 80;                    // ticks a raven hunts before it burns out
+    private static final int DASH_COST = 250;                    // sneak: Dash
+    private static final double DASH_SPEED = 4.0;                // blocks per tick along your look, at the start
+    private static final double DASH_UP_SHARE = 0.5;             // how much of the up/down part of your look is kept
+    private static final double DASH_LIFT = 0.2;                 // a small hop on top, so it leaves the ground
+    private static final int DASH_FALL_GUARD_TICKS = 60;         // no fall damage on the next landing within this long
+    private static final int DASH_TRAIL_TICKS = 10;              // ticks of fire trailing behind you
 
     // Ability 4 - Flame Transformation (Sequence 6)
     private static final int FLAME_SEQUENCE = 6;
@@ -152,6 +171,17 @@ public class Conqueror {
     /** The flame lance of Flame Transformation. Its range is set per cast (flameRange). */
     private static final Shot FLAME_LANCE = Shot.of(LANCE_MODEL)
             .speed(LANCE_SPEED).width(0.5).trail(LANCE_STREAK);
+
+    /** A raven of fire (models/model_fx/conqueror/fire_raven_0..2: wings up, level, down). */
+    private static final ModelFx RAVEN_MODEL = ModelFx.of("conqueror/fire_raven").frames(3).smooth()
+            .scale(0.8f).pivot(8, 2.5f, 9).glow().unshaded()
+            .aura(0xFFFF6A1A, 0.07f, 3);
+    /** One raven of Fire Ravens: hunts its prey (combat/Seeker). What it does on a hit is set per cast. */
+    private static final Seeker FIRE_RAVEN = Seeker.of(RAVEN_MODEL)
+            .speed(RAVEN_SPEED).turn(RAVEN_TURN).life(RAVEN_LIFE).width(0.5).seek(RAVENS_RANGE)
+            .flap(6)
+            .trail(SpellFx.FIRE_EMBER, 1)
+            .burst(SpellFx.FIRE_EMBER, 14);
 
 
     //--------------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -405,136 +435,71 @@ public class Conqueror {
     }
 
 
-    //Ability 3
-    public static void conquerorDash(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 7)) return;
+    // =========================
+    // Ability 3 - Fire Ravens
+    // Normal: a flock of RAVENS_COUNT ravens of fire bursts from you and is shared out over the enemies within
+    //         RAVENS_RANGE that you can see. Each one hunts its enemy (combat/Seeker): it turns after it when it runs,
+    //         hits it on contact (RAVEN_DAMAGE, set on fire), takes the nearest enemy left if its own dies first,
+    //         and bursts on a block in the way.
+    // Sneak:  Dash: you are flung the way you look in a streak of fire, and land without fall damage.
+    // =========================
+    public static void conquerorFireRavens(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, RAVENS_SEQUENCE)) return;
 
-        if (player.isShiftKeyDown()) repugnantAura(player, sl);
-        else dash(player, sl);
+        if (player.isShiftKeyDown()) dash(player, sl);
+        else fireRavens(player, sl);
     }
 
-    private static void dash(Player player, ServerLevel sl){
-
-        if (player.isShiftKeyDown()) {
-            Vec3 look = player.getLookAngle().normalize();
-
-            player.setDeltaMovement(look.x * 4, look.y * 4 * 0.5 + 0.2, look.z * 4);
-            player.hurtMarked = true;
+    private static void fireRavens(Player player, ServerLevel sl) {
+        Vec3 eye = player.getEyePosition();
+        List<LivingEntity> prey = Spells.enemiesAround(player, sl, player.getBoundingBox().getCenter(), RAVENS_RANGE);
+        prey.removeIf(enemy -> !Spells.clearLine(player, sl, eye, enemy.getBoundingBox().getCenter()));   // only what you can see
+        if (prey.isEmpty()) {
+            player.sendSystemMessage(Component.literal("There is no prey in sight."));
+            return;                                                  // nothing spent
         }
+        if (!Spells.paySpirituality(player, RAVENS_COST)) return;
 
+        prey.sort(Comparator.comparingDouble(enemy -> enemy.distanceToSqr(player)));   // the nearest get theirs first
+        Vec3 from = Spells.clearStart(player, sl, eye.add(0, 0.2, 0));
+        FIRE_RAVEN.onHit((target, at) -> ravenStrikes(player, sl, target, at))
+                .launchAt(player, sl, from, prey, RAVENS_COUNT, RAVENS_EVERY);
+
+        ParticleShapes.burst(sl, SpellFx.FIRE_EMBER, from, 24, 0.08, 0.3);
+        ParticleShapes.burst(sl, SpellFx.FIRE_SMOKE, from, 6, 0.02, 0.08);
+        Spells.sound(sl, from, SoundEvents.BLAZE_SHOOT, 1f, 1.2f);
+        Spells.sound(sl, from, SoundEvents.ENDER_DRAGON_FLAP, 0.8f, 1.8f);
+    }
+
+    /** A raven reaches its prey: it hits, sets it alight and bursts. */
+    private static void ravenStrikes(Player player, ServerLevel sl, LivingEntity target, Vec3 at) {
+        Spells.strike(player, target, RAVEN_DAMAGE);
+        target.setRemainingFireTicks(RAVEN_BURN_TICKS);
+        ParticleShapes.burst(sl, SpellFx.FIRE_SMOKE, at, 3, 0.02, 0.06);
+        Spells.sound(sl, at, SoundEvents.FIRECHARGE_USE, 0.5f, 1.5f);
+    }
+
+    /** Sneak: flung the way you look, fire trailing behind, and no fall damage when you come down. */
+    private static void dash(Player player, ServerLevel sl) {
+        if (!Spells.paySpirituality(player, DASH_COST)) return;
+
+        Vec3 look = player.getLookAngle().normalize();
+        player.setDeltaMovement(look.x * DASH_SPEED, look.y * DASH_SPEED * DASH_UP_SHARE + DASH_LIFT, look.z * DASH_SPEED);
+        player.hurtMarked = true;                                    // (the client is told about the new speed)
+        FallGuard.protect(player, DASH_FALL_GUARD_TICKS);
+
+        ParticleShapes.burst(sl, SpellFx.FIRE_EMBER, player.position().add(0, 0.5, 0), 16, 0.05, 0.25);
+        Spells.sound(sl, player.position(), SoundEvents.FIRECHARGE_USE, 0.9f, 0.9f);
+        dashTrail(player, sl, DASH_TRAIL_TICKS);
+    }
+
+    /** Embers and smoke where you are, every tick for 'ticksLeft' ticks. */
+    private static void dashTrail(Player player, ServerLevel sl, int ticksLeft) {
+        if (ticksLeft <= 0 || !Spells.casterStillHere(player, sl)) return;
         Vec3 middle = player.getBoundingBox().getCenter();
-        List<LivingEntity> enemies = Spells.enemiesAround(player, sl, middle, 24);
-
-
-        summonWraiths(player,sl,enemies);
-    }
-
-    private static void summonWraiths(Player player, ServerLevel sl, List<LivingEntity> enemies) {
-        int total = enemies.size() * 2;
-
-        Vec3 feet = player.position();
-        float yaw = player.getYRot();
-
-        for (int i = 0; i < total; i++) {
-
-            // going round the enemies again and again: each gets its first wraith before any gets its second
-            LivingEntity enemy = enemies.get(i % enemies.size());
-
-            Vec3 spot = Spells.spotAround(feet, yaw + i * 360f / total, 2.2 + (i % 3) * 0.8);
-
-            // on the ground there. A caster high in the air gets them at the height of their feet
-            Vec3 ground = Spells.groundAt(player, sl, spot);
-            Vec3 rises = Math.abs(ground.y - feet.y) <= 3.0 ? ground : spot;
-
-            Later.run(
-                    sl,
-                    i * WRAITHS_SPREAD / total,
-                    () -> wraithRises(player, sl, rises, enemy)
-            );
-        }
-
-        Spells.sound(sl, feet, SoundEvents.WITHER_SPAWN, 0.5f, 1.6f);
-    }
-
-    private static void wraithRises(Player player, ServerLevel sl, Vec3 ground, LivingEntity enemy) {
-        if (!Spells.casterStillHere(player, sl)) return;
-
-        Vec3 toEnemy = enemy.position().subtract(ground);
-
-        // it faces its enemy (one standing right on the spot has no direction: the way the caster looks, then)
-        float yaw = toEnemy.x * toEnemy.x + toEnemy.z * toEnemy.z < 0.01 ? player.getYRot() : Spells.yawOf(toEnemy);
-
-//        ParticleShapes.model(sl, WRAITH_RISING, ground, yaw, 0f, 0f);
-
-
-        // where it hangs when it has risen: that is where it flies from
-        Vec3 hangs = ground.add(0, 0.35, 0);
-
-        Later.run(
-                sl,
-                WRAITH_RISES,
-                () -> wraithFlies(player, sl, hangs, enemy)
-        );
-    }
-
-    /** The wraith goes for its enemy and cannot miss it (SpellFx.homing). */
-    private static void wraithFlies(Player player, ServerLevel sl, Vec3 from, LivingEntity wanted) {
-        if (!Spells.casterStillHere(player, sl)) return;
-
-        // its enemy may be dead by now (another wraith was faster): it takes the nearest one that is left
-        LivingEntity enemy = wanted;
-
-        if (!isPrey(player, sl, enemy)) {
-            enemy = null;
-
-            double nearest = Double.MAX_VALUE;
-
-            for (LivingEntity other : Spells.enemiesAround(player, sl, from, WRAITH_RADIUS)) {
-                double distance = other.position().distanceToSqr(from);
-                if (distance < nearest) {
-                    nearest = distance;
-                    enemy = other;
-                }
-            }
-
-            if (enemy == null) return;                              // no one left: it just fades
-        }
-
-        int flight = (int) Math.max(6, Math.min(18, Math.round(enemy.position().distanceTo(from) / WRAITH_SPEED)));
-
-        ModelFx flying = wraithModel()
-                .lifetime(flight + 6).fade(3, 6)
-                .key(0, pose().frame(1))
-                .during(0, Math.max(2, flight / 2), pose().frame(2), ModelFx.Ease.OUT)        // arms out
-                .during(flight, flight + 6, pose().forward(1.0f));                            // on through it as it fades
-
-        SpellFx.homing(sl, flying, from, enemy, flight);
-
-        Spells.sound(sl, from, SoundEvents.WITHER_SHOOT, 0.25f, 1.6f);
-
-        LivingEntity prey = enemy;
-
-        Later.run(
-                sl,
-                flight,
-                () -> wraithSlams(player, sl, prey)
-        );
-    }
-
-    private static void wraithSlams(Player player, ServerLevel sl, LivingEntity enemy) {
-        if (!Spells.casterStillHere(player, sl)) return;
-        if (!isPrey(player, sl, enemy)) return;
-
-        Vec3 middle = enemy.getBoundingBox().getCenter();
-
-        Spells.strike(player, enemy, WRAITH_DAMAGE);
-
-        ParticleShapes.burst(sl, PALE_SPARK, middle, 12, 0.05, 0.3);
-        ParticleShapes.burst(sl, SpellFx.FIRE_SMOKE, middle, 4, 0.02, 0.08);
-        SpellFx.shockRing(sl, enemy.position(), enemy.getBbWidth() * 0.5 + 1.1, 0xC0B48CFF, 6, 0);
-        Spells.sound(sl, middle, SoundEvents.WITHER_HURT, 0.5f, 1.4f);
-
-        if (enemy.isAlive()) curse(sl, enemy);
+        ParticleShapes.burst(sl, SpellFx.FIRE_EMBER, middle, 4, 0.0, 0.05);
+        if (ticksLeft % 2 == 0) ParticleShapes.spawn(sl, SpellFx.FIRE_SMOKE, middle);
+        Later.run(sl, 1, () -> dashTrail(player, sl, ticksLeft - 1));
     }
 
     // =========================
