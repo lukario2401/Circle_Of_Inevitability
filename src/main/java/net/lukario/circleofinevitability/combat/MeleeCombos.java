@@ -29,6 +29,7 @@ public final class MeleeCombos {
         register(PrinceOfAbolition.MELEE_COMBO);
         register(PaleEmperor.MELEE_COMBO);
         register(WormOfTime.MELEE_COMBO);
+        register(Conqueror.MELEE_COMBO);
     }
 
     private MeleeCombos() {}

@@ -77,8 +77,8 @@ public class WormOfTime {
     // =========================
     private static final int THEFT_SEQUENCE = 8;
     private static final int THEFT_COST = 250;                 // for stealing. Releasing costs nothing
-    private static final double THEFT_RANGE = 24;
-    private static final int THEFT_HELD_TICKS = 1200;          // a stolen ability is held for a minute at most
+    private static final double THEFT_RANGE = 32;
+    private static final int THEFT_HELD_TICKS = 1200*20;          // a stolen ability is held for a minute at most
     private static final int THEFT_MOB_EMPTY_TICKS = 600;      // a mob that was stolen from has nothing more to give for this long (0 = no limit)
     private static final int THEFT_FLIGHT_TICKS = 10;          // how long the stolen light takes to reach the thief
     private static final float THEFT_ORB_SCALE = 0.28f;        // the lights circling over the thief's head: their size,
