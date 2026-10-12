@@ -3,14 +3,18 @@ package net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonde
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.combat.Later;
+import net.lukario.circleofinevitability.combat.Shot;
 import net.lukario.circleofinevitability.combat.SpellFx;
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.combat.Transit;
 import net.lukario.circleofinevitability.combat.Trap;
+import net.lukario.circleofinevitability.particles.fx.ModelFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
+import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.lukario.circleofinevitability.status.Vulnerable;
@@ -18,6 +22,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -35,7 +41,7 @@ import java.util.List;
  *   1 Hunter's Trap        (Hunter)               a hidden trap that holds and hurts whoever steps on it       | sneak: Explosive Charge, a fuse and a blast
  *   2 Provocation          (Provoker)             a mob drops everything to come for you, and takes more damage | sneak: Repugnant Aura, the mobs around you fight each other
  *   3 Fire Ravens          (Pyromaniac)           not built yet
- *   4 Flame Transformation (Conspirer)            not built yet
+ *   4 Flame Transformation (Conspirer)            merge with a flame lance and step out where it lands         | sneak: Misdirection, vanish and leave a flame figure that blows up
  *   5 Cull                 (Reaper)               not built yet
  *   6 Galvanization        (Iron-blooded Knight)  not built yet
  *   7 Fog of War           (War Bishop)           not built yet
@@ -53,8 +59,9 @@ import java.util.List;
  * a name nobody else has (ConquerorEvents).
  *
  * What is reusable lives outside this class (see docs/SPELL_KIT.md): combat/Trap (the trap itself),
- * status/Taunt (a mob made to go after one entity: you, or another mob), status/Vulnerable, combat/Spells, combat/SpellFx, combat/Later, root/Root. fireBlast below is written as "where and how hard",
- * so the fire abilities to come can call it too.
+ * status/Taunt (a mob made to go after one entity: you, or another mob), combat/Transit (travel inside a Shot),
+ * status/Vulnerable, status/Concealment, combat/Spells, combat/SpellFx, combat/Later, root/Root. fireBlast (where, how wide, how hard) and fuseBlast (the same
+ * after a fuse) below are written so the fire abilities to come can call them too.
  *
  * Nothing here breaks blocks or lights real fire. The numbers for every ability are right below.
  */
@@ -101,7 +108,23 @@ public class Conqueror {
     private static final int AURA_TICKS = 200;                   // how long they fight each other
     private static final int AURA_COLOR = 0xC0602A1E;            // murky red-brown
 
-    // Fire blasts (the Explosive Charge now, the fire abilities later)
+    // Ability 4 - Flame Transformation (Sequence 6)
+    private static final int FLAME_SEQUENCE = 6;
+    private static final int FLAME_COST = 1500;
+    private static final double FLAME_RANGE_MIN = 10.0;          // how far the lance flies when the Sequence is new
+    private static final double FLAME_RANGE_MAX = 30.0;          // ...and once it is fully digested (and from Sequence 5)
+    private static final double LANCE_SPEED = 2.5;               // blocks per tick
+    private static final float LANCE_DAMAGE = 30f;               // on the enemy it flies into (it stops there)
+    private static final double FLAME_BURST_RADIUS = 2.5;        // the bursts where you leave and where you arrive
+    private static final float FLAME_BURST_DAMAGE = 16f;
+    private static final int DECOY_COST = 1500;                  // sneak: Misdirection
+    private static final int DECOY_FUSE = 40;                    // ticks until the figure of flame goes off
+    private static final double DECOY_RADIUS = 3.5;
+    private static final float DECOY_DAMAGE = 36f;
+    private static final int DECOY_HIDE_TICKS = 60;              // how long you stay hidden
+    private static final int DECOY_SPEED_LEVEL = 1;              // 0 = Speed I, 1 = Speed II while hidden
+
+    // Fire blasts (the Explosive Charge and Flame Transformation, the fire abilities later)
     private static final float BLAST_EDGE = 0.5f;                // part of the damage that is left at the rim
     private static final double BLAST_PUSH = 1.1;                // how hard it throws back, blocks per tick
     private static final double BLAST_LIFT = 0.45;
@@ -123,6 +146,16 @@ public class Conqueror {
     private static final SlashFx PROVOKE_LINE = SlashFx.line("slash/smooth")     // caster to the provoked, for a moment
             .color(0xC0FF3A2A).core(0xE0FFE0D0)
             .width(0.08f).taper(SlashFx.Taper.UNIFORM);
+
+    private static final ModelFx LANCE_MODEL = ModelFx.of("fireball")       // the shared fireball, stretched into a lance
+            .scale(0.6f, 1.6f, 0.6f).pivot(8, 8, 8).glow().unshaded().seeThrough()
+            .aura(0xFFFF7A1A, 0.14f, 3).spin(26f);
+    private static final SlashFx LANCE_STREAK = SlashFx.line("slash/smooth")
+            .color(0xC0FF7A1A).core(0xE0FFE8B0)
+            .width(0.35f).taper(SlashFx.Taper.COMET);
+    /** The flame lance of Flame Transformation. Its range is set per cast (flameRange). */
+    private static final Shot FLAME_LANCE = Shot.of(LANCE_MODEL)
+            .speed(LANCE_SPEED).width(0.5).trail(LANCE_STREAK);
 
     // =========================
     // Ability 1 - Hunter's Trap
@@ -177,21 +210,7 @@ public class Conqueror {
 
     /** Sneak: the charge lies in a red circle while its fuse burns, then it goes off. */
     private static void plantCharge(Player player, ServerLevel sl, Vec3 ground) {
-        SpellFx.warningCircle(sl, ground, CHARGE_RADIUS, CHARGE_COLOR, CHARGE_FUSE);
-        Spells.sound(sl, ground, SoundEvents.FIRECHARGE_USE, 0.8f, 0.7f);
-        burnFuse(sl, ground, CHARGE_FUSE);
-        Later.run(sl, CHARGE_FUSE, () -> {
-            if (!Spells.casterStillHere(player, sl)) return;         // nobody left to set it off
-            fireBlast(player, sl, ground.add(0, 0.6, 0), CHARGE_RADIUS, CHARGE_DAMAGE);
-        });
-    }
-
-    /** One spark and click of the fuse, then the next one CHARGE_TICK_EVERY ticks later: higher as it gets close. */
-    private static void burnFuse(ServerLevel sl, Vec3 ground, int ticksLeft) {
-        if (ticksLeft <= 0) return;
-        ParticleShapes.cone(sl, SpellFx.FIRE_EMBER, ground.add(0, 0.2, 0), Spells.UP, 40, 6, 0.05, 0.18);
-        Spells.sound(sl, ground, SoundEvents.AMETHYST_BLOCK_CHIME, 0.6f, 2.0f - (float) ticksLeft / CHARGE_FUSE);
-        Later.run(sl, CHARGE_TICK_EVERY, () -> burnFuse(sl, ground, ticksLeft - CHARGE_TICK_EVERY));
+        fuseBlast(player, sl, ground, CHARGE_FUSE, CHARGE_RADIUS, CHARGE_DAMAGE);
     }
 
     // =========================
@@ -264,8 +283,85 @@ public class Conqueror {
     }
 
     // =========================
+    // Ability 4 - Flame Transformation
+    // Normal: throw a flame lance and merge with it (combat/Transit): you travel inside it and step out where it
+    //         lands, with a burst of fire where you left and where you arrive. It reaches FLAME_RANGE_MIN blocks
+    //         when the Sequence is new and FLAME_RANGE_MAX once it is digested (always the most from Sequence 5).
+    // Sneak:  Misdirection: you vanish, quick and unseen, and leave a figure of flame that blows up behind you.
+    // =========================
+    public static void conquerorFlameTransformation(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, FLAME_SEQUENCE)) return;
+
+        if (player.isShiftKeyDown()) misdirection(player, sl);
+        else flameTransformation(player, sl);
+    }
+
+    private static void flameTransformation(Player player, ServerLevel sl) {
+        if (!Transit.canGo(player)) {
+            player.sendSystemMessage(Component.literal("You cannot leave this place."));
+            return;                                                  // nothing spent
+        }
+        if (!Spells.paySpirituality(player, FLAME_COST)) return;
+
+        double range = flameRange(player);
+        Vec3 hand = Spells.clearStart(player, sl, player.getEyePosition().add(Spells.rightOf(player).scale(0.35)).add(0, -0.25, 0));
+        Shot lance = FLAME_LANCE.range(range).onHit((target, at) -> {
+            Spells.strike(player, target, LANCE_DAMAGE);
+            target.setRemainingFireTicks(BLAST_BURN_TICKS);
+        });
+        Transit.by(lance)
+                .onDepart(from -> fireBlast(player, sl, from.add(0, 0.6, 0), FLAME_BURST_RADIUS, FLAME_BURST_DAMAGE))
+                .onArrive((at, hitBlock) -> fireBlast(player, sl, at.add(0, 0.6, 0), FLAME_BURST_RADIUS, FLAME_BURST_DAMAGE))
+                .go(player, sl, hand, Spells.aimFrom(player, sl, hand, range));
+        Spells.sound(sl, player.position(), SoundEvents.BLAZE_SHOOT, 1f, 0.8f);
+    }
+
+    /** How far the lance flies: grows with the digestion of Sequence 6, the full reach from Sequence 5 on. */
+    private static double flameRange(Player player) {
+        if (Beyonder.hasSequence(player, FLAME_SEQUENCE - 1)) return FLAME_RANGE_MAX;
+        float digested = Math.max(0f, Math.min(100f, SoulCore.getDigestion(player))) / 100f;
+        return FLAME_RANGE_MIN + (FLAME_RANGE_MAX - FLAME_RANGE_MIN) * digested;
+    }
+
+    /** Sneak: a figure of flame stands where you stood and goes off after its fuse; you are hidden and quick meanwhile. */
+    private static void misdirection(Player player, ServerLevel sl) {
+        if (!Spells.paySpirituality(player, DECOY_COST)) return;
+
+        Vec3 spot = player.position();
+        ModelFx figure = SpellFx.FLAMES.scale(0.8f, 1.0f, 0.8f)     // about as tall as a player
+                .lifetime(DECOY_FUSE).fade(0, 4).spin(3f);
+        ParticleShapes.model(sl, figure, spot, player.getYRot(), 0f, 0f);
+        fuseBlast(player, sl, spot, DECOY_FUSE, DECOY_RADIUS, DECOY_DAMAGE);
+
+        Concealment.hide(player, DECOY_HIDE_TICKS);                 // mobs forget you and go for nothing
+        player.addEffect(new MobEffectInstance(MobEffects.SPEED, DECOY_HIDE_TICKS, DECOY_SPEED_LEVEL, false, false, true));
+    }
+
+    // =========================
     // Helpers shared by the abilities
     // =========================
+
+    /**
+     * A blast with a fuse at a spot on the ground: a red warning circle 'radius' wide, sparks and rising clicks
+     * for 'fuse' ticks, then fireBlast. Nothing goes off if the caster died or left meanwhile.
+     */
+    private static void fuseBlast(Player player, ServerLevel sl, Vec3 ground, int fuse, double radius, float damage) {
+        SpellFx.warningCircle(sl, ground, radius, CHARGE_COLOR, fuse);
+        Spells.sound(sl, ground, SoundEvents.FIRECHARGE_USE, 0.8f, 0.7f);
+        burnFuse(sl, ground, fuse, fuse);
+        Later.run(sl, fuse, () -> {
+            if (!Spells.casterStillHere(player, sl)) return;         // nobody left to set it off
+            fireBlast(player, sl, ground.add(0, 0.6, 0), radius, damage);
+        });
+    }
+
+    /** One spark and click of a fuse, then the next one CHARGE_TICK_EVERY ticks later: higher as it gets close. */
+    private static void burnFuse(ServerLevel sl, Vec3 ground, int ticksLeft, int fuse) {
+        if (ticksLeft <= 0) return;
+        ParticleShapes.cone(sl, SpellFx.FIRE_EMBER, ground.add(0, 0.2, 0), Spells.UP, 40, 6, 0.05, 0.18);
+        Spells.sound(sl, ground, SoundEvents.AMETHYST_BLOCK_CHIME, 0.6f, 2.0f - (float) ticksLeft / fuse);
+        Later.run(sl, CHARGE_TICK_EVERY, () -> burnFuse(sl, ground, ticksLeft - CHARGE_TICK_EVERY, fuse));
+    }
 
     /**
      * An explosion of fire at a spot: 'damage' in the middle, BLAST_EDGE of it at the rim. What it hits is

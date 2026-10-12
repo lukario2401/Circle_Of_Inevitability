@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesAirCannon;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.Conqueror.conquerorFlameTransformation;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderAbility4;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsSeal;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
@@ -48,6 +49,7 @@ public class SKeyPressAbilityFourUsed {
         princeOfAbolitionHammer(player,level,serverLevel,false);
         handOfOrderAbility4(player,level,serverLevel,false);
         paleEmperorSpearSkull(player,level,serverLevel,false);
+        conquerorFlameTransformation(player,level,serverLevel,false);
     }
 
 }

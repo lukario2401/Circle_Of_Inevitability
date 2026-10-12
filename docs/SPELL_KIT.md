@@ -19,6 +19,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A wave that spreads and hits each enemy as it gets there | [`Spells.wave`](#1-spells-aiming-and-enemies) + `SpellFx.steadyRing` | `combat/` |
 | Everyone the caster can see, or everyone in a cone | [`Spells.enemiesInSight`, `enemiesInCone`](#1-spells-aiming-and-enemies) | `combat/` |
 | Teleport to where the caster looks | [`Spells.blinkSpot`](#1-spells-aiming-and-enemies) | `combat/` |
+| Travel inside something you throw and step out where it lands (merge with a flame, ride a bolt) | [`Transit`](#transit-travel-inside-a-shot) | `combat/` |
 | A model that flies into an enemy and cannot miss | [`SpellFx.homing`](#models-on-an-entity) | `combat/` |
 | Count hits, stacks or charges on an entity, and show them | [`Marks`](#marks) + [`SpellFx.overHead`](#models-on-an-entity) | `status/` |
 | A mark under someone that follows them (cursed, warded), changing as it grows | [`SpellFx.circleUnder`](#models-on-an-entity) | `combat/` |
@@ -430,6 +431,35 @@ Good to know:
 - It is a `Zone` underneath (`set` returns that zone's name): it ends when its owner dies, logs out or changes dimension, and a server restart drops it.
 
 Something that goes off after a time instead of under a foot needs no trap: `Later.run(sl, ticks, () -> ...)` with a `SpellFx.warningCircle` of the same length (`plantCharge` in `Conqueror.java`).
+
+---
+
+## Transit: travel inside a shot
+
+The caster becomes part of a `Shot` they throw, travels with it and steps out where it lands. A flame they merge with, a bolt they ride, a card they fold into.
+
+```java
+Transit.by(LANCE.onHit((target, at) -> Spells.strike(player, target, 30f)))   // any Shot; it still hurts what it hits
+        .onDepart(from -> SpellFx.fireBurst(sl, from, 2.5))                  // the caster's feet where they left
+        .onArrive((at, hitBlock) -> SpellFx.fireBurst(sl, at, 2.5))          // their feet where they came out
+        .go(player, sl, hand, Spells.aimFrom(player, sl, hand, 20));
+```
+
+| Part | What it does |
+|---|---|
+| `Transit.by(shot)` | Travel inside this shot. Nothing happens until `.go(...)` |
+| `.visible()` | The caster stays seen and can be hurt on the way (default: concealed) |
+| `.onDepart(from -> ...)` | Runs right before they leave |
+| `.onArrive((at, hitBlock) -> ...)` | Runs right after they came out. `hitBlock` is `true` when the shot ended on a block |
+| `.go(player, sl, from, direction)` | Fires the shot and sends the caster with it. `false` (nothing fired) when they may not travel |
+| `Transit.canGo(player)` | `false` while they are rooted with `TELEPORT`. Check it before paying, so a refused cast costs nothing |
+
+Good to know:
+
+- **On the way** the caster is concealed (unseen, unhurt, mobs forget them) and held where they stood, so the body is "in" the shot. Concealment ends when they come out.
+- **Where they come out** is never inside a block: a step back from where the shot stopped, else on the ground under it, else the nearest free spot. With no room at all they stay where they were (`onArrive` still runs). No fall damage for `Transit.LANDING_TICKS` (100) afterwards, since they may come out in the air at a wall.
+- The shot keeps its `onHit`. Its `onEnd` is taken over: put the end into `onArrive`.
+- A caster who dies or leaves on the way does not come out; `onArrive` does not run.
 
 ---
 
@@ -908,6 +938,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `PathwayAbilities`, `Beyonder.castUnbound`, `StolenAbilities` | `steal`, `pickToSteal`, `releaseStolen`, `castStolen` in `WormOfTime.java` |
 | `Trap`, a fuse with `Later.run`, a blast that is weaker at its rim | `setTrap`, `springTrap`, `plantCharge`, `burnFuse`, `fireBlast` in `Conqueror.java` |
 | `Taunt` (on the caster, and `brawl`) with `Vulnerable` and `SpellFx.circleUnder` | `provoke`, `repugnantAura`, `provokeShows`, `auraShows` in `Conqueror.java` |
+| `Transit` with a `Shot` whose range grows with digestion; `Concealment` with a decoy that blows up | `flameTransformation`, `flameRange`, `misdirection`, `fuseBlast` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 
@@ -1126,10 +1157,11 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | A HudTimer still counts though the thing is over | It only shows time. Call `HudTimer.hide(player, name)` where the thing ends early |
 | A message I show above the hotbar never appears | The line above the hotbar is rewritten every tick by the spirituality display. Use chat (`sendSystemMessage`), a `HudTimer` or `ScreenImages` |
 | My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5 |
+| A transit leaves the caster behind | They are rooted with `TELEPORT` (`go` returned `false`), or they died or left on the way |
 | A taunted mob ignores the taunt | It is blind, its target is hidden, too far (48 blocks) or in creative, or it is a marionette. Players cannot be taunted at all |
 | A marionette stands still | It only attacks what you hit, what hits you or it, or monsters within 16 blocks. Hit something |
 | Removing one model from a mob removed the others too | Give each a `.tag(...)` and clear by tag |
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
