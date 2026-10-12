@@ -17,6 +17,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Marks;
 import net.lukario.circleofinevitability.status.Parasite;
+import net.lukario.circleofinevitability.status.ParasiteControl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,6 +26,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -79,6 +81,8 @@ public class WormOfTime {
     private static final int THEFT_COST = 250;                 // for stealing. Releasing costs nothing
     private static final double THEFT_RANGE = 32;
     private static final int THEFT_HELD_TICKS = 1200*20;          // a stolen ability is held for a minute at most
+    private static final int THEFT_MAX_HELD = 5;               // how many stolen abilities can be held at once (0 = no limit).
+                                                               // When full, a new theft is refused until one is released
     private static final int THEFT_MOB_EMPTY_TICKS = 600;      // a mob that was stolen from has nothing more to give for this long (0 = no limit)
     private static final int THEFT_FLIGHT_TICKS = 10;          // how long the stolen light takes to reach the thief
     private static final float THEFT_ORB_SCALE = 0.28f;        // the lights circling over the thief's head: their size,
@@ -118,8 +122,22 @@ public class WormOfTime {
     private static final String PARASITE_CLOCK = "worm_of_time_parasite";          // the parasite's clock (combat/HudTimer)
     private static final String PARASITE_HOST_CLOCK = "worm_of_time_parasitized";  // the host's clock
     private static final String PARASITE_RESTING = "worm_of_time_parasite_rest";   // the mark (status/Marks) of someone who just came out
+    // steering the host (status/ParasiteControl): mobs only, a player host just carries the parasite
+    private static final boolean PARASITE_STEERS_MOBS = true;     // false = every host only carries the parasite
+    private static final int PARASITE_STEER_IDLE_TICKS = 40;      // two seconds without input: the host acts on its own again
+    private static final double PARASITE_WALK_SPEED = 1.0;        // 1 = the host's normal walking speed
+    private static final double PARASITE_SPRINT_SPEED = 1.4;      // while sprint is held
+    private static final double PARASITE_STRIKE_REACH = 3.0;      // left click: how far a hit reaches (blocks from its eyes)
+    private static final int PARASITE_STRIKE_REST = 20;           // ticks between two hits
+    private static final float PARASITE_BARE_DAMAGE = 2f;         // a hit of a host that has no attack of its own (a cow)
+    private static final double PARASITE_SHOT_RANGE = 24;         // left click with a host that shoots (skeleton, pillager, witch)
+    private static final int PARASITE_SHOT_REST = 30;             // ticks between two shots
+    private static final double PARASITE_HUNT_RANGE = 24;         // right click: how far away it can be told to hunt something
+    private static final ParasiteControl.Settings PARASITE_STEERING = new ParasiteControl.Settings(
+            PARASITE_STEER_IDLE_TICKS, PARASITE_WALK_SPEED, PARASITE_SPRINT_SPEED, PARASITE_STRIKE_REACH,
+            PARASITE_STRIKE_REST, PARASITE_BARE_DAMAGE, PARASITE_SHOT_RANGE, PARASITE_SHOT_REST, PARASITE_HUNT_RANGE);
 
-    /** Hands status/Parasite the four methods under "Parasite: what it does". */
+    /** Hands status/Parasite the methods under "Parasite: what it does". */
     private static final Parasite.Hooks PARASITE_HOOKS = new Parasite.Hooks() {
         @Override
         public void entered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
@@ -139,6 +157,16 @@ public class WormOfTime {
         @Override
         public boolean allowsKey(int key) {
             return key == PARASITE_KEY;               // the only ability key that works from inside a host
+        }
+
+        @Override
+        public ParasiteControl.Settings control(LivingEntity host) {
+            return PARASITE_STEERS_MOBS ? PARASITE_STEERING : null;     // (only asked for a mob)
+        }
+
+        @Override
+        public void struck(ServerPlayer parasite, LivingEntity host, LivingEntity target, ServerLevel sl) {
+            parasiteStruck(parasite, host, target, sl);
         }
     };
 
@@ -222,8 +250,8 @@ public class WormOfTime {
             player.sendSystemMessage(Component.literal("No one stands before you."));
             return;                                                  // nothing spent
         }
-        if (StolenAbilities.isFull(player)) {
-            player.sendSystemMessage(Component.literal("You cannot hold more than " + StolenAbilities.MAX_HELD
+        if (StolenAbilities.isFull(player, THEFT_MAX_HELD)) {
+            player.sendSystemMessage(Component.literal("You cannot hold more than " + THEFT_MAX_HELD
                     + " stolen abilities. Release one first (sneak)."));
             return;
         }
@@ -238,7 +266,7 @@ public class WormOfTime {
 
         boolean sneakForm = ability.sneakForm() && player.getRandom().nextBoolean();
         Player victim = hasPathway(target) ? (Player) target : null;
-        StolenAbilities.Held held = StolenAbilities.hold(player, ability, sneakForm, victim, THEFT_HELD_TICKS);
+        StolenAbilities.Held held = StolenAbilities.hold(player, ability, sneakForm, victim, THEFT_HELD_TICKS, THEFT_MAX_HELD);
         if (held == null) return;                                    // (full: checked above)
         if (victim == null && THEFT_MOB_EMPTY_TICKS > 0) Marks.add(target, THEFT_EMPTY, 1, THEFT_MOB_EMPTY_TICKS);
 
@@ -320,6 +348,9 @@ public class WormOfTime {
     //         you see through its eyes, and nothing can see or hurt you. While you are inside: an upkeep and a
     //         life drain at each beat, two minutes at most, and you are thrown out hurt if it dies.
     // Inside a host: the same key puts you back out, standing behind it. Sneaking makes no difference.
+    //         A mob host can be steered (status/ParasiteControl): the walk keys, jump and sprint walk it where you
+    //         look, left click makes it hit (or shoot) what you look at, right click tells it what to hunt. With no
+    //         input for PARASITE_STEER_IDLE_TICKS it acts on its own again. A player host only carries you.
     // Going in, being carried and coming out is status/Parasite. What the parasite does to its host is the
     // four methods under "Parasite: what it does": that is where new effects go.
     // =========================
@@ -375,8 +406,10 @@ public class WormOfTime {
 
     /** Once, when the parasite has just gone in. */
     private static void parasiteEntered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
-        parasite.sendSystemMessage(Component.literal("You are inside " + host.getName().getString()
-                + ". Press the key again to leave it."));
+        boolean steers = PARASITE_STEERS_MOBS && host instanceof Mob;
+        parasite.sendSystemMessage(Component.literal("You are inside " + host.getName().getString() + "."
+                + (steers ? " Move and look to steer it, left click to strike, right click to pick what it hunts." : "")
+                + " Press the key again to leave it."));
         if (PARASITE_MAX_TICKS > 0) HudTimer.show(parasite, PARASITE_CLOCK, "Parasite", PARASITE_MAX_TICKS, PARASITE_COLOR);
         if (PARASITE_HOST_IS_TOLD && host instanceof Player carrier) {
             carrier.sendSystemMessage(Component.literal("Something has crawled into you."));
@@ -395,7 +428,7 @@ public class WormOfTime {
         }
         parasiteDrain(parasite, host, sl);
         // TODO(parasite): more that happens while inside (stealing from the host without aiming, its spirituality,
-        //                 steering it, slowly taking it over...). 'host' may be a mob or a Player.
+        //                 slowly taking it over...). 'host' may be a mob or a Player. Steering is status/ParasiteControl.
     }
 
     /**
@@ -430,6 +463,13 @@ public class WormOfTime {
         if (host.getHealth() > take) host.setHealth(host.getHealth() - take);
         else host.kill(sl);                                          // only with PARASITE_DRAIN_LEAVES = 0
         if (PARASITE_DRAIN_GAIN > 0) parasite.heal(take * PARASITE_DRAIN_GAIN);
+    }
+
+    /**
+     * Right after the parasite made its mob host hit (or shoot at) 'target' with left click.
+     * TODO(parasite): what a steered strike adds (the parasite's own power in the blow, a mark, stealing from it...)
+     */
+    private static void parasiteStruck(ServerPlayer parasite, LivingEntity host, LivingEntity target, ServerLevel sl) {
     }
 
     private static String parasiteEndText(Parasite.End why) {
@@ -470,10 +510,18 @@ public class WormOfTime {
                     .lifetime(THEFT_HELD_TICKS - THEFT_FLIGHT_TICKS).fade(6, 20)
                     .tag(THEFT_ORB_TAG + held.slot());
             ParticleShapes.modelOn(sl, light, player, new Vec3(0, player.getBbHeight() + 0.55, 0),
-                    held.slot() * 360f / StolenAbilities.MAX_HELD, 0f, 0f);
+                    orbAngle(held.slot()), 0f, 0f);
             SpellFx.risingRings(sl, player.position(), 0.9, 1.8, 3, COMBO_HEAD);
             Spells.sound(sl, player.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 1f, 1.5f);
         });
+    }
+
+    /**
+     * Where a held ability's light circles over the head (degrees). With a limit the lights share the circle
+     * evenly; with no limit each new one goes 137.5 degrees further on, so any number of them stay apart.
+     */
+    private static float orbAngle(int slot) {
+        return THEFT_MAX_HELD > 0 ? slot * 360f / THEFT_MAX_HELD : slot * 137.5f;
     }
 
     /** The release: its light over the head goes out, and a ring and a ribbon of the Pathway's colors burst from the thief. */
