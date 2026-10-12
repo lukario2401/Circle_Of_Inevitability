@@ -475,7 +475,7 @@ Transit.by(LANCE.speed(1.2).range(30).onHit((target, at) -> Spells.strike(player
         .go(player, sl, hand, player.getLookAngle());   // 'hand' is not used when steered
 ```
 
-- It flies at the shot's `speed` for as far as its `range`, measured along the way it really went. Slower is easier to steer: 1 to 1.5 blocks a tick is a good start.
+- It flies at the shot's `speed` for as far as its `range`, measured along the way it really went. `Shot.range(Transit.UNLIMITED)` = until something stops it (at most `Transit.MAX_RIDE_TICKS`, an hour). Slower is easier to steer: 1 to 1.5 blocks a tick is a good start.
 - It ends at a block, at the first enemy (`onHit` first; `.pierce()` goes on through), at the end of its range, when they are rooted (`MOVE` or `TELEPORT`), when they sneak with `.letGoOnSneak()`, and when they have been stuck for a few ticks (a step the look-ahead missed). They stop there: no landing spot is searched, they are where the flight brought them.
 - The shot's `trail` is drawn along the way they flew, piece by piece. `windup` and `stick` are not used.
 

@@ -125,8 +125,13 @@ public class Conqueror {
     // Ability 4 - Flame Transformation (Sequence 6)
     private static final int FLAME_SEQUENCE = 6;
     private static final int FLAME_COST = 1500;
-    private static final double FLAME_RANGE_MIN = 10.0;          // how far the lance flies when the Sequence is new
-    private static final double FLAME_RANGE_MAX = 60.0;          // ...and once it is fully digested (and from Sequence 5)
+    // How far the lance flies (blocks of path). Within a Sequence it grows with digestion, from the most of the
+    // Sequence before up to the most of this one. From Sequence 3 there is no limit: it flies until a block, an
+    // enemy or sneaking stops it (Transit.UNLIMITED).
+    private static final double FLAME_RANGE_MIN = 10.0;          // Sequence 6, not digested at all
+    private static final double FLAME_RANGE_SEQ6 = 120.0;        // Sequence 6, fully digested
+    private static final double FLAME_RANGE_SEQ5 = 360.0;        // Sequence 5, fully digested
+    private static final double FLAME_RANGE_SEQ4 = 3600.0;       // Sequence 4, fully digested
     private static final double LANCE_SPEED = 1.2;               // blocks per tick (you fly this fast: slower = easier to steer)
     private static final double LANCE_TURN = 10.0;               // degrees a tick it turns toward where you look
     private static final float LANCE_DAMAGE = 30f;               // on the enemy it flies into (it stops there)
@@ -507,8 +512,8 @@ public class Conqueror {
     // Normal: become a flame lance and ride it (combat/Transit, steered): your body and camera fly with it and it
     //         turns toward wherever you look, LANCE_TURN degrees a tick. It ends at a block, at the first enemy it
     //         runs into (LANCE_DAMAGE, set on fire), at the end of its range, or when you sneak; a burst of fire
-    //         where you left and where you come out. It flies FLAME_RANGE_MIN blocks when the Sequence is new and
-    //         FLAME_RANGE_MAX once it is digested (always the most from Sequence 5).
+    //         where you left and where you come out. Its range grows with digestion: Sequence 6 10 -> 120 blocks,
+    //         Sequence 5 -> 360, Sequence 4 -> 3600, Sequence 3 and above no limit (flameRange).
     // Sneak:  Misdirection: you vanish, quick and unseen, and leave a figure of flame that blows up behind you.
     // =========================
     public static void conquerorFlameTransformation(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
@@ -540,11 +545,16 @@ public class Conqueror {
         Spells.sound(sl, player.position(), SoundEvents.BLAZE_SHOOT, 1f, 0.8f);
     }
 
-    /** How far the lance flies: grows with the digestion of Sequence 6, the full reach from Sequence 5 on. */
+    /**
+     * How far the lance flies: Sequence 6 goes from FLAME_RANGE_MIN to FLAME_RANGE_SEQ6 as it is digested,
+     * Sequence 5 from there to FLAME_RANGE_SEQ5, Sequence 4 on to FLAME_RANGE_SEQ4; Sequence 3 and above: no limit.
+     */
     private static double flameRange(Player player) {
-        if (Beyonder.hasSequence(player, FLAME_SEQUENCE - 1)) return FLAME_RANGE_MAX;
+        if (Beyonder.hasSequence(player, 3)) return Transit.UNLIMITED;
         float digested = Math.max(0f, Math.min(100f, SoulCore.getDigestion(player))) / 100f;
-        return (FLAME_RANGE_MIN + (FLAME_RANGE_MAX - FLAME_RANGE_MIN) * digested) * (10-Beyonder.powerLevel(player));
+        if (Beyonder.hasSequence(player, 4)) return FLAME_RANGE_SEQ5 + (FLAME_RANGE_SEQ4 - FLAME_RANGE_SEQ5) * digested;
+        if (Beyonder.hasSequence(player, 5)) return FLAME_RANGE_SEQ6 + (FLAME_RANGE_SEQ5 - FLAME_RANGE_SEQ6) * digested;
+        return FLAME_RANGE_MIN + (FLAME_RANGE_SEQ6 - FLAME_RANGE_MIN) * digested;
     }
 
     /** Sneak: a figure of flame stands where you stood and goes off after its fuse; you are hidden and quick meanwhile. */

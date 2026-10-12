@@ -815,6 +815,12 @@ Everything outside reference/ and the history above now uses the project name Ci
   - Sneak + J: you are flung the way you look with fire behind you; landing does not hurt.
   - Other models that are not moved (the flame lance, Pale Emperor wraiths, crowns) look and turn exactly as before.
 
+## Conqueror ability 4: longer lance ranges (2026-10-12)
+- Flame Transformation's range (blocks of path), each growing with digestion from the most of the Sequence before: Sequence 6 10 -> 120, Sequence 5 120 -> 360, Sequence 4 360 -> 3600, Sequence 3 and above no limit. Constants FLAME_RANGE_MIN, FLAME_RANGE_SEQ6, _SEQ5, _SEQ4 in Conqueror (FLAME_RANGE_MAX and Luka's (10 - powerLevel) multiplier are gone). Reading "120 when digested at Sequence 6" as the top of a 10 -> 120 scale, and the same for 5 and 4, was my choice.
+- combat/Transit: +UNLIMITED (a range for rides that end only on a block, an enemy, a root or sneaking) and +MAX_RIDE_TICKS (72000, an hour); the ride's tick limit is now worked out in double and capped, so a huge range no longer overflows the int (it would have ended the ride at once).
+- At 1.2 blocks a tick, 3600 blocks is a 50-second ride; an unlimited one lasts until you sneak or hit something, and you stay concealed meanwhile.
+- NOT built (no Gradle here); not compiled. In game: /sequence set @s 6 + digestion 100: about 120 blocks of flight; /sequence set @s 3: the flight goes on until you sneak or hit a block.
+
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
 | --- | --- | --- | --- | --- |
@@ -848,3 +854,4 @@ Everything outside reference/ and the history above now uses the project name Ci
 | Worm Of Time: Theft limit, Parasite steering (feature) | 2026-10-12 | (Luka fills in) | new code, not a port: 4 new Java files (status/ParasiteControl, client/ClientParasiteControl, network/SParasiteControlPacket, network/CParasiteControlPacket, about 510 lines); WormOfTime +60, Parasite +22, StolenAbilities (limit per hold), PacketHandler +13, HudTimerOverlay +11 (columns); docs/SPELL_KIT.md, docs/SEQUENCES.md; this file | Worm Of Time: Theft holds THEFT_MAX_HELD (5), Parasite steers a mob host |
 | Conqueror: steered Flame Transformation (change) | 2026-10-12 | (Luka fills in) | Transit +200 (steered ride), Shot +10, Spells +20, ModelFx +40, ModelFxRenderer +4, ParticleShapes +15, Conqueror +10; docs/SPELL_KIT.md, docs/MODEL_FX.md; this file | Conqueror: ride and steer the Flame Transformation lance |
 | Conqueror: Fire Ravens (feature) | 2026-10-12 | (Luka fills in) | new code, not a port: 1 new Java file (combat/Seeker, about 380 lines); Conqueror +90 (ability 3 and the dash, replacing the WIP), ModelFx +20, ModelFxParticle +50, ModelFxRenderer +15, ParticleShapes +55, SKeyPressAbilityThreeUsed and PathwayAbilities renamed; 3 model JSONs and 1 texture (conqueror/fire_raven); docs/SPELL_KIT.md, docs/MODEL_FX.md, docs/SEQUENCES.md; this file | Conqueror: ability 3, Fire Ravens (sneak: Dash), and combat/Seeker |
+| Conqueror: lance ranges (change) | 2026-10-12 | (Luka fills in) | Conqueror flameRange and 4 constants, Transit +UNLIMITED, +MAX_RIDE_TICKS and the capped tick limit; docs/SPELL_KIT.md; this file | Conqueror: Flame Transformation reaches 120 / 360 / 3600 blocks, unlimited from Sequence 3 |

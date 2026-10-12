@@ -80,6 +80,13 @@ public final class Transit {
     public static double RIDE_BELOW = 0.45;
     /** Steered: a little more time than the range needs, for when something slows them down on the way. */
     private static final int RIDE_SPARE_TICKS = 10;
+    /**
+     * A range for a shot that is ridden until something stops it (a block, an enemy, sneaking with
+     * .letGoOnSneak()): Shot.range(Transit.UNLIMITED). Steered rides only; a straight shot needs a real range.
+     */
+    public static final double UNLIMITED = Double.POSITIVE_INFINITY;
+    /** Steered: the longest a ride can last however far its range is (an hour), so an UNLIMITED one ends some day. */
+    public static int MAX_RIDE_TICKS = 72000;
     /** Steered: a ride that has not got anywhere for this many ticks in a row is over (stuck on something). */
     private static final int STUCK_TICKS = 6;
     /**
@@ -236,7 +243,9 @@ public final class Transit {
             this.player = player;
             this.sl = sl;
             this.heading = heading;
-            this.maxTicks = (int) Math.ceil(shot.reach() / shot.blocksPerTick()) + RIDE_SPARE_TICKS;
+            // (worked out in double and capped, so a huge or UNLIMITED range cannot overflow the int)
+            double needed = Math.ceil(shot.reach() / shot.blocksPerTick()) + RIDE_SPARE_TICKS;
+            this.maxTicks = (int) Math.min(needed, MAX_RIDE_TICKS);
         }
 
         private void start() {
