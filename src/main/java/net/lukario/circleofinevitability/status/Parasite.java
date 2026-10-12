@@ -8,6 +8,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.Vec3;
@@ -24,7 +25,7 @@ import java.util.UUID;
 
 /**
  * Parasite: a player leaves their own body and lives inside another living thing (a mob or a player), which
- * carries them wherever it goes and keeps acting on its own. Works from any Pathway:
+ * carries them wherever it goes and keeps acting on its own (unless they steer it: ParasiteControl). Works from any Pathway:
  *
  *   Parasite.enter(serverPlayer, host, 2400, HOOKS);    // inside for two minutes at most (0 = no limit). False if refused
  *   Parasite.isInside(player)      Parasite.hostOf(player)      Parasite.ticksInside(player)
@@ -38,6 +39,8 @@ import java.util.UUID;
  *     (a host that is a player; a mob that changes dimension is a new entity and the parasite is put out)
  *   - holding sneak steps the view back out of the host for as long as it is held (the game does that by itself)
  *   - the ability keys do nothing, except the ones its Hooks allow (allowsKey)
+ *   - if its Hooks give Settings from control(host) and the host is a mob, the parasite can steer it: walk it,
+ *     turn it, make it strike and tell it what to hunt (status/ParasiteControl). Otherwise it only rides along
  *   - one host carries one parasite
  *
  * It ends when leave(...) is called, when the time is up, when the host dies or is gone (unloaded, logged
@@ -98,6 +101,15 @@ public final class Parasite {
 
         /** True for the ability keys (1..7 = G H J K L N M) that still work from inside a host. */
         default boolean allowsKey(int key) { return false; }
+
+        /**
+         * How the parasite steers this host (status/ParasiteControl), or null: it only rides along. Asked once,
+         * when it goes in. Only a Mob can be steered: for a player host this is not asked.
+         */
+        default ParasiteControl.Settings control(LivingEntity host) { return null; }
+
+        /** Right after the parasite made its host strike (or shoot at) 'target'. */
+        default void struck(ServerPlayer parasite, LivingEntity host, LivingEntity target, ServerLevel sl) {}
     }
 
     /** Hooks that do nothing: a parasite that only rides along. */
@@ -170,6 +182,15 @@ public final class Parasite {
             link.hooks.entered(parasite, host, sl);
         } catch (RuntimeException e) {
             CircleOfInevitability.LOGGER.error("A parasite's entered hook failed", e);   // it is inside all the same
+        }
+        if (host instanceof Mob mob && LINKS.get(parasite.getUUID()) == link) {         // (entered may have ended it)
+            ParasiteControl.Settings control = null;
+            try {
+                control = link.hooks.control(mob);
+            } catch (RuntimeException e) {
+                CircleOfInevitability.LOGGER.error("A parasite's control hook failed", e);  // it only rides along, then
+            }
+            if (control != null) ParasiteControl.start(parasite, mob, control, link.hooks);
         }
         return true;
     }
@@ -287,6 +308,7 @@ public final class Parasite {
         LivingEntity host = sl.getEntity(link.host) instanceof LivingEntity found ? found : null;
         if (host != null) link.where = host.position();
 
+        ParasiteControl.stop(parasite, host);             // (nothing if it was not steering)
         giveBodyBack(parasite);
         if (parasite.isAlive()) putOut(parasite, sl, host, link.where);
         try {

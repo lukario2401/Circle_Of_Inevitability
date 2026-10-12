@@ -772,7 +772,7 @@ PaleEmperorFx.wings(sl, player, 400, "my_pathway_wings");    // something to sho
 
 ### Parasite
 
-A player leaves their own body and lives inside another living thing, a mob or a player. The host carries them and keeps acting on its own. Worm Of Time's Parasite (`wormOfTimeAbility3`) uses it.
+A player leaves their own body and lives inside another living thing, a mob or a player. The host carries them and keeps acting on its own, unless they steer it (a mob only, see "Steering the host" below). Worm Of Time's Parasite (`wormOfTimeAbility3`) uses it.
 
 ```java
 Parasite.enter(serverPlayer, host, 2400, HOOKS);     // two minutes at most (0 = no limit). False if refused
@@ -789,6 +789,8 @@ private static final Parasite.Hooks HOOKS = new Parasite.Hooks() {
     @Override public void tick(ServerPlayer parasite, LivingEntity host, ServerLevel sl, int ticksInside) { ... } // every tick
     @Override public void left(ServerPlayer parasite, LivingEntity host, ServerLevel sl, Parasite.End why) { ... } // once
     @Override public boolean allowsKey(int key) { return key == 3; }   // ability keys that work from inside
+    @Override public ParasiteControl.Settings control(LivingEntity host) { return STEERING; }   // null = it only rides along
+    @Override public void struck(ServerPlayer parasite, LivingEntity host, LivingEntity target, ServerLevel sl) { ... } // after a steered strike
 };
 ```
 
@@ -800,7 +802,37 @@ private static final Parasite.Hooks HOOKS = new Parasite.Hooks() {
 - How it is done: the parasite is in spectator mode with its view on the host. Holding sneak takes the view off the host for as long as it is held; that is the game's doing. The game mode from before is kept in the player's saved data and given back however it ends, also at the next login if the server stopped without warning. Who is in whom is not saved: a restart ends every parasitism.
 - Settings: `Parasite.OUT_DISTANCE` (how far behind the host they come out), `Parasite.LANDING_TICKS` (no fall damage for that long afterwards).
 
-To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `WormOfTime.java`: `parasiteEntered`, `parasiteTick`, `parasiteLeft` and `parasiteRefusal` (who cannot be taken). Each has a `TODO(parasite)` line where new effects go; its numbers are the `PARASITE_` constants at the top of the file.
+#### Steering the host
+
+If the `Hooks` give `Settings` from `control(host)` and the host is a `Mob`, the parasite steers it (`status/ParasiteControl`; the client side is `client/ClientParasiteControl`, the packets `SParasiteControlPacket` and `CParasiteControlPacket`). A player host is never steered; it only carries its parasite.
+
+```java
+private static final ParasiteControl.Settings STEERING = new ParasiteControl.Settings(
+        40,      // idleTicks: this long without input and the host acts on its own again
+        1.0,     // walkSpeed (1 = its normal walking speed)
+        1.4,     // sprintSpeed
+        3.0,     // reach of a hit, blocks from its eyes
+        20,      // strikeRest: ticks between two hits
+        2f,      // bareDamage: a hit of a host with no attack of its own (a cow)
+        24,      // shotRange of a host that shoots (skeleton, pillager, witch, snow golem)
+        30,      // shotRest
+        24);     // huntRange of right click
+```
+
+| The parasite | The host |
+| --- | --- |
+| walk keys | walks that way, relative to where the parasite looks. In the air or in water (a bee, a fish, a mob that swims) it goes along the look, up and down too |
+| jump | jumps; in the air or in water it rises |
+| sprint | walks at `sprintSpeed` |
+| mouse | looks there. The parasite's view turns at once; the host's head follows a moment later |
+| left click | strikes what the parasite looks at: a mob that shoots (`RangedAttackMob`) shoots it, any other hits it with its own attack (`doHurtTarget`) if it is within `reach`. A host with no attack of its own deals `bareDamage`. `Hooks.struck` is called after |
+| right click | on something: hunts it on its own until it dies or another is picked. On nothing: it stops hunting |
+
+- **Your input wins.** While the parasite presses, turns the mouse or clicks, the host's own walking, looking and jumping are switched off (its goals with the `MOVE`, `LOOK` and `JUMP` flags do not run and its path is dropped). After `idleTicks` with no input they are on again and it acts on its own, still hunting what it was told to. Holding sneak (the view out of the host) also lets it be.
+- What it strikes or hunts is picked like `Spells.aimEnemy`, from the host's eyes along the parasite's look, not through walls, and never the parasite's allies or its own marionettes.
+- The clicks never reach the game while steering, so a spectator's click does not jump the view into what it hits.
+
+To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `WormOfTime.java`: `parasiteEntered`, `parasiteTick`, `parasiteLeft`, `parasiteStruck` (after a steered strike) and `parasiteRefusal` (who cannot be taken). Each has a `TODO(parasite)` line where new effects go; its numbers are the `PARASITE_` constants at the top of the file.
 
 ### Root and Freeze
 
@@ -851,18 +883,19 @@ While the part in the brackets runs, `Beyonder.hasSequence` is `true` for that p
 ### StolenAbilities: who holds what
 
 ```java
-StolenAbilities.Held held = StolenAbilities.hold(thief, ability, false, victim, 1200);   // for a minute. null if the thief is full
-StolenAbilities.Held newest = StolenAbilities.newest(thief);                             // what a release casts, or null
-StolenAbilities.spend(thief, newest);                                                    // used up: the victim has it back
+StolenAbilities.Held held = StolenAbilities.hold(thief, ability, false, victim, 1200, 5);   // for a minute, 5 held at most. null if full
+StolenAbilities.Held newest = StolenAbilities.newest(thief);                                // what a release casts, or null
+StolenAbilities.spend(thief, newest);                                                       // used up: the victim has it back
 ```
 
 `false` is "its normal form"; `true` holds the sneak form. `victim` is the player it was taken from, or `null` when it was taken from a mob or from nobody.
 
-`StolenAbilities.count(thief)`, `isFull(thief)`, `holds(thief, held)`, `isTaken(victim, ability)` and `blocksKey(player, key)` work from anywhere.
+`StolenAbilities.count(thief)`, `isFull(thief, max)`, `holds(thief, held)`, `isTaken(victim, ability)` and `blocksKey(player, key)` work from anywhere.
 
 - **The victim cannot use that key meanwhile.** Each ability key asks `StolenAbilities.blocksKey(player, key)` before anything else; it tells the player and the key press does nothing. They get the ability back when it is spent, when its time is up, or when the holder dies or logs out.
-- A player holds `StolenAbilities.MAX_HELD` (3) at most. The same ability of the same player is never held twice at once: check `isTaken` before `hold`.
-- Each held ability has a `slot()` (0, 1, 2) that stays the same for as long as it is held. Use it to show each in a place and with a tag of its own, as the lights over the thief's head do.
+- **How many can be held is given with each `hold`**, like the time: the last number (`0` or less = no limit). The ability that steals decides it; Worm Of Time's Theft uses `THEFT_MAX_HELD` (5) and refuses a new theft when full. Ask `isFull(thief, max)` with the same number before paying. The same ability of the same player is never held twice at once: check `isTaken` before `hold`.
+- **Newest first.** `newest(thief)` is always the one taken last; once it is spent, the one taken before it is next.
+- Each held ability has a `slot()` (0, 1, 2...: the lowest one free when it was taken) that stays the same for as long as it is held. Use it to show each in a place and with a tag of its own, as the lights over the thief's head do.
 - Both players see a clock by the hotbar (`HudTimer`): the holder with the ability's name, the victim with `Lost: ...`.
 - Nothing is saved. A server restart gives everything back.
 

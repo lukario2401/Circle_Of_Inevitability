@@ -21,7 +21,7 @@ import java.util.UUID;
  * The abilities a player holds that are not their own: who holds what, for how long, and whom it was taken from.
  * Worm Of Time's theft uses it; anything else that lends, steals or copies an ability can too.
  *
- *   Held held = StolenAbilities.hold(thief, ability, sneakForm, victim, 1200);   // victim may be null (a mob)
+ *   Held held = StolenAbilities.hold(thief, ability, sneakForm, victim, 1200, 5); // victim may be null (a mob); 5 at most
  *   Held newest = StolenAbilities.newest(thief);                                 // the one a release casts, or null
  *   StolenAbilities.spend(thief, newest);                                        // used up: the victim has it back
  *
@@ -35,9 +35,6 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
 public final class StolenAbilities {
 
-    /** How many a player can hold at once. */
-    public static final int MAX_HELD = 3;
-
     private static final int HELD_COLOR = 0x52E3C4;   // the clock of the one who holds it
     private static final int LOST_COLOR = 0xFF7A6A;   // the clock of the one it was taken from
 
@@ -46,7 +43,8 @@ public final class StolenAbilities {
      * sneakForm: true if its sneak form comes out when it is released.
      * victim:    the player it was taken from, or null (a mob, or nobody).
      * until:     the game time at which it runs out.
-     * slot:      0 .. MAX_HELD - 1, kept for as long as it is held. For showing each one in a place of its own.
+     * slot:      0, 1, 2... the lowest one free when it was taken, kept for as long as it is held. For showing each
+     *            one in a place of its own.
      */
     public record Held(PathwayAbilities.Ability ability, boolean sneakForm, UUID victim, long until, int slot) {
 
@@ -56,7 +54,7 @@ public final class StolenAbilities {
         }
     }
 
-    /** holder -> what they hold, oldest first. */
+    /** holder -> what they hold, oldest first (so the newest is last). */
     private static final Map<UUID, List<Held>> HELD = new HashMap<>();
 
     private StolenAbilities() {}
@@ -67,11 +65,12 @@ public final class StolenAbilities {
 
     /**
      * Gives 'ability' to the holder for 'ticks' ticks. 'victim' loses the use of it meanwhile (null = taken from
-     * no player). Returns what is now held, or null if the holder is full (see isFull).
+     * no player). 'maxHeld' is how many the holder may hold at once (0 or less = no limit); the ability that
+     * steals decides it. Returns what is now held, or null if the holder already holds 'maxHeld' (see isFull).
      */
-    public static Held hold(Player holder, PathwayAbilities.Ability ability, boolean sneakForm, Player victim, int ticks) {
+    public static Held hold(Player holder, PathwayAbilities.Ability ability, boolean sneakForm, Player victim, int ticks, int maxHeld) {
+        if (isFull(holder, maxHeld)) return null;
         List<Held> list = HELD.computeIfAbsent(holder.getUUID(), id -> new ArrayList<>());
-        if (list.size() >= MAX_HELD) return null;
 
         int slot = 0;
         while (slotTaken(list, slot)) slot++;
@@ -91,11 +90,12 @@ public final class StolenAbilities {
         return list == null ? 0 : list.size();
     }
 
-    public static boolean isFull(Player holder) {
-        return count(holder) >= MAX_HELD;
+    /** True if the holder holds 'maxHeld' or more already (never true when 'maxHeld' is 0 or less: no limit). */
+    public static boolean isFull(Player holder, int maxHeld) {
+        return maxHeld > 0 && count(holder) >= maxHeld;
     }
 
-    /** The one held for the shortest time: what a release casts. Null if the player holds nothing. */
+    /** The one taken last: what a release casts (newest first). Null if the player holds nothing. */
     public static Held newest(Player holder) {
         List<Held> list = HELD.get(holder.getUUID());
         return list == null || list.isEmpty() ? null : list.get(list.size() - 1);
