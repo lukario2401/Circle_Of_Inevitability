@@ -269,6 +269,21 @@ public final class ParticleShapes {
     }
 
     /**
+     * A ModelFx held out in front of an entity's eyes, its TOP (up in Blockbench, as for modelAlong and Shot)
+     * pointing where it looks, and turning with its look: a lance someone rides (combat/Transit), a beam
+     * being aimed. 'ahead' = blocks in front of the eyes, 'below' = blocks under the line of sight (so the
+     * crosshair stays clear). The entity sees it too in first person.
+     * Give the model a tag to take it away early: clearModels(level, entity, "my_tag").
+     */
+    public static void modelInFront(Level level, ModelFx model, Entity entity, double ahead, double below) {
+        double eyeBelowTop = entity.getBbHeight() - entity.getEyeHeight();
+        // tipped forward 90 degrees: the model's top looks along the line of sight, so up(...) is "ahead" and
+        // forward(...) is "down" (see ModelFxRenderer: rotateX(-pitch) turns the model's -Z to straight down)
+        ModelFx held = model.key(0, ModelFx.pose().up((float) ahead).forward((float) below)).seenByWearer();
+        modelOnHead(level, held, entity, -eyeBelowTop, 0f, 90f, 0f);
+    }
+
+    /**
      * Plays a ModelFx with its top (up in Blockbench) pointing along 'direction': spears, arrows, meteors...
      * In its keys, up(...) then moves it along that direction, so .key(10, ModelFx.pose().up(20)) flies
      * 20 blocks that way in 10 ticks.

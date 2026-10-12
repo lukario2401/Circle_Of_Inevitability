@@ -387,6 +387,27 @@ public final class Spells {
         return new Vec3(direction.x * cos - direction.z * sin, direction.y, direction.x * sin + direction.z * cos);
     }
 
+    /**
+     * 'from' turned toward 'to' by at most 'maxDegrees' (in any direction, up and down too): steering something
+     * that cannot turn on the spot, a tick at a time. Both are directions; the result is one too (length 1).
+     *   heading = Spells.turnToward(heading, player.getLookAngle(), 12);   // follows the crosshair, 12 degrees a tick
+     */
+    public static Vec3 turnToward(Vec3 from, Vec3 to, double maxDegrees) {
+        Vec3 a = from.normalize();
+        Vec3 b = to.normalize();
+        double angle = Math.acos(Math.max(-1.0, Math.min(1.0, a.dot(b))));
+        double max = Math.toRadians(Math.max(0.0, maxDegrees));
+        if (angle <= max) return b;
+        double sin = Math.sin(angle);
+        if (sin < 1.0E-4) {
+            // turning right round: any way is as good, so go over the side
+            Vec3 side = Math.abs(a.y) > 0.99 ? new Vec3(1, 0, 0) : a.cross(UP).normalize();
+            return a.scale(Math.cos(max)).add(side.scale(Math.sin(max))).normalize();
+        }
+        double t = max / angle;                                       // the part of the way it gets this time
+        return a.scale(Math.sin((1 - t) * angle) / sin).add(b.scale(Math.sin(t * angle) / sin)).normalize();
+    }
+
     // =========================
     // Doing things
     // =========================

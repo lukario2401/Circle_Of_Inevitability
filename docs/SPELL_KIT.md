@@ -19,7 +19,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A wave that spreads and hits each enemy as it gets there | [`Spells.wave`](#1-spells-aiming-and-enemies) + `SpellFx.steadyRing` | `combat/` |
 | Everyone the caster can see, or everyone in a cone | [`Spells.enemiesInSight`, `enemiesInCone`](#1-spells-aiming-and-enemies) | `combat/` |
 | Teleport to where the caster looks | [`Spells.blinkSpot`](#1-spells-aiming-and-enemies) | `combat/` |
-| Travel inside something you throw and step out where it lands (merge with a flame, ride a bolt) | [`Transit`](#transit-travel-inside-a-shot) | `combat/` |
+| Travel inside something you throw and step out where it lands (merge with a flame, ride a bolt), straight or steered with your look | [`Transit`](#transit-travel-inside-a-shot) | `combat/` |
 | A model that flies into an enemy and cannot miss | [`SpellFx.homing`](#models-on-an-entity) | `combat/` |
 | Count hits, stacks or charges on an entity, and show them | [`Marks`](#marks) + [`SpellFx.overHead`](#models-on-an-entity) | `status/` |
 | A mark under someone that follows them (cursed, warded), changing as it grows | [`SpellFx.circleUnder`](#models-on-an-entity) | `combat/` |
@@ -142,6 +142,7 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `sound(sl, at, SoundEvents.X, volume, pitch)` | A sound at a spot |
 | `casterStillHere(player, sl)` | `false` once the player died, left or changed dimension. Check it in the later steps of a spell |
 | `yawOf(direction)`, `flatLook(player)`, `rightOf(player)`, `turned(direction, degrees)`, `UP` | Directions. `turned` is how you make a fan of projectiles |
+| `turnToward(from, to, maxDegrees)` | `from` turned toward `to` by at most that many degrees, up and down too. Call it every tick to steer something that cannot turn on the spot: `heading = Spells.turnToward(heading, player.getLookAngle(), 12)` |
 
 **Who is an enemy.** Anything alive except: the caster, what the caster rides or owns (pets, tamed horses), the caster's marionettes, team mates, armor stands, spectators and whoever is concealed.
 
@@ -449,6 +450,8 @@ Transit.by(LANCE.onHit((target, at) -> Spells.strike(player, target, 30f)))   //
 |---|---|
 | `Transit.by(shot)` | Travel inside this shot. Nothing happens until `.go(...)` |
 | `.visible()` | The caster stays seen and can be hurt on the way (default: concealed) |
+| `.steered(degreesPerTick)` / `.steered()` | They ride it: body and camera fly with the shot, and it turns toward where they look, at most that many degrees a tick (`.steered()` = `Transit.STEER_DEGREES`, 12; 180 = at once). See "Steered" below |
+| `.letGoOnSneak()` | Steered: sneaking during the flight ends it where they are |
 | `.onDepart(from -> ...)` | Runs right before they leave |
 | `.onArrive((at, hitBlock) -> ...)` | Runs right after they came out. `hitBlock` is `true` when the shot ended on a block |
 | `.go(player, sl, from, direction)` | Fires the shot and sends the caster with it. `false` (nothing fired) when they may not travel |
@@ -456,10 +459,25 @@ Transit.by(LANCE.onHit((target, at) -> Spells.strike(player, target, 30f)))   //
 
 Good to know:
 
-- **On the way** the caster is concealed (unseen, unhurt, mobs forget them) and held where they stood, so the body is "in" the shot. Concealment ends when they come out.
-- **Where they come out** is never inside a block: a step back from where the shot stopped, else on the ground under it, else the nearest free spot. With no room at all they stay where they were (`onArrive` still runs). No fall damage for `Transit.LANDING_TICKS` (100) afterwards, since they may come out in the air at a wall.
+- **On the way** the caster is concealed (unseen, unhurt, mobs forget them). Concealment ends when they come out.
+- **Straight** (the default): the shot flies on its own, the caster is held where they stood, and they appear where it lands.
+- **Where they come out** (straight) is never inside a block: a step back from where the shot stopped, else on the ground under it, else the nearest free spot. With no room at all they stay where they were (`onArrive` still runs). No fall damage for `Transit.LANDING_TICKS` (100) afterwards, since they may come out in the air at a wall.
 - The shot keeps its `onHit`. Its `onEnd` is taken over: put the end into `onArrive`.
 - A caster who dies or leaves on the way does not come out; `onArrive` does not run.
+
+**Steered.** With `.steered(...)` nothing is fired ahead: the caster's body is the shot. Each tick it turns toward their look (`Spells.turnToward`), looks ahead for a block or an enemy, and gives the body the speed to get there, the way `Spells.push` does, so their own game moves them smoothly and the camera goes along. The shot's model is held in front of their eyes (`ParticleShapes.modelInFront`, `Transit.RIDE_AHEAD` 1.6 blocks ahead and `RIDE_BELOW` 0.45 under the line of sight) and turns with their look; they see it in first person, and while they are concealed the others see only it.
+
+```java
+Transit.by(LANCE.speed(1.2).range(30).onHit((target, at) -> Spells.strike(player, target, 30f)))
+        .steered(10)                       // 10 degrees a tick: a full turn round in under a second
+        .letGoOnSneak()                    // sneak to step out early
+        .onArrive((at, hitBlock) -> SpellFx.fireBurst(sl, at, 2.5))
+        .go(player, sl, hand, player.getLookAngle());   // 'hand' is not used when steered
+```
+
+- It flies at the shot's `speed` for as far as its `range`, measured along the way it really went. Slower is easier to steer: 1 to 1.5 blocks a tick is a good start.
+- It ends at a block, at the first enemy (`onHit` first; `.pierce()` goes on through), at the end of its range, when they are rooted (`MOVE` or `TELEPORT`), when they sneak with `.letGoOnSneak()`, and when they have been stuck for a few ticks (a step the look-ahead missed). They stop there: no landing spot is searched, they are where the flight brought them.
+- The shot's `trail` is drawn along the way they flew, piece by piece. `windup` and `stick` are not used.
 
 ---
 
@@ -971,7 +989,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `PathwayAbilities`, `Beyonder.castUnbound`, `StolenAbilities` | `steal`, `pickToSteal`, `releaseStolen`, `castStolen` in `WormOfTime.java` |
 | `Trap`, a fuse with `Later.run`, a blast that is weaker at its rim | `setTrap`, `springTrap`, `plantCharge`, `burnFuse`, `fireBlast` in `Conqueror.java` |
 | `Taunt` (on the caster, and `brawl`) with `Vulnerable` and `SpellFx.circleUnder` | `provoke`, `repugnantAura`, `provokeShows`, `auraShows` in `Conqueror.java` |
-| `Transit` with a `Shot` whose range grows with digestion; `Concealment` with a decoy that blows up | `flameTransformation`, `flameRange`, `misdirection`, `fuseBlast` in `Conqueror.java` |
+| `Transit.steered` with a `Shot` whose range grows with digestion; `Concealment` with a decoy that blows up | `flameTransformation`, `flameRange`, `misdirection`, `fuseBlast` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 
@@ -1189,7 +1207,9 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | The models of a zone stay when it ends early | Give them a tag of their own and clear it in `.onEnd(...)` |
 | A HudTimer still counts though the thing is over | It only shows time. Call `HudTimer.hide(player, name)` where the thing ends early |
 | A message I show above the hotbar never appears | The line above the hotbar is rewritten every tick by the spirituality display. Use chat (`sendSystemMessage`), a `HudTimer` or `ScreenImages` |
-| My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5 |
+| My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5. For something held in front of the eyes on purpose, give the model `.seenByWearer()` (or use `ParticleShapes.modelInFront`) |
+| A model on someone concealed is gone | By design: what is stuck to a concealed entity is not drawn. Give it `.shownWhileHidden()` when it is what they turned into |
+| A steered transit ends at once | They looked at the ground or a wall close by (it hits it), are rooted, or were sneaking with `.letGoOnSneak()` (the first tick does not count) |
 | A transit leaves the caster behind | They are rooted with `TELEPORT` (`go` returned `false`), or they died or left on the way |
 | A taunted mob ignores the taunt | It is blind, its target is hidden, too far (48 blocks) or in creative, or it is a marionette. Players cannot be taunted at all |
 | A marionette stands still | It only attacks what you hit, what hits you or it, or monsters within 16 blocks. Hit something |

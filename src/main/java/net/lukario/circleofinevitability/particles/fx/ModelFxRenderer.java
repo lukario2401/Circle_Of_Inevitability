@@ -175,9 +175,11 @@ public final class ModelFxRenderer {
             float time = particle.time(partialTick);
             if (time < 0 || time > fx.lifetimeTicks()) continue;
             // what is stuck to someone concealed is not drawn either: it would give them away (see status/Concealment)
-            if (fx.followsEntity() && ClientConcealment.isHidden(fx.followId())) continue;
+            // (unless the model is what they turned into: ModelFx.shownWhileHidden())
+            if (fx.followsEntity() && !fx.isShownWhileHidden() && ClientConcealment.isHidden(fx.followId())) continue;
             // what you wear on your own head is not drawn in first person, like a helmet: it would hang in your face
-            if (fx.turnsWithHead() && !camera.isDetached() && camera.entity() != null
+            // (unless it is held out in front of the eyes on purpose: ModelFx.seenByWearer())
+            if (fx.turnsWithHead() && !fx.isSeenByWearer() && !camera.isDetached() && camera.entity() != null
                     && camera.entity().getId() == fx.followId()) continue;
 
             ModelFx.Pose pose = fx.poseAt(time);

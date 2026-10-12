@@ -121,6 +121,17 @@ public final class Shot {
     /** What happens where its flight ends (on a block, on the enemy that stopped it, or at the end of its range). */
     public Shot onEnd(End end) { Shot c = copy(); c.onEnd = end; return c; }
 
+    // ---------- what it is (for Transit, which can fly a shot itself when it is steered) ----------
+
+    ModelFx look() { return model; }
+    double blocksPerTick() { return speed; }
+    double reach() { return range; }
+    double pathWidth() { return width; }
+    double tipLength() { return tip; }
+    boolean goesThrough() { return pierce; }
+    SlashFx streak() { return trail; }
+    Hit hitAction() { return onHit; }
+
     // ---------- firing ----------
 
     /**

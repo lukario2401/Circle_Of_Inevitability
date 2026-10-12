@@ -39,7 +39,7 @@ import java.util.List;
  *   1 Hunter's Trap        (Hunter)               a hidden trap that holds and hurts whoever steps on it       | sneak: Explosive Charge, a fuse and a blast
  *   2 Provocation          (Provoker)             a mob drops everything to come for you, and takes more damage | sneak: Repugnant Aura, the mobs around you fight each other
  *   3 Fire Ravens          (Pyromaniac)           not built yet
- *   4 Flame Transformation (Conspirer)            merge with a flame lance and step out where it lands         | sneak: Misdirection, vanish and leave a flame figure that blows up
+ *   4 Flame Transformation (Conspirer)            ride a flame lance, steer it with your look, step out at the end | sneak: Misdirection, vanish and leave a flame figure that blows up
  *   5 Cull                 (Reaper)               not built yet
  *   6 Galvanization        (Iron-blooded Knight)  not built yet
  *   7 Fog of War           (War Bishop)           not built yet
@@ -111,7 +111,8 @@ public class Conqueror {
     private static final int FLAME_COST = 1500;
     private static final double FLAME_RANGE_MIN = 10.0;          // how far the lance flies when the Sequence is new
     private static final double FLAME_RANGE_MAX = 30.0;          // ...and once it is fully digested (and from Sequence 5)
-    private static final double LANCE_SPEED = 2.5;               // blocks per tick
+    private static final double LANCE_SPEED = 1.2;               // blocks per tick (you fly this fast: slower = easier to steer)
+    private static final double LANCE_TURN = 10.0;               // degrees a tick it turns toward where you look
     private static final float LANCE_DAMAGE = 30f;               // on the enemy it flies into (it stops there)
     private static final double FLAME_BURST_RADIUS = 2.5;        // the bursts where you leave and where you arrive
     private static final float FLAME_BURST_DAMAGE = 16f;
@@ -408,9 +409,11 @@ public class Conqueror {
 
     // =========================
     // Ability 4 - Flame Transformation
-    // Normal: throw a flame lance and merge with it (combat/Transit): you travel inside it and step out where it
-    //         lands, with a burst of fire where you left and where you arrive. It reaches FLAME_RANGE_MIN blocks
-    //         when the Sequence is new and FLAME_RANGE_MAX once it is digested (always the most from Sequence 5).
+    // Normal: become a flame lance and ride it (combat/Transit, steered): your body and camera fly with it and it
+    //         turns toward wherever you look, LANCE_TURN degrees a tick. It ends at a block, at the first enemy it
+    //         runs into (LANCE_DAMAGE, set on fire), at the end of its range, or when you sneak; a burst of fire
+    //         where you left and where you come out. It flies FLAME_RANGE_MIN blocks when the Sequence is new and
+    //         FLAME_RANGE_MAX once it is digested (always the most from Sequence 5).
     // Sneak:  Misdirection: you vanish, quick and unseen, and leave a figure of flame that blows up behind you.
     // =========================
     public static void conquerorFlameTransformation(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
@@ -434,9 +437,11 @@ public class Conqueror {
             target.setRemainingFireTicks(BLAST_BURN_TICKS);
         });
         Transit.by(lance)
+                .steered(LANCE_TURN)
+                .letGoOnSneak()
                 .onDepart(from -> fireBlast(player, sl, from.add(0, 0.6, 0), FLAME_BURST_RADIUS, FLAME_BURST_DAMAGE))
                 .onArrive((at, hitBlock) -> fireBlast(player, sl, at.add(0, 0.6, 0), FLAME_BURST_RADIUS, FLAME_BURST_DAMAGE))
-                .go(player, sl, hand, Spells.aimFrom(player, sl, hand, range));
+                .go(player, sl, hand, player.getLookAngle());       // steered: it sets off where you look
         Spells.sound(sl, player.position(), SoundEvents.BLAZE_SHOOT, 1f, 0.8f);
     }
 
