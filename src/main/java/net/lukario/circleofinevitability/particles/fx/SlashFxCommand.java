@@ -7,6 +7,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.AttendantOfMysteries;
+import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.Conqueror;
 import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.HandOfOrder;
 import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.KeyOfStars;
 import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PaleEmperor;
@@ -59,7 +60,7 @@ public final class SlashFxCommand {
     /** The classes whose SlashFx constants the command knows. A new Pathway class goes here. */
     private static final List<Class<?>> SOURCES = List.of(
             AttendantOfMysteries.class, HandOfOrder.class, KeyOfStars.class,
-            PaleEmperor.class, PrinceOfAbolition.class, WormOfTime.class);
+            PaleEmperor.class, PrinceOfAbolition.class, WormOfTime.class, Conqueror.class);
 
     // =========================
     // Tuning

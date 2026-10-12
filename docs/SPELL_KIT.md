@@ -25,6 +25,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Put a ring or a field of things on uneven ground | [`Spells.groundNear`](#1-spells-aiming-and-enemies) | `combat/` |
 | Blind something (mobs too) | [`Blind`](#blind) | `status/` |
 | Make something take more damage for a while (a curse) | [`Vulnerable`](#vulnerable) | `status/` |
+| Make a mob go after one chosen entity ("come at me"), or set mobs on each other | [`Taunt`](#taunt) | `status/` |
 | Drag something under the ground and give it back | [`Burial`](#burial) | `status/` |
 | Let a player fly for a while | [`Flight`](#flight) | `status/` |
 | Wings (or anything worn) that turn with the player | `ParticleShapes.modelOnTurning`, `PaleEmperorFx.wings(sl, player, ticks, tag)` ([MODEL_FX.md](MODEL_FX.md)) | `particles/fx/` |
@@ -695,6 +696,25 @@ Vulnerable.add(target, 0.25f, 0.25f, 100);     // a fixed 25% that does not stac
 
 An `add` never lowers or shortens what is already on the target, so two abilities can use it on the same enemy: a fixed 20% from one does not undo a stacked 60% from another.
 
+### Taunt
+
+A mob is made to go after one entity you choose, and nothing else, for a while: a provocation, a decoy, or mobs set on each other.
+
+```java
+Taunt.apply(mob, player, 200);                 // 10 seconds: it comes for the caster
+Taunt.apply(mob, otherMob, 200);               // it goes after another mob instead
+Taunt.brawl(mobs, 200, player.getRandom());    // each mob in the list goes after a random other one of them
+```
+
+`Taunt.isTaunted(entity)`, `targetOf(entity)` (who it must go after, or `null`), `ticksLeft(entity)`, `remove(mob)`.
+
+- **Only mobs.** A player has no AI to steer, so `apply` returns `false` for one (and for marionettes, and when the target is itself, dead or concealed). Pair it with something that works on players too when that matters: Provocation adds `Vulnerable` to whatever it hits.
+- While it lasts the mob turns down every other target, and it is pointed at its target again every `Taunt.REAIM_EVERY` ticks, also mobs that keep their target in a brain (piglins).
+- It ends early when the target dies, leaves the dimension or gets further away than `Taunt.GIVE_UP_DISTANCE` (48), or becomes a creative player.
+- `Blind` and `Concealment` win while they last: a blind mob is left alone until it sees again, and nothing is made to go after someone hidden.
+- Monsters and neutral mobs (wolves, golems) know how to fight what they target. A cow that is taunted only looks at it; to make anything walk over and hit, see how `Marionette.think` does it.
+- `brawl` needs two mobs that can be taunted and returns how many it set; a new taunt replaces the old one. Saved with the entity.
+
 ### Burial
 
 An entity is pulled down into the ground, held there and put back where it stood.
@@ -887,6 +907,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | Model tags | `stringUp`, `summonProjection` |
 | `PathwayAbilities`, `Beyonder.castUnbound`, `StolenAbilities` | `steal`, `pickToSteal`, `releaseStolen`, `castStolen` in `WormOfTime.java` |
 | `Trap`, a fuse with `Later.run`, a blast that is weaker at its rim | `setTrap`, `springTrap`, `plantCharge`, `burnFuse`, `fireBlast` in `Conqueror.java` |
+| `Taunt` (on the caster, and `brawl`) with `Vulnerable` and `SpellFx.circleUnder` | `provoke`, `repugnantAura`, `provokeShows`, `auraShows` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 
@@ -1105,9 +1126,10 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | A HudTimer still counts though the thing is over | It only shows time. Call `HudTimer.hide(player, name)` where the thing ends early |
 | A message I show above the hotbar never appears | The line above the hotbar is rewritten every tick by the spirituality display. Use chat (`sendSystemMessage`), a `HudTimer` or `ScreenImages` |
 | My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5 |
+| A taunted mob ignores the taunt | It is blind, its target is hidden, too far (48 blocks) or in creative, or it is a marionette. Players cannot be taunted at all |
 | A marionette stands still | It only attacks what you hit, what hits you or it, or monsters within 16 blocks. Hit something |
 | Removing one model from a mob removed the others too | Give each a `.tag(...)` and clear by tag |
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

@@ -8,17 +8,24 @@ import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Trap;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
+import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
+import net.lukario.circleofinevitability.status.Marionette;
+import net.lukario.circleofinevitability.status.Taunt;
+import net.lukario.circleofinevitability.status.Vulnerable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -26,7 +33,7 @@ import java.util.List;
  * and every ability has a normal cast and a sneak cast:
  *
  *   1 Hunter's Trap        (Hunter)               a hidden trap that holds and hurts whoever steps on it       | sneak: Explosive Charge, a fuse and a blast
- *   2 Provocation          (Provoker)             not built yet
+ *   2 Provocation          (Provoker)             a mob drops everything to come for you, and takes more damage | sneak: Repugnant Aura, the mobs around you fight each other
  *   3 Fire Ravens          (Pyromaniac)           not built yet
  *   4 Flame Transformation (Conspirer)            not built yet
  *   5 Cull                 (Reaper)               not built yet
@@ -46,7 +53,7 @@ import java.util.List;
  * a name nobody else has (ConquerorEvents).
  *
  * What is reusable lives outside this class (see docs/SPELL_KIT.md): combat/Trap (the trap itself),
- * combat/Spells, combat/SpellFx, combat/Later, root/Root. fireBlast below is written as "where and how hard",
+ * status/Taunt (a mob made to go after one entity: you, or another mob), status/Vulnerable, combat/Spells, combat/SpellFx, combat/Later, root/Root. fireBlast below is written as "where and how hard",
  * so the fire abilities to come can call it too.
  *
  * Nothing here breaks blocks or lights real fire. The numbers for every ability are right below.
@@ -80,6 +87,20 @@ public class Conqueror {
     private static final float CHARGE_DAMAGE = 48f;              // in the middle of the blast
     private static final int CHARGE_COLOR = 0xE0FF4A1A;          // the warning circle: red-orange
 
+    // Ability 2 - Provocation (Sequence 8)
+    private static final int PROVOKE_SEQUENCE = 8;
+    private static final int PROVOKE_COST = 300;                 // Sequence 8 holds 400, so it can be paid from there on
+    private static final double PROVOKE_RANGE = 24.0;
+    private static final int PROVOKE_TICKS = 200;                // how long the target stays provoked
+    private static final float PROVOKE_EXTRA = 0.25f;            // it takes this much more damage meanwhile (0.25 = 25%)
+    private static final int PROVOKE_COLOR = 0xD0FF3A2A;         // angry red
+    private static final String PROVOKED_MARK = "conqueror_provoked";   // the tag of the circle under a provoked one
+    private static final int AURA_COST = 300;                    // sneak: Repugnant Aura
+    private static final double AURA_RADIUS = 10.0;              // the mobs this close turn on each other
+    private static final int AURA_MAX_TARGETS = 12;              // the nearest this many
+    private static final int AURA_TICKS = 200;                   // how long they fight each other
+    private static final int AURA_COLOR = 0xC0602A1E;            // murky red-brown
+
     // Fire blasts (the Explosive Charge now, the fire abilities later)
     private static final float BLAST_EDGE = 0.5f;                // part of the damage that is left at the rim
     private static final double BLAST_PUSH = 1.1;                // how hard it throws back, blocks per tick
@@ -94,6 +115,14 @@ public class Conqueror {
             .size(0.08f).endSize(0.02f).sizeRandom(0.4f)
             .lifetime(16, 8).friction(0.9f)
             .glow();
+    private static final ParticleFx ANGER_SPARK = ParticleFx.of("fx/spark")
+            .color(0xFFFF4A3A).endColor(0x00801010)
+            .size(0.12f).endSize(0.03f).sizeRandom(0.4f)
+            .lifetime(18, 10).friction(0.9f)
+            .glow();
+    private static final SlashFx PROVOKE_LINE = SlashFx.line("slash/smooth")     // caster to the provoked, for a moment
+            .color(0xC0FF3A2A).core(0xE0FFE0D0)
+            .width(0.08f).taper(SlashFx.Taper.UNIFORM);
 
     // =========================
     // Ability 1 - Hunter's Trap
@@ -163,6 +192,75 @@ public class Conqueror {
         ParticleShapes.cone(sl, SpellFx.FIRE_EMBER, ground.add(0, 0.2, 0), Spells.UP, 40, 6, 0.05, 0.18);
         Spells.sound(sl, ground, SoundEvents.AMETHYST_BLOCK_CHIME, 0.6f, 2.0f - (float) ticksLeft / CHARGE_FUSE);
         Later.run(sl, CHARGE_TICK_EVERY, () -> burnFuse(sl, ground, ticksLeft - CHARGE_TICK_EVERY));
+    }
+
+    // =========================
+    // Ability 2 - Provocation
+    // Normal: the enemy you look at is provoked for PROVOKE_TICKS. A mob drops everything to come for you
+    //         (status/Taunt), and anything provoked, players too, takes PROVOKE_EXTRA more damage meanwhile.
+    // Sneak:  Repugnant Aura: the mobs around you turn on each other.
+    // =========================
+    public static void conquerorProvocation(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, PROVOKE_SEQUENCE)) return;
+
+        if (player.isShiftKeyDown()) repugnantAura(player, sl);
+        else provoke(player, sl);
+    }
+
+    private static void provoke(Player player, ServerLevel sl) {
+        LivingEntity target = Spells.aimEnemy(player, sl, PROVOKE_RANGE);
+        if (target == null) {
+            player.sendSystemMessage(Component.literal("No one stands before you."));
+            return;                                                  // nothing spent
+        }
+        if (!Spells.paySpirituality(player, PROVOKE_COST)) return;
+
+        Vulnerable.add(target, PROVOKE_EXTRA, PROVOKE_EXTRA, PROVOKE_TICKS);    // a fixed share: casting again does not stack it
+        Taunt.apply(target, player, PROVOKE_TICKS);                             // (does nothing to a player: they have no AI)
+        if (target instanceof Player other) {
+            other.sendSystemMessage(Component.literal("You have been provoked. Every blow lands harder on you for a while."));
+        }
+        provokeShows(player, sl, target);
+    }
+
+    private static void repugnantAura(Player player, ServerLevel sl) {
+        List<LivingEntity> near = new ArrayList<>();
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position().add(0, 1, 0), AURA_RADIUS)) {
+            if (enemy instanceof Mob && !Marionette.isMarionette(enemy)) near.add(enemy);   // only mobs can be steered
+        }
+        near.sort(Comparator.comparingDouble(enemy -> enemy.distanceToSqr(player)));
+        if (near.size() > AURA_MAX_TARGETS) near = new ArrayList<>(near.subList(0, AURA_MAX_TARGETS));
+        if (near.size() < 2) {
+            player.sendSystemMessage(Component.literal("There is nothing here to set against each other."));
+            return;                                                  // nothing spent
+        }
+        if (!Spells.paySpirituality(player, AURA_COST)) return;
+
+        Taunt.brawl(near, AURA_TICKS, player.getRandom());
+        auraShows(player, sl, near);
+    }
+
+    // ---------- what is seen and heard (nothing below changes what happens) ----------
+
+    /** A red line flashes from the caster to the target, sparks fly over its head and a red circle stays under it. */
+    private static void provokeShows(Player player, ServerLevel sl, LivingEntity target) {
+        SpellFx.tether(sl, PROVOKE_LINE, player, target, 10);
+        SpellFx.circleUnder(sl, target, Math.max(0.6, target.getBbWidth()), PROVOKE_COLOR, PROVOKE_TICKS, PROVOKED_MARK);
+        ParticleShapes.burst(sl, ANGER_SPARK, target.position().add(0, target.getBbHeight() + 0.3, 0), 14, 0.05, 0.2);
+        Spells.sound(sl, target.position(), SoundEvents.ENDER_DRAGON_GROWL, 0.4f, 1.8f);
+        Spells.sound(sl, player.position(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, 0.8f, 0.7f);
+    }
+
+    /** A murky wave rolls out from the caster, and every mob that was turned gets a red circle and angry sparks. */
+    private static void auraShows(Player player, ServerLevel sl, List<LivingEntity> turned) {
+        SpellFx.shockRing(sl, player.position(), AURA_RADIUS, AURA_COLOR, 12, 0);
+        SpellFx.shockRing(sl, player.position(), AURA_RADIUS * 0.6, PROVOKE_COLOR, 10, 3);
+        for (LivingEntity mob : turned) {
+            if (!Taunt.isTaunted(mob)) continue;
+            SpellFx.circleUnder(sl, mob, Math.max(0.6, mob.getBbWidth()), PROVOKE_COLOR, AURA_TICKS, PROVOKED_MARK);
+            ParticleShapes.burst(sl, ANGER_SPARK, mob.position().add(0, mob.getBbHeight() + 0.3, 0), 8, 0.04, 0.16);
+        }
+        Spells.sound(sl, player.position(), SoundEvents.WITHER_AMBIENT, 0.6f, 0.6f);
     }
 
     // =========================

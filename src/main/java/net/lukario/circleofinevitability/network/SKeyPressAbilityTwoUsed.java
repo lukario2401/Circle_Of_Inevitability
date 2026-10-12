@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesFlamingJump;
+import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.Conqueror.conquerorProvocation;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.HandOfOrder.handOfOrderDecree;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.KeyOfStars.keyOfStarsDash;
 import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.PaleEmperor.paleEmperorDoor;
@@ -50,6 +51,7 @@ public class SKeyPressAbilityTwoUsed {
         princeOfAbolitionFlame(player,level,serverLevel,false);
         paleEmperorDoor(player,serverLevel,false);
         wormOfTimeAbility2(player,level,serverLevel,false);
+        conquerorProvocation(player,level,serverLevel,false);
 
     }
 }

@@ -52,7 +52,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |
 | Prince Of Abolition | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
 | Pale Emperor | Root 9 | Door 8 | Serpent 7 | Spear Skull 7 | Spikes 6 | Wings 5 | Wraiths 4 |
-| Conqueror | Hunter's Trap 9 | - | - | - | - | - | - |
+| Conqueror | Hunter's Trap 9 | Provocation 8 | - | - | - | - | - |
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one).
 
