@@ -149,7 +149,7 @@ public final class AbilityWheel {
     public void quickCast(Player player) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         Entry entry = lastPick(player);
-        if (entry == null || !unlocked(player, entry)) {
+        if (entry == null) {
             open(player);
             return;
         }
