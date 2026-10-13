@@ -167,9 +167,8 @@ public class Conqueror {
             .color(0xC0FF3A2A).core(0xE0FFE0D0)
             .width(0.08f).taper(SlashFx.Taper.UNIFORM);
 
-    private static final ModelFx LANCE_MODEL = ModelFx.of("fireball")       // the shared fireball, stretched into a lance
-            .scale(0.6f, 1.6f, 0.6f).pivot(8, 8, 8).glow().unshaded().seeThrough()
-            .aura(0xFFFF7A1A, 0.14f, 3).spin(26f);
+    /** The spear of fire (models/model_fx/conqueror/flame_spear, see ConquerorFx). */
+    private static final ModelFx LANCE_MODEL = ConquerorFx.FLAME_SPEAR;
     private static final SlashFx LANCE_STREAK = SlashFx.line("slash/smooth")
             .color(0xC0FF7A1A).core(0xE0FFE8B0)
             .width(0.35f).taper(SlashFx.Taper.COMET);
@@ -178,9 +177,7 @@ public class Conqueror {
             .speed(LANCE_SPEED).width(0.5).trail(LANCE_STREAK);
 
     /** A raven of fire (models/model_fx/conqueror/fire_raven_0..2: wings up, level, down). */
-    private static final ModelFx RAVEN_MODEL = ModelFx.of("conqueror/fire_raven").frames(3).smooth()
-            .scale(0.8f).pivot(8, 2.5f, 9).glow().unshaded()
-            .aura(0xFFFF6A1A, 0.07f, 3);
+    private static final ModelFx RAVEN_MODEL = ConquerorFx.FIRE_RAVEN;
     /** One raven of Fire Ravens: hunts its prey (combat/Seeker). What it does on a hit is set per cast. */
     private static final Seeker FIRE_RAVEN = Seeker.of(RAVEN_MODEL)
             .speed(RAVEN_SPEED).turn(RAVEN_TURN).life(RAVEN_LIFE).width(0.5).seek(RAVENS_RANGE)
@@ -346,6 +343,7 @@ public class Conqueror {
                 .set(player, sl, TRAP_NAME, TRAP_MAX);
 
         SpellFx.warningCircle(sl, ground, TRAP_RADIUS, TRAP_COLOR, TRAP_ARM_TICKS);
+        ConquerorFx.trapSet(sl, ground, player.getYRot());           // the bear trap opens, then fades into hiding
         Spells.sound(sl, ground, SoundEvents.CHAIN_PLACE, 0.8f, 0.8f);
     }
 
@@ -359,6 +357,7 @@ public class Conqueror {
         }
 
         SpellFx.closingRing(sl, ground, TRAP_RADIUS * 1.6, TRAP_COLOR, 6, 0);
+        ConquerorFx.trapSnap(sl, ground, victim.getYRot(), TRAP_HOLD_TICKS);   // the jaws slam shut and hold
         ParticleShapes.burst(sl, TRAP_GLINT, ground.add(0, 0.4, 0), 24, 0.08, 0.3);
         Spells.sound(sl, ground, SoundEvents.ANVIL_LAND, 0.5f, 1.8f);
         Spells.sound(sl, ground, SoundEvents.PLAYER_ATTACK_CRIT, 1f, 0.8f);
@@ -367,7 +366,8 @@ public class Conqueror {
 
     /** Sneak: the charge lies in a red circle while its fuse burns, then it goes off. */
     private static void plantCharge(Player player, ServerLevel sl, Vec3 ground) {
-        fuseBlast(player, sl, ground, CHARGE_FUSE, CHARGE_RADIUS, CHARGE_DAMAGE);
+        ConquerorFx.powderKeg(sl, ground, player.getYRot() + 180f, CHARGE_FUSE);   // a powder keg, shaking as it burns down
+        fuseBlast(player, sl, ground, ConquerorFx.kegFuse(ground), CHARGE_FUSE, CHARGE_RADIUS, CHARGE_DAMAGE);
     }
 
     // =========================
@@ -421,6 +421,7 @@ public class Conqueror {
     /** A red line flashes from the caster to the target, sparks fly over its head and a red circle stays under it. */
     private static void provokeShows(Player player, ServerLevel sl, LivingEntity target) {
         SpellFx.tether(sl, PROVOKE_LINE, player, target, 10);
+        ConquerorFx.battleCry(sl, player, 30);                       // a war banner rises behind you, a red ring rolls out
         SpellFx.circleUnder(sl, target, Math.max(0.6, target.getBbWidth()), PROVOKE_COLOR, PROVOKE_TICKS, PROVOKED_MARK);
         ParticleShapes.burst(sl, ANGER_SPARK, target.position().add(0, target.getBbHeight() + 0.3, 0), 14, 0.05, 0.2);
         Spells.sound(sl, target.position(), SoundEvents.ENDER_DRAGON_GROWL, 0.4f, 1.8f);
@@ -470,8 +471,7 @@ public class Conqueror {
         FIRE_RAVEN.onHit((target, at) -> ravenStrikes(player, sl, target, at))
                 .launchAt(player, sl, from, prey, RAVENS_COUNT, RAVENS_EVERY);
 
-        ParticleShapes.burst(sl, SpellFx.FIRE_EMBER, from, 24, 0.08, 0.3);
-        ParticleShapes.burst(sl, SpellFx.FIRE_SMOKE, from, 6, 0.02, 0.08);
+        ConquerorFx.ravensErupt(sl, player, from);                   // rings of fire round you, embers where they leave
         Spells.sound(sl, from, SoundEvents.BLAZE_SHOOT, 1f, 1.2f);
         Spells.sound(sl, from, SoundEvents.ENDER_DRAGON_FLAP, 0.8f, 1.8f);
     }
@@ -562,9 +562,7 @@ public class Conqueror {
         if (!Spells.paySpirituality(player, DECOY_COST)) return;
 
         Vec3 spot = player.position();
-        ModelFx figure = SpellFx.FLAMES.scale(0.8f, 1.0f, 0.8f)     // about as tall as a player
-                .lifetime(DECOY_FUSE).fade(0, 4).spin(3f);
-        ParticleShapes.model(sl, figure, spot, player.getYRot(), 0f, 0f);
+        ConquerorFx.flameFigure(sl, spot, player.getYRot(), DECOY_FUSE);   // a figure of flame in your shape
         fuseBlast(player, sl, spot, DECOY_FUSE, DECOY_RADIUS, DECOY_DAMAGE);
 
         Concealment.hide(player, DECOY_HIDE_TICKS);                 // mobs forget you and go for nothing
@@ -580,9 +578,14 @@ public class Conqueror {
      * for 'fuse' ticks, then fireBlast. Nothing goes off if the caster died or left meanwhile.
      */
     private static void fuseBlast(Player player, ServerLevel sl, Vec3 ground, int fuse, double radius, float damage) {
+        fuseBlast(player, sl, ground, ground.add(0, 0.2, 0), fuse, radius, damage);
+    }
+
+    /** The same, with the fuse's sparks at 'sparks' (the top of a keg) instead of just above the ground. */
+    private static void fuseBlast(Player player, ServerLevel sl, Vec3 ground, Vec3 sparks, int fuse, double radius, float damage) {
         SpellFx.warningCircle(sl, ground, radius, CHARGE_COLOR, fuse);
         Spells.sound(sl, ground, SoundEvents.FIRECHARGE_USE, 0.8f, 0.7f);
-        burnFuse(sl, ground, fuse, fuse);
+        burnFuse(sl, ground, sparks, fuse, fuse);
         Later.run(sl, fuse, () -> {
             if (!Spells.casterStillHere(player, sl)) return;         // nobody left to set it off
             fireBlast(player, sl, ground.add(0, 0.6, 0), radius, damage);
@@ -590,11 +593,11 @@ public class Conqueror {
     }
 
     /** One spark and click of a fuse, then the next one CHARGE_TICK_EVERY ticks later: higher as it gets close. */
-    private static void burnFuse(ServerLevel sl, Vec3 ground, int ticksLeft, int fuse) {
+    private static void burnFuse(ServerLevel sl, Vec3 ground, Vec3 sparks, int ticksLeft, int fuse) {
         if (ticksLeft <= 0) return;
-        ParticleShapes.cone(sl, SpellFx.FIRE_EMBER, ground.add(0, 0.2, 0), Spells.UP, 40, 6, 0.05, 0.18);
+        ParticleShapes.cone(sl, SpellFx.FIRE_EMBER, sparks, Spells.UP, 40, 6, 0.05, 0.18);
         Spells.sound(sl, ground, SoundEvents.AMETHYST_BLOCK_CHIME, 0.6f, 2.0f - (float) ticksLeft / fuse);
-        Later.run(sl, CHARGE_TICK_EVERY, () -> burnFuse(sl, ground, ticksLeft - CHARGE_TICK_EVERY, fuse));
+        Later.run(sl, CHARGE_TICK_EVERY, () -> burnFuse(sl, ground, sparks, ticksLeft - CHARGE_TICK_EVERY, fuse));
     }
 
     /**

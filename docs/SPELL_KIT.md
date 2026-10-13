@@ -1046,6 +1046,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Trap`, a fuse with `Later.run`, a blast that is weaker at its rim | `setTrap`, `springTrap`, `plantCharge`, `burnFuse`, `fireBlast` in `Conqueror.java` |
 | `Taunt` (on the caster, and `brawl`) with `Vulnerable` and `SpellFx.circleUnder` | `provoke`, `repugnantAura`, `provokeShows`, `auraShows` in `Conqueror.java` |
 | `Transit.steered` with a `Shot` whose range grows with digestion; `Concealment` with a decoy that blows up | `flameTransformation`, `flameRange`, `misdirection`, `fuseBlast` in `Conqueror.java` |
+| `ConquerorFx` displays timed to the ability (`trapSet` / `trapSnap`, `powderKeg` with sparks at `kegFuse`, `battleCry`, `flameFigure`) | `setTrap`, `springTrap`, `plantCharge`, `provokeShows`, `misdirection` in `Conqueror.java` |
 | `Seeker.launchAt` (a flock of fire ravens with flapping wings), a dash with `FallGuard` | `fireRavens`, `ravenStrikes`, `dash`, `dashTrail` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |

@@ -433,6 +433,14 @@ These are in `models/model_fx/` and any Pathway can use them. Sizes are at `.sca
 | `pale_emperor/wraith` | A hooded spirit of the dead, 2.7 blocks tall: a skull deep in the hood with lights for eyes, a robe worn to rags, clawed arms of bare bone. 3 steps: 0 = arms hanging, 2 = reaching out | under it `(8, -16, 8)` | `.frames(3).smooth()`. Face = front |
 | `pale_emperor/death_sigil` | A flat seal for the ground, 3 blocks wide: a ring of runes, a feathered serpent biting its tail, eight feathers and an hourglass | default (its middle) | `.glow().unshaded().seeThrough()` |
 | `pale_emperor/death_sigil_ring`, `death_sigil_core` | The outer and the inner half of that seal | default | Play both and give them opposite `.spin(...)` |
+| `conqueror/bear_trap` | A steel bear trap, 1 block wide, teeth red with old blood. 3 steps: 0 = open flat, 2 = snapped shut | default (the middle of its base) | `.frames(3).smooth()`. Step 2 turns the jaws 90 degrees (Blockbench may show 45) |
+| `conqueror/powder_keg` | A powder keg with a burning fuse, 0.6 blocks wide, a red flame on its front | default (its bottom) | |
+| `conqueror/flame_spear` | A spear of fire, 2.6 blocks long, tip up; the texture flickers | `(8, -6, 8)` near the back, tip `(8, 32, 8)` | `.glow().unshaded().seeThrough()`. For `Shot`, `modelAlong` and riding it (`Transit`) |
+| `conqueror/flame_figure` | A figure of flame in a person's shape, 2 blocks tall, white-hot eyes; flickers | default (its feet) | `.glow().unshaded().seeThrough()`. Face = front |
+| `conqueror/war_banner` | A tattered blood-red war banner, crossed swords under a crown, 3 blocks tall. 3 steps: blown back, still, blown forward | the foot of the pole `(8, -16, 8)` | `.frames(3).smooth()`, swing `frame` 0 <-> 2 to wave it. Cloth = front |
+| `conqueror/reaper_scythe` | The Reaper's scythe, 3 blocks tall: black blade curving down to the right, blood-red edge, skull and red gem on its head | the lower grip `(4, -12, 8)` (the shaft stands at x 4) | `.glow()`; the edge is what shines |
+| `conqueror/iron_mantle` | A mantle of dark iron with red-hot veins over a player's body: pauldrons, breastplate (a red sword on it), faulds, vambraces | default (between the feet) | Play it with `modelOnTurning`; `.scale(height / 1.8)` for other bodies |
+| `conqueror/war_sigil` | The War Bishop's seal: a flat circle of gold and blood-red runes, eight swords pointing in, a mitre | default (its middle) | Lies flat like `rune_circle`. `.glow().unshaded().seeThrough()` |
 | `conqueror/fire_raven` | A raven of fire, 1.5 blocks from wing tip to wing tip: charred body, burning wings that brighten toward the tips, white-hot beak, eyes and talons. 3 steps: 0 = wings up, 1 = level, 2 = down | the middle of its body `(8, 2.5, 9)` | `.frames(3).smooth().glow().unshaded()`. Beak = front. Made for `combat/Seeker` with `.flap(...)` |
 
 The fire and light ones (`orb`, `thread` and `projection` too) want `.glow().unshaded().seeThrough()`; the solid ones `.glow()`.
@@ -489,6 +497,28 @@ Each display also has a `..._TICKS` number: how long it lasts.
 The effects themselves are public constants (`PaleEmperorFx.SKULL`, `RIB_CAGE`, `COFFIN`, `WING_RIGHT` ...). To change one, copy it into your Pathway class and edit it, or adjust a copy on the spot: `PaleEmperorFx.SKULL.scale(4f)`.
 
 The wings and the crown are worn: they move with the entity they are on. The wings turn when its body turns (`modelOnTurning`); the crown follows its head (`modelOnHead`).
+
+### Conqueror: ready-made displays
+
+`ConquerorFx` (next to `Conqueror`) holds the Conqueror's looks: war, blood, iron and fire, each one call, for the abilities that exist and for those still to be built. The models come from `tools/model_gen/conqueror_models.py`: change a number there, run `python3 tools/model_gen/conqueror_models.py`, press F3+T.
+
+**See them in game** (cheats on), on flat ground: `/conquerorfx all` (every display in a ring 16 blocks out, three times; `/conquerorfx all 5` five times) or `/conquerorfx cull` (just that one, 7 blocks ahead; TAB lists the names: trap_set, trap_snap, keg, spear, figure, banner, cull, fog, battle_cry, galvanize, ravens).
+
+| Call | What happens | Ticks to hang things on |
+|---|---|---|
+| `trapSet(sl, ground, yaw)` | The bear trap drops on the ground, its jaws spring open, it fades into hiding | `TRAP_SET_TICKS` |
+| `trapSnap(sl, ground, yaw, ticks)` | Open trap, the jaws slam shut, it jolts, holds `ticks`, fades; sparks and blood | `TRAP_SNAPS` |
+| `powderKeg(sl, ground, yaw, fuse)` | A keg drops with a bounce and shakes harder and harder for `fuse` ticks, swelling at the end. `kegFuse(ground)` = where the fuse burns | |
+| `FLAME_SPEAR` | The flame spear as a `ModelFx` (what Flame Transformation's lance looks like) | |
+| `flameFigure(sl, spot, yaw, ticks)` | A figure of flame rises out of fire, stands swaying, swells at the end | |
+| `warBanner(sl, ground, yaw, ticks, tag)` | A banner thrust up out of the ground, waving, sinking at the end (`BANNER_SHORTEST`) | |
+| `battleCry(sl, who, ticks)` | A banner rises behind someone, red rings roll out | |
+| `cull(sl, prey, yaw)` / `cull(sl, feet, yaw, height)` | Blood circle and mist drawn in; a giant scythe rises behind the prey, drawn back, and cuts down diagonally through it: a crimson crescent, blood thrown along the cut and up in a fountain, red rays, a dark pool; the scythe swings on and crumbles into embers | `CULL_HITS` (16), `CULL_TICKS` |
+| `galvanize(sl, wearer, ticks, tag)` | Molten iron spirals up the body, a mantle of iron closes over it (it turns with it), sparks drop off it, at the end it cracks into flakes. `galvanizeEnds(sl, wearer, tag)` ends it early, `ironClang(sl, at)` for a blow glancing off it | `MANTLE_FORMED`, `MANTLE_SHORTEST` |
+| `fogOfWar(sl, center, radius, ticks, tag)` | The War Bishop's seal opens and turns; fog rolls out in rings to a dome `radius` wide, thickest at its edge, embers in it; six banners rise round the edge; it thins away at the end. `fogOfWarEnds(sl, center, tag)` | `FOG_ROLLED_OUT`, `FOG_SHORTEST` |
+| `ravensErupt(sl, who, from)` | Rings of fire round the caster, embers where the ravens leave. `FIRE_RAVEN` is the raven model | |
+
+They only show things: none of them hurts, roots or moves anyone. Put the damage at the tick they name with `Later.run`.
 
 ## Tricks worth copying
 
