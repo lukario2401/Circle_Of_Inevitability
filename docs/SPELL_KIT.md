@@ -718,6 +718,23 @@ Spells.strike(player, target, 15f * paid);
 
 - Every name is its own counter. Start the name with your Pathway.
 - Each `add` makes all the marks of that name last their full time again. When the time runs out without a new one, they are forgotten together.
+
+#### One player's marks, dropping one at a time
+
+Give the owner (the player who marks) and how many ticks it takes for one mark to wear off. Each player has his own count on the same mob; other players' marks never count for you. Nothing marks by itself: your ability calls `add` when it hits.
+
+```java
+Marks.add(target, player, "conqueror_cull", 5, 60);        // one more of yours, 5 at most; one wears off every 3 seconds
+int marks = Marks.count(target, player, "conqueror_cull");
+
+switch (Marks.take(target, player, "conqueror_cull")) {    // a finisher that does more the more marks there are
+    case 0 -> { /* not marked */ }
+    case 1, 2 -> { /* ... */ }
+    default -> { /* 3 or more */ }
+}
+```
+
+Also `add(target, player, name, amount, max, dropEvery)`, `clear(target, player, name)`, `ticksLeft(target, player, name)` (until all are gone) and `ticksToNextDrop(target, player, name)`. Every `add` starts the wear-off clock again, so marks only drop while you stop marking it. They are not shown: use `SpellFx.overHead` with `count(...)` if you want them seen.
 - Saved with the entity. To show them, see `SpellFx.overHead` above.
 
 ### Blind

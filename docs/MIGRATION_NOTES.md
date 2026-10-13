@@ -840,6 +840,9 @@ Luka had wired key 5 (SKeyPressAbilityFiveUsed, PathwayAbilities) to `conquerorC
 - Sneak: Cull. The enemy you aim at (else the nearest in sight, CULL_RANGE) is held in place (Root MOVEMENT) while `ConquerorFx.cull` swings; at `ConquerorFx.CULL_HITS` it takes CULL_DAMAGE, or dies outright at or under CULL_EXECUTE_SHARE of its health, then bleeds (Wither II, CULL_BLEED_TICKS).
 - CULL_SEQUENCE = 5; the PathwayAbilities line is moved under Flame Transformation; SEQUENCES.md has Cull 5.
 
+## Marks: one player's marks, dropping one at a time (2026-10-13; docs/SPELL_KIT.md, "Marks")
+For Cull and other finishers that do more the more marks an enemy carries. `status/Marks` gets overloads with an owner: `add(target, owner, name, max, dropEvery)` (and with an amount), `count`, `take`, `clear`, `ticksLeft`, `ticksToNextDrop`. Each owner has his own counter (stored as `name@uuid`), one mark wears off every `dropEvery` ticks after the last add (worked out from the time, nothing ticks), and empty counters are dropped on the next add. Nothing adds marks by itself and nothing shows them. The old shared marks work as before.
+
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
 | --- | --- | --- | --- | --- |
@@ -877,3 +880,4 @@ Luka had wired key 5 (SKeyPressAbilityFiveUsed, PathwayAbilities) to `conquerorC
 | Conqueror FX (feature) | 2026-10-13 | (Luka fills in) | new code, not a port: 1 new Java file (ConquerorFx, about 560 lines), Conqueror +20; 2 Python files (tools/model_gen); 12 model JSONs and 8 textures (conqueror/); docs/MODEL_FX.md, docs/SPELL_KIT.md; this file | Conqueror FX: models and ready-made displays for every ability |
 | Conqueror FX: Cull swing (fix) | 2026-10-13 | (Luka fills in) | ConquerorFx cull (the swing, the crescents, the blood direction); this file | Conqueror FX: the Cull scythe swings blade first |
 | Conqueror ability 5: Cull | 2026-10-13 | (Luka fills in) | Conqueror (Cull, fireball), PathwayAbilities, SEQUENCES.md, this file | Conqueror ability 5: Cull |
+| Marks per player | 2026-10-13 | (Luka fills in) | status/Marks, SPELL_KIT.md, this file | Marks: one player's marks, dropping one at a time |
