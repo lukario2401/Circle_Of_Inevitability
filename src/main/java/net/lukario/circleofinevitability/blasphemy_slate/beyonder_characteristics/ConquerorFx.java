@@ -281,30 +281,41 @@ public final class ConquerorFx {
     /** The tick the blade goes through the prey: put the damage here. */
     public static final int CULL_HITS = 16;
     private static final int CULL_RAISED = 11;                       // the scythe is drawn back, ready
-    private static final float CULL_TILT = 38f;                      // how far the swing is tipped: a diagonal cut
-    /** Blocks from the grip to where the blade meets the shaft (39 px), at REAPER_SCYTHE's scale. */
-    private static final double CULL_REACH = 39.0 / 16.0 * 1.6;
-    /** The crescent's middle is this far back from the prey, so its rim (radius 2.6) runs right through it. */
-    private static final double CULL_ARC_BACK = 2.4;
+    private static final float CULL_TILT = 38f;                      // how far the swing leans from upright: a diagonal cut
 
-    // the cut itself: a wide crimson crescent, its dotted lead, a white-hot core and the pieces it breaks into
+    /*
+     * How the swing works. The scythe is turned side-on (played at yaw - 90), so its blade, which reaches out to the
+     * model's +X, points the way the cut goes and the whole scythe lies in one upright plane through the prey. That
+     * plane leans CULL_TILT degrees to one side (the model's pitch). The swing is a ROLL inside that plane, around the
+     * grip: from drawn back (CULL_BACK) over the top and down through the prey (CULL_THROUGH) to the follow-through.
+     * The blade's hook leads all the way and its edge goes through the prey, not the shaft.
+     */
+    private static final float CULL_BACK = -80f;                     // drawn back: the blade high behind the grip
+    private static final float CULL_THROUGH = 70f;                   // at CULL_HITS: the middle of the blade on the prey
+    private static final float CULL_AFTER = 140f;                    // where the swing runs out
+    /** The middle of the blade lies this many degrees ahead of the shaft (seen from the grip). */
+    private static final float CULL_BLADE_AHEAD = 20.7f;
+    /** Blocks from the grip to the middle of the blade (it is all about this far: the crescent's radius). */
+    private static final double CULL_REACH = 3.86;
+
+    // the cut itself: a wide crimson crescent along the blade's path, its dotted lead, a white-hot core, the pieces
     private static final SlashFx CULL_LEAD = SlashFx.arc("slash/dashed")
-            .color(0xC0601010).radius(2.7f).arc(160f).width(0.12f).taper(SlashFx.Taper.UNIFORM)
-            .lifetime(10).sweep(4);
+            .color(0xC0601010).radius(3.95f).arc(150f).width(0.12f).taper(SlashFx.Taper.UNIFORM)
+            .lifetime(12).sweep(5);
     private static final SlashFx CULL_CUT = SlashFx.arc("slash/edge")
             .color(0xF0A00C0C).tailColor(0x90300000).headColor(0xFFFF4A3A).core(0xE0FFE0D0)
-            .radius(2.6f).arc(170f).width(1.3f).taper(SlashFx.Taper.CRESCENT)
+            .radius(3.86f).arc(170f).width(1.4f).taper(SlashFx.Taper.CRESCENT)
             .layers(3).spread(0.22f)
-            .lifetime(14).sweep(2);
+            .lifetime(14).sweep(3);
     private static final SlashFx CULL_CORE = SlashFx.arc("slash/smooth")
             .color(0xFFFFF0E0).core(0xFFFFFFFF)
-            .radius(2.6f).arc(160f).width(0.18f).taper(SlashFx.Taper.CRESCENT)
-            .lifetime(10).sweep(2);
+            .radius(3.86f).arc(160f).width(0.18f).taper(SlashFx.Taper.CRESCENT)
+            .lifetime(10).sweep(3);
     private static final SlashFx CULL_BREAK = SlashFx.arc("slash/shatter")
             .color(0xC0C01010).tailColor(0x40400000).headColor(0xE0FF6040)
-            .radius(2.7f).arc(150f).width(1.5f).taper(SlashFx.Taper.CRESCENT)
+            .radius(3.95f).arc(150f).width(1.6f).taper(SlashFx.Taper.CRESCENT)
             .layers(2).spread(0.3f)
-            .lifetime(10).sweep(1).delay(5);
+            .lifetime(10).sweep(1).delay(6);
     private static final SlashFx CULL_RAY = SlashFx.line("slash/smooth")
             .color(0xFFFF3A2A).headColor(0xFFFFE0D0).core(0xC0FFFFFF)
             .width(0.09f).taper(SlashFx.Taper.CRESCENT)
@@ -316,10 +327,10 @@ public final class ConquerorFx {
     }
 
     /**
-     * Cull: the air around the prey darkens and red mist is drawn in to it, a blood-red circle opens under it and a
-     * dotted line marks the cut to come. A giant scythe fades in behind and above it, drawn back; at CULL_HITS it
-     * swings down diagonally through the prey: a crimson crescent tears through, blood bursts out along the cut,
-     * red rays and sparks, the ground is splashed; the scythe swings on and crumbles into red embers.
+     * Cull: red mist is drawn in to the prey, a blood-red circle opens under it and a dotted crescent marks the cut
+     * to come. A giant scythe fades in, side-on, drawn back high behind the prey; at CULL_HITS it sweeps over and
+     * down diagonally, hook first, its blade through the prey: a crimson crescent along its path, blood thrown the way
+     * the blade goes, red rays and sparks, the ground splashed; the scythe sweeps on and crumbles into red embers.
      * 'feet' = where the prey stands, 'yaw' = the way the cut goes (the caster's look), 'height' = how tall it is.
      */
     public static void cull(ServerLevel sl, Vec3 feet, float yaw, double height) {
@@ -328,51 +339,62 @@ public final class ConquerorFx {
         Vec3 forward = ahead(yaw);
         boolean fromLeft = random.nextBoolean();
         float tilt = fromLeft ? CULL_TILT : -CULL_TILT;
+        // the swing's plane: 'forward' and 'upright' (straight up, leaning 'tilt' degrees to the left; - = right)
+        Vec3 left = ahead(yaw - 90f);
+        double lean = Math.toRadians(tilt);
+        Vec3 upright = new Vec3(0, Math.cos(lean), 0).add(left.scale(Math.sin(lean)));
+        // the grip: the middle of the blade, CULL_REACH from it, reaches the prey's middle at CULL_THROUGH
+        Vec3 grip = middle.subtract(onSwing(forward, upright, CULL_THROUGH + CULL_BLADE_AHEAD, CULL_REACH));
+        // the crescents lie in the same plane, centered on the grip: they trace the blade (SlashFx roll -90 + tilt)
+        float roll = -90f + tilt;
 
-        // 1. the mark: a blood circle, mist drawn in, the dotted line of the cut
+        // 1. the mark: a blood circle, mist drawn in, the dotted crescent of the cut
         SpellFx.runeCircle(sl, feet, 2.2, 0xD0A00A0A, CULL_TICKS, fromLeft ? -6f : 6f);
         SpellFx.closingRing(sl, feet, 5.0, 0xA0601010, CULL_HITS - 2, 0);
         for (int i = 0; i < 5; i++) {
-            int t = i * 2;
-            Later.run(sl, t, () -> ParticleShapes.ring(sl, BLOOD_MIST, middle.add(0, -0.4, 0), 4.0, 14, -0.18));
+            Later.run(sl, i * 2, () -> ParticleShapes.ring(sl, BLOOD_MIST, middle.add(0, -0.4, 0), 4.0, 14, -0.18));
         }
-        Vec3 arc = middle.subtract(forward.scale(CULL_ARC_BACK));
-        float roll = -tilt * 1.5f;                                       // the crescent stands tipped the way the scythe swings
-        ParticleShapes.slash(sl, CULL_LEAD, arc, yaw, 0f, roll);
+        ParticleShapes.slash(sl, CULL_LEAD, grip, yaw, 0f, roll);
 
-        // 2. the scythe: its grip behind the prey so the head of the blade passes through its middle at CULL_HITS
-        Vec3 grip = middle.subtract(forward.scale(CULL_REACH));
+        // 2. the scythe, side-on (yaw - 90), leaning 'tilt' (pitch), swung by its roll around the grip
         ModelFx scythe = REAPER_SCYTHE.lifetime(CULL_TICKS).fade(0, 8)
-                .key(0, pose().pitch(-60f).scale(0.7f).alpha(0f))
-                .key(CULL_RAISED, pose().pitch(-125f).scale(1f).alpha(1f), Ease.OUT)        // rises and is drawn back
-                .during(CULL_RAISED - 3, CULL_RAISED, pose().roll(fromLeft ? 3f : -3f), Ease.IN_OUT)
-                .key(CULL_HITS, pose().pitch(90f).roll(0f), Ease.IN)                       // the swing
-                .key(CULL_HITS + 8, pose().pitch(150f), Ease.OUT)                          // on through, slowing
+                .key(0, pose().roll(CULL_BACK + 40f).scale(0.7f).alpha(0f))
+                .key(CULL_RAISED, pose().roll(CULL_BACK).scale(1f).alpha(1f), Ease.OUT)    // rises and is drawn back
+                .key(CULL_HITS, pose().roll(CULL_THROUGH), Ease.IN)                        // the swing: slow, then all at once
+                .key(CULL_HITS + 8, pose().roll(CULL_AFTER), Ease.OUT)                     // on through, slowing
                 .during(CULL_HITS + 6, CULL_TICKS, pose().alpha(0f).scale(1.1f), Ease.IN);
-        ParticleShapes.model(sl, scythe, grip, yaw, 0f, tilt);
+        ParticleShapes.model(sl, scythe, grip, yaw - 90f, tilt, 0f);
 
         // 3. the cut
-        Later.run(sl, CULL_HITS - 1, () -> {
-            ParticleShapes.slash(sl, CULL_CUT, arc, yaw, 0f, roll);
-            ParticleShapes.slash(sl, CULL_CORE, arc, yaw, 0f, roll);
-            ParticleShapes.slash(sl, CULL_BREAK, arc, yaw, 0f, roll);
+        Later.run(sl, CULL_HITS - 2, () -> {
+            ParticleShapes.slash(sl, CULL_CUT, grip, yaw, 0f, roll);
+            ParticleShapes.slash(sl, CULL_CORE, grip, yaw, 0f, roll);
+            ParticleShapes.slash(sl, CULL_BREAK, grip, yaw, 0f, roll);
         });
-        Later.run(sl, CULL_HITS, () -> cullBleeds(sl, feet, middle, forward, random));
+        // which way the blade is going as it passes through the prey: on along its path (down and to the side)
+        Vec3 cutsToward = onSwing(forward, upright, CULL_THROUGH + CULL_BLADE_AHEAD + 90f, 1.0).add(forward.scale(0.4)).normalize();
+        Later.run(sl, CULL_HITS, () -> cullBleeds(sl, feet, middle, cutsToward, random));
         Later.run(sl, CULL_HITS + 6, () -> {
-            ParticleShapes.alongSlash(sl, BLOOD_SPARK, CULL_CUT, arc, yaw, 0f, roll, 6f, 18, 0.05, 0.05);
-            ParticleShapes.alongSlash(sl, BLOOD_MIST, CULL_CUT, arc, yaw, 0f, roll, 6f, 8, 0.02, 0.02);
+            ParticleShapes.alongSlash(sl, BLOOD_SPARK, CULL_CUT, grip, yaw, 0f, roll, 6f, 18, 0.05, 0.05);
+            ParticleShapes.alongSlash(sl, BLOOD_MIST, CULL_CUT, grip, yaw, 0f, roll, 6f, 8, 0.02, 0.02);
         });
-        // the scythe crumbling: embers along where its head goes after the cut
-        Later.run(sl, CULL_HITS + 10, () -> {
-            Vec3 head = grip.add(forward.scale(CULL_REACH * 0.5)).add(0, -CULL_REACH * 0.85, 0);
-            ParticleShapes.burst(sl, WAR_EMBER, head, 20, 0.03, 0.15);
-            ParticleShapes.burst(sl, BLOOD_SPARK, head, 10, 0.03, 0.12);
+        // the scythe crumbling: embers where its blade is as the swing runs out
+        Later.run(sl, CULL_HITS + 9, () -> {
+            Vec3 blade = grip.add(onSwing(forward, upright, CULL_AFTER + CULL_BLADE_AHEAD, CULL_REACH));
+            ParticleShapes.burst(sl, WAR_EMBER, blade, 20, 0.03, 0.15);
+            ParticleShapes.burst(sl, BLOOD_SPARK, blade, 10, 0.03, 0.12);
         });
+    }
+
+    /** A point of the swing, seen from the grip: 'degrees' from upright toward forward, 'distance' blocks out. */
+    private static Vec3 onSwing(Vec3 forward, Vec3 upright, double degrees, double distance) {
+        double a = Math.toRadians(degrees);
+        return upright.scale(Math.cos(a) * distance).add(forward.scale(Math.sin(a) * distance));
     }
 
     /** The blood when the scythe goes through: out along the cut, up in a fountain, down on the ground. */
     private static void cullBleeds(ServerLevel sl, Vec3 feet, Vec3 middle, Vec3 forward, RandomSource random) {
-        ParticleShapes.cone(sl, BLOOD, middle, forward, 80, 46, 0.15, 0.5);              // thrown out along the cut
+        ParticleShapes.cone(sl, BLOOD, middle, forward, 70, 46, 0.15, 0.5);              // thrown the way the blade goes
         ParticleShapes.cone(sl, BLOOD, middle, new Vec3(0, 1, 0), 50, 24, 0.2, 0.45);    // a fountain
         ParticleShapes.burst(sl, BLOOD_MIST, middle, 14, 0.02, 0.1);
         ParticleShapes.burst(sl, BLOOD_SPARK, middle, 22, 0.1, 0.4);
