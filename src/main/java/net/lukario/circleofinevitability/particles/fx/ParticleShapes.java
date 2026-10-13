@@ -269,6 +269,21 @@ public final class ParticleShapes {
     }
 
     /**
+     * A ModelFx held out in front of an entity's eyes, its TOP (up in Blockbench, as for modelAlong and Shot)
+     * pointing where it looks, and turning with its look: a lance someone rides (combat/Transit), a beam
+     * being aimed. 'ahead' = blocks in front of the eyes, 'below' = blocks under the line of sight (so the
+     * crosshair stays clear). The entity sees it too in first person.
+     * Give the model a tag to take it away early: clearModels(level, entity, "my_tag").
+     */
+    public static void modelInFront(Level level, ModelFx model, Entity entity, double ahead, double below) {
+        double eyeBelowTop = entity.getBbHeight() - entity.getEyeHeight();
+        // tipped forward 90 degrees: the model's top looks along the line of sight, so up(...) is "ahead" and
+        // forward(...) is "down" (see ModelFxRenderer: rotateX(-pitch) turns the model's -Z to straight down)
+        ModelFx held = model.key(0, ModelFx.pose().up((float) ahead).forward((float) below)).seenByWearer();
+        modelOnHead(level, held, entity, -eyeBelowTop, 0f, 90f, 0f);
+    }
+
+    /**
      * Plays a ModelFx with its top (up in Blockbench) pointing along 'direction': spears, arrows, meteors...
      * In its keys, up(...) then moves it along that direction, so .key(10, ModelFx.pose().up(20)) flies
      * 20 blocks that way in 10 ticks.
@@ -278,6 +293,57 @@ public final class ParticleShapes {
         float yaw = (float) Math.toDegrees(Math.atan2(-dir.x, dir.z));
         float pitch = 90f - (float) Math.toDegrees(Math.asin(Math.max(-1.0, Math.min(1.0, dir.y))));
         model(level, model, position, yaw, pitch, 0f);
+    }
+
+    /**
+     * Plays a ModelFx with its FRONT (north in Blockbench: a beak, a face) looking along 'direction', tipped up or
+     * down with it: a bird, a ghost, a fish that flies that way. (modelAlong is for models that point with their top.)
+     */
+    public static void modelFacing(Level level, ModelFx model, Vec3 position, Vec3 direction) {
+        model(level, model, position, facingYaw(direction), facingPitch(direction), 0f);
+    }
+
+    // =========================
+    // Models the server moves (a homing raven, a ghost that chases someone: see combat/Seeker)
+    // =========================
+
+    /**
+     * Moves the models that are NOT stuck to an entity and were given this tag (ModelFx.tag) to 'position',
+     * turned to yaw/pitch/roll. They glide there during the next tick, like an entity, so calling this every
+     * tick makes them fly smoothly along any path the server works out:
+     *   String tag = "my_ghost_" + UUID.randomUUID();
+     *   ParticleShapes.modelFacing(sl, GHOST.tag(tag).lifetime(200), from, direction);   // once
+     *   ParticleShapes.moveModelFacing(sl, tag, where, heading);                          // every tick after that
+     *   ParticleShapes.clearModels(sl, where, tag);                                        // when it is done
+     * Their keys and frames keep playing while they move (wings keep beating). Give each model its own tag.
+     */
+    public static void moveModel(Level level, String tag, Vec3 position, float yaw, float pitch, float roll) {
+        if (tag == null || tag.isEmpty()) return;                    // no tag would mean nothing to move
+        spawnFar(level, ModelFx.moving(tag, yaw, pitch, roll), position, Vec3.ZERO);
+    }
+
+    /** moveModel for a model played with modelFacing: its front looks along 'direction'. */
+    public static void moveModelFacing(Level level, String tag, Vec3 position, Vec3 direction) {
+        moveModel(level, tag, position, facingYaw(direction), facingPitch(direction), 0f);
+    }
+
+    /** moveModel for a model played with modelAlong: its top points along 'direction'. */
+    public static void moveModelAlong(Level level, String tag, Vec3 position, Vec3 direction) {
+        Vec3 dir = direction.normalize();
+        float pitch = 90f - (float) Math.toDegrees(Math.asin(Math.max(-1.0, Math.min(1.0, dir.y))));
+        moveModel(level, tag, position, facingYaw(dir), pitch, 0f);
+    }
+
+    /** The yaw (like an entity's) that looks along this direction. */
+    private static float facingYaw(Vec3 direction) {
+        return (float) Math.toDegrees(Math.atan2(-direction.x, direction.z));
+    }
+
+    /** The pitch (like an entity's: + = looking down) that looks along this direction. */
+    private static float facingPitch(Vec3 direction) {
+        double length = direction.length();
+        if (length < 1.0e-6) return 0f;
+        return (float) -Math.toDegrees(Math.asin(Math.max(-1.0, Math.min(1.0, direction.y / length))));
     }
 
     /** Removes every ModelFx stuck to this entity (for everyone who can see it). */

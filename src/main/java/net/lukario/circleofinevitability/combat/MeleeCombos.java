@@ -1,7 +1,7 @@
 package net.lukario.circleofinevitability.combat;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
-import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.*;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
@@ -29,6 +29,7 @@ public final class MeleeCombos {
         register(PrinceOfAbolition.MELEE_COMBO);
         register(PaleEmperor.MELEE_COMBO);
         register(WormOfTime.MELEE_COMBO);
+        register(Conqueror.MELEE_COMBO);
     }
 
     private MeleeCombos() {}

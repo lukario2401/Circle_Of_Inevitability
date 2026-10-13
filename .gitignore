@@ -27,3 +27,4 @@ forge*changelog.txt
 
 # harness / game logs (never commit)
 logs/
+__pycache__/

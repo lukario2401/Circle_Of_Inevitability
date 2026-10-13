@@ -125,6 +125,19 @@ public class PacketHandler {
                 .consumerMainThread(STextPromptAnswerPacket::handle)
                 .add();
 
+        // Steering a host from inside it (see status/ParasiteControl)
+        INSTANCE.messageBuilder(CParasiteControlPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CParasiteControlPacket::encode)
+                .decoder(CParasiteControlPacket::new)
+                .consumerMainThread(CParasiteControlPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(SParasiteControlPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SParasiteControlPacket::encode)
+                .decoder(SParasiteControlPacket::new)
+                .consumerMainThread(SParasiteControlPacket::handle)
+                .add();
+
         // Server -> Client: who is hidden (see status/Concealment)
         INSTANCE.messageBuilder(CConcealPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(CConcealPacket::encode)

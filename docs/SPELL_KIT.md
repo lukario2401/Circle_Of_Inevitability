@@ -19,7 +19,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A wave that spreads and hits each enemy as it gets there | [`Spells.wave`](#1-spells-aiming-and-enemies) + `SpellFx.steadyRing` | `combat/` |
 | Everyone the caster can see, or everyone in a cone | [`Spells.enemiesInSight`, `enemiesInCone`](#1-spells-aiming-and-enemies) | `combat/` |
 | Teleport to where the caster looks | [`Spells.blinkSpot`](#1-spells-aiming-and-enemies) | `combat/` |
-| Travel inside something you throw and step out where it lands (merge with a flame, ride a bolt) | [`Transit`](#transit-travel-inside-a-shot) | `combat/` |
+| Travel inside something you throw and step out where it lands (merge with a flame, ride a bolt), straight or steered with your look | [`Transit`](#transit-travel-inside-a-shot) | `combat/` |
 | A model that flies into an enemy and cannot miss | [`SpellFx.homing`](#models-on-an-entity) | `combat/` |
 | Count hits, stacks or charges on an entity, and show them | [`Marks`](#marks) + [`SpellFx.overHead`](#models-on-an-entity) | `status/` |
 | A mark under someone that follows them (cursed, warded), changing as it grows | [`SpellFx.circleUnder`](#models-on-an-entity) | `combat/` |
@@ -40,9 +40,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
-| Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/soul_abilities/beyonder_characteristics/` |
+| Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
 | Cast an ability without its Sequence and without its cost | [`Beyonder.castUnbound`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder/` |
-| Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/soul_abilities/beyonder_characteristics/` |
+| Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
 | Something a Pathway always has from a Sequence on, with no key press (a potion effect, or code of your own once a second) | `SequencePassives` ([SEQUENCES.md](SEQUENCES.md#passives)) | `blasphemy_slate/beyonder/` |
 | Damage that names no attacker (`damageSources().magic()`, an explosion or lightning with no owner) showing as the caster's damage number | `DamageFx.credit(player, target)` right before it ([DAMAGE_FX.md](DAMAGE_FX.md)) | `combat/` |
 
@@ -81,7 +81,7 @@ public static void myPathwayIceLance(Player player, Level level, ServerLevel sl,
 Then add it to the packet of the key it belongs to (`network/SKeyPressAbilityOneUsed` ... `SevenUsed`): one `import static` at the top and one line next to the others.
 
 ```java
-import static net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.MyPathway.myPathwayIceLance;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.MyPathway.myPathwayIceLance;
 
 myPathwayIceLance(player, level, serverLevel, false);
 ```
@@ -142,6 +142,7 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `sound(sl, at, SoundEvents.X, volume, pitch)` | A sound at a spot |
 | `casterStillHere(player, sl)` | `false` once the player died, left or changed dimension. Check it in the later steps of a spell |
 | `yawOf(direction)`, `flatLook(player)`, `rightOf(player)`, `turned(direction, degrees)`, `UP` | Directions. `turned` is how you make a fan of projectiles |
+| `turnToward(from, to, maxDegrees)` | `from` turned toward `to` by at most that many degrees, up and down too. Call it every tick to steer something that cannot turn on the spot: `heading = Spells.turnToward(heading, player.getLookAngle(), 12)` |
 
 **Who is an enemy.** Anything alive except: the caster, what the caster rides or owns (pets, tamed horses), the caster's marionettes, team mates, armor stands, spectators and whoever is concealed.
 
@@ -449,6 +450,8 @@ Transit.by(LANCE.onHit((target, at) -> Spells.strike(player, target, 30f)))   //
 |---|---|
 | `Transit.by(shot)` | Travel inside this shot. Nothing happens until `.go(...)` |
 | `.visible()` | The caster stays seen and can be hurt on the way (default: concealed) |
+| `.steered(degreesPerTick)` / `.steered()` | They ride it: body and camera fly with the shot, and it turns toward where they look, at most that many degrees a tick (`.steered()` = `Transit.STEER_DEGREES`, 12; 180 = at once). See "Steered" below |
+| `.letGoOnSneak()` | Steered: sneaking during the flight ends it where they are |
 | `.onDepart(from -> ...)` | Runs right before they leave |
 | `.onArrive((at, hitBlock) -> ...)` | Runs right after they came out. `hitBlock` is `true` when the shot ended on a block |
 | `.go(player, sl, from, direction)` | Fires the shot and sends the caster with it. `false` (nothing fired) when they may not travel |
@@ -456,10 +459,25 @@ Transit.by(LANCE.onHit((target, at) -> Spells.strike(player, target, 30f)))   //
 
 Good to know:
 
-- **On the way** the caster is concealed (unseen, unhurt, mobs forget them) and held where they stood, so the body is "in" the shot. Concealment ends when they come out.
-- **Where they come out** is never inside a block: a step back from where the shot stopped, else on the ground under it, else the nearest free spot. With no room at all they stay where they were (`onArrive` still runs). No fall damage for `Transit.LANDING_TICKS` (100) afterwards, since they may come out in the air at a wall.
+- **On the way** the caster is concealed (unseen, unhurt, mobs forget them). Concealment ends when they come out.
+- **Straight** (the default): the shot flies on its own, the caster is held where they stood, and they appear where it lands.
+- **Where they come out** (straight) is never inside a block: a step back from where the shot stopped, else on the ground under it, else the nearest free spot. With no room at all they stay where they were (`onArrive` still runs). No fall damage for `Transit.LANDING_TICKS` (100) afterwards, since they may come out in the air at a wall.
 - The shot keeps its `onHit`. Its `onEnd` is taken over: put the end into `onArrive`.
 - A caster who dies or leaves on the way does not come out; `onArrive` does not run.
+
+**Steered.** With `.steered(...)` nothing is fired ahead: the caster's body is the shot. Each tick it turns toward their look (`Spells.turnToward`), looks ahead for a block or an enemy, and gives the body the speed to get there, the way `Spells.push` does, so their own game moves them smoothly and the camera goes along. The shot's model is held in front of their eyes (`ParticleShapes.modelInFront`, `Transit.RIDE_AHEAD` 1.6 blocks ahead and `RIDE_BELOW` 0.45 under the line of sight) and turns with their look; they see it in first person, and while they are concealed the others see only it.
+
+```java
+Transit.by(LANCE.speed(1.2).range(30).onHit((target, at) -> Spells.strike(player, target, 30f)))
+        .steered(10)                       // 10 degrees a tick: a full turn round in under a second
+        .letGoOnSneak()                    // sneak to step out early
+        .onArrive((at, hitBlock) -> SpellFx.fireBurst(sl, at, 2.5))
+        .go(player, sl, hand, player.getLookAngle());   // 'hand' is not used when steered
+```
+
+- It flies at the shot's `speed` for as far as its `range`, measured along the way it really went. `Shot.range(Transit.UNLIMITED)` = until something stops it (at most `Transit.MAX_RIDE_TICKS`, an hour). Slower is easier to steer: 1 to 1.5 blocks a tick is a good start.
+- It ends at a block, at the first enemy (`onHit` first; `.pierce()` goes on through), at the end of its range, when they are rooted (`MOVE` or `TELEPORT`), when they sneak with `.letGoOnSneak()`, and when they have been stuck for a few ticks (a step the look-ahead missed). They stop there: no landing spot is searched, they are where the flight brought them.
+- The shot's `trail` is drawn along the way they flew, piece by piece. `windup` and `stick` are not used.
 
 ---
 
@@ -700,6 +718,23 @@ Spells.strike(player, target, 15f * paid);
 
 - Every name is its own counter. Start the name with your Pathway.
 - Each `add` makes all the marks of that name last their full time again. When the time runs out without a new one, they are forgotten together.
+
+#### One player's marks, dropping one at a time
+
+Give the owner (the player who marks) and how many ticks it takes for one mark to wear off. Each player has his own count on the same mob; other players' marks never count for you. Nothing marks by itself: your ability calls `add` when it hits.
+
+```java
+Marks.add(target, player, "conqueror_cull", 5, 60);        // one more of yours, 5 at most; one wears off every 3 seconds
+int marks = Marks.count(target, player, "conqueror_cull");
+
+switch (Marks.take(target, player, "conqueror_cull")) {    // a finisher that does more the more marks there are
+    case 0 -> { /* not marked */ }
+    case 1, 2 -> { /* ... */ }
+    default -> { /* 3 or more */ }
+}
+```
+
+Also `add(target, player, name, amount, max, dropEvery)`, `clear(target, player, name)`, `ticksLeft(target, player, name)` (until all are gone) and `ticksToNextDrop(target, player, name)`. Every `add` starts the wear-off clock again, so marks only drop while you stop marking it. They are not shown: use `SpellFx.overHead` with `count(...)` if you want them seen.
 - Saved with the entity. To show them, see `SpellFx.overHead` above.
 
 ### Blind
@@ -772,7 +807,7 @@ PaleEmperorFx.wings(sl, player, 400, "my_pathway_wings");    // something to sho
 
 ### Parasite
 
-A player leaves their own body and lives inside another living thing, a mob or a player. The host carries them and keeps acting on its own. Worm Of Time's Parasite (`wormOfTimeAbility3`) uses it.
+A player leaves their own body and lives inside another living thing, a mob or a player. The host carries them and keeps acting on its own, unless they steer it (a mob only, see "Steering the host" below). Worm Of Time's Parasite (`wormOfTimeAbility3`) uses it.
 
 ```java
 Parasite.enter(serverPlayer, host, 2400, HOOKS);     // two minutes at most (0 = no limit). False if refused
@@ -789,6 +824,8 @@ private static final Parasite.Hooks HOOKS = new Parasite.Hooks() {
     @Override public void tick(ServerPlayer parasite, LivingEntity host, ServerLevel sl, int ticksInside) { ... } // every tick
     @Override public void left(ServerPlayer parasite, LivingEntity host, ServerLevel sl, Parasite.End why) { ... } // once
     @Override public boolean allowsKey(int key) { return key == 3; }   // ability keys that work from inside
+    @Override public ParasiteControl.Settings control(LivingEntity host) { return STEERING; }   // null = it only rides along
+    @Override public void struck(ServerPlayer parasite, LivingEntity host, LivingEntity target, ServerLevel sl) { ... } // after a steered strike
 };
 ```
 
@@ -800,7 +837,37 @@ private static final Parasite.Hooks HOOKS = new Parasite.Hooks() {
 - How it is done: the parasite is in spectator mode with its view on the host. Holding sneak takes the view off the host for as long as it is held; that is the game's doing. The game mode from before is kept in the player's saved data and given back however it ends, also at the next login if the server stopped without warning. Who is in whom is not saved: a restart ends every parasitism.
 - Settings: `Parasite.OUT_DISTANCE` (how far behind the host they come out), `Parasite.LANDING_TICKS` (no fall damage for that long afterwards).
 
-To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `WormOfTime.java`: `parasiteEntered`, `parasiteTick`, `parasiteLeft` and `parasiteRefusal` (who cannot be taken). Each has a `TODO(parasite)` line where new effects go; its numbers are the `PARASITE_` constants at the top of the file.
+#### Steering the host
+
+If the `Hooks` give `Settings` from `control(host)` and the host is a `Mob`, the parasite steers it (`status/ParasiteControl`; the client side is `client/ClientParasiteControl`, the packets `SParasiteControlPacket` and `CParasiteControlPacket`). A player host is never steered; it only carries its parasite.
+
+```java
+private static final ParasiteControl.Settings STEERING = new ParasiteControl.Settings(
+        40,      // idleTicks: this long without input and the host acts on its own again
+        1.0,     // walkSpeed (1 = its normal walking speed)
+        1.4,     // sprintSpeed
+        3.0,     // reach of a hit, blocks from its eyes
+        20,      // strikeRest: ticks between two hits
+        2f,      // bareDamage: a hit of a host with no attack of its own (a cow)
+        24,      // shotRange of a host that shoots (skeleton, pillager, witch, snow golem)
+        30,      // shotRest
+        24);     // huntRange of right click
+```
+
+| The parasite | The host |
+| --- | --- |
+| walk keys | walks that way, relative to where the parasite looks. In the air or in water (a bee, a fish, a mob that swims) it goes along the look, up and down too |
+| jump | jumps; in the air or in water it rises |
+| sprint | walks at `sprintSpeed` |
+| mouse | looks there. The parasite's view turns at once; the host's head follows a moment later |
+| left click | strikes what the parasite looks at: a mob that shoots (`RangedAttackMob`) shoots it, any other hits it with its own attack (`doHurtTarget`) if it is within `reach`. A host with no attack of its own deals `bareDamage`. `Hooks.struck` is called after |
+| right click | on something: hunts it on its own until it dies or another is picked. On nothing: it stops hunting |
+
+- **Your input wins.** While the parasite presses, turns the mouse or clicks, the host's own walking, looking and jumping are switched off (its goals with the `MOVE`, `LOOK` and `JUMP` flags do not run and its path is dropped). After `idleTicks` with no input they are on again and it acts on its own, still hunting what it was told to. Holding sneak (the view out of the host) also lets it be.
+- What it strikes or hunts is picked like `Spells.aimEnemy`, from the host's eyes along the parasite's look, not through walls, and never the parasite's allies or its own marionettes.
+- The clicks never reach the game while steering, so a spectator's click does not jump the view into what it hits.
+
+To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `WormOfTime.java`: `parasiteEntered`, `parasiteTick`, `parasiteLeft`, `parasiteStruck` (after a steered strike) and `parasiteRefusal` (who cannot be taken). Each has a `TODO(parasite)` line where new effects go; its numbers are the `PARASITE_` constants at the top of the file.
 
 ### Root and Freeze
 
@@ -851,18 +918,19 @@ While the part in the brackets runs, `Beyonder.hasSequence` is `true` for that p
 ### StolenAbilities: who holds what
 
 ```java
-StolenAbilities.Held held = StolenAbilities.hold(thief, ability, false, victim, 1200);   // for a minute. null if the thief is full
-StolenAbilities.Held newest = StolenAbilities.newest(thief);                             // what a release casts, or null
-StolenAbilities.spend(thief, newest);                                                    // used up: the victim has it back
+StolenAbilities.Held held = StolenAbilities.hold(thief, ability, false, victim, 1200, 5);   // for a minute, 5 held at most. null if full
+StolenAbilities.Held newest = StolenAbilities.newest(thief);                                // what a release casts, or null
+StolenAbilities.spend(thief, newest);                                                       // used up: the victim has it back
 ```
 
 `false` is "its normal form"; `true` holds the sneak form. `victim` is the player it was taken from, or `null` when it was taken from a mob or from nobody.
 
-`StolenAbilities.count(thief)`, `isFull(thief)`, `holds(thief, held)`, `isTaken(victim, ability)` and `blocksKey(player, key)` work from anywhere.
+`StolenAbilities.count(thief)`, `isFull(thief, max)`, `holds(thief, held)`, `isTaken(victim, ability)` and `blocksKey(player, key)` work from anywhere.
 
 - **The victim cannot use that key meanwhile.** Each ability key asks `StolenAbilities.blocksKey(player, key)` before anything else; it tells the player and the key press does nothing. They get the ability back when it is spent, when its time is up, or when the holder dies or logs out.
-- A player holds `StolenAbilities.MAX_HELD` (3) at most. The same ability of the same player is never held twice at once: check `isTaken` before `hold`.
-- Each held ability has a `slot()` (0, 1, 2) that stays the same for as long as it is held. Use it to show each in a place and with a tag of its own, as the lights over the thief's head do.
+- **How many can be held is given with each `hold`**, like the time: the last number (`0` or less = no limit). The ability that steals decides it; Worm Of Time's Theft uses `THEFT_MAX_HELD` (5) and refuses a new theft when full. Ask `isFull(thief, max)` with the same number before paying. The same ability of the same player is never held twice at once: check `isTaken` before `hold`.
+- **Newest first.** `newest(thief)` is always the one taken last; once it is spent, the one taken before it is next.
+- Each held ability has a `slot()` (0, 1, 2...: the lowest one free when it was taken) that stays the same for as long as it is held. Use it to show each in a place and with a tag of its own, as the lights over the thief's head do.
 - Both players see a clock by the hotbar (`HudTimer`): the holder with the ability's name, the victim with `Lost: ...`.
 - Nothing is saved. A server restart gives everything back.
 
@@ -901,6 +969,62 @@ ParticleShapes.model(sl, SKULL.tag(tag), from, yaw, 0f, 0f);
 ParticleShapes.clearModels(sl, where, tag);
 ```
 
+## Seeker: a model that hunts an enemy
+
+A summoned thing that goes after someone: a raven, a ghost, a wisp, a homing bolt. It flies at its enemy, curves after it when it runs, and hits it on contact. A `Shot` is worked out once and flies straight; a `Seeker` is steered by the server every tick, so its path bends toward wherever its enemy is now.
+
+The one-line version (default speed, turn and life):
+
+```java
+Seeker.send(player, sl, GHOST_MODEL, from, target, 10f);     // flies from 'from' at 'target', 10 damage on contact
+```
+
+Or describe it once, like a `Shot` (every method returns a new copy):
+
+```java
+private static final ModelFx RAVEN_MODEL = ModelFx.of("conqueror/fire_raven").frames(3).smooth()
+        .scale(0.8f).pivot(8, 2.5f, 9).glow().unshaded().aura(0xFFFF6A1A, 0.07f, 3);
+private static final Seeker RAVEN = Seeker.of(RAVEN_MODEL)   // its FRONT (north in Blockbench) looks where it flies
+        .speed(0.9)              // blocks per tick
+        .turn(14)                // degrees a tick it can turn toward its enemy
+        .life(80)                // ticks before it gives up and bursts
+        .width(0.5)              // how close it must come to an enemy's body to hit it
+        .flap(6)                 // a model with frames: 0 -> last -> 0 every 6 ticks (wings beating)
+        .trail(SpellFx.FIRE_EMBER, 1)
+        .burst(SpellFx.FIRE_EMBER, 14);
+
+RAVEN.onHit((target, at) -> Spells.strike(player, target, 10f))
+     .launch(player, sl, from, startDirection, target);       // startDirection null = straight at it
+
+RAVEN.onHit(...).launchAt(player, sl, from, enemies, 6, 2);   // a flock of 6, 2 ticks apart, shared out over the enemies
+```
+
+| Part | What it does |
+|---|---|
+| `Seeker.of(model)` | A Seeker that looks like this `ModelFx`. Its front (north) looks the way it flies. A plain model: not `.following(...)` |
+| `.pointsWithTop()` | For models that point with their top (up in Blockbench), like a `Shot`: spears, bolts |
+| `.speed(blocksPerTick)` | How fast (default 0.8) |
+| `.turn(degreesPerTick)` | How sharply it can turn (default 12). Small = wide curves, a quick enemy can dodge it; 180 = turns on the spot |
+| `.life(ticks)` | How long it hunts before it bursts (`Ending.EXPIRED`, default 100) |
+| `.windup(ticks)` | Hangs in the air, drifting slowly the way it starts, before it goes |
+| `.width(blocks)` | How close it must come to a body to hit (default 0.5) |
+| `.seek(blocks)` | How far it looks for a new enemy when it has none (default 24); it gives up on one twice that far away |
+| `.keepTarget()` | Never takes another enemy: if its own is gone, it bursts (`Ending.LOST`) |
+| `.throughWalls()` | Flies through blocks (default: a block stops it, `Ending.WALL`) |
+| `.flap(ticks)` | For a model with `.frames(n)`: frame 0 -> last -> 0 every `ticks` ticks, smooth with `.smooth()` |
+| `.trail(particle, perTick)` / `.burst(particle, count)` | Particles left behind it / where it ends, whatever the reason |
+| `.onHit((target, at) -> ...)` | What happens to the enemy it reaches |
+| `.onEnd((at, why) -> ...)` | Runs where it ends: `why` is `HIT`, `WALL`, `LOST`, `EXPIRED` or `GONE` (`GONE` = the caster died or left; `onHit`/`onEnd` do not run then) |
+| `.launch(owner, sl, from, startDirection, target)` | Sends one. `target` may be `null`: it flies along `startDirection` and takes the first enemy it finds |
+| `.launchAt(owner, sl, from, enemies, count, everyTicks)` | A flock: `count` of them, `everyTicks` apart, fanned out left and right of the look and a little up, each enemy gets its first before any gets a second |
+
+Good to know:
+
+- It hits the **first enemy it touches**, not only its own. Then it is gone.
+- Its enemy dies, hides (`Concealment`) or gets too far away: it turns to the **nearest enemy left** that it can see. With none for 12 ticks it bursts.
+- It cannot turn on the spot, so an enemy that dodges sideways at the last moment can make it **miss and come round again**. Close to its enemy it turns much harder, so it never circles round one forever.
+- **How it is drawn:** the model is played once and then moved every tick with `ParticleShapes.moveModelFacing` (see docs/MODEL_FX.md, "Models the server moves"). The client glides it between those spots like an entity and keeps playing the model's own keys and frames. A model that should do something of its own while it flies (spin, wings) does it in its keys; `.flap(...)` adds the wing beats for you.
+
 ---
 
 ## 7. Where each tool is used
@@ -938,7 +1062,9 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `PathwayAbilities`, `Beyonder.castUnbound`, `StolenAbilities` | `steal`, `pickToSteal`, `releaseStolen`, `castStolen` in `WormOfTime.java` |
 | `Trap`, a fuse with `Later.run`, a blast that is weaker at its rim | `setTrap`, `springTrap`, `plantCharge`, `burnFuse`, `fireBlast` in `Conqueror.java` |
 | `Taunt` (on the caster, and `brawl`) with `Vulnerable` and `SpellFx.circleUnder` | `provoke`, `repugnantAura`, `provokeShows`, `auraShows` in `Conqueror.java` |
-| `Transit` with a `Shot` whose range grows with digestion; `Concealment` with a decoy that blows up | `flameTransformation`, `flameRange`, `misdirection`, `fuseBlast` in `Conqueror.java` |
+| `Transit.steered` with a `Shot` whose range grows with digestion; `Concealment` with a decoy that blows up | `flameTransformation`, `flameRange`, `misdirection`, `fuseBlast` in `Conqueror.java` |
+| `ConquerorFx` displays timed to the ability (`trapSet` / `trapSnap`, `powderKeg` with sparks at `kegFuse`, `battleCry`, `flameFigure`) | `setTrap`, `springTrap`, `plantCharge`, `provokeShows`, `misdirection` in `Conqueror.java` |
+| `Seeker.launchAt` (a flock of fire ravens with flapping wings), a dash with `FallGuard` | `fireRavens`, `ravenStrikes`, `dash`, `dashTrail` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 
@@ -1156,7 +1282,12 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | The models of a zone stay when it ends early | Give them a tag of their own and clear it in `.onEnd(...)` |
 | A HudTimer still counts though the thing is over | It only shows time. Call `HudTimer.hide(player, name)` where the thing ends early |
 | A message I show above the hotbar never appears | The line above the hotbar is rewritten every tick by the spirituality display. Use chat (`sendSystemMessage`), a `HudTimer` or `ScreenImages` |
-| My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5 |
+| My crown or mask is not there in first person | By design: what is worn on the head (`modelOnHead`) is hidden from its wearer in first person. Press F5. For something held in front of the eyes on purpose, give the model `.seenByWearer()` (or use `ParticleShapes.modelInFront`) |
+| A Seeker shows up but never moves, or moves in jumps | Its model has `.following(...)` (Seeker removes it), or the game is not sending its moves: each one is a particle packet, so check that particles are not switched off for models. Jumps are lag: the client glides between the spots the server sends |
+| A Seeker flies tail first or belly up | Its model's front must be north in Blockbench and its top up. A model that points with its top needs `.pointsWithTop()` |
+| A Seeker circles round its enemy | It should not: close to its enemy it turns harder. A very fast one with a tiny `.turn(...)` can still overshoot once; raise the turn |
+| A model on someone concealed is gone | By design: what is stuck to a concealed entity is not drawn. Give it `.shownWhileHidden()` when it is what they turned into |
+| A steered transit ends at once | They looked at the ground or a wall close by (it hits it), are rooted, or were sneaking with `.letGoOnSneak()` (the first tick does not count) |
 | A transit leaves the caster behind | They are rooted with `TELEPORT` (`go` returned `false`), or they died or left on the way |
 | A taunted mob ignores the taunt | It is blind, its target is hidden, too far (48 blocks) or in creative, or it is a marionette. Players cannot be taunted at all |
 | A marionette stands still | It only attacks what you hit, what hits you or it, or monsters within 16 blocks. Hit something |

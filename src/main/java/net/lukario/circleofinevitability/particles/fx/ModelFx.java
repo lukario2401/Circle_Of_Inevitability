@@ -259,7 +259,10 @@ public final class ModelFx implements ParticleOptions {
     private Vec3 followOffset;
     private boolean turns;                  // turns with the entity it follows (wings, a shield)
     private boolean head;                   // ...with its HEAD: looks where it looks, nods when it nods (a crown, a halo)
+    private boolean wearerSees;             // worn on the head, and still drawn for the wearer in first person
+    private boolean whileHidden;            // drawn even while what it is stuck to is concealed
     private boolean clear;                  // special: removes models stuck to followId
+    private boolean move;                   // special: moves the free models with this tag here (ParticleShapes.moveModel)
     private String tag;                     // name for clearModels(entity, tag); "" = no name
     private List<Key> keys;                 // sorted by tick
     private Key[] timeline;                 // keys with their real start tick, in the order they apply (made when needed)
@@ -276,6 +279,7 @@ public final class ModelFx implements ParticleOptions {
         c.lifetime = lifetime; c.delay = delay; c.fadeIn = fadeIn; c.fadeOut = fadeOut; c.spin = spin;
         c.frames = frames; c.smooth = smooth;
         c.followId = followId; c.followOffset = followOffset; c.turns = turns; c.head = head; c.clear = clear; c.tag = tag;
+        c.wearerSees = wearerSees; c.whileHidden = whileHidden; c.move = move;
         c.keys = keys;
         return c;
     }
@@ -328,6 +332,18 @@ public final class ModelFx implements ParticleOptions {
     public static ModelFx clearingTag(String tag) {
         ModelFx fx = of("clear").lifetime(1).tag(tag);
         fx.clear = true;
+        return fx;
+    }
+
+    /**
+     * Special "effect" that moves the models that are NOT stuck to an entity and were given this tag to where it
+     * is played, turned to yaw/pitch/roll (see ParticleShapes.moveModel). They glide there during the next tick,
+     * the way an entity does, so a model the server moves every tick flies smoothly however it turns.
+     * Their own keys and frames keep playing (wings keep beating); the keys' offsets count from the new spot.
+     */
+    public static ModelFx moving(String tag, float yaw, float pitch, float roll) {
+        ModelFx fx = of("move").lifetime(1).tag(tag).rotation(yaw, pitch, roll);
+        fx.move = true;
         return fx;
     }
 
@@ -485,7 +501,11 @@ public final class ModelFx implements ParticleOptions {
 
     public ModelFx following(Entity entity) { return following(entity, Vec3.ZERO); }
 
-    public ModelFx notFollowing() { ModelFx c = copy(); c.followId = -1; c.followOffset = Vec3.ZERO; c.turns = false; c.head = false; return c; }
+    public ModelFx notFollowing() {
+        ModelFx c = copy(); c.followId = -1; c.followOffset = Vec3.ZERO; c.turns = false; c.head = false;
+        c.wearerSees = false; c.whileHidden = false;
+        return c;
+    }
 
     /**
      * For a model stuck to an entity: it also TURNS with it, like something the entity wears (wings, a shield).
@@ -501,6 +521,20 @@ public final class ModelFx implements ParticleOptions {
      * Use ParticleShapes.modelOnHead(...), which sets this for you.
      */
     public ModelFx turningWithHead() { ModelFx c = copy(); c.turns = true; c.head = true; return c; }
+
+    /**
+     * For a model worn on the head: the wearer sees it too in first person, instead of it being left out like a
+     * helmet. For what is held out in front of the eyes on purpose: a lance being ridden (combat/Transit), a
+     * visor, a sight. Put it far enough ahead (pose().up/forward in its keys) that it does not fill the screen.
+     */
+    public ModelFx seenByWearer() { ModelFx c = copy(); c.wearerSees = true; return c; }
+
+    /**
+     * For a model stuck to an entity: it is drawn even while that entity is concealed (status/Concealment),
+     * which hides everything stuck to it otherwise. For when the model is what the entity has turned into
+     * (someone travelling inside a flame lance) rather than something that would give them away.
+     */
+    public ModelFx shownWhileHidden() { ModelFx c = copy(); c.whileHidden = true; return c; }
 
     /**
      * A name for this model, so it can be removed on its own: ParticleShapes.clearModels(sl, entity, "ice")
@@ -589,7 +623,11 @@ public final class ModelFx implements ParticleOptions {
     public Vec3 followOffset() { return followOffset; }
     public boolean turnsWithEntity() { return turns; }
     public boolean turnsWithHead() { return turns && head; }
+    public boolean isSeenByWearer() { return wearerSees; }
+    public boolean isShownWhileHidden() { return whileHidden; }
     public boolean isClear() { return clear; }
+    /** True for the special "effect" made by moving(...): it moves other models instead of being drawn. */
+    public boolean isMove() { return move; }
     public String tagName() { return tag; }
     public List<Key> keys() { return keys; }
     /** 1 = an ordinary model; more = it is made of the models frameModel(0) .. frameModel(frameCount() - 1). */
@@ -682,7 +720,8 @@ public final class ModelFx implements ParticleOptions {
                         int auraColor, float auraSize, int auraLayers) {}
     private record Shape(Vec3 scale, Vec3 pivot, Vec3 rotation) {}
     private record Timing(int lifetime, int delay, int fadeIn, int fadeOut, float spin, int frames, boolean smooth) {}
-    private record Link(int followId, Vec3 followOffset, boolean clear, String tag, boolean turns, boolean head) {}
+    private record Link(int followId, Vec3 followOffset, boolean clear, String tag, boolean turns, boolean head,
+                        boolean wearerSees, boolean whileHidden, boolean move) {}
 
     private static final Identifier DEFAULT_MODEL =
             Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, FOLDER + "/order_hammer");
@@ -720,7 +759,10 @@ public final class ModelFx implements ParticleOptions {
             Codec.BOOL.optionalFieldOf("clear", false).forGetter(Link::clear),
             Codec.STRING.optionalFieldOf("tag", "").forGetter(Link::tag),
             Codec.BOOL.optionalFieldOf("turns", false).forGetter(Link::turns),
-            Codec.BOOL.optionalFieldOf("head", false).forGetter(Link::head)
+            Codec.BOOL.optionalFieldOf("head", false).forGetter(Link::head),
+            Codec.BOOL.optionalFieldOf("wearer_sees", false).forGetter(Link::wearerSees),
+            Codec.BOOL.optionalFieldOf("while_hidden", false).forGetter(Link::whileHidden),
+            Codec.BOOL.optionalFieldOf("move", false).forGetter(Link::move)
     ).apply(i, Link::new));
 
     private static ModelFx fromParts(Look look, Shape shape, Timing timing, Link link, List<Key> keys) {
@@ -738,6 +780,9 @@ public final class ModelFx implements ParticleOptions {
         fx.tag = link.tag();
         fx.turns = link.turns();
         fx.head = link.head();
+        fx.wearerSees = link.wearerSees();
+        fx.whileHidden = link.whileHidden();
+        fx.move = link.move();
         List<Key> sorted = new ArrayList<>(keys);
         sorted.sort((a, b) -> Integer.compare(a.tick(), b.tick()));
         fx.keys = List.copyOf(sorted);
@@ -751,7 +796,8 @@ public final class ModelFx implements ParticleOptions {
                     new Vec3(fx.pivotX, fx.pivotY, fx.pivotZ), new Vec3(fx.yaw, fx.pitch, fx.roll))),
             TIMING_CODEC.forGetter((ModelFx fx) -> new Timing(fx.lifetime, fx.delay, fx.fadeIn, fx.fadeOut, fx.spin,
                     fx.frames, fx.smooth)),
-            LINK_CODEC.forGetter((ModelFx fx) -> new Link(fx.followId, fx.followOffset, fx.clear, fx.tag, fx.turns, fx.head)),
+            LINK_CODEC.forGetter((ModelFx fx) -> new Link(fx.followId, fx.followOffset, fx.clear, fx.tag, fx.turns, fx.head,
+                    fx.wearerSees, fx.whileHidden, fx.move)),
             KEY_CODEC.listOf().optionalFieldOf("keys", List.of()).forGetter(ModelFx::keys)
     ).apply(i, ModelFx::fromParts));
 
@@ -791,6 +837,9 @@ public final class ModelFx implements ParticleOptions {
         buffer.writeUtf(tag);
         buffer.writeBoolean(turns);
         buffer.writeBoolean(head);
+        buffer.writeBoolean(wearerSees);
+        buffer.writeBoolean(whileHidden);
+        buffer.writeBoolean(move);
         int count = Math.min(keys.size(), MAX_KEYS);
         buffer.writeVarInt(count);
         for (int i = 0; i < count; i++) {
@@ -838,6 +887,9 @@ public final class ModelFx implements ParticleOptions {
         fx.tag = buffer.readUtf();
         fx.turns = buffer.readBoolean();
         fx.head = buffer.readBoolean();
+        fx.wearerSees = buffer.readBoolean();
+        fx.whileHidden = buffer.readBoolean();
+        fx.move = buffer.readBoolean();
         int count = Math.min(buffer.readVarInt(), MAX_KEYS); // safety cap
         List<Key> keys = new ArrayList<>(count);
         for (int i = 0; i < count; i++) {

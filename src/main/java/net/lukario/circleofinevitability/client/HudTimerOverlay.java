@@ -29,6 +29,9 @@ public class HudTimerOverlay {
     private static final int LAST_TICKS = 100;
     private static final int LAST_COLOR = 0xFF5555;
     private static final int LABEL_COLOR = 0xD0D0D0;
+    /** A column of timers that would go higher than this starts a new column to its right (many stolen abilities). */
+    private static final int COLUMN_TOP = 4;
+    private static final int COLUMN_GAP = 8;
 
     private static final class Timer {
         String label;
@@ -88,12 +91,20 @@ public class HudTimerOverlay {
 
         Font font = minecraft.font;
         int x = guiGraphics.guiWidth() / 2 + 91 + GAP_FROM_HOTBAR;
-        int y = guiGraphics.guiHeight() - TIMER_HEIGHT;      // the lowest timer stands beside the hotbar
+        int lowest = guiGraphics.guiHeight() - TIMER_HEIGHT; // the lowest timer stands beside the hotbar
+        int y = lowest;
+        int columnWidth = 0;                                 // the widest word in the column being drawn
 
         for (Timer timer : TIMERS.values()) {
+            if (y < COLUMN_TOP && y != lowest) {             // the column reached the top of the screen: start another to its right
+                x += columnWidth + COLUMN_GAP;
+                y = lowest;
+                columnWidth = 0;
+            }
             int color = timer.ticksLeft <= LAST_TICKS ? LAST_COLOR : timer.color;
             guiGraphics.text(font, timer.label, x, y, 0xFF000000 | LABEL_COLOR, true);
             guiGraphics.text(font, time(timer.ticksLeft), x, y + LINE_HEIGHT, 0xFF000000 | (color & 0xFFFFFF), true);
+            columnWidth = Math.max(columnWidth, Math.max(font.width(timer.label), font.width(time(timer.ticksLeft))));
             y -= TIMER_HEIGHT + 2;                           // the next one above it
         }
     }

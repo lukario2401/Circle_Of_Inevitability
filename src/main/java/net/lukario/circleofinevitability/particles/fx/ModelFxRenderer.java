@@ -138,6 +138,18 @@ public final class ModelFxRenderer {
     }
 
     /**
+     * Moves the models that are not stuck to an entity and carry this tag (ModelFx.moving). A tag that names no
+     * model here (it has not arrived yet, or it is already gone) changes nothing.
+     */
+    static void moveTagged(String tag, double x, double y, double z, float yaw, float pitch, float roll) {
+        if (tag.isEmpty()) return;
+        for (ModelFxParticle particle : ACTIVE) {
+            if (particle.fx().followsEntity() || !tag.equals(particle.fx().tagName()) || !particle.isAlive()) continue;
+            particle.steerTo(x, y, z, yaw, pitch, roll);
+        }
+    }
+
+    /**
      * Tells the particle engine how to draw MODELS. Called once from ClientParticleHandler; never throws.
      * If it fails, the models keep ticking but are not drawn (ModelFxParticle then stays NO_RENDER).
      */
@@ -175,9 +187,11 @@ public final class ModelFxRenderer {
             float time = particle.time(partialTick);
             if (time < 0 || time > fx.lifetimeTicks()) continue;
             // what is stuck to someone concealed is not drawn either: it would give them away (see status/Concealment)
-            if (fx.followsEntity() && ClientConcealment.isHidden(fx.followId())) continue;
+            // (unless the model is what they turned into: ModelFx.shownWhileHidden())
+            if (fx.followsEntity() && !fx.isShownWhileHidden() && ClientConcealment.isHidden(fx.followId())) continue;
             // what you wear on your own head is not drawn in first person, like a helmet: it would hang in your face
-            if (fx.turnsWithHead() && !camera.isDetached() && camera.entity() != null
+            // (unless it is held out in front of the eyes on purpose: ModelFx.seenByWearer())
+            if (fx.turnsWithHead() && !fx.isSeenByWearer() && !camera.isDetached() && camera.entity() != null
                     && camera.entity().getId() == fx.followId()) continue;
 
             ModelFx.Pose pose = fx.poseAt(time);
@@ -199,12 +213,13 @@ public final class ModelFxRenderer {
                         .translate(0f, -neck, 0f)
                         .rotateX(rad(-particle.nod(partialTick)))
                         .translate(0f, neck, 0f)
-                        .rotateY(rad(-fx.yaw()));
+                        .rotateY(rad(-particle.yaw(partialTick)));
             } else {
-                matrix.rotateY(rad(180f - fx.yaw() - particle.turn(partialTick)));
+                matrix.rotateY(rad(180f - particle.yaw(partialTick) - particle.turn(partialTick)));
             }
-            matrix.rotateX(rad(-fx.pitch()))
-                    .rotateZ(rad(-fx.roll()))
+            // (particle.yaw/pitch/roll = the ModelFx's own, or the ones the server last moved it to: ModelFx.moving)
+            matrix.rotateX(rad(-particle.pitch(partialTick)))
+                    .rotateZ(rad(-particle.roll(partialTick)))
                     // keyframe: offset (right, up, forward = -Z), then rotation around the pivot
                     .translate(pose.right(), pose.up(), -pose.forward())
                     .rotateY(rad(-pose.yaw()))

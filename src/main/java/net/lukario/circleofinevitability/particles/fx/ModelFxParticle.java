@@ -22,6 +22,14 @@ public class ModelFxParticle extends Particle {
     private final ClientLevel clientLevel;
     private long lastTickTime;
 
+    // Moved by the server (ModelFx.moving / ParticleShapes.moveModel): where it is going this tick and how it is
+    // turned, like an entity. Until the first move it stands where it was played, turned the way its ModelFx says.
+    private boolean steered;
+    private boolean hasNext;
+    private double nextX, nextY, nextZ;
+    private float yawO, yawNow, pitchO, pitchNow, rollO, rollNow;
+    private float nextYaw, nextPitch, nextRoll;
+
     protected ModelFxParticle(ClientLevel level, double x, double y, double z, ModelFx fx) {
         super(level, x, y, z);
         this.fx = fx;
@@ -34,8 +42,17 @@ public class ModelFxParticle extends Particle {
         this.zd = 0;
         this.lastTickTime = level.getGameTime();
 
+        this.yawO = this.yawNow = fx.yaw();
+        this.pitchO = this.pitchNow = fx.pitch();
+        this.rollO = this.rollNow = fx.roll();
+
         if (fx.isClear()) {
             ModelFxRenderer.clearFollowing(fx.followId(), fx.tagName());
+            this.remove();
+            return;
+        }
+        if (fx.isMove()) {
+            ModelFxRenderer.moveTagged(fx.tagName(), x, y, z, fx.yaw(), fx.pitch(), fx.roll());
             this.remove();
             return;
         }
@@ -59,6 +76,17 @@ public class ModelFxParticle extends Particle {
         this.yo = this.y;
         this.zo = this.z;
         this.lastTickTime = clientLevel.getGameTime();
+        this.yawO = this.yawNow;
+        this.pitchO = this.pitchNow;
+        this.rollO = this.rollNow;
+        if (hasNext) {
+            // glides to where the server put it during this tick (drawn between xo and x, like an entity)
+            hasNext = false;
+            moveTo(new Vec3(nextX, nextY, nextZ));
+            this.yawNow = nextYaw;
+            this.pitchNow = nextPitch;
+            this.rollNow = nextRoll;
+        }
         if (this.age++ >= this.lifetime) {
             this.remove();
             return;
@@ -93,10 +121,38 @@ public class ModelFxParticle extends Particle {
         return ModelFxRenderer.isRegistered() ? ModelFxRenderer.MODELS : ParticleRenderType.NO_RENDER;
     }
 
+    /**
+     * The server moved it (ModelFx.moving): it gets there during the next tick. The angles are taken the short way
+     * round (from 170 to -170 turns 20 degrees, not 340).
+     */
+    void steerTo(double x, double y, double z, float yaw, float pitch, float roll) {
+        steered = true;     // from now on the angles come from the server (they start from what it showed until now)
+        nextX = x;
+        nextY = y;
+        nextZ = z;
+        nextYaw = yawNow + Mth.wrapDegrees(yaw - yawNow);
+        nextPitch = pitchNow + Mth.wrapDegrees(pitch - pitchNow);
+        nextRoll = rollNow + Mth.wrapDegrees(roll - rollNow);
+        hasNext = true;
+    }
+
     // ---------- used by ModelFxRenderer ----------
 
     ModelFx fx() {
         return fx;
+    }
+
+    /** How it is turned this frame: its ModelFx's yaw, or (when the server moves it) the yaw it was last given. */
+    float yaw(float partialTick) {
+        return steered ? Mth.lerp(partialTick, yawO, yawNow) : fx.yaw();
+    }
+
+    float pitch(float partialTick) {
+        return steered ? Mth.lerp(partialTick, pitchO, pitchNow) : fx.pitch();
+    }
+
+    float roll(float partialTick) {
+        return steered ? Mth.lerp(partialTick, rollO, rollNow) : fx.roll();
     }
 
     /** Ticks since it appeared (after the delay); negative = not visible yet. */
