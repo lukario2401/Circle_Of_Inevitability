@@ -407,6 +407,24 @@ These are in `models/model_fx/` and any Pathway can use them. Sizes are at `.sca
 | `pale_emperor/wraith` | A hooded spirit of the dead, 2.7 blocks tall: a skull deep in the hood with lights for eyes, a robe worn to rags, clawed arms of bare bone. 3 steps: 0 = arms hanging, 2 = reaching out | under it `(8, -16, 8)` | `.frames(3).smooth()`. Face = front |
 | `pale_emperor/death_sigil` | A flat seal for the ground, 3 blocks wide: a ring of runes, a feathered serpent biting its tail, eight feathers and an hourglass | default (its middle) | `.glow().unshaded().seeThrough()` |
 | `pale_emperor/death_sigil_ring`, `death_sigil_core` | The outer and the inner half of that seal | default | Play both and give them opposite `.spin(...)` |
+| `demoness/mirror` | A tall standing mirror, frame of blackened silver with a violet gem, 1.6 blocks wide and 2 tall | default (the middle of its foot) | Front = the glass; the back is glass too. `.glow()` |
+| `demoness/mirror_shard` | A jagged shard of dark mirror stuck in the ground, 1.8 blocks tall | default (where it meets the ground) | 3 px of it are under the ground |
+| `demoness/mirror_shard_glow` | Only the glowing cracks of `mirror_shard`, a hair bigger | default | Play it over the shard, `.glow().unshaded().seeThrough()`; its `.color(...)` alpha = how charged |
+| `demoness/glass_shard` | One sliver of a broken mirror, 0.7 blocks, tip up | its middle `(8, 5, 8)` | For `modelAlong`: slivers flying out |
+| `demoness/dagger` | The Assassin's dagger: black steel, a violet edge, 1.75 blocks, tip up | the grip `(8, 0, 8)` | For `modelAlong` |
+| `demoness/black_flame` | A ball of black flame with violet tongues, animated, 0.9 blocks | `(8, 8, 8)` | A core with see-through shells. `.glow().unshaded().seeThrough()` |
+| `demoness/black_flame_pillar` | Black flames, 1 block wide and 2 tall, animated | default (the base) | Like `flame_pillar`: stretch with `.scale(w, h / 2, w)` |
+| `demoness/web` | A round spider web lying flat, 1 block wide | default (its middle) | White: tint it. `modelAlong` stands it against a wall |
+| `demoness/cocoon` | Silk wrapping round something 2 blocks tall, in 3 steps: 0 = loose rings floating round, 2 = wrapped shut | default (its foot) | `.frames(3).smooth()` |
+| `demoness/plague_sigil`, `curse_sigil` | Flat seals 1 block wide: a sickly green flower of rot / a crimson eye in a ring of thorns | default | `.glow().unshaded().seeThrough()` |
+| `demoness/black_rose` | A black rose with crimson edges, 1 block tall, in 3 steps: 0 = a closed bud, 2 = open | the foot of its stem `(8, 0, 8)` | `.frames(3).smooth()` |
+| `demoness/fissure`, `frost` | Flat: cracks glowing red / frost spreading, 1 block wide | default | `.glow().unshaded().seeThrough()`, scale to the width |
+| `demoness/rock` | A lump of rock split open, red in its cracks, 0.6 blocks | `(8, 8, 8)` | |
+| `demoness/hailstone` | A jagged lump of hail, 0.4 blocks | `(8, 8, 8)` | `.glow().seeThrough()` |
+| `demoness/tornado` | A funnel of wind, animated, 2 blocks tall and 2 wide at the top | default (its foot) | `.glow().unshaded().seeThrough().spin(...)` |
+| `demoness/plague_cloud` | A cloud of plague, murky green and black, 1.25 blocks | `(8, 8, 8)` | `.glow().unshaded().seeThrough()` |
+| `demoness/lightning` | A red lightning bolt with two forks, 2 blocks tall | default = where it strikes | `.glow().unshaded().seeThrough()` |
+| `demoness/blood_sky` | A swirl of dark red cloud seen from below, 1 block wide, fading at its rim | default | Scale it up a lot and hang it high. `.color(...)` makes storm clouds of it |
 
 The fire and light ones (`orb`, `thread` and `projection` too) want `.glow().unshaded().seeThrough()`; the solid ones `.glow()`.
 
@@ -462,6 +480,22 @@ Each display also has a `..._TICKS` number: how long it lasts.
 The effects themselves are public constants (`PaleEmperorFx.SKULL`, `RIB_CAGE`, `COFFIN`, `WING_RIGHT` ...). To change one, copy it into your Pathway class and edit it, or adjust a copy on the spot: `PaleEmperorFx.SKULL.scale(4f)`.
 
 The wings and the crown are worn: they move with the entity they are on. The wings turn when its body turns (`modelOnTurning`); the crown follows its head (`modelOnHead`).
+
+### Demoness: ready-made displays
+
+`DemonessFx` (next to the other classes) does the same for the Demoness (Assassin) class: one display per ability of the design doc, visual only. `/demonessfx all` plays them all in a ring 32 blocks around you, `/demonessfx tornado` just one (TAB for the names).
+
+| Key | Calls | Ticks to hang the ability on |
+|---|---|---|
+| 1 Fatal Step | `vanish`, `appear`, `backstab(sl, attacker, target)`; sneak: `placeShard`, `shardCharge(..., charge 0..1, tag)` every second, `shardExplode(..., power, tag)` | `BACKSTAB_HITS`, `SHARD_RISES` |
+| 2 Black Flame | `blackFlameBolt(sl, from, to)` (returns the tick it lands), `blackFlameHit`, `burn(sl, entity, ticks, tag)`, `creep(sl, from, to)`; sneak: `mirrorSubstitute`, `mirrorShatter(sl, ground, attackerPos, tag)` | `CREEP_TICKS`, `SLIVERS_FLY` |
+| 3 Mirror World | `mirrorEnter(sl, player)`, `mirrorExit(sl, ground, yaw)`; sneak: `mirrorReturn` | `MIRROR_ENTERED` |
+| 4 Silk wheel | `silkSnare` (returns the landing tick) / `snareWeb` / `snareCatch`, `webSwing` / `webPull`, `tripWeb` / `tripSnap`, `cocoon(sl, entity, ticks, mending, tag)`, `threadsOfLife` / `servantRise`, `webOfFate` / `fateTangle` / `fateLink` / `fatePull` / `fateSnap` | `COCOON_SHUT`, `FATE_OPENS`, `FATE_PULL_TICKS` |
+| 5 Plague | `plagueMark(sl, entity, ticks, stage, tag)`, `plagueJump`, `plagueBloom`; sneak: `curseMark`, `curseCharge(sl, entity, stored 0..1)`, `curseRelease` | `PLAGUE_JUMP_TICKS`, `CURSE_RELEASE_HITS` |
+| 6 Unaging | `unagingWard(sl, entity, ticks, tag)`, `unagingRevive(sl, entity, tag)`; sneak: `shardExplode` on each placed shard | `REVIVE_BLOOMS` |
+| 7 Catastrophe wheel | `earthquake`, `hailstorm` / `hailstone`, `tornado` + `tornadoAt`, `iceAge`, `blackDeath` / `blackDeathGrow` / `blackDeathRadius`, `blackFlameRain` / `blackFlameDrop`, `doomsdaySky` / `meteorDrop` / `lightningStrike` | `QUAKE_SPLITS`, `HAIL_FALLS`, `TORNADO_FORMS`, `ICE_SPREADS`, `FLAME_FALLS`, `METEOR_FALLS`, `LIGHTNING_HITS` |
+
+The Demoness models are not drawn in Blockbench: `tools/model_fx/demoness_models.py` builds the cubes and paints the textures in code (`python3 tools/model_fx/demoness_models.py`, or name some: `... web cocoon`). It also renders a preview of each into `build/model_fx_preview/`. `tools/model_fx/fxgen.py` is the toolkit it uses, for generated models of other classes. The files it writes open in Blockbench like any other.
 
 ## Tricks worth copying
 
