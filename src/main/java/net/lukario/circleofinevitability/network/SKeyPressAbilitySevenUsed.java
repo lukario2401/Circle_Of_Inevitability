@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseCatastrophe;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsCosmicPlague;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFogOfWar;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorWraiths;
@@ -50,6 +51,7 @@ public class SKeyPressAbilitySevenUsed {
         attendantOfMysteriesGrafting(player,level,serverLevel,false);
         paleEmperorWraiths(player,level,serverLevel,false);
         conquerorFogOfWar(player,level,serverLevel,false);
+        apocalypseCatastrophe(player,level,serverLevel,false);
 
 
     }

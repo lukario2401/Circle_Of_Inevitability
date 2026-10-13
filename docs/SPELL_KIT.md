@@ -20,6 +20,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A wave that spreads and hits each enemy as it gets there | [`Spells.wave`](#1-spells-aiming-and-enemies) + `SpellFx.steadyRing` | `combat/` |
 | Everyone the caster can see, or everyone in a cone | [`Spells.enemiesInSight`, `enemiesInCone`](#1-spells-aiming-and-enemies) | `combat/` |
 | Teleport to where the caster looks | [`Spells.blinkSpot`](#1-spells-aiming-and-enemies) | `combat/` |
+| Draw someone along a line to a point, fast and straight (a grappling line, a whip that yanks, a web pulling everyone in) | [`Reel`](#reel-drawn-along-a-line) | `combat/` |
 | Travel inside something you throw and step out where it lands (merge with a flame, ride a bolt), straight or steered with your look | [`Transit`](#transit-travel-inside-a-shot) | `combat/` |
 | A model that flies into an enemy and cannot miss | [`SpellFx.homing`](#models-on-an-entity) | `combat/` |
 | Count hits, stacks or charges on an entity, and show them | [`Marks`](#marks) + [`SpellFx.overHead`](#models-on-an-entity) | `status/` |
@@ -36,6 +37,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | "The next hit does not land, this happens instead" | [`Substitute`](#substitute) | `status/` |
 | "My next normal hit is special" (a backstab, a charged blow) | [`EmpoweredHit`](#empoweredhit) | `status/` |
 | Write down everything someone takes for a while, then hit them with all of it at once (a curse that comes due) | [`StoredDamage`](#storeddamage) | `status/` |
+| Nothing heals them for a while (frostbite, a festering wound) | [`NoHeal`](#noheal) | `status/` |
 | Take over a mob | [`Marionette`](#marionette) | `status/` |
 | Vanish: unseen, untargeted, unhurt | [`Concealment`](#concealment) | `status/` |
 | Leave your body and live inside a mob or a player, which carries you | [`Parasite`](#parasite) | `status/` |
@@ -43,6 +45,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
+| One key, many spells: a round menu where each has its own Sequence, cost and cooldown, and a sneak press casts the last pick again | [`AbilityWheel`](#abilitywheel-many-spells-on-one-key) | `menu/` |
 | Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
 | Cast an ability without its Sequence and without its cost | [`Beyonder.castUnbound`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder/` |
 | Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
@@ -480,6 +483,31 @@ Used in `plague` in `Apocalypse.java`.
 
 ---
 
+## Reel: drawn along a line
+
+An entity is drawn straight to a point, fast, the way a grappling line pulls: a player swinging to a ledge, a mob yanked in, everyone tangled dragged to the middle.
+
+```java
+FallGuard.protect(player, 200);                         // no fall damage when they land
+Reel.in(player, () -> anchor)                           // the point, asked again every tick (null = let go)
+        .speed(1.6)                                     // blocks per tick at most (default 1.4)
+        .stopAt(1.2)                                    // close enough: arrived (default 1.2)
+        .lasts(30)                                      // lets go after this long anyway (default 40)
+        .onArrive(() -> Spells.sound(sl, anchor, SoundEvents.SPIDER_STEP, 1f, 1f))
+        .start(sl);
+
+Reel.in(mob, () -> Spells.casterStillHere(player, sl) ? player.position() : null).speed(1.2).start(sl);   // to a moving point
+```
+
+- It goes straight at the point, up and down too, slowing a little as it gets close. Every tick its fall counter is reset.
+- It does not go through walls: it lets go once it has not moved for `Reel.STUCK_TICKS` ticks (6).
+- It stops when the entity dies or leaves the level. `.onEnd(() -> ...)` runs however it ended.
+- `Spells.pull` is the soft version: sideways only, call it again and again for a steady drag (a tornado drawing things in).
+
+Used in `webSwing` and `drawInFate` in `Apocalypse.java`.
+
+---
+
 ## Transit: travel inside a shot
 
 The caster becomes part of a `Shot` they throw, travels with it and steps out where it lands. A flame they merge with, a bolt they ride, a card they fold into.
@@ -691,6 +719,17 @@ StoredDamage.start(target, player, 200,
 - `StoredDamage.deal(victim, owner, amount)` hits as magic from the owner: armor does not take its share a second time, and damage dealt this way is never written down, so a curse does not feed on its own payment.
 - The part that comes due can wait for a look of its own: `Later.run(level, 4, () -> StoredDamage.deal(...))` (`curse` in `Apocalypse.java`).
 - One per entity: starting another replaces it. It ends with nothing due when the entity dies. Not saved.
+
+### NoHeal
+
+Nothing heals the entity for a while: food, regeneration, potions, a mob's own healing.
+
+```java
+NoHeal.apply(target, 100);         // 5 seconds; applying it again only ever makes it last longer
+NoHeal.isApplied(entity);   NoHeal.ticksLeft(entity);   NoHeal.remove(target);
+```
+
+Health set straight away (`setHealth`, a `DeathWard` bringing someone back) is not healing and still works. Saved with the entity. Used by the Hopeless Ice Age (`iceAge` in `Apocalypse.java`).
 
 ### Marionette
 
@@ -955,6 +994,57 @@ These were already there and go well with the rest: `Root.apply(target, 80, Root
 
 ---
 
+## AbilityWheel: many spells on one key
+
+A round menu of spells on one key. Each entry has its own Sequence, spirituality cost and cooldown, all written under its icon; entries above the player's Sequence are greyed out. The last pick is saved on the player, so a sneak press casts it again without the screen.
+
+```java
+private static final AbilityWheel SPELLS = AbilityWheel.create("my_pathway_spells", "Spells")
+        .entry("fire",  "my_pathway/fire",  "Fireball", 6, 1250, 40,  MyPathway::fireball)
+        .entry("storm", "my_pathway/storm", "Storm",    4, 5000, 200, MyPathway::storm)
+        .onCast((player, sl, entry) -> addStack(player, sl));          // after every cast that went off
+
+public static void myPathwaySpells(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return;
+    if (!Beyonder.hasSequence(player, 6)) return;                      // the key's own Sequence
+    if (player.isShiftKeyDown()) SPELLS.quickCast(player);             // the last pick (none yet: the wheel)
+    else SPELLS.open(player);
+}
+
+private static AbilityWheel.Result fireball(ServerPlayer player, ServerLevel sl) {
+    LivingEntity target = Spells.aimEnemy(player, sl, 24);
+    if (target == null) {
+        player.sendSystemMessage(Component.literal("No one stands before you."));
+        return AbilityWheel.Result.REFUSED;                            // nothing is taken
+    }
+    Spells.strike(player, target, 20f);
+    return AbilityWheel.Result.DONE;                                   // the cost is taken, the cooldown starts
+}
+```
+
+| Part | What it does |
+|---|---|
+| `.entry(key, icon, name, sequence, cost, cooldownTicks, cast)` | One spell. `key` names it in the save data: keep it once players have used it. `icon` as for `AbilityMenu` (a PNG under `textures/gui/`, no `.png`) |
+| `.free(player -> ...)` | After an entry: while this says true, that entry skips the cost and cooldown checks (the second press of a two-part spell) |
+| `.onCast((player, sl, entry) -> ...)` | Runs after every cast that returned `DONE` |
+| `.radius(pixels)` | How far from the middle of the screen the icons sit (default 72) |
+| `open(player)`, `quickCast(player)`, `cast(player, entry)` | Show it / cast the last pick / cast one entry with every check |
+| `lastPick(player)`, `entry(key)`, `entries()`, `unlocked(player)`, `cooldownLeft(player, entry)`, `reset(player)` | Asking about it |
+
+What the cast returns:
+
+- `DONE`: it went off. The cost is taken, the cooldown starts, `onCast` runs.
+- `FREE`: it went off but costs nothing and starts no cooldown (Trip-web's second end, Web of Fate's recast).
+- `REFUSED`: it could not (no target, no room). Nothing is taken; say why in the cast.
+
+The wheel checks the Sequence, the cooldown and that the spirituality is there **before** the cast and takes it **after**, so a cast only checks what is its own. Cast through `Beyonder.castUnbound` (a stolen ability) there is no screen: the thief's last pick, or a random entry, goes off at once. The last pick and the cooldowns are saved on the player.
+
+It is built on `AbilityMenu` (`menu/`), which any menu can use for the same look: `.ring(radius)` lays its icons round a circle, and `.details(player -> ...)` and `.lockedWhen(player -> ...)` after an option give it a second line and grey it out.
+
+Used for keys 4 and 7 in `Apocalypse.java` (`SILKS`, `CATASTROPHES`). A new disaster there is one line in `DISASTERS` and a method.
+
+---
+
 ## Another Pathway's abilities: listing, casting and stealing them
 
 Three small parts. Worm Of Time's Theft (`wormOfTimeAbility2` in `WormOfTime.java`) uses all three.
@@ -1148,6 +1238,12 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 | `Contagion` (a plague that jumps on, stronger each time) | `plague` in `Apocalypse.java` |
+| `AbilityWheel` (two wheels of spells, a last pick that the fifth stack reuses) | `SILKS`, `CATASTROPHES`, `lastCatastrophe` in `Apocalypse.java` |
+| `Zone` that holds once then slows (a snare), that gets worse every second until frozen, one whose size grows with every victim | `laySnare`, `iceAge`, `blackDeath` in `Apocalypse.java` |
+| A line between two points that springs on the first enemy through it, tied with two casts | `tripWeb`, `watchTripLine` in `Apocalypse.java` |
+| `Reel` (a grappling line, a pull to the middle), `DamageLink.share` growing as the web catches more | `webSwing`, `tangle`, `drawInFate` in `Apocalypse.java` |
+| A drain that heals the caster, and a mob it would kill rising as a `Marionette` instead | `drain`, `riseAsServant` in `Apocalypse.java` |
+| Things falling near random enemies in a circle (meteors, lightning), a moving tornado that lifts and throws | `fallingSpot`, `doomFalls`, `tornadoTick` in `Apocalypse.java` |
 | `StoredDamage` (a curse that comes due) | `curse` in `Apocalypse.java` |
 | `EmpoweredHit` (a backstab), a teleport behind someone that faces them | `fatalStep`, `spotBehind` in `Apocalypse.java` |
 | `Substitute` with a mirror that rises and shatters at the attacker | `readyMirrorSubstitute`, `mirrorEscape` in `Apocalypse.java` |

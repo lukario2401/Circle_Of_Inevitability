@@ -25,6 +25,10 @@ public class AbilityMenuScreen extends Screen {
     private static final int LABEL_COLOR = 0xFFD8D8E0;
     private static final int LABEL_HOVER_COLOR = 0xFFFFE08A;
     private static final int TITLE_COLOR = 0xFFFFE08A;
+    private static final int DETAIL_COLOR = 0xFFA8A8B8;
+    private static final int LOCKED_COLOR = 0xFF6A6A72;
+    private static final float LOCKED_SHADE = 0.3f;
+    private static final float DETAIL_SCALE = 0.75f;
 
     private final String menuId;
     private final int iconSize;
@@ -52,6 +56,7 @@ public class AbilityMenuScreen extends Screen {
     private int hoveredIndex(double mouseX, double mouseY) {
         for (int i = 0; i < options.size(); i++) {
             COpenAbilityMenuPacket.Option option = options.get(i);
+            if (option.locked()) continue;                      // greyed out: cannot be hovered or picked
             double dx = mouseX - (width / 2.0 + option.x());
             double dy = mouseY - (height / 2.0 + option.y());
             if (Math.abs(dx) <= iconSize / 2.0 && Math.abs(dy) <= iconSize / 2.0) return i;
@@ -84,7 +89,7 @@ public class AbilityMenuScreen extends Screen {
     public boolean keyPressed(KeyEvent event) {
         int index = event.key() - GLFW.GLFW_KEY_1; // number keys 1..9 pick options
         if (index >= 0 && index < 9 && index < options.size()) {
-            choose(index);
+            if (!options.get(index).locked()) choose(index);
             return true;
         }
         return super.keyPressed(event); // Esc closes
@@ -135,7 +140,7 @@ public class AbilityMenuScreen extends Screen {
             guiGraphics.pose().translate(iconX, iconY);
             if (isHovered) guiGraphics.pose().scale(HOVER_SCALE, HOVER_SCALE);
 
-            float shade = isHovered ? 1f : 0.8f;
+            float shade = option.locked() ? LOCKED_SHADE : isHovered ? 1f : 0.8f;
             int half = iconSize / 2;
             // 26.2: no setColor; the tint is the blit's last argument
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED, option.icon(), -half, -half, 0f, 0f, iconSize, iconSize,
@@ -145,7 +150,17 @@ public class AbilityMenuScreen extends Screen {
             // label + number key under the icon
             String label = (i + 1) + ". " + option.label();
             int labelY = iconY + (int) (half * (isHovered ? HOVER_SCALE : 1f)) + 4;
-            guiGraphics.centeredText(font, label, iconX, labelY, isHovered ? LABEL_HOVER_COLOR : LABEL_COLOR);
+            int labelColor = option.locked() ? LOCKED_COLOR : isHovered ? LABEL_HOVER_COLOR : LABEL_COLOR;
+            guiGraphics.centeredText(font, label, iconX, labelY, labelColor);
+
+            // the small second line: cost, cooldown, what it needs
+            if (!option.detail().isEmpty()) {
+                guiGraphics.pose().pushMatrix();
+                guiGraphics.pose().translate(iconX, labelY + 10);                    // under the 9 px tall label
+                guiGraphics.pose().scale(DETAIL_SCALE, DETAIL_SCALE);
+                guiGraphics.centeredText(font, option.detail(), 0, 0, option.locked() ? LOCKED_COLOR : DETAIL_COLOR);
+                guiGraphics.pose().popMatrix();
+            }
         }
     }
 }

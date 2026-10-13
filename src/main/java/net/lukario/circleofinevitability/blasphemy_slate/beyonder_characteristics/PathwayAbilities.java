@@ -146,17 +146,21 @@ public final class PathwayAbilities {
             new Ability("Conqueror", 7, "Fog of War", 3, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorFogOfWar(player, level, sl, true)),
 
-            // ---- Apocalypse (keys 4 and 7, the silk and catastrophe wheels, are not made yet) ----
+            // ---- Apocalypse ----
             new Ability("Apocalypse", 1, "Fatal Step", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> Apocalypse.apocalypseFatalStep(player, level, sl, true)),
             new Ability("Apocalypse", 2, "Black Flame", 8, SNEAK, STEALABLE,
                     (player, level, sl) -> Apocalypse.apocalypseBlackFlame(player, level, sl, true)),
             new Ability("Apocalypse", 3, "Mirror World", 7, SNEAK, OWN_PATHWAY_ONLY,      // the same key is the way back out
                     (player, level, sl) -> Apocalypse.apocalypseMirrorWorld(player, level, sl, true)),
+            new Ability("Apocalypse", 4, "Silk Weaver", 6, SNEAK, STEALABLE,            // stolen: no wheel, its last (or a random) silk
+                    (player, level, sl) -> Apocalypse.apocalypseSilkWeaver(player, level, sl, true)),
             new Ability("Apocalypse", 5, "Plague", 5, SNEAK, STEALABLE,
                     (player, level, sl) -> Apocalypse.apocalypsePlague(player, level, sl, true)),
             new Ability("Apocalypse", 6, "Unaging", 4, SNEAK, STEALABLE,
-                    (player, level, sl) -> Apocalypse.apocalypseUnaging(player, level, sl, true)));
+                    (player, level, sl) -> Apocalypse.apocalypseUnaging(player, level, sl, true)),
+            new Ability("Apocalypse", 7, "Catastrophe", 3, SNEAK, STEALABLE,            // stolen: no wheel, its last (or a random) disaster
+                    (player, level, sl) -> Apocalypse.apocalypseCatastrophe(player, level, sl, true)));
 
     private PathwayAbilities() {}
 

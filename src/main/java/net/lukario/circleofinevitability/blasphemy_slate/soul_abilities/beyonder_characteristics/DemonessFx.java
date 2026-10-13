@@ -60,6 +60,7 @@ import java.util.function.Supplier;
  *   5 Plague              plagueMark, plagueJump, plagueBloom | sneak: curseMark, curseCharge, curseRelease
  *   6 Unaging             unagingWard, unagingRevive          | sneak: shardExplode on every placed shard
  *   7 Catastrophe         earthquake, hailstorm, tornado, iceAge, blackDeath, blackFlameRain, doomsdaySky
+ *                         (rainCloud and bloodSky: only the sky of the last two, to drop what falls yourself)
  */
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
 public final class DemonessFx {
@@ -1237,10 +1238,7 @@ public final class DemonessFx {
      */
     public static void doomsdaySky(ServerLevel sl, Vec3 ground, double radius, int ticks, int perSecond) {
         int all = Math.max(40, ticks);
-        ModelFx sky = SKY.scale((float) (radius * 3.5)).lifetime(all).fade(30, 30).spin(0.4f);
-        ParticleShapes.model(sl, sky, ground.add(0, 22, 0), 0f, 0f, 0f);
-        ModelFx glow = SpellFx.RUNE_CIRCLE.color(0x70E0203A).scale((float) (radius * 2.0)).lifetime(all).fade(20, 20).spin(-0.5f);
-        ParticleShapes.model(sl, glow, ground.add(0, 0.05, 0), 0f, 0f, 0f);
+        bloodSky(sl, ground, radius, all);
         RandomSource random = sl.getRandom();
         int every = Math.max(1, 20 / Math.max(1, perSecond));
         for (int t = 20; t < all - 20; t += every) {
@@ -1252,6 +1250,27 @@ public final class DemonessFx {
                 else lightningStrike(sl, spot);
             });
         }
+    }
+
+    /**
+     * Only the sky of the Doomsday: a swirling dark red sky over 'ground' and a red circle on the ground under it,
+     * 'radius' wide, for 'ticks' ticks, with nothing falling. Drop what falls yourself (meteorDrop,
+     * blackFlameDrop, lightningStrike) where you want it to hit.
+     */
+    public static void bloodSky(ServerLevel sl, Vec3 ground, double radius, int ticks) {
+        int all = Math.max(40, ticks);
+        ModelFx sky = SKY.scale((float) (radius * 3.5)).lifetime(all).fade(30, 30).spin(0.4f);
+        ParticleShapes.model(sl, sky, ground.add(0, 22, 0), 0f, 0f, 0f);
+        ModelFx glow = SpellFx.RUNE_CIRCLE.color(0x70E0203A).scale((float) (radius * 2.0)).lifetime(all).fade(20, 20).spin(-0.5f);
+        ParticleShapes.model(sl, glow, ground.add(0, 0.05, 0), 0f, 0f, 0f);
+    }
+
+    /**
+     * Only the cloud of the Black Flame Rain: a violet-black cloud over 'ground' for 'ticks' ticks, 'radius' being
+     * the width of the rain under it. Drop the flames yourself with blackFlameDrop where they should hit.
+     */
+    public static void rainCloud(ServerLevel sl, Vec3 ground, double radius, int ticks) {
+        cloudOver(sl, ground, radius * 2.8, 19.0, ticks, 0xFF6A3090);
     }
 
     // =====================================================================================
