@@ -843,6 +843,12 @@ Luka had wired key 5 (SKeyPressAbilityFiveUsed, PathwayAbilities) to `conquerorC
 ## Marks: one player's marks, dropping one at a time (2026-10-13; docs/SPELL_KIT.md, "Marks")
 For Cull and other finishers that do more the more marks an enemy carries. `status/Marks` gets overloads with an owner: `add(target, owner, name, max, dropEvery)` (and with an amount), `count`, `take`, `clear`, `ticksLeft`, `ticksToNextDrop`. Each owner has his own counter (stored as `name@uuid`), one mark wears off every `dropEvery` ticks after the last add (worked out from the time, nothing ticks), and empty counters are dropped on the next add. Nothing adds marks by itself and nothing shows them. The old shared marks work as before.
 
+## Conqueror abilities 6 and 7: Galvanization and Fog of War (2026-10-13)
+Every Conqueror key is built now. The numbers are under "Ability 6" and "Ability 7" at the top of Conqueror.java.
+- 6 Galvanization (N, Sequence 4). Normal: an iron mantle (`ConquerorFx.galvanize`) for GALV_TICKS; cast again to take it off. While it is worn (`Conqueror.isGalvanized`, persistent `conqueror_galvanized_until`), `ConquerorEvents.onConquerorHurt` halves every blow (GALV_GUARD), sparks fly where it struck (`ironClang`), and an attacker within GALV_REBOUND_REACH takes GALV_REBOUND of it back as thorns damage; Strength II and Fire Resistance are kept up once a second. Sneak: Iron Charge, 8 ticks at 1.8 blocks/tick along the way you face; each enemy touched takes IRON_CHARGE_DAMAGE once and is thrown aside.
+- 7 Fog of War (M, Sequence 3). Normal: `ConquerorFx.fogOfWar` plus a `Zone` FOG_RADIUS wide for FOG_TICKS; cast again to lift it. Enemies in it are blinded (`Blind`, mobs see FOG_MOB_SEES blocks), slowed, weakened and take FOG_EXTRA more damage (`Vulnerable`); the caster gets Speed in it. Sneak: War Banner, a banner (`ConquerorFx.warBanner` + `battleCry`) and a zone BANNER_RADIUS wide for BANNER_TICKS: the caster and allies near it get Strength II, Resistance and Regeneration, enemies Weakness II. A new banner replaces the old one.
+- Not done: the mantle is not put back on after a relog or dimension change (the protection stays, only the model is missing).
+
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
 | --- | --- | --- | --- | --- |
@@ -881,3 +887,4 @@ For Cull and other finishers that do more the more marks an enemy carries. `stat
 | Conqueror FX: Cull swing (fix) | 2026-10-13 | (Luka fills in) | ConquerorFx cull (the swing, the crescents, the blood direction); this file | Conqueror FX: the Cull scythe swings blade first |
 | Conqueror ability 5: Cull | 2026-10-13 | (Luka fills in) | Conqueror (Cull, fireball), PathwayAbilities, SEQUENCES.md, this file | Conqueror ability 5: Cull |
 | Marks per player | 2026-10-13 | (Luka fills in) | status/Marks, SPELL_KIT.md, this file | Marks: one player's marks, dropping one at a time |
+| Conqueror abilities 6 and 7 | 2026-10-13 | (Luka fills in) | Conqueror (Galvanization, Iron Charge, Fog of War, War Banner, ConquerorEvents), SKeyPressAbilitySix/SevenUsed, PathwayAbilities, SEQUENCES.md, ConquerorFx (comment), this file | Conqueror abilities 6 and 7: Galvanization and Fog of War |

@@ -13,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsCosmicPlague;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFogOfWar;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorWraiths;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderBind;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionAbolition;
@@ -48,6 +49,7 @@ public class SKeyPressAbilitySevenUsed {
         princeOfAbolitionAbolition(player,level,serverLevel,false);
         attendantOfMysteriesGrafting(player,level,serverLevel,false);
         paleEmperorWraiths(player,level,serverLevel,false);
+        conquerorFogOfWar(player,level,serverLevel,false);
 
 
     }

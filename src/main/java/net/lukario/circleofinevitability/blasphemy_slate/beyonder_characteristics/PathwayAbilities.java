@@ -130,7 +130,7 @@ public final class PathwayAbilities {
             new Ability("Worm Of Time", 3, "Parasite", 4, NO_SNEAK, OWN_PATHWAY_ONLY,     // the same key is the way back out, and only this Pathway has it
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility3(player, level, sl, true)),
 
-            // ---- Conqueror ---- (keys 6 and 7 are not built yet: each gets its line here when it is)
+            // ---- Conqueror ----
             new Ability("Conqueror", 1, "Hunter's Trap", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorHuntersTrap(player, level, sl, true)),
             new Ability("Conqueror", 2, "Provocation", 8, SNEAK, STEALABLE,
@@ -140,7 +140,11 @@ public final class PathwayAbilities {
             new Ability("Conqueror", 4, "Flame Transformation", 6, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorFlameTransformation(player, level, sl, true)),
             new Ability("Conqueror", 5, "Cull", 5, SNEAK, STEALABLE,
-                    (player, level, sl) -> Conqueror.conquerorCull(player, level, sl, true)));
+                    (player, level, sl) -> Conqueror.conquerorCull(player, level, sl, true)),
+            new Ability("Conqueror", 6, "Galvanization", 4, SNEAK, STEALABLE,
+                    (player, level, sl) -> Conqueror.conquerorGalvanization(player, level, sl, true)),
+            new Ability("Conqueror", 7, "Fog of War", 3, SNEAK, STEALABLE,
+                    (player, level, sl) -> Conqueror.conquerorFogOfWar(player, level, sl, true)));
 
     private PathwayAbilities() {}
 

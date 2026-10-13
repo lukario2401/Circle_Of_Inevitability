@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
+import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.combat.*;
@@ -19,15 +20,22 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * Conqueror: the Hunter pathway (Red Priest) of Lord of the Mysteries. Each key is one step up the pathway,
@@ -38,8 +46,8 @@ import java.util.List;
  *   3 Fire Ravens          (Pyromaniac)           a flock of fire ravens hunts the enemies around you            | sneak: Dash, flung the way you look in a streak of fire
  *   4 Flame Transformation (Conspirer)            ride a flame lance, steer it with your look, step out at the end | sneak: Misdirection, vanish and leave a flame figure that blows up
  *   5 Cull                 (Reaper)               a fireball that bursts on what it hits                        | sneak: Cull, a giant scythe reaps the enemy you aim at
- *   6 Galvanization        (Iron-blooded Knight)  not built yet
- *   7 Fog of War           (War Bishop)           not built yet
+ *   6 Galvanization        (Iron-blooded Knight)  a mantle of iron: half damage, blows rebound, strength       | sneak: Iron Charge, a charge that runs through enemies
+ *   7 Fog of War           (War Bishop)           a dome of fog: enemies in it are blinded, slowed, weakened    | sneak: War Banner, a banner that blesses allies near it
  *
  * ADDING THE NEXT ABILITY (four places, nothing else):
  *   1. Here: its numbers in "Ability settings", then a method like conquerorHuntersTrap under its own heading.
@@ -156,6 +164,33 @@ public class Conqueror {
     private static final float CULL_DAMAGE = 30f;
     private static final float CULL_EXECUTE_SHARE = 0.3f;        // prey at or under this share of its health is killed outright
     private static final int CULL_BLEED_TICKS = 100;             // Wither afterwards: it bleeds
+
+    // Ability 6 - Galvanization (Sequence 4)
+    private static final int GALV_SEQUENCE = 4;
+    private static final int GALV_COST = 6000;                   // Sequence 4 holds 32400
+    private static final int GALV_TICKS = 400;                   // how long the iron is worn (cast again to take it off)
+    private static final float GALV_GUARD = 0.5f;                // share of every blow the iron takes (0.5 = half damage)
+    private static final float GALV_REBOUND = 0.3f;              // share of a close blow that goes back to who struck it
+    private static final double GALV_REBOUND_REACH = 6.0;        // ...if they are this close (melee, not arrows from afar)
+    private static final int GALV_STRENGTH_LEVEL = 1;            // 0 = Strength I, 1 = Strength II
+    private static final int IRON_CHARGE_COST = 2000;            // sneak: Iron Charge
+    private static final int IRON_CHARGE_TICKS = 8;              // how long you charge
+    private static final double IRON_CHARGE_SPEED = 1.8;         // blocks per tick (8 ticks = about 14 blocks)
+    private static final double IRON_CHARGE_REACH = 1.8;         // the enemies this close to you are run through
+    private static final float IRON_CHARGE_DAMAGE = 80f;         // once per enemy and charge
+    private static final double IRON_CHARGE_PUSH = 1.4;
+    private static final double IRON_CHARGE_LIFT = 0.5;
+
+    // Ability 7 - Fog of War (Sequence 3)
+    private static final int FOG_SEQUENCE = 3;
+    private static final int FOG_COST = 12000;                   // Sequence 3 holds 59780
+    private static final double FOG_RADIUS = 16.0;
+    private static final int FOG_TICKS = 400;                    // cast again to lift it early
+    private static final double FOG_MOB_SEES = 4.0;              // a mob in the fog only sees this far (status/Blind)
+    private static final float FOG_EXTRA = 0.25f;                // enemies in the fog take this much more damage
+    private static final int BANNER_COST = 8000;                 // sneak: War Banner
+    private static final double BANNER_RADIUS = 10.0;
+    private static final int BANNER_TICKS = 600;                 // one banner at a time: a new one takes the old one's place
 
     // Fire blasts (the Explosive Charge and Flame Transformation, the fire abilities later)
     private static final float BLAST_EDGE = 0.5f;                // part of the damage that is left at the rim
@@ -656,6 +691,196 @@ public class Conqueror {
     }
 
     // =========================
+    // Ability 6 - Galvanization
+    // Normal: iron closes over your body for GALV_TICKS (cast again to take it off, which costs nothing): it takes
+    //         GALV_GUARD of every blow, a blow struck from close by rebounds GALV_REBOUND of itself onto who struck
+    //         it, and you have Strength and Fire Resistance meanwhile (ConquerorEvents does the blows).
+    // Sneak:  Iron Charge: you charge the way you face for IRON_CHARGE_TICKS; every enemy you run into is hit
+    //         once (IRON_CHARGE_DAMAGE) and thrown aside.
+    // =========================
+    public static void conquerorGalvanization(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, GALV_SEQUENCE)) return;
+
+        if (player.isShiftKeyDown()) ironCharge(player, sl);
+        else galvanization(player, sl);
+    }
+
+    private static final String GALVANIZED_UNTIL = "conqueror_galvanized_until";   // game time
+    private static final String MANTLE_TAG = "conqueror_mantle";
+
+    private static void galvanization(Player player, ServerLevel sl) {
+        if (isGalvanized(player)) {                                  // cast again: it comes off
+            player.getPersistentData().remove(GALVANIZED_UNTIL);
+            ConquerorFx.galvanizeEnds(sl, player, MANTLE_TAG);
+            Spells.sound(sl, player.position(), SoundEvents.CHAIN_PLACE, 1f, 0.6f);
+            return;
+        }
+        if (!Spells.paySpirituality(player, GALV_COST)) return;
+
+        long until = sl.getGameTime() + GALV_TICKS;
+        player.getPersistentData().putLong(GALVANIZED_UNTIL, until);
+        ConquerorFx.galvanize(sl, player, GALV_TICKS, MANTLE_TAG);
+        Spells.sound(sl, player.position(), SoundEvents.ANVIL_LAND, 1f, 0.6f);
+        Spells.sound(sl, player.position(), SoundEvents.FIRECHARGE_USE, 0.7f, 0.5f);
+        galvanizedTick(player, sl, until);
+    }
+
+    /** True while the iron is worn. */
+    public static boolean isGalvanized(Entity entity) {
+        return entity.getPersistentData().getLongOr(GALVANIZED_UNTIL, 0L) > entity.level().getGameTime();
+    }
+
+    /** Keeps the strength of the iron up, once a second, until it ends, comes off or a new one replaces it. */
+    private static void galvanizedTick(Player player, ServerLevel sl, long until) {
+        if (!Spells.casterStillHere(player, sl)) return;
+        if (player.getPersistentData().getLongOr(GALVANIZED_UNTIL, 0L) != until || !isGalvanized(player)) return;
+        Spells.keepEffect(player, MobEffects.STRENGTH, GALV_STRENGTH_LEVEL, 40);
+        Spells.keepEffect(player, MobEffects.FIRE_RESISTANCE, 0, 40);
+        Later.run(sl, 20, () -> galvanizedTick(player, sl, until));
+    }
+
+    /** A blow on someone galvanized: the iron takes its share, and a close attacker gets some of it back. */
+    private static boolean rebounding = false;                       // the blow sent back must not rebound again
+
+    private static void ironTakesBlow(LivingHurtEvent event, LivingEntity victim, ServerLevel sl) {
+        float amount = event.getAmount();
+        if (amount <= 0f) return;
+        event.setAmount(amount * (1f - GALV_GUARD));
+
+        Entity direct = event.getSource().getDirectEntity();
+        Vec3 middle = victim.getBoundingBox().getCenter();
+        Vec3 struck = direct == null ? middle
+                : middle.add(direct.getBoundingBox().getCenter().subtract(middle).normalize().scale(victim.getBbWidth() * 0.6));
+        ConquerorFx.ironClang(sl, struck);
+        Spells.sound(sl, struck, SoundEvents.ANVIL_LAND, 0.4f, 1.6f);
+
+        if (direct instanceof LivingEntity attacker && attacker != victim && attacker.isAlive()
+                && attacker.distanceTo(victim) <= GALV_REBOUND_REACH) {
+            rebounding = true;
+            try {
+                attacker.invulnerableTime = 0;
+                attacker.hurt(victim.damageSources().thorns(victim), amount * GALV_REBOUND);
+            } finally {
+                rebounding = false;
+            }
+        }
+    }
+
+    /** Sneak: a charge along the ground; everyone in the way is hit once and thrown aside. */
+    private static void ironCharge(Player player, ServerLevel sl) {
+        if (!Spells.paySpirituality(player, IRON_CHARGE_COST)) return;
+
+        Vec3 way = Spells.flatLook(player).normalize();
+        FallGuard.protect(player, IRON_CHARGE_TICKS + 40);
+        ParticleShapes.burst(sl, ConquerorFx.IRON_SPARK, player.position().add(0, 0.5, 0), 16, 0.06, 0.25);
+        Spells.sound(sl, player.position(), SoundEvents.PLAYER_ATTACK_KNOCKBACK, 1.2f, 0.6f);
+        Spells.sound(sl, player.position(), SoundEvents.ENDER_DRAGON_GROWL, 0.5f, 1.6f);
+        ironChargeStep(player, sl, way, IRON_CHARGE_TICKS, new HashSet<>());
+    }
+
+    private static void ironChargeStep(Player player, ServerLevel sl, Vec3 way, int ticksLeft, Set<UUID> struck) {
+        if (!Spells.casterStillHere(player, sl)) return;
+        if (ticksLeft <= 0) {                                        // the charge runs out: dust and a ring
+            SpellFx.shockRing(sl, player.position(), 3.0, 0xD0B8BCC8, 8, 0);
+            ParticleShapes.burst(sl, ConquerorFx.IRON_FLAKE, player.position().add(0, 0.3, 0), 10, 0.05, 0.15);
+            return;
+        }
+        player.setDeltaMovement(way.x * IRON_CHARGE_SPEED, player.getDeltaMovement().y, way.z * IRON_CHARGE_SPEED);
+        player.hurtMarked = true;
+
+        Vec3 middle = player.getBoundingBox().getCenter();
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, middle, IRON_CHARGE_REACH)) {
+            if (!struck.add(enemy.getUUID())) continue;              // once per enemy
+            Spells.strike(player, enemy, IRON_CHARGE_DAMAGE);
+            Spells.push(enemy, middle.subtract(way), IRON_CHARGE_PUSH, IRON_CHARGE_LIFT);
+            ConquerorFx.ironClang(sl, enemy.getBoundingBox().getCenter());
+            Spells.sound(sl, enemy.position(), SoundEvents.ANVIL_LAND, 0.8f, 0.8f);
+        }
+        ParticleShapes.burst(sl, ConquerorFx.IRON_SPARK, player.position().add(0, 0.3, 0), 4, 0.05, 0.1);
+        Later.run(sl, 1, () -> ironChargeStep(player, sl, way, ticksLeft - 1, struck));
+    }
+
+    // =========================
+    // Ability 7 - Fog of War
+    // Normal: a dome of fog FOG_RADIUS wide rolls out from where you stand for FOG_TICKS (cast again to lift it):
+    //         enemies in it are blinded (a mob only sees FOG_MOB_SEES blocks and loses what it hunted), slowed,
+    //         weakened and take FOG_EXTRA more damage; you are quicker in it.
+    // Sneak:  War Banner: a banner rises where you stand for BANNER_TICKS. You and your allies within BANNER_RADIUS
+    //         of it get Strength II, Resistance and Regeneration; enemies near it are weakened. One at a time.
+    // =========================
+    public static void conquerorFogOfWar(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, FOG_SEQUENCE)) return;
+
+        if (player.isShiftKeyDown()) warBanner(player, sl);
+        else fogOfWar(player, sl);
+    }
+
+    private static final String FOG_ZONE = "conqueror_fog_of_war";
+    private static final String BANNER_ZONE = "conqueror_war_banner";
+
+    private static void fogOfWar(Player player, ServerLevel sl) {
+        if (Zone.isOpen(player, FOG_ZONE)) {                         // cast again: it lifts
+            Zone.close(player, FOG_ZONE);
+            return;
+        }
+        if (!Spells.paySpirituality(player, FOG_COST)) return;
+
+        Vec3 center = player.position();
+        ConquerorFx.fogOfWar(sl, center, FOG_RADIUS, FOG_TICKS, FOG_ZONE);
+        Spells.sound(sl, center, SoundEvents.WITHER_SPAWN, 0.6f, 0.5f);
+        Spells.sound(sl, center, SoundEvents.BELL_BLOCK, 1f, 0.5f);
+
+        Zone.at(center, FOG_RADIUS)
+                .height(FOG_RADIUS * 0.7 + 2)
+                .lasts(FOG_TICKS)
+                .every(10)
+                .onInside((enemy, ticksInside) -> {
+                    Blind.apply(enemy, 30, FOG_MOB_SEES);
+                    Spells.keepEffect(enemy, MobEffects.SLOWNESS, 0, 40);
+                    Spells.keepEffect(enemy, MobEffects.WEAKNESS, 0, 40);
+                    Vulnerable.add(enemy, FOG_EXTRA, FOG_EXTRA, 30);
+                })
+                .onPulse(ticksLeft -> {
+                    if (player.position().distanceTo(center) <= FOG_RADIUS) Spells.keepEffect(player, MobEffects.SPEED, 0, 40);
+                })
+                .onEnd(() -> ConquerorFx.fogOfWarEnds(sl, center, FOG_ZONE))
+                .open(player, sl, FOG_ZONE);
+    }
+
+    /** Sneak: a war banner that blesses those who fight with you and weakens those who fight against you. */
+    private static void warBanner(Player player, ServerLevel sl) {
+        if (!Spells.paySpirituality(player, BANNER_COST)) return;
+        if (Zone.isOpen(player, BANNER_ZONE)) Zone.close(player, BANNER_ZONE);   // the old banner goes
+
+        Vec3 ground = player.position();
+        ConquerorFx.warBanner(sl, ground, player.getYRot(), BANNER_TICKS, BANNER_ZONE);
+        ConquerorFx.battleCry(sl, player, 40);
+        SpellFx.steadyRing(sl, ground, BANNER_RADIUS, 0x90FF3A2A, BANNER_TICKS, 0);
+        Spells.sound(sl, ground, SoundEvents.BELL_BLOCK, 1.2f, 0.7f);
+        Spells.sound(sl, ground, SoundEvents.ENDER_DRAGON_GROWL, 0.6f, 0.8f);
+
+        Zone.at(ground, BANNER_RADIUS)
+                .lasts(BANNER_TICKS)
+                .every(10)
+                .affects(who -> true)                                // enemies and allies: told apart below
+                .onInside((who, ticksInside) -> {
+                    if (Spells.isEnemy(player, who)) Spells.keepEffect(who, MobEffects.WEAKNESS, 1, 40);
+                    else blessedByBanner(who);
+                })
+                .onPulse(ticksLeft -> {
+                    if (player.position().distanceTo(ground) <= BANNER_RADIUS) blessedByBanner(player);
+                })
+                .onEnd(() -> ParticleShapes.clearModels(sl, ground, BANNER_ZONE))
+                .open(player, sl, BANNER_ZONE);
+    }
+
+    private static void blessedByBanner(LivingEntity who) {
+        Spells.keepEffect(who, MobEffects.STRENGTH, 1, 60);
+        Spells.keepEffect(who, MobEffects.RESISTANCE, 0, 60);
+        Spells.keepEffect(who, MobEffects.REGENERATION, 0, 60);
+    }
+
+    // =========================
     // Helpers shared by the abilities
     // =========================
 
@@ -867,5 +1092,21 @@ public class Conqueror {
                 ParticleShapes.spawn(sl, EDGE_EMBER, position, velocity);
             }
         });
+    }
+
+    // =========================
+    // Events
+    // =========================
+
+    @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static class ConquerorEvents {
+
+        /** Blows on someone galvanized (ability 6) glance off the iron. */
+        @SubscribeEvent
+        public static void onConquerorHurt(LivingHurtEvent event) {
+            LivingEntity victim = event.getEntity();
+            if (rebounding || !(victim.level() instanceof ServerLevel sl)) return;
+            if (isGalvanized(victim)) ironTakesBlow(event, victim, sl);
+        }
     }
 }

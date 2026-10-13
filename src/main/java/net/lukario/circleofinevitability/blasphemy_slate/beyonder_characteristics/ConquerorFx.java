@@ -29,7 +29,7 @@ import java.util.List;
 
 /**
  * The Conqueror's looks: war, blood, iron and fire. Each display is one call, with its size, timing and animation
- * already chosen, for the abilities that exist and for the ones still to be built (Cull, Galvanization, Fog of War).
+ * already chosen, used by the Conqueror abilities (see Conqueror) and free for anything else.
  * The models are in models/model_fx/conqueror/ and are made by tools/model_gen/conqueror_models.py.
  *
  * ---------- See them in game ----------
