@@ -137,6 +137,8 @@ public final class PathwayAbilities {
                     (player, level, sl) -> Conqueror.conquerorProvocation(player, level, sl, true)),
             new Ability("Conqueror", 3, "Fire Ravens", 7, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorFireRavens(player, level, sl, true)),
+            new Ability("Conqueror", 5, "Cull", 5, SNEAK, STEALABLE,
+                    (player, level, sl) -> Conqueror.conquerorCull(player, level, sl, true)),
             new Ability("Conqueror", 4, "Flame Transformation", 6, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorFlameTransformation(player, level, sl, true)));
 

@@ -626,6 +626,15 @@ public class Conqueror {
         return !sl.getBlockState(BlockPos.containing(spot.x, spot.y - 0.2, spot.z)).isAir();
     }
 
+    public static void conquerorCull(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, FLAME_SEQUENCE)) return;
+
+        if (player.isShiftKeyDown()) cull(player, sl);
+        else fireball(player, sl);
+    }
+
+
+
     private static final Vec3 UP = new Vec3(0, 1, 0);
 
     private static Vec3 flatLook(Player player) {
