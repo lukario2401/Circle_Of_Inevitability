@@ -161,7 +161,7 @@ public class Conqueror {
     private static final float FIREBALL_DAMAGE = 40f;            // in the middle of the burst (BLAST_EDGE of it at the rim)
     private static final int CULL_COST = 1800;                   // sneak: Cull
     private static final double CULL_RANGE = 20.0;               // how far away the prey can be
-    private static final float CULL_DAMAGE = 30f;
+    private static final float CULL_DAMAGE = 45f;
     private static final float CULL_EXECUTE_SHARE = 0.3f;        // prey at or under this share of its health is killed outright
     private static final int CULL_BLEED_TICKS = 100;             // Wither afterwards: it bleeds
 
@@ -675,14 +675,10 @@ public class Conqueror {
             if (!Spells.casterStillHere(player, sl) || !target.isAlive() || target.level() != sl) return;
             boolean weak = target.getHealth() <= target.getMaxHealth() * CULL_EXECUTE_SHARE;
 
+            Marks.add(target,player, "conqueror_cull",5*Beyonder.powerLevel(player),20*20);
             int marks = Marks.count(target, player, "conqueror_cull");
-            if (marks!=0){
             Spells.strike(player, target, weak ? target.getMaxHealth() * 10f + 1000f : CULL_DAMAGE*marks);   // through any armour
-            }else{
-                Spells.strike(player, target, weak ? target.getMaxHealth() * 10f + 1000f : CULL_DAMAGE);   // through any armour
 
-            }
-            Marks.add(target,player, "conqueror_cull",10,20*20);
 
             if (target.isAlive()) target.addEffect(new MobEffectInstance(MobEffects.WITHER, CULL_BLEED_TICKS, 1));
             Spells.sound(sl, target.position(), SoundEvents.PLAYER_ATTACK_SWEEP, 1.2f, 0.5f);
