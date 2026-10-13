@@ -26,7 +26,7 @@ public class SequenceCommands {
     /** The Pathway names exactly as the classes check them. */
     public static final List<String> PATHWAYS = List.of(
             "Key Of Stars", "Worm Of Time", "Hand Of Order", "Attendant Of Mysteries", "Prince Of Abolition", "Pale Emperor",
-            "Conqueror");
+            "Conqueror", "Apocalypse");
 
     @SubscribeEvent
     public static void onRegisterSequenceCommands(RegisterCommandsEvent event) {

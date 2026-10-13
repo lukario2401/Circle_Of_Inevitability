@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseUnaging;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsOrbital;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorGalvanization;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorWings;
@@ -50,6 +51,7 @@ public class SKeyPressAbilitySixUsed {
         attendantOfMysteriesHistoricalVoid(player,level,serverLevel,false);
         paleEmperorWings(player,level,serverLevel,false);
         conquerorGalvanization(player,level,serverLevel,false);
+        apocalypseUnaging(player,level,serverLevel,false);
 
     }
 }

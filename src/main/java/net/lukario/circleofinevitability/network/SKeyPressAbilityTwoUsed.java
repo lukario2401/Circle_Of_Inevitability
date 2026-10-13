@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseBlackFlame;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesFlamingJump;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorProvocation;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderDecree;
@@ -52,6 +53,7 @@ public class SKeyPressAbilityTwoUsed {
         paleEmperorDoor(player,serverLevel,false);
         wormOfTimeAbility2(player,level,serverLevel,false);
         conquerorProvocation(player,level,serverLevel,false);
+        apocalypseBlackFlame(player,level,serverLevel,false);
 
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseMirrorWorld;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesDamageTransfer;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFireRavens;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderEdict;
@@ -52,6 +53,7 @@ public class SKeyPressAbilityThreeUsed {
         paleEmperorSerpent(player,level,serverLevel,false);
         wormOfTimeAbility3(player,level,serverLevel,false);
         conquerorFireRavens(player,level,serverLevel,false);
+        apocalypseMirrorWorld(player,level,serverLevel,false);
 
 
     }

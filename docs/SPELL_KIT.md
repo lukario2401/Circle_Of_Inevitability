@@ -13,6 +13,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A small clock next to the hotbar ("Revive 27s") | [`HudTimer`](#hudtimer-a-small-clock-next-to-the-hotbar) | `combat/` |
 | Ground that keeps doing something to whoever stands on it, worse the longer they stay (cursed land, a healing circle, an aura) | [`Zone`](#zone-ground-that-keeps-doing-something) | `combat/` |
 | A hidden spot that springs once when an enemy steps on it (a snare, a mine, a rune) | [`Trap`](#trap-a-hidden-spot-that-springs-once) | `combat/` |
+| Something one enemy carries for a while and then passes on to the nearest ones, stronger each time (a plague, a spreading curse) | [`Contagion`](#contagion-it-passes-from-one-enemy-to-the-next) | `combat/` |
 | A potion effect kept up for as long as something lasts | [`Spells.keepEffect`](#1-spells-aiming-and-enemies) | `combat/` |
 | A line that keeps joining two moving things (thread, chain, beam) | [`SpellFx.tether`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
 | Rings, warning circles, a burst of fire or of any color | [`SpellFx`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
@@ -33,6 +34,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A crown (or anything on the head) that looks where the head looks | `ParticleShapes.modelOnHead`, `PaleEmperorFx.crown(sl, player, ticks, tag)` ([MODEL_FX.md](MODEL_FX.md)) | `particles/fx/` |
 | Damage that lands on someone else, or is shared by a group | [`DamageLink`](#damagelink) | `status/` |
 | "The next hit does not land, this happens instead" | [`Substitute`](#substitute) | `status/` |
+| "My next normal hit is special" (a backstab, a charged blow) | [`EmpoweredHit`](#empoweredhit) | `status/` |
+| Write down everything someone takes for a while, then hit them with all of it at once (a curse that comes due) | [`StoredDamage`](#storeddamage) | `status/` |
 | Take over a mob | [`Marionette`](#marionette) | `status/` |
 | Vanish: unseen, untargeted, unhurt | [`Concealment`](#concealment) | `status/` |
 | Leave your body and live inside a mob or a player, which carries you | [`Parasite`](#parasite) | `status/` |
@@ -435,6 +438,48 @@ Something that goes off after a time instead of under a foot needs no trap: `Lat
 
 ---
 
+## Contagion: it passes from one enemy to the next
+
+Something one enemy carries for a while and then passes on to the enemies nearest to it, which carry it and pass it on in their turn, stronger each time. A plague, a curse that spreads, a fire that leaps from body to body.
+
+```java
+Contagion.spread()
+        .lasts(100)                                       // each one carries it for 5 seconds
+        .every(20, (victim, stage) -> Spells.strike(player, victim, 5f * (float) Math.pow(1.5, stage - 1)))
+        .passesTo(2, 3)                                   // then it jumps to 2 or 3 of the nearest
+        .reach(8)
+        .generations(4)                                   // the 4th one to carry it passes it on no more
+        .maxVictims(24)
+        .travel(10)                                       // a jump takes half a second
+        .onCatch((victim, stage) -> DemonessFx.plagueMark(sl, victim, 100, stage, "my_pathway_plague"))
+        .onRunOut((victim, stage) -> DemonessFx.plagueBloom(sl, victim))
+        .onPass((from, to, stage) -> DemonessFx.plagueJump(sl, from, to))
+        .start(player, sl, target);
+```
+
+| Part | What it does |
+|---|---|
+| `Contagion.spread()` | A new one. Nothing happens until `.start(...)` |
+| `.lasts(ticks)` | How long one carries it before it passes on (default 100) |
+| `.every(ticks, (victim, stage) -> ...)` | What it does to whoever carries it, every `ticks` ticks (the first time `ticks` after they caught it) |
+| `.passesTo(count)`, `.passesTo(min, max)` | To how many new ones it passes each time, nearest first (default 1) |
+| `.reach(blocks)` | How far it can jump (default 6) |
+| `.generations(stages)` | The first one carries stage 1, every jump adds one; the one who carries the last stage keeps it (default 3) |
+| `.maxVictims(count)` | How many can catch this outbreak in all (default 12) |
+| `.travel(ticks)` | How long a jump takes; the new one catches it then (default 10) |
+| `.notOnDeath()` | One who dies while carrying it takes it with them. Without this it jumps on from where the body fell |
+| `.onCatch`, `.onRunOut`, `.onPass` | Someone caught it (the first one too) / someone's time with it is up, right before it jumps on / it jumps |
+
+Good to know:
+
+- **`stage` is how it gets stronger**: 1 on the first one, 2 on the ones it jumped to, and so on. Scale your damage, the size of the mark, its color with it.
+- **Nobody catches the same outbreak twice**, so it always moves outward. Two casts are two outbreaks: both can be on the same enemy.
+- It stops when its owner dies, logs out or leaves the dimension. Build a new one for every cast; it is not saved.
+
+Used in `plague` in `Apocalypse.java`.
+
+---
+
 ## Transit: travel inside a shot
 
 The caster becomes part of a `Shot` they throw, travels with it and steps out where it lands. A flame they merge with, a bolt they ride, a card they fold into.
@@ -611,6 +656,41 @@ Substitute.arm(player, 200, 1, (saved, source, amount, level) -> {
 - **What counts as a hit:** damage from an attacker (melee, arrows, abilities), projectiles and explosions.
 - **What goes through without using it up:** fire, falling, drowning, poison and the like; anything in creative mode; the void and `/kill`.
 - Arming again replaces the old one. Gone on death, on logout and after a restart.
+
+### EmpoweredHit
+
+The next time this player hits something with a normal attack (fist or weapon, not an ability), that hit is changed. A backstab, a charged blow, a poisoned blade.
+
+```java
+EmpoweredHit.arm(player, "my_pathway_backstab", 40, (attacker, target, amount, level) -> {
+    // the hit is landing right now; 'amount' is what it would do
+    ParticleShapes.burst(level, SPARK, target.getBoundingBox().getCenter(), 12, 0.05, 0.2);
+    return amount * 1.5f + 16f;                      // what it does instead
+});
+```
+
+`40` is how long it waits for the hit. `EmpoweredHit.isArmed(player, name)`, `ticksLeft(player, name)`, `disarm(player, name)`.
+
+- Only real swings count. `Spells.strike` also looks like a player attack to the game, so abilities never use it up.
+- A swing the game cancels (a rooted player, a concealed target) does not use it up either.
+- Several names can be armed at once; one swing uses all of them. Arming a name again replaces it. Gone on death, logout and after a restart.
+
+### StoredDamage
+
+For a while, everything an entity takes is written down; when the time is up, the whole sum comes due at once.
+
+```java
+StoredDamage.start(target, player, 200,
+        (victim, amount, total, level) -> { /* a hit was written down: a throb of its mark */ },
+        (victim, total, level) -> StoredDamage.deal(victim, player, total));      // time is up: all of it again
+```
+
+`StoredDamage.isStoring(entity)`, `total(entity)`, `ticksLeft(entity)`, `release(entity)` (comes due now), `cancel(entity)` (nothing comes due).
+
+- What is written down is what the entity really lost, after armor and everything else.
+- `StoredDamage.deal(victim, owner, amount)` hits as magic from the owner: armor does not take its share a second time, and damage dealt this way is never written down, so a curse does not feed on its own payment.
+- The part that comes due can wait for a look of its own: `Later.run(level, 4, () -> StoredDamage.deal(...))` (`curse` in `Apocalypse.java`).
+- One per entity: starting another replaces it. It ends with nothing due when the entity dies. Not saved.
 
 ### Marionette
 
@@ -1067,6 +1147,12 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Seeker.launchAt` (a flock of fire ravens with flapping wings), a dash with `FallGuard` | `fireRavens`, `ravenStrikes`, `dash`, `dashTrail` in `Conqueror.java` |
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
+| `Contagion` (a plague that jumps on, stronger each time) | `plague` in `Apocalypse.java` |
+| `StoredDamage` (a curse that comes due) | `curse` in `Apocalypse.java` |
+| `EmpoweredHit` (a backstab), a teleport behind someone that faces them | `fatalStep`, `spotBehind` in `Apocalypse.java` |
+| `Substitute` with a mirror that rises and shatters at the attacker | `readyMirrorSubstitute`, `mirrorEscape` in `Apocalypse.java` |
+| `Concealment` that the same key ends (out where you aim, or back where you went in) | `enterMirrorWorld`, `exitWhereYouAim`, `returnFromMirror`, `mirrorWorldTick` in `Apocalypse.java` |
+| Things on the ground that charge while enemies stand in front of them, and go off together | `placeShard`, `chargeShards`, `shatterShards` in `Apocalypse.java` |
 
 ## Tricks worth copying
 

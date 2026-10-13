@@ -12,6 +12,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypsePlague;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesCountdown;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorCull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
@@ -50,6 +51,7 @@ public class SKeyPressAbilityFiveUsed {
         princeOfAbolitionMeteor(player,level,serverLevel,false);
         paleEmperorSpikes(player,level,serverLevel,false);
         conquerorCull(player,level,serverLevel,false);
+        apocalypsePlague(player,level,serverLevel,false);
 
 
 

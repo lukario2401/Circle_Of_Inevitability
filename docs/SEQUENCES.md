@@ -53,6 +53,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Prince Of Abolition | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
 | Pale Emperor | Root 9 | Door 8 | Serpent 7 | Spear Skull 7 | Spikes 6 | Wings 5 | Wraiths 4 |
 | Conqueror | Hunter's Trap 9 | Provocation 8 | Fire Ravens 7 | Flame Transformation 6 | Cull 5 | Galvanization 4 | Fog of War 3 |
+| Apocalypse | Fatal Step 9 | Black Flame 8 | Mirror World 7 | (Silk Weaver 6, not made yet) | Plague 5 | Unaging 4 | (Catastrophe 3, not made yet) |
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one).
 
