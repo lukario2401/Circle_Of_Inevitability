@@ -1028,6 +1028,7 @@ private static AbilityWheel.Result fireball(ServerPlayer player, ServerLevel sl)
 | `.free(player -> ...)` | After an entry: while this says true, that entry skips the cost and cooldown checks (the second press of a two-part spell) |
 | `.onCast((player, sl, entry) -> ...)` | Runs after every cast that returned `DONE` |
 | `.radius(pixels)` | How far from the middle of the screen the icons sit (default 72) |
+| `.quickCastCooldown(false)` | A sneak recast (`quickCast`) ignores cooldowns: it works while the pick is cooling down and starts none. The cost is still paid. Picks from the wheel keep their cooldowns |
 | `open(player)`, `quickCast(player)`, `cast(player, entry)` | Show it / cast the last pick / cast one entry with every check |
 | `lastPick(player)`, `entry(key)`, `entries()`, `unlocked(player)`, `cooldownLeft(player, entry)`, `reset(player)` | Asking about it |
 

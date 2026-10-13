@@ -95,6 +95,7 @@ public final class AbilityWheel {
     private int radius = 72;
     private final List<Entry> entries = new ArrayList<>();
     private CastDone onCast;
+    private boolean quickCastCooldown = true;        // false: a sneak recast neither waits for nor starts a cooldown
     private AbilityMenu menu;                        // built the first time it is opened
 
     private AbilityWheel(String id, String title) {
@@ -124,6 +125,15 @@ public final class AbilityWheel {
     }
 
     /** Runs after every cast that went off with DONE (a stack, a sound, leaving a form...). */
+    /**
+     * false: quickCast ignores cooldowns. It casts the last pick even while that pick is cooling down, and starts
+     * no cooldown of its own (the cost is still paid). Picking from the wheel keeps its cooldowns as before.
+     */
+    public AbilityWheel quickCastCooldown(boolean on) {
+        this.quickCastCooldown = on;
+        return this;
+    }
+
     public AbilityWheel onCast(CastDone action) {
         this.onCast = action;
         return this;
@@ -145,7 +155,10 @@ public final class AbilityWheel {
         menu().open(serverPlayer);
     }
 
-    /** Casts the last pick again. With no last pick (or one the player may no longer use) the wheel opens. */
+    /**
+     * Casts the last pick again (with no cooldown when quickCastCooldown(false)). With no last pick the wheel
+     * opens; a last pick above the player's Sequence is refused with a message.
+     */
     public void quickCast(Player player) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         Entry entry = lastPick(player);
@@ -153,14 +166,20 @@ public final class AbilityWheel {
             open(player);
             return;
         }
-        cast(serverPlayer, entry);
+        cast(serverPlayer, entry, !quickCastCooldown);
+    }
+
+    /** Casts one entry with every check, its cooldown included. */
+    public Result cast(ServerPlayer player, Entry entry) {
+        return cast(player, entry, false);
     }
 
     /**
      * Casts one entry: checks its Sequence, cooldown and cost, runs it, and on DONE takes the cost, starts the
      * cooldown and runs onCast. The entry becomes the last pick if it went off.
+     * ignoreCooldown: the cooldown is neither checked nor started (the cost is still checked and taken).
      */
-    public Result cast(ServerPlayer player, Entry entry) {
+    public Result cast(ServerPlayer player, Entry entry, boolean ignoreCooldown) {
         if (!(player.level() instanceof ServerLevel sl)) return Result.REFUSED;
         if (!unlocked(player, entry)) {
             player.sendSystemMessage(Component.literal(entry.name + " needs Sequence " + entry.sequence + "."));
@@ -168,7 +187,7 @@ public final class AbilityWheel {
         }
         boolean free = entry.isFree(player);
         if (!free) {
-            int wait = cooldownLeft(player, entry);
+            int wait = ignoreCooldown ? 0 : cooldownLeft(player, entry);
             if (wait > 0) {
                 player.sendSystemMessage(Component.literal(entry.name + " is ready again in " + seconds(wait) + "."));
                 return Result.REFUSED;
@@ -186,7 +205,7 @@ public final class AbilityWheel {
         if (result == Result.DONE) {
             if (!free) {
                 Spells.paySpirituality(player, entry.cost);
-                if (entry.cooldown > 0) player.getPersistentData().putLong(id + "_ready_" + entry.key, sl.getGameTime() + entry.cooldown);
+                if (entry.cooldown > 0 && !ignoreCooldown) player.getPersistentData().putLong(id + "_ready_" + entry.key, sl.getGameTime() + entry.cooldown);
             }
             if (onCast != null) onCast.run(player, sl, entry);
         }

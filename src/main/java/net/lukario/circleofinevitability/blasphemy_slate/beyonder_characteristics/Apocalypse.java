@@ -860,6 +860,7 @@ public class Apocalypse {
     // Icons are in assets/circle_of_inevitability/textures/gui/ability_menus/apocalypse/
     private static final AbilityWheel SILKS = AbilityWheel.create("apocalypse_silk", "Silk Weaver")
             .radius(76)                                          // GUI pixels from the middle of the screen
+            .quickCastCooldown(false)                            // sneak recast: no cooldown
             .entry("snare", "ability_menus/apocalypse/silk_snare", "Silk Snare", 6,
                     SILK_LOW_COST, SILK_LOW_COOLDOWN, Apocalypse::silkSnare)
             .entry("swing", "ability_menus/apocalypse/web_swing", "Web Swing", 6,
@@ -1424,7 +1425,9 @@ public class Apocalypse {
     private static final AbilityWheel CATASTROPHES = catastropheWheel();
 
     private static AbilityWheel catastropheWheel() {
-        AbilityWheel wheel = AbilityWheel.create("apocalypse_catastrophe", "Catastrophe").radius(84);   // seven: a little wider
+        AbilityWheel wheel = AbilityWheel.create("apocalypse_catastrophe", "Catastrophe")
+                .radius(84)                                      // seven: a little wider
+                .quickCastCooldown(false);                       // sneak recast: no cooldown
         for (Disaster disaster : DISASTERS) {
             wheel.entry(disaster.key(), "ability_menus/apocalypse/" + disaster.key(), disaster.name(), disaster.sequence(),
                     disaster.cost(), disaster.cooldown(), (player, sl) -> {
