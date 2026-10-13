@@ -834,6 +834,12 @@ Everything outside reference/ and the history above now uses the project name Ci
 - Now ConquerorFx.cull plays the scythe side-on (yaw - 90), so the blade points the way the cut goes and the scythe lies in one upright plane through the prey, leaning 38 degrees (its pitch); it swings by its ROLL in that plane, around the grip: drawn back high behind (-80), over the top and down through the prey (70 at CULL_HITS, the middle of the blade on the prey's middle), on to 140. The hook leads and the blade goes through the prey. The crescents are now centered on the grip with the blade's radius (3.86), so they trace the blade's path; the blood is thrown the way the blade goes. CULL_HITS is still 16.
 - Checked by running the renderer's matrix math in Python for several yaws, both lean sides: the middle of the blade is within 0.04 blocks of the prey's middle at CULL_HITS, the crescent lies in the swing's plane and starts on the drawn-back side. ConquerorFx compiles against stand-ins. Not built with Gradle; look at it with /conquerorfx cull.
 
+## Conqueror ability 5: Cull (2026-10-13)
+Luka had wired key 5 (SKeyPressAbilityFiveUsed, PathwayAbilities) to `conquerorCull`, which called `cull` and `fireball`, neither of which existed, and checked Sequence 6 instead of 5.
+- Normal: a blood-red fireball (`Shot`, models/model_fx/fireball) flies where you look and ends in `fireBlast` (FIREBALL_DAMAGE, radius FIREBALL_RADIUS) on the first enemy or block, or at FIREBALL_RANGE.
+- Sneak: Cull. The enemy you aim at (else the nearest in sight, CULL_RANGE) is held in place (Root MOVEMENT) while `ConquerorFx.cull` swings; at `ConquerorFx.CULL_HITS` it takes CULL_DAMAGE, or dies outright at or under CULL_EXECUTE_SHARE of its health, then bleeds (Wither II, CULL_BLEED_TICKS).
+- CULL_SEQUENCE = 5; the PathwayAbilities line is moved under Flame Transformation; SEQUENCES.md has Cull 5.
+
 ## Stage log
 | Stage | Date | Credit used (Settings > Usage) | Lines ported | Commit |
 | --- | --- | --- | --- | --- |
@@ -870,3 +876,4 @@ Everything outside reference/ and the history above now uses the project name Ci
 | Conqueror: lance ranges (change) | 2026-10-12 | (Luka fills in) | Conqueror flameRange and 4 constants, Transit +UNLIMITED, +MAX_RIDE_TICKS and the capped tick limit; docs/SPELL_KIT.md; this file | Conqueror: Flame Transformation reaches 120 / 360 / 3600 blocks, unlimited from Sequence 3 |
 | Conqueror FX (feature) | 2026-10-13 | (Luka fills in) | new code, not a port: 1 new Java file (ConquerorFx, about 560 lines), Conqueror +20; 2 Python files (tools/model_gen); 12 model JSONs and 8 textures (conqueror/); docs/MODEL_FX.md, docs/SPELL_KIT.md; this file | Conqueror FX: models and ready-made displays for every ability |
 | Conqueror FX: Cull swing (fix) | 2026-10-13 | (Luka fills in) | ConquerorFx cull (the swing, the crescents, the blood direction); this file | Conqueror FX: the Cull scythe swings blade first |
+| Conqueror ability 5: Cull | 2026-10-13 | (Luka fills in) | Conqueror (Cull, fireball), PathwayAbilities, SEQUENCES.md, this file | Conqueror ability 5: Cull |

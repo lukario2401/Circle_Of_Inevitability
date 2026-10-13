@@ -37,7 +37,7 @@ import java.util.List;
  *   2 Provocation          (Provoker)             a mob drops everything to come for you, and takes more damage | sneak: Repugnant Aura, the mobs around you fight each other
  *   3 Fire Ravens          (Pyromaniac)           a flock of fire ravens hunts the enemies around you            | sneak: Dash, flung the way you look in a streak of fire
  *   4 Flame Transformation (Conspirer)            ride a flame lance, steer it with your look, step out at the end | sneak: Misdirection, vanish and leave a flame figure that blows up
- *   5 Cull                 (Reaper)               not built yet
+ *   5 Cull                 (Reaper)               a fireball that bursts on what it hits                        | sneak: Cull, a giant scythe reaps the enemy you aim at
  *   6 Galvanization        (Iron-blooded Knight)  not built yet
  *   7 Fog of War           (War Bishop)           not built yet
  *
@@ -144,6 +144,19 @@ public class Conqueror {
     private static final int DECOY_HIDE_TICKS = 100;              // how long you stay hidden
     private static final int DECOY_SPEED_LEVEL = 2;              // 0 = Speed I, 1 = Speed II while hidden
 
+    // Ability 5 - Cull (Sequence 5)
+    private static final int CULL_SEQUENCE = 5;
+    private static final int FIREBALL_COST = 400;
+    private static final double FIREBALL_RANGE = 48.0;
+    private static final double FIREBALL_SPEED = 1.4;            // blocks per tick
+    private static final double FIREBALL_RADIUS = 3.5;           // the burst where it lands
+    private static final float FIREBALL_DAMAGE = 40f;            // in the middle of the burst (BLAST_EDGE of it at the rim)
+    private static final int CULL_COST = 1800;                   // sneak: Cull
+    private static final double CULL_RANGE = 20.0;               // how far away the prey can be
+    private static final float CULL_DAMAGE = 90f;
+    private static final float CULL_EXECUTE_SHARE = 0.3f;        // prey at or under this share of its health is killed outright
+    private static final int CULL_BLEED_TICKS = 100;             // Wither afterwards: it bleeds
+
     // Fire blasts (the Explosive Charge and Flame Transformation, the fire abilities later)
     private static final float BLAST_EDGE = 0.5f;                // part of the damage that is left at the rim
     private static final double BLAST_PUSH = 1.1;                // how hard it throws back, blocks per tick
@@ -175,6 +188,17 @@ public class Conqueror {
     /** The flame lance of Flame Transformation. Its range is set per cast (flameRange). */
     private static final Shot FLAME_LANCE = Shot.of(LANCE_MODEL)
             .speed(LANCE_SPEED).width(0.5).trail(LANCE_STREAK);
+
+    /** The fireball of ability 5 (models/model_fx/fireball): blood-red fire that whirls as it flies. */
+    private static final ModelFx FIREBALL_MODEL = ModelFx.of("fireball")
+            .pivot(8, 8, 8).glow().unshaded().seeThrough()
+            .aura(0xFFC01A0A, 0.14f, 3).spin(26f);
+    private static final SlashFx FIREBALL_STREAK = SlashFx.line("slash/smooth")
+            .color(0xA0E0301A).core(0xD0FFD0A0)
+            .width(0.3f).taper(SlashFx.Taper.COMET);
+    /** It flies straight and stops at the first enemy or block; what it does there is set per cast. */
+    private static final Shot FIREBALL = Shot.of(FIREBALL_MODEL)
+            .speed(FIREBALL_SPEED).range(FIREBALL_RANGE).width(0.5).trail(FIREBALL_STREAK);
 
     /** A raven of fire (models/model_fx/conqueror/fire_raven_0..2: wings up, level, down). */
     private static final ModelFx RAVEN_MODEL = ConquerorFx.FIRE_RAVEN;
@@ -570,6 +594,59 @@ public class Conqueror {
     }
 
     // =========================
+    // Ability 5 - Cull
+    // Normal: a fireball flies where you look and bursts on the first enemy or block (fireBlast: FIREBALL_DAMAGE,
+    //         thrown back, set on fire).
+    // Sneak:  Cull: a giant scythe rises behind the enemy you aim at (or the nearest one in sight) and reaps it
+    //         at ConquerorFx.CULL_HITS. It is held in place until then. CULL_DAMAGE, or death outright if it is down
+    //         to CULL_EXECUTE_SHARE of its health; then it bleeds (Wither).
+    // =========================
+    public static void conquerorCull(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, CULL_SEQUENCE)) return;
+
+        if (player.isShiftKeyDown()) cull(player, sl);
+        else fireball(player, sl);
+    }
+
+    private static void fireball(Player player, ServerLevel sl) {
+        if (!Spells.paySpirituality(player, FIREBALL_COST)) return;
+
+        Vec3 look = player.getLookAngle().normalize();
+        Vec3 from = Spells.clearStart(player, sl, player.getEyePosition().add(look.scale(0.9)).add(0, -0.2, 0));
+        FIREBALL.onEnd((at, hitBlock) -> fireBlast(player, sl, at, FIREBALL_RADIUS, FIREBALL_DAMAGE))
+                .fire(player, sl, from, look);
+        Spells.sound(sl, from, SoundEvents.BLAZE_SHOOT, 1f, 0.7f);
+    }
+
+    private static void cull(Player player, ServerLevel sl) {
+        LivingEntity prey = Spells.aimEnemy(player, sl, CULL_RANGE);
+        if (prey == null) {
+            List<LivingEntity> inSight = Spells.enemiesInSight(player, sl, CULL_RANGE, 30.0);
+            if (!inSight.isEmpty()) prey = inSight.get(0);
+        }
+        if (prey == null) {
+            player.sendSystemMessage(Component.literal("There is nothing in sight to reap."));
+            return;                                                  // nothing spent
+        }
+        if (!Spells.paySpirituality(player, CULL_COST)) return;
+
+        LivingEntity target = prey;
+        float yaw = Spells.yawOf(target.position().subtract(player.position()));   // the cut faces away from you
+        Root.apply(target, ConquerorFx.CULL_HITS, RootRestriction.MOVEMENT);       // it cannot walk out of the swing
+        ConquerorFx.cull(sl, target, yaw);
+        Spells.sound(sl, target.position(), SoundEvents.WITHER_AMBIENT, 0.8f, 0.6f);
+
+        Later.run(sl, ConquerorFx.CULL_HITS, () -> {
+            if (!Spells.casterStillHere(player, sl) || !target.isAlive() || target.level() != sl) return;
+            boolean weak = target.getHealth() <= target.getMaxHealth() * CULL_EXECUTE_SHARE;
+            Spells.strike(player, target, weak ? target.getMaxHealth() * 10f + 1000f : CULL_DAMAGE);   // through any armour
+            if (target.isAlive()) target.addEffect(new MobEffectInstance(MobEffects.WITHER, CULL_BLEED_TICKS, 1));
+            Spells.sound(sl, target.position(), SoundEvents.PLAYER_ATTACK_SWEEP, 1.2f, 0.5f);
+            Spells.sound(sl, target.position(), SoundEvents.PLAYER_ATTACK_CRIT, 1f, 0.6f);
+        });
+    }
+
+    // =========================
     // Helpers shared by the abilities
     // =========================
 
@@ -625,15 +702,6 @@ public class Conqueror {
     private static boolean onSolidGround(ServerLevel sl, Vec3 spot) {
         return !sl.getBlockState(BlockPos.containing(spot.x, spot.y - 0.2, spot.z)).isAir();
     }
-
-    public static void conquerorCull(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, FLAME_SEQUENCE)) return;
-
-        if (player.isShiftKeyDown()) cull(player, sl);
-        else fireball(player, sl);
-    }
-
-
 
     private static final Vec3 UP = new Vec3(0, 1, 0);
 
