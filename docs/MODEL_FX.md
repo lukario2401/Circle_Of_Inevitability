@@ -442,6 +442,14 @@ These are in `models/model_fx/` and any Pathway can use them. Sizes are at `.sca
 | `conqueror/iron_mantle` | A mantle of dark iron with red-hot veins over a player's body: pauldrons, breastplate (a red sword on it), faulds, vambraces | default (between the feet) | Play it with `modelOnTurning`; `.scale(height / 1.8)` for other bodies |
 | `conqueror/war_sigil` | The War Bishop's seal: a flat circle of gold and blood-red runes, eight swords pointing in, a mitre | default (its middle) | Lies flat like `rune_circle`. `.glow().unshaded().seeThrough()` |
 | `conqueror/fire_raven` | A raven of fire, 1.5 blocks from wing tip to wing tip: charred body, burning wings that brighten toward the tips, white-hot beak, eyes and talons. 3 steps: 0 = wings up, 1 = level, 2 = down | the middle of its body `(8, 2.5, 9)` | `.frames(3).smooth().glow().unshaded()`. Beak = front. Made for `combat/Seeker` with `.flap(...)` |
+| `hanged_man/pendulum` | A spirit pendulum: a crimson crystal on a silver chain, 1.4 blocks long | the top of the chain `(8, 24, 8)` | Swing it with `pose().roll(...)` |
+| `hanged_man/whisper_mouths` | Four mouths in a ring 0.9 blocks across, facing out, to circle a head. 2 steps: 0 = shut, 1 = open | the middle of the ring `(8, 8, 8)` | `.frames(2).smooth()`; swing `frame` 0 <-> 1 to make them whisper |
+| `hanged_man/shadow_tendrils` | Four shadow tendrils rising from a pool, 1.4 blocks tall, round a 1-block middle. 5 steps: 0 = leaning out, 4 = curled shut over the middle | the middle of the pool `(8, -16, 8)` | `.frames(5).smooth()`. Start it under the ground with `pose().up(...)` |
+| `hanged_man/flesh_lump` | A veined lump of flesh with two bone shards, 0.6 blocks wide. 2 steps: 0 = resting, 1 = swollen | its middle `(8, 8, 8)` | `.frames(2).smooth()` |
+| `hanged_man/flesh_cloak` | See-through veined shells round a standing player, 2 blocks tall | default (between the feet) | `.seeThrough()`. Worn with `modelOnTurning` |
+| `hanged_man/black_armor` | Black plates with crimson trim round a player's body and limbs. 2 steps: 0 = flung apart, 1 = locked on | default (between the feet) | `.frames(2).smooth()`. Worn with `modelOnTurning` |
+| `hanged_man/black_armor_helm` | A black knight's helm with a glowing visor slit and a crest | the top of the head inside it `(8, 0, 8)` | `modelOnHead(..., 0, ...)` puts it on |
+| `hanged_man/shadow_head` | A head of shadow, 0.45 blocks wide, slit red eyes and a jagged grin, wisps off its back | the bottom of its neck `(8, 0, 8)` | Face = front |
 
 The fire and light ones (`orb`, `thread` and `projection` too) want `.glow().unshaded().seeThrough()`; the solid ones `.glow()`.
 
@@ -519,6 +527,17 @@ The wings and the crown are worn: they move with the entity they are on. The win
 | `ravensErupt(sl, who, from)` | Rings of fire round the caster, embers where the ravens leave. `FIRE_RAVEN` is the raven model | |
 
 They only show things: none of them hurts, roots or moves anyone. Put the damage at the tick they name with `Later.run`.
+
+### Hanged Man: ready-made displays
+
+`HangedManFx` (next to the other pathway classes) holds the Hanged Man's looks for all seven keys, both casts, and the Grazing soul theft (key 5): crimson, shadow, flesh and stolen souls. They only show things; the damage, roots and timing are the ability's, at the ticks the constants name (`BIND_GRIPS`, `STEAL_ARRIVES`, `DEGENERATION_ARRIVES`, `ARMOR_LOCKS`...). The class comment lists every call by key. The models come from `tools/model_gen/hanged_man/models.py` (`python3 tools/model_gen/hanged_man/models.py src/main/resources/assets/circle_of_inevitability`, then F3+T); `render.py` there draws any model to a PNG without the game, and `icons.py` makes the 16x16 pictures in `textures/gui/hanged_man/`.
+
+**See them in game** (cheats on): `/hangedfx all` (every display one after another; those on a spot in a ring 8 blocks out) or `/hangedfx binding` (TAB lists the names: divination, ritual, whispers, listen, binding, lurking, flesh_bomb, flesh_cloak, grazing, cull, black_armor, degeneration, trinity). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+Statuses: `HangedManFx.status(player, Status.FLESH_CLOAK, ticks)` shows the picture in the row above the hotbar stacks and a `HudTimer`; `statusEnd(...)` takes both away.
+
+Grazing souls are free-standing models, and clearing by tag clears that tag everywhere, so every soul has its own tag: `graveSoul(...)` returns it, keep it with the stolen ability and hand it to `soulStolen(...)` or `graveSoulFades(...)`.
+
 
 ## Tricks worth copying
 
