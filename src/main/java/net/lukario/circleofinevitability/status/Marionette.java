@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.status;
 
 import net.minecraft.core.UUIDUtil;
+import net.minecraft.core.particles.ParticleTypes;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.particles.fx.ModelFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;
@@ -45,6 +46,7 @@ import java.util.UUID;
  *   Marionette.ticksLeft(entity)
  *   Marionette.release(mob)                     // lets go: it is its old self again
  *   Marionette.collapse(mob)                    // cuts the strings the way running out of time does
+ *   Marionette.summon(mob, player, 600)         // a creature called up for the player: see "Summoned" below
  *
  * What a marionette does:
  *   - it attacks, in this order: what its master last hit, what last hit its master, the fight it is already in,
@@ -55,6 +57,11 @@ import java.util.UUID;
  *   - mobs that cannot fight (a cow, a villager) are walked up to the enemy and made to hit it
  * It ends when the time is up, when the puppet dies, or when its master dies, logs out or leaves the dimension.
  * When the time runs out the puppet drops dead (DIES_WHEN_TIME_RUNS_OUT); in the other cases it is just let go.
+ *
+ * Summoned: Marionette.summon(...) is for a creature an ability has just spawned (a Door of Summoning). It fights
+ * the same way, but does not count toward MAX_PER_MASTER, shows no control bar, and whenever it ends (time up,
+ * released, its master gone) it vanishes: it is removed from the world, with no drops. Spawn the mob, add it to
+ * the level, then hand it over. Marionette.isSummoned(entity) says whether it is one.
  *
  * Looks: a wooden control bar turning above it with strings down to its body (models/model_fx/marionette_cross).
  * Saved with the mob, so a marionette is still one after a reload (the model is not shown again, though).
@@ -73,6 +80,7 @@ public final class Marionette {
     private static final String MASTER = "Master";
     private static final String TICKS = "Ticks";
     private static final String STRIKE = "Strike";          // ticks until a mob that cannot fight may be made to hit again
+    private static final String SUMMONED = "Summoned";      // true: called up by an ability; it vanishes when it ends
     /** The control bar carries this tag, so cutting the strings removes it and nothing else stuck to the mob. */
     private static final String MODEL_TAG = "marionette";
 
@@ -109,12 +117,31 @@ public final class Marionette {
      * @return false if it cannot be taken: dead, in another dimension, or another player's marionette
      */
     public static boolean control(Mob mob, Player master, int ticks) {
+        return take(mob, master, ticks, false);
+    }
+
+    /**
+     * A creature an ability has just called up fights for the master for 'ticks' ticks, then vanishes (no drops).
+     * Does not count toward MAX_PER_MASTER and shows no control bar. False if it could not be taken (as control).
+     */
+    public static boolean summon(Mob mob, Player master, int ticks) {
+        return take(mob, master, ticks, true);
+    }
+
+    /** True for a creature handed over with summon(...). */
+    public static boolean isSummoned(Entity entity) {
+        CompoundTag tag = entity == null ? null : marionetteTag(entity);
+        return tag != null && tag.getBooleanOr(SUMMONED, false);
+    }
+
+    private static boolean take(Mob mob, Player master, int ticks, boolean summoned) {
         if (ticks <= 0 || !mob.isAlive() || !(mob.level() instanceof ServerLevel sl) || master.level() != sl) return false;
         UUID holder = masterId(mob);
         if (holder != null && !holder.equals(master.getUUID())) return false;
 
-        if (holder == null) {
+        if (holder == null && !summoned) {
             List<Mob> held = of(master);
+            held.removeIf(Marionette::isSummoned);              // the summoned do not count
             while (held.size() >= Math.max(1, MAX_PER_MASTER)) {        // make room: the one closest to its end goes
                 Mob oldest = held.get(0);
                 for (Mob other : held) {
@@ -128,12 +155,14 @@ public final class Marionette {
         CompoundTag tag = new CompoundTag();
         tag.store(MASTER, UUIDUtil.CODEC, master.getUUID());
         tag.putInt(TICKS, ticks);
+        if (summoned) tag.putBoolean(SUMMONED, true);
         mob.getPersistentData().put(TAG, tag);
         HELD.computeIfAbsent(master.getUUID(), id -> new HashSet<>()).add(mob.getUUID());
 
         aim(mob, null);                                     // it forgets whoever it was hunting (often its new master)
         ParticleShapes.clearModels(sl, mob, MODEL_TAG);     // taken again: one control bar, not two
-        hangStrings(sl, mob, ticks);
+        if (summoned) mob.setPersistenceRequired();         // it leaves when its time is up, not before
+        else hangStrings(sl, mob, ticks);
         return true;
     }
 
@@ -201,6 +230,7 @@ public final class Marionette {
         CompoundTag tag = marionetteTag(mob);
         if (tag == null) return;
         UUID holder = tag.read(MASTER, UUIDUtil.CODEC).isPresent() ? tag.read(MASTER, UUIDUtil.CODEC).orElseThrow() : null;
+        boolean summoned = tag.getBooleanOr(SUMMONED, false);
         mob.getPersistentData().remove(TAG);
         if (holder != null) {
             Set<UUID> ids = HELD.get(holder);
@@ -212,6 +242,12 @@ public final class Marionette {
         if (!(mob.level() instanceof ServerLevel sl)) return;
         ParticleShapes.clearModels(sl, mob, MODEL_TAG);
         if (!mob.isAlive()) return;
+        if (summoned) {                                     // called up for a while: it goes back where it came from
+            sl.sendParticles(ParticleTypes.POOF, mob.getX(), mob.getY(0.5), mob.getZ(), 12, 0.3, 0.4, 0.3, 0.02);
+            sl.playSound(null, mob.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.PLAYERS, 0.6f, 1.4f);
+            mob.discard();
+            return;
+        }
 
         aim(mob, null);
         ParticleShapes.burst(sl, STRING_SNAP, mob.position().add(0, mob.getBbHeight() + 0.6, 0), 12, 0.03, 0.14);

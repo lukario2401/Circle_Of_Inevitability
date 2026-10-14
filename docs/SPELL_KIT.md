@@ -743,6 +743,9 @@ Marionette.of(player);                             // the marionettes that playe
 Marionette.ticksLeft(entity);
 Marionette.release(mob);                           // lets go: it is its old self again
 Marionette.collapse(mob);                          // cuts the strings the way running out of time does
+Marionette.summon(mob, player, 600);               // a creature an ability just spawned: fights the same way, does not
+                                                   // count toward MAX_PER_MASTER, no control bar, vanishes (no drops) when it ends
+Marionette.isSummoned(entity);
 ```
 
 What a marionette does:
@@ -1029,6 +1032,7 @@ private static AbilityWheel.Result fireball(ServerPlayer player, ServerLevel sl)
 | `.onCast((player, sl, entry) -> ...)` | Runs after every cast that returned `DONE` |
 | `.radius(pixels)` | How far from the middle of the screen the icons sit (default 72) |
 | `.quickCastCooldown(false)` | A sneak recast (`quickCast`) ignores cooldowns: it works while the pick is cooling down and starts none. The cost is still paid. Picks from the wheel keep their cooldowns |
+| `.quickCastCost(2f)` | A sneak recast costs that many times the entry's cost (default 1). With `.quickCastCooldown(false)`: no cooldown, double the price (Beauty Goddess's two wheels) |
 | `open(player)`, `quickCast(player)`, `cast(player, entry)` | Show it / cast the last pick / cast one entry with every check |
 | `lastPick(player)`, `entry(key)`, `entries()`, `unlocked(player)`, `cooldownLeft(player, entry)`, `reset(player)` | Asking about it |
 

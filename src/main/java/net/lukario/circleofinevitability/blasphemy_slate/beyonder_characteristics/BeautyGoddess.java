@@ -15,28 +15,38 @@ import net.lukario.circleofinevitability.status.Blind;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.DeathWard;
 import net.lukario.circleofinevitability.status.FallGuard;
+import net.lukario.circleofinevitability.status.Flight;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.lukario.circleofinevitability.status.Vulnerable;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -64,20 +74,21 @@ import java.util.UUID;
  *   5 Lunar Battlefield  (Scarlet Scholar)   a full moon over where you aim; inside it the key is Flash Teleportation
  *                                                                              | sneak: Spectral Moonlight Form
  *   6 Gaze of Darkness   (Shaman King)       darkness holds and hurts the target; the key again crushes the eye
- *   7 Moon wheel         (Beauty Goddess)    Beauty (1), Blood Moon (0)       | sneak: the last one again
+ *                                                                              | sneak: Bat Swarm Transformation
+ *   7 Moon wheel         (High Summoner)     Door of Summoning (3), Creation (2), Beauty (1), Blood Moon (0)
+ *                                                                              | sneak: the last one again
  *
- * Not made yet (docs/BEAUTY_GODDESS.md): Bat Swarm Transformation (key 6 sneak; sneaking casts the Gaze for now),
- * Door of Summoning and Creation (the Moon wheel's Sequence 3 and 2 entries, so key 7 opens at Sequence 1).
+ * The two wheels' sneak recast (the last pick again) has no cooldown but costs twice as much (QUICK_CAST_COST).
  *
  * Every look and sound is in BeautyGoddessFx (see /beautyfx); this class only decides who is hurt, held and
  * helped, and when (at the ticks BeautyGoddessFx names: TAME_LANDS, SHACKLES_LOCK, DRINK_DONE, MOON_RISEN...).
- * The reusable pieces come from docs/SPELL_KIT.md: combat/Zone (the cloud, the moons, Beauty), status/Marionette
- * (the tamed), status/Concealment (invisibility, shadow, moonlight), status/DeathWard (the re-forming moonlight),
+ * The reusable pieces come from docs/SPELL_KIT.md: combat/Zone (the cloud, the moons, Beauty, Creation),
+ * status/Marionette (the tamed, and the summoned with Marionette.summon), status/Flight (the bat swarm), status/Concealment (invisibility, shadow, moonlight), status/DeathWard (the re-forming moonlight),
  * status/Taunt (the Blood Moon's rampage), root/Root, combat/Spells, combat/Later.
  *
  * The passives (poison resistance, Strength, Night Vision...) are in SequencePassives; the ones that need more
  * than a check once a second (afterimages, longer potions, mobs that hesitate) are here.
- * Nothing here breaks blocks or lights real fire. The numbers for every ability are right below.
+ * Nothing here breaks blocks or lights real fire; Creation grows plants (as bone meal does). The numbers for every ability are right below.
  */
 public class BeautyGoddess {
 
@@ -184,9 +195,31 @@ public class BeautyGoddess {
     private static final float GAZE_DAMAGE = 8f;                 // each second while held
     private static final float GAZE_CRUSH_DAMAGE = 40f;          // the key again: the eye is crushed and this lands
     private static final int GAZE_LOST_SIGHT = 2;                // checks (half seconds) in a row without seeing it and the gaze breaks
+    // sneak: Bat Swarm Transformation (the key again re-forms you early)
+    private static final int SWARM_COST = 6000;
+    private static final int SWARM_TICKS = 120;                  // you fly as a swarm this long, invisible
+    private static final int SWARM_BATS = 12;
+    private static final float SWARM_BAT_HEALTH = 4f;            // each blow kills one bat for every this much damage (one at least)
+    private static final double SWARM_BITE_REACH = 2.5;          // twice a second the bats bite every enemy this close...
+    private static final float SWARM_BITE_DAMAGE = 3f;           // ...for this much...
+    private static final float SWARM_BITE_DRAIN = 0.5f;          // ...and you get this much back for each bite
 
-    // Ability 7 - Moon wheel (Sequence 1 for now: its Sequence 3 and 2 entries are not made yet)
-    private static final int MOON_WHEEL_SEQUENCE = 1;
+    // Both wheels: the sneak recast skips the cooldown and costs this many times as much
+    private static final float QUICK_CAST_COST = 2f;
+
+    // Ability 7 - Moon wheel (Sequence 3)
+    private static final int MOON_WHEEL_SEQUENCE = 3;
+    private static final int DOOR_SEQUENCE = 3, DOOR_COST = 10000, DOOR_COOLDOWN = 900;
+    private static final double DOOR_RANGE = 20.0;
+    private static final int DOOR_TICKS = 100;                   // the door stands (the summoned step out from BeautyGoddessFx.DOOR_OPEN)
+    private static final int SUMMON_TICKS = 600;                 // they fight for you this long, then go back (no drops)
+    private static final int SUMMON_EVERY = 10;                  // ticks between two of them stepping out
+    private static final float DOOR_ANOMALY_CHANCE = 0.08f;      // something stranger comes through with them
+    private static final int CREATION_SEQUENCE = 2, CREATION_COST = 25000, CREATION_COOLDOWN = 1200;
+    private static final double CREATION_RANGE = 24.0;
+    private static final double CREATION_RADIUS = 8.0;
+    private static final int CREATION_TICKS = 400;               // it heals from BeautyGoddessFx.SEED_BLOOMS for this long
+    private static final int CREATION_GROWTH = 8;                // each second, this many spots in it grow as if bone-mealed
     private static final int BEAUTY_SEQUENCE = 1, BEAUTY_COST = 20000, BEAUTY_COOLDOWN = 1200;
     private static final double BEAUTY_RADIUS = 16.0;
     private static final int BEAUTY_TICKS = 200;
@@ -222,6 +255,8 @@ public class BeautyGoddess {
     private static final String MOON_Y = "beauty_goddess_moon_y";
     private static final String MOON_Z = "beauty_goddess_moon_z";
     private static final String FLASH_READY = "beauty_goddess_flash_ready";
+    private static final String SWARM_UNTIL = "beauty_goddess_swarm_until";
+    private static final String SWARM_LEFT = "beauty_goddess_swarm_bats";
 
     // Saved on whoever it is put on
     private static final String TAMED_UNTIL = "beauty_goddess_tamed_until";
@@ -232,6 +267,7 @@ public class BeautyGoddess {
     private static final String ZONE_MOON = "beauty_goddess_moon";
     private static final String ZONE_BEAUTY = "beauty_goddess_beauty";
     private static final String ZONE_BLOOD_MOON = "beauty_goddess_blood_moon";
+    private static final String ZONE_CREATION = "beauty_goddess_creation";
 
     /** The enemies each gliding caster has passed (the bats go for them). Not saved. */
     private static final Map<UUID, Set<LivingEntity>> PASSED = new HashMap<>();
@@ -253,9 +289,19 @@ public class BeautyGoddess {
             breathTick(player, sl);
             shadowTick(player, sl);
             moonlightTick(player, sl);
+            swarmTick(player, sl);
             if (player.tickCount % AFTERIMAGE_EVERY == 0 && player.isSprinting() && isBeautyGoddess(player, AFTERIMAGE_SEQUENCE)) {
                 BeautyGoddessFx.afterimage(sl, player);
             }
+        }
+
+        /** A blow on the swarm kills bats instead of hurting you; only when the last one falls are you flesh again. */
+        @SubscribeEvent
+        public static void onBeautyGoddessHurt(LivingHurtEvent event) {
+            if (!(event.getEntity() instanceof Player player) || !(player.level() instanceof ServerLevel sl)) return;
+            if (!isActive(player, SWARM_UNTIL) || event.getAmount() <= 0f) return;
+            if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;      // the void and /kill
+            event.setAmount(swarmStruck(player, sl, event.getAmount()));
         }
 
         // what was on the screen and the body does not survive relogging or dying: start clean
@@ -594,7 +640,8 @@ public class BeautyGoddess {
 
     // =========================
     // Ability 4 - Potions
-    // Normal: the potion wheel. Sneak: the last potion again, without the wheel. Each is drunk (or thrown) and
+    // Normal: the potion wheel. Sneak: the last potion again, without the wheel, with no cooldown but
+    //         QUICK_CAST_COST times its cost. Each is drunk (or thrown) and
     //         takes hold at BeautyGoddessFx.DRINK_DONE:
     //   Invisibility (6): unseen and untouchable for INVISIBILITY_TICKS; attacking brings you out.
     //   Fire Breathing (6): BREATH_TICKS of flame out of your mouth where you look.
@@ -605,6 +652,7 @@ public class BeautyGoddess {
     // =========================
     private static final AbilityWheel POTIONS = AbilityWheel.create("beauty_goddess_potions", "Potions")
             .radius(72)
+            .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("invisibility", BeautyGoddessFx.WHEEL_INVISIBILITY, "Invisibility Potion", INVISIBILITY_SEQUENCE,
                     INVISIBILITY_COST, INVISIBILITY_COOLDOWN, BeautyGoddess::invisibilityPotion)
             .entry("fire_breathing", BeautyGoddessFx.WHEEL_FIRE_BREATHING, "Fire Breathing Potion", BREATH_SEQUENCE,
@@ -903,7 +951,9 @@ public class BeautyGoddess {
     // Normal: the reflection of the enemy you look at is caught in your eye. From BeautyGoddessFx.GAZE_GRIPS
     //         solid darkness holds it in place and hurts it GAZE_DAMAGE a second, for as long as you keep it in
     //         sight (GAZE_TICKS at most). The key again crushes the eye: GAZE_CRUSH_DAMAGE, and the gaze ends.
-    //         Bat Swarm Transformation (the sneak form) is not made yet: sneaking casts the Gaze too.
+    // Sneak:  Bat Swarm Transformation. For SWARM_TICKS you are SWARM_BATS bats: you fly, are invisible, and bite
+    //         every enemy close by. A blow kills bats instead of hurting you (one for every SWARM_BAT_HEALTH of it);
+    //         you cannot die while one is left. The key again, or the last bat falling, and you re-form where you are.
     // =========================
     public static void beautyGoddessGaze(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, GAZE_SEQUENCE)) return;
@@ -911,6 +961,15 @@ public class BeautyGoddess {
         Gaze held = GAZES.get(player.getUUID());
         if (held != null) {                                        // the key again: crush the eye, for nothing
             crushGaze(player, sl, held);
+            return;
+        }
+        if (isActive(player, SWARM_UNTIL)) {                       // the key again: re-form now, for nothing
+            endSwarm(player, sl);
+            return;
+        }
+        if (player.isShiftKeyDown()) {
+            if (!Spells.paySpirituality(player, SWARM_COST)) return;
+            batSwarm(player, sl);
             return;
         }
         LivingEntity target = Spells.aimEnemy(player, sl, GAZE_RANGE);
@@ -987,34 +1046,200 @@ public class BeautyGoddess {
         if (message != null) player.sendSystemMessage(Component.literal(message));
     }
 
+    private static void batSwarm(Player player, ServerLevel sl) {
+        endForms(player, sl);
+        CompoundTag data = player.getPersistentData();
+        data.putLong(SWARM_UNTIL, sl.getGameTime() + SWARM_TICKS);
+        data.putInt(SWARM_LEFT, SWARM_BATS);
+        Flight.grant(player, SWARM_TICKS);
+        player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, SWARM_TICKS, 0, false, false));
+        BeautyGoddessFx.batSwarm(sl, player, SWARM_TICKS, swarmTag(player));
+        BeautyGoddessFx.status(player, Status.BAT_SWARM, SWARM_TICKS);
+    }
+
+    /** Every tick as a swarm: it ends on time; it smokes; twice a second the bats bite what is close. */
+    private static void swarmTick(Player player, ServerLevel sl) {
+        if (!player.getPersistentData().contains(SWARM_UNTIL)) return;
+        if (!isActive(player, SWARM_UNTIL)) {
+            endSwarm(player, sl);
+            return;
+        }
+        if (player.tickCount % 5 == 0) BeautyGoddessFx.batSwarmTick(sl, player);
+        if (player.tickCount % 10 != 0) return;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.getBoundingBox().getCenter(), SWARM_BITE_REACH)) {
+            Spells.strike(player, enemy, SWARM_BITE_DAMAGE);
+            player.heal(SWARM_BITE_DRAIN);
+        }
+    }
+
+    /**
+     * A blow of 'amount' lands on the swarm: bats die instead of you. Returns what is left of the blow for your
+     * body: nothing while bats are left, the rest once the last one is killed (the swarm then ends).
+     */
+    private static float swarmStruck(Player player, ServerLevel sl, float amount) {
+        CompoundTag data = player.getPersistentData();
+        int left = data.getIntOr(SWARM_LEFT, 0);
+        int killed = Math.min(left, Math.max(1, (int) Math.ceil(amount / SWARM_BAT_HEALTH)));
+        left -= killed;
+        Vec3 chest = player.getBoundingBox().getCenter();
+        for (int i = 0; i < killed; i++) {
+            BeautyGoddessFx.batSwarmBatLost(sl, chest.add((player.getRandom().nextDouble() - 0.5) * 1.6,
+                    (player.getRandom().nextDouble() - 0.5) * 1.2, (player.getRandom().nextDouble() - 0.5) * 1.6));
+        }
+        if (left > 0) {
+            data.putInt(SWARM_LEFT, left);
+            return 0f;
+        }
+        endSwarm(player, sl);
+        player.sendSystemMessage(Component.literal("Your last bat falls: you are flesh again."));
+        return Math.max(0f, amount - killed * SWARM_BAT_HEALTH);
+    }
+
+    private static void endSwarm(Player player, ServerLevel sl) {
+        CompoundTag data = player.getPersistentData();
+        data.remove(SWARM_UNTIL);
+        data.remove(SWARM_LEFT);
+        if (Flight.has(player)) Flight.end(player);                // lands you safely (Flight guards the fall)
+        MobEffectInstance invisible = player.getEffect(MobEffects.INVISIBILITY);   // only the swarm's own
+        if (invisible != null && invisible.getAmplifier() == 0 && invisible.getDuration() <= SWARM_TICKS) {
+            player.removeEffect(MobEffects.INVISIBILITY);
+        }
+        BeautyGoddessFx.batSwarmEnd(sl, player, swarmTag(player));
+        BeautyGoddessFx.statusEnd(player, Status.BAT_SWARM);
+    }
+
+    private static String swarmTag(Player player) {
+        return "bg_swarm_" + player.getId();
+    }
+
     // =========================
     // Ability 7 - Moon wheel
-    // Normal: the Moon wheel. Sneak: the last entry again, without the wheel.
+    // Normal: the Moon wheel. Sneak: the last entry again, without the wheel, with no cooldown but QUICK_CAST_COST
+    //         times its cost.
+    //   Door of Summoning (3): a door opens where you aim and three creatures of the Spirit World step out (two
+    //               hounds and a vex) to fight for you for SUMMON_TICKS (status/Marionette's summon: they do not
+    //               take the place of the tamed). Now and then something stranger comes with them: a ravager.
+    //   Creation (2): a Seed of Life where you aim. From its bloom, for CREATION_TICKS, everything that is not your
+    //               enemy within CREATION_RADIUS is healed to full and cleansed every second, and plants grow.
     //   Beauty (1): for BEAUTY_TICKS every enemy within BEAUTY_RADIUS of you is drawn gently toward you, stands in
     //               awe (cannot attack or cast) and takes BEAUTY_EXTRA more damage.
     //   Blood Moon (0): a red moon over where you aim, BLOOD_MOON_RADIUS wide, for BLOOD_MOON_TICKS. Under it every
     //               enemy burns BLOOD_MOON_DAMAGE a second, the monsters are set on each other, and you and your
     //               allies are healed and strengthened.
-    // Door of Summoning (3) and Creation (2) are not made yet, so the wheel opens at Sequence 1.
     // =========================
     private static final AbilityWheel MOON_WHEEL = AbilityWheel.create("beauty_goddess_moon", "Moon")
-            .radius(64)
+            .radius(72)
+            .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .entry("door", BeautyGoddessFx.WHEEL_DOOR, "Door of Summoning", DOOR_SEQUENCE,
+                    DOOR_COST, DOOR_COOLDOWN, BeautyGoddess::doorOfSummoning)
+            .entry("creation", BeautyGoddessFx.WHEEL_CREATION, "Creation", CREATION_SEQUENCE,
+                    CREATION_COST, CREATION_COOLDOWN, BeautyGoddess::creation)
             .entry("beauty", BeautyGoddessFx.WHEEL_BEAUTY, "Beauty", BEAUTY_SEQUENCE,
                     BEAUTY_COST, BEAUTY_COOLDOWN, BeautyGoddess::beauty)
             .entry("blood_moon", BeautyGoddessFx.WHEEL_BLOOD_MOON, "Blood Moon", BLOOD_MOON_SEQUENCE,
                     BLOOD_MOON_COST, BLOOD_MOON_COOLDOWN, BeautyGoddess::bloodMoon);
 
     public static void beautyGoddessMoonWheel(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return;
-        if (!Beyonder.hasSequence(player, MOON_WHEEL_SEQUENCE)) {
-            if (Beyonder.hasSequence(player, 3)) {
-                player.sendSystemMessage(Component.literal("The Moon wheel opens at Sequence 1 (Beauty). "
-                        + "Door of Summoning and Creation are not made yet."));
-            }
-            return;
-        }
+        if (!ready(player, bypassClassCheck, MOON_WHEEL_SEQUENCE)) return;
         if (player.isShiftKeyDown()) MOON_WHEEL.quickCast(player);
         else MOON_WHEEL.open(player);
+    }
+
+    private static AbilityWheel.Result doorOfSummoning(ServerPlayer player, ServerLevel sl) {
+        revealFromForms(player, sl);
+        Vec3 ground = Spells.aimGround(player, sl, DOOR_RANGE);
+        Vec3 toCaster = player.position().subtract(ground);
+        float yaw = toCaster.horizontalDistanceSqr() < 0.01 ? player.getYRot() + 180f : Spells.yawOf(toCaster);   // it opens toward you
+        String tag = "bg_door_" + player.getId() + "_" + sl.getGameTime();
+        BeautyGoddessFx.summoningDoor(sl, ground, yaw, DOOR_TICKS, tag);
+        BeautyGoddessFx.status(player, Status.SUMMONING, SUMMON_TICKS);
+
+        List<EntityType<? extends Mob>> coming = new ArrayList<>(List.<EntityType<? extends Mob>>of(EntityTypes.WOLF, EntityTypes.VEX, EntityTypes.WOLF));
+        boolean anomaly = player.getRandom().nextFloat() < DOOR_ANOMALY_CHANCE;
+        if (anomaly) coming.add(EntityTypes.RAVAGER);
+        for (int i = 0; i < coming.size(); i++) {
+            EntityType<? extends Mob> type = coming.get(i);
+            int step = i;
+            boolean stranger = anomaly && i == coming.size() - 1;
+            Later.run(sl, BeautyGoddessFx.DOOR_OPEN + i * SUMMON_EVERY, () -> {
+                if (!Spells.casterStillHere(player, sl)) return;
+                if (stranger) {
+                    BeautyGoddessFx.summonAnomaly(sl, ground, yaw);
+                    player.sendSystemMessage(Component.literal("Something stranger answers the door."));
+                }
+                BeautyGoddessFx.spiritCharge(sl, ground, yaw);
+                double side = (step % 2 == 0 ? 1 : -1) * 0.6 * ((step + 1) / 2);
+                Vec3 out = Spells.spotAround(ground, yaw, 1.6).add(Spells.spotAround(Vec3.ZERO, yaw + 90f, side));
+                Mob summoned = summon(player, sl, type, Spells.groundAt(player, sl, out.add(0, 1, 0)), yaw);
+                if (summoned != null) BeautyGoddessFx.summonArrives(sl, summoned);
+            });
+        }
+        player.sendSystemMessage(Component.literal("The Door of Summoning opens."));
+        return AbilityWheel.Result.DONE;
+    }
+
+    /** One creature of the Spirit World, standing at 'feet' and fighting for the caster for SUMMON_TICKS. */
+    private static Mob summon(Player player, ServerLevel sl, EntityType<? extends Mob> type, Vec3 feet, float yaw) {
+        Mob mob = type.create(sl, EntitySpawnReason.MOB_SUMMONED);
+        if (mob == null) return null;
+        mob.snapTo(feet.x, feet.y, feet.z, yaw, 0f);
+        mob.setYHeadRot(yaw);
+        if (!sl.addFreshEntity(mob)) return null;
+        if (!Marionette.summon(mob, player, SUMMON_TICKS)) {
+            mob.discard();
+            return null;
+        }
+        return mob;
+    }
+
+    private static AbilityWheel.Result creation(ServerPlayer player, ServerLevel sl) {
+        revealFromForms(player, sl);
+        Vec3 ground = Spells.aimGround(player, sl, CREATION_RANGE);
+        String tag = "bg_creation_" + player.getId();
+        int whole = BeautyGoddessFx.SEED_BLOOMS + CREATION_TICKS;
+        long until = sl.getGameTime() + whole;
+        Zone.close(player, ZONE_CREATION);                           // an older seed wilts first
+        BeautyGoddessFx.seedOfLife(sl, ground, CREATION_RADIUS, whole, tag);
+        BeautyGoddessFx.status(player, Status.CREATION, whole);
+        Later.run(sl, BeautyGoddessFx.SEED_BLOOMS, () -> {
+            if (!Spells.casterStillHere(player, sl)) return;
+            Zone.at(ground, CREATION_RADIUS).height(5).lasts(CREATION_TICKS).every(20)
+                    .affects(entity -> isBody(entity) && !Spells.isEnemy(player, entity))
+                    .onInside((ally, inside) -> restore(sl, ally))
+                    .onPulse(left -> {
+                        BeautyGoddessFx.seedOfLifePulse(sl, ground, CREATION_RADIUS);
+                        if (inCircle(player, ground, CREATION_RADIUS, 5)) restore(sl, player);
+                        grow(player, sl, ground);
+                    })
+                    .onEnd(() -> {
+                        if (sl.getGameTime() < until - 5) BeautyGoddessFx.seedOfLifeEnd(sl, ground, tag);
+                        BeautyGoddessFx.statusEnd(player, Status.CREATION);
+                    })
+                    .open(player, sl, ZONE_CREATION);
+        });
+        return AbilityWheel.Result.DONE;
+    }
+
+    /** The Seed of Life on one of yours: whole again, and nothing harmful left on them. */
+    private static void restore(ServerLevel sl, LivingEntity ally) {
+        boolean helped = ally.getHealth() < ally.getMaxHealth() || !Spells.harmfulEffects(ally).isEmpty();
+        Spells.cleanse(ally);
+        ally.setHealth(ally.getMaxHealth());
+        if (helped) BeautyGoddessFx.seedOfLifeHeal(sl, ally);
+    }
+
+    /** CREATION_GROWTH random spots under the seed grow as if bone-mealed: crops ripen, saplings rise, grass flowers. */
+    private static void grow(Player player, ServerLevel sl, Vec3 ground) {
+        ItemStack meal = new ItemStack(Items.BONE_MEAL, 64);
+        for (int i = 0; i < CREATION_GROWTH; i++) {
+            double angle = player.getRandom().nextDouble() * Math.PI * 2;
+            double far = Math.sqrt(player.getRandom().nextDouble()) * CREATION_RADIUS;
+            Vec3 spot = Spells.groundNear(player, sl, ground.add(Math.cos(angle) * far, 0, Math.sin(angle) * far), 3);
+            if (spot == null) continue;
+            BlockPos above = BlockPos.containing(spot.x, spot.y + 0.1, spot.z);     // a crop or sapling standing on it
+            if (!BoneMealItem.growCrop(meal, sl, above)) BoneMealItem.growCrop(meal, sl, above.below());   // or the grass itself
+            if (meal.isEmpty()) meal = new ItemStack(Items.BONE_MEAL, 64);
+        }
     }
 
     private static AbilityWheel.Result beauty(ServerPlayer player, ServerLevel sl) {
@@ -1152,11 +1377,12 @@ public class BeautyGoddess {
         return dx * dx + dz * dz <= radius * radius && at.y >= ground.y - 1.5 && at.y <= ground.y + height;
     }
 
-    /** Only one of the hiding forms at a time: a new one (or invisibility) ends the others first. */
+    /** Only one of the forms (invisible, shadow, moonlight, swarm) at a time: a new one ends the others first. */
     private static void endForms(Player player, ServerLevel sl) {
         if (player.getPersistentData().contains(INVISIBLE_UNTIL)) endInvisibility(player, sl);
         if (player.getPersistentData().contains(SHADOW_UNTIL)) endShadow(player, sl);
         if (player.getPersistentData().contains(MOONLIGHT_UNTIL)) endMoonlight(player, sl);
+        if (player.getPersistentData().contains(SWARM_UNTIL)) endSwarm(player, sl);
     }
 
     /** Casting something that shows you brings you out of a hiding form first. */
@@ -1173,7 +1399,8 @@ public class BeautyGoddess {
     /** After a relog or a death: nothing of the timed casts is left over (their looks did not survive either). */
     private static void clearState(Player player) {
         CompoundTag data = player.getPersistentData();
-        for (String key : List.of(VISION_UNTIL, WINGS_UNTIL, INVISIBLE_UNTIL, BREATH_UNTIL, SHADOW_UNTIL,
+        if (data.contains(SWARM_UNTIL) && Flight.has(player)) Flight.end(player);
+        for (String key : List.of(SWARM_UNTIL, SWARM_LEFT, VISION_UNTIL, WINGS_UNTIL, INVISIBLE_UNTIL, BREATH_UNTIL, SHADOW_UNTIL,
                 MOONLIGHT_UNTIL, MOON_UNTIL, MOON_X, MOON_Y, MOON_Z, FLASH_READY)) {
             data.remove(key);
         }

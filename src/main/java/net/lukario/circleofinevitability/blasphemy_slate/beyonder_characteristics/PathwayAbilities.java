@@ -189,9 +189,9 @@ public final class PathwayAbilities {
                     (player, level, sl) -> BeautyGoddess.beautyGoddessPotions(player, level, sl, true)),
             new Ability("Beauty Goddess", 5, "Lunar Battlefield", 5, SNEAK, STEALABLE,
                     (player, level, sl) -> BeautyGoddess.beautyGoddessLunarBattlefield(player, level, sl, true)),
-            new Ability("Beauty Goddess", 6, "Gaze of Darkness", 4, NO_SNEAK, STEALABLE,     // Bat Swarm (its sneak form) is not made yet
+            new Ability("Beauty Goddess", 6, "Gaze of Darkness", 4, SNEAK, STEALABLE,
                     (player, level, sl) -> BeautyGoddess.beautyGoddessGaze(player, level, sl, true)),
-            new Ability("Beauty Goddess", 7, "Moon", 1, SNEAK, STEALABLE,                   // stolen: no wheel; Door of Summoning (3) and Creation (2) are not made yet
+            new Ability("Beauty Goddess", 7, "Moon", 3, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)));
 
     private PathwayAbilities() {}

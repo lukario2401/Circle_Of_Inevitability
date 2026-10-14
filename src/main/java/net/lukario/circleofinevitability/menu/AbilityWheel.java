@@ -37,6 +37,7 @@ import java.util.function.Predicate;
  *     REFUSED  it could not (no target, no room): nothing is taken. Tell the player why in the cast.
  *   The wheel checks the Sequence, the cooldown and that the player has the spirituality BEFORE the cast, and
  *   takes it after, so a cast only has to check what is its own (a target, room).
+ * - .quickCastCooldown(false).quickCastCost(2f): a sneak recast ignores the cooldown and costs double.
  * - .free(player -> ...) after an entry: while it says true, that entry skips the cost and cooldown checks
  *   (pair it with FREE: the cast that ties off a spell already paid for).
  *
@@ -96,6 +97,7 @@ public final class AbilityWheel {
     private final List<Entry> entries = new ArrayList<>();
     private CastDone onCast;
     private boolean quickCastCooldown = true;        // false: a sneak recast neither waits for nor starts a cooldown
+    private float quickCastCost = 1f;                // a sneak recast costs this many times the entry's cost
     private AbilityMenu menu;                        // built the first time it is opened
 
     private AbilityWheel(String id, String title) {
@@ -134,6 +136,16 @@ public final class AbilityWheel {
         return this;
     }
 
+    /**
+     * A sneak recast (quickCast) costs this many times the entry's own cost: quickCastCost(2f) = twice as much.
+     * Pair it with quickCastCooldown(false) for "no cooldown, but double the price". Picking from the wheel pays
+     * the normal cost.
+     */
+    public AbilityWheel quickCastCost(float multiplier) {
+        this.quickCastCost = Math.max(0f, multiplier);
+        return this;
+    }
+
     public AbilityWheel onCast(CastDone action) {
         this.onCast = action;
         return this;
@@ -166,7 +178,7 @@ public final class AbilityWheel {
             open(player);
             return;
         }
-        cast(serverPlayer, entry, !quickCastCooldown);
+        cast(serverPlayer, entry, !quickCastCooldown, quickCastCost);
     }
 
     /** Casts one entry with every check, its cooldown included. */
@@ -180,7 +192,13 @@ public final class AbilityWheel {
      * ignoreCooldown: the cooldown is neither checked nor started (the cost is still checked and taken).
      */
     public Result cast(ServerPlayer player, Entry entry, boolean ignoreCooldown) {
+        return cast(player, entry, ignoreCooldown, 1f);
+    }
+
+    /** The same, paying 'costMultiplier' times the entry's cost (a sneak recast with quickCastCost). */
+    public Result cast(ServerPlayer player, Entry entry, boolean ignoreCooldown, float costMultiplier) {
         if (!(player.level() instanceof ServerLevel sl)) return Result.REFUSED;
+        int cost = Math.round(entry.cost * Math.max(0f, costMultiplier));
         if (!unlocked(player, entry)) {
             player.sendSystemMessage(Component.literal(entry.name + " needs Sequence " + entry.sequence + "."));
             return Result.REFUSED;
@@ -192,8 +210,8 @@ public final class AbilityWheel {
                 player.sendSystemMessage(Component.literal(entry.name + " is ready again in " + seconds(wait) + "."));
                 return Result.REFUSED;
             }
-            if (SoulCore.getSpirituality(player) < entry.cost) {
-                Spells.paySpirituality(player, entry.cost);      // takes nothing, only says so
+            if (SoulCore.getSpirituality(player) < cost) {
+                Spells.paySpirituality(player, cost);            // takes nothing, only says so
                 return Result.REFUSED;
             }
         }
@@ -204,7 +222,7 @@ public final class AbilityWheel {
         player.getPersistentData().putString(id + "_last", entry.key);
         if (result == Result.DONE) {
             if (!free) {
-                Spells.paySpirituality(player, entry.cost);
+                Spells.paySpirituality(player, cost);
                 if (entry.cooldown > 0 && !ignoreCooldown) player.getPersistentData().putLong(id + "_ready_" + entry.key, sl.getGameTime() + entry.cooldown);
             }
             if (onCast != null) onCast.run(player, sl, entry);
