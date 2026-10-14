@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability;
 import com.mojang.logging.LogUtils;
 import net.lukario.circleofinevitability.effects.ModEffects;
 import net.lukario.circleofinevitability.particles.ModParticles;
+import net.lukario.circleofinevitability.sounds.ModSounds;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
@@ -35,6 +36,7 @@ public class CircleOfInevitability
         ServerStartingEvent.BUS.addListener(this::onServerStarting);
 
         ModParticles.PARTICLES.register(modEventBus);
+        ModSounds.SOUNDS.register(modEventBus);
         ModEffects.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us

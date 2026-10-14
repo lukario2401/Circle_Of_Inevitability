@@ -1,0 +1,232 @@
+{
+  "beauty_goddess.flask_throw": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.flask_throw",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/flask_throw"
+      }
+    ]
+  },
+  "beauty_goddess.flask_shatter": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.flask_shatter",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/flask_shatter_1"
+      },
+      {
+        "name": "circle_of_inevitability:beauty_goddess/flask_shatter_2"
+      }
+    ]
+  },
+  "beauty_goddess.potion_bubble": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.potion_bubble",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/potion_bubble"
+      }
+    ]
+  },
+  "beauty_goddess.heal_chime": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.heal_chime",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/heal_chime"
+      }
+    ]
+  },
+  "beauty_goddess.spirit_vision": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.spirit_vision",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/spirit_vision"
+      }
+    ]
+  },
+  "beauty_goddess.blood_pact": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.blood_pact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/blood_pact"
+      }
+    ]
+  },
+  "beauty_goddess.wings_unfurl": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.wings_unfurl",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/wings_unfurl"
+      }
+    ]
+  },
+  "beauty_goddess.wing_flap": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.wing_flap",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/wing_flap_1"
+      },
+      {
+        "name": "circle_of_inevitability:beauty_goddess/wing_flap_2"
+      }
+    ]
+  },
+  "beauty_goddess.bat_swarm": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.bat_swarm",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/bat_swarm"
+      }
+    ]
+  },
+  "beauty_goddess.shackles": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.shackles",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/shackles"
+      }
+    ]
+  },
+  "beauty_goddess.drain": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.drain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/drain"
+      }
+    ]
+  },
+  "beauty_goddess.invisibility": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.invisibility",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/invisibility"
+      }
+    ]
+  },
+  "beauty_goddess.fire_breath": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.fire_breath",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/fire_breath"
+      }
+    ]
+  },
+  "beauty_goddess.sun_water": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.sun_water",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/sun_water"
+      }
+    ]
+  },
+  "beauty_goddess.shadow_melt": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.shadow_melt",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/shadow_melt"
+      }
+    ]
+  },
+  "beauty_goddess.moonrise": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.moonrise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/moonrise"
+      }
+    ]
+  },
+  "beauty_goddess.moon_blink": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.moon_blink",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/moon_blink"
+      }
+    ]
+  },
+  "beauty_goddess.moonlight_form": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.moonlight_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/moonlight_form"
+      }
+    ]
+  },
+  "beauty_goddess.moonlight_reform": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.moonlight_reform",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/moonlight_reform"
+      }
+    ]
+  },
+  "beauty_goddess.gaze": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.gaze",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/gaze"
+      }
+    ]
+  },
+  "beauty_goddess.eye_crush": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.eye_crush",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/eye_crush"
+      }
+    ]
+  },
+  "beauty_goddess.darkness_close": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.darkness_close",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/darkness_close"
+      }
+    ]
+  },
+  "beauty_goddess.door_open": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.door_open",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/door_open"
+      }
+    ]
+  },
+  "beauty_goddess.summon_arrival": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.summon_arrival",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/summon_arrival"
+      }
+    ]
+  },
+  "beauty_goddess.creation": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.creation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/creation"
+      }
+    ]
+  },
+  "beauty_goddess.beauty": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.beauty",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/beauty"
+      }
+    ]
+  },
+  "beauty_goddess.blood_moon": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.blood_moon",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/blood_moon"
+      }
+    ]
+  },
+  "beauty_goddess.potion_drink": {
+    "subtitle": "subtitles.circle_of_inevitability.beauty_goddess.potion_drink",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:beauty_goddess/potion_drink"
+      }
+    ]
+  }
+}

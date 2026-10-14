@@ -450,6 +450,27 @@ These are in `models/model_fx/` and any Pathway can use them. Sizes are at `.sca
 | `hanged_man/black_armor` | Black plates with crimson trim round a player's body and limbs. 2 steps: 0 = flung apart, 1 = locked on | default (between the feet) | `.frames(2).smooth()`. Worn with `modelOnTurning` |
 | `hanged_man/black_armor_helm` | A black knight's helm with a glowing visor slit and a crest | the top of the head inside it `(8, 0, 8)` | `modelOnHead(..., 0, ...)` puts it on |
 | `hanged_man/shadow_head` | A head of shadow, 0.45 blocks wide, slit red eyes and a jagged grin, wisps off its back | the bottom of its neck `(8, 0, 8)` | Face = front |
+| `beauty_goddess/flask` + `flask_liquid` | A round-bottomed potion flask with a cork and a crescent label, 0.75 blocks tall, and the liquid inside it (white: `.color(...)` is the potion) | `(8, 6, 8)` for both, the middle of its body | Play both with the same keys, `.glow().seeThrough()` |
+| `beauty_goddess/bat` | A black bat with red eyes, 1.2 blocks wingspan, 3 steps: 0 = wings up, 1 = level, 2 = down | its body `(8, 4, 8.6)` | `.frames(3).smooth()`. Face = front. For `Seeker` with `.flap(...)` |
+| `beauty_goddess/bat_wing` | A bat wing of darkness: black leather between five finger bones, 2.1 blocks long, 5 steps: 0 = folded, 4 = spread | the shoulder `(-10, 15, 8)` | `.frames(5).smooth().glow().seeThrough()`. Grows toward +X (the right); `.mirrored()` last for the left |
+| `beauty_goddess/abyss_shackle` | A cuff of black iron with violet crescents, a ring 1.1 blocks across round a 1-block middle | its middle `(8, 8, 8)` | Scale it to the bound one's width |
+| `beauty_goddess/abyss_chain` | A chain of darkness, 3 blocks long, standing up | the lower end `(8, -16, 8)` | For `modelAlong`; `.scale(1, length / 3, 1)`. `.glow().seeThrough()` |
+| `beauty_goddess/abyss_pool` | A ragged pool of darkness with a violet glowing rim, 1 block wide, flat | default (its middle) | `.glow().unshaded().seeThrough()` |
+| `beauty_goddess/full_moon`, `blood_moon` | A cratered moon in a faint halo, 1.5 blocks across; the blood moon is the same in red | its middle `(8, 8, 8)` | `.scale(6f)` and more for the sky. `.glow().unshaded().seeThrough()` |
+| `beauty_goddess/moon_beam` | A column of moonlight, 1 block wide and 3 tall, fading toward its top. White: tint it | its foot `(8, -16, 8)` | `.scale(width, height / 3, width)`. `.glow().unshaded().seeThrough()` |
+| `beauty_goddess/moon_sigil_ring`, `moon_sigil_core` | A flat moon seal in two halves: the twelve phases of the moon among runes, and a six-pointed star round a crescent and a bat. 1 block wide, white | default (its middle) | Tint both, give them opposite `.spin(...)`. `BeautyGoddessFx.seal(...)` does it |
+| `beauty_goddess/moon_halo` | A standing ring of light with rays and four crescents, 1 block wide, white | its middle `(8, 8, 8)` | Faces north and south. `.glow().unshaded().seeThrough()` |
+| `beauty_goddess/moonlight_figure` | A person made of moonlight, 2 blocks tall, bright eyes, mist trailing | default (between the feet) | Worn with `modelOnTurning`, `.scale(height / 2)`. `.glow().unshaded().seeThrough()` |
+| `beauty_goddess/gaze_eye` | A crimson-irised eyeball, 0.7 blocks, its nerve trailing behind. 3 steps: 0 = lids shut, 2 = wide open | its middle `(8, 8, 8)` | `.frames(3).smooth()`. Iris = front |
+| `beauty_goddess/darkness_prison` | A shell of black glass round a 1 x 2 block body, violet cracks and spikes. 2 steps: 0 = flung apart, 1 = closed | default (the middle of its base) | `.frames(2).smooth().seeThrough()`; `.scale(width, height / 2, width)` |
+| `beauty_goddess/spirit_door` | The Door of Summoning's frame: dark stone carved with silver-violet runes, a pointed arch with a crescent and an eye. 3 blocks wide and tall | its threshold `(8, -16, 8)` | Both faces are the same |
+| `beauty_goddess/spirit_door_left`, `_right` | Its two doors of black wood framed in silver | their hinges `(-10, -16, 8)` and `(26, -16, 8)` | Move them with `pose().right(-/+ 1.125 * scale)` and swing `yaw` |
+| `beauty_goddess/spirit_door_void` | The Spirit World inside the doorway, swirling violet with stars, animated | `(8, -16, 8)` | `.glow().unshaded().seeThrough()`; scale it from 0 to open it |
+| `beauty_goddess/spirit_beast` | A hound of the Spirit World, see-through blue, bone horns and ribs, four white eyes. 2 blocks long, 3 steps of a gallop | default (under its middle) | `.frames(3).smooth()`, swing `frame` 0 <-> 2. Face = front |
+| `beauty_goddess/seed_of_life` | A golden seed that splits, sprouts and blooms into a glowing flower 1.6 blocks tall. 5 steps: 0 = closed seed, 4 = full bloom | default (where it stands) | `.frames(5).smooth()`. In step 0 the sprout is under the ground |
+| `beauty_goddess/crescent_crown` | A silver circlet with a crescent and a crimson moonstone | default `(8, 0, 8)`, the band's lower edge | The band is 10 px wide: `modelOnHead(..., 0, ...)` |
+| `beauty_goddess/goddess` | The goddess of the moon: a woman of light, 3 blocks tall, a flaring dress, silver hair, a crescent over her head | the middle of her hem `(8, -16, 8)` | `.glow().unshaded().seeThrough()`. Face = front |
+| `beauty_goddess/tame_mark` | The blood pact's mark: a drop between two fangs in a ring, 1 block wide, standing up, white | its middle `(8, 8, 8)` | Tint it crimson; over a head with `.spin(...)` |
 
 The fire and light ones (`orb`, `thread` and `projection` too) want `.glow().unshaded().seeThrough()`; the solid ones `.glow()`.
 
@@ -538,6 +559,25 @@ Statuses: `HangedManFx.status(player, Status.FLESH_CLOAK, ticks)` shows the pict
 
 Grazing souls are free-standing models, and clearing by tag clears that tag everywhere, so every soul has its own tag: `graveSoul(...)` returns it, keep it with the stolen ability and hand it to `soulStolen(...)` or `graveSoulFades(...)`.
 
+
+### Beauty Goddess: ready-made displays
+
+`BeautyGoddessFx` (next to the other pathway classes) holds the Beauty Goddess (Moon pathway) looks for all seven keys, both casts, the four potions of key 4 and the four entries of the Moon wheel on key 7: moonlight, blood, bats, darkness, potions and the Spirit World. They only show things; the damage, healing, taming and summoning are the ability's, at the ticks the constants name (`TAME_LANDS`, `SHACKLES_LOCK`, `DRINK_DONE`, `MOON_RISEN`, `GAZE_GRIPS`, `DOOR_OPEN`, `SEED_BLOOMS`...). The class comment lists every call by key; [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/beauty_goddess/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` | The models and their textures in `models/model_fx/beauty_goddess/` and `textures/model_fx/beauty_goddess/` (`../hanged_man/render.py` draws any of them without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/beauty_goddess/`), the status pictures (`textures/gui/beauty_goddess/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/bat_0`, `bat_1`, `petal`, `crescent`, `bubble`, `droplet`, `sparkle`, `leaf` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/beauty_goddess/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` |
+
+**See them in game** (cheats on): `/beautyfx all` (every display one after another; those on a spot in a ring 8 blocks out) or `/beautyfx moon` (TAB lists the names: medicine, spirit_vision, tame, animal_sense, wings, shackles, invisibility, fire_breath, sun_water, shadow, moon, moonlight_form, gaze, bat_swarm, door, creation, beauty, blood_moon). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+Statuses: `BeautyGoddessFx.status(player, Status.MOONLIGHT_FORM, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
+
+The flock of bats from Wings of Darkness is a ready `Seeker`: `BeautyGoddessFx.BAT_SEEKER.onHit((target, at) -> Spells.strike(player, target, 6f)).launchAt(player, sl, from, enemies, 8, 1)`.
 
 ## Tricks worth copying
 

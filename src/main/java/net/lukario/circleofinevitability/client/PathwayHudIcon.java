@@ -27,6 +27,7 @@ public class PathwayHudIcon {
 
     static {
         ICONS.put("Attendant Of Mysteries", icon("attendant_of_mysteries"));
+        ICONS.put("Beauty Goddess", icon("beauty_goddess"));            // shows once the Pathway exists (docs/BEAUTY_GODDESS.md)
     }
 
     private static Identifier icon(String fileName) {
