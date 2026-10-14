@@ -1085,6 +1085,7 @@ While the part in the brackets runs, `Beyonder.hasSequence` is `true` for that p
 - **Only what runs inside is free.** What the ability does later (`Later.run`, an upkeep each tick, like the Pale Emperor's underworld) is paid as usual.
 - It is for that one player only. Everyone else is gated and pays as always.
 - For this to work, a new ability must check its Sequence with `Beyonder.hasSequence` and pay through `SoulCore` or `Spells.paySpirituality`, as all of them do.
+- **A paid version:** `Beyonder.castUnbound(player, 3f, () -> ...)` still opens every Sequence gate, but the cast costs 3 times what the ability itself costs, and is refused with the usual message when the player cannot pay that. While it runs the ability sees a third of the player's spirituality, and every point it takes comes off three times. `0f` is the free cast above. Used by Grazing in `HangedMan.java`.
 
 ### StolenAbilities: who holds what
 

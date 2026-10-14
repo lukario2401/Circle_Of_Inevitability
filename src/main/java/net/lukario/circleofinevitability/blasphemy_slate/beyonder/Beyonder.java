@@ -58,6 +58,7 @@ public final class Beyonder {
 
     private static Player unboundCaster;        // set only while castUnbound runs (abilities run on the server thread)
     private static boolean unboundCostWaived;
+    private static float unboundCostMultiplier; // 0 = the cast is free; more = it costs that many times its own cost
 
     /**
      * Runs 'cast' as if this player had every Sequence and all the spirituality they need: while it runs,
@@ -70,17 +71,39 @@ public final class Beyonder {
      * Only what runs inside 'cast' is free. What the ability does later (Later.run, an upkeep each tick) is paid as usual.
      */
     public static boolean castUnbound(Player player, Runnable cast) {
+        return castUnbound(player, 0f, cast);
+    }
+
+    /**
+     * The same, but the cast is paid for: it costs 'costMultiplier' times what the ability itself costs
+     * (Hanged Man's Grazing: 3). It is refused, with the usual "not enough spirituality", when the player cannot
+     * pay that much. No Sequence gate, as above. 0 = free, the same as castUnbound(player, cast).
+     *
+     *   boolean wentOff = Beyonder.castUnbound(player, 3f, () -> ability.cast().run(player, level, sl));
+     *
+     * How: while it runs, the ability sees a third of the player's spirituality (getSpirituality), and every point
+     * it pays comes off three times (setSpirituality). Returns true if the ability went off (it paid).
+     */
+    public static boolean castUnbound(Player player, float costMultiplier, Runnable cast) {
         Player casterBefore = unboundCaster;
         boolean waivedBefore = unboundCostWaived;
+        float multiplierBefore = unboundCostMultiplier;
         unboundCaster = player;
         unboundCostWaived = false;
+        unboundCostMultiplier = Math.max(0f, costMultiplier);
         try {
             cast.run();
             return unboundCostWaived;
         } finally {
             unboundCaster = casterBefore;
             unboundCostWaived = waivedBefore;
+            unboundCostMultiplier = multiplierBefore;
         }
+    }
+
+    /** During castUnbound: how many times its own cost the cast costs (0 = free). Outside it: 0. */
+    public static float unboundCostMultiplier(Player player) {
+        return isCastingUnbound(player) ? unboundCostMultiplier : 0f;
     }
 
     /** True while castUnbound is running for this player. */

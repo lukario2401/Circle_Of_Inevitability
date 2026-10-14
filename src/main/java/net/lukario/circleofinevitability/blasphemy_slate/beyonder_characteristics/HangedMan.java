@@ -6,6 +6,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HangedManFx.Status;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.menu.AbilityMenu;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Concealment;
@@ -19,6 +20,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -29,12 +31,15 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -55,7 +60,9 @@ import java.util.UUID;
  *   3 Shadow Binding     (Shadow Ascetic)     shadows rise where you aim, hold and hurt everything there
  *                                                                              | sneak: Shadow Lurking (press again to rise)
  *   4 Flesh Bomb         (Rose Bishop)        a lump of flesh that sticks, swells and bursts | sneak: Flesh Cloak
- *   5 Grazing            (Shepherd)           not here yet: the soul theft with its wheel of seven stolen abilities
+ *   5 Grazing            (Shepherd)           what you kill leaves you an ability, kept for good in 7 slots: the key casts
+ *                                             the selected one, at full power, for 3x its cost
+ *                                                                              | sneak: the wheel of your 7 slots
  *   6 Cull of Spiritual Flesh (Black Knight)  a wide black cut that strips their defense     | sneak: Black Armor
  *   7 Degeneration       (Trinity Templar)    corruption that eats their buffs, rots them, turns a mob on its own
  *                                                                              | sneak: Trinity Body, two more bodies
@@ -65,9 +72,6 @@ import java.util.UUID;
  * What is reusable lives outside this class (docs/SPELL_KIT.md): status/Vulnerable (the divination mark, the cull),
  * status/Concealment (lurking), status/EmpoweredHit (the ambush), status/DeathWard (the spare bodies),
  * status/Taunt (the betrayal), status/NoHeal, root/Root, combat/Spells, combat/Later.
- *
- * ADDING KEY 5 (Grazing) later, the same four places as every ability (see Conqueror.java):
- *   a method here, network/SKeyPressAbilityFiveUsed, PathwayAbilities.ALL and docs/SEQUENCES.md.
  *
  * Nothing here breaks blocks or lights real fire. The numbers for every ability are right below.
  */
@@ -141,6 +145,15 @@ public class HangedMan {
     private static final float CLOAK_GUARD = 0.4f;               // share of every blow the soft flesh swallows
     private static final float CLOAK_HEAL = 1f;                  // health every half second while worn
 
+    // Ability 5 - Grazing (Sequence 5): the souls of what you kill, kept for good in GRAZE_SLOTS slots
+    private static final int GRAZING_SEQUENCE = 5;
+    private static final int GRAZE_SLOTS = 7;
+    private static final float GRAZE_COST_MULTIPLIER = 3f;       // a stored ability costs 3x its own cost (no Sequence gate, no cooldown)
+    private static final int SOUL_RISE_TICKS = 10;               // a slot is free: the soul rises off the corpse this long, then flies to you
+    private static final int SOUL_WAIT_TICKS = 600;              // every slot is full: the soul waits on the corpse 30 s...
+    private static final double SOUL_REACH = 4.0;                // ...for you to stand this close and take it (sneak + key)
+    private static final int WHEEL_RADIUS = 76;                  // GUI pixels from the middle of the screen to the slots
+
     // Ability 6 - Cull of Spiritual Flesh (Sequence 4)
     private static final int CULL_SEQUENCE = 4;
     private static final int CULL_COST = 6000;                   // Sequence 4 holds 32400
@@ -186,6 +199,12 @@ public class HangedMan {
     private static final String TRINITY_LEFT = "hanged_man_trinity_bodies";
     private static final String TRINITY_ECHO = "hanged_man_trinity_echo";        // when the copies last flashed
 
+    // Grazing's slots: a compound with slot0..slot6 ("Pathway|key|sneak" or missing) and "selected".
+    // Kept through death (copied over in onHangedManClone).
+    private static final String GRAZING = "hanged_man_grazing";
+    private static final String GRAZING_SELECTED = "selected";
+    private static final String GRAZING_WHEEL = "hanged_man_grazing";            // the menu's id
+
     // Saved on whoever it is put on
     private static final String WHISPERED_UNTIL = "hanged_man_whispered_until";
     private static final String DEGENERATING_UNTIL = "hanged_man_degenerating_until";
@@ -207,6 +226,7 @@ public class HangedMan {
             if (!(player.level() instanceof ServerLevel sl)) return;
             // these run out even if the pathway is taken away in the meantime
             lurkTick(player, sl);
+            if (player.tickCount % 10 == 0) waitingSoulsTick(player, sl);
             cloakTick(player, sl);
             armorTick(player, sl);
             trinityTick(player, sl);
@@ -255,6 +275,33 @@ public class HangedMan {
         @SubscribeEvent
         public static void onHangedManLogout(PlayerEvent.PlayerLoggedOutEvent event) {
             WHISPERED.remove(event.getEntity().getUUID());
+            dropWaitingSouls(event.getEntity());
+        }
+
+        /** Grazing: what a Hanged Man of Sequence 5 or better kills leaves them an ability. */
+        @SubscribeEvent
+        public static void onHangedManKill(LivingDeathEvent event) {
+            LivingEntity victim = event.getEntity();
+            if (!(victim.level() instanceof ServerLevel sl)) return;
+            if (!(event.getSource().getEntity() instanceof Player killer) || killer == victim) return;
+            if (victim.getHealth() > 0f) return;                         // a death ward undid the death
+            grazeKill(killer, victim, sl);
+        }
+
+        /** The slots are kept for good: they go with the player into their new body. */
+        @SubscribeEvent
+        public static void onHangedManClone(PlayerEvent.Clone event) {
+            CompoundTag before = event.getOriginal().getPersistentData();
+            if (before.contains(GRAZING)) {
+                event.getEntity().getPersistentData().put(GRAZING, before.getCompoundOrEmpty(GRAZING).copy());
+            }
+        }
+
+        // souls are not saved: a world that closes takes its waiting souls with it
+        @SubscribeEvent
+        public static void onHangedManLevelUnload(LevelEvent.Unload event) {
+            if (!(event.getLevel() instanceof ServerLevel)) return;
+            SOULS.removeIf(soul -> soul.level == event.getLevel());
         }
     }
 
@@ -594,6 +641,303 @@ public class HangedMan {
         player.getPersistentData().remove(CLOAK_UNTIL);
         HangedManFx.fleshCloakEnd(sl, player);
         HangedManFx.statusEnd(player, Status.FLESH_CLOAK);
+    }
+
+    // =========================
+    // Ability 5 - Grazing
+    // Kills:  a hostile mob you kill gives you a random ability of another Pathway; a player you kill, one of
+    //         the abilities their Sequence gives them. Its normal or its sneak form, at random. It flies into your
+    //         first empty slot. With all GRAZE_SLOTS full its soul waits on the corpse for SOUL_WAIT_TICKS.
+    // Sneak:  the wheel of your slots: click one to select it. Standing by a soul of yours that waits on its
+    //         corpse, the wheel asks which slot it takes the place of instead.
+    // Normal: casts the selected slot, in the form it was taken in, whatever its Sequence, for
+    //         GRAZE_COST_MULTIPLIER times its own cost (Beyonder.castUnbound). No cooldown of its own.
+    // The slots are saved on the player and kept for good (through death too).
+    // =========================
+    public static void hangedManGrazing(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, GRAZING_SEQUENCE)) return;
+
+        if (player.isShiftKeyDown()) {
+            WaitingSoul soul = soulNear(player, sl);
+            if (soul != null) openReplaceWheel(player, soul);
+            else openSlotWheel(player);
+            return;
+        }
+        castSelected(player, level, sl);
+    }
+
+    /** One stored ability: what it is and which of its forms comes out. */
+    private record Grazed(PathwayAbilities.Ability ability, boolean sneakForm) {
+
+        /** "Dash" or "Dash (sneak)". */
+        String label() {
+            return sneakForm ? ability.name() + " (sneak)" : ability.name();
+        }
+
+        String save() {
+            return ability.pathway() + "|" + ability.key() + "|" + (sneakForm ? 1 : 0);
+        }
+
+        /** Null for an empty slot, or one whose ability no longer exists. */
+        static Grazed load(String saved) {
+            String[] parts = saved.split("\\|");
+            if (parts.length != 3) return null;
+            try {
+                PathwayAbilities.Ability ability = PathwayAbilities.of(parts[0], Integer.parseInt(parts[1]));
+                return ability == null ? null : new Grazed(ability, ability.sneakForm() && parts[2].equals("1"));
+            } catch (NumberFormatException e) {
+                return null;
+            }
+        }
+    }
+
+    /** A soul that waits on its corpse for its killer, whose slots were all full. Not saved. */
+    private static final class WaitingSoul {
+        final UUID owner;
+        final ServerLevel level;
+        final Vec3 corpse;
+        final Grazed grazed;
+        final int color;
+        final String tag;                                        // its look (HangedManFx.graveSoul)
+        final long expires;
+
+        WaitingSoul(UUID owner, ServerLevel level, Vec3 corpse, Grazed grazed, int color, String tag, long expires) {
+            this.owner = owner;
+            this.level = level;
+            this.corpse = corpse;
+            this.grazed = grazed;
+            this.color = color;
+            this.tag = tag;
+            this.expires = expires;
+        }
+    }
+
+    private static final List<WaitingSoul> SOULS = new ArrayList<>();
+
+    // ---------- the slots
+
+    private static CompoundTag slots(Player player) {
+        CompoundTag data = player.getPersistentData();
+        if (!data.contains(GRAZING)) data.put(GRAZING, new CompoundTag());
+        return data.getCompoundOrEmpty(GRAZING);
+    }
+
+    private static Grazed slot(Player player, int index) {
+        return Grazed.load(slots(player).getStringOr("slot" + index, ""));
+    }
+
+    private static void setSlot(Player player, int index, Grazed grazed) {
+        slots(player).putString("slot" + index, grazed.save());
+    }
+
+    private static int selected(Player player) {
+        return Math.floorMod(slots(player).getIntOr(GRAZING_SELECTED, 0), GRAZE_SLOTS);
+    }
+
+    private static void select(Player player, int index) {
+        slots(player).putInt(GRAZING_SELECTED, index);
+    }
+
+    /** The first empty slot, or -1 when all are full. */
+    private static int firstEmpty(Player player) {
+        for (int i = 0; i < GRAZE_SLOTS; i++) {
+            if (slot(player, i) == null) return i;
+        }
+        return -1;
+    }
+
+    // ---------- the kill
+
+    private static void grazeKill(Player killer, LivingEntity victim, ServerLevel sl) {
+        if (!SoulCore.getPathway(killer).equals(PATHWAY) || !Beyonder.hasSequence(killer, GRAZING_SEQUENCE)) return;
+        if (!(victim instanceof Player) && !(victim instanceof Enemy)) return;     // animals have nothing to give
+
+        PathwayAbilities.Ability ability = pickSoul(killer, victim);
+        if (ability == null) {
+            if (victim instanceof Player) killer.sendSystemMessage(Component.literal("Their soul holds nothing you can graze."));
+            return;
+        }
+        Grazed grazed = new Grazed(ability, ability.sneakForm() && killer.getRandom().nextBoolean());
+        int color = victim instanceof Player other ? pathwayColor(SoulCore.getPathway(other)) : HangedManFx.SOUL;
+        Vec3 corpse = victim.position();
+
+        int empty = firstEmpty(killer);
+        if (empty >= 0) {
+            setSlot(killer, empty, grazed);
+            if (slot(killer, selected(killer)) == null || selected(killer) == empty) select(killer, empty);
+            String soul = HangedManFx.graveSoul(sl, corpse, color, SOUL_RISE_TICKS + 20);
+            Later.run(sl, SOUL_RISE_TICKS, () -> {
+                if (Spells.casterStillHere(killer, sl)) HangedManFx.soulStolen(sl, corpse, soul, killer, color);
+                else HangedManFx.graveSoulFades(sl, corpse, soul);
+            });
+            killer.sendSystemMessage(Component.literal("Grazed " + grazed.label() + " (" + ability.pathway()
+                    + ") into slot " + (empty + 1) + "."));
+            return;
+        }
+
+        String tag = HangedManFx.graveSoul(sl, corpse, color, SOUL_WAIT_TICKS);
+        SOULS.add(new WaitingSoul(killer.getUUID(), sl, corpse, grazed, color, tag, sl.getGameTime() + SOUL_WAIT_TICKS));
+        killer.sendSystemMessage(Component.literal("Your " + GRAZE_SLOTS + " slots are full. The soul of "
+                + grazed.label() + " (" + ability.pathway() + ") waits on its corpse for " + SOUL_WAIT_TICKS / 20
+                + " s: stand by it and sneak + press the key to take it in place of one."));
+    }
+
+    /** From a player with a Pathway: one of the abilities their Sequence gives them. Otherwise: any of another Pathway. */
+    private static PathwayAbilities.Ability pickSoul(Player killer, LivingEntity victim) {
+        List<PathwayAbilities.Ability> choices = new ArrayList<>();
+        if (victim instanceof Player other && !PathwayAbilities.of(SoulCore.getPathway(other)).isEmpty()) {
+            for (PathwayAbilities.Ability ability : PathwayAbilities.of(SoulCore.getPathway(other))) {
+                if (ability.stealable() && Beyonder.hasSequence(other, ability.sequence())) choices.add(ability);
+            }
+        } else {
+            for (PathwayAbilities.Ability ability : PathwayAbilities.ALL) {
+                if (ability.stealable() && !ability.pathway().equals(PATHWAY)) choices.add(ability);
+            }
+        }
+        return choices.isEmpty() ? null : choices.get(killer.getRandom().nextInt(choices.size()));
+    }
+
+    /** The color of a player's soul: the color of their Pathway. */
+    private static int pathwayColor(String pathway) {
+        return switch (pathway) {
+            case "Key Of Stars" -> 0xB0A0B4FF;
+            case "Worm Of Time" -> 0xB052E3C4;
+            case "Hand Of Order" -> 0xB0FFD27A;
+            case "Attendant Of Mysteries" -> 0xB09CFFE6;
+            case "Prince Of Abolition" -> 0xB0FF7A3A;
+            case "Pale Emperor" -> 0xB0E8E4D0;
+            case "Conqueror" -> 0xB0FF4A1A;
+            case "Apocalypse" -> 0xB0B050FF;
+            case PATHWAY -> 0xB0D0283C;
+            default -> HangedManFx.SOUL;
+        };
+    }
+
+    // ---------- the souls that wait on their corpses
+
+    /** Twice a second for the owner: their waiting souls drift, and fade when their time is up. */
+    private static void waitingSoulsTick(Player player, ServerLevel sl) {
+        if (SOULS.isEmpty()) return;
+        long now = sl.getGameTime();
+        for (WaitingSoul soul : new ArrayList<>(SOULS)) {
+            if (!soul.owner.equals(player.getUUID()) || soul.level != sl) continue;
+            if (soul.expires <= now) {
+                SOULS.remove(soul);
+                HangedManFx.graveSoulFades(sl, soul.corpse, soul.tag);
+            } else {
+                HangedManFx.graveSoulTick(sl, soul.corpse);
+            }
+        }
+    }
+
+    /** The nearest of the player's waiting souls within SOUL_REACH, or null. */
+    private static WaitingSoul soulNear(Player player, ServerLevel sl) {
+        WaitingSoul best = null;
+        double bestDistance = SOUL_REACH * SOUL_REACH;
+        long now = sl.getGameTime();
+        for (WaitingSoul soul : SOULS) {
+            if (!soul.owner.equals(player.getUUID()) || soul.level != sl || soul.expires <= now) continue;
+            double d = player.position().distanceToSqr(soul.corpse);
+            if (d <= bestDistance) {
+                bestDistance = d;
+                best = soul;
+            }
+        }
+        return best;
+    }
+
+    /** The player left: their waiting souls fade. */
+    private static void dropWaitingSouls(Player player) {
+        for (WaitingSoul soul : new ArrayList<>(SOULS)) {
+            if (!soul.owner.equals(player.getUUID())) continue;
+            SOULS.remove(soul);
+            HangedManFx.graveSoulFades(soul.level, soul.corpse, soul.tag);
+        }
+    }
+
+    // ---------- the wheels (a new menu every time: what is in the slots is this player's own)
+
+    /** Sneak: pick the slot the key casts. Empty slots are greyed out. */
+    private static void openSlotWheel(Player player) {
+        AbilityMenu wheel = AbilityMenu.create(GRAZING_WHEEL).title("Grazing").ring(WHEEL_RADIUS);
+        int chosen = selected(player);
+        for (int i = 0; i < GRAZE_SLOTS; i++) {
+            int index = i;
+            Grazed grazed = slot(player, i);
+            wheel.option(iconOf(grazed), grazed == null ? "Empty" : grazed.label(), 0, 0, (picker, level) -> {
+                        Grazed now = slot(picker, index);
+                        if (now == null) return;
+                        select(picker, index);
+                        picker.sendSystemMessage(Component.literal("Grazing: " + now.label() + " is ready."));
+                    })
+                    .details(viewer -> grazed == null ? ""
+                            : (index == chosen ? "selected · " : "") + grazed.ability().pathway())
+                    .lockedWhen(viewer -> grazed == null);
+        }
+        wheel.open(player);
+    }
+
+    /** Sneak by a waiting soul: pick the slot it takes the place of (an empty one, if any, just takes it). */
+    private static void openReplaceWheel(Player player, WaitingSoul soul) {
+        AbilityMenu wheel = AbilityMenu.create(GRAZING_WHEEL).title("Graze " + soul.grazed.label() + " in place of...")
+                .ring(WHEEL_RADIUS);
+        for (int i = 0; i < GRAZE_SLOTS; i++) {
+            int index = i;
+            Grazed grazed = slot(player, i);
+            wheel.option(grazed == null ? HangedManFx.WHEEL_EMPTY : HangedManFx.WHEEL_REPLACE,
+                            grazed == null ? "Empty" : grazed.label(), 0, 0,
+                            (picker, level) -> takeSoul(picker, level, soul, index))
+                    .details(viewer -> grazed == null ? "put it here" : grazed.ability().pathway());
+        }
+        wheel.open(player);
+    }
+
+    private static String iconOf(Grazed grazed) {
+        if (grazed == null) return HangedManFx.WHEEL_EMPTY;
+        return grazed.sneakForm() ? HangedManFx.WHEEL_SNEAK_BADGE : HangedManFx.WHEEL_SOUL;
+    }
+
+    /** The waiting soul goes into that slot (what was there is gone) and is selected. */
+    private static void takeSoul(ServerPlayer player, ServerLevel sl, WaitingSoul soul, int index) {
+        if (!SOULS.contains(soul) || soul.level != sl
+                || player.position().distanceToSqr(soul.corpse) > (SOUL_REACH + 2) * (SOUL_REACH + 2)) {
+            player.sendSystemMessage(Component.literal("That soul is gone."));
+            return;
+        }
+        SOULS.remove(soul);
+        Grazed before = slot(player, index);
+        setSlot(player, index, soul.grazed);
+        select(player, index);
+        HangedManFx.soulStolen(sl, soul.corpse, soul.tag, player, soul.color);
+        player.sendSystemMessage(Component.literal("Grazed " + soul.grazed.label() + " into slot " + (index + 1)
+                + (before == null ? "." : ", in place of " + before.label() + ".")));
+    }
+
+    // ---------- the cast
+
+    /** The selected slot goes off in its stored form, at full power, for GRAZE_COST_MULTIPLIER times its cost. */
+    private static void castSelected(Player player, Level level, ServerLevel sl) {
+        int index = selected(player);
+        Grazed grazed = slot(player, index);
+        if (grazed == null) {
+            HangedManFx.emptySlot(sl, player);
+            player.sendSystemMessage(Component.literal("Slot " + (index + 1) + " holds no soul. Kill something to"
+                    + " graze one, or sneak + press the key to pick another slot."));
+            return;
+        }
+        riseFromShadow(player, sl);
+        boolean wasSneaking = player.isShiftKeyDown();
+        player.setShiftKeyDown(grazed.sneakForm());                 // the form it was taken in, not how you stand
+        boolean wentOff;
+        try {
+            wentOff = Beyonder.castUnbound(player, GRAZE_COST_MULTIPLIER, () -> grazed.ability().cast().run(player, level, sl));
+        } catch (RuntimeException e) {
+            CircleOfInevitability.LOGGER.error("A grazed ability failed: {}", grazed.label(), e);
+            wentOff = false;
+        } finally {
+            player.setShiftKeyDown(wasSneaking);
+        }
+        if (wentOff) HangedManFx.stolenCast(sl, player);
     }
 
     // =========================

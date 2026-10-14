@@ -54,7 +54,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Pale Emperor | Root 9 | Door 8 | Serpent 7 | Spear Skull 7 | Spikes 6 | Wings 5 | Wraiths 4 |
 | Conqueror | Hunter's Trap 9 | Provocation 8 | Fire Ravens 7 | Flame Transformation 6 | Cull 5 | Galvanization 4 | Fog of War 3 |
 | Apocalypse | Fatal Step 9 | Black Flame 8 | Mirror World 7 | Silk Weaver 6 (wheel: silks at 6, 5, 4, 3) | Plague 5 | Unaging 4 | Catastrophe 3 (wheel: disasters at 3, 2, 1) |
-| Hanged Man | Divination 9 | Whispers 8 | Shadow Binding 7 | Flesh Bomb 6 | - (Grazing 5, not yet) | Cull of Spiritual Flesh 4 | Degeneration 3 |
+| Hanged Man | Divination 9 | Whispers 8 | Shadow Binding 7 | Flesh Bomb 6 | Grazing 5 (7 slots of stolen abilities) | Cull of Spiritual Flesh 4 | Degeneration 3 |
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one).
 
@@ -63,6 +63,8 @@ A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole 
 Worm Of Time's Parasite (J) is the only key that works while its player is inside a host: J again puts them back out (`status/Parasite`; see "Parasite" in [SPELL_KIT.md](SPELL_KIT.md)). Inside a mob, the walk keys, jump, sprint, mouse and both clicks steer it instead (`status/ParasiteControl`).
 
 Worm Of Time's Theft (H) holds `THEFT_MAX_HELD` (5) stolen abilities at once and releases the newest first (sneak + H).
+
+Hanged Man's Grazing (L) keeps an ability from every hostile mob or player its owner kills, in 7 slots that are kept for good (through death too). It casts the selected one whatever its Sequence, for three times that ability's own cost (`Beyonder.castUnbound(player, 3f, ...)`). Sneak + L picks the slot; by a soul that waits on its corpse (all slots full), it picks the slot that soul replaces.
 
 ## Passives
 

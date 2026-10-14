@@ -162,7 +162,7 @@ public final class PathwayAbilities {
             new Ability("Apocalypse", 7, "Catastrophe", 3, SNEAK, STEALABLE,            // stolen: no wheel, its last (or a random) disaster
                     (player, level, sl) -> Apocalypse.apocalypseCatastrophe(player, level, sl, true)),
 
-            // ---- Hanged Man ---- (key 5, Grazing, is not written yet)
+            // ---- Hanged Man ----
             new Ability("Hanged Man", 1, "Divination", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> HangedMan.hangedManDivination(player, level, sl, true)),
             new Ability("Hanged Man", 2, "Whispers", 8, SNEAK, STEALABLE,
@@ -171,6 +171,8 @@ public final class PathwayAbilities {
                     (player, level, sl) -> HangedMan.hangedManShadowBinding(player, level, sl, true)),
             new Ability("Hanged Man", 4, "Flesh Bomb", 6, SNEAK, STEALABLE,
                     (player, level, sl) -> HangedMan.hangedManFleshBomb(player, level, sl, true)),
+            new Ability("Hanged Man", 5, "Grazing", 5, SNEAK, OWN_PATHWAY_ONLY,         // its slots and wheel are the Hanged Man's own
+                    (player, level, sl) -> HangedMan.hangedManGrazing(player, level, sl, true)),
             new Ability("Hanged Man", 6, "Cull of Spiritual Flesh", 4, SNEAK, STEALABLE,
                     (player, level, sl) -> HangedMan.hangedManCull(player, level, sl, true)),
             new Ability("Hanged Man", 7, "Degeneration", 3, SNEAK, STEALABLE,
