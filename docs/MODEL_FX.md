@@ -579,6 +579,27 @@ Statuses: `BeautyGoddessFx.status(player, Status.MOONLIGHT_FORM, ticks)` shows t
 
 The flock of bats from Wings of Darkness is a ready `Seeker`: `BeautyGoddessFx.BAT_SEEKER.onHit((target, at) -> Spells.strike(player, target, 6f)).launchAt(player, sl, from, enemies, 8, 1)`.
 
+### Hand Of God: ready-made displays
+
+`HandOfGodFx` (next to the other pathway classes) holds the Hand Of God (Twilight Giant pathway) looks for all seven keys, both casts, the three wheels (Dawn on key 4, Demon Hunting on key 6, Silver and Twilight on key 7) and what grows at higher Sequences (Silver Armor, the Cage, the Glory hurricane, the bigger Giant). They only show things; the damage, holding, hiding and moving are the ability's, at the ticks the constants name (`LIGHT_RISEN`, `HURRICANE_GATHERS`, `PROTECTION_RAISED`, `EYE_OPENS`, `VIAL_POURED`, `GIANT_RISEN`, `RAPIER_STRIKES`, `TWILIGHT_SWORD_HITS`, `HAND_GRIPS`, `TIME_FROZEN`, `KINGDOM_RISEN`...). The class comment lists every call by key; [HAND_OF_GOD.md](HAND_OF_GOD.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/hand_of_god/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` | The models and their textures in `models/model_fx/hand_of_god/` and `textures/model_fx/hand_of_god/` (`../hanged_man/render.py` draws any of them without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/hand_of_god/`), the status pictures (`textures/gui/hand_of_god/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/ray`, `rune_0`, `rune_1`, `rune_2`, `ash`, `hourglass`, `footprint`, `feather_light` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/hand_of_god/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`HAND_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` |
+
+**See them in game** (cheats on): `/handfx all` or `/handfx hurricane` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+Two parts are worth using for other Pathways too:
+- **A shell of light**: `HandOfGodFx.dome(sl, center, radius, color, ticks, tag)` and `sphere(...)` lay `DAWN_WALL` tiles into a dome or a whole sphere, row by row, any color (one model per tile, so about 45 for a dome 6 blocks across). A barrier, a ward, a cage.
+- **A seal**: `HandOfGodFx.seal(sl, ground, radius, color, ticks, tag)`, the two halves of the dawn seal turning against each other, white so any color works.
+
+Statuses: `HandOfGodFx.status(player, Status.DAWN_ARMOR, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.

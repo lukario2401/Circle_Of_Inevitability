@@ -228,5 +228,256 @@
         "name": "circle_of_inevitability:beauty_goddess/potion_drink"
       }
     ]
+  },
+  "hand_of_god.charge": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.charge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/charge"
+      }
+    ]
+  },
+  "hand_of_god.impact": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/impact"
+      }
+    ]
+  },
+  "hand_of_god.divine_blood": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.divine_blood",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/divine_blood"
+      }
+    ]
+  },
+  "hand_of_god.flurry": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.flurry",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/flurry"
+      }
+    ]
+  },
+  "hand_of_god.resist": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.resist",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/resist"
+      }
+    ]
+  },
+  "hand_of_god.edge_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.edge_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/edge_swing_1"
+      },
+      {
+        "name": "circle_of_inevitability:hand_of_god/edge_swing_2"
+      }
+    ]
+  },
+  "hand_of_god.finisher": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.finisher",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/finisher"
+      }
+    ]
+  },
+  "hand_of_god.parry": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.parry",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/parry"
+      }
+    ]
+  },
+  "hand_of_god.dawn_light": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.dawn_light",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/dawn_light"
+      }
+    ]
+  },
+  "hand_of_god.dawn_armor": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.dawn_armor",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/dawn_armor"
+      }
+    ]
+  },
+  "hand_of_god.dawn_sword": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.dawn_sword",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/dawn_sword"
+      }
+    ]
+  },
+  "hand_of_god.hurricane": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.hurricane",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/hurricane"
+      }
+    ]
+  },
+  "hand_of_god.protection": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.protection",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/protection"
+      }
+    ]
+  },
+  "hand_of_god.dome_hit": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.dome_hit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/dome_hit"
+      }
+    ]
+  },
+  "hand_of_god.transference": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.transference",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/transference"
+      }
+    ]
+  },
+  "hand_of_god.eye": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.eye",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/eye"
+      }
+    ]
+  },
+  "hand_of_god.alchemy": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.alchemy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/alchemy"
+      }
+    ]
+  },
+  "hand_of_god.coat_hit": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.coat_hit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/coat_hit"
+      }
+    ]
+  },
+  "hand_of_god.conceal": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.conceal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/conceal"
+      }
+    ]
+  },
+  "hand_of_god.giant_form": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.giant_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/giant_form"
+      }
+    ]
+  },
+  "hand_of_god.giant_step": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.giant_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/giant_step"
+      }
+    ]
+  },
+  "hand_of_god.mercury": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.mercury",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/mercury"
+      }
+    ]
+  },
+  "hand_of_god.rapier": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.rapier",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/rapier"
+      }
+    ]
+  },
+  "hand_of_god.light_step": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.light_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/light_step"
+      }
+    ]
+  },
+  "hand_of_god.twilight_sword": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.twilight_sword",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/twilight_sword"
+      }
+    ]
+  },
+  "hand_of_god.divine_hand": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.divine_hand",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/divine_hand"
+      }
+    ]
+  },
+  "hand_of_god.time_stop": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.time_stop",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/time_stop"
+      }
+    ]
+  },
+  "hand_of_god.time_resume": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.time_resume",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/time_resume"
+      }
+    ]
+  },
+  "hand_of_god.decay": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.decay",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/decay"
+      }
+    ]
+  },
+  "hand_of_god.kingdom": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.kingdom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/kingdom"
+      }
+    ]
+  },
+  "hand_of_god.cage": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_god.cage",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_god/cage"
+      }
+    ]
   }
 }

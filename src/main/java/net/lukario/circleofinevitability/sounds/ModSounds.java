@@ -15,7 +15,8 @@ import net.minecraftforge.registries.RegistryObject;
  *
  * A new sound: its .ogg (mono, so it is placed in the world) in sounds/, an event in sounds.json with the same name
  * as here, a subtitle in lang/en_us.json, and a line below. The Beauty Goddess ones are made by
- * tools/model_gen/beauty_goddess/sounds.py, which writes the .ogg files, sounds.json and the subtitles' names.
+ * tools/model_gen/beauty_goddess/sounds.py and the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, which write
+ * the .ogg files, sounds.json and the subtitles' names.
  */
 public final class ModSounds {
 
@@ -87,4 +88,69 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> BEAUTY_BEAUTY = sound("beauty_goddess.beauty");
     /** The Blood Moon rises. */
     public static final RegistryObject<SoundEvent> BEAUTY_BLOOD_MOON = sound("beauty_goddess.blood_moon");
+
+    // ---------- Hand Of God (tools/model_gen/hand_of_god/sounds.py) ----------
+
+    /** A warrior charges. */
+    public static final RegistryObject<SoundEvent> HAND_CHARGE = sound("hand_of_god.charge");
+    /** A heavy blow lands. */
+    public static final RegistryObject<SoundEvent> HAND_IMPACT = sound("hand_of_god.impact");
+    /** Divine blood surges. */
+    public static final RegistryObject<SoundEvent> HAND_DIVINE_BLOOD = sound("hand_of_god.divine_blood");
+    /** A flurry of blows. */
+    public static final RegistryObject<SoundEvent> HAND_FLURRY = sound("hand_of_god.flurry");
+    /** Supernatural power is shrugged off. */
+    public static final RegistryObject<SoundEvent> HAND_RESIST = sound("hand_of_god.resist");
+    /** A blade sweeps. */
+    public static final RegistryObject<SoundEvent> HAND_EDGE_SWING = sound("hand_of_god.edge_swing");
+    /** A finishing cut. */
+    public static final RegistryObject<SoundEvent> HAND_FINISHER = sound("hand_of_god.finisher");
+    /** A blow is parried. */
+    public static final RegistryObject<SoundEvent> HAND_PARRY = sound("hand_of_god.parry");
+    /** The light of dawn breaks. */
+    public static final RegistryObject<SoundEvent> HAND_DAWN_LIGHT = sound("hand_of_god.dawn_light");
+    /** Armor of light forms. */
+    public static final RegistryObject<SoundEvent> HAND_DAWN_ARMOR = sound("hand_of_god.dawn_armor");
+    /** The Sword of Dawn forms. */
+    public static final RegistryObject<SoundEvent> HAND_DAWN_SWORD = sound("hand_of_god.dawn_sword");
+    /** A Hurricane of Light roars. */
+    public static final RegistryObject<SoundEvent> HAND_HURRICANE = sound("hand_of_god.hurricane");
+    /** A wall of dawn rises. */
+    public static final RegistryObject<SoundEvent> HAND_PROTECTION = sound("hand_of_god.protection");
+    /** Protection holds. */
+    public static final RegistryObject<SoundEvent> HAND_DOME_HIT = sound("hand_of_god.dome_hit");
+    /** Wounds are taken on. */
+    public static final RegistryObject<SoundEvent> HAND_TRANSFERENCE = sound("hand_of_god.transference");
+    /** The Eye of Demon Hunting opens. */
+    public static final RegistryObject<SoundEvent> HAND_EYE = sound("hand_of_god.eye");
+    /** A concoction is brewed. */
+    public static final RegistryObject<SoundEvent> HAND_ALCHEMY = sound("hand_of_god.alchemy");
+    /** A coated blade sizzles. */
+    public static final RegistryObject<SoundEvent> HAND_COAT_HIT = sound("hand_of_god.coat_hit");
+    /** A mind is hidden. */
+    public static final RegistryObject<SoundEvent> HAND_CONCEAL = sound("hand_of_god.conceal");
+    /** A Giant awakens. */
+    public static final RegistryObject<SoundEvent> HAND_GIANT_FORM = sound("hand_of_god.giant_form");
+    /** A Giant's step. */
+    public static final RegistryObject<SoundEvent> HAND_GIANT_STEP = sound("hand_of_god.giant_step");
+    /** Liquid silver flows. */
+    public static final RegistryObject<SoundEvent> HAND_MERCURY = sound("hand_of_god.mercury");
+    /** Silver rapiers strike. */
+    public static final RegistryObject<SoundEvent> HAND_RAPIER = sound("hand_of_god.rapier");
+    /** Someone steps through light. */
+    public static final RegistryObject<SoundEvent> HAND_LIGHT_STEP = sound("hand_of_god.light_step");
+    /** The Twilight Sword tears through. */
+    public static final RegistryObject<SoundEvent> HAND_TWILIGHT_SWORD = sound("hand_of_god.twilight_sword");
+    /** The Divine Right Hand grips. */
+    public static final RegistryObject<SoundEvent> HAND_DIVINE_HAND = sound("hand_of_god.divine_hand");
+    /** Time stands still. */
+    public static final RegistryObject<SoundEvent> HAND_TIME_STOP = sound("hand_of_god.time_stop");
+    /** Time resumes. */
+    public static final RegistryObject<SoundEvent> HAND_TIME_RESUME = sound("hand_of_god.time_resume");
+    /** Everything decays. */
+    public static final RegistryObject<SoundEvent> HAND_DECAY = sound("hand_of_god.decay");
+    /** A Divine Kingdom descends. */
+    public static final RegistryObject<SoundEvent> HAND_KINGDOM = sound("hand_of_god.kingdom");
+    /** A cage of light closes. */
+    public static final RegistryObject<SoundEvent> HAND_CAGE = sound("hand_of_god.cage");
 }
