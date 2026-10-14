@@ -176,7 +176,23 @@ public final class PathwayAbilities {
             new Ability("Hanged Man", 6, "Cull of Spiritual Flesh", 4, SNEAK, STEALABLE,
                     (player, level, sl) -> DarkAngel.hangedManCull(player, level, sl, true)),
             new Ability("Hanged Man", 7, "Degeneration", 3, SNEAK, STEALABLE,
-                    (player, level, sl) -> DarkAngel.hangedManDegeneration(player, level, sl, true)));
+                    (player, level, sl) -> DarkAngel.hangedManDegeneration(player, level, sl, true)),
+
+            // ---- Beauty Goddess ----
+            new Ability("Beauty Goddess", 1, "Medicine Concoction", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessMedicine(player, level, sl, true)),
+            new Ability("Beauty Goddess", 2, "Taming", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessTaming(player, level, sl, true)),
+            new Ability("Beauty Goddess", 3, "Wings of Darkness", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessWings(player, level, sl, true)),
+            new Ability("Beauty Goddess", 4, "Potions", 6, SNEAK, STEALABLE,                 // stolen: no wheel, its last (or a random) potion
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessPotions(player, level, sl, true)),
+            new Ability("Beauty Goddess", 5, "Lunar Battlefield", 5, SNEAK, STEALABLE,
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessLunarBattlefield(player, level, sl, true)),
+            new Ability("Beauty Goddess", 6, "Gaze of Darkness", 4, NO_SNEAK, STEALABLE,     // Bat Swarm (its sneak form) is not made yet
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessGaze(player, level, sl, true)),
+            new Ability("Beauty Goddess", 7, "Moon", 1, SNEAK, STEALABLE,                   // stolen: no wheel; Door of Summoning (3) and Creation (2) are not made yet
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)));
 
     private PathwayAbilities() {}
 

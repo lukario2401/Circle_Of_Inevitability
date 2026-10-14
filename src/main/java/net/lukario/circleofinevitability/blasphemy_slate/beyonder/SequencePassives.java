@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -38,6 +39,20 @@ public final class SequencePassives {
     // =========================
     static {
         effect(4, MobEffects.SATURATION); // Sequence 4 and stronger: never hungry
+
+        // ---- Beauty Goddess (docs/BEAUTY_GODDESS.md). Also in BeautyGoddess itself: afterimages when you sprint
+        // (Sequence 5), your potions and medicine last longer (Sequence 6).
+        custom("Beauty Goddess", 9, player -> player.removeEffect(MobEffects.POISON));          // Apothecary: poison does not take
+        effect("Beauty Goddess", 8, MobEffects.STRENGTH, 0);                                    // Beast Tamer: Strength I
+        effect("Beauty Goddess", 7, MobEffects.NIGHT_VISION, 0);                                // Vampire: Night Vision...
+        custom("Beauty Goddess", 7, player -> {                                                 // ...and wounds close faster
+            if (player.getHealth() < player.getMaxHealth()) player.heal(0.5f);
+        });
+        custom("Beauty Goddess", 5, player -> {                                                 // Scarlet Scholar: Speed II at night
+            if (player.level().isDarkOutside()) keepEffect(player, MobEffects.SPEED, 1);
+        });
+        effect("Beauty Goddess", 4, MobEffects.REGENERATION, 0);                                // Shaman King: strong regeneration
+        custom("Beauty Goddess", 1, BeautyGoddess::hesitate);                                   // Beauty Goddess: mobs hesitate to hunt you
     }
 
     // =========================

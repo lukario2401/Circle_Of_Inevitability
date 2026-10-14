@@ -6,7 +6,7 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 
 | Word | Meaning | Where |
 | --- | --- | --- |
-| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Hanged Man (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Hanged Man, Beauty Goddess (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
@@ -55,8 +55,9 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Conqueror | Hunter's Trap 9 | Provocation 8 | Fire Ravens 7 | Flame Transformation 6 | Cull 5 | Galvanization 4 | Fog of War 3 |
 | Apocalypse | Fatal Step 9 | Black Flame 8 | Mirror World 7 | Silk Weaver 6 (wheel: silks at 6, 5, 4, 3) | Plague 5 | Unaging 4 | Catastrophe 3 (wheel: disasters at 3, 2, 1) |
 | Hanged Man | Divination 9 | Whispers 8 | Shadow Binding 7 | Flesh Bomb 6 | Grazing 5 (7 slots of stolen abilities) | Cull of Spiritual Flesh 4 | Degeneration 3 |
+| Beauty Goddess | Medicine Concoction 9 | Taming 8 | Wings of Darkness 7 | Potions 6 (wheel: potions at 6, 6, 5, 4) | Lunar Battlefield 5 | Gaze of Darkness 4 | Moon 1 (wheel: Beauty 1, Blood Moon 0) |
 
-The number is the weakest Sequence that can use it (that Sequence and every stronger one).
+The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's Moon wheel (M) will open at Sequence 3 once its Door of Summoning (3) and Creation (2) exist; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
@@ -73,6 +74,13 @@ What a Beyonder always has from a Sequence on (that Sequence and every stronger 
 | Passive | Who | From Sequence |
 | --- | --- | --- |
 | Saturation I (never hungry; vanilla also heals quickly while saturated) | every Pathway | 4 |
+| Poison does not take (removed at every check) | Beauty Goddess | 9 |
+| Strength I | Beauty Goddess | 8 |
+| Night Vision, and half a heart back every second while hurt | Beauty Goddess | 7 |
+| Its own potions and medicine last 1.5 times as long (in `BeautyGoddess`, `POTION_MASTERY`) | Beauty Goddess | 6 |
+| Speed II while it is dark outside (the last one given runs out up to 30 s into the day); afterimages of moonlight while sprinting (in `BeautyGoddess`) | Beauty Goddess | 5 |
+| Regeneration I | Beauty Goddess | 4 |
+| A mob hunting you loses you now and then (30% each second) | Beauty Goddess | 1 |
 
 To add one, add a line to that list (and a row here):
 

@@ -39,7 +39,35 @@ Pathway name in code: `"Beauty Goddess"`.
 | Eyes grow back at once, strong regeneration | Shaman King (4) |
 | Mobs never pick you out of a crowd (they hesitate when they see you) | Beauty Goddess (1) |
 
-To be built the way the other Pathways are: the key methods in a new `BeautyGoddess.java`, one line per ability in `PathwayAbilities.ALL`, a row in `docs/SEQUENCES.md`, and the passives in `SequencePassives`.
+## What is built
+
+The abilities are in `blasphemy_slate/beyonder_characteristics/BeautyGoddess.java` (every number is a constant at the top of it), one line each in `PathwayAbilities.ALL`, a row in [SEQUENCES.md](SEQUENCES.md), and the passives in `SequencePassives`. Set the Pathway with `/sequence pathway <player> "Beauty Goddess"`.
+
+| Key | Built | Not made yet |
+| --- | --- | --- |
+| 1 | Medicine Concoction, Spirit Vision | |
+| 2 | Taming, Animal Sense | |
+| 3 | Wings of Darkness, Abyss Shackles | |
+| 4 | the wheel: Invisibility (6), Fire Breathing (6), Sun Water (5), Shadow (4); sneak = last potion | |
+| 5 | Lunar Battlefield with Flash Teleportation, Spectral Moonlight Form | |
+| 6 | Gaze of Darkness (the key again crushes the eye) | Bat Swarm Transformation: sneaking casts the Gaze for now |
+| 7 | the wheel: Beauty (1), Blood Moon (0); sneak = last entry | Door of Summoning (3), Creation (2): the wheel opens at Sequence 1 until they exist |
+
+The three left out are the hardest to build:
+- **Bat Swarm Transformation** needs a body split into bats that can each be hit (nothing in the mod does that yet).
+- **Door of Summoning** needs creatures that are summoned and taken away again without loot, and that share `Marionette.MAX_PER_MASTER` (3) with Taming.
+- **Creation** needs fallen allies brought back and plants grown (players who respawn, blocks that change).
+Their looks and sounds are ready in `BeautyGoddessFx` (`batSwarm...`, `summoningDoor...`, `seedOfLife...`).
+
+How the built ones work, where it is not obvious from the table above:
+- Medicine Concoction heals and cures you and every non-enemy in the cloud; enemies in it are poisoned.
+- Taming uses `status/Marionette`: at most 3 at once, a minute each. A mob with more max health than 40 (+20 for every Sequence past 8) resists, as do players.
+- Wings of Darkness: press the key again to land early. The bats go for the enemies you passed on the way, or the ones near where you land.
+- Invisibility, Shadow and Moonlight Form hide you completely (`status/Concealment`: unseen and untouchable). Attacking ends them, and only one of them is on at a time.
+- Lunar Battlefield: press the key again while you stand in your own moonlight to blink (Flash Teleportation). From outside it, the key raises a new moon in its place.
+- Moonlight Form, cast in your own moonlight, cancels your next death while that moon is up (`status/DeathWard`).
+- Gaze of Darkness holds as long as you can see the target, 6 seconds at most.
+- Blood Moon sets the monsters under it on each other every 5 seconds (`Taunt.brawl`).
 
 ## Looks, sounds and pictures (ready)
 

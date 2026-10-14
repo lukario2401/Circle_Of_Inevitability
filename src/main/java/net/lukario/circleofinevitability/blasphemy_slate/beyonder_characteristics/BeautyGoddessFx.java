@@ -64,7 +64,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *          shadowForm(sl, player, ticks, tag), shadowFormTick(sl, player), shadowFormEnd(sl, player, tag)
  *          the wheel's pictures: WHEEL_INVISIBILITY, WHEEL_FIRE_BREATHING, WHEEL_SUN_WATER, WHEEL_SHADOW
  *   Key 5  lunarBattlefield(sl, center, radius, ticks, tag), lunarBattlefieldPulse(sl, center, radius), lunarBattlefieldEnd(sl, center, tag)
- *          flashTeleport(sl, from, to)
+ *          flashTeleport(sl, from, to); the passive's afterimage(sl, runner) every few ticks of a sprint
  *          sneak: moonlightForm(sl, player, ticks, tag), moonlightFormTick(sl, player), moonlightFormEnd(sl, player, tag)
  *                 moonlightShatter(sl, at), moonlightReform(sl, player) (whole again at MOONLIGHT_REFORMS)
  *   Key 6  gaze(sl, player, target, ticks, tag) (the darkness grips at GAZE_GRIPS), gazeTick(sl, target),
@@ -884,6 +884,15 @@ public final class BeautyGoddessFx {
         SpellFx.shockRing(sl, to, 1.8, 0xC0DCE8FF, 8, 0);
         sound(sl, from, ModSounds.BEAUTY_MOON_BLINK, 0.8f, wobble(1.0f));
         sound(sl, to, ModSounds.BEAUTY_MOON_BLINK, 1.0f, wobble(1.2f));
+    }
+
+    /** The Scarlet Scholar's passive: a pale copy of moonlight left where the runner was, fading. Call it every few ticks of a sprint. */
+    public static void afterimage(ServerLevel sl, Player runner) {
+        ModelFx copy = MOONLIGHT_FIGURE.scale(runner.getBbHeight() / 2f).lifetime(12).fade(0, 10)
+                .key(0, pose().alpha(0.4f))
+                .key(12, pose().alpha(0f), Ease.OUT);
+        ParticleShapes.model(sl, copy, runner.position(), runner.getYRot(), 0f, 0f);
+        ParticleShapes.burst(sl, MOON_MOTE, chestOf(runner), 1, 0.005, 0.01);
     }
 
     // ---------- sneak: Spectral Moonlight Form
