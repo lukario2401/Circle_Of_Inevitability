@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * How the Hanged Man pathway looks and sounds: every key, both casts, and the Grazing soul theft.
- * Visual only: nothing here hurts, roots or heals anyone. The ability code does that, at the ticks named by the
+ * Visual only: nothing here hurts, roots or heals anyone. The ability code (HangedMan) does that, at the ticks named by the
  * constants below (..._GRIPS, ..._ARRIVES...), with Later.run.
  *
  * ---------- See them in game ----------

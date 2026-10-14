@@ -15,6 +15,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseSilkWeaver;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesAirCannon;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFlameTransformation;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HangedMan.hangedManFleshBomb;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderAbility4;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsSeal;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
@@ -52,6 +53,7 @@ public class SKeyPressAbilityFourUsed {
         paleEmperorSpearSkull(player,level,serverLevel,false);
         conquerorFlameTransformation(player,level,serverLevel,false);
         apocalypseSilkWeaver(player,level,serverLevel,false);
+        hangedManFleshBomb(player,level,serverLevel,false);
     }
 
 }

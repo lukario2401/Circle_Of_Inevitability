@@ -6,7 +6,7 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 
 | Word | Meaning | Where |
 | --- | --- | --- |
-| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Hanged Man (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
@@ -54,6 +54,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Pale Emperor | Root 9 | Door 8 | Serpent 7 | Spear Skull 7 | Spikes 6 | Wings 5 | Wraiths 4 |
 | Conqueror | Hunter's Trap 9 | Provocation 8 | Fire Ravens 7 | Flame Transformation 6 | Cull 5 | Galvanization 4 | Fog of War 3 |
 | Apocalypse | Fatal Step 9 | Black Flame 8 | Mirror World 7 | Silk Weaver 6 (wheel: silks at 6, 5, 4, 3) | Plague 5 | Unaging 4 | Catastrophe 3 (wheel: disasters at 3, 2, 1) |
+| Hanged Man | Divination 9 | Whispers 8 | Shadow Binding 7 | Flesh Bomb 6 | - (Grazing 5, not yet) | Cull of Spiritual Flesh 4 | Degeneration 3 |
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one).
 
@@ -112,7 +113,7 @@ Target: a full bar in about 45 minutes of normal active play, roughly 40% from t
 | --- | --- | --- |
 | `/sequence info` | everyone | Your Pathway, Sequence, digestion and spirituality (current of maximum). |
 | `/sequence advance` | everyone | Advance yourself (see above). |
-| `/sequence pathway <player> "<Pathway name>"` | op (level 2) | Set the Pathway. Tab completes the seven names (quotes needed). `"none"` clears it. |
+| `/sequence pathway <player> "<Pathway name>"` | op (level 2) | Set the Pathway. Tab completes every Pathway name (quotes needed). `"none"` clears it. |
 | `/sequence set <player> <0-9>` | op | Set the Sequence. |
 | `/sequence digestion <player> <0-100>` | op | Set digestion. |
 | `/sequence spirituality <player> <amount>` | op | Set spirituality (clamped to the maximum). |

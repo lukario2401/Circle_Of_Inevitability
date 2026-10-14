@@ -15,6 +15,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseFatalStep;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesPaperDagger;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorHuntersTrap;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HangedMan.hangedManDivination;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderBuff;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsStarBurst;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorRoot;
@@ -54,5 +55,6 @@ public class SKeyPressAbilityOneUsed {
         wormOfTimeAbility1(player,level,serverLevel,false);
         conquerorHuntersTrap(player,level,serverLevel,false);
         apocalypseFatalStep(player,level,serverLevel,false);
+        hangedManDivination(player,level,serverLevel,false);
     }
 }

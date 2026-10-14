@@ -2,7 +2,7 @@
 
 A Minecraft Forge mod by Luka (Lukario2401): a soul system (stage, tier, shards, Soul Essence, corruption)
 and beyonder characteristics to take on: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries,
-Prince Of Abolition, Pale Emperor, Conqueror and Apocalypse (the Demoness). They come with abilities on seven keys, melee combos and their own
+Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse (the Demoness) and Hanged Man. They come with abilities on seven keys, melee combos and their own
 particles, slashes and 3D effects.
 
 - Minecraft 26.2, Forge 65.1.0 or newer, Java 25

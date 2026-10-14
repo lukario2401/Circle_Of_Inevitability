@@ -16,6 +16,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsOrbital;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorGalvanization;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorWings;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HangedMan.hangedManCull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderWords;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionEntropy;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesHistoricalVoid;
@@ -52,6 +53,7 @@ public class SKeyPressAbilitySixUsed {
         paleEmperorWings(player,level,serverLevel,false);
         conquerorGalvanization(player,level,serverLevel,false);
         apocalypseUnaging(player,level,serverLevel,false);
+        hangedManCull(player,level,serverLevel,false);
 
     }
 }
