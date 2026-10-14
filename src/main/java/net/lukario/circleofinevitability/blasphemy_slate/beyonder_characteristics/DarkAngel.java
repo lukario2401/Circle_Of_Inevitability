@@ -75,9 +75,9 @@ import java.util.UUID;
  *
  * Nothing here breaks blocks or lights real fire. The numbers for every ability are right below.
  */
-public class HangedMan {
+public class DarkAngel {
 
-    private static final String PATHWAY = "Hanged Man";
+    private static final String PATHWAY = "Dark Angel";
 
     // =========================
     // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
@@ -89,22 +89,22 @@ public class HangedMan {
     private static final double DIVINATION_RADIUS = 24.0;        // the pulse finds every enemy this close
     private static final int REVEAL_TICKS = 200;                 // they glow (seen through walls) this long
     private static final int MARK_TICKS = 200;                   // the strongest of them is marked this long...
-    private static final float MARK_EXTRA = 0.2f;                // ...and takes this much more damage meanwhile (0.2 = 20%)
+    private static final float MARK_EXTRA = 0.25f;                // ...and takes this much more damage meanwhile (0.2 = 20%)
     // sneak: Ritual Circle. It costs blood, not spirituality.
     private static final float RITUAL_PRICE = 4f;                // health it takes (2 hearts); refused when you have too little
-    private static final double RITUAL_RADIUS = 4.0;
+    private static final double RITUAL_RADIUS = 8.0;
     private static final int RITUAL_TICKS = 200;                 // how long the circle stands
     private static final int RITUAL_PULSE = 40;                  // every 2 s, while you stand in it...
     private static final float RITUAL_SPIRITUALITY = 0.08f;      // ...this share of your maximum spirituality comes back...
-    private static final int RITUAL_STRENGTH_LEVEL = 0;          // ...and you have Strength I and Resistance I
-    private static final int RITUAL_RESISTANCE_LEVEL = 0;
+    private static final int RITUAL_STRENGTH_LEVEL = 1;          // ...and you have Strength I and Resistance I
+    private static final int RITUAL_RESISTANCE_LEVEL = 1;
 
     // Ability 2 - Whispers (Sequence 8)
     private static final int WHISPERS_SEQUENCE = 8;
     private static final int WHISPERS_COST = 300;                // Sequence 8 holds 400
     private static final double WHISPERS_RANGE = 24.0;
     private static final int WHISPERS_TICKS = 160;               // how long the mouths whisper to it
-    private static final float WHISPERS_DAMAGE = 2f;             // each second
+    private static final float WHISPERS_DAMAGE = 4f;             // each second
     private static final int WHISPERS_WEAKNESS_LEVEL = 0;        // Weakness I and Slowness I meanwhile
     private static final int WHISPERS_SLOW_LEVEL = 0;
     // sneak: Listen
@@ -127,7 +127,7 @@ public class HangedMan {
     private static final int LURK_TICKS = 160;
     private static final int LURK_SPEED_LEVEL = 1;               // 0 = Speed I, 1 = Speed II while sunk
     private static final int AMBUSH_WINDOW = 40;                 // your first hit from the shadow, or this long after rising...
-    private static final float AMBUSH_BONUS = 14f;               // ...does this much more...
+    private static final float AMBUSH_BONUS = 25f;               // ...does this much more...
     private static final int AMBUSH_HOLD_TICKS = 20;             // ...and holds what it hit in place for a moment
 
     // Ability 4 - Flesh Bomb (Sequence 6)
@@ -150,7 +150,7 @@ public class HangedMan {
     private static final int GRAZE_SLOTS = 7;
     private static final float GRAZE_COST_MULTIPLIER = 3f;       // a stored ability costs 3x its own cost (no Sequence gate, no cooldown)
     private static final int SOUL_RISE_TICKS = 10;               // a slot is free: the soul rises off the corpse this long, then flies to you
-    private static final int SOUL_WAIT_TICKS = 600;              // every slot is full: the soul waits on the corpse 30 s...
+    private static final int SOUL_WAIT_TICKS = 150;              // every slot is full: the soul waits on the corpse 30 s...
     private static final double SOUL_REACH = 4.0;                // ...for you to stand this close and take it (sneak + key)
     private static final int WHEEL_RADIUS = 76;                  // GUI pixels from the middle of the screen to the slots
 
@@ -165,10 +165,10 @@ public class HangedMan {
     // sneak: Black Armor (cast again to take it off, which costs nothing)
     private static final int ARMOR_COST = 6000;
     private static final int ARMOR_TICKS = 400;
-    private static final float ARMOR_GUARD = 0.45f;              // share of every blow the plates take
+    private static final float ARMOR_GUARD = 0.65f;              // share of every blow the plates take
     private static final float ARMOR_GROWTH = 0.25f;             // you grow this much bigger in it (0.25 = a quarter)
     private static final double ARMOR_KNOCKBACK_RESISTANCE = 0.6;
-    private static final int ARMOR_STRENGTH_LEVEL = 0;           // Strength I while worn
+    private static final int ARMOR_STRENGTH_LEVEL = 1;           // Strength I while worn
 
     // Ability 7 - Degeneration (Sequence 3)
     private static final int DEGENERATION_SEQUENCE = 3;
@@ -182,7 +182,7 @@ public class HangedMan {
     // sneak: Trinity Body
     private static final int TRINITY_COST = 12000;
     private static final int TRINITY_TICKS = 400;
-    private static final float TRINITY_BONUS = 0.35f;            // the other two strike with you: 35% more damage dealt
+    private static final float TRINITY_BONUS = 0.65f;            // the other two strike with you: 35% more damage dealt
     private static final int TRINITY_BODIES = 2;                 // each lethal blow kills one of them instead of you...
     private static final float TRINITY_REVIVE_HEALTH = 0.5f;     // ...and you stand with this share of your health
     private static final int TRINITY_ECHO_EVERY = 10;            // ticks between two flashes of the copies striking (only the look)
@@ -190,29 +190,29 @@ public class HangedMan {
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String RITUAL_UNTIL = "hanged_man_ritual_until";
-    private static final String LISTEN_UNTIL = "hanged_man_listen_until";
-    private static final String LURK_UNTIL = "hanged_man_lurk_until";
-    private static final String CLOAK_UNTIL = "hanged_man_cloak_until";
-    private static final String ARMOR_UNTIL = "hanged_man_armor_until";
-    private static final String TRINITY_UNTIL = "hanged_man_trinity_until";
-    private static final String TRINITY_LEFT = "hanged_man_trinity_bodies";
-    private static final String TRINITY_ECHO = "hanged_man_trinity_echo";        // when the copies last flashed
+    private static final String RITUAL_UNTIL = "dark_angel_ritual_until";
+    private static final String LISTEN_UNTIL = "dark_angel_listen_until";
+    private static final String LURK_UNTIL = "dark_angel_lurk_until";
+    private static final String CLOAK_UNTIL = "dark_angel_cloak_until";
+    private static final String ARMOR_UNTIL = "dark_angel_armor_until";
+    private static final String TRINITY_UNTIL = "dark_angel_trinity_until";
+    private static final String TRINITY_LEFT = "dark_angel_trinity_bodies";
+    private static final String TRINITY_ECHO = "dark_angel_trinity_echo";        // when the copies last flashed
 
     // Grazing's slots: a compound with slot0..slot6 ("Pathway|key|sneak" or missing) and "selected".
     // Kept through death (copied over in onHangedManClone).
-    private static final String GRAZING = "hanged_man_grazing";
+    private static final String GRAZING = "dark_angel_grazing";
     private static final String GRAZING_SELECTED = "selected";
-    private static final String GRAZING_WHEEL = "hanged_man_grazing";            // the menu's id
+    private static final String GRAZING_WHEEL = "dark_angel_grazing";            // the menu's id
 
     // Saved on whoever it is put on
-    private static final String WHISPERED_UNTIL = "hanged_man_whispered_until";
-    private static final String DEGENERATING_UNTIL = "hanged_man_degenerating_until";
+    private static final String WHISPERED_UNTIL = "dark_angel_whispered_until";
+    private static final String DEGENERATING_UNTIL = "dark_angel_degenerating_until";
 
     // Other names
-    private static final String AMBUSH = "hanged_man_ambush";
-    private static final Identifier ARMOR_SCALE = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "hanged_man_black_armor_scale");
-    private static final Identifier ARMOR_FOOTING = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "hanged_man_black_armor_footing");
+    private static final String AMBUSH = "dark_angel_ambush";
+    private static final Identifier ARMOR_SCALE = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "dark_angel_black_armor_scale");
+    private static final Identifier ARMOR_FOOTING = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "dark_angel_black_armor_footing");
 
     /** Who each caster's whispers are on right now (a new target ends the old whispers). Not saved. */
     private static final Map<UUID, LivingEntity> WHISPERED = new HashMap<>();
@@ -518,7 +518,7 @@ public class HangedMan {
         Concealment.hide(player, LURK_TICKS + 5);                 // a little longer: lurkTick ends it
         player.addEffect(new MobEffectInstance(MobEffects.SPEED, LURK_TICKS, LURK_SPEED_LEVEL, false, false));
         // a hit straight out of the shadow (it brings you out too) counts as the ambush
-        EmpoweredHit.arm(player, AMBUSH, LURK_TICKS + AMBUSH_WINDOW, HangedMan::ambush);
+        EmpoweredHit.arm(player, AMBUSH, LURK_TICKS + AMBUSH_WINDOW, DarkAngel::ambush);
     }
 
     private static float ambush(Player attacker, LivingEntity target, float amount, ServerLevel sl) {
@@ -552,7 +552,7 @@ public class HangedMan {
         }
         HangedManFx.lurkExit(sl, player);
         HangedManFx.statusEnd(player, Status.LURKING);
-        if (EmpoweredHit.isArmed(player, AMBUSH)) EmpoweredHit.arm(player, AMBUSH, AMBUSH_WINDOW, HangedMan::ambush);
+        if (EmpoweredHit.isArmed(player, AMBUSH)) EmpoweredHit.arm(player, AMBUSH, AMBUSH_WINDOW, DarkAngel::ambush);
     }
 
     /** Casting anything else brings you out of the shadow first. */
@@ -1105,7 +1105,7 @@ public class HangedMan {
         data.putInt(TRINITY_LEFT, TRINITY_BODIES);
         HangedManFx.trinity(sl, player, TRINITY_TICKS);
         HangedManFx.status(player, Status.TRINITY, TRINITY_TICKS);
-        DeathWard.arm(player, TRINITY_TICKS, TRINITY_REVIVE_HEALTH, HangedMan::bodyDiesInstead);
+        DeathWard.arm(player, TRINITY_TICKS, TRINITY_REVIVE_HEALTH, DarkAngel::bodyDiesInstead);
     }
 
     /** A lethal blow: one of the other bodies dies in your place. While one is left, the next blow is covered too. */
@@ -1118,7 +1118,7 @@ public class HangedMan {
         long remaining = data.getLongOr(TRINITY_UNTIL, 0L) - sl.getGameTime();
         if (left > 0 && remaining > 0) {
             player.sendSystemMessage(Component.literal("One of your bodies dies in your place. " + left + " left."));
-            DeathWard.arm(player, (int) remaining, TRINITY_REVIVE_HEALTH, HangedMan::bodyDiesInstead);
+            DeathWard.arm(player, (int) remaining, TRINITY_REVIVE_HEALTH, DarkAngel::bodyDiesInstead);
         } else {
             player.sendSystemMessage(Component.literal("Your last other body dies in your place."));
             endTrinity(player, sl);
