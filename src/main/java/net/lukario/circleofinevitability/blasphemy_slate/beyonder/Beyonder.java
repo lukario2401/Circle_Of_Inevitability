@@ -76,7 +76,7 @@ public final class Beyonder {
 
     /**
      * The same, but the cast is paid for: it costs 'costMultiplier' times what the ability itself costs
-     * (Hanged Man's Grazing: 3). It is refused, with the usual "not enough spirituality", when the player cannot
+     * (Dark Angel's Grazing: 3). It is refused, with the usual "not enough spirituality", when the player cannot
      * pay that much. No Sequence gate, as above. 0 = free, the same as castUnbound(player, cast).
      *
      *   boolean wentOff = Beyonder.castUnbound(player, 3f, () -> ability.cast().run(player, level, sl));

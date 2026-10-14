@@ -16,21 +16,20 @@ import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.DeathWard;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Flight;
+import net.lukario.circleofinevitability.status.Glide;
 import net.lukario.circleofinevitability.status.Marionette;
+import net.lukario.circleofinevitability.status.Swarm;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.lukario.circleofinevitability.status.Vulnerable;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
@@ -39,24 +38,18 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -83,7 +76,8 @@ import java.util.UUID;
  * Every look and sound is in BeautyGoddessFx (see /beautyfx); this class only decides who is hurt, held and
  * helped, and when (at the ticks BeautyGoddessFx names: TAME_LANDS, SHACKLES_LOCK, DRINK_DONE, MOON_RISEN...).
  * The reusable pieces come from docs/SPELL_KIT.md: combat/Zone (the cloud, the moons, Beauty, Creation),
- * status/Marionette (the tamed, and the summoned with Marionette.summon), status/Flight (the bat swarm), status/Concealment (invisibility, shadow, moonlight), status/DeathWard (the re-forming moonlight),
+ * status/Marionette (the tamed, and the summoned with Marionette.spawnSummon), status/Glide (the wings),
+ * status/Swarm and status/Flight (the bat swarm), status/Concealment (invisibility, shadow, moonlight), status/DeathWard (the re-forming moonlight),
  * status/Taunt (the Blood Moon's rampage), root/Root, combat/Spells, combat/Later.
  *
  * The passives (poison resistance, Strength, Night Vision...) are in SequencePassives; the ones that need more
@@ -245,7 +239,6 @@ public class BeautyGoddess {
     // Saved on the player (game times are "until" this tick)
     // =========================
     private static final String VISION_UNTIL = "beauty_goddess_vision_until";
-    private static final String WINGS_UNTIL = "beauty_goddess_wings_until";
     private static final String INVISIBLE_UNTIL = "beauty_goddess_invisible_until";
     private static final String BREATH_UNTIL = "beauty_goddess_breath_until";
     private static final String SHADOW_UNTIL = "beauty_goddess_shadow_until";
@@ -255,8 +248,6 @@ public class BeautyGoddess {
     private static final String MOON_Y = "beauty_goddess_moon_y";
     private static final String MOON_Z = "beauty_goddess_moon_z";
     private static final String FLASH_READY = "beauty_goddess_flash_ready";
-    private static final String SWARM_UNTIL = "beauty_goddess_swarm_until";
-    private static final String SWARM_LEFT = "beauty_goddess_swarm_bats";
 
     // Saved on whoever it is put on
     private static final String TAMED_UNTIL = "beauty_goddess_tamed_until";
@@ -269,8 +260,6 @@ public class BeautyGoddess {
     private static final String ZONE_BLOOD_MOON = "beauty_goddess_blood_moon";
     private static final String ZONE_CREATION = "beauty_goddess_creation";
 
-    /** The enemies each gliding caster has passed (the bats go for them). Not saved. */
-    private static final Map<UUID, Set<LivingEntity>> PASSED = new HashMap<>();
 
     /** Who each caster is gazing at right now. Not saved. */
     private record Gaze(LivingEntity target, long started, long until, String tag) {}
@@ -284,7 +273,6 @@ public class BeautyGoddess {
             Player player = event.player();
             if (!(player.level() instanceof ServerLevel sl)) return;
             // these run out even if the pathway is taken away in the meantime (or the cast was stolen)
-            glideTick(player, sl);
             invisibilityTick(player, sl);
             breathTick(player, sl);
             shadowTick(player, sl);
@@ -293,15 +281,6 @@ public class BeautyGoddess {
             if (player.tickCount % AFTERIMAGE_EVERY == 0 && player.isSprinting() && isBeautyGoddess(player, AFTERIMAGE_SEQUENCE)) {
                 BeautyGoddessFx.afterimage(sl, player);
             }
-        }
-
-        /** A blow on the swarm kills bats instead of hurting you; only when the last one falls are you flesh again. */
-        @SubscribeEvent
-        public static void onBeautyGoddessHurt(LivingHurtEvent event) {
-            if (!(event.getEntity() instanceof Player player) || !(player.level() instanceof ServerLevel sl)) return;
-            if (!isActive(player, SWARM_UNTIL) || event.getAmount() <= 0f) return;
-            if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;      // the void and /kill
-            event.setAmount(swarmStruck(player, sl, event.getAmount()));
         }
 
         // what was on the screen and the body does not survive relogging or dying: start clean
@@ -317,7 +296,6 @@ public class BeautyGoddess {
 
         @SubscribeEvent
         public static void onBeautyGoddessLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-            PASSED.remove(event.getEntity().getUUID());
             GAZES.remove(event.getEntity().getUUID());
         }
     }
@@ -391,7 +369,7 @@ public class BeautyGoddess {
         player.getPersistentData().putLong(VISION_UNTIL, until);
         BeautyGoddessFx.spiritVision(sl, player, VISION_RADIUS);
         BeautyGoddessFx.status(player, Status.SPIRIT_VISION, VISION_TICKS);
-        List<LivingEntity> seen = livingAround(player, sl, VISION_RADIUS);
+        List<LivingEntity> seen = Spells.livingAround(player, sl, player.position(), VISION_RADIUS);
         for (LivingEntity one : seen) {
             one.addEffect(new MobEffectInstance(MobEffects.GLOWING, VISION_TICKS, 0, false, false));
         }
@@ -411,7 +389,7 @@ public class BeautyGoddess {
             player.getPersistentData().remove(VISION_UNTIL);
             return;
         }
-        for (LivingEntity one : livingAround(player, sl, VISION_RADIUS)) {
+        for (LivingEntity one : Spells.livingAround(player, sl, player.position(), VISION_RADIUS)) {
             if (!one.hasEffect(MobEffects.GLOWING)) continue;                              // only what was seen at the cast
             BeautyGoddessFx.spiritVisionMark(sl, one, (int) Math.min(left, VISION_REFRESH + 4), one.getHealth() / one.getMaxHealth());
         }
@@ -536,8 +514,8 @@ public class BeautyGoddess {
     public static void beautyGoddessWings(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, WINGS_SEQUENCE)) return;
 
-        if (isActive(player, WINGS_UNTIL)) {                       // gliding: the key ends it, for nothing
-            endGlide(player, sl);
+        if (Glide.isGliding(player)) {                             // gliding: the key ends it, for nothing
+            Glide.end(player);
             return;
         }
         if (player.isShiftKeyDown()) {
@@ -557,47 +535,16 @@ public class BeautyGoddess {
     }
 
     private static void wings(Player player, ServerLevel sl) {
-        player.getPersistentData().putLong(WINGS_UNTIL, sl.getGameTime() + WINGS_TICKS);
-        PASSED.put(player.getUUID(), new LinkedHashSet<>());
         BeautyGoddessFx.wings(sl, player, WINGS_TICKS, wingsTag(player));
         BeautyGoddessFx.status(player, Status.WINGS, WINGS_TICKS);
-        FallGuard.protect(player, WINGS_TICKS + 200);
-        if (player.onGround()) {                                    // off the ground first
-            player.setDeltaMovement(player.getDeltaMovement().x, 0.5, player.getDeltaMovement().z);
-            player.hurtMarked = true;
-        }
+        Glide.start(player, WINGS_TICKS, WINGS_SPEED, WINGS_SINK, WINGS_CATCH, (glider, passed) -> wingsBurst(glider, sl, passed));
     }
 
-    /** Every tick of the glide: carried along the look, and every enemy close by is remembered for the bats. */
-    private static void glideTick(Player player, ServerLevel sl) {
-        if (!player.getPersistentData().contains(WINGS_UNTIL)) return;
-        if (!isActive(player, WINGS_UNTIL) || player.isSpectator()) {
-            endGlide(player, sl);
-            return;
-        }
-        Vec3 look = player.getLookAngle();
-        double down = Math.max(-0.6, look.y * WINGS_SPEED - WINGS_SINK);
-        player.setDeltaMovement(look.x * WINGS_SPEED, down, look.z * WINGS_SPEED);
-        player.hurtMarked = true;
-        player.fallDistance = 0f;
-        Set<LivingEntity> passed = PASSED.get(player.getUUID());
-        if (passed != null) passed.addAll(Spells.enemiesAround(player, sl, player.getBoundingBox().getCenter(), WINGS_CATCH));
-    }
-
-    private static void endGlide(Player player, ServerLevel sl) {
-        player.getPersistentData().remove(WINGS_UNTIL);
+    /** The end of the glide: the wings burst into bats that bite the enemies passed (or, with none, those near). */
+    private static void wingsBurst(Player player, ServerLevel sl, List<LivingEntity> passed) {
         BeautyGoddessFx.statusEnd(player, Status.WINGS);
-        FallGuard.protect(player, 200);
-        Set<LivingEntity> passed = PASSED.remove(player.getUUID());
-        if (!Spells.casterStillHere(player, sl)) return;
         BeautyGoddessFx.wingsBurst(sl, player, wingsTag(player));
-        List<LivingEntity> prey = new ArrayList<>();
-        if (passed != null) {
-            for (LivingEntity one : passed) {
-                if (one.isAlive() && one.level() == sl) prey.add(one);
-            }
-        }
-        if (prey.isEmpty()) prey = Spells.enemiesAround(player, sl, player.position(), WINGS_BURST_RADIUS);
+        List<LivingEntity> prey = passed.isEmpty() ? Spells.enemiesAround(player, sl, player.position(), WINGS_BURST_RADIUS) : passed;
         if (prey.isEmpty()) return;                                 // the bats only scatter
         BeautyGoddessFx.BAT_SEEKER.onHit((target, at) -> {
             Spells.strike(player, target, BAT_DAMAGE);
@@ -735,7 +682,7 @@ public class BeautyGoddess {
         Later.run(sl, flight, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
             BeautyGoddessFx.sunWater(sl, at, SUN_RADIUS);
-            for (LivingEntity one : livingAround(player, sl, at, SUN_RADIUS)) {
+            for (LivingEntity one : Spells.livingAround(player, sl, at, SUN_RADIUS)) {
                 if (!Spells.isEnemy(player, one)) {
                     Spells.cleanse(one);
                     continue;
@@ -963,8 +910,8 @@ public class BeautyGoddess {
             crushGaze(player, sl, held);
             return;
         }
-        if (isActive(player, SWARM_UNTIL)) {                       // the key again: re-form now, for nothing
-            endSwarm(player, sl);
+        if (Swarm.isActive(player)) {                              // the key again: re-form now, for nothing
+            Swarm.end(player);
             return;
         }
         if (player.isShiftKeyDown()) {
@@ -1048,22 +995,27 @@ public class BeautyGoddess {
 
     private static void batSwarm(Player player, ServerLevel sl) {
         endForms(player, sl);
-        CompoundTag data = player.getPersistentData();
-        data.putLong(SWARM_UNTIL, sl.getGameTime() + SWARM_TICKS);
-        data.putInt(SWARM_LEFT, SWARM_BATS);
         Flight.grant(player, SWARM_TICKS);
         player.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY, SWARM_TICKS, 0, false, false));
         BeautyGoddessFx.batSwarm(sl, player, SWARM_TICKS, swarmTag(player));
         BeautyGoddessFx.status(player, Status.BAT_SWARM, SWARM_TICKS);
+        // a blow kills bats instead of hurting you (status/Swarm); the last one falling ends it
+        Swarm.start(player, SWARM_TICKS, SWARM_BATS, SWARM_BAT_HEALTH, new Swarm.Hooks() {
+            @Override
+            public void bodyLost(LivingEntity who, ServerLevel level, Vec3 at, int left) {
+                BeautyGoddessFx.batSwarmBatLost(level, at);
+            }
+
+            @Override
+            public void over(LivingEntity who, ServerLevel level, Swarm.End why) {
+                if (who instanceof Player swarmed) reform(swarmed, level, why);
+            }
+        });
     }
 
-    /** Every tick as a swarm: it ends on time; it smokes; twice a second the bats bite what is close. */
+    /** Every tick as a swarm: it smokes; twice a second the bats bite what is close. */
     private static void swarmTick(Player player, ServerLevel sl) {
-        if (!player.getPersistentData().contains(SWARM_UNTIL)) return;
-        if (!isActive(player, SWARM_UNTIL)) {
-            endSwarm(player, sl);
-            return;
-        }
+        if (!Swarm.isActive(player)) return;
         if (player.tickCount % 5 == 0) BeautyGoddessFx.batSwarmTick(sl, player);
         if (player.tickCount % 10 != 0) return;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.getBoundingBox().getCenter(), SWARM_BITE_REACH)) {
@@ -1072,33 +1024,8 @@ public class BeautyGoddess {
         }
     }
 
-    /**
-     * A blow of 'amount' lands on the swarm: bats die instead of you. Returns what is left of the blow for your
-     * body: nothing while bats are left, the rest once the last one is killed (the swarm then ends).
-     */
-    private static float swarmStruck(Player player, ServerLevel sl, float amount) {
-        CompoundTag data = player.getPersistentData();
-        int left = data.getIntOr(SWARM_LEFT, 0);
-        int killed = Math.min(left, Math.max(1, (int) Math.ceil(amount / SWARM_BAT_HEALTH)));
-        left -= killed;
-        Vec3 chest = player.getBoundingBox().getCenter();
-        for (int i = 0; i < killed; i++) {
-            BeautyGoddessFx.batSwarmBatLost(sl, chest.add((player.getRandom().nextDouble() - 0.5) * 1.6,
-                    (player.getRandom().nextDouble() - 0.5) * 1.2, (player.getRandom().nextDouble() - 0.5) * 1.6));
-        }
-        if (left > 0) {
-            data.putInt(SWARM_LEFT, left);
-            return 0f;
-        }
-        endSwarm(player, sl);
-        player.sendSystemMessage(Component.literal("Your last bat falls: you are flesh again."));
-        return Math.max(0f, amount - killed * SWARM_BAT_HEALTH);
-    }
-
-    private static void endSwarm(Player player, ServerLevel sl) {
-        CompoundTag data = player.getPersistentData();
-        data.remove(SWARM_UNTIL);
-        data.remove(SWARM_LEFT);
+    /** The swarm is over (time, the last bat, the key): flesh again where you are. */
+    private static void reform(Player player, ServerLevel sl, Swarm.End why) {
         if (Flight.has(player)) Flight.end(player);                // lands you safely (Flight guards the fall)
         MobEffectInstance invisible = player.getEffect(MobEffects.INVISIBILITY);   // only the swarm's own
         if (invisible != null && invisible.getAmplifier() == 0 && invisible.getDuration() <= SWARM_TICKS) {
@@ -1106,6 +1033,7 @@ public class BeautyGoddess {
         }
         BeautyGoddessFx.batSwarmEnd(sl, player, swarmTag(player));
         BeautyGoddessFx.statusEnd(player, Status.BAT_SWARM);
+        if (why == Swarm.End.BROKEN) player.sendSystemMessage(Component.literal("Your last bat falls: you are flesh again."));
     }
 
     private static String swarmTag(Player player) {
@@ -1170,26 +1098,12 @@ public class BeautyGoddess {
                 BeautyGoddessFx.spiritCharge(sl, ground, yaw);
                 double side = (step % 2 == 0 ? 1 : -1) * 0.6 * ((step + 1) / 2);
                 Vec3 out = Spells.spotAround(ground, yaw, 1.6).add(Spells.spotAround(Vec3.ZERO, yaw + 90f, side));
-                Mob summoned = summon(player, sl, type, Spells.groundAt(player, sl, out.add(0, 1, 0)), yaw);
+                Mob summoned = Marionette.spawnSummon(type, player, sl, Spells.groundAt(player, sl, out.add(0, 1, 0)), yaw, SUMMON_TICKS);
                 if (summoned != null) BeautyGoddessFx.summonArrives(sl, summoned);
             });
         }
         player.sendSystemMessage(Component.literal("The Door of Summoning opens."));
         return AbilityWheel.Result.DONE;
-    }
-
-    /** One creature of the Spirit World, standing at 'feet' and fighting for the caster for SUMMON_TICKS. */
-    private static Mob summon(Player player, ServerLevel sl, EntityType<? extends Mob> type, Vec3 feet, float yaw) {
-        Mob mob = type.create(sl, EntitySpawnReason.MOB_SUMMONED);
-        if (mob == null) return null;
-        mob.snapTo(feet.x, feet.y, feet.z, yaw, 0f);
-        mob.setYHeadRot(yaw);
-        if (!sl.addFreshEntity(mob)) return null;
-        if (!Marionette.summon(mob, player, SUMMON_TICKS)) {
-            mob.discard();
-            return null;
-        }
-        return mob;
     }
 
     private static AbilityWheel.Result creation(ServerPlayer player, ServerLevel sl) {
@@ -1209,7 +1123,7 @@ public class BeautyGoddess {
                     .onPulse(left -> {
                         BeautyGoddessFx.seedOfLifePulse(sl, ground, CREATION_RADIUS);
                         if (inCircle(player, ground, CREATION_RADIUS, 5)) restore(sl, player);
-                        grow(player, sl, ground);
+                        Spells.growPlants(player, sl, ground, CREATION_RADIUS, CREATION_GROWTH);
                     })
                     .onEnd(() -> {
                         if (sl.getGameTime() < until - 5) BeautyGoddessFx.seedOfLifeEnd(sl, ground, tag);
@@ -1226,20 +1140,6 @@ public class BeautyGoddess {
         Spells.cleanse(ally);
         ally.setHealth(ally.getMaxHealth());
         if (helped) BeautyGoddessFx.seedOfLifeHeal(sl, ally);
-    }
-
-    /** CREATION_GROWTH random spots under the seed grow as if bone-mealed: crops ripen, saplings rise, grass flowers. */
-    private static void grow(Player player, ServerLevel sl, Vec3 ground) {
-        ItemStack meal = new ItemStack(Items.BONE_MEAL, 64);
-        for (int i = 0; i < CREATION_GROWTH; i++) {
-            double angle = player.getRandom().nextDouble() * Math.PI * 2;
-            double far = Math.sqrt(player.getRandom().nextDouble()) * CREATION_RADIUS;
-            Vec3 spot = Spells.groundNear(player, sl, ground.add(Math.cos(angle) * far, 0, Math.sin(angle) * far), 3);
-            if (spot == null) continue;
-            BlockPos above = BlockPos.containing(spot.x, spot.y + 0.1, spot.z);     // a crop or sapling standing on it
-            if (!BoneMealItem.growCrop(meal, sl, above)) BoneMealItem.growCrop(meal, sl, above.below());   // or the grass itself
-            if (meal.isEmpty()) meal = new ItemStack(Items.BONE_MEAL, 64);
-        }
     }
 
     private static AbilityWheel.Result beauty(ServerPlayer player, ServerLevel sl) {
@@ -1354,20 +1254,6 @@ public class BeautyGoddess {
         return entity.isAlive() && !entity.isSpectator() && !(entity instanceof ArmorStand);
     }
 
-    /** Every living body within 'radius' of the caster, the caster left out. */
-    private static List<LivingEntity> livingAround(Player player, ServerLevel sl, double radius) {
-        return livingAround(player, sl, player.position(), radius);
-    }
-
-    private static List<LivingEntity> livingAround(Player player, ServerLevel sl, Vec3 center, double radius) {
-        List<LivingEntity> found = new ArrayList<>();
-        AABB area = new AABB(center, center).inflate(radius + 2.0);
-        for (LivingEntity one : sl.getEntitiesOfClass(LivingEntity.class, area, other -> other != player && isBody(other))) {
-            if (Spells.distanceToBody(one, center) <= radius) found.add(one);
-        }
-        return found;
-    }
-
     private static boolean inCircle(Entity entity, Vec3 ground, double radius, double height) {
         return inCircle(entity.position(), ground, radius, height);
     }
@@ -1382,7 +1268,7 @@ public class BeautyGoddess {
         if (player.getPersistentData().contains(INVISIBLE_UNTIL)) endInvisibility(player, sl);
         if (player.getPersistentData().contains(SHADOW_UNTIL)) endShadow(player, sl);
         if (player.getPersistentData().contains(MOONLIGHT_UNTIL)) endMoonlight(player, sl);
-        if (player.getPersistentData().contains(SWARM_UNTIL)) endSwarm(player, sl);
+        if (Swarm.isActive(player)) Swarm.end(player);
     }
 
     /** Casting something that shows you brings you out of a hiding form first. */
@@ -1399,12 +1285,10 @@ public class BeautyGoddess {
     /** After a relog or a death: nothing of the timed casts is left over (their looks did not survive either). */
     private static void clearState(Player player) {
         CompoundTag data = player.getPersistentData();
-        if (data.contains(SWARM_UNTIL) && Flight.has(player)) Flight.end(player);
-        for (String key : List.of(SWARM_UNTIL, SWARM_LEFT, VISION_UNTIL, WINGS_UNTIL, INVISIBLE_UNTIL, BREATH_UNTIL, SHADOW_UNTIL,
+        for (String key : List.of(VISION_UNTIL, INVISIBLE_UNTIL, BREATH_UNTIL, SHADOW_UNTIL,
                 MOONLIGHT_UNTIL, MOON_UNTIL, MOON_X, MOON_Y, MOON_Z, FLASH_READY)) {
             data.remove(key);
         }
-        PASSED.remove(player.getUUID());
         GAZES.remove(player.getUUID());
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) BeautyGoddessFx.statusEnd(player, status);     // a clock left running before death

@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.combat;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Marionette;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -15,6 +16,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BoneMealItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -38,6 +42,7 @@ import java.util.function.Consumer;
  *   Vec3 direction = Spells.aimFrom(player, sl, hand, 24);          // from the hand toward what the crosshair is on
  *   for (LivingEntity e : Spells.enemiesAround(player, sl, spot, 4)) Spells.strike(player, e, 12f);
  *   if (!Spells.paySpirituality(player, 1000)) return;                   // takes the spirituality, or says there is not enough
+ *   Spells.alliesAround(player, sl, spot, 6)                        // the caster's side there (livingAround: everyone)
  *
  * "Enemy" means: anything alive except the caster, what the caster rides or owns (pets, tamed horses), the
  * caster's marionettes, team mates, armor stands, spectators and whoever is concealed. Add your own rule with
@@ -92,6 +97,30 @@ public final class Spells {
         for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> isEnemy(caster, other))) {
             if (distanceToBody(candidate, center) <= radius) result.add(candidate);
         }
+        return result;
+    }
+
+    /**
+     * Every living body whose body is within 'radius' of a point, enemies and allies alike: everything alive except
+     * the caster, spectators and armor stands (a sight that sees all, a splash that hurts some and helps others).
+     */
+    public static List<LivingEntity> livingAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+        List<LivingEntity> result = new ArrayList<>();
+        AABB area = new AABB(center, center).inflate(radius + 2.0);
+        for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> other != caster
+                && !other.getUUID().equals(caster.getUUID()) && other.isAlive() && !other.isSpectator() && !(other instanceof ArmorStand))) {
+            if (distanceToBody(candidate, center) <= radius) result.add(candidate);
+        }
+        return result;
+    }
+
+    /**
+     * The caster's side within 'radius' of a point: everyone livingAround finds that is not an enemy (team mates,
+     * pets, marionettes and summons, other players' concealed bodies). The caster is not in it; add them yourself.
+     */
+    public static List<LivingEntity> alliesAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+        List<LivingEntity> result = livingAround(caster, sl, center, radius);
+        result.removeIf(other -> isEnemy(caster, other));
         return result;
     }
 
@@ -472,6 +501,26 @@ public final class Spells {
         if (has != null && has.getAmplifier() >= amplifier
                 && (has.getDuration() > ticks / 2 || has.isInfiniteDuration())) return;
         entity.addEffect(new MobEffectInstance(effect, ticks, amplifier));
+    }
+
+    /**
+     * 'spots' random places on the ground within 'radius' of 'ground' grow as if bone meal were used on them:
+     * crops ripen, saplings grow, grass sprouts flowers. Call it every second for a garden that grows while it lasts.
+     * Returns how many of them grew. (It changes blocks: only plants, the way bone meal does.)
+     */
+    public static int growPlants(Player caster, ServerLevel sl, Vec3 ground, double radius, int spots) {
+        ItemStack meal = new ItemStack(Items.BONE_MEAL, 64);
+        int grew = 0;
+        for (int i = 0; i < spots; i++) {
+            double angle = sl.getRandom().nextDouble() * Math.PI * 2;
+            double far = Math.sqrt(sl.getRandom().nextDouble()) * radius;
+            Vec3 spot = groundNear(caster, sl, ground.add(Math.cos(angle) * far, 0, Math.sin(angle) * far), 3);
+            if (spot == null) continue;
+            BlockPos above = BlockPos.containing(spot.x, spot.y + 0.1, spot.z);       // a crop or sapling standing there
+            if (BoneMealItem.growCrop(meal, sl, above) || BoneMealItem.growCrop(meal, sl, above.below())) grew++;   // or the grass itself
+            if (meal.isEmpty()) meal = new ItemStack(Items.BONE_MEAL, 64);
+        }
+        return grew;
     }
 
     /** Takes every harmful potion effect off the entity and puts out the fire on it. */

@@ -31,6 +31,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Make a mob go after one chosen entity ("come at me"), or set mobs on each other | [`Taunt`](#taunt) | `status/` |
 | Drag something under the ground and give it back | [`Burial`](#burial) | `status/` |
 | Let a player fly for a while | [`Flight`](#flight) | `status/` |
+| Carry a player fast along their look for a while, and know which enemies they passed (wings, a dive, a leap on the wind) | [`Glide`](#glide) | `status/` |
+| Spread someone over many small bodies: blows kill those instead, and only the last one falling lets damage through (a bat swarm, a flock of paper birds) | [`Swarm`](#swarm) | `status/` |
 | Wings (or anything worn) that turn with the player | `ParticleShapes.modelOnTurning`, `PaleEmperorFx.wings(sl, player, ticks, tag)` ([MODEL_FX.md](MODEL_FX.md)) | `particles/fx/` |
 | A crown (or anything on the head) that looks where the head looks | `ParticleShapes.modelOnHead`, `PaleEmperorFx.crown(sl, player, ticks, tag)` ([MODEL_FX.md](MODEL_FX.md)) | `particles/fx/` |
 | Damage that lands on someone else, or is shared by a group | [`DamageLink`](#damagelink) | `status/` |
@@ -39,6 +41,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Write down everything someone takes for a while, then hit them with all of it at once (a curse that comes due) | [`StoredDamage`](#storeddamage) | `status/` |
 | Nothing heals them for a while (frostbite, a festering wound) | [`NoHeal`](#noheal) | `status/` |
 | Take over a mob | [`Marionette`](#marionette) | `status/` |
+| Call up creatures that fight for you for a while, then vanish without drops (a door of summoning, risen dead) | [`Marionette.spawnSummon`](#marionette) | `status/` |
+| Everyone in a circle, enemies and allies alike, or only the caster's side | [`Spells.livingAround`, `alliesAround`](#1-spells-aiming-and-enemies) | `combat/` |
+| Make plants grow in a circle, as bone meal does | [`Spells.growPlants`](#1-spells-aiming-and-enemies) | `combat/` |
 | Vanish: unseen, untargeted, unhurt | [`Concealment`](#concealment) | `status/` |
 | Leave your body and live inside a mob or a player, which carries you | [`Parasite`](#parasite) | `status/` |
 | Cheat death once | [`DeathWard`](#deathward) | `status/` |
@@ -124,6 +129,9 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `aimFrom(player, sl, from, range)` | The direction from `from` to what the crosshair is on. For things thrown from a hand or by a summon standing beside the player: thrown along the plain look direction they land a step to the side |
 | `groundAt(player, sl, point)` | Top of the blocks under a point |
 | `enemiesAround(player, sl, center, radius)` | Every enemy whose body is within `radius` of a point |
+| `livingAround(player, sl, center, radius)` | Everything alive there, enemies and allies alike (not the caster, spectators or armor stands): a sight that sees all, a splash that hurts some and heals others |
+| `alliesAround(player, sl, center, radius)` | Only the caster's side there: team mates, pets, marionettes and summons. The caster is not in it |
+| `growPlants(player, sl, ground, radius, spots)` | `spots` random places in the circle grow as if bone-mealed (crops ripen, saplings grow, grass flowers). Call it every second for a garden. Returns how many grew |
 | `enemiesOnLine(player, sl, from, to, grow)` | Every enemy the line passes through, nearest first. `grow` makes the line fatter |
 | `enemiesInSight(player, sl, range, halfAngle)` | Every enemy the caster can see: within `range`, at most `halfAngle` degrees from the crosshair (45 is about the whole screen), not behind blocks. Nearest first |
 | `enemiesInCone(player, sl, from, direction, range, halfAngle)` | Every enemy in a cone from any point along any direction (a breath, a roar out of a summon's mouth). Walls do not matter. Nearest first |
@@ -745,6 +753,7 @@ Marionette.release(mob);                           // lets go: it is its old sel
 Marionette.collapse(mob);                          // cuts the strings the way running out of time does
 Marionette.summon(mob, player, 600);               // a creature an ability just spawned: fights the same way, does not
                                                    // count toward MAX_PER_MASTER, no control bar, vanishes (no drops) when it ends
+Mob hound = Marionette.spawnSummon(EntityTypes.WOLF, player, sl, feet, yaw, 600);   // spawns one there and summons it (null if it could not)
 Marionette.isSummoned(entity);
 ```
 
@@ -926,6 +935,33 @@ PaleEmperorFx.wings(sl, player, 400, "my_pathway_wings");    // something to sho
 ```
 
 `Flight.has(player)`, `ticksLeft(player)`, `end(player)`. However it ends, the fall after it does no damage. Creative players and spectators keep their own flying; for them only the time is counted. Saved with the player, so a flight goes on after logging out and in. Models are not: show the wings again when they log in or change dimension (`wingsAgain` in `PaleEmperor.java`).
+
+### Glide
+
+A player is carried along where they look for a while, fast, sinking a little, with no fall damage after.
+
+```java
+Glide.start(player, 50, 0.95, 0.08);                   // 50 ticks, 0.95 blocks a tick, sinking 0.08 a tick
+Glide.start(player, 50, 0.95, 0.08, 2.5, (glider, passed) -> {
+    // at the end: every enemy that came within 2.5 blocks on the way (still alive), the first one passed first
+});
+BeautyGoddessFx.wings(sl, player, 50, "my_pathway_wings"); // something to show for it
+```
+
+`Glide.isGliding(entity)`, `ticksLeft(entity)`, `end(player)` (lands them now; the callback still runs). Looking down dives faster (at most `Glide.MAX_DIVE`), looking up climbs. The landing after it is safe for `Glide.LANDING_GUARD_TICKS`. Not saved: dying or logging out drops the glide without its callback. Used by Wings of Darkness (`wings`, `wingsBurst` in `BeautyGoddess.java`).
+
+### Swarm
+
+For a while someone is many small bodies. A blow kills some of them instead of hurting them: one for every `perBody` damage, at least one. While one is left they cannot be hurt; the blow that kills the last one lands with what is left of it.
+
+```java
+Swarm.start(player, 120, 12, 4f, new Swarm.Hooks() {     // 6 seconds, 12 bodies, one dies per 4 damage
+    @Override public void bodyLost(LivingEntity who, ServerLevel sl, Vec3 at, int left) { /* a bat bursts at 'at' */ }
+    @Override public void over(LivingEntity who, ServerLevel sl, Swarm.End why) { /* TIME, BROKEN or ENDED */ }
+});
+```
+
+`Swarm.isActive(entity)`, `bodiesLeft(entity)`, `ticksLeft(entity)`, `end(entity)` (its `over` runs with `End.ENDED`). Both hooks are optional. It is only the counting: flying, invisibility and the look are yours to add. The void and `/kill` go through. Works on mobs too. Not saved: dying or logging out drops it without `over`. Used by Bat Swarm Transformation (`batSwarm`, `reform` in `BeautyGoddess.java`).
 
 ### Parasite
 
@@ -1255,6 +1291,11 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Substitute` with a mirror that rises and shatters at the attacker | `readyMirrorSubstitute`, `mirrorEscape` in `Apocalypse.java` |
 | `Concealment` that the same key ends (out where you aim, or back where you went in) | `enterMirrorWorld`, `exitWhereYouAim`, `returnFromMirror`, `mirrorWorldTick` in `Apocalypse.java` |
 | Things on the ground that charge while enemies stand in front of them, and go off together | `placeShard`, `chargeShards`, `shatterShards` in `Apocalypse.java` |
+| `Glide` with a `Seeker` flock at the end that goes for everyone passed | `wings`, `wingsBurst` in `BeautyGoddess.java` |
+| `Swarm` with `Flight` and invisibility | `batSwarm`, `swarmTick`, `reform` in `BeautyGoddess.java` |
+| `Marionette.spawnSummon` (creatures out of a door, one after another), `Spells.growPlants` in a `Zone` | `doorOfSummoning`, `creation` in `BeautyGoddess.java` |
+| `AbilityWheel.quickCastCooldown(false).quickCastCost(2f)` (sneak recast: no cooldown, double price) | `POTIONS`, `MOON_WHEEL` in `BeautyGoddess.java` |
+| `Concealment` forms that end each other (only one at a time), `DeathWard` armed only inside your own `Zone` | `endForms`, `moonlightForm` in `BeautyGoddess.java` |
 
 ## Tricks worth copying
 

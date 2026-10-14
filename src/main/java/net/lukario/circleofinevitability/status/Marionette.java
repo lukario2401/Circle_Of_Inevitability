@@ -13,6 +13,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.NeutralMob;
@@ -47,6 +49,7 @@ import java.util.UUID;
  *   Marionette.release(mob)                     // lets go: it is its old self again
  *   Marionette.collapse(mob)                    // cuts the strings the way running out of time does
  *   Marionette.summon(mob, player, 600)         // a creature called up for the player: see "Summoned" below
+ *   Marionette.spawnSummon(EntityTypes.WOLF, player, sl, feet, yaw, 600)   // spawns one and summons it in one go
  *
  * What a marionette does:
  *   - it attacks, in this order: what its master last hit, what last hit its master, the fight it is already in,
@@ -126,6 +129,25 @@ public final class Marionette {
      */
     public static boolean summon(Mob mob, Player master, int ticks) {
         return take(mob, master, ticks, true);
+    }
+
+    /**
+     * Spawns a creature of 'type' with its feet at 'feet', facing 'yaw', and summons it for 'master' for 'ticks'
+     * (see summon). Returns it, or null if it could not be spawned there.
+     *
+     *   Mob hound = Marionette.spawnSummon(EntityTypes.WOLF, player, sl, Spells.groundAt(player, sl, spot), yaw, 600);
+     */
+    public static Mob spawnSummon(EntityType<? extends Mob> type, Player master, ServerLevel sl, Vec3 feet, float yaw, int ticks) {
+        Mob mob = type.create(sl, EntitySpawnReason.MOB_SUMMONED);
+        if (mob == null) return null;
+        mob.snapTo(feet.x, feet.y, feet.z, yaw, 0f);
+        mob.setYHeadRot(yaw);
+        if (!sl.addFreshEntity(mob)) return null;
+        if (!summon(mob, master, ticks)) {
+            mob.discard();
+            return null;
+        }
+        return mob;
     }
 
     /** True for a creature handed over with summon(...). */
