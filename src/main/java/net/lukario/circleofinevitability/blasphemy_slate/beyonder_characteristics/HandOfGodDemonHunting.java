@@ -296,8 +296,8 @@ public final class HandOfGodDemonHunting {
     static Coat coatFor(LivingEntity one) {
         if (Marionette.isMarionette(one) || Marionette.isSummoned(one) || one.getType() == EntityTypes.VEX) return Coat.EXORCISM;
         if (one.fireImmune()) return Coat.FREEZE;
-        if (one.getType().is(EntityTypeTags.ARTHROPOD) || one.getType().is(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES)) return Coat.BURNING;
-        if (one.getType().is(EntityTypeTags.AQUATIC) || wearsMetal(one)) return Coat.LIGHTNING;
+        if (one.is(EntityTypeTags.ARTHROPOD) || one.is(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES)) return Coat.BURNING;
+        if (one.is(EntityTypeTags.AQUATIC) || wearsMetal(one)) return Coat.LIGHTNING;
         if (Spells.isEvil(one)) return Coat.PURIFICATION;
         if (one.getMaxHealth() >= DECAY_COAT_HEALTH) return Coat.DECAY;
         return Coat.LIGHTNING;
@@ -331,10 +331,10 @@ public final class HandOfGodDemonHunting {
                 yield amount + FREEZE_DAMAGE;
             }
             case LIGHTNING -> amount + LIGHTNING_DAMAGE
-                    + (target.getType().is(EntityTypeTags.AQUATIC) || target.isInWater() || wearsMetal(target) ? LIGHTNING_CONDUCTED : 0f);
+                    + (target.is(EntityTypeTags.AQUATIC) || target.isInWater() || wearsMetal(target) ? LIGHTNING_CONDUCTED : 0f);
             case BURNING -> {
                 target.setRemainingFireTicks(Math.max(target.getRemainingFireTicks(), BURN_TICKS));
-                boolean weak = target.getType().is(EntityTypeTags.ARTHROPOD) || target.getType().is(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES);
+                boolean weak = target.is(EntityTypeTags.ARTHROPOD) || target.is(EntityTypeTags.FREEZE_IMMUNE_ENTITY_TYPES);
                 yield amount + BURN_DAMAGE + (weak ? BURN_WEAK : 0f);
             }
             case DECAY -> {

@@ -363,7 +363,12 @@ public final class HandOfGodTwilight {
     private static AbilityWheel.Result lightConcealment(ServerPlayer player, ServerLevel sl) {
         boolean glory = Beyonder.hasSequence(player, WITHERING_SEQUENCE);
         List<BlockPos> near = Spells.lightNear(sl, player.getEyePosition(), LIGHT_ENTRY_REACH, LIGHT_MIN);
-        Vec3 entry = !near.isEmpty() ? near.get(0).getCenter()
+        Vec3 entry = !near.isEmpty()
+                ? new Vec3(
+                near.get(0).getX() + 0.5,
+                near.get(0).getY() + 0.5,
+                near.get(0).getZ() + 0.5
+        )
                 : Spells.inDaylight(sl, BlockPos.containing(player.getEyePosition())) ? player.getEyePosition().add(Spells.flatLook(player)) : null;
         Vec3 exit = null;
         BlockPos aimedLight = Spells.lightAimed(player, sl, LIGHT_RANGE, LIGHT_AROUND, LIGHT_MIN);
@@ -402,9 +407,21 @@ public final class HandOfGodTwilight {
         return AbilityWheel.Result.DONE;
     }
 
+    private static Vec3 blockCenter(BlockPos pos) {
+        return new Vec3(
+                pos.getX() + 0.5,
+                pos.getY() + 0.5,
+                pos.getZ() + 0.5
+        );
+    }
+
     /** Where to stand to step out of a light: beside it, on the ground, with room for the body. Null if nowhere. */
     private static Vec3 standBeside(Player player, ServerLevel sl, BlockPos light) {
-        Vec3 middle = light.getCenter();
+        Vec3 middle = new Vec3(
+                light.getX() + 0.5,
+                light.getY() + 0.5,
+                light.getZ() + 0.5
+        );
         Vec3 toPlayer = player.position().subtract(middle);
         Vec3 side = new Vec3(toPlayer.x, 0, toPlayer.z);
         side = side.lengthSqr() < 1.0E-4 ? Spells.flatLook(player).scale(-1) : side.normalize();

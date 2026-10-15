@@ -687,7 +687,7 @@ public class BeautyGoddess {
                     Spells.cleanse(one);
                     continue;
                 }
-                if (one.getType().is(EntityTypeTags.UNDEAD)) {
+                if (one.is(EntityTypeTags.UNDEAD)) {
                     Spells.strike(player, one, SUN_UNDEAD_DAMAGE);
                     if (one.isAlive()) one.setRemainingFireTicks(Math.max(one.getRemainingFireTicks(), SUN_UNDEAD_BURN_TICKS));
                     BeautyGoddessFx.sunWaterBurn(sl, one);

@@ -123,7 +123,7 @@ public final class Spells {
      * enemy of players: zombies, spiders, slimes, illagers...) and whatever an addEvilCheck rule names.
      */
     public static boolean isEvil(LivingEntity entity) {
-        if (entity.getType().is(EntityTypeTags.UNDEAD) || entity instanceof Enemy) return true;
+        if (entity.is(EntityTypeTags.UNDEAD) || entity instanceof Enemy) return true;
         for (EvilCheck check : EVIL_CHECKS) {
             if (check.isEvil(entity)) return true;
         }
@@ -467,12 +467,22 @@ public final class Spells {
         BlockPos middle = BlockPos.containing(center);
         List<BlockPos> found = new ArrayList<>();
         for (BlockPos pos : BlockPos.betweenClosed(middle.offset(-r, -r, -r), middle.offset(r, r, r))) {
-            if (pos.getCenter().distanceTo(center) > reach) continue;
+            if (new Vec3(
+                    pos.getX() + 0.5,
+                    pos.getY() + 0.5,
+                    pos.getZ() + 0.5
+            ).distanceTo(center) > reach) continue;
             BlockState state = sl.getBlockState(pos);
             if (state.isAir()) continue;
             if (state.getLightEmission(sl, pos) >= minLight) found.add(pos.immutable());
         }
-        found.sort(Comparator.comparingDouble(pos -> pos.getCenter().distanceToSqr(center)));
+        found.sort(Comparator.comparingDouble(pos ->
+                new Vec3(
+                        pos.getX() + 0.5,
+                        pos.getY() + 0.5,
+                        pos.getZ() + 0.5
+                ).distanceToSqr(center)
+        ));
         return found;
     }
 
