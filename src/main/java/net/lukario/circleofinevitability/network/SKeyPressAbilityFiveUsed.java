@@ -17,6 +17,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorCull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManGrazing;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessLunarBattlefield;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGod.handOfGodProtection;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
@@ -56,6 +57,7 @@ public class SKeyPressAbilityFiveUsed {
         apocalypsePlague(player,level,serverLevel,false);
         hangedManGrazing(player,level,serverLevel,false);
         beautyGoddessLunarBattlefield(player,level,serverLevel,false);
+        handOfGodProtection(player,level,serverLevel,false);
 
 
 

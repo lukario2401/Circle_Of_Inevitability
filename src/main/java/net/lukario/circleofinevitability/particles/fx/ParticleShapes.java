@@ -69,6 +69,13 @@ public final class ParticleShapes {
         }
     }
 
+    /** Like spawn(...), but only 'viewer' sees it (a trail only the hunter sees, a mark only its owner sees). */
+    public static void spawnFor(ServerPlayer viewer, ParticleOptions particle, Vec3 position, Vec3 velocity) {
+        if (!(viewer.level() instanceof ServerLevel serverLevel)) return;
+        serverLevel.sendParticles(viewer, particle, false, false, position.x, position.y, position.z, 0,
+                velocity.x, velocity.y, velocity.z, 1.0);
+    }
+
     /**
      * Sprays particles from origin into a cone around direction.
      * @param angleDegrees full opening angle of the cone (90 = 45 degrees to each side)

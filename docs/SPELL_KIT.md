@@ -13,6 +13,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A small clock next to the hotbar ("Revive 27s") | [`HudTimer`](#hudtimer-a-small-clock-next-to-the-hotbar) | `combat/` |
 | Ground that keeps doing something to whoever stands on it, worse the longer they stay (cursed land, a healing circle, an aura) | [`Zone`](#zone-ground-that-keeps-doing-something) | `combat/` |
 | A hidden spot that springs once when an enemy steps on it (a snare, a mine, a rune) | [`Trap`](#trap-a-hidden-spot-that-springs-once) | `combat/` |
+| A shell round a spot that enemies and their projectiles cannot cross, and that shelters allies inside (a dome of light, a barrier, a cage) | [`Dome`](#dome-a-shell-that-holds-a-line) | `combat/` |
 | Something one enemy carries for a while and then passes on to the nearest ones, stronger each time (a plague, a spreading curse) | [`Contagion`](#contagion-it-passes-from-one-enemy-to-the-next) | `combat/` |
 | A potion effect kept up for as long as something lasts | [`Spells.keepEffect`](#1-spells-aiming-and-enemies) | `combat/` |
 | A line that keeps joining two moving things (thread, chain, beam) | [`SpellFx.tether`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
@@ -49,6 +50,10 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Cheat death once | [`DeathWard`](#deathward) | `status/` |
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
+| Less supernatural damage for a while, and blindness, nausea, roots, freezing and taunts shaken off | [`SupernaturalResistance`](#supernaturalresistance) | `status/` |
+| A Beyonder's body: taller, more hearts, longer reach, faster swings, on while something is true | [`Physique`](#physique-a-beyonders-body) | `blasphemy_slate/beyonder/` |
+| "Burns evil and undead" in one call | [`Spells.isEvil`](#1-spells-aiming-and-enemies) | `combat/` |
+| Particles only one player sees (a trail for the hunter) | `ParticleShapes.spawnFor(viewer, particle, at, velocity)` | `particles/fx/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
 | One key, many spells: a round menu where each has its own Sequence, cost and cooldown, and a sneak press casts the last pick again | [`AbilityWheel`](#abilitywheel-many-spells-on-one-key) | `menu/` |
 | Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
@@ -142,6 +147,8 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `spotAround(center, yaw, distance)` | The spot `distance` blocks from a point the way `yaw` looks. For rings: `spotAround(center, yaw + i * 360f / count, radius)` |
 | `firstEnemyOnLine(...)` | The nearest of those, or `null` |
 | `isEnemy(player, other)` | The rule itself (see below) |
+| `isFriend(player, other)` | The caster's side (the caster too), judged as if nobody were concealed: for a wall that must keep hidden enemies out as well (`!isFriend`) |
+| `isEvil(entity)` | Undead, every monster (`Enemy`), and what an `addEvilCheck(entity -> ...)` rule names. For "burns evil and undead" |
 | `clearStart(player, sl, wanted)` | `wanted`, or just in front of the wall if a wall is between it and the player's eyes. For things that appear beside the player |
 | `clearLine(player, sl, from, to)` | `true` when nothing solid is between two points |
 | `freeSpotNear(player, sl, from, direction, distance)` | A spot to blink to: about `distance` blocks from `from`, in or near `direction`, where the player fits. `null` if walled in |
@@ -449,6 +456,51 @@ Something that goes off after a time instead of under a foot needs no trap: `Lat
 
 ---
 
+## Dome: a shell that holds a line
+
+A shell round a spot that things cannot cross the wrong way: enemies are kept out (or in), their projectiles end at it, and allies inside take less harm. A dome of light, a barrier, a cage, the walls of a kingdom. Used by Hand Of God's Protection and Cage (`protection`, `cage` in `HandOfGod.java`).
+
+```java
+Dome.at(ground, 6)                                       // a half sphere on the ground (Dome.sphere(middle, r): a whole one)
+        .lasts(300)
+        .keepsEnemiesOut()                               // enemies cannot come in; those inside when it rises are put out
+        .stopsProjectiles()                              // projectiles of enemies (or of nobody) end at the shell
+        .shields(0.6f)                                   // allies inside take 60% less damage (not the owner)
+        .wardsEffects()                                  // no harmful potion effect can be put on an ally inside
+        .holdsOwner()                                    // the owner cannot leave it
+        .onBlock(at -> HandOfGodFx.domeHit(sl, at))      // something was stopped, at this spot on the shell
+        .onEnd(() -> HandOfGodFx.protectionEnd(sl, ground, tag))
+        .raise(player, sl, "my_pathway_dome");
+```
+
+| Part | What it does |
+|---|---|
+| `Dome.at(ground, radius)` / `Dome.sphere(middle, radius)` | Half a sphere on the ground, or a whole one (it may reach into the ground). Nothing happens until `.raise(...)` |
+| `.lasts(ticks)` | How long it stands (default 200) |
+| `.keepsEnemiesOut()` | Outsiders inside are put out at the shell, those outside cannot come in |
+| `.keepsEnemiesIn()` | Outsiders cannot cross either way: those inside stay in, those outside stay out (a cage) |
+| `.stopsProjectiles()` | A projectile of an outsider, or of nobody, that would cross the shell ends there (with `keepsEnemiesIn` also on its way out). Allies' projectiles go through |
+| `.shields(fraction)` | Allies inside take that much less damage. The owner is not shielded |
+| `.wardsEffects()` | No harmful potion effect can be put on an ally (or the owner) inside |
+| `.holdsOwner()` | The owner cannot leave it |
+| `.outsiders(entity -> ...)` | Who is kept out or in, instead of the owner's enemies. `entity -> !Spells.isFriend(player, entity)` also keeps out concealed enemies |
+| `.keepWhile(() -> ...)` | Checked every tick: it falls the moment this is false (the owner walked away) |
+| `.onBlock(at -> ...)` | Runs with the spot on the shell where a projectile was stopped or someone was put back |
+| `.onEnd(() -> ...)` | It fell, however it ended |
+| `.raise(player, sl, name)` | Raises it. One of the same name and player falls first |
+
+`Dome.isRaised(player, name)`, `ticksLeft`, `center` (the ground under it, or the middle of a sphere), `isInside(player, name, entity)`, `close`, `weaken(player, name, ticks)` (projectiles go through and the shield is halved), `isWeakened`, and `renew(player, name)` (its whole time again) work from anywhere.
+
+Good to know:
+
+- **Crossing is checked every tick** from where each one is, so walking, being knocked back, an ender pearl or any other teleport all count. Someone put back stands just on their own side of the shell and is pushed off it. Creative players and riders (their mount is moved instead) are left alone.
+- **Who is who:** outsiders are the owner's enemies unless `.outsiders(...)` says otherwise. Everyone else is an ally and crosses freely both ways.
+- A shot that gets through between two ticks still does not land on someone sheltered when its shooter stands outside (`LivingAttackEvent`).
+- **It has no look of its own.** Draw it when you raise it (`HandOfGodFx.dome` and `HandOfGodFx.sphere` draw a shell of light tiles in any color) and clear the look in `onEnd`.
+- It falls when its owner dies, logs out or changes dimension. Build a new one for every cast. Not saved: a server restart drops it.
+
+---
+
 ## Contagion: it passes from one enemy to the next
 
 Something one enemy carries for a while and then passes on to the enemies nearest to it, which carry it and pass it on in their turn, stronger each time. A plague, a curse that spreads, a fire that leaps from body to body.
@@ -738,6 +790,22 @@ NoHeal.isApplied(entity);   NoHeal.ticksLeft(entity);   NoHeal.remove(target);
 ```
 
 Health set straight away (`setHealth`, a `DeathWard` bringing someone back) is not healing and still works. Saved with the entity. Used by the Hopeless Ice Age (`iceAge` in `Apocalypse.java`).
+
+### SupernaturalResistance
+
+For a while the supernatural has less hold on an entity: supernatural damage is cut, and blindness and nausea cannot be put on it. A grant that shakes off also ends roots, freezing, `Blind`, taunts and darkness on it every tick.
+
+```java
+SupernaturalResistance.grant(player, "my_pathway_resist", 160, 0.4f, true,        // 8 seconds, 40% less, shakes off
+        shaken -> HandOfGodFx.resistanceShrug(sl, player));                        // something was shaken off (may be null)
+SupernaturalResistance.grant(player, "my_pathway_innate", 40, 0.25f, false, null);  // a passive: renewed every second
+```
+
+`SupernaturalResistance.has(entity)`, `cut(entity)`, `ticksLeft(entity, name)`, `end(entity, name)` and `isSupernatural(source)`.
+
+- Supernatural damage: magic (also what an ability deals when it names no attacker), wither, explosions, lightning, freezing, sonic booms, thorns and dragon's breath. Melee, arrows, falls, fire and drowning are not.
+- Several grants can be on one entity under different names: the biggest cut counts, and any grant that shakes off does.
+- Works on mobs too. Not saved; gone on death and logout.
 
 ### Marionette
 
@@ -1030,6 +1098,20 @@ To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `
 ### Root and Freeze
 
 These were already there and go well with the rest: `Root.apply(target, 80, RootRestriction.EVERYTHING)` holds something in place (see `root/Root.java` for the single restrictions), `Freeze.apply(target, 80)` puts it in ice.
+
+### Physique: a Beyonder's body
+
+Attribute changes (size, health, reach, attack speed, footing) that are on while something is true and off when it is not. Safe to call every second or every tick: it only touches the attribute when the value has to change. In `blasphemy_slate/beyonder/`.
+
+```java
+private static final Identifier TALL = Physique.id("my_pathway_tall");
+private static final Identifier HEARTS = Physique.id("my_pathway_hearts");
+boolean mine = SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, 6);
+Physique.keep(player, Attributes.SCALE, TALL, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, mine);   // 15% taller
+Physique.keep(player, Attributes.MAX_HEALTH, HEARTS, 4.0, AttributeModifier.Operation.ADD_VALUE, mine);       // two more hearts
+```
+
+`Physique.remove(entity, attribute, id)` and `Physique.has(entity, attribute, id)`. The modifiers are not saved with the player, so call `keep` once a second for everyone (not only those who have it, or it is never taken off): `bodyTick` in `HandOfGod.java` does this for Weapon Mastery, Giant's Physique, the Guardian's footing and the Grandmaster's Edge.
 
 ---
 
@@ -1524,4 +1606,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

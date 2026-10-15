@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGod;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -53,6 +54,15 @@ public final class SequencePassives {
         });
         effect("Beauty Goddess", 4, MobEffects.REGENERATION, 0);                                // Shaman King: strong regeneration
         custom("Beauty Goddess", 1, BeautyGoddess::hesitate);                                   // Beauty Goddess: mobs hesitate to hunt you
+
+        // ---- Hand Of God (docs/HAND_OF_GOD.md). Also in HandOfGod itself: Weapon Mastery (Sequence 7), Giant's
+        // Physique (6), half knockback (5), Tracking and Spiritual Intuition (4), wither does not take (2), Divine Touch (1).
+        effect("Hand Of God", 9, MobEffects.STRENGTH, 0);                                       // Warrior: Strength I (Divine Blood)
+        custom("Hand Of God", 8, HandOfGod::innateResistance);                                  // Pugilist: Supernatural Resistance
+        effect("Hand Of God", 5, MobEffects.RESISTANCE, 0);                                     // Guardian: Resistance I
+        custom("Hand Of God", 3, HandOfGod::dawnAura);                                          // Silver Knight: Dawn Aura burns evil
+        custom("Hand Of God", 2, HandOfGod::twilightResistance);                                // Glory: nothing stops your healing
+        custom("Hand Of God", 0, HandOfGod::twilightAura);                                      // Twilight Giant: Twilight Aura
     }
 
     // =========================

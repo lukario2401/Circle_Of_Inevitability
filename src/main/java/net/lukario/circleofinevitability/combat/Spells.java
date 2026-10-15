@@ -9,12 +9,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
@@ -76,18 +78,52 @@ public final class Spells {
     // =========================
 
     public static boolean isEnemy(Player caster, LivingEntity other) {
-        // the UUID check also covers the caster's new body after dying and respawning while a spell is still running
-        if (other == caster || other.getUUID().equals(caster.getUUID())) return false;
         if (!other.isAlive() || other.isSpectator() || other instanceof ArmorStand) return false;
-        if (other == caster.getVehicle()) return false;
-        if (other instanceof OwnableEntity owned && owned.getOwnerReference() != null && caster.getUUID().equals(owned.getOwnerReference().getUUID())) return false;
-        if (Marionette.isMarionetteOf(other, caster)) return false;
         if (Concealment.isHidden(other)) return false;
-        if (caster.isAlliedTo(other)) return false;               // same scoreboard team
+        return !isFriend(caster, other);
+    }
+
+    /**
+     * On the caster's side: the caster themself (also their new body after respawning), what they ride or own, their
+     * marionettes, team mates and every addAllyCheck rule. Unlike !isEnemy, a concealed body is judged as if it were
+     * seen: for a wall that must keep hidden enemies out too (Hand Of God's Protection from Sequence 1).
+     */
+    public static boolean isFriend(Player caster, LivingEntity other) {
+        // the UUID check also covers the caster's new body after dying and respawning while a spell is still running
+        if (other == caster || other.getUUID().equals(caster.getUUID())) return true;
+        if (other == caster.getVehicle()) return true;
+        if (other instanceof OwnableEntity owned && owned.getOwnerReference() != null && caster.getUUID().equals(owned.getOwnerReference().getUUID())) return true;
+        if (Marionette.isMarionetteOf(other, caster)) return true;
+        if (caster.isAlliedTo(other)) return true;                // same scoreboard team
         for (AllyCheck check : ALLY_CHECKS) {
-            if (check.isAlly(caster, other)) return false;
+            if (check.isAlly(caster, other)) return true;
         }
-        return true;
+        return false;
+    }
+
+    /** Says whether something is evil, beyond what isEvil already knows. */
+    @FunctionalInterface
+    public interface EvilCheck {
+        boolean isEvil(LivingEntity entity);
+    }
+
+    private static final List<EvilCheck> EVIL_CHECKS = new ArrayList<>();
+
+    /** One more kind of evil thing (a Pathway's corrupted, its demons): Spells.addEvilCheck(entity -> ...). */
+    public static void addEvilCheck(EvilCheck check) {
+        EVIL_CHECKS.add(check);
+    }
+
+    /**
+     * Evil, for "burns evil and undead" in one call: the undead, every monster (anything the game counts as an
+     * enemy of players: zombies, spiders, slimes, illagers...) and whatever an addEvilCheck rule names.
+     */
+    public static boolean isEvil(LivingEntity entity) {
+        if (entity.getType().is(EntityTypeTags.UNDEAD) || entity instanceof Enemy) return true;
+        for (EvilCheck check : EVIL_CHECKS) {
+            if (check.isEvil(entity)) return true;
+        }
+        return false;
     }
 
     /** Every enemy whose body is within 'radius' of a point. */

@@ -192,7 +192,17 @@ public final class PathwayAbilities {
             new Ability("Beauty Goddess", 6, "Gaze of Darkness", 4, SNEAK, STEALABLE,
                     (player, level, sl) -> BeautyGoddess.beautyGoddessGaze(player, level, sl, true)),
             new Ability("Beauty Goddess", 7, "Moon", 3, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
-                    (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)));
+                    (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)),
+
+            // ---- Hand Of God (keys 4, 6 and 7, the three wheels, are not written yet: docs/HAND_OF_GOD.md) ----
+            new Ability("Hand Of God", 1, "Warrior's Charge", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> HandOfGod.handOfGodWarriorsCharge(player, level, sl, true)),
+            new Ability("Hand Of God", 2, "Gladiator's Flurry", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> HandOfGod.handOfGodGladiatorsFlurry(player, level, sl, true)),
+            new Ability("Hand Of God", 3, "Grandmaster's Edge", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> HandOfGod.handOfGodGrandmastersEdge(player, level, sl, true)),
+            new Ability("Hand Of God", 5, "Protection", 5, SNEAK, OWN_PATHWAY_ONLY,          // the Guardian's own sword and body
+                    (player, level, sl) -> HandOfGod.handOfGodProtection(player, level, sl, true)));
 
     private PathwayAbilities() {}
 

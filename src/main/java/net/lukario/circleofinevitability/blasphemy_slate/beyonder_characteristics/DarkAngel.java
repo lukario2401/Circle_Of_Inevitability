@@ -809,6 +809,7 @@ public class DarkAngel {
             case "Conqueror" -> 0xB0FF4A1A;
             case "Apocalypse" -> 0xB0B050FF;
             case "Beauty Goddess" -> 0xB0DCE8FF;
+            case HandOfGod.PATHWAY -> 0xB0FF7A1A;
             case PATHWAY -> 0xB0D0283C;
             default -> HangedManFx.SOUL;
         };

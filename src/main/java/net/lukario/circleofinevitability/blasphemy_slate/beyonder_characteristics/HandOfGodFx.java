@@ -18,11 +18,14 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -1455,6 +1458,17 @@ public final class HandOfGodFx {
     /** Demon Hunter's Tracking: a green footprint where a hunted enemy stepped (only send it to the hunter if you can). */
     public static void footprint(ServerLevel sl, Vec3 at, float yaw) {
         ParticleShapes.spawn(sl, FOOTPRINT, at.add(0, 0.05, 0), Vec3.ZERO);
+    }
+
+    /** The same footprint, seen only by the hunter. */
+    public static void footprint(ServerPlayer hunter, Vec3 at, float yaw) {
+        ParticleShapes.spawnFor(hunter, FOOTPRINT, at.add(0, 0.05, 0), Vec3.ZERO);
+    }
+
+    /** Spiritual Intuition: something started hunting the Demon Hunter out of sight. A chime only they hear. */
+    public static void intuition(ServerPlayer hunter) {
+        hunter.connection.send(new ClientboundSoundPacket(BuiltInRegistries.SOUND_EVENT.wrapAsHolder(SoundEvents.AMETHYST_BLOCK_CHIME),
+                SoundSource.PLAYERS, hunter.getX(), hunter.getY(), hunter.getZ(), 0.6f, 1.8f, hunter.getRandom().nextLong()));
     }
 
     /** Hand of God's Divine Touch: a bare-handed blow decays what it lands on. */

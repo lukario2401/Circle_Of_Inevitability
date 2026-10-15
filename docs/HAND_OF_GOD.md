@@ -2,7 +2,7 @@
 
 The Hand Of God Pathway is the Twilight Giant Pathway of Lord of the Mysteries, the Strength tarot card: Warrior (9), Pugilist (8), Weapon Master (7), Dawn Paladin (6), Guardian (5), Demon Hunter (4), Silver Knight (3), Glory (2), Hand of God (1), Twilight Giant (0). Source: the Twilight Giant Pathway and Twilight Giant Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-The abilities are not written as code yet; their looks, sounds and pictures are (see "Looks, sounds and pictures (ready)" at the end). This file is the plan: what every ability does, the numbers to start from, which existing parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md)).
+Keys 1, 2, 3 and 5 and every passive are written (see "What is built"); the three wheels (keys 4, 6 and 7) are not yet. Their looks, sounds and pictures are all ready (see "Looks, sounds and pictures (ready)" at the end). The rest of this file is the plan the wheels will follow: what every ability does, the numbers to start from, which existing parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts are worth writing first.
 
 Pathway name in code: `"Hand Of God"`.
 
@@ -173,6 +173,8 @@ Most of it is parts that exist already. `NEW` means a part that does not exist y
 
 These come from this Pathway and would be useful to the others too. Each is one small class in `status/` (or a method in `Spells`) that looks after itself, like the rest of the kit. Each of them is described by what it should do so that it can be coded straight from here, and each should get a section in [SPELL_KIT.md](SPELL_KIT.md) when it is written.
 
+Written already (with keys 1, 2, 3 and 5; see [SPELL_KIT.md](SPELL_KIT.md)): `Dome` (`combat/Dome`, with `keepsEnemiesOut`, `keepsEnemiesIn`, `stopsProjectiles`, `shields`, `wardsEffects`, `holdsOwner`, `outsiders`, `keepWhile`, `onBlock`, `weaken`, `renew`), `SupernaturalResistance` (`status/`), `Physique` (`blasphemy_slate/beyonder/`), `Spells.isEvil` (with `Spells.addEvilCheck`) and `Spells.isFriend`. `Aegis` turned out not to be needed: Damage Transference is `DamageLink.redirect` from each ally to the guardian. Still to write, for the wheels: `GiantForm`, `Unnoticed`, `WeaponCoat`, `Decay`, `Spells.lightNear` / `lightAimed`, `DawnBlade`, `ArmorOfLight`.
+
 | Part | Where | What it does | Used by |
 | --- | --- | --- | --- |
 | `Dome` | `combat/` | A shell around a spot: `Dome.at(center, radius).lasts(t).stopsProjectiles().keepsEnemiesOut()` / `.keepsEnemiesIn()`, `.allyShield(0.7f)`, `.onHit(...)`, `.weakenBy(ticks)`. A `Zone` underneath for who is inside; the shell itself pushes and removes projectiles. | Protection, Cage, Divine Kingdom walls |
@@ -202,16 +204,33 @@ Two ideas are cheap and give the most: `Decay` and `Dome`. Four of the abilities
 
 Follow the same steps as Beauty Goddess ([SPELL_KIT.md](SPELL_KIT.md), "The shape of an ability"):
 
-1. `blasphemy_slate/beyonder_characteristics/HandOfGod.java`, `PATHWAY = "Hand Of God"`, one method per key: `handOfGodWarriorsCharge`, `handOfGodGladiatorsFlurry`, `handOfGodGrandmastersEdge`, `handOfGodDawn`, `handOfGodProtection`, `handOfGodDemonHunting`, `handOfGodTwilight`. Every number is a constant at the top.
+1. Done for keys 1, 2, 3 and 5: `blasphemy_slate/beyonder_characteristics/HandOfGod.java`, `PATHWAY = "Hand Of God"`, one method per key: `handOfGodWarriorsCharge`, `handOfGodGladiatorsFlurry`, `handOfGodGrandmastersEdge`, `handOfGodDawn`, `handOfGodProtection`, `handOfGodDemonHunting`, `handOfGodTwilight`. Every number is a constant at the top.
 2. Wheels with `AbilityWheel.create("hand_of_god_dawn", ...)` (key 4), `"hand_of_god_demon_hunting"` (key 6) and `"hand_of_god_twilight"` (key 7), each with `.quickCastCooldown(false).quickCastCost(2f)` like Beauty Goddess. The key 7 wheel has eight entries, so give it a larger `.radius(...)`.
-3. One `import static` and one line in each `network/SKeyPressAbilityOneUsed` to `SevenUsed`.
-4. Seven lines in `PathwayAbilities.ALL`: key 1 at Sequence 9, key 2 at 8, key 3 at 7, key 4 at 6, key 5 at 5, key 6 at 4, key 7 at 3.
-5. `"Hand Of God"` in `SequenceCommands.PATHWAYS`.
-6. The passives as lines in `SequencePassives`; a misspelt Pathway name stops the game on purpose.
-7. A row for it in the three tables of [SEQUENCES.md](SEQUENCES.md) and in the Pathway list at its top, and the list in the README.
-8. Done already: `HandOfGodFx.java` and the icon in `PathwayHudIcon` under `"Hand Of God"`. Still to do: the Pathway color in `DarkAngel.pathwayColor` (`HandOfGodFx.PATHWAY_COLOR`).
+3. One `import static` and one line in each `network/SKeyPressAbilityOneUsed` to `SevenUsed` (done for One, Two, Three and Five).
+4. Seven lines in `PathwayAbilities.ALL`: key 1 at Sequence 9, key 2 at 8, key 3 at 7, key 4 at 6, key 5 at 5, key 6 at 4, key 7 at 3 (done for 1, 2, 3 and 5).
+5. Done: `"Hand Of God"` in `SequenceCommands.PATHWAYS`.
+6. Done: the passives as lines in `SequencePassives`; a misspelt Pathway name stops the game on purpose.
+7. Done: a row for it in the tables of [SEQUENCES.md](SEQUENCES.md) and in the Pathway list at its top, and the list in the README (fill in the wheel cells when they are written).
+8. Done already: `HandOfGodFx.java` and the icon in `PathwayHudIcon` under `"Hand Of God"`. Done too: the Pathway color in `DarkAngel.pathwayColor`.
 9. Done already: models, wheel pictures (32 px), status pictures (16 px), particles and sounds, generated by the scripts in `tools/model_gen/hand_of_god/`, and `/handfx all` to play every display.
 10. Set it with `/sequence pathway <player> "Hand Of God"`.
+
+## What is built
+
+Keys 1, 2, 3 and 5 and every passive. The abilities are in `blasphemy_slate/beyonder_characteristics/HandOfGod.java` (every number is a constant at the top of it), one line each in `PathwayAbilities.ALL` (Protection is not stealable: it is the Guardian's own sword), a row in [SEQUENCES.md](SEQUENCES.md), and the passives in `SequencePassives` and `HandOfGod`. Set the Pathway with `/sequence pathway <player> "Hand Of God"`. Keys 4, 6 and 7 (the wheels) do nothing yet.
+
+How it works where the tables above do not say:
+- Warrior's Charge rushes at the enemy you look at if one is within 9 blocks, else 8 blocks straight ahead (`combat/Reel`). The first enemy in front of you is hit and thrown, and the rush stops there; enemies beside your path are shoved aside. It cannot be started while you are held in place.
+- Gladiator's Flurry needs an enemy within 4 blocks of your crosshair. Each of the first four blows holds it in place for a moment; if it gets more than 6 blocks away the rest miss.
+- Supernatural Resistance and the Pugilist's passive are the new `status/SupernaturalResistance`. "Supernatural" damage is magic (which is also what abilities deal when they name no attacker), wither, explosions, lightning, freezing, sonic booms, thorns and dragon's breath. While the cast lasts it also shakes off roots, freezing, `Blind`, taunts and darkness every tick.
+- Grandmaster's Edge: swings 50% faster and 1.5 blocks more reach (`beyonder/Physique`). Every swing that lands with at least 70% of the attack bar also cuts each other enemy within 4 blocks in front of you (60 degrees each side) for 60% of its damage, and counts toward the combo: the third in a row, each within 1.5 seconds of the last, is the finishing cut. Swings that miss cannot be seen by the server, so they neither cut nor count.
+- Riposte uses `status/Substitute` (the next hit, arrow or explosion that would land does not) and `status/EmpoweredHit` (the counter). The attacker cannot move, jump or strike for 1.5 seconds; an arrow is destroyed.
+- Protection is the new `combat/Dome`, raised at once round your feet. Enemies inside are put out and cannot come in (every tick, so a teleport or a pearl counts too); their projectiles end at the shell; you cannot leave it; allies inside take 60% less damage and no harmful potion effect. Each of your melee swings weakens it for 3 seconds: projectiles go through and the shield is halved. Press the key again to lower it early. Cooldown 30 seconds.
+- The Cage (Glory, 2): the same as a whole sphere 7 blocks round, a little sunk into the ground. Nothing crosses it but your allies: enemies inside stay in, enemies outside stay out. You can move; it falls when you are more than 10 blocks from its shell, or after 30 seconds.
+- Hand of God (1): the dome or cage also keeps out concealed enemies (`Spells.isFriend` decides, not `isEnemy`), an orange shell shows outside it, and sneak + L while you stand inside it costs 1500 and makes it whole and new (its full time again). Damage Transference is cast with sneak + L from outside it.
+- Damage Transference is `DamageLink.redirect` from every ally within 16 blocks to you (half of what they lose, after their armor), with Resistance I, II or III for one, two or three and more allies. An ally who goes more than 24 blocks away is let go. Cooldown 30 seconds. It refuses (costing nothing) with no ally near.
+- Physique and Weapon Mastery change attributes (scale, max health, attack speed, reach, knockback resistance) with fixed ids; they are checked once a second for every player and taken off again when the Pathway or Sequence no longer has them, so nothing is left behind.
+- Tracking prints are particles sent only to the hunter (`ParticleShapes.spawnFor`); the Intuition chime is a sound only they hear.
 
 ## Looks, sounds and pictures (ready)
 
