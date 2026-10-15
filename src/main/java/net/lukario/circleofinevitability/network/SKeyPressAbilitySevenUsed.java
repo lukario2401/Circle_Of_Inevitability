@@ -21,6 +21,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderBind;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionAbolition;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesGrafting;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGodTwilight.handOfGodTwilight;
 
 public class SKeyPressAbilitySevenUsed {
 
@@ -56,6 +57,7 @@ public class SKeyPressAbilitySevenUsed {
         apocalypseCatastrophe(player,level,serverLevel,false);
         hangedManDegeneration(player,level,serverLevel,false);
         beautyGoddessMoonWheel(player,level,serverLevel,false);
+        handOfGodTwilight(player,level,serverLevel,false);
 
 
     }

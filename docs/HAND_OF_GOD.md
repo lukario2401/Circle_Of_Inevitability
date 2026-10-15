@@ -2,7 +2,7 @@
 
 The Hand Of God Pathway is the Twilight Giant Pathway of Lord of the Mysteries, the Strength tarot card: Warrior (9), Pugilist (8), Weapon Master (7), Dawn Paladin (6), Guardian (5), Demon Hunter (4), Silver Knight (3), Glory (2), Hand of God (1), Twilight Giant (0). Source: the Twilight Giant Pathway and Twilight Giant Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-Keys 1, 2, 3 and 5 and every passive are written (see "What is built"); the three wheels (keys 4, 6 and 7) are not yet. Their looks, sounds and pictures are all ready (see "Looks, sounds and pictures (ready)" at the end). The rest of this file is the plan the wheels will follow: what every ability does, the numbers to start from, which existing parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts are worth writing first.
+Every key, every wheel entry and every passive is written (see "What is built"). The rest of this file is the design they were built from: what every ability does, the numbers they started from (the code's constants are the truth now), which parts of the [spell kit](SPELL_KIT.md) build each one, and the new reusable parts that came out of it.
 
 Pathway name in code: `"Hand Of God"`.
 
@@ -84,7 +84,7 @@ These do not get their own key or entry. The same ability is stronger from the S
 | --- | --- | --- |
 | Dawn Armor becomes Silver Armor | Silver Knight (3) | No timer: it stays until you cast it again. Absorption doubles. |
 | Sword of Dawn | Silver Knight (3) | No timer and no upkeep: it stays until you cast it again or put it away. |
-| Giant Form | Silver Knight (3), Glory (2) | 6 blocks tall at Sequence 3 (madness grows slower), a full dozens-of-blocks form at Sequence 2 (visual; your reach and strength grow with it) and no madness. |
+| Giant Form | Silver Knight (3), Glory (2) | 1.5 times your size at Sequence 3 (madness grows slower), 1.75 times from Sequence 2 with no madness; the reach grows with it. (Decided: 1.2 / 1.5 / 1.75, not the book's dozens of blocks, so the Giant still fits indoors.) |
 | Protection becomes Cage | Glory (2) | The dome closes into a full sphere that also holds the enemies in it. Nothing crosses the shell but your allies. It holds as long as you stay within 10 blocks of it. |
 | Hurricane of Light | Glory (2) | Twice as wide and long, and everything in its path is decayed. |
 | Light Concealment | Glory (2) | You can end it by Withering: you age into rotten liquid, vanish into the Spirit World and re-form at any spot you aim at in view, hidden on the way. |
@@ -127,7 +127,7 @@ Spirituality is what each Sequence can pay: 9 holds 20, 8 holds 400, 7 holds 198
 | Eye of Demon Hunting | 3000 | 200 | 240 | 40 | |
 | Alchemy | 3500 | 300 | 400 (10 hits) | | per coat |
 | Mind Concealment | 4000 | 600 | 300 | | |
-| Giant Form | 8000 | 1200 | 800 | scale 2 | |
+| Giant Form | 8000 | 1200 | 800 | 1.2 / 1.5 / 1.75 times | |
 | Mercury Liquefaction | 10000 | 400 | 120 | 20 | |
 | Silver Rapier | 8000 | 200 | | 32 | 3 x 20 |
 | Light Concealment | 6000 | 300 | 20 | 32 | |
@@ -139,41 +139,41 @@ Spirituality is what each Sequence can pay: 9 holds 20, 8 holds 400, 7 holds 198
 
 ## Planned: what each is built from
 
-Most of it is parts that exist already. `NEW` means a part that does not exist yet and is listed under "New reusable parts" below.
+Most of it is parts that existed already; the new ones are listed under "New reusable parts" below, all written now.
 
 | Ability | Built from |
 | --- | --- |
 | Warrior's Charge | `Reel.in` with a point 8 blocks ahead, `Spells.enemiesOnLine`, `Spells.strike`, `Spells.push`, `FallGuard` |
 | Divine Blood | `Beyonder` healing, `Spells.keepEffect` |
 | Gladiator's Flurry | `Later.run` five times, `Spells.strike`, `Root.apply` (short), `SpellFx` rings |
-| Supernatural Resistance | `Spells.cleanse` every tick (`Later` loop), plus the damage cut in a status; NEW `SupernaturalResistance` |
-| Grandmaster's Edge | `EmpoweredHit` for the finisher, a short status for the swing arc; `Spells.enemiesInCone` for the sweep (NEW `Arc` hook on attack) |
+| Supernatural Resistance | `Spells.cleanse` every tick (`Later` loop), plus the damage cut: `SupernaturalResistance` |
+| Grandmaster's Edge | `EmpoweredHit` for the finisher, a short status for the swing arc; `Spells.enemiesInCone` for the sweep, from the real-swing hook in `HandOfGod` (`landed`) |
 | Riposte | `Substitute.arm` (its callback staggers the attacker with `Root.apply`) plus `EmpoweredHit.arm` for the counter |
 | Light of Dawn | `Zone.around` (reveals concealed enemies with `Concealment.reveal`, cleanses allies with `Spells.cleanse`, burns evil), `SpellFx.shockRing` |
-| Dawn Armor | `Spells.keepEffect` (Resistance, Absorption) plus `ParticleShapes.modelOnTurning` for the look; NEW `ArmorOfLight` for the durable form |
-| Sword of Dawn | `ParticleShapes.modelInFront` in the hand, `Vulnerable.add` on each hit, a status that raises your normal attacks: NEW `DawnBlade` |
-| Hurricane of Light | `AnimatedShot` with `.pierce()` and a wide `.width`, `Spells.strike`, `Vulnerable`, damage to evil from `Spells.isEvil` (NEW) |
-| Protection | `Zone.at` for the interior, NEW `Dome` for the shell (stops projectiles, keeps enemies out), `Root.apply` on you |
-| Damage Transference | NEW `Aegis` (the opposite of `DamageLink.redirect`: damage to allies lands on you) |
+| Dawn Armor | `ConjuredArmor` (planned as `ArmorOfLight`) plus `ParticleShapes.modelOnTurning` for the look |
+| Sword of Dawn | `ConjuredWeapon` (planned as `DawnBlade`), `ParticleShapes.modelOnTurning` beside the body, `Vulnerable.add` on each hit |
+| Hurricane of Light | `HandOfGodFx.hurricane` and a sweep along its line tick by tick (`releaseHurricane`), `Spells.strike`, `Spells.isEvil`, `Decay` from Glory |
+| Protection | `Dome` (stops projectiles, keeps enemies out or in, shelters allies, holds you in) |
+| Damage Transference | `DamageLink.redirect` from each ally to you (planned as a new `Aegis`, not needed) |
 | Eye of Demon Hunting | `Spells.livingAround` plus `SpellFx.overHead`, `Vulnerable.add`, `Marks` |
-| Alchemy | NEW `WeaponCoat` (a charged `EmpoweredHit`), then `Freeze.apply`, `Spells.strike`, Lightning, `Marks`, `Marionette.release` |
-| Mind Concealment | NEW `Unnoticed` (a `Concealment` that only hides you from minds, not eyes) |
-| Giant Form | NEW `GiantForm`, `Spells.livingAround` for the nausea, `Zone.around` for the stomp slow |
+| Alchemy | `WeaponCoat` (a charged `EmpoweredHit`), then `Freeze.apply`, `Decay.apply`, fire on the target, `Marionette.release` |
+| Mind Concealment | `Unnoticed` (a `Concealment` that only hides you from minds, not eyes) |
+| Giant Form | `GiantForm`, `Spells.livingAround` for the nausea, a stride check every tick for the stomp slow |
 | Mercury Liquefaction | `Concealment.hide`, `Glide`, `Substitute`, `Root.apply` on the wrapped, `DamageLink.redirect` (for the Silver Armor variant) |
 | Silver Rapier | `Shot` fired from points around the target with `.windup(0)` and no trail, or `SpellFx.homing` |
-| Light Concealment | `Concealment.hide`, `Spells.blinkSpot`, NEW `Spells.lightNear` / `lightAimed` |
-| Twilight Sword | `AnimatedShot` from above the target, `Spells.enemiesAround`, `Decay.apply` (NEW) |
+| Light Concealment | `Concealment.hide`, `Spells.blinkSpot`, `Spells.lightNear` / `lightAimed` / `inDaylight` |
+| Twilight Sword | `HandOfGodFx.twilightSword` (the falling sword), `Spells.enemiesAround`, `Spells.strikeThrough`, `Decay.apply` |
 | Divine Right Hand | `Reel`, `Root.apply`, `Burial.bury` for the slam, `ModelFx` for the hand |
 | Passage of Time | `Root.apply` (EVERYTHING), `StoredDamage.start`, `Freeze.apply` for the look |
 | Decay | `Zone.at` with `Decay.apply` and `NoHeal` inside it |
 | Divine Kingdom | `Zone.around` for the whole kingdom, `Spells.keepEffect`, `Spells.alliesAround` for the acknowledged |
-| Passives | `SequencePassives`: `effect(...)` and `custom(...)` lines, plus attribute changes for Giant's Physique (NEW helper `Physique`) |
+| Passives | `SequencePassives`: `effect(...)` and `custom(...)` lines, plus attribute changes for Giant's Physique (`Physique`) |
 
 ## New reusable parts worth writing first
 
 These come from this Pathway and would be useful to the others too. Each is one small class in `status/` (or a method in `Spells`) that looks after itself, like the rest of the kit. Each of them is described by what it should do so that it can be coded straight from here, and each should get a section in [SPELL_KIT.md](SPELL_KIT.md) when it is written.
 
-Written already (with keys 1, 2, 3 and 5; see [SPELL_KIT.md](SPELL_KIT.md)): `Dome` (`combat/Dome`, with `keepsEnemiesOut`, `keepsEnemiesIn`, `stopsProjectiles`, `shields`, `wardsEffects`, `holdsOwner`, `outsiders`, `keepWhile`, `onBlock`, `weaken`, `renew`), `SupernaturalResistance` (`status/`), `Physique` (`blasphemy_slate/beyonder/`), `Spells.isEvil` (with `Spells.addEvilCheck`) and `Spells.isFriend`. `Aegis` turned out not to be needed: Damage Transference is `DamageLink.redirect` from each ally to the guardian. Still to write, for the wheels: `GiantForm`, `Unnoticed`, `WeaponCoat`, `Decay`, `Spells.lightNear` / `lightAimed`, `DawnBlade`, `ArmorOfLight`.
+All written; each has a section in [SPELL_KIT.md](SPELL_KIT.md). With keys 1, 2, 3 and 5: `Dome` (`combat/Dome`, with `keepsEnemiesOut`, `keepsEnemiesIn`, `stopsProjectiles`, `shields`, `wardsEffects`, `holdsOwner`, `outsiders`, `keepWhile`, `onBlock`, `weaken`, `renew`), `SupernaturalResistance` (`status/`), `Physique` (`blasphemy_slate/beyonder/`), `Spells.isEvil` (with `Spells.addEvilCheck`) and `Spells.isFriend`. `Aegis` turned out not to be needed: Damage Transference is `DamageLink.redirect` from each ally to the guardian. With the wheels, all in `status/` unless said: `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor` (planned as `ArmorOfLight`: the name says what it is for any Pathway), `ConjuredWeapon` (planned as `DawnBlade`), and in `combat/Spells`: `lightNear`, `lightAimed`, `inDaylight`, `canBeChosen` (what `Unnoticed` hides from) and `strikeThrough` (a hit that no `Dome` shield, `Substitute` or `DeathWard` stops; those three let it through).
 
 | Part | Where | What it does | Used by |
 | --- | --- | --- | --- |
@@ -185,39 +185,39 @@ Written already (with keys 1, 2, 3 and 5; see [SPELL_KIT.md](SPELL_KIT.md)): `Do
 | `Decay` | `status/` | `Decay.apply(target, ticks, depth)`: `NoHeal`, wither, weakness, armor and held weapon lose durability every second, maximum health shrinks with `depth` (a removable attribute modifier). Stays on for the given time. | Decay, Twilight Sword, Divine Right Hand, Hurricane (from Sequence 2), Divine Touch |
 | `Spells.isEvil` | `combat/` | `true` for undead, monsters and anything marked evil by another Pathway, so "burns evil" is one call. | Light of Dawn, Sword of Dawn, Hurricane, Eye |
 | `Spells.lightNear`, `lightAimed` | `combat/` | The block positions that give light within a range, and the one nearest to what the crosshair is on. `null` if none. | Light Concealment |
-| `DawnBlade` | `status/` | A weapon that is not an item: a model in the hand while it is out, and a flag that adds Purification to your normal attacks. Optional upkeep, and a permanent mode. | Sword of Dawn, Hurricane of Light |
-| `ArmorOfLight` | `status/` | The Dawn / Silver Armor: Resistance, absorption, no slowdown and the look; timed or permanent. | Dawn Armor |
+| `ConjuredWeapon` (was `DawnBlade`) | `status/` | A weapon that is not an item: while it is drawn your normal hits are its hits, with more damage and reach and your own `onHit`. Optional upkeep, and a permanent mode. The model is the ability's. | Sword of Dawn, Hurricane of Light |
+| `ConjuredArmor` (was `ArmorOfLight`) | `status/` | Armor that is not an item: less damage, a layer of absorption that can regrow, no knockback or slowness; timed or permanent. The look is the ability's. | Dawn Armor, Silver Armor, Mercury Liquefaction on an ally |
 | `SupernaturalResistance` | `status/` | A cut to damage that has no attacker, and statuses that cannot be put on while it lasts. | Supernatural Resistance |
 | `Physique` | `blasphemy_slate/beyonder/` | Attribute modifiers for a Pathway by Sequence (scale, health, reach, step height), idempotent so it can run from `SequencePassives` once a second. | Giant's Physique, Weapon Mastery |
 
 Two ideas are cheap and give the most: `Decay` and `Dome`. Four of the abilities use each.
 
-## Decisions to make before coding
+## Decisions (made)
 
-1. **Is the Sword of Dawn an item?** The plan says no: it is a status and a model in the hand (`DawnBlade`), so nothing has to be given, taken or dropped. The other way is a real temporary item in the main hand.
-2. **How tall may the Giant be?** The scale attribute has an upper limit and a very tall player is awkward to play. The plan is scale 2 / 3 / 5 for Sequences 4 / 3 / 2 and a visual-only larger form after that.
-3. **Friendly fire of the Hurricane of Light.** The plan lets allies take a quarter of the damage (`HURRICANE_ALLY_SHARE`). It can be 0 for no friendly fire at all.
-4. **Alchemy by weakness.** The plan chooses the coating from the target's type. The alternative is a sub-wheel where you pick it.
-5. **Stealing.** Everything is stealable (as with the Apocalypse wheels, a stolen wheel casts its last or a random entry), except Giant Form, Damage Transference and Protection, which are meant for the Pathway's own body and sword.
+1. **The Sword of Dawn is not an item.** It is a `ConjuredWeapon` and a model held beside the body, so nothing has to be given, taken or dropped.
+2. **The Giant is 1.2 / 1.5 / 1.75 times your size** at Sequences 4 / 3 / 2 and up (`GIANT_SCALE`, `GIANT_KNIGHT_SCALE`, `GIANT_GLORY_SCALE`), and its model is as tall as you really are.
+3. **The Hurricane of Light hurts allies in its path for a quarter** (`HURRICANE_ALLY_SHARE`; 0 turns friendly fire off).
+4. **Alchemy picks the coating from the target** (`coatFor`), not from a sub-wheel.
+5. **Stealing.** Everything is stealable (a stolen wheel casts its last or a random entry), except Protection and Damage Transference (key 5 is `OWN_PATHWAY_ONLY`) and Giant Form, which refuses anyone whose own Pathway is not Hand Of God.
 
 ## Checklist for the code
 
 Follow the same steps as Beauty Goddess ([SPELL_KIT.md](SPELL_KIT.md), "The shape of an ability"):
 
-1. Done for keys 1, 2, 3 and 5: `blasphemy_slate/beyonder_characteristics/HandOfGod.java`, `PATHWAY = "Hand Of God"`, one method per key: `handOfGodWarriorsCharge`, `handOfGodGladiatorsFlurry`, `handOfGodGrandmastersEdge`, `handOfGodDawn`, `handOfGodProtection`, `handOfGodDemonHunting`, `handOfGodTwilight`. Every number is a constant at the top.
-2. Wheels with `AbilityWheel.create("hand_of_god_dawn", ...)` (key 4), `"hand_of_god_demon_hunting"` (key 6) and `"hand_of_god_twilight"` (key 7), each with `.quickCastCooldown(false).quickCastCost(2f)` like Beauty Goddess. The key 7 wheel has eight entries, so give it a larger `.radius(...)`.
-3. One `import static` and one line in each `network/SKeyPressAbilityOneUsed` to `SevenUsed` (done for One, Two, Three and Five).
-4. Seven lines in `PathwayAbilities.ALL`: key 1 at Sequence 9, key 2 at 8, key 3 at 7, key 4 at 6, key 5 at 5, key 6 at 4, key 7 at 3 (done for 1, 2, 3 and 5).
+1. Done: `blasphemy_slate/beyonder_characteristics/HandOfGod.java`, `PATHWAY = "Hand Of God"`, with `handOfGodWarriorsCharge`, `handOfGodGladiatorsFlurry`, `handOfGodGrandmastersEdge` and `handOfGodProtection`; the wheels each in a class of their own beside it: `HandOfGodDawn.handOfGodDawn`, `HandOfGodDemonHunting.handOfGodDemonHunting`, `HandOfGodTwilight.handOfGodTwilight`. Every number is a constant at the top of its class.
+2. Done: wheels `"hand_of_god_dawn"` (key 4), `"hand_of_god_demon_hunting"` (key 6) and `"hand_of_god_twilight"` (key 7, radius 92 for its eight entries), each with `.quickCastCooldown(false).quickCastCost(2f)` like Beauty Goddess.
+3. Done: one `import static` and one line in each `network/SKeyPressAbilityOneUsed` to `SevenUsed`.
+4. Done: seven lines in `PathwayAbilities.ALL`: key 1 at Sequence 9, key 2 at 8, key 3 at 7, key 4 at 6, key 5 at 5, key 6 at 4, key 7 at 3.
 5. Done: `"Hand Of God"` in `SequenceCommands.PATHWAYS`.
 6. Done: the passives as lines in `SequencePassives`; a misspelt Pathway name stops the game on purpose.
-7. Done: a row for it in the tables of [SEQUENCES.md](SEQUENCES.md) and in the Pathway list at its top, and the list in the README (fill in the wheel cells when they are written).
+7. Done: a row for it in the tables of [SEQUENCES.md](SEQUENCES.md) and in the Pathway list at its top, and the list in the README.
 8. Done already: `HandOfGodFx.java` and the icon in `PathwayHudIcon` under `"Hand Of God"`. Done too: the Pathway color in `DarkAngel.pathwayColor`.
 9. Done already: models, wheel pictures (32 px), status pictures (16 px), particles and sounds, generated by the scripts in `tools/model_gen/hand_of_god/`, and `/handfx all` to play every display.
 10. Set it with `/sequence pathway <player> "Hand Of God"`.
 
 ## What is built
 
-Keys 1, 2, 3 and 5 and every passive. The abilities are in `blasphemy_slate/beyonder_characteristics/HandOfGod.java` (every number is a constant at the top of it), one line each in `PathwayAbilities.ALL` (Protection is not stealable: it is the Guardian's own sword), a row in [SEQUENCES.md](SEQUENCES.md), and the passives in `SequencePassives` and `HandOfGod`. Set the Pathway with `/sequence pathway <player> "Hand Of God"`. Keys 4, 6 and 7 (the wheels) do nothing yet.
+Every key and every passive. Keys 1, 2, 3 and 5 and the passives are in `blasphemy_slate/beyonder_characteristics/HandOfGod.java`; the wheels are in `HandOfGodDawn.java` (key 4), `HandOfGodDemonHunting.java` (key 6) and `HandOfGodTwilight.java` (key 7) beside it, which `HandOfGod` ticks and clears after a relog or a death. Every number is a constant at the top of its class. One line each in `PathwayAbilities.ALL` (Protection is not stealable: it is the Guardian's own sword), a row in [SEQUENCES.md](SEQUENCES.md), and the passives in `SequencePassives` and `HandOfGod`. Set the Pathway with `/sequence pathway <player> "Hand Of God"`.
 
 How it works where the tables above do not say:
 - Warrior's Charge rushes at the enemy you look at if one is within 9 blocks, else 8 blocks straight ahead (`combat/Reel`). The first enemy in front of you is hit and thrown, and the rush stops there; enemies beside your path are shoved aside. It cannot be started while you are held in place.
@@ -231,6 +231,24 @@ How it works where the tables above do not say:
 - Damage Transference is `DamageLink.redirect` from every ally within 16 blocks to you (half of what they lose, after their armor), with Resistance I, II or III for one, two or three and more allies. An ally who goes more than 24 blocks away is let go. Cooldown 30 seconds. It refuses (costing nothing) with no ally near.
 - Physique and Weapon Mastery change attributes (scale, max health, attack speed, reach, knockback resistance) with fixed ids; they are checked once a second for every player and taken off again when the Pathway or Sequence no longer has them, so nothing is left behind.
 - Tracking prints are particles sent only to the hunter (`ParticleShapes.spawnFor`); the Intuition chime is a sound only they hear.
+
+The wheels (sneak on a wheel key casts the last pick again with no cooldown, for double the cost):
+- Light of Dawn stands where you cast it (not round you as you walk). Once a second: enemies who are concealed or unnoticed are forced out (they can hide again, and are forced out again a second later); evil and undead take 6 and are weakened; you and your allies lose blindness, `Blind` and taunts, are cleansed and heal 1.
+- Dawn Armor is `ConjuredArmor`: 40% less damage, 4 hearts of absorption, no knockback, slowness does not take, for 45 seconds; cast again for fresh plates. Silver Knight (3): the Silver Armor stays until you cast it again (free, it takes it off), with 8 hearts of absorption that regrow a point every 2 seconds without a hit.
+- Sword of Dawn is `ConjuredWeapon`: +6 per hit (less for a spam click) and +1 reach, 20 spirituality a second, 40 seconds. Every hit adds 5% to the damage the target takes (30% at most, for 10 seconds after the last), evil and undead take +8; a swing with 90% of the attack bar also cuts each enemy 6 blocks ahead for 60%. Silver Knight (3): no timer and no upkeep, cast again to put it away (free). Misses, as for Grandmaster's Edge, are not seen.
+- Hurricane of Light draws the Sword of Dawn first if it is not out (at no further cost). It rolls 20 blocks in 24 ticks, 4 wide; each enemy it reaches takes 60 (90 if evil) and is thrown along; each ally a quarter of 60. Glory: 40 blocks and 8 wide, and everything it reaches decays. It does not stop at walls.
+- Eye of Demon Hunting: every second the evil within 40 blocks glow (the vanilla glowing effect, so everyone sees the outline) and get a green ring. Each enemy you look at while it is open is read once into chat (health, its weakness, its effects; from Silver Knight a player's Pathway and Sequence too) and takes 20% more damage until the eye closes. The book's "who is lying" has nothing in the game to read, so it is left out.
+- Alchemy reads the target you look at (24 blocks): Exorcism for marionettes, summons and vexes; Freeze for fire-immune creatures; Burning for arthropods and freeze-immune creatures; Lightning Strike for water creatures and anyone in iron, chain, gold or netherite armor; Purification for the evil; Decay for anything with 40 health or more; Lightning Strike otherwise or when nothing is aimed at. The coating is `WeaponCoat`: 10 hits or 20 seconds. Each adds to the hit (see the constants) and Freeze freezes for 2 seconds, Burning sets the target alight (never the ground), Decay rots, Exorcism cuts a marionette's strings (a summon vanishes).
+- Mind Concealment is `Unnoticed` for 15 seconds. Abilities that choose a target through `Spells` aiming pass over you; abilities of other Pathways that find their target some other way may not.
+- Giant Form is `GiantForm`: 1.2 / 1.5 / 1.75 times your size (Sequence 4 / 3 / 2 and up), 1 / 1.5 / 2 more reach, half a block (a block from 3) more step, Strength III and Resistance II, 40 seconds. A stride every 2.2 blocks (times the size) slows enemies on the ground within 4 (times the size). Weaker ones (less maximum health than you) that see you get nausea and weakness, at most every 10 seconds. Madness fills in 30 seconds at Sequence 4 and 50 at 3 (so at 3 the 40 seconds run out first), none from Glory; full madness breaks the form and leaves you with Weakness II, slowness and nausea. Cast again to end it (free).
+- Mercury Liquefaction (120 ticks at most, cast again to re-form early, free): you are concealed. Aimed at an ally, you ride along with them and they wear Silver Armor (40% less damage, 4 hearts of absorption); aimed at an enemy, you ride along with it and it is held and takes 5 a second; otherwise you slide to where you aim (`Reel`, 0.6 blocks a tick) and every enemy within 1.5 blocks of you is held 2 seconds. While concealed nothing can hurt you, so the book's "a killing blow re-forms you" has nothing to catch.
+- Silver Rapier needs an enemy in sight (32 blocks); three hits of 20.
+- Light Concealment enters by a light source within 6 blocks of your eyes (at least light 10: torches, lanterns, glowstone, lava...) or, by day under the open sky, the sunlight, and comes out beside the light source nearest your crosshair (within 4 of it, 32 away) or at a sunlit spot you aim at. It takes a second, hidden. With Mind Concealment still up you stay hidden 6 seconds more. Glory: with no light to go in or out by, you wither away and re-form at any spot you aim at.
+- Twilight Sword lands on the enemy you aim at, or on the ground you aim at (48 blocks): 90 to each enemy within 5, through `Dome` shields, `Substitute` and `DeathWard` (`Spells.strikeThrough`), and decay.
+- Divine Right Hand seizes an enemy you aim at (32 blocks) unless it is a boss (dragon, wither, warden, elder guardian, or more than 150 health): held 3 seconds, 15 a second, then flung for 35 more and decayed. Aimed at the ground or a boss, it slams down there: 80 to each enemy within 6, buried (`Burial`; held if it is too big to bury) and decayed.
+- Passage of Time stands round where you cast it: at the moment the clock stops, every enemy within 24 is held completely for 8 seconds, and whatever it took meanwhile lands on it again twice over (`StoredDamage`).
+- Decay is a `Zone` of 12 blocks where you aim (32 away), 12 seconds: each enemy in it rots, its health 10% lower at first and 5% more for each second it stays (50% at most).
+- Divine Kingdom stands round where you cast it, 40 blocks, 60 seconds: enemies in it are slowed and weakened, cannot heal and deal 70% of their damage; you and your allies have Strength, Resistance and Regeneration. Cast again to end it (free).
 
 ## Looks, sounds and pictures (ready)
 

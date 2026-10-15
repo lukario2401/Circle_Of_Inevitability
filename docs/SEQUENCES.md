@@ -56,9 +56,9 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Apocalypse | Fatal Step 9 | Black Flame 8 | Mirror World 7 | Silk Weaver 6 (wheel: silks at 6, 5, 4, 3) | Plague 5 | Unaging 4 | Catastrophe 3 (wheel: disasters at 3, 2, 1) |
 | Dark Angel | Divination 9 | Whispers 8 | Shadow Binding 7 | Flesh Bomb 6 | Grazing 5 (7 slots of stolen abilities) | Cull of Spiritual Flesh 4 | Degeneration 3 |
 | Beauty Goddess | Medicine Concoction 9 | Taming 8 | Wings of Darkness 7 | Potions 6 (wheel: potions at 6, 6, 5, 4) | Lunar Battlefield 5 | Gaze of Darkness 4 | Moon 3 (wheel: Door of Summoning 3, Creation 2, Beauty 1, Blood Moon 0) |
-| Hand Of God | Warrior's Charge 9 | Gladiator's Flurry 8 | Grandmaster's Edge 7 | (Dawn wheel 6: not written yet) | Protection 5 | (Demon Hunting wheel 4: not written yet) | (Silver and Twilight wheel 3: not written yet) |
+| Hand Of God | Warrior's Charge 9 | Gladiator's Flurry 8 | Grandmaster's Edge 7 | Dawn 6 (wheel: Light of Dawn, Dawn Armor, Sword of Dawn, Hurricane of Light, all at 6) | Protection 5 | Demon Hunting 4 (wheel: Eye, Alchemy, Mind Concealment, Giant Form, all at 4) | Silver and Twilight 3 (wheel: Mercury 3, Silver Rapier 3, Light Concealment 3, Twilight Sword 2, Divine Right Hand 1, Passage of Time 0, Decay 0, Divine Kingdom 0) |
 
-The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md).
+The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
@@ -105,7 +105,7 @@ What a Beyonder always has from a Sequence on (that Sequence and every stronger 
 | Resistance I; half knockback (in `HandOfGod`) | Hand Of God | 5 |
 | Tracking: enemies you hit leave footprints only you see for 20 s; Spiritual Intuition: a chime only you hear when a mob starts hunting you out of sight (in `HandOfGod`) | Hand Of God | 4 |
 | Dawn Aura: evil and undead within 6 blocks take 1.5 damage each second | Hand Of God | 3 |
-| Twilight Resistance: wither does not take, nothing stops your healing | Hand Of God | 2 |
+| Twilight Resistance: wither does not take, nothing stops your healing, you cannot rot (`status/Decay`) | Hand Of God | 2 |
 | Divine Touch: bare-handed blows do 6 more and the target cannot heal for 3 s (in `HandOfGod`) | Hand Of God | 1 |
 | Twilight Aura: enemies within 16 blocks are slowed and weakened and cannot heal | Hand Of God | 0 |
 

@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.combat;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Marionette;
+import net.lukario.circleofinevitability.status.Unnoticed;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -22,6 +23,7 @@ import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -45,6 +47,8 @@ import java.util.function.Consumer;
  *   for (LivingEntity e : Spells.enemiesAround(player, sl, spot, 4)) Spells.strike(player, e, 12f);
  *   if (!Spells.paySpirituality(player, 1000)) return;                   // takes the spirituality, or says there is not enough
  *   Spells.alliesAround(player, sl, spot, 6)                        // the caster's side there (livingAround: everyone)
+ *   Spells.strikeThrough(player, target, 90f)                       // a hit no shield, substitute or death ward stops
+ *   BlockPos light = Spells.lightAimed(player, sl, 32, 4, 10);      // the light source nearest the crosshair, or null
  *
  * "Enemy" means: anything alive except the caster, what the caster rides or owns (pets, tamed horses), the
  * caster's marionettes, team mates, armor stands, spectators and whoever is concealed. Add your own rule with
@@ -181,6 +185,7 @@ public final class Spells {
     public static List<LivingEntity> enemiesInSight(Player caster, ServerLevel sl, double range, double halfAngle) {
         Vec3 eye = caster.getEyePosition();
         List<LivingEntity> result = enemiesInCone(caster, sl, eye, caster.getLookAngle(), range, halfAngle);
+        result.removeIf(candidate -> !canBeChosen(candidate));             // seen, but no mind takes it in (status/Unnoticed)
         // its body or its head showing is enough
         result.removeIf(candidate -> !clearLine(caster, sl, eye, candidate.getBoundingBox().getCenter())
                 && !clearLine(caster, sl, eye, candidate.getEyePosition()));
@@ -242,6 +247,23 @@ public final class Spells {
         return onLine.isEmpty() ? null : onLine.get(0);
     }
 
+    /**
+     * False for an enemy an ability cannot CHOOSE as its target, though it is there and can be caught by what hits
+     * an area: one whose mind is concealed (status/Unnoticed). The aiming here (aimEnemy, aimFrom, aimGround,
+     * enemiesInSight) already passes over it; ask this yourself when you pick a target some other way.
+     */
+    public static boolean canBeChosen(LivingEntity entity) {
+        return Unnoticed.canBeChosen(entity);
+    }
+
+    /** The enemy on the line closest to 'from' that can be chosen as a target (canBeChosen), or null. */
+    private static LivingEntity firstChosenOnLine(Player caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+        for (LivingEntity candidate : enemiesOnLine(caster, sl, from, to, grow)) {
+            if (canBeChosen(candidate)) return candidate;
+        }
+        return null;
+    }
+
     /** Distance from a point to the nearest part of an entity's body (0 when the point is inside it). */
     public static double distanceToBody(LivingEntity entity, Vec3 point) {
         AABB body = entity.getBoundingBox();
@@ -258,7 +280,7 @@ public final class Spells {
     /** The enemy the caster is looking at within range (not through walls), or null. */
     public static LivingEntity aimEnemy(Player caster, ServerLevel sl, double range) {
         Vec3 eye = caster.getEyePosition();
-        return firstEnemyOnLine(caster, sl, eye, aimPoint(caster, sl, range), 0.4);
+        return firstChosenOnLine(caster, sl, eye, aimPoint(caster, sl, range), 0.4);
     }
 
     /** Where the crosshair ends: on the first block in the way, or 'range' blocks out if there is none. */
@@ -277,7 +299,7 @@ public final class Spells {
         Vec3 eye = caster.getEyePosition();
         Vec3 look = caster.getLookAngle().normalize();
         Vec3 point = aimPoint(caster, sl, range);
-        LivingEntity target = firstEnemyOnLine(caster, sl, eye, point, 0.4);
+        LivingEntity target = firstChosenOnLine(caster, sl, eye, point, 0.4);
         if (target != null) {
             // the spot on the crosshair's line that is level with that enemy
             double along = Mth.clamp(target.getBoundingBox().getCenter().subtract(eye).dot(look), 0.0, eye.distanceTo(point));
@@ -295,7 +317,7 @@ public final class Spells {
         Vec3 eye = caster.getEyePosition();
         Vec3 look = caster.getLookAngle().normalize();
         Vec3 stop = aimPoint(caster, sl, range);
-        LivingEntity target = firstEnemyOnLine(caster, sl, eye, stop, 0.4);
+        LivingEntity target = firstChosenOnLine(caster, sl, eye, stop, 0.4);
         if (target != null) return groundAt(caster, sl, target.position().add(0, 0.5, 0));
         return groundAt(caster, sl, stop.subtract(look.scale(0.3)));           // a step back out of the block that was hit
     }
@@ -426,6 +448,50 @@ public final class Spells {
     }
 
     // =========================
+    // Light
+    // =========================
+
+    /** Furthest lightNear looks (blocks): every block in the cube is checked, so this stays small. */
+    public static final double LIGHT_SEARCH_LIMIT = 8.0;
+
+    /**
+     * The blocks that give off at least 'minLight' light (torch 14, lantern 15, glowstone 15, lava 15, a candle 3 to
+     * 12, redstone torch 7) within 'radius' blocks of a point, nearest first. Empty if there is none. 'radius' is
+     * capped at LIGHT_SEARCH_LIMIT.
+     *
+     *   List<BlockPos> lights = Spells.lightNear(sl, player.position(), 6, 10);
+     */
+    public static List<BlockPos> lightNear(ServerLevel sl, Vec3 center, double radius, int minLight) {
+        double reach = Math.min(radius, LIGHT_SEARCH_LIMIT);
+        int r = (int) Math.ceil(reach);
+        BlockPos middle = BlockPos.containing(center);
+        List<BlockPos> found = new ArrayList<>();
+        for (BlockPos pos : BlockPos.betweenClosed(middle.offset(-r, -r, -r), middle.offset(r, r, r))) {
+            if (pos.getCenter().distanceTo(center) > reach) continue;
+            BlockState state = sl.getBlockState(pos);
+            if (state.isAir()) continue;
+            if (state.getLightEmission(sl, pos) >= minLight) found.add(pos.immutable());
+        }
+        found.sort(Comparator.comparingDouble(pos -> pos.getCenter().distanceToSqr(center)));
+        return found;
+    }
+
+    /**
+     * The light source (at least 'minLight', see lightNear) nearest to what the crosshair is on, within 'around'
+     * blocks of it, as far as 'range' away. Null if there is none.
+     */
+    public static BlockPos lightAimed(Player caster, ServerLevel sl, double range, double around, int minLight) {
+        Vec3 point = aimPoint(caster, sl, range);
+        List<BlockPos> lights = lightNear(sl, point, around, minLight);
+        return lights.isEmpty() ? null : lights.get(0);
+    }
+
+    /** True by day for a spot under the open sky (sunlight counts as a light source). */
+    public static boolean inDaylight(ServerLevel sl, BlockPos pos) {
+        return !sl.isDarkOutside() && sl.canSeeSky(pos);
+    }
+
+    // =========================
     // Directions
     // =========================
 
@@ -485,6 +551,27 @@ public final class Spells {
         target.invulnerableTime = 0;
         target.hurt(caster.damageSources().playerAttack(caster), damage);
         caster.setLastHurtMob(target);
+    }
+
+    /** The entities a strikeThrough is landing on right now (only during the strike itself). */
+    private static final Set<UUID> PIERCING = new HashSet<>();
+
+    /**
+     * A strike that nothing stops: a Dome's shield does not soften it, a Substitute does not take it and a DeathWard
+     * does not save from it (none of them is used up either). For a sword of Glory, a divine judgement.
+     */
+    public static void strikeThrough(Player caster, LivingEntity target, float damage) {
+        PIERCING.add(target.getUUID());
+        try {
+            strike(caster, target, damage);
+        } finally {
+            PIERCING.remove(target.getUUID());
+        }
+    }
+
+    /** True while a strikeThrough is landing on this entity: shields and wards must let it through. */
+    public static boolean isPiercing(LivingEntity entity) {
+        return !PIERCING.isEmpty() && PIERCING.contains(entity.getUUID());
     }
 
     /** Throws the target away from a point: 'strength' blocks per tick sideways, 'lift' upward. */

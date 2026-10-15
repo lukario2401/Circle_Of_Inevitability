@@ -466,6 +466,7 @@ public final class Dome {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide() || RAISED.isEmpty()) return;
         if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
+        if (Spells.isPiercing(entity)) return;                       // Spells.strikeThrough: no shield softens it
         float best = 0f;
         for (Dome dome : shelters(entity)) {
             if (dome.isOwner(entity)) continue;

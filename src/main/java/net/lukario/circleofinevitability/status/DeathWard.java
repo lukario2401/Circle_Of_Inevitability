@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.status;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.Spells;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -99,6 +100,7 @@ public final class DeathWard {
         if (!(entity.level() instanceof ServerLevel sl)) return false;
         if (!isArmed(entity)) return false;
         if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;   // the void and /kill still kill
+        if (Spells.isPiercing(entity)) return false;                 // Spells.strikeThrough: no ward saves from it (it stays armed)
 
         Ward ward = WARDS.remove(entity.getUUID());
         // (returning true below cancels the death)
@@ -123,7 +125,7 @@ public final class DeathWard {
             entity.getPersistentData().remove(GRACE_TAG);
             return false;
         }
-        return !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY);
+        return !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && !Spells.isPiercing(entity);
     }
 
     @SubscribeEvent

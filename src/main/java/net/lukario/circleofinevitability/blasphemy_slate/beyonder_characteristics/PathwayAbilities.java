@@ -194,15 +194,21 @@ public final class PathwayAbilities {
             new Ability("Beauty Goddess", 7, "Moon", 3, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)),
 
-            // ---- Hand Of God (keys 4, 6 and 7, the three wheels, are not written yet: docs/HAND_OF_GOD.md) ----
+            // ---- Hand Of God (docs/HAND_OF_GOD.md) ----
             new Ability("Hand Of God", 1, "Warrior's Charge", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> HandOfGod.handOfGodWarriorsCharge(player, level, sl, true)),
             new Ability("Hand Of God", 2, "Gladiator's Flurry", 8, SNEAK, STEALABLE,
                     (player, level, sl) -> HandOfGod.handOfGodGladiatorsFlurry(player, level, sl, true)),
             new Ability("Hand Of God", 3, "Grandmaster's Edge", 7, SNEAK, STEALABLE,
                     (player, level, sl) -> HandOfGod.handOfGodGrandmastersEdge(player, level, sl, true)),
+            new Ability("Hand Of God", 4, "Dawn", 6, SNEAK, STEALABLE,                       // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> HandOfGodDawn.handOfGodDawn(player, level, sl, true)),
             new Ability("Hand Of God", 5, "Protection", 5, SNEAK, OWN_PATHWAY_ONLY,          // the Guardian's own sword and body
-                    (player, level, sl) -> HandOfGod.handOfGodProtection(player, level, sl, true)));
+                    (player, level, sl) -> HandOfGod.handOfGodProtection(player, level, sl, true)),
+            new Ability("Hand Of God", 6, "Demon Hunting", 4, SNEAK, STEALABLE,              // stolen: no wheel; Giant Form refuses a thief
+                    (player, level, sl) -> HandOfGodDemonHunting.handOfGodDemonHunting(player, level, sl, true)),
+            new Ability("Hand Of God", 7, "Silver and Twilight", 3, SNEAK, STEALABLE,        // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> HandOfGodTwilight.handOfGodTwilight(player, level, sl, true)));
 
     private PathwayAbilities() {}
 

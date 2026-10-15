@@ -13,6 +13,7 @@ import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.DamageLink;
+import net.lukario.circleofinevitability.status.Decay;
 import net.lukario.circleofinevitability.status.EmpoweredHit;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.NoHeal;
@@ -65,15 +66,20 @@ import java.util.UUID;
  *                                                                              | sneak: Supernatural Resistance
  *   3 Grandmaster's Edge (Weapon Master)  15 s: faster, longer swings that cut everything in front; every third
  *                                         swing in a row is a finishing cut     | sneak: Riposte
- *   4 Dawn               (Dawn Paladin)   the Dawn wheel: NOT WRITTEN YET (docs/HAND_OF_GOD.md, "Key 4 wheel")
+ *   4 Dawn               (Dawn Paladin)   the Dawn wheel: Light of Dawn, Dawn Armor, Sword of Dawn, Hurricane of
+ *                                         Light (HandOfGodDawn)                 | sneak: the last pick again
  *   5 Protection         (Guardian)       a dome of Dawn light round you: enemies kept out, projectiles stopped,
  *                                         allies shielded; from Glory (2) a Cage that holds enemies in
  *                                                                              | sneak: Damage Transference
- *   6 Demon Hunting      (Demon Hunter)   the Demon Hunting wheel: NOT WRITTEN YET
- *   7 Silver and Twilight (Silver Knight) the Twilight wheel: NOT WRITTEN YET
+ *   6 Demon Hunting      (Demon Hunter)   the Demon Hunting wheel: Eye of Demon Hunting, Alchemy, Mind
+ *                                         Concealment, Giant Form (HandOfGodDemonHunting) | sneak: the last pick again
+ *   7 Silver and Twilight (Silver Knight) the Silver and Twilight wheel: Mercury Liquefaction, Silver Rapier, Light
+ *                                         Concealment, Twilight Sword, Divine Right Hand, Passage of Time, Decay,
+ *                                         Divine Kingdom (HandOfGodTwilight)    | sneak: the last pick again
  *
- * Every look and sound is in HandOfGodFx (see /handfx); this class only decides who is hurt, held and helped,
- * and when. The reusable pieces come from docs/SPELL_KIT.md: combat/Reel (the charge), combat/Dome (Protection
+ * The three wheels each have a class of their own beside this one, with their numbers at the top; this class
+ * ticks them and starts them clean after a relog or a death. Every look and sound is in HandOfGodFx (see /handfx);
+ * the ability classes only decide who is hurt, held and helped, and when. The reusable pieces come from docs/SPELL_KIT.md: combat/Reel (the charge), combat/Dome (Protection
  * and the Cage), status/SupernaturalResistance, status/Substitute + status/EmpoweredHit (Riposte),
  * status/DamageLink (Damage Transference: a redirect from each ally to the guardian), beyonder/Physique (the
  * body passives and the Grandmaster's reach and speed), root/Root, combat/Spells, combat/Later.
@@ -248,6 +254,11 @@ public class HandOfGod {
     @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class HandOfGodEvents {
 
+        static {
+            // Glory's Twilight Resistance: one who holds the authority of Decay does not rot (status/Decay)
+            Decay.addImmunity(entity -> entity instanceof Player player && isHandOfGod(player, TWILIGHT_RESISTANCE_SEQUENCE));
+        }
+
         @SubscribeEvent
         public static void onHandOfGodTick(TickEvent.PlayerTickEvent.Post event) {
             Player player = event.player();
@@ -255,9 +266,11 @@ public class HandOfGod {
             // these run out even if the Pathway is taken away in the meantime (or the cast was stolen)
             if (player.tickCount % 5 == 0 && isActive(player, EDGE_UNTIL)) HandOfGodFx.edgeTick(sl, player);
             if (player.tickCount % 5 == 0) trackingTick(player, sl);
+            HandOfGodDemonHunting.tick(player, sl);
             if (player.tickCount % 20 == 0) {
                 bodyTick(player);
                 coverTick(player, sl);
+                HandOfGodDawn.tick(player, sl);
             }
         }
 
@@ -275,6 +288,7 @@ public class HandOfGod {
         public static void onHandOfGodHurt(LivingHurtEvent event) {
             LivingEntity target = event.getEntity();
             if (!(target.level() instanceof ServerLevel sl)) return;
+            HandOfGodTwilight.kingdomCut(event);                                 // an enemy in a Divine Kingdom deals less
             if (!(event.getSource().getEntity() instanceof Player player) || event.getSource().getDirectEntity() != player) return;
             Swing swing = SWINGS.remove(player.getUUID());
             if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
@@ -336,6 +350,8 @@ public class HandOfGod {
             SWINGS.remove(player.getUUID());
             endCover(player, null);
             TRACKS.values().removeIf(track -> track.hunter.equals(player.getUUID()));
+            HandOfGodDemonHunting.forget(player);
+            HandOfGodTwilight.forget(player);
         }
     }
 
@@ -829,10 +845,11 @@ public class HandOfGod {
         }
     }
 
-    /** Glory (2): nothing stops your healing and wither ends at once (it cannot be put on: onHandOfGodEffect). */
+    /** Glory (2): nothing stops your healing, wither ends at once and nothing rots you (it cannot be put on either). */
     public static void twilightResistance(Player player) {
         player.removeEffect(MobEffects.WITHER);
         if (NoHeal.isApplied(player)) NoHeal.remove(player);
+        Decay.cure(player);
     }
 
     /** Twilight Giant (0): enemies within TWILIGHT_AURA_RADIUS are slowed and weakened and cannot heal. Run once a second. */
@@ -846,7 +863,7 @@ public class HandOfGod {
     }
 
     /** True for this Pathway at this Sequence or stronger. */
-    private static boolean isHandOfGod(Player player, int sequence) {
+    static boolean isHandOfGod(Player player, int sequence) {
         return SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, sequence);
     }
 
@@ -855,13 +872,13 @@ public class HandOfGod {
     // =========================
 
     /** Has this pathway (or the check is skipped) and has reached the Sequence the ability needs. */
-    private static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
+    static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
         if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return false;
         return Beyonder.hasSequence(player, sequence);
     }
 
     /** True while the game time saved under 'key' is still ahead. */
-    private static boolean isActive(Entity entity, String key) {
+    static boolean isActive(Entity entity, String key) {
         return entity.getPersistentData().getLongOr(key, 0L) > entity.level().getGameTime();
     }
 
@@ -883,6 +900,9 @@ public class HandOfGod {
         SWINGS.remove(player.getUUID());
         endCover(player, null);
         edgeBody(player, false);
+        HandOfGodDawn.clearState(player);
+        HandOfGodDemonHunting.clearState(player);
+        HandOfGodTwilight.clearState(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) HandOfGodFx.statusEnd(player, status);       // a clock left running before death
     }

@@ -305,6 +305,17 @@ public final class HandOfGodFx {
         HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
     }
 
+    /** How long something "until ended" is shown at most (an hour): show it again after that. */
+    public static final int FOREVER = 72000;
+
+    /** Only the status's picture, no clock: for what lasts until it is ended (Silver Armor, the Silver Knight's sword). */
+    public static void statusForever(Player player, Status status) {
+        int slot = status.ordinal();
+        ScreenImages.show(player, status.id(), "hand_of_god/" + status.image,
+                ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
+        HudTimer.hide(player, status.id());
+    }
+
     /** It ended early. */
     public static void statusEnd(Player player, Status status) {
         ScreenImages.hide(player, status.id());

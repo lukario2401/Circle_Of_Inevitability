@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.status;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.Spells;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -124,6 +125,7 @@ public final class Substitute {
         LivingEntity entity = event.getEntity();
         if (!(entity.level() instanceof ServerLevel sl)) return false;
         if (!isArmed(entity)) return false;
+        if (Spells.isPiercing(entity)) return false;                 // Spells.strikeThrough: nothing takes it in their place
         if (!isRealHit(entity, event.getSource(), event.getAmount())) return false;
 
         Armed armed = ARMED.get(entity.getUUID());

@@ -21,6 +21,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderWords;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionEntropy;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesHistoricalVoid;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGodDemonHunting.handOfGodDemonHunting;
 
 public class SKeyPressAbilitySixUsed {
 
@@ -56,6 +57,7 @@ public class SKeyPressAbilitySixUsed {
         apocalypseUnaging(player,level,serverLevel,false);
         hangedManCull(player,level,serverLevel,false);
         beautyGoddessGaze(player,level,serverLevel,false);
+        handOfGodDemonHunting(player,level,serverLevel,false);
 
     }
 }

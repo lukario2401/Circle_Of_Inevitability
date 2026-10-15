@@ -52,6 +52,14 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
 | Less supernatural damage for a while, and blindness, nausea, roots, freezing and taunts shaken off | [`SupernaturalResistance`](#supernaturalresistance) | `status/` |
 | A Beyonder's body: taller, more hearts, longer reach, faster swings, on while something is true | [`Physique`](#physique-a-beyonders-body) | `blasphemy_slate/beyonder/` |
+| Rot: no healing, wither, weakness, armor and weapons wearing out, less maximum health (Twilight, a curse of age) | [`Decay`](#decay) | `status/` |
+| "My next few hits are special" (a poison, holy oil, a concoction on the blade) | [`WeaponCoat`](#weaponcoat) | `status/` |
+| Minds slide off you: mobs forget you and abilities cannot choose you, though you are seen and can be hurt | [`Unnoticed`](#unnoticed) | `status/` |
+| A bigger body for a while, with more reach and step, and a madness that can break it (a giant, a titan) | [`GiantForm`](#giantform) | `status/` |
+| Armor that is not an item: less damage, a layer of absorption, no knockback (plates of light, a coat of silver) | [`ConjuredArmor`](#conjuredarmor) | `status/` |
+| A weapon that is not an item: while it is drawn, the player's normal hits are its hits (a sword of light, claws of flame) | [`ConjuredWeapon`](#conjuredweapon) | `status/` |
+| The light sources near a spot or near the crosshair, and whether a spot is in daylight | [`Spells.lightNear`, `lightAimed`, `inDaylight`](#1-spells-aiming-and-enemies) | `combat/` |
+| A hit that no shield, substitute or death ward stops | [`Spells.strikeThrough`](#1-spells-aiming-and-enemies) | `combat/` |
 | "Burns evil and undead" in one call | [`Spells.isEvil`](#1-spells-aiming-and-enemies) | `combat/` |
 | Particles only one player sees (a trail for the hunter) | `ParticleShapes.spawnFor(viewer, particle, at, velocity)` | `particles/fx/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
@@ -128,7 +136,7 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 
 | Call | What you get |
 |---|---|
-| `aimEnemy(player, sl, range)` | The enemy the player is looking at (not through walls), or `null` |
+| `aimEnemy(player, sl, range)` | The enemy the player is looking at (not through walls), or `null`. It passes over one whose mind is concealed (`Unnoticed`), as do `aimFrom`, `aimGround` and `enemiesInSight` |
 | `aimPoint(player, sl, range)` | Where the crosshair ends: on the first block in the way, else `range` blocks out |
 | `aimGround(player, sl, range)` | The ground being aimed at. Under the first enemy in the way, if there is one. Aimed at the open sky, with no ground within 24 blocks below, it is a point in the air |
 | `aimFrom(player, sl, from, range)` | The direction from `from` to what the crosshair is on. For things thrown from a hand or by a summon standing beside the player: thrown along the plain look direction they land a step to the side |
@@ -149,6 +157,11 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `isEnemy(player, other)` | The rule itself (see below) |
 | `isFriend(player, other)` | The caster's side (the caster too), judged as if nobody were concealed: for a wall that must keep hidden enemies out as well (`!isFriend`) |
 | `isEvil(entity)` | Undead, every monster (`Enemy`), and what an `addEvilCheck(entity -> ...)` rule names. For "burns evil and undead" |
+| `canBeChosen(entity)` | `false` for one an ability may not pick as its target (an `Unnoticed` mind) though it is there. The aiming above already asks it; ask it yourself when you pick a target another way |
+| `strikeThrough(player, target, damage)` | Like `strike`, but no `Dome` shield softens it, no `Substitute` takes it and no `DeathWard` saves from it (none of them is used up). `isPiercing(entity)` is `true` while one lands: a shield or ward of your own should let it through too |
+| `lightNear(sl, center, radius, minLight)` | The blocks giving off at least `minLight` light (torch 14, lantern and glowstone 15) within `radius` (8 at most: every block is looked at), nearest first |
+| `lightAimed(player, sl, range, around, minLight)` | The light source nearest to what the crosshair is on, within `around` of it, or `null` |
+| `inDaylight(sl, pos)` | `true` by day for a spot under the open sky: sunlight as a light source |
 | `clearStart(player, sl, wanted)` | `wanted`, or just in front of the wall if a wall is between it and the player's eyes. For things that appear beside the player |
 | `clearLine(player, sl, from, to)` | `true` when nothing solid is between two points |
 | `freeSpotNear(player, sl, from, direction, distance)` | A spot to blink to: about `distance` blocks from `from`, in or near `direction`, where the player fits. `null` if walled in |
@@ -807,6 +820,108 @@ SupernaturalResistance.grant(player, "my_pathway_innate", 40, 0.25f, false, null
 - Several grants can be on one entity under different names: the biggest cut counts, and any grant that shakes off does.
 - Works on mobs too. Not saved; gone on death and logout.
 
+### Decay
+
+The entity rots for a while: it cannot heal (`NoHeal`), it has wither and weakness, its armor and what it holds lose durability every second (items, never blocks), and its maximum health is lower by a part of itself.
+
+```java
+Decay.apply(target, 200, 0.2f);                 // 10 seconds, 20% of its health gone meanwhile; false if it cannot rot
+Decay.apply(enemy, 40, 0.1f + ticksInside / 400f);   // every second in a Zone: the longer they stay, the deeper
+Decay.isDecaying(entity);   Decay.depth(entity);   Decay.ticksLeft(entity);   Decay.cure(target);
+Decay.addImmunity(entity -> ...);               // some cannot rot (a Pathway with authority over Decay)
+```
+
+- Applying it again never makes it shorter or shallower. `Decay.MAX_DEPTH` (0.6) is the most health it can take; the health comes back when it ends.
+- `WEAR_EVERY` and `WEAR` say how fast the gear wears out.
+- Saved with the entity. Used by Hand Of God's Decay, Twilight Sword, Divine Right Hand, the Glory Hurricane and Alchemy's Decay coating; Glory and up are immune (`HandOfGodEvents` in `HandOfGod.java`).
+
+### WeaponCoat
+
+Something on a player's weapon (or fists) that changes their next few hits: `EmpoweredHit`, but for several hits.
+
+```java
+WeaponCoat.arm(player, "my_class_poison", 10, 400, (attacker, target, amount, sl) -> {   // 10 hits, or 20 seconds
+    target.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 1));
+    return amount + 4f;                                                                    // what the hit does instead
+});
+WeaponCoat.isArmed(player, name);   WeaponCoat.charges(player, name);   WeaponCoat.ticksLeft(player, name);   WeaponCoat.disarm(player, name);
+```
+
+- Only real swings use a charge, as for `EmpoweredHit`. Several coats under different names are all used by each hit.
+- Inside the coat's part, add to `amount` rather than calling `Spells.strike` on the same target; hurt others a tick later (`Later.run`).
+- The look is yours: Hand Of God's Alchemy shows a glow on the hand every few ticks while `isArmed` (`HandOfGodDemonHunting.tick`). Not saved.
+
+### Unnoticed
+
+Minds slide off the entity, but eyes do not: the opposite half of `Concealment`.
+
+```java
+Unnoticed.hide(player, 300);         // 15 seconds
+Unnoticed.isUnnoticed(entity);   Unnoticed.ticksLeft(entity);   Unnoticed.end(player);
+```
+
+- Mobs forget it and cannot target it, and abilities cannot choose it: `Spells.aimEnemy`, `enemiesInSight` and the aiming of `aimFrom` and `aimGround` pass over it (`Spells.canBeChosen`). What only catches whoever is there (`enemiesAround`, a blast, a shot that flies into it) still does.
+- It is drawn and can be hurt as usual. It ends the moment it hurts anything, with a swing or an ability.
+- Saved with the entity. Used by Hand Of God's Mind Concealment.
+
+### GiantForm
+
+The entity swells to a bigger body for a while, with longer reach and step, and a madness that can rise until it breaks the form.
+
+```java
+GiantForm.of(1.5)                       // 1.5 times the size it has now
+        .reach(1.5).stepHeight(1.0)     // more reach and step (optional)
+        .lasts(800)                     // 0 = until GiantForm.end(...)
+        .madness(1f / 30f)              // madness each second (0..1); 0 = none
+        .everySecond((giant, madness) -> ...)
+        .onMad(giant -> ...)            // madness is full: the form ends right after
+        .onEnd((giant, why) -> ...)     // TIME, MAD, ENDED, REPLACED, DIED, LEFT
+        .grow(player);
+GiantForm.isGiant(entity);   GiantForm.madness(entity);   GiantForm.scale(entity);   GiantForm.ticksLeft(entity);   GiantForm.end(entity);
+```
+
+- The body is attribute modifiers with fixed ids, so one form at a time; it is on top of what the entity already has (a Pathway's own `Physique` stays).
+- It ends, and shrinks back, on death, logout and a change of dimension. Nothing is saved: after a restart nobody is left giant.
+- The look is yours (`HandOfGodFx.giantForm` shows the one-eyed Giant round the caster; show it before `grow`, so it grows from the old size). Used by Hand Of God's Giant Form.
+
+### ConjuredArmor
+
+Armor that is not an item: it weighs nothing and cannot be taken off or dropped.
+
+```java
+ConjuredArmor.of("my_class_bone_shell")
+        .lasts(900)                     // 0 = until ConjuredArmor.takeOff(...)
+        .cut(0.4f)                      // 40% less damage from everything
+        .absorption(8f).regrow(40)      // a layer of absorption, one point back every 2 s without a hit
+        .steady()                       // no knockback, slowness does not take
+        .onHit((wearer, amount) -> ...)
+        .onEnd(wearer -> ...)           // clear its look here
+        .wear(entity);
+ConjuredArmor.isWorn(entity, name);   ConjuredArmor.ticksLeft(entity, name);   ConjuredArmor.takeOff(entity, name);
+```
+
+- Several under different names: the biggest cut counts and the layers add up. Works on mobs too. Not saved.
+- Used by Hand Of God's Dawn Armor and Silver Armor (`dawnArmor` in `HandOfGodDawn.java`) and by Mercury Liquefaction on an ally.
+
+### ConjuredWeapon
+
+A weapon that is not an item: nothing is put in the hand, so nothing can be dropped, stolen or duplicated. While it is drawn, the player's normal hits are its hits.
+
+```java
+ConjuredWeapon.of("my_class_flame_blade")
+        .lasts(800)                     // 0 = until put away
+        .damage(6f).reach(1.0)          // more on every hit, more reach
+        .upkeep(20, 25)                 // 25 spirituality a second; it fades when that cannot be paid (optional)
+        .onHit((attacker, target, amount, charge, sl) -> amount)   // charge: how full the attack bar was (1 = full swing)
+        .onEnd((wielder, why) -> ...)   // TIME, PUT_AWAY, NO_SPIRITUALITY, REPLACED, DIED, LEFT
+        .draw(player);
+ConjuredWeapon.isDrawn(player, name);   ConjuredWeapon.ticksLeft(player, name);   ConjuredWeapon.putAway(player, name);
+```
+
+- `damage` is scaled by the attack bar, so a spam click adds little. As for `WeaponCoat`, add to `amount` in `onHit` and hurt others a tick later.
+- The look is yours (a model held beside the body with `ParticleShapes.modelOnTurning`, cleared in `onEnd`). Not saved.
+- Used by Hand Of God's Sword of Dawn (`drawSword`, `purifyingHit` in `HandOfGodDawn.java`).
+
 ### Marionette
 
 A mob whose strings a player holds. It stops hunting its master and fights for them.
@@ -1378,6 +1493,11 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Marionette.spawnSummon` (creatures out of a door, one after another), `Spells.growPlants` in a `Zone` | `doorOfSummoning`, `creation` in `BeautyGoddess.java` |
 | `AbilityWheel.quickCastCooldown(false).quickCastCost(2f)` (sneak recast: no cooldown, double price) | `POTIONS`, `MOON_WHEEL` in `BeautyGoddess.java` |
 | `Concealment` forms that end each other (only one at a time), `DeathWard` armed only inside your own `Zone` | `endForms`, `moonlightForm` in `BeautyGoddess.java` |
+| `Dome` (a dome that keeps out, a sphere that holds in, mended in place), `DamageLink.redirect` from every ally | `protection`, `cage`, `mendDome`, `transference` in `HandOfGod.java` |
+| `Zone` for friend and foe alike (`affects(one -> true)`), `ConjuredArmor` timed or until cast again, `ConjuredWeapon` with an upkeep and a crescent on a full swing | `lightOfDawn`, `dawnTouches`, `dawnArmor`, `drawSword`, `purifyingHit` in `HandOfGodDawn.java` |
+| A hurricane that rolls along a line tick by tick and hits each one once | `releaseHurricane`, `hurricaneReaches` in `HandOfGodDawn.java` |
+| `WeaponCoat` chosen by the target, `Unnoticed`, `GiantForm` with madness, reading an enemy into chat | `alchemy`, `coatFor`, `mindConcealment`, `giantForm`, `giantSecond`, `read` in `HandOfGodDemonHunting.java` |
+| `Concealment` riding along with a host, `Reel` while hidden, `Spells.lightNear` / `lightAimed`, `Spells.strikeThrough`, `Burial`, `StoredDamage` paid back twice, a `Zone` that weakens what enemies deal | `mercuryLiquefaction`, `mercuryStep`, `lightConcealment`, `twilightSword`, `slam`, `passageOfTime`, `divineKingdom`, `kingdomCut` in `HandOfGodTwilight.java` |
 
 ## Tricks worth copying
 
@@ -1606,4 +1726,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

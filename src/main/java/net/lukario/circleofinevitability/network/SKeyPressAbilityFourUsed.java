@@ -21,6 +21,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsSeal;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionHammer;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGodDawn.handOfGodDawn;
 
 public class SKeyPressAbilityFourUsed {
 
@@ -56,6 +57,7 @@ public class SKeyPressAbilityFourUsed {
         apocalypseSilkWeaver(player,level,serverLevel,false);
         hangedManFleshBomb(player,level,serverLevel,false);
         beautyGoddessPotions(player,level,serverLevel,false);
+        handOfGodDawn(player,level,serverLevel,false);
     }
 
 }
