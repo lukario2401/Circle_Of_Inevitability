@@ -1,8 +1,8 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGod;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortune;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;

@@ -1,8 +1,8 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortuneFx.Poem;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneFx.Poem;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityWheel;

@@ -3,7 +3,9 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HangedManFx.Status;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx.Status;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityMenu;

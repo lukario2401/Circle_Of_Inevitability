@@ -1,10 +1,10 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGodFx.Status;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodFx.Status;
 import net.lukario.circleofinevitability.combat.Dome;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Reel;

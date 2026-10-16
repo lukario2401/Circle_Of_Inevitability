@@ -1,8 +1,6 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
-import net.lukario.circleofinevitability.root.Root;
-import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Parasite;
 import net.lukario.circleofinevitability.status.Silence;
 import net.minecraft.network.chat.Component;
@@ -18,8 +16,8 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorCull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManGrazing;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessLunarBattlefield;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGod.handOfGodProtection;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortuneSpirits.knightOfMisfortuneSpiritCommanding;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod.handOfGodProtection;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneSpirits.knightOfMisfortuneSpiritCommanding;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderAbility5;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;

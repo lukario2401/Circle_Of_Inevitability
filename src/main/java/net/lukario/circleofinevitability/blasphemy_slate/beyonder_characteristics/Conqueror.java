@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.ConquerorFx;
 import net.lukario.circleofinevitability.combat.*;
 import net.lukario.circleofinevitability.particles.fx.ModelFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;

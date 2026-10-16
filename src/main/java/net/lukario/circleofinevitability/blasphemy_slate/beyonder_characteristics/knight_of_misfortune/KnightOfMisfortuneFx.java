@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune;
 
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;

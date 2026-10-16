@@ -1,5 +1,10 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodTwilight;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.*;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;

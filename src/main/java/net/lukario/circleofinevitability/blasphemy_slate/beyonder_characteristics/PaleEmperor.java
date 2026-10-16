@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.PaleEmperorFx;
 import net.lukario.circleofinevitability.combat.AnimatedShot;
 import net.lukario.circleofinevitability.combat.HudTimer;
 import net.lukario.circleofinevitability.combat.Later;

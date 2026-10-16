@@ -3,7 +3,8 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddessFx.Status;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.BeautyGoddessFx;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.BeautyGoddessFx.Status;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.SpellFx;
 import net.lukario.circleofinevitability.combat.Spells;
