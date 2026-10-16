@@ -10,8 +10,11 @@ import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -31,26 +34,33 @@ public class KnightOfMisfortune {
     // Ability 1 - Warrior's Charge (Sequence 9)
     private static final int CHARGE_SEQUENCE = 9;
     private static final int CHARGE_COST = 250;
-    private static final double CHARGE_RANGE = 8.0;
-    private static final double CHARGE_SPEED = 1.4;              // blocks per tick at most
+    private static final double CHARGE_RANGE = 16.0;
+    private static final double CHARGE_SPEED = 2.4;              // blocks per tick at most
     private static final int CHARGE_TICKS = 12;                  // the rush lets go after this long anyway
-    private static final double CHARGE_REACH = 0.8;              // how close (beyond your body) an enemy counts as hit
-    private static final float CHARGE_DAMAGE = 30f;              // the first one in your way...
+    private static final double CHARGE_REACH = 1.2;              // how close (beyond your body) an enemy counts as hit
+    private static final float CHARGE_DAMAGE = 12f;              // the first one in your way...
     private static final double CHARGE_THROW = 1.4;              // ...is thrown back this hard...
     private static final double CHARGE_LIFT = 0.45;
     private static final double CHARGE_SHOVE = 0.7;
 
-    private static final String CHARGING_UNTIL = "hand_of_god_charging_until";
+    private static final int LISTEN_COST = 300;
+    private static final int LISTEN_TICKS = 300;                 // 15 s of listening
+    private static final double LISTEN_RADIUS = 16.0;
+    private static final int LISTEN_PULSE = 40;                  // ticks between two listens
+    private static final int LISTEN_GLOW_TICKS = 50;
 
+
+    private static final String CHARGING_UNTIL = "hand_of_god_charging_until";
+    private static final String LISTEN_UNTIL = "dark_angel_listen_until";
 
     public static void knightOfMisfortuneRush(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, CHARGE_SEQUENCE)) return;
 
-//        if (player.isShiftKeyDown()) {
-//            if (!Spells.paySpirituality(player, BLOOD_COST)) return;
-//            divineBlood(player, sl);
-//            return;
-//        }
+        if (player.isShiftKeyDown()) {
+            if (!Spells.paySpirituality(player, LISTEN_COST)) return;
+            listen(player, sl);
+            return;
+        }
         if (isActive(player, CHARGING_UNTIL)) return;                   // already rushing: let the key bounce off
         if (Root.has(player, RootRestriction.MOVE)) {
             player.sendSystemMessage(Component.literal("You are held fast and cannot charge."));
@@ -58,6 +68,24 @@ public class KnightOfMisfortune {
         }
         if (!Spells.paySpirituality(player, CHARGE_COST)) return;
         charge(player, sl);
+    }
+
+    private static void listen(Player player, ServerLevel sl) {
+        long until = sl.getGameTime() + LISTEN_TICKS;
+        player.getPersistentData().putLong(LISTEN_UNTIL, until);
+        HangedManFx.status(player, HangedManFx.Status.LISTEN, LISTEN_TICKS);
+        listenPulse(player, sl, until);
+    }
+
+    private static void listenPulse(Player player, ServerLevel sl, long until) {
+        if (!Spells.casterStillHere(player, sl)) return;
+        if (player.getPersistentData().getLongOr(LISTEN_UNTIL, 0L) != until || sl.getGameTime() > until) return;
+        HangedManFx.listenPulse(sl, player, LISTEN_RADIUS);
+        for (LivingEntity heard : Spells.enemiesAround(player, sl, player.position(), LISTEN_RADIUS)) {
+            heard.addEffect(new MobEffectInstance(MobEffects.GLOWING, LISTEN_GLOW_TICKS, 0, false, false));
+            if (heard instanceof Mob mob && mob.getTarget() == player) HangedManFx.listenWarning(sl, mob, player);
+        }
+        if (sl.getGameTime() + LISTEN_PULSE <= until) Later.run(sl, LISTEN_PULSE, () -> listenPulse(player, sl, until));
     }
 
     static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
@@ -106,7 +134,7 @@ public class KnightOfMisfortune {
             boolean inTheWay = along > -0.2 && aside < 0.6 + enemy.getBbWidth() * 0.5;
             if (inTheWay && !struck[0]) {
                 struck[0] = true;
-                Spells.strike(player, enemy, CHARGE_DAMAGE);
+                Spells.strike(player, enemy, CHARGE_DAMAGE*Beyonder.powerLevel(player));
                 Spells.push(enemy, player.position(), CHARGE_THROW, CHARGE_LIFT);
                 player.setDeltaMovement(Vec3.ZERO);
                 player.hurtMarked = true;
