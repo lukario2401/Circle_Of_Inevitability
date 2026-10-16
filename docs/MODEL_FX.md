@@ -600,6 +600,28 @@ Two parts are worth using for other Pathways too:
 
 Statuses: `HandOfGodFx.status(player, Status.DAWN_ARMOR, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
 
+### Knight Of Misfortune: ready-made displays
+
+`KnightOfMisfortuneFx` (next to the other pathway classes) holds the Knight Of Misfortune (Darkness pathway) looks for all seven keys, both casts, the four wheels (Midnight Poem on key 2, Spirit Commanding on key 5, Nightwatcher on key 6, Darkness and Concealment on key 7) and what grows at higher Sequences (the complete Demonic Wolf, Misfortune and Catastrophe, the Sword's three edicts). They only show things; the sleep, fear, damage, hiding and moving are the ability's, at the ticks the constants name (`POEM_LANDS`, `LIMBS_GROWN`, `SOUL_OUT`, `DREAM_OPENS`, `REQUIEM_RISEN`, `EARTH_SUNK`, `DOMAIN_RISEN`, `HAIR_BINDS`, `CURSE_LANDS`, `WOLF_RISEN`, `SWORD_FORMED`, `WORLD_CLOSED`, `CONCEALED`, `MANTLE_RISEN`, `REST_FALLS`, `DESTINATION_OPENS`). The class comment lists every call by key; [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/knight_of_misfortune/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` | The models and their textures in `models/model_fx/knight_of_misfortune/` and `textures/model_fx/knight_of_misfortune/` (`../hanged_man/render.py` draws any of them without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/knight_of_misfortune/`), the status pictures (`textures/gui/knight_of_misfortune/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/note`, `sleep_z`, `wisp`, `hair`, `tooth`, `horseshoe`, `skull`, `eye` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/knight_of_misfortune/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`KNIGHT_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` |
+
+**See them in game** (cheats on): `/knightfx all` or `/knightfx night_domain` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+Three parts are worth using for other Pathways too:
+- **A shell of fog**: `KnightOfMisfortuneFx.veilShell(sl, center, radius, color, ticks, tag)` lays `VEIL_WALL` tiles into a whole sphere, as `HandOfGodFx.sphere` does with light. The tile is dark and drawn in its own colors, so it is played without `.glow()`; tint it to change the fog. A wall of darkness, a sealed room, a dream.
+- **A dark seal**: `KnightOfMisfortuneFx.seal(sl, ground, radius, color, ticks, tag)`, a crescent and star in a ring of script, white so any color works.
+- **The moving tide**: `DARK_TIDE` tiles side by side with `.during(0, ticks, pose().forward(length))` (`darkTide`) is a wave that rolls forward; any liquid wall can be made the same way.
+
+Statuses: `KnightOfMisfortuneFx.status(player, Status.MANTLE, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.

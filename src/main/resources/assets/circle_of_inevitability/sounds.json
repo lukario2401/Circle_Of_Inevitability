@@ -479,5 +479,396 @@
         "name": "circle_of_inevitability:hand_of_god/cage"
       }
     ]
+  },
+  "knight_of_misfortune.spirit_vision": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.spirit_vision",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/spirit_vision"
+      }
+    ]
+  },
+  "knight_of_misfortune.dowsing": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.dowsing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/dowsing"
+      }
+    ]
+  },
+  "knight_of_misfortune.poem": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.poem",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/poem_1"
+      },
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/poem_2"
+      },
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/poem_3"
+      }
+    ]
+  },
+  "knight_of_misfortune.tranquilize": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.tranquilize",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/tranquilize"
+      }
+    ]
+  },
+  "knight_of_misfortune.lullaby": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.lullaby",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/lullaby"
+      }
+    ]
+  },
+  "knight_of_misfortune.pacify": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.pacify",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/pacify"
+      }
+    ]
+  },
+  "knight_of_misfortune.fear": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.fear",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/fear"
+      }
+    ]
+  },
+  "knight_of_misfortune.agitate": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.agitate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/agitate"
+      }
+    ]
+  },
+  "knight_of_misfortune.limbs": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.limbs",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/limbs"
+      }
+    ]
+  },
+  "knight_of_misfortune.lash": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.lash",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/lash_1"
+      },
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/lash_2"
+      }
+    ]
+  },
+  "knight_of_misfortune.limbs_tear": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.limbs_tear",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/limbs_tear"
+      }
+    ]
+  },
+  "knight_of_misfortune.soul_out": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.soul_out",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/soul_out"
+      }
+    ]
+  },
+  "knight_of_misfortune.soul_return": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.soul_return",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/soul_return"
+      }
+    ]
+  },
+  "knight_of_misfortune.dream_enter": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.dream_enter",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/dream_enter"
+      }
+    ]
+  },
+  "knight_of_misfortune.dream_shape": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.dream_shape",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/dream_shape"
+      }
+    ]
+  },
+  "knight_of_misfortune.requiem": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.requiem",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/requiem"
+      }
+    ]
+  },
+  "knight_of_misfortune.soothe": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.soothe",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/soothe"
+      }
+    ]
+  },
+  "knight_of_misfortune.teeth": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.teeth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/teeth"
+      }
+    ]
+  },
+  "knight_of_misfortune.banshee": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.banshee",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/banshee"
+      }
+    ]
+  },
+  "knight_of_misfortune.earth": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.earth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/earth"
+      }
+    ]
+  },
+  "knight_of_misfortune.gale": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.gale",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/gale"
+      }
+    ]
+  },
+  "knight_of_misfortune.command_spirits": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.command_spirits",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/command_spirits"
+      }
+    ]
+  },
+  "knight_of_misfortune.night_domain": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.night_domain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/night_domain"
+      }
+    ]
+  },
+  "knight_of_misfortune.hair": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.hair",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/hair"
+      }
+    ]
+  },
+  "knight_of_misfortune.curse": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.curse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/curse"
+      }
+    ]
+  },
+  "knight_of_misfortune.mishap": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.mishap",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/mishap_1"
+      },
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/mishap_2"
+      },
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/mishap_3"
+      }
+    ]
+  },
+  "knight_of_misfortune.catastrophe": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.catastrophe",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/catastrophe"
+      }
+    ]
+  },
+  "knight_of_misfortune.wolf_form": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.wolf_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/wolf_form"
+      }
+    ]
+  },
+  "knight_of_misfortune.wolf_howl": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.wolf_howl",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/wolf_howl"
+      }
+    ]
+  },
+  "knight_of_misfortune.wolf_bite": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.wolf_bite",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/wolf_bite"
+      }
+    ]
+  },
+  "knight_of_misfortune.wolf_step": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.wolf_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/wolf_step"
+      }
+    ]
+  },
+  "knight_of_misfortune.dark_sword": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.dark_sword",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/dark_sword"
+      }
+    ]
+  },
+  "knight_of_misfortune.dark_tide": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.dark_tide",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/dark_tide"
+      }
+    ]
+  },
+  "knight_of_misfortune.edict_sleep": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.edict_sleep",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/edict_sleep"
+      }
+    ]
+  },
+  "knight_of_misfortune.edict_despair": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.edict_despair",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/edict_despair"
+      }
+    ]
+  },
+  "knight_of_misfortune.edict_destruction": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.edict_destruction",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/edict_destruction"
+      }
+    ]
+  },
+  "knight_of_misfortune.nightmare_world": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.nightmare_world",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/nightmare_world"
+      }
+    ]
+  },
+  "knight_of_misfortune.horror": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.horror",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/horror"
+      }
+    ]
+  },
+  "knight_of_misfortune.conceal": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.conceal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/conceal"
+      }
+    ]
+  },
+  "knight_of_misfortune.reveal": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.reveal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/reveal"
+      }
+    ]
+  },
+  "knight_of_misfortune.secret": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.secret",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/secret"
+      }
+    ]
+  },
+  "knight_of_misfortune.concealed_world": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.concealed_world",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/concealed_world"
+      }
+    ]
+  },
+  "knight_of_misfortune.mantle": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.mantle",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/mantle"
+      }
+    ]
+  },
+  "knight_of_misfortune.shadow_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.shadow_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/shadow_swing"
+      }
+    ]
+  },
+  "knight_of_misfortune.eternal_rest": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.eternal_rest",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/eternal_rest"
+      }
+    ]
+  },
+  "knight_of_misfortune.destination": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.destination",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/destination"
+      }
+    ]
+  },
+  "knight_of_misfortune.dissolve": {
+    "subtitle": "subtitles.circle_of_inevitability.knight_of_misfortune.dissolve",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knight_of_misfortune/dissolve"
+      }
+    ]
   }
 }

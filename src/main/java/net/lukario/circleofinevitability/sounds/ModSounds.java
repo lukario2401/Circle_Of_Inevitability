@@ -153,4 +153,101 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> HAND_KINGDOM = sound("hand_of_god.kingdom");
     /** A cage of light closes. */
     public static final RegistryObject<SoundEvent> HAND_CAGE = sound("hand_of_god.cage");
+
+    // ---------- Knight Of Misfortune (tools/model_gen/knight_of_misfortune/sounds.py) ----------
+
+    /** Spirit Vision opens. */
+    public static final RegistryObject<SoundEvent> KNIGHT_SPIRIT_VISION = sound("knight_of_misfortune.spirit_vision");
+    /** A pendulum swings. */
+    public static final RegistryObject<SoundEvent> KNIGHT_DOWSING = sound("knight_of_misfortune.dowsing");
+    /** A Midnight Poem is whispered. */
+    public static final RegistryObject<SoundEvent> KNIGHT_POEM = sound("knight_of_misfortune.poem");
+    /** All goes still. */
+    public static final RegistryObject<SoundEvent> KNIGHT_TRANQUILIZE = sound("knight_of_misfortune.tranquilize");
+    /** A lullaby plays. */
+    public static final RegistryObject<SoundEvent> KNIGHT_LULLABY = sound("knight_of_misfortune.lullaby");
+    /** The will to live fades. */
+    public static final RegistryObject<SoundEvent> KNIGHT_PACIFY = sound("knight_of_misfortune.pacify");
+    /** Fear takes hold. */
+    public static final RegistryObject<SoundEvent> KNIGHT_FEAR = sound("knight_of_misfortune.fear");
+    /** Fury is stirred. */
+    public static final RegistryObject<SoundEvent> KNIGHT_AGITATE = sound("knight_of_misfortune.agitate");
+    /** Nightmare limbs tear free. */
+    public static final RegistryObject<SoundEvent> KNIGHT_LIMBS = sound("knight_of_misfortune.limbs");
+    /** A limb lashes. */
+    public static final RegistryObject<SoundEvent> KNIGHT_LASH = sound("knight_of_misfortune.lash");
+    /** A limb is torn off. */
+    public static final RegistryObject<SoundEvent> KNIGHT_LIMBS_TEAR = sound("knight_of_misfortune.limbs_tear");
+    /** A soul leaves its body. */
+    public static final RegistryObject<SoundEvent> KNIGHT_SOUL_OUT = sound("knight_of_misfortune.soul_out");
+    /** A soul returns. */
+    public static final RegistryObject<SoundEvent> KNIGHT_SOUL_RETURN = sound("knight_of_misfortune.soul_return");
+    /** A dream is entered. */
+    public static final RegistryObject<SoundEvent> KNIGHT_DREAM_ENTER = sound("knight_of_misfortune.dream_enter");
+    /** A dream bends. */
+    public static final RegistryObject<SoundEvent> KNIGHT_DREAM_SHAPE = sound("knight_of_misfortune.dream_shape");
+    /** A Requiem is sung. */
+    public static final RegistryObject<SoundEvent> KNIGHT_REQUIEM = sound("knight_of_misfortune.requiem");
+    /** Souls are soothed. */
+    public static final RegistryObject<SoundEvent> KNIGHT_SOOTHE = sound("knight_of_misfortune.soothe");
+    /** A spirit leaves the teeth. */
+    public static final RegistryObject<SoundEvent> KNIGHT_TEETH = sound("knight_of_misfortune.teeth");
+    /** A banshee wails. */
+    public static final RegistryObject<SoundEvent> KNIGHT_BANSHEE = sound("knight_of_misfortune.banshee");
+    /** Something moves through the earth. */
+    public static final RegistryObject<SoundEvent> KNIGHT_EARTH = sound("knight_of_misfortune.earth");
+    /** A gale spirit lifts. */
+    public static final RegistryObject<SoundEvent> KNIGHT_GALE = sound("knight_of_misfortune.gale");
+    /** The spirits answer. */
+    public static final RegistryObject<SoundEvent> KNIGHT_COMMAND_SPIRITS = sound("knight_of_misfortune.command_spirits");
+    /** The night spreads. */
+    public static final RegistryObject<SoundEvent> KNIGHT_NIGHT_DOMAIN = sound("knight_of_misfortune.night_domain");
+    /** Hair lashes out. */
+    public static final RegistryObject<SoundEvent> KNIGHT_HAIR = sound("knight_of_misfortune.hair");
+    /** Misfortune is bestowed. */
+    public static final RegistryObject<SoundEvent> KNIGHT_CURSE = sound("knight_of_misfortune.curse");
+    /** Something goes wrong. */
+    public static final RegistryObject<SoundEvent> KNIGHT_MISHAP = sound("knight_of_misfortune.mishap");
+    /** Catastrophe strikes. */
+    public static final RegistryObject<SoundEvent> KNIGHT_CATASTROPHE = sound("knight_of_misfortune.catastrophe");
+    /** A demonic wolf awakens. */
+    public static final RegistryObject<SoundEvent> KNIGHT_WOLF_FORM = sound("knight_of_misfortune.wolf_form");
+    /** A demonic wolf howls. */
+    public static final RegistryObject<SoundEvent> KNIGHT_WOLF_HOWL = sound("knight_of_misfortune.wolf_howl");
+    /** A wolf bites. */
+    public static final RegistryObject<SoundEvent> KNIGHT_WOLF_BITE = sound("knight_of_misfortune.wolf_bite");
+    /** A wolf's step. */
+    public static final RegistryObject<SoundEvent> KNIGHT_WOLF_STEP = sound("knight_of_misfortune.wolf_step");
+    /** The Sword of Darkness forms. */
+    public static final RegistryObject<SoundEvent> KNIGHT_DARK_SWORD = sound("knight_of_misfortune.dark_sword");
+    /** A tide of Darkness surges. */
+    public static final RegistryObject<SoundEvent> KNIGHT_DARK_TIDE = sound("knight_of_misfortune.dark_tide");
+    /** Eternal Sleep. */
+    public static final RegistryObject<SoundEvent> KNIGHT_EDICT_SLEEP = sound("knight_of_misfortune.edict_sleep");
+    /** Despair. */
+    public static final RegistryObject<SoundEvent> KNIGHT_EDICT_DESPAIR = sound("knight_of_misfortune.edict_despair");
+    /** Destruction. */
+    public static final RegistryObject<SoundEvent> KNIGHT_EDICT_DESTRUCTION = sound("knight_of_misfortune.edict_destruction");
+    /** A Nightmare World opens. */
+    public static final RegistryObject<SoundEvent> KNIGHT_NIGHTMARE_WORLD = sound("knight_of_misfortune.nightmare_world");
+    /** Horror. */
+    public static final RegistryObject<SoundEvent> KNIGHT_HORROR = sound("knight_of_misfortune.horror");
+    /** Something is concealed. */
+    public static final RegistryObject<SoundEvent> KNIGHT_CONCEAL = sound("knight_of_misfortune.conceal");
+    /** Something is revealed. */
+    public static final RegistryObject<SoundEvent> KNIGHT_REVEAL = sound("knight_of_misfortune.reveal");
+    /** A secret is hidden. */
+    public static final RegistryObject<SoundEvent> KNIGHT_SECRET = sound("knight_of_misfortune.secret");
+    /** A Concealed World closes. */
+    public static final RegistryObject<SoundEvent> KNIGHT_CONCEALED_WORLD = sound("knight_of_misfortune.concealed_world");
+    /** Darkness gathers. */
+    public static final RegistryObject<SoundEvent> KNIGHT_MANTLE = sound("knight_of_misfortune.mantle");
+    /** Shadows strike. */
+    public static final RegistryObject<SoundEvent> KNIGHT_SHADOW_SWING = sound("knight_of_misfortune.shadow_swing");
+    /** Eternal Rest. */
+    public static final RegistryObject<SoundEvent> KNIGHT_ETERNAL_REST = sound("knight_of_misfortune.eternal_rest");
+    /** The Destination of All Things opens. */
+    public static final RegistryObject<SoundEvent> KNIGHT_DESTINATION = sound("knight_of_misfortune.destination");
+    /** Something dissolves into darkness. */
+    public static final RegistryObject<SoundEvent> KNIGHT_DISSOLVE = sound("knight_of_misfortune.dissolve");
 }

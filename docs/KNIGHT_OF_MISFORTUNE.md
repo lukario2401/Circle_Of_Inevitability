@@ -2,7 +2,7 @@
 
 The Knight Of Misfortune Pathway is the Darkness Pathway of Lord of the Mysteries: Sleepless (9), Midnight Poet (8), Nightmare (7), Soul Assurer (6), Spirit Warlock (5), Nightwatcher (4), Horror Bishop (3), Servant of Concealment (2), Knight of Misfortune (1), Darkness (0). Source: the Darkness Pathway and Darkness Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-**Status: planned, nothing here is code yet.** This file is the plan: what every ability does, the numbers to start from, which existing parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md)).
+**Status: the abilities are planned, not written; their looks, sounds and pictures are ready** (see "Looks, sounds and pictures (ready)"). This file is the plan: what every ability does, the numbers to start from, which existing parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md)).
 
 Pathway name in code: `"Knight Of Misfortune"` (already in `KnightOfMisfortune.PATHWAY` and `SequenceCommands.PATHWAYS`).
 
@@ -249,6 +249,32 @@ When it is written, these places need a line (the checklist from [SPELL_KIT.md](
 | `SequencePassives` | the passives above |
 | `PathwayHudIcon` | the Pathway's icon |
 | [SEQUENCES.md](SEQUENCES.md) | a row in "Required Sequence of every ability key", a row per passive, and the Pathway name list |
+
+## Looks, sounds and pictures (ready)
+
+The abilities are not written yet, but everything they need to look and sound right is: `KnightOfMisfortuneFx.java` (next to the other pathway classes). It only shows things; the ability does the sleeping, holding, hiding, damage and moving, at the ticks its constants name. `/knightfx all` plays every display in game, `/knightfx <name>` one of them.
+
+| Ability | Normal cast | Sneak cast |
+| --- | --- | --- |
+| 1 Night Sight | Spirit Vision: `spiritVision(viewer, ticks)`, then `spiritVisionMark(viewer, seen, spirit)` on everything seen (only the viewer sees either) | Dowsing: `dowsing(sl, player, toward, ticks, tag)`, `dowsingEnd` |
+| 2 Midnight Poem (wheel) | Every poem: `recite(sl, player, Poem.X, tag)`. Then `tranquilize` + `tranquilized` + `tranquilizeReveal`; `lullaby` + `slumber`/`wake` on each sleeper at `POEM_LANDS`; `pacify`; `fear` + `afraid`; `agitate`. Icons `WHEEL_TRANQUILIZE`, `WHEEL_LULLABY`, `WHEEL_PACIFY`, `WHEEL_FEAR`, `WHEEL_AGITATING` | the same, without the wheel |
+| 3 Nightmare | Nightmare Limbs: `nightmareLimbs` (grown at `LIMBS_GROWN`), `limbLash(sl, player, target, index)`, `limbsTear` | Nightmare State: `nightmareState` + `sleepingBody`, `nightmareTick`, `nightmareReturn`. Dream Invasion: `dreamInvade` (in at `DREAM_OPENS`), `dreamShape(sl, sleeper, Dream.X)`, `dreamEnd` |
+| 4 Requiem | `requiem` (sung at `REQUIEM_RISEN`), `requiemPulse` every second, `requiemOn(sl, enemy, depth)`, `requiemEnd` | Soothing Requiem: `soothingRequiem`, `soothed` on each ally |
+| 5 Spirit Commanding (wheel) | `spiritRelease` before each spirit. Banshee: `banshee` on the summoned body, `bansheeWail`, `bansheeEnd`. Earthen Spirit: `earthMerge` (sunk at `EARTH_SUNK`), `earthTick`, `earthEmerge`. Gale Spirit: `gale`, `galeTick`, `galeEnd`. Command Spirits: `commandSpirits`, `spiritBound`. Icons `WHEEL_TERROR_BANSHEE`, `WHEEL_EARTHEN_SPIRIT`, `WHEEL_GALE_SPIRIT`, `WHEEL_COMMAND_SPIRITS` | the last pick again |
+| 6 Nightwatcher (wheel) | Night Domain: `nightDomain` (spread at `DOMAIN_RISEN`), `domainPulse`, `domainCorrode`, `domainEnd`. Hair: `hairEntangle`, `hairBind` at `HAIR_BINDS`. Curse: `curse`, `misfortune(sl, target, level, ticks, tag)` at `CURSE_LANDS`, `misfortuneArea` (Sequence 1), `mishap(sl, victim, Mishap.X)`, `catastrophe`. Wolf: `wolfForm(..., complete)` (full size at `WOLF_RISEN`), `wolfStep`, `wolfHowl`, `wolfBite`, `wolfMadness`, `wolfFormEnd`. Icons `WHEEL_NIGHT_DOMAIN`, `WHEEL_HAIR_ENTANGLEMENT`, `WHEEL_CURSE_OF_MISFORTUNE`, `WHEEL_DEMONIC_WOLF` | the last pick again |
+| 7 Darkness and Concealment (wheel) | Sword: `darkSword` (formed at `SWORD_FORMED`), `darkSwing`, `darkTide` (returns its ticks), `tideMelt`, `edict(sl, player, target, Edict.X)`, `darkSwordEnd`. `nightmareWorld` (closed at `WORLD_CLOSED`), `nightmareWorldPulse`. `concealedState` (gone at `CONCEALED`), `concealedStateEnd`, `reverseConcealment`. `secretConcealment`, `secretPulse`. `concealedWorld`, `concealedWorldEnd`. `mantle`, `mantleTick`, `mantleSwing`, `mantleEnd`. `eternalRest` (falls at `REST_FALLS`), `restWard`, `restWake`. `destination` (open at `DESTINATION_OPENS`), `destinationTick`, `dissolve`, `destinationEnd`. Icons `WHEEL_SWORD_OF_DARKNESS` ... `WHEEL_DESTINATION_OF_ALL_THINGS` | the last pick again |
+| Passives | `nocturnality`, `dangerChime`, `horrorAura`, `horrorFlinch`, `illOmen` | |
+
+Every timed cast can show its picture and clock above the hotbar: `KnightOfMisfortuneFx.status(player, Status.X, ticks)`, and `statusEnd` to take it away (24 statuses, `SLUMBER` and `FEAR` included for whoever carries them). The Pathway's icon beside the hotbar is registered in `PathwayHudIcon` under `"Knight Of Misfortune"`.
+
+What is in the repository, all of it generated by the scripts in `tools/model_gen/knight_of_misfortune/` (see "Knight Of Misfortune: ready-made displays" in [MODEL_FX.md](MODEL_FX.md)):
+
+| What | Where | Made by |
+| --- | --- | --- |
+| 20 model files: the Sword of Darkness, a Nightmare Limb (4 frames, straight to curled), the Demonic Wolf (incomplete, and complete with six arms), the Dowsing pendulum, the Terror Banshee, a soul out of its body; and the pictures: the seal of Darkness, a poem's script, a dream's oval, the Misfortune horseshoe, the Horror eye, the secret seal, the Eternal Rest sigil, a wall of fog (animated), the tide of Darkness (animated) and the vortex of the Destination of All Things (animated) | `models/model_fx/knight_of_misfortune/`, `textures/model_fx/knight_of_misfortune/` | `models.py` (+ `textures.py`) |
+| 21 wheel pictures (32 px), 24 status pictures (16 px), the Pathway icon | `textures/gui/ability_menus/knight_of_misfortune/`, `textures/gui/knight_of_misfortune/`, `textures/gui/pathway_icons/knight_of_misfortune.png` | `icons.py` |
+| 8 particle pictures: `fx/note`, `fx/sleep_z`, `fx/wisp`, `fx/hair`, `fx/tooth`, `fx/horseshoe`, `fx/skull`, `fx/eye` | `textures/particle/fx/` | `particles.py` |
+| 47 sounds (52 files): Spirit Vision, dowsing, whispered poems, every poem, limbs, lashes and tearing, the soul leaving and returning, dreams, Requiem, the spirits in the teeth, the banshee, earth, gale, the command, the Night Domain, hair, the curse, mishaps, Catastrophe, the wolf (form, howl, bite, step), the Sword of Darkness, its tide and three edicts, the Nightmare World, Horror, concealment and revealing, secrets, the Concealed World, the Mantle and its shadow swings, Eternal Rest, the Destination of All Things and dissolving | `sounds/knight_of_misfortune/`, `sounds.json`, subtitles in `lang/en_us.json`, registered in `sounds/ModSounds.java` (`KNIGHT_...`) | `sounds.py` |
 
 ## Left out on purpose
 
