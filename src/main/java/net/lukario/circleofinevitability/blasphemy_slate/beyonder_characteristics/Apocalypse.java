@@ -98,7 +98,7 @@ public class Apocalypse {
     // =========================
 
     // Stacks: every ability used adds one picture next to the hotbar, the 5th one calls down a catastrophe
-    private static final int MAX_STACKS = 5;
+    private static final int MAX_STACKS = 20;
     private static final float STACK_CATASTROPHE_POWER = 1.35f;  // how strong the 5th stack's catastrophe is (1 = as cast)
     private static final float STACK_BURST_DAMAGE = 40f;         // no catastrophe unlocked yet: a black flame burst
     private static final double STACK_BURST_RADIUS = 8.0;
