@@ -194,6 +194,10 @@ public final class PathwayAbilities {
             new Ability("Beauty Goddess", 7, "Moon", 3, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)),
 
+            //
+            new Ability("Knight Of Misfortune", 1, "Knight Of Misfortune", 3, SNEAK, STEALABLE,
+                    (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneRush(player, level, sl, true)),
+
             // ---- Hand Of God (docs/HAND_OF_GOD.md) ----
             new Ability("Hand Of God", 1, "Warrior's Charge", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> HandOfGod.handOfGodWarriorsCharge(player, level, sl, true)),
@@ -209,6 +213,9 @@ public final class PathwayAbilities {
                     (player, level, sl) -> HandOfGodDemonHunting.handOfGodDemonHunting(player, level, sl, true)),
             new Ability("Hand Of God", 7, "Silver and Twilight", 3, SNEAK, STEALABLE,        // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> HandOfGodTwilight.handOfGodTwilight(player, level, sl, true)));
+
+
+
 
     private PathwayAbilities() {}
 
