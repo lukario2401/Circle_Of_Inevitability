@@ -6,7 +6,7 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 
 | Word | Meaning | Where |
 | --- | --- | --- |
-| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God, Knight Of Misfortune (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
@@ -57,8 +57,9 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Dark Angel | Divination 9 | Whispers 8 | Shadow Binding 7 | Flesh Bomb 6 | Grazing 5 (7 slots of stolen abilities) | Cull of Spiritual Flesh 4 | Degeneration 3 |
 | Beauty Goddess | Medicine Concoction 9 | Taming 8 | Wings of Darkness 7 | Potions 6 (wheel: potions at 6, 6, 5, 4) | Lunar Battlefield 5 | Gaze of Darkness 4 | Moon 3 (wheel: Door of Summoning 3, Creation 2, Beauty 1, Blood Moon 0) |
 | Hand Of God | Warrior's Charge 9 | Gladiator's Flurry 8 | Grandmaster's Edge 7 | Dawn 6 (wheel: Light of Dawn, Dawn Armor, Sword of Dawn, Hurricane of Light, all at 6) | Protection 5 | Demon Hunting 4 (wheel: Eye, Alchemy, Mind Concealment, Giant Form, all at 4) | Silver and Twilight 3 (wheel: Mercury 3, Silver Rapier 3, Light Concealment 3, Twilight Sword 2, Divine Right Hand 1, Passage of Time 0, Decay 0, Divine Kingdom 0) |
+| Knight Of Misfortune | Night Sight 9 | Midnight Poem 8 (wheel: Tranquilize, Lullaby, Pacify, Fear at 8, Agitating 6) | Nightmare 7 | Requiem 6 | Spirit Commanding 5 (wheel: Terror Banshee, Earthen Spirit, Gale Spirit at 5, Command Spirits 1) | - (planned: Nightwatcher 4) | - (planned: Darkness and Concealment 3) |
 
-The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md).
+The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md). So do Knight Of Misfortune's two wheels (H, L); its Nightmare (J) becomes Dream Invasion while the soul is out of the body; see [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
@@ -108,6 +109,12 @@ What a Beyonder always has from a Sequence on (that Sequence and every stronger 
 | Twilight Resistance: wither does not take, nothing stops your healing, you cannot rot (`status/Decay`) | Hand Of God | 2 |
 | Divine Touch: bare-handed blows do 6 more and the target cannot heal for 3 s (in `HandOfGod`) | Hand Of God | 1 |
 | Twilight Aura: enemies within 16 blocks are slowed and weakened and cannot heal | Hand Of God | 0 |
+| Night Vision; Nocturnality: in full dark (night, caves) Strength I, Speed I and half a heart back each second (in `KnightOfMisfortune`, `nocturnality`) | Knight Of Misfortune | 9 |
+| A chime only you hear when a mob starts hunting you unseen or in the dark (in `KnightOfMisfortune`) | Knight Of Misfortune | 9 |
+| Steady Hand: falls shorter than 6 blocks do not hurt (in `KnightOfMisfortune`) | Knight Of Misfortune | 8 |
+| Resonance: poems give back a quarter of their price; spirituality comes back 25% faster (in `KnightOfMisfortune` and `KnightOfMisfortunePoems`) | Knight Of Misfortune | 7 |
+| Spirit Sight: spirits, summons, the undead and sleepers within 16 blocks are marked for you alone | Knight Of Misfortune | 6 |
+| Spirit Teeth: four spirits out at once (eight from Sequence 4) (in `KnightOfMisfortuneSpirits`) | Knight Of Misfortune | 5 |
 
 To add one, add a line to that list (and a row here):
 

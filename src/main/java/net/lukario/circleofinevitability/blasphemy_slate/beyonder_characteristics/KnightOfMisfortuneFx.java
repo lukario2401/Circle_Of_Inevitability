@@ -14,6 +14,7 @@ import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.lukario.circleofinevitability.screen.ScreenAnchor;
 import net.lukario.circleofinevitability.screen.ScreenImages;
 import net.lukario.circleofinevitability.sounds.ModSounds;
+import net.lukario.circleofinevitability.status.Slumber;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -71,7 +72,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *              requiemOn(sl, enemy, depth), requiemEnd(sl, center, tag)
  *          sneak: soothingRequiem(sl, player, radius), soothed(sl, ally)
  *   Key 5  the wheel's pictures: WHEEL_TERROR_BANSHEE, WHEEL_EARTHEN_SPIRIT, WHEEL_GALE_SPIRIT, WHEEL_COMMAND_SPIRITS
- *          spiritRelease(sl, player, at) before each spirit; banshee(sl, body, ticks, tag) on the summoned body,
+ *          spiritRelease(sl, player, at) before each spirit; banshee(sl, caster, ticks, tag) at the caster's shoulder,
  *              bansheeWail(sl, body, radius), bansheeEnd(sl, body, tag)
  *          earthMerge(sl, player, ticks, tag) (sunk at EARTH_SUNK), earthTick(sl, player), earthEmerge(sl, player, tag)
  *          gale(sl, player, ticks, tag), galeTick(sl, player), galeEnd(sl, player, tag)
@@ -611,7 +612,7 @@ public final class KnightOfMisfortuneFx {
         SpellFx.circleUnder(sl, sleeper, widthOf(sleeper), 0x80A8C0FF, ticks, tag);
         for (int t = 0; t < Math.min(ticks, 400); t += 20) {
             Later.run(sl, t, () -> {
-                if (sleeper.isAlive()) ParticleShapes.spawn(sl, SLEEP_Z, headOf(sleeper), new Vec3(0.01, 0.03, 0));
+                if (sleeper.isAlive() && Slumber.kind(sleeper) != null) ParticleShapes.spawn(sl, SLEEP_Z, headOf(sleeper), new Vec3(0.01, 0.03, 0));
             });
         }
     }
@@ -708,6 +709,12 @@ public final class KnightOfMisfortuneFx {
         ParticleShapes.slashBetween(sl, LASH, from, chestOf(target));
         ParticleShapes.burst(sl, BLOOD, chestOf(target), 5, 0.04, 0.12);
         sound(sl, chestOf(target), ModSounds.KNIGHT_LASH, 0.9f, wobble(1.0f));
+    }
+
+    /** The limbs are drawn back in (cast again, or their time is up early): they shrink into the back. */
+    public static void limbsRetract(ServerLevel sl, Player player, String tag) {
+        ParticleShapes.clearModels(sl, player, tag);
+        ParticleShapes.burst(sl, DARK_SMOKE, chestOf(player).subtract(Spells.flatLook(player).scale(0.3)), 6, 0.02, 0.06);
     }
 
     /** The limbs are torn off: a burst of dark blood and the backlash. */
@@ -857,16 +864,16 @@ public final class KnightOfMisfortuneFx {
 
     // ---------- Terror Banshee
 
-    /** The banshee, on the (invisible) body the ability summons for it, floating and turning with it for 'ticks'. */
+    /** The banshee floats at the shoulder of 'body' (the caster) and turns with it, for 'ticks'. */
     public static void banshee(ServerLevel sl, Entity body, int ticks, String tag) {
         ModelFx spirit = BANSHEE.scale(0.9f).lifetime(ticks).fade(10, 16).tag(tag)
-                .key(0, pose().up(-0.6f).alpha(0f))
-                .key(14, pose().up(0.6f).alpha(1f), Ease.OUT);
-        for (int t = 14; t < ticks - 20; t += 40) {
-            spirit = spirit.key(t + 20, pose().up(0.85f), Ease.IN_OUT).key(t + 40, pose().up(0.6f), Ease.IN_OUT);
+                .key(0, pose().right(1.0f).forward(-0.8f).up(0.4f).alpha(0f))
+                .key(14, pose().up(1.2f).alpha(1f), Ease.OUT);
+        for (int t = 14; t < ticks - 40; t += 40) {
+            spirit = spirit.key(t + 20, pose().up(1.45f), Ease.IN_OUT).key(t + 40, pose().up(1.2f), Ease.IN_OUT);
         }
         ParticleShapes.modelOnTurning(sl, spirit, body, Vec3.ZERO, 0f, 0f, 0f);
-        ParticleShapes.burst(sl, WISP, body.position().add(0, 1.0, 0), 12, 0.03, 0.1);
+        ParticleShapes.burst(sl, WISP, body.position().add(0, 1.6, 0), 12, 0.03, 0.1);
     }
 
     /** The banshee wails: a cold ring rolls out 'radius' blocks and the air shudders. */
@@ -1647,13 +1654,13 @@ public final class KnightOfMisfortuneFx {
                 soothingRequiem(sl, v, 8);
                 Later.run(sl, 10, () -> soothed(sl, v));
             }),
-            new Case("banshee", 120, false, (sl, v, t, spot) -> {
-                spiritRelease(sl, v, spot.add(0, 1, 0));
-                if (t == v) return;
+            new Case("banshee", 120, true, (sl, v, t, spot) -> {
+                spiritRelease(sl, v, v.position().add(0, 1.6, 0));
                 String tag = tagFor("banshee");
-                banshee(sl, t, 110, tag);
-                for (int i = 0; i < 3; i++) Later.run(sl, 30 + i * 30, () -> bansheeWail(sl, t, 8));
-                Later.run(sl, 110, () -> bansheeEnd(sl, t, tag));
+                banshee(sl, v, 110, tag);
+                for (int i = 0; i < 3; i++) Later.run(sl, 30 + i * 30, () -> bansheeWail(sl, v, 8));
+                if (t != v) Later.run(sl, 32, () -> afraid(sl, t, 40, tagFor("afraid")));
+                Later.run(sl, 110, () -> bansheeEnd(sl, v, tag));
             }),
             new Case("earthen_spirit", 70, true, (sl, v, t, spot) -> {
                 String tag = tagFor("earth");

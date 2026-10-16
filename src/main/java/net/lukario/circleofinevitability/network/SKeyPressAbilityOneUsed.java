@@ -18,9 +18,9 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManDivination;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessMedicine;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGod.handOfGodWarriorsCharge;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortune.knightOfMisfortuneNightSight;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderBuff;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsStarBurst;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortune.knightOfMisfortuneRush;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorRoot;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionSpear;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility1;
@@ -61,6 +61,6 @@ public class SKeyPressAbilityOneUsed {
         hangedManDivination(player,level,serverLevel,false);
         beautyGoddessMedicine(player,level,serverLevel,false);
         handOfGodWarriorsCharge(player,level,serverLevel,false);
-        knightOfMisfortuneRush(player,level,serverLevel,false);
+        knightOfMisfortuneNightSight(player,level,serverLevel,false);
     }
 }

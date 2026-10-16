@@ -53,6 +53,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Less supernatural damage for a while, and blindness, nausea, roots, freezing and taunts shaken off | [`SupernaturalResistance`](#supernaturalresistance) | `status/` |
 | A Beyonder's body: taller, more hearts, longer reach, faster swings, on while something is true | [`Physique`](#physique-a-beyonders-body) | `blasphemy_slate/beyonder/` |
 | Rot: no healing, wither, weakness, armor and weapons wearing out, less maximum health (Twilight, a curse of age) | [`Decay`](#decay) | `status/` |
+| Put something to sleep (wakes when hit, or deeply, or for good), or leave it limp and unwilling to fight | [`Slumber`](#slumber) | `status/` |
+| Make something afraid of one entity: a mob runs from it, a player is slowed and cannot sprint at it | [`Fear`](#fear) | `status/` |
+| Hush an entity's power: no abilities for a player, no attacks at all for a mob | [`Silence`](#silence) | `status/` |
 | "My next few hits are special" (a poison, holy oil, a concoction on the blade) | [`WeaponCoat`](#weaponcoat) | `status/` |
 | Minds slide off you: mobs forget you and abilities cannot choose you, though you are seen and can be hurt | [`Unnoticed`](#unnoticed) | `status/` |
 | A bigger body for a while, with more reach and step, and a madness that can break it (a giant, a titan) | [`GiantForm`](#giantform) | `status/` |
@@ -863,6 +866,47 @@ Unnoticed.isUnnoticed(entity);   Unnoticed.ticksLeft(entity);   Unnoticed.end(pl
 - Mobs forget it and cannot target it, and abilities cannot choose it: `Spells.aimEnemy`, `enemiesInSight` and the aiming of `aimFrom` and `aimGround` pass over it (`Spells.canBeChosen`). What only catches whoever is there (`enemiesAround`, a blast, a shot that flies into it) still does.
 - It is drawn and can be hurt as usual. It ends the moment it hurts anything, with a swing or an ability.
 - Saved with the entity. Used by Hand Of God's Mind Concealment.
+
+### Slumber
+
+Sleep that works on players and mobs alike: a lullaby, a soul put to rest, a body that will not get up.
+
+```java
+Slumber.put(target, 160, Slumber.Kind.SLEEP);       // 8 seconds; the first blow wakes it
+Slumber.put(target, 160, Slumber.Kind.DEEP);        // the first DEEP_HITS (2) blows do not wake it
+Slumber.put(target, 160, Slumber.Kind.LIMP);        // awake, but it cannot attack, use abilities or jump, and crawls
+Slumber.put(target, 160, Slumber.Kind.ETERNAL);     // only the time or Slumber.wake ends it
+Slumber.isAsleep(entity);   Slumber.isLimp(entity);   Slumber.kind(entity);   Slumber.ticksLeft(entity);   Slumber.wake(target);
+Slumber.addImmunity(entity -> ...);                 // some cannot be put to sleep
+Slumber.addWakeListener((entity, kind) -> ...);     // it woke (hurt, time up or wake): clear the look of its sleep
+```
+
+- Asleep (SLEEP, DEEP, ETERNAL) it is held completely (`Root` EVERYTHING); a player's screen goes dark (`Blind`), a mob forgets what it hunted and picks no one. `put` returns `false` for a creative player, the dead and the immune.
+- Putting it to sleep again never makes it shorter; a new kind replaces the old one. `wake` lifts the root kinds it set, also one that something else set at the same time.
+- The look is yours (`KnightOfMisfortuneFx.slumber` and `wake`). Saved with the entity. Used by the Knight Of Misfortune's poems, Dream Invasion, Requiem and Command Spirits.
+
+### Fear
+
+The other half of `Taunt`: something is afraid of one entity for a while.
+
+```java
+Fear.apply(victim, caster, 120);    // 6 seconds; false if it cannot be frightened
+Fear.isAfraid(entity);   Fear.sourceOf(entity);   Fear.ticksLeft(entity);   Fear.end(victim);   Fear.addImmunity(entity -> ...);
+```
+
+- A mob runs `FLEE_DISTANCE` away from what it fears (at `FLEE_SPEED`), drops it as a target and cannot pick it again; past `SAFE_DISTANCE` it stops running but still will not go after it.
+- A player gets Slowness I and Darkness and cannot sprint toward what they fear.
+- Afraid again never makes it shorter; a new source replaces the old one. It ends when the source dies or leaves. Saved with the entity. Used by the Fear poem, the Terror Banshee and Terror dreams.
+
+### Silence
+
+An entity's power is hushed for a while: a player cannot use abilities (every ability key refuses) but can still fight with weapons; a mob cannot attack at all, in melee or with what it shoots.
+
+```java
+Silence.apply(target, 100);   Silence.isSilenced(entity);   Silence.ticksLeft(entity);   Silence.lift(target);
+```
+
+It is `root/Root` underneath (ABILITIES, and ATTACK for a mob): saved with the entity, Root's ring shows, and the player is told "You are bound by Order." when they press a key. Used by Requiem and the Lullaby a player shakes off.
 
 ### GiantForm
 

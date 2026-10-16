@@ -194,9 +194,17 @@ public final class PathwayAbilities {
             new Ability("Beauty Goddess", 7, "Moon", 3, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)),
 
-            //
-            new Ability("Knight Of Misfortune", 1, "Knight Of Misfortune", 3, SNEAK, STEALABLE,
-                    (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneRush(player, level, sl, true)),
+            // ---- Knight Of Misfortune (docs/KNIGHT_OF_MISFORTUNE.md): keys 1 to 5 written, 6 and 7 planned ----
+            new Ability("Knight Of Misfortune", 1, "Night Sight", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneNightSight(player, level, sl, true)),
+            new Ability("Knight Of Misfortune", 2, "Midnight Poem", 8, SNEAK, STEALABLE,       // stolen: no wheel, its last (or a random) poem
+                    (player, level, sl) -> KnightOfMisfortunePoems.knightOfMisfortuneMidnightPoem(player, level, sl, true)),
+            new Ability("Knight Of Misfortune", 3, "Nightmare", 7, SNEAK, OWN_PATHWAY_ONLY,     // the Nightmare's own flesh and soul
+                    (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneNightmare(player, level, sl, true)),
+            new Ability("Knight Of Misfortune", 4, "Requiem", 6, SNEAK, STEALABLE,
+                    (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneRequiem(player, level, sl, true)),
+            new Ability("Knight Of Misfortune", 5, "Spirit Commanding", 5, SNEAK, OWN_PATHWAY_ONLY,   // the spirits live in its teeth
+                    (player, level, sl) -> KnightOfMisfortuneSpirits.knightOfMisfortuneSpiritCommanding(player, level, sl, true)),
 
             // ---- Hand Of God (docs/HAND_OF_GOD.md) ----
             new Ability("Hand Of God", 1, "Warrior's Charge", 9, SNEAK, STEALABLE,

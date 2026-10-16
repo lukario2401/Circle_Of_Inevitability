@@ -18,6 +18,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManShadowBinding;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessWings;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGod.handOfGodGrandmastersEdge;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortune.knightOfMisfortuneNightmare;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderEdict;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsBuff;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSerpent;
@@ -60,6 +61,7 @@ public class SKeyPressAbilityThreeUsed {
         hangedManShadowBinding(player,level,serverLevel,false);
         beautyGoddessWings(player,level,serverLevel,false);
         handOfGodGrandmastersEdge(player,level,serverLevel,false);
+        knightOfMisfortuneNightmare(player,level,serverLevel,false);
 
 
     }

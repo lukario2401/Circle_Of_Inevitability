@@ -2,7 +2,7 @@
 
 The Knight Of Misfortune Pathway is the Darkness Pathway of Lord of the Mysteries: Sleepless (9), Midnight Poet (8), Nightmare (7), Soul Assurer (6), Spirit Warlock (5), Nightwatcher (4), Horror Bishop (3), Servant of Concealment (2), Knight of Misfortune (1), Darkness (0). Source: the Darkness Pathway and Darkness Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-**Status: the abilities are planned, not written; their looks, sounds and pictures are ready** (see "Looks, sounds and pictures (ready)"). This file is the plan: what every ability does, the numbers to start from, which existing parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md)).
+**Status: keys 1 to 5 (Sequences 9 to 5) and their passives are written** (see "What is built"); **keys 6 and 7 (Sequence 4 and up) are still planned**. Every look, sound and picture is ready (see "Looks, sounds and pictures (ready)"). This file is the plan: what every ability does, the numbers to start from, which existing parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md)).
 
 Pathway name in code: `"Knight Of Misfortune"` (already in `KnightOfMisfortune.PATHWAY` and `SequenceCommands.PATHWAYS`).
 
@@ -225,10 +225,10 @@ Every one of these is wanted by more than one ability, and by other Pathways too
 
 | Part | What it is | Used by |
 | --- | --- | --- |
-| `status/Slumber` | Sleep with kinds: SLEEP (wakes when hurt), DEEP (the first hits do not wake it), LIMP (awake but cannot attack or cast: Pacify), ETERNAL (only time or `wake` ends it). Players: held and screen dark (`Root` EVERYTHING + `Blind`); mobs: AI off. `Slumber.put`, `isAsleep`, `kind`, `wake`, and an `addImmunity` hook like `Decay`'s. | Lullaby, Pacify, Dream Invasion, Hair Entanglement, Requiem, Nightmare World, Sword edicts, Eternal Rest, Command Spirits |
-| `status/Fear` | The other half of `Taunt`: a mob flees from a source, a player cannot sprint toward it, is slowed and nauseous, with a dark vignette. `Fear.apply(entity, from, ticks)`, `isAfraid`, `addImmunity`. | Fear poem, Terror Banshee, Horror Aura, Despair edict, Terror dream |
+| `status/Slumber` **(written)** | Sleep with kinds: SLEEP (wakes when hurt), DEEP (the first hits do not wake it), LIMP (awake but cannot attack or cast: Pacify), ETERNAL (only time or `wake` ends it). Players: held and screen dark (`Root` EVERYTHING + `Blind`); mobs: AI off. `Slumber.put`, `isAsleep`, `kind`, `wake`, and an `addImmunity` hook like `Decay`'s. | Lullaby, Pacify, Dream Invasion, Hair Entanglement, Requiem, Nightmare World, Sword edicts, Eternal Rest, Command Spirits |
+| `status/Fear` **(written)** | The other half of `Taunt`: a mob flees from a source, a player cannot sprint toward it, is slowed and nauseous, with a dark vignette. `Fear.apply(entity, from, ticks)`, `isAfraid`, `addImmunity`. | Fear poem, Terror Banshee, Horror Aura, Despair edict, Terror dream |
 | `status/Misfortune` | Levels, the mishap roll and the table above; `Misfortune.add(target, level, ticks)`, `level`, `clear`, `addImmunity`. | Curse, Night Domain, Misfortune, Catastrophe, Ill Omen |
-| `status/Silence` | Ability keys do nothing for a while (asked next to `StolenAbilities.blocksKey` in every key packet); summons and marionettes stop attacking; ranged mobs cannot shoot. | Requiem, Despair edict, the "Silence" authority |
+| `status/Silence` **(written, on `Root`)** | Ability keys do nothing for a while; a mob cannot attack, in melee or with what it shoots. | Requiem, Despair edict, the "Silence" authority |
 | `status/Nocturnality` | One number 0 to 1 for "how dark is it for this entity" (light level, time of day, open sky), and `forceNight(entity or area, ticks)`. `Spells.inDaylight` is its other half. | The whole passive ladder, Night Domain, Nightmare World |
 | `Spells.addUnchoosableCheck((caster, target) -> ...)` | Extends `canBeChosen`, which only knows `Unnoticed`: an area or a Pathway may say "this one cannot be picked". | Secret Concealment, Concealed World; `Unnoticed` itself could use it |
 | `combat/Domain` | **A lift, not new:** Divine Kingdom is written inline in `HandOfGodTwilight` (`divineKingdom`, `kingdomTouches`, `kingdomCut`). Pull the shared shape out: allies buffed, enemies weakened, an ambient look, cast again to end. | Night Domain, Divine Kingdom, Nightmare World |
@@ -236,19 +236,28 @@ Every one of these is wanted by more than one ability, and by other Pathways too
 
 `Slumber`, `Fear` and `Misfortune` first: Midnight Poem, Requiem, the sword and half of the top Sequences cannot be written without them. The two lifts are optional and can wait; until then Night Domain can use two `Zone`s and Earthen Spirit can copy Mercury's loop.
 
-## What is already in the repository
+## What is built
 
-`KnightOfMisfortune.java` is a work-in-progress file: its one ability, `knightOfMisfortuneRush`, is a copy of Hand Of God's Warrior's Charge (using `HandOfGodFx`) with a "listen" pulse (built on `HangedManFx`) on the sneak cast, registered as a single placeholder line in `PathwayAbilities.ALL` and called from key 1 only. It is **replaced** by Spirit Vision and Dowsing when the code is written; keep the naming `knightOfMisfortune<Name>`. Following the Hand Of God split, the code can go in `KnightOfMisfortune` (keys 1, 3, 4, passives), `KnightOfMisfortunePoems` (key 2), `KnightOfMisfortuneSpirits` (key 5), `KnightOfMisfortuneNightwatcher` (key 6), `KnightOfMisfortuneDarkness` (key 7) and `KnightOfMisfortuneFx`.
+Keys 1 to 5, the passives of Sequences 9 to 5, and the three new statuses they stand on. Set the Pathway with `/sequence pathway <player> "Knight Of Misfortune"`.
 
-When it is written, these places need a line (the checklist from [SPELL_KIT.md](SPELL_KIT.md) and [SEQUENCES.md](SEQUENCES.md)):
+| Key | Class and method | Notes |
+| --- | --- | --- |
+| 1 Night Sight | `KnightOfMisfortune.knightOfMisfortuneNightSight` | Spirit Vision marks everything alive once a second, for the caster alone (`ParticleShapes.spawnFor`). Dowsing costs nothing when it finds nothing. |
+| 2 Midnight Poem | `KnightOfMisfortunePoems.knightOfMisfortuneMidnightPoem` (wheel) | All five poems. Resonance (Sequence 7) gives back a quarter of the price after the cast (`AbilityWheel.onCast`). |
+| 3 Nightmare | `KnightOfMisfortune.knightOfMisfortuneNightmare` | Limbs: their "flesh" is a `ConjuredArmor` absorption layer; when it is gone they tear off. Nightmare State: `Concealment` + `Flight`, the body's spot is saved on the player (a relog puts the soul back in it). Dream Shaping is an `AbilityMenu` of three; no pick in 5 s = Secrets. |
+| 4 Requiem | `KnightOfMisfortune.knightOfMisfortuneRequiem` | A `Zone` on the ground where it was sung. Soothed allies are immune to `Slumber` and `Fear` while it lasts (`addImmunity`). |
+| 5 Spirit Commanding | `KnightOfMisfortuneSpirits.knightOfMisfortuneSpiritCommanding` (wheel) | All four entries, Command Spirits (Sequence 1) included. Earthen and Gale Spirit: pick them again (free) to rise / come down. |
 
-| Where | What |
-| --- | --- |
-| `network/SKeyPressAbility...Used` (keys 2 to 7) | one `import static` and one line each (key 1 already has one) |
-| `PathwayAbilities.ALL` | seven lines (replace the placeholder); wheel keys: stolen casts take the last pick or a random entry; Spirit Commanding and Nightmare State are own-Pathway-only (they need your teeth and your body) |
-| `SequencePassives` | the passives above |
-| `PathwayHudIcon` | the Pathway's icon |
-| [SEQUENCES.md](SEQUENCES.md) | a row in "Required Sequence of every ability key", a row per passive, and the Pathway name list |
+Every number is a constant at the top of its class. `PathwayAbilities.ALL` has the five lines (Nightmare and Spirit Commanding are own-Pathway-only), the key packets 1 to 5 call them, `SequencePassives` has the passives (Night Vision, Nocturnality, Resonance, Spirit Sight) and `KnightOfMisfortune` the ones that react to events (the danger chime, Steady Hand's falls, the gale's empty hands).
+
+Where it differs from the design above:
+- **Terror Banshee** is a spirit floating at your shoulder, not a creature: it wails round you and has no body to strike at all (which is "weapons cannot hurt it" taken all the way).
+- **Silence** is `root/Root` underneath (ABILITIES, and ATTACK for a mob), so a silenced player sees Root's "You are bound by Order." when they press a key.
+- **Command Spirits** uses `Marionette.summon`: the creatures it takes return to the darkness (vanish, no drops) when it ends, and do not count toward the 3 marionettes of `Marionette.control`.
+- **Not done yet:** Resonance's "poems can be cast while silenced", Steady Hand's faster bow draw (only the falls are), the health numbers Spirit Vision shows from Sequence 6, and Spirit Vision's hidden traps.
+- **The new statuses:** `status/Slumber`, `status/Fear` and `status/Silence` are written and documented in [SPELL_KIT.md](SPELL_KIT.md). `Misfortune`, `Nocturnality`, `addUnchoosableCheck` and the two lifts (`Domain`, `GroundSlide`) are still for keys 6 and 7; darkness is read by `KnightOfMisfortune.darkness(entity)` for now.
+
+Still to write for keys 6 and 7: `KnightOfMisfortuneNightwatcher` (key 6) and `KnightOfMisfortuneDarkness` (key 7), their lines in the key packets 6 and 7 and in `PathwayAbilities.ALL`, and the passives of Sequences 4 to 0.
 
 ## Looks, sounds and pictures (ready)
 

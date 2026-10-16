@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfGod;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortune;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -63,6 +64,13 @@ public final class SequencePassives {
         custom("Hand Of God", 3, HandOfGod::dawnAura);                                          // Silver Knight: Dawn Aura burns evil
         custom("Hand Of God", 2, HandOfGod::twilightResistance);                                // Glory: nothing stops your healing
         custom("Hand Of God", 0, HandOfGod::twilightAura);                                      // Twilight Giant: Twilight Aura
+
+        // ---- Knight Of Misfortune (docs/KNIGHT_OF_MISFORTUNE.md). Also in KnightOfMisfortune itself: the sense of hidden
+        // danger (Sequence 9), Steady Hand's falls (8), Spirit Teeth (5, in KnightOfMisfortuneSpirits).
+        effect("Knight Of Misfortune", 9, MobEffects.NIGHT_VISION, 0);                          // Sleepless: sees in the dark...
+        custom("Knight Of Misfortune", 9, KnightOfMisfortune::nocturnality);                    // ...and is stronger in it
+        custom("Knight Of Misfortune", 7, KnightOfMisfortune::resonance);                       // Nightmare: spirituality back faster
+        custom("Knight Of Misfortune", 6, KnightOfMisfortune::spiritSight);                     // Soul Assurer: spirits are seen
     }
 
     // =========================
