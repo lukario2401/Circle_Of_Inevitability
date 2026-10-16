@@ -185,7 +185,7 @@ public final class Spells {
     public static List<LivingEntity> enemiesInSight(Player caster, ServerLevel sl, double range, double halfAngle) {
         Vec3 eye = caster.getEyePosition();
         List<LivingEntity> result = enemiesInCone(caster, sl, eye, caster.getLookAngle(), range, halfAngle);
-        result.removeIf(candidate -> !canBeChosen(candidate));             // seen, but no mind takes it in (status/Unnoticed)
+        result.removeIf(candidate -> !canBeChosen(caster, candidate));     // seen, but no mind takes it in (status/Unnoticed)
         // its body or its head showing is enough
         result.removeIf(candidate -> !clearLine(caster, sl, eye, candidate.getBoundingBox().getCenter())
                 && !clearLine(caster, sl, eye, candidate.getEyePosition()));
@@ -247,19 +247,45 @@ public final class Spells {
         return onLine.isEmpty() ? null : onLine.get(0);
     }
 
+    /** Says that 'chooser' cannot pick 'target' as the target of an ability right now. 'chooser' may be null (unknown). */
+    @FunctionalInterface
+    public interface UnchoosableCheck {
+        boolean cannotChoose(Player chooser, LivingEntity target);
+    }
+
+    private static final List<UnchoosableCheck> UNCHOOSABLE_CHECKS = new ArrayList<>();
+
+    /**
+     * One more reason an ability cannot pick someone, beyond Unnoticed: a veiled area, a sealed world, a Pathway that
+     * divination slips off. E.g. (chooser, target) -> MyVeils.covers(target) && !MyVeils.covers(chooser).
+     */
+    public static void addUnchoosableCheck(UnchoosableCheck check) {
+        UNCHOOSABLE_CHECKS.add(check);
+    }
+
     /**
      * False for an enemy an ability cannot CHOOSE as its target, though it is there and can be caught by what hits
-     * an area: one whose mind is concealed (status/Unnoticed). The aiming here (aimEnemy, aimFrom, aimGround,
-     * enemiesInSight) already passes over it; ask this yourself when you pick a target some other way.
+     * an area: one whose mind is concealed (status/Unnoticed), or one an addUnchoosableCheck rule hides. The aiming
+     * here (aimEnemy, aimFrom, aimGround, enemiesInSight) already passes over it; ask this yourself when you pick a
+     * target some other way.
      */
     public static boolean canBeChosen(LivingEntity entity) {
-        return Unnoticed.canBeChosen(entity);
+        return canBeChosen(null, entity);
+    }
+
+    /** The same, when you know who is choosing (some rules only hide it from those outside, or from enemies). */
+    public static boolean canBeChosen(Player chooser, LivingEntity entity) {
+        if (!Unnoticed.canBeChosen(entity)) return false;
+        for (UnchoosableCheck check : UNCHOOSABLE_CHECKS) {
+            if (check.cannotChoose(chooser, entity)) return false;
+        }
+        return true;
     }
 
     /** The enemy on the line closest to 'from' that can be chosen as a target (canBeChosen), or null. */
     private static LivingEntity firstChosenOnLine(Player caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
         for (LivingEntity candidate : enemiesOnLine(caster, sl, from, to, grow)) {
-            if (canBeChosen(candidate)) return candidate;
+            if (canBeChosen(caster, candidate)) return candidate;
         }
         return null;
     }

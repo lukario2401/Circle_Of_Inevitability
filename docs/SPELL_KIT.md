@@ -56,6 +56,10 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Put something to sleep (wakes when hit, or deeply, or for good), or leave it limp and unwilling to fight | [`Slumber`](#slumber) | `status/` |
 | Make something afraid of one entity: a mob runs from it, a player is slowed and cannot sprint at it | [`Fear`](#fear) | `status/` |
 | Hush an entity's power: no abilities for a player, no attacks at all for a mob | [`Silence`](#silence) | `status/` |
+| Take an entity's luck: levels of Misfortune, and every second a mishap may befall it (a stumble, a fumble, a shot gone wide, a falling stone, a calamity) | [`Misfortune`](#misfortune) | `status/` |
+| How dark is it for this entity (0..1), and night forced on a place or a body | [`Nocturnality`](#nocturnality) | `status/` |
+| Nobody (or nobody outside) can pick these as an ability's target: a veil, a sealed world | [`Spells.addUnchoosableCheck`](#1-spells-aiming-and-enemies) | `combat/` |
+| A power that works though the caster is silenced (a poem in the mind) | [`Silence.addCastsThrough`](#silence) | `status/` |
 | "My next few hits are special" (a poison, holy oil, a concoction on the blade) | [`WeaponCoat`](#weaponcoat) | `status/` |
 | Minds slide off you: mobs forget you and abilities cannot choose you, though you are seen and can be hurt | [`Unnoticed`](#unnoticed) | `status/` |
 | A bigger body for a while, with more reach and step, and a madness that can break it (a giant, a titan) | [`GiantForm`](#giantform) | `status/` |
@@ -127,6 +131,14 @@ Two habits worth keeping:
 ## 1. Spells: aiming and enemies
 
 `Spells` answers the questions every ability asks.
+
+Who can be **picked** as a target (by `aimEnemy`, `enemiesInSight` and the aiming of `aimFrom` / `aimGround`) is `Spells.canBeChosen(chooser, target)`: not someone `Unnoticed`, and not someone an `addUnchoosableCheck` rule hides. What hits an area still catches them.
+
+```java
+Spells.addUnchoosableCheck((chooser, target) -> MyVeil.covers(target) && !MyVeil.covers(chooser));   // once, in a static block
+```
+
+(`chooser` is null when the caller does not say.) Knight Of Misfortune uses it for Secret Concealment, the Concealed World and the Servant of Concealment's presence.
 
 ```java
 LivingEntity target = Spells.aimEnemy(player, sl, 24);            // the enemy under the crosshair, or null
@@ -457,7 +469,7 @@ Trap.at(ground, 1.5)                                     // its middle on the gr
 | `.onExpire(() -> ...)` | It ended without springing: its time is up, a newer trap took its place, or its owner died or left |
 | `.set(player, sl, name, max)` | Sets it. `max` is how many traps with this name the player may have at once |
 
-`Trap.count(player, name, max)` and `Trap.clear(player, name, max)` work from anywhere.
+`Trap.count(player, name, max)` and `Trap.clear(player, name, max)` work from anywhere. `Trap.hiddenNear(sl, center, radius)` gives where every trap (anyone's, of any kind) lies near a spot, for a sight that sees what is hidden (Knight Of Misfortune's Spirit Vision).
 
 Good to know:
 
@@ -906,7 +918,54 @@ An entity's power is hushed for a while: a player cannot use abilities (every ab
 Silence.apply(target, 100);   Silence.isSilenced(entity);   Silence.ticksLeft(entity);   Silence.lift(target);
 ```
 
-It is `root/Root` underneath (ABILITIES, and ATTACK for a mob): saved with the entity, Root's ring shows, and the player is told "You are bound by Order." when they press a key. Used by Requiem and the Lullaby a player shakes off.
+It is `root/Root` underneath (ABILITIES, and ATTACK for a mob): saved with the entity, Root's ring shows, and the player is told "You are bound by Order." when they press a key. Used by Requiem, the Lullaby a player shakes off and the Despair edict.
+
+Some power needs no voice. Let one through a silence (or any root with ABILITIES) on its key, and let its wheel's picks through:
+
+```java
+Silence.addCastsThrough((player, key) -> key == 2 && MyPathway.resonates(player));   // once, in a static block
+AbilityWheel.create(...)....castsWhileSilenced(player -> MyPathway.resonates(player));  // its wheel (AbilityMenu has it too)
+```
+
+The ability keys ask `Silence.blocksKey(player, key)` first. Knight Of Misfortune's poems use it from Sequence 7.
+
+### Misfortune
+
+An entity's luck is taken: it carries 1 to 5 levels, and every second it rolls a mishap with a 10% chance per level.
+
+```java
+Misfortune.add(target, player, 3, 3, 400);          // 3 levels at once, at most 3, for 20 seconds from now
+Misfortune.add(target, player, 1, 5, 400);          // one more, up to 5 (a field that worsens it each beat)
+Misfortune.add(target, player, 2, 5, 400, true);    // Catastrophe: its worst mishap is a disaster
+Misfortune.level(entity);   Misfortune.ticksLeft(entity);   Misfortune.clear(target);   Misfortune.befall(victim, Misfortune.Mishap.STUMBLE);
+Misfortune.addImmunity(entity -> ...);              // some cannot be cursed
+Misfortune.addHalfLevels(entity -> ...);            // some carry only half (bosses)
+Misfortune.addListener((victim, mishap, source) -> ...);   // the look and sound of each mishap
+```
+
+| Mishap | From level | What happens |
+|---|---|---|
+| `STUMBLE` | 1 | Slowness IV for a second and a little trip |
+| `FUMBLE` | 2 | What it holds and wears loses 6 durability; its next blow is 30% weaker |
+| `BACKFIRE` | 3 | The next thing it shoots flies wide (up to 30 degrees) |
+| `FALLING_STONE` | 4 | Magic damage, 5% of its maximum health, counted as the curser's (`DamageFx.credit`) |
+| `CALAMITY` | 5 | 15% of its maximum health; with Catastrophe 30%, and it is thrown up for a fall it did not see coming |
+
+The damage is the status's own; the look is a listener's (Knight Of Misfortune's shows the mishaps it caused). Adding never lowers the level and makes all of it last again. Saved with the entity. Every number is a `public static` at the top of the class. Used by the Curse of Misfortune, the Night Domain, Misfortune, Catastrophe and Ill Omen.
+
+### Nocturnality
+
+How dark it is for an entity, as one number, and night forced on a place or a body.
+
+```java
+float dark = Nocturnality.darkness(entity);          // 0 = full light ... 1 = pitch black (block light, and sky light at a quarter by night)
+Nocturnality.isDark(entity);                          // at least DARK (0.75): full dark
+Nocturnality.forceNight(sl, center, 20, 800);         // 40 s of night 20 blocks round a spot: darkness() is 1 there
+Nocturnality.forceNight(entity, 200);                 // night that goes with the entity (saved with it)
+Nocturnality.isForcedNight(entity);   Nocturnality.inDaySun(entity);   // the bright sun of day under the open sky
+```
+
+It only changes what `darkness()` says: the sky the players see is not touched. Forced night on a place is not saved. Used by Knight Of Misfortune's Nocturnality, Deep Night, Night Domain and Nightmare World.
 
 ### GiantForm
 
@@ -1307,6 +1366,7 @@ private static AbilityWheel.Result fireball(ServerPlayer player, ServerLevel sl)
 | `.entry(key, icon, name, sequence, cost, cooldownTicks, cast)` | One spell. `key` names it in the save data: keep it once players have used it. `icon` as for `AbilityMenu` (a PNG under `textures/gui/`, no `.png`) |
 | `.free(player -> ...)` | After an entry: while this says true, that entry skips the cost and cooldown checks (the second press of a two-part spell) |
 | `.onCast((player, sl, entry) -> ...)` | Runs after every cast that returned `DONE` |
+| `.castsWhileSilenced(player -> ...)` | While this says true, a pick from the wheel is not stopped by a root with ABILITIES (pair it with `Silence.addCastsThrough` for the key) |
 | `.radius(pixels)` | How far from the middle of the screen the icons sit (default 72) |
 | `.quickCastCooldown(false)` | A sneak recast (`quickCast`) ignores cooldowns: it works while the pick is cooling down and starts none. The cost is still paid. Picks from the wheel keep their cooldowns |
 | `.quickCastCost(2f)` | A sneak recast costs that many times the entry's cost (default 1). With `.quickCastCooldown(false)`: no cooldown, double the price (Beauty Goddess's two wheels) |

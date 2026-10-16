@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * A pop-up menu of clickable icons. Everything about a menu is defined here on the server —
@@ -91,6 +92,7 @@ public class AbilityMenu {
     private int iconSize = 32;
     private int ringRadius = 0;                  // > 0: the options are laid out round a circle
     private final List<Option> options = new ArrayList<>();
+    private Predicate<ServerPlayer> castsWhileSilenced;   // true: a root's ABILITIES does not stop a pick
 
     private AbilityMenu(String id) {
         this.id = id;
@@ -136,6 +138,12 @@ public class AbilityMenu {
         return this;
     }
 
+    /** While this says true for the player, a root with ABILITIES (status/Silence) does not stop a pick. */
+    public AbilityMenu castsWhileSilenced(Predicate<ServerPlayer> when) {
+        this.castsWhileSilenced = when;
+        return this;
+    }
+
     /** Shows this menu to the player. */
     public void open(Player player) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
@@ -166,7 +174,8 @@ public class AbilityMenu {
         OPEN_MENUS.remove(player.getUUID());
 
         if (choice < 0 || choice >= menu.options.size()) return;
-        if (Root.has(player, RootRestriction.ABILITIES)) return; // got rooted while the menu was open
+        if (Root.has(player, RootRestriction.ABILITIES)                                    // got rooted while the menu was open
+                && (menu.castsWhileSilenced == null || !menu.castsWhileSilenced.test(player))) return;
         Option option = menu.options.get(choice);
         if (option.lockedFor(player)) return;                     // the screen greys these out; never trust it alone
         option.action.run(player, player.level());

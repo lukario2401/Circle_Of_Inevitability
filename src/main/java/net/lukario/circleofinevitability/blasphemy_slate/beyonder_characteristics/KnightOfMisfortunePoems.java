@@ -44,7 +44,9 @@ import java.util.List;
  *
  * Every poem is heard: whoever heard a poem from you in the last HEARD_TICKS is held POEM_REPEAT longer by the next one
  * (up to HEARD_MOST times). A player who sneaks when it lands shakes it off in half the time. Bosses only hear Fear
- * and Tranquilize. From Nightmare (7) a poem costs RESONANCE_REFUND less (given back after the cast).
+ * and Tranquilize. From Nightmare (7) a poem costs RESONANCE_REFUND less (given back after the cast) and needs no voice:
+ * it can be cast while silenced (Silence.addCastsThrough, in KnightOfMisfortune, and the wheel's castsWhileSilenced).
+ * From Horror Bishop (3) Lullaby and Pacify reach CITY_RANGE all round you.
  *
  * Sneak casts the last poem again without the wheel (no cooldown, double the cost), as for the other wheels.
  * The looks are KnightOfMisfortuneFx's; every number is right below.
@@ -95,6 +97,10 @@ public final class KnightOfMisfortunePoems {
     private static final float AGITATE_VULNERABLE = 0.15f;       // it takes 15% more from everything
     private static final double AGITATE_NEAREST = 12.0;          // a mob goes after the nearest thing this close
 
+    private static final int RESONANCE_SEQUENCE = 7;             // Nightmare: poems need no voice (cast while silenced)
+    private static final int CITY_SEQUENCE = 3;                  // Horror Bishop: Lullaby and Pacify reach a whole city...
+    private static final double CITY_RANGE = 40.0;               // ...all round you
+
     private static final int HEARD_TICKS = 600;                  // a poem heard within this long...
     private static final float POEM_REPEAT = 0.25f;              // ...makes the next one hold this much longer...
     private static final int HEARD_MOST = 4;                     // ...up to this many times over
@@ -117,6 +123,7 @@ public final class KnightOfMisfortunePoems {
                     FEAR_COST, FEAR_COOLDOWN, KnightOfMisfortunePoems::fear)
             .entry("agitating", KnightOfMisfortuneFx.WHEEL_AGITATING, "Agitating", AGITATE_SEQUENCE,
                     AGITATE_COST, AGITATE_COOLDOWN, KnightOfMisfortunePoems::agitating)
+            .castsWhileSilenced(player -> KnightOfMisfortune.isKnight(player, RESONANCE_SEQUENCE))   // resonated: no voice
             .onCast(KnightOfMisfortunePoems::resonance);
 
     // =========================
@@ -131,7 +138,7 @@ public final class KnightOfMisfortunePoems {
 
     /** Resonance (Nightmare, 7): a part of every poem's price comes back. */
     private static void resonance(ServerPlayer player, ServerLevel sl, AbilityWheel.Entry entry) {
-        if (!KnightOfMisfortune.isKnight(player, 7)) return;
+        if (!KnightOfMisfortune.isKnight(player, RESONANCE_SEQUENCE)) return;
         float max = Beyonder.maxSpirituality(player);
         float back = entry.cost() * KnightOfMisfortune.RESONANCE_REFUND;
         SoulCore.setSpiritualityQuietly(player, Math.min(max, SoulCore.getSpirituality(player) + back));
@@ -171,9 +178,12 @@ public final class KnightOfMisfortunePoems {
         KnightOfMisfortuneFx.lullaby(sl, player, LULLABY_RANGE);
         Vec3 eyes = player.getEyePosition();
         Vec3 look = player.getLookAngle();
+        boolean city = Beyonder.hasSequence(player, CITY_SEQUENCE);
         Later.run(sl, KnightOfMisfortuneFx.POEM_LANDS, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
-            for (LivingEntity hearer : Spells.enemiesInCone(player, sl, eyes, look, LULLABY_RANGE, LULLABY_ANGLE)) {
+            List<LivingEntity> hearers = city ? Spells.enemiesAround(player, sl, player.position(), CITY_RANGE)
+                    : Spells.enemiesInCone(player, sl, eyes, look, LULLABY_RANGE, LULLABY_ANGLE);
+            for (LivingEntity hearer : hearers) {
                 if (KnightOfMisfortune.isBoss(hearer)) continue;
                 int ticks = heard(hearer, LULLABY_TICKS);
                 if (hearer instanceof Player listener && listener.isShiftKeyDown()) {     // cogitating: awake, but blank
@@ -189,6 +199,7 @@ public final class KnightOfMisfortunePoems {
     }
 
     private static AbilityWheel.Result pacify(ServerPlayer player, ServerLevel sl) {
+        if (Beyonder.hasSequence(player, CITY_SEQUENCE)) return pacifyCity(player, sl);
         LivingEntity target = Spells.aimEnemy(player, sl, PACIFY_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("No one hears you."));
@@ -206,6 +217,27 @@ public final class KnightOfMisfortunePoems {
             int held = target instanceof Player listener && listener.isShiftKeyDown() ? ticks / 2 : ticks;
             if (Slumber.put(target, held, Slumber.Kind.LIMP)) KnightOfMisfortune.showSlumber(sl, target, held);
         });
+        return AbilityWheel.Result.DONE;
+    }
+
+    /** Horror Bishop (3): every enemy within CITY_RANGE (not bosses) is pacified. */
+    private static AbilityWheel.Result pacifyCity(ServerPlayer player, ServerLevel sl) {
+        List<LivingEntity> hearers = Spells.enemiesAround(player, sl, player.position(), CITY_RANGE);
+        hearers.removeIf(KnightOfMisfortune::isBoss);
+        if (hearers.isEmpty()) {
+            player.sendSystemMessage(Component.literal("No one hears you."));
+            return AbilityWheel.Result.REFUSED;
+        }
+        KnightOfMisfortuneFx.recite(sl, player, Poem.PACIFY, null);
+        for (LivingEntity target : hearers) {
+            int ticks = heard(target, PACIFY_TICKS);
+            KnightOfMisfortuneFx.pacify(sl, player, target, ticks, "km_pacify_" + target.getId());
+            Later.run(sl, KnightOfMisfortuneFx.POEM_LANDS, () -> {
+                if (!target.isAlive()) return;
+                int held = target instanceof Player listener && listener.isShiftKeyDown() ? ticks / 2 : ticks;
+                if (Slumber.put(target, held, Slumber.Kind.LIMP)) KnightOfMisfortune.showSlumber(sl, target, held);
+            });
+        }
         return AbilityWheel.Result.DONE;
     }
 

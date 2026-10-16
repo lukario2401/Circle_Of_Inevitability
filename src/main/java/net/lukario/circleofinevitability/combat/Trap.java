@@ -5,6 +5,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
@@ -36,6 +38,8 @@ import java.util.function.Predicate;
  *
  *   Trap.count(player, "my_pathway_trap", 3)       // how many of them lie armed or arming right now
  *   Trap.clear(player, "my_pathway_trap", 3);      // takes them all away (their onExpire runs)
+ *   Trap.hiddenNear(sl, spot, 16)                  // where every trap (anyone's) lies within 16 blocks: for a sight
+ *                                                  // that sees what is hidden
  *
  * It is a Zone underneath, so it ends by itself when its owner dies, logs out or goes to another dimension,
  * and it is not saved: if the server stops, the traps are gone.
@@ -58,6 +62,11 @@ public final class Trap {
     private IntConsumer onWait = null;
     private Runnable onExpire = null;
     private boolean sprung = false;
+
+    /** Every trap that was set and may still lie there (cleaned up as hiddenNear finds them gone). */
+    private record Laid(Player owner, ServerLevel level, String slot, Vec3 ground) {}
+
+    private static final List<Laid> LAID = new ArrayList<>();
 
     private Trap(Vec3 ground, double radius) {
         this.ground = ground;
@@ -144,6 +153,8 @@ public final class Trap {
                 });
         if (catches != null) zone.affects(catches);
         zone.open(owner, sl, slot);
+        LAID.removeIf(laid -> laid.owner().getUUID().equals(owner.getUUID()) && laid.slot().equals(slot));
+        LAID.add(new Laid(owner, sl, slot, ground));
         return slot;
     }
 
@@ -163,6 +174,16 @@ public final class Trap {
         for (int i = 0; i < max; i++) {
             Zone.close(owner, slotName(name, i));
         }
+    }
+
+    /** Where the traps (of anyone, of any kind) lie within 'radius' of 'center', armed or not. */
+    public static List<Vec3> hiddenNear(ServerLevel sl, Vec3 center, double radius) {
+        LAID.removeIf(laid -> !Zone.isOpen(laid.owner(), laid.slot()));
+        List<Vec3> found = new ArrayList<>();
+        for (Laid laid : LAID) {
+            if (laid.level() == sl && laid.ground().distanceToSqr(center) <= radius * radius) found.add(laid.ground());
+        }
+        return found;
     }
 
     // ---------- internals ----------

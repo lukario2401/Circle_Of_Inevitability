@@ -66,11 +66,18 @@ public final class SequencePassives {
         custom("Hand Of God", 0, HandOfGod::twilightAura);                                      // Twilight Giant: Twilight Aura
 
         // ---- Knight Of Misfortune (docs/KNIGHT_OF_MISFORTUNE.md). Also in KnightOfMisfortune itself: the sense of hidden
-        // danger (Sequence 9), Steady Hand's falls (8), Spirit Teeth (5, in KnightOfMisfortuneSpirits).
+        // danger (Sequence 9), Steady Hand's falls and bow (8), Spirit Teeth (5, in KnightOfMisfortuneSpirits), Presence of
+        // Concealment (2), the Archangel's hearts and Ill Omen (1), what does not take on Darkness (0).
         effect("Knight Of Misfortune", 9, MobEffects.NIGHT_VISION, 0);                          // Sleepless: sees in the dark...
         custom("Knight Of Misfortune", 9, KnightOfMisfortune::nocturnality);                    // ...and is stronger in it
         custom("Knight Of Misfortune", 7, KnightOfMisfortune::resonance);                       // Nightmare: spirituality back faster
         custom("Knight Of Misfortune", 6, KnightOfMisfortune::spiritSight);                     // Soul Assurer: spirits are seen
+        custom("Knight Of Misfortune", 4, KnightOfMisfortune::deepNight);                       // Nightwatcher: the sun weakens, the dark veils
+        custom("Knight Of Misfortune", 3, KnightOfMisfortune::horrorAura);                      // Horror Bishop: the weak tremble
+        custom("Knight Of Misfortune", 2, KnightOfMisfortune::requiemPresence);                 // Servant of Concealment: extreme peace
+        effect("Knight Of Misfortune", 1, MobEffects.STRENGTH, 0);                              // Knight of Misfortune: the Archangel's
+        effect("Knight Of Misfortune", 1, MobEffects.SPEED, 0);                                 // body (and its hearts, in KnightOfMisfortune)
+        custom("Knight Of Misfortune", 0, KnightOfMisfortune::eternalSlumber);                  // Darkness: Eternal Slumber, Horror
     }
 
     // =========================

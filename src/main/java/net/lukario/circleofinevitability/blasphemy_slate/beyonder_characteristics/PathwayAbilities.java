@@ -194,7 +194,7 @@ public final class PathwayAbilities {
             new Ability("Beauty Goddess", 7, "Moon", 3, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)),
 
-            // ---- Knight Of Misfortune (docs/KNIGHT_OF_MISFORTUNE.md): keys 1 to 5 written, 6 and 7 planned ----
+            // ---- Knight Of Misfortune (docs/KNIGHT_OF_MISFORTUNE.md) ----
             new Ability("Knight Of Misfortune", 1, "Night Sight", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneNightSight(player, level, sl, true)),
             new Ability("Knight Of Misfortune", 2, "Midnight Poem", 8, SNEAK, STEALABLE,       // stolen: no wheel, its last (or a random) poem
@@ -205,6 +205,10 @@ public final class PathwayAbilities {
                     (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneRequiem(player, level, sl, true)),
             new Ability("Knight Of Misfortune", 5, "Spirit Commanding", 5, SNEAK, OWN_PATHWAY_ONLY,   // the spirits live in its teeth
                     (player, level, sl) -> KnightOfMisfortuneSpirits.knightOfMisfortuneSpiritCommanding(player, level, sl, true)),
+            new Ability("Knight Of Misfortune", 6, "Nightwatcher", 4, SNEAK, STEALABLE,         // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> KnightOfMisfortuneNightwatcher.knightOfMisfortuneNightwatcher(player, level, sl, true)),
+            new Ability("Knight Of Misfortune", 7, "Darkness and Concealment", 3, SNEAK, STEALABLE,   // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> KnightOfMisfortuneDarkness.knightOfMisfortuneDarkness(player, level, sl, true)),
 
             // ---- Hand Of God (docs/HAND_OF_GOD.md) ----
             new Ability("Hand Of God", 1, "Warrior's Charge", 9, SNEAK, STEALABLE,

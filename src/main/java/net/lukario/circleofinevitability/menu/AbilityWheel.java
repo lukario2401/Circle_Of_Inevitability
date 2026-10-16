@@ -98,6 +98,7 @@ public final class AbilityWheel {
     private CastDone onCast;
     private boolean quickCastCooldown = true;        // false: a sneak recast neither waits for nor starts a cooldown
     private float quickCastCost = 1f;                // a sneak recast costs this many times the entry's cost
+    private Predicate<ServerPlayer> castsWhileSilenced; // true: picks from the wheel go through a root's ABILITIES
     private AbilityMenu menu;                        // built the first time it is opened
 
     private AbilityWheel(String id, String title) {
@@ -143,6 +144,15 @@ public final class AbilityWheel {
      */
     public AbilityWheel quickCastCost(float multiplier) {
         this.quickCastCost = Math.max(0f, multiplier);
+        return this;
+    }
+
+    /**
+     * While this says true for a player, a pick from the wheel is not stopped by a root with ABILITIES (status/Silence):
+     * spells that need no voice. Let the key through too: Silence.addCastsThrough((player, key) -> ...).
+     */
+    public AbilityWheel castsWhileSilenced(Predicate<ServerPlayer> when) {
+        this.castsWhileSilenced = when;
         return this;
     }
 
@@ -289,6 +299,7 @@ public final class AbilityWheel {
     private AbilityMenu menu() {
         if (menu != null) return menu;
         AbilityMenu built = AbilityMenu.create(id).title(title).ring(radius);
+        if (castsWhileSilenced != null) built.castsWhileSilenced(castsWhileSilenced);
         for (Entry entry : entries) {
             built.option(entry.icon, entry.name, 0, 0, (player, sl) -> cast(player, entry))
                     .details(player -> details(player, entry))
@@ -312,25 +323,3 @@ public final class AbilityWheel {
         return tenths % 10 == 0 ? (tenths / 10) + "s" : (tenths / 10) + "." + (tenths % 10) + "s";
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -54,7 +54,8 @@ import java.util.concurrent.ThreadLocalRandom;
  * Displays that need a target use the nearest mob within 12 blocks, or you when there is none.
  *
  * ---------- Use them in an ability ----------
- *   Key 1  spiritVision(viewer, ticks) (only the viewer sees it), spiritVisionMark(viewer, seen, spirit)
+ *   Key 1  spiritVision(viewer, ticks) (only the viewer sees it), spiritVisionMark(viewer, seen, spirit),
+ *              spiritVisionTrap(viewer, ground) (a hidden trap)
  *          sneak: dowsing(sl, player, toward, ticks, tag), dowsingEnd(sl, player, tag)
  *   Key 2  the poem wheel's pictures: WHEEL_TRANQUILIZE, WHEEL_LULLABY, WHEEL_PACIFY, WHEEL_FEAR, WHEEL_AGITATING
  *          every poem starts with recite(sl, player, Poem.X, tag); then
@@ -524,6 +525,15 @@ public final class KnightOfMisfortuneFx {
                     new Vec3(0, 0.06, 0));
         }
         ParticleShapes.spawnFor(viewer, spirit ? EYE : STAR, headOf(seen).add(0, 0.3, 0), Vec3.ZERO);
+    }
+
+    /** A hidden trap the vision shows: a faint ring of runes on the ground, only for the viewer. */
+    public static void spiritVisionTrap(ServerPlayer viewer, Vec3 ground) {
+        for (int i = 0; i < 8; i++) {
+            double a = Math.PI * 2 * i / 8;
+            ParticleShapes.spawnFor(viewer, DARK_MOTE, ground.add(Math.cos(a) * 0.7, 0.1, Math.sin(a) * 0.7), new Vec3(0, 0.02, 0));
+        }
+        ParticleShapes.spawnFor(viewer, EYE, ground.add(0, 0.4, 0), Vec3.ZERO);
     }
 
     /**

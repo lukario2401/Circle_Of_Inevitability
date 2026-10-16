@@ -2,11 +2,13 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortuneFx.Dream;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KnightOfMisfortuneFx.Status;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.combat.Trap;
 import net.lukario.circleofinevitability.combat.Zone;
 import net.lukario.circleofinevitability.menu.AbilityMenu;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
@@ -19,12 +21,16 @@ import net.lukario.circleofinevitability.status.Fear;
 import net.lukario.circleofinevitability.status.Flight;
 import net.lukario.circleofinevitability.status.GiantForm;
 import net.lukario.circleofinevitability.status.Marionette;
+import net.lukario.circleofinevitability.status.Misfortune;
+import net.lukario.circleofinevitability.status.Nocturnality;
 import net.lukario.circleofinevitability.status.Silence;
 import net.lukario.circleofinevitability.status.Slumber;
+import net.lukario.circleofinevitability.status.SupernaturalResistance;
 import net.lukario.circleofinevitability.status.Taunt;
-import net.minecraft.core.BlockPos;
+import net.lukario.circleofinevitability.status.Unnoticed;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EntityTypeTags;
@@ -32,16 +38,21 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
+import net.minecraftforge.event.entity.living.LivingEntityUseItemEvent;
 import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
@@ -53,8 +64,8 @@ import java.util.List;
 
 /**
  * Knight Of Misfortune: the Darkness Pathway of Lord of the Mysteries (docs/KNIGHT_OF_MISFORTUNE.md). Seven keys in
- * the Attendant Of Mysteries pattern, from Sleepless (Sequence 9) up to Darkness (Sequence 0). Written so far: keys 1
- * to 5 (Sequences 9 to 5) and the passives of those Sequences; keys 6 and 7 are planned.
+ * the Attendant Of Mysteries pattern, from Sleepless (Sequence 9) up to Darkness (Sequence 0). All seven keys and every
+ * passive are written.
  *
  *   1 Night Sight     (Sleepless)      Spirit Vision: everything alive round you glows for you alone
  *                                                                      | sneak: Dowsing (who hunts you?)
@@ -67,14 +78,22 @@ import java.util.List;
  *                                                                      | sneak: Soothing Requiem (allies)
  *   5 Spirit Commanding (Spirit Warlock) the spirit wheel: Terror Banshee, Earthen Spirit, Gale Spirit, Command
  *                                      Spirits (KnightOfMisfortuneSpirits) | sneak: the last pick again
+ *   6 Nightwatcher    (Nightwatcher)   the Nightwatcher wheel: Night Domain, Hair Entanglement, Curse of Misfortune
+ *                                      (Misfortune at 1, Catastrophe at 0), Demonic Wolf Form
+ *                                      (KnightOfMisfortuneNightwatcher)  | sneak: the last pick again
+ *   7 Darkness and Concealment (Horror Bishop) the Darkness wheel: Sword of Darkness, Nightmare World, Concealed
+ *                                      State, Secret Concealment, Concealed World, Mantle of Darkness, Eternal Rest,
+ *                                      Destination of All Things (KnightOfMisfortuneDarkness) | sneak: the last pick again
  *
  * Every look and sound is in KnightOfMisfortuneFx (see /knightfx); the ability classes only decide who sleeps, fears,
- * is held and helped, and when. The reusable pieces: status/Slumber, status/Fear and status/Silence (new with this
- * Pathway), status/Concealment, status/Flight, status/ConjuredArmor (the limbs' layer), status/Marionette,
- * combat/Zone, menu/AbilityWheel and menu/AbilityMenu (Dream Shaping), root/Root, combat/Spells, combat/Later.
+ * is held and helped, and when. The reusable pieces new with this Pathway: status/Slumber, status/Fear, status/Silence
+ * (and Silence.addCastsThrough), status/Misfortune, status/Nocturnality, Spells.addUnchoosableCheck and
+ * Trap.hiddenNear; it also uses status/Concealment, Flight, ConjuredArmor, ConjuredWeapon, GiantForm, Marionette,
+ * Decay, DeathWard, Unnoticed, combat/Zone, combat/Dome, menu/AbilityWheel and menu/AbilityMenu, root/Root.
  *
  * The passives that are a potion effect or a check once a second are in SequencePassives; the ones that react to
- * events (the danger sense, Steady Hand's falls, the gale's empty hands) are here. Nothing here changes blocks.
+ * events (the danger sense, Steady Hand's falls and bow, the gale's empty hands, Ill Omen, the Archangel's body,
+ * what Darkness cannot be touched by) are here. Nothing here changes blocks.
  */
 public class KnightOfMisfortune {
 
@@ -156,7 +175,27 @@ public class KnightOfMisfortune {
     static final float RESONANCE_REFUND = 0.25f;
     private static final float RESONANCE_REGEN = 0.25f;
     private static final double SPIRIT_SIGHT_RANGE = 16.0;      // Soul Assurer: spirits round you are seen
+    private static final int VISION_HEALTH_SEQUENCE = 6;        // Soul Assurer: Spirit Vision shows health, and costs
+                                                                // no cooldown in the dark
+    private static final int STEADY_DRAW_EVERY = 4;             // Midnight Poet: every 4th tick of drawing counts twice
+    private static final int DEEP_NIGHT_SEQUENCE = 4;           // Nightwatcher: Strength II and Regeneration in full dark,
+                                                                // Weakness I in bright day sun
+    private static final int VEIL_STILL = 3;                    // standing still in the dark this many seconds: Unnoticed
+    private static final int HORROR_SEQUENCE = 3;               // Horror Bishop: the aura
+    private static final double HORROR_RADIUS = 8.0;            // (halved while sneaking)
+    private static final float HORROR_FLEE_HEALTH = 40f;        // mobs with at most this much maximum health flee it
+    private static final int PRESENCE_SEQUENCE = 2;             // Servant of Concealment: not picked in the dark or sneaking;
+    private static final double PRESENCE_RADIUS = 10.0;         // enemies this close are always slowed
+    private static final int ARCHANGEL_SEQUENCE = 1;            // Knight of Misfortune: six more hearts...
+    private static final double ARCHANGEL_HEALTH = 12.0;
+    private static final float ILL_OMEN_CHANCE = 0.25f;         // ...and whoever hurts you may carry Misfortune
+    private static final int ILL_OMEN_TICKS = 400;
+    private static final int SLUMBER_SEQUENCE = 0;              // Darkness: sleep, fear and taunts do not take...
+    private static final float SLUMBER_RESIST = 0.5f;           // ...supernatural damage is halved...
+    private static final int HORROR_EVERY = 6;                  // ...and every 6 s whoever looks at you flinches
+    private static final double HORROR_GAZE_RANGE = 24.0;
     static final float BOSS_HEALTH = 150f;                      // at least this much maximum health: a boss
+    private static final Identifier ARCHANGEL_HEALTH_ID = Physique.id("knight_of_misfortune_archangel_health");
 
     // =========================
     // Saved on the player (game times are "until" this tick)
@@ -180,6 +219,8 @@ public class KnightOfMisfortune {
     private static final String REQUIEM_READY = "knight_of_misfortune_requiem_ready";
     private static final String SOOTHE_READY = "knight_of_misfortune_soothe_ready";
     private static final String DANGER_READY = "knight_of_misfortune_danger_ready";
+    private static final String STILL_AT = "knight_of_misfortune_still_at";       // where they stood last second...
+    private static final String STILL_FOR = "knight_of_misfortune_still_for";     // ...and how many seconds they have
 
     // Saved on whoever it touches
     private static final String SOOTHED_UNTIL = "knight_of_misfortune_soothed_until";
@@ -194,9 +235,25 @@ public class KnightOfMisfortune {
     public static class KnightOfMisfortuneEvents {
 
         static {
-            // a soothed ally cannot be frightened or put to sleep (Soothing Requiem)
+            // a soothed ally cannot be frightened or put to sleep (Soothing Requiem); Darkness (0) never can
             Slumber.addImmunity(KnightOfMisfortune::isSoothed);
             Fear.addImmunity(KnightOfMisfortune::isSoothed);
+            Slumber.addImmunity(KnightOfMisfortune::isEternalSlumber);
+            Fear.addImmunity(KnightOfMisfortune::isEternalSlumber);
+            // Misfortune: the Knight of Misfortune (1) shrugs it off, bosses carry half, and this Pathway shows it
+            Misfortune.addImmunity(entity -> entity instanceof Player player && isKnight(player, ARCHANGEL_SEQUENCE));
+            Misfortune.addHalfLevels(KnightOfMisfortune::isBoss);
+            Misfortune.addListener((victim, mishap, source) -> {
+                if (source == null || !SoulCore.getPathway(source).equals(PATHWAY) || !(victim.level() instanceof ServerLevel sl)) return;
+                KnightOfMisfortuneFx.mishap(sl, victim, KnightOfMisfortuneFx.Mishap.valueOf(mishap.name()));
+            });
+            // what cannot be picked: a Secret Concealment's side, whoever is inside a Concealed World, and a Servant of
+            // Concealment (2) in the dark or sneaking (Presence of Concealment)
+            Spells.addUnchoosableCheck(KnightOfMisfortuneDarkness::veiled);
+            Spells.addUnchoosableCheck((chooser, target) -> target instanceof Player knight && chooser != knight
+                    && isKnight(knight, PRESENCE_SEQUENCE) && (knight.isShiftKeyDown() || darkness(knight) >= DARK));
+            // Resonance (7): a poem needs no voice
+            Silence.addCastsThrough((player, key) -> key == 2 && isKnight(player, RESONANCE_SEQUENCE));
             // whoever wakes from a sleep this Pathway showed loses its look
             Slumber.addWakeListener((sleeper, kind) -> {
                 if (!sleeper.getPersistentData().getBooleanOr(SLUMBER_SHOWN, false)) return;
@@ -215,6 +272,34 @@ public class KnightOfMisfortune {
             limbsTick(player, sl);
             nightmareTick(player, sl);
             KnightOfMisfortuneSpirits.tick(player, sl);
+            KnightOfMisfortuneNightwatcher.tick(player, sl);
+            KnightOfMisfortuneDarkness.tick(player, sl);
+            if (player.tickCount % 20 == 0) {                              // the Archangel's body, on or off
+                Physique.keep(player, Attributes.MAX_HEALTH, ARCHANGEL_HEALTH_ID, ARCHANGEL_HEALTH,
+                        AttributeModifier.Operation.ADD_VALUE, isKnight(player, ARCHANGEL_SEQUENCE));
+            }
+        }
+
+        /** Steady Hand: a Midnight Poet draws a bow or a crossbow faster. */
+        @SubscribeEvent
+        public static void onKnightOfMisfortuneDraw(LivingEntityUseItemEvent.Tick event) {
+            if (!(event.getEntity() instanceof Player player) || player.level().isClientSide()) return;
+            if (!(event.getItem().getItem() instanceof BowItem) && !(event.getItem().getItem() instanceof CrossbowItem)) return;
+            if (player.tickCount % STEADY_DRAW_EVERY != 0 || !isKnight(player, STEADY_SEQUENCE)) return;
+            if (event.getDuration() > 1) event.setDuration(event.getDuration() - 1);
+        }
+
+        /** Ill Omen (1): whoever hurts the Knight may carry Misfortune; at Darkness (0) always, and it is Catastrophe. */
+        @SubscribeEvent
+        public static void onKnightOfMisfortuneHurt(LivingHurtEvent event) {
+            if (!(event.getEntity() instanceof Player knight) || !(knight.level() instanceof ServerLevel sl)) return;
+            if (!(event.getSource().getEntity() instanceof LivingEntity attacker) || attacker == knight) return;
+            if (!isKnight(knight, ARCHANGEL_SEQUENCE) || Spells.isFriend(knight, attacker)) return;
+            boolean darkness = isKnight(knight, SLUMBER_SEQUENCE);
+            if (!darkness && knight.getRandom().nextFloat() >= ILL_OMEN_CHANCE) return;
+            if (curse(knight, sl, attacker, 1, Misfortune.MAX_LEVEL, ILL_OMEN_TICKS, darkness) > 0) {
+                KnightOfMisfortuneFx.illOmen(sl, attacker);
+            }
         }
 
         /** Gale Spirit: hands of wind, no weapon. */
@@ -295,7 +380,8 @@ public class KnightOfMisfortune {
             return;
         }
         if (!(player instanceof ServerPlayer viewer)) return;
-        if (coolingDown(player, sl, VISION_READY, "Spirit Vision")) return;
+        boolean freeInDark = isKnight(player, VISION_HEALTH_SEQUENCE) && darkness(player) >= DARK;
+        if (!freeInDark && coolingDown(player, sl, VISION_READY, "Spirit Vision")) return;
         if (!Spells.paySpirituality(player, VISION_COST)) return;
         player.getPersistentData().putLong(VISION_READY, sl.getGameTime() + VISION_COOLDOWN);
         player.getPersistentData().putLong(VISION_UNTIL, sl.getGameTime() + VISION_TICKS);
@@ -311,6 +397,13 @@ public class KnightOfMisfortune {
         for (LivingEntity seen : Spells.livingAround(player, sl, player.position(), range)) {
             KnightOfMisfortuneFx.spiritVisionMark(viewer, seen, isSpirit(seen));
         }
+        for (Vec3 trap : Trap.hiddenNear(sl, player.position(), range)) KnightOfMisfortuneFx.spiritVisionTrap(viewer, trap);
+        if (!Beyonder.hasSequence(player, VISION_HEALTH_SEQUENCE)) return;
+        LivingEntity looked = Spells.aimEnemy(player, sl, range);           // Soul Assurer: its health and its spirit
+        if (looked == null) return;
+        String state = Slumber.kind(looked) != null ? ", asleep" : Fear.isAfraid(looked) ? ", afraid" : "";
+        player.sendOverlayMessage(Component.literal(looked.getName().getString() + ": " + Math.round(looked.getHealth())
+                + " / " + Math.round(looked.getMaxHealth()) + state));
     }
 
     private static void dowsing(Player player, ServerLevel sl) {
@@ -786,11 +879,16 @@ public class KnightOfMisfortune {
     // Passives (called once a second from SequencePassives)
     // =========================
 
-    /** Sleepless (9): Nocturnality. In full dark: Strength I, Speed I and wounds close a little. */
+    /**
+     * Sleepless (9): Nocturnality. In full dark: Strength I, Speed I and wounds close a little. Nightwatcher (4), Deep
+     * Night: Strength II and Regeneration I in full dark.
+     */
     public static void nocturnality(Player player) {
         if (darkness(player) < DARK) return;
-        Spells.keepEffect(player, MobEffects.STRENGTH, 0, 60);
+        boolean deep = isKnight(player, DEEP_NIGHT_SEQUENCE);
+        Spells.keepEffect(player, MobEffects.STRENGTH, deep ? 1 : 0, 60);
         Spells.keepEffect(player, MobEffects.SPEED, 0, 60);
+        if (deep) Spells.keepEffect(player, MobEffects.REGENERATION, 0, 60);
         if (player.getHealth() < player.getMaxHealth()) player.heal(0.5f);
         if (player.level() instanceof ServerLevel sl && player.getRandom().nextInt(3) == 0) KnightOfMisfortuneFx.nocturnality(sl, player);
     }
@@ -813,18 +911,104 @@ public class KnightOfMisfortune {
         }
     }
 
+    /**
+     * Nightwatcher (4), Deep Night: bright day sun under the open sky weakens you (Weakness I; a Night Domain lifts it).
+     * Veil: standing still in the dark for VEIL_STILL seconds hides your mind (status/Unnoticed) until you move.
+     */
+    public static void deepNight(Player player) {
+        if (Nocturnality.inDaySun(player)) Spells.keepEffect(player, MobEffects.WEAKNESS, 0, 40);
+        CompoundTag data = player.getPersistentData();
+        long here = player.blockPosition().asLong();
+        int still = data.getLongOr(STILL_AT, Long.MIN_VALUE) == here && darkness(player) >= DARK ? data.getIntOr(STILL_FOR, 0) + 1 : 0;
+        data.putLong(STILL_AT, here);
+        data.putInt(STILL_FOR, still);
+        if (still >= VEIL_STILL) Unnoticed.hide(player, 30);
+    }
+
+    /**
+     * Horror Bishop (3), Horror Aura: every enemy weaker than you within HORROR_RADIUS (half while sneaking) trembles.
+     * Mobs of little health flee you; weaker players are slowed, and sick with it when they look at you.
+     */
+    public static void horrorAura(Player player) {
+        if (!(player.level() instanceof ServerLevel sl) || inNightmare(player)) return;
+        double radius = player.isShiftKeyDown() ? HORROR_RADIUS / 2 : HORROR_RADIUS;
+        KnightOfMisfortuneFx.horrorAura(sl, player, radius);
+        int mine = SoulCore.getSequence(player);
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), radius)) {
+            if (enemy instanceof Player other) {
+                String pathway = SoulCore.getPathway(other);
+                boolean weaker = pathway == null || pathway.equals("none") || SoulCore.getSequence(other) > mine;
+                if (!weaker || isEternalSlumber(other)) continue;
+                boolean looking = looksAt(other, player);
+                Spells.keepEffect(other, MobEffects.SLOWNESS, looking ? 1 : 0, 40);
+                if (looking) Spells.keepEffect(other, MobEffects.NAUSEA, 0, 100);
+            } else if (enemy.getMaxHealth() <= HORROR_FLEE_HEALTH && !isBoss(enemy)) {
+                boolean already = Fear.isAfraid(enemy);
+                if (Fear.apply(enemy, player, 40) && !already) KnightOfMisfortuneFx.horrorFlinch(sl, enemy);
+            }
+        }
+    }
+
+    /** Servant of Concealment (2), the Requiem's presence: enemies within PRESENCE_RADIUS are always slowed, cannot sprint. */
+    public static void requiemPresence(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), PRESENCE_RADIUS)) {
+            if (isEternalSlumber(enemy)) continue;
+            Spells.keepEffect(enemy, MobEffects.SLOWNESS, 0, 40);
+            if (enemy instanceof Player other) other.setSprinting(false);
+        }
+    }
+
+    /**
+     * Darkness (0), Eternal Slumber: supernatural damage is halved and blindness and nausea do not take
+     * (status/SupernaturalResistance), nor do taunts; Slumber and Fear never do (their immunities, above). Horror: every
+     * HORROR_EVERY seconds, every enemy within HORROR_GAZE_RANGE that looks at you flinches: its next second of acting
+     * is cancelled.
+     */
+    public static void eternalSlumber(Player player) {
+        SupernaturalResistance.grant(player, "knight_of_misfortune_eternal_slumber", 40, SLUMBER_RESIST, false, null);
+        Taunt.remove(player);
+        if (player.tickCount % (HORROR_EVERY * 20) >= 20 || !(player.level() instanceof ServerLevel sl)) return;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), HORROR_GAZE_RANGE)) {
+            if (!looksAt(enemy, player)) continue;
+            Root.apply(enemy, 20, RootRestriction.ATTACK, RootRestriction.ABILITIES, RootRestriction.USE_ITEMS);
+            if (enemy instanceof Mob mob && mob.getTarget() == player) mob.setTarget(null);
+            KnightOfMisfortuneFx.horrorFlinch(sl, enemy);
+        }
+    }
+
     // =========================
-    // Helpers shared by the abilities (also KnightOfMisfortunePoems and KnightOfMisfortuneSpirits)
+    // Helpers shared by the abilities (also KnightOfMisfortunePoems, ...Spirits, ...Nightwatcher and ...Darkness)
     // =========================
 
-    /** How dark it is where it stands: 0 = full light, 1 = pitch black. Sky light counts for a quarter by night. */
+    /** How dark it is where it stands: 0 = full light, 1 = pitch black (status/Nocturnality: forced night counts). */
     static float darkness(LivingEntity entity) {
-        Level level = entity.level();
-        BlockPos pos = entity.blockPosition();
-        int block = level.getBrightness(LightLayer.BLOCK, pos);
-        int sky = level.getBrightness(LightLayer.SKY, pos);
-        if (level.isDarkOutside()) sky /= 4;
-        return 1f - Math.max(block, sky) / 15f;
+        return Nocturnality.darkness(entity);
+    }
+
+    /** True when 'viewer' looks at 'seen' (near the middle of its sight, nothing in between). */
+    static boolean looksAt(LivingEntity viewer, LivingEntity seen) {
+        Vec3 to = seen.getEyePosition().subtract(viewer.getEyePosition());
+        if (to.lengthSqr() < 1.0E-4) return false;
+        return viewer.getLookAngle().dot(to.normalize()) > 0.9 && viewer.hasLineOfSight(seen);
+    }
+
+    /** A Darkness (0) of this Pathway: what this Pathway puts on others does not take on them. */
+    static boolean isEternalSlumber(LivingEntity entity) {
+        return entity instanceof Player player && isKnight(player, SLUMBER_SEQUENCE);
+    }
+
+    /**
+     * Misfortune from this Pathway: 'levels' more (up to 'max') for 'ticks', its mark over the head and its picture,
+     * if it is a player. Never on the caster's side. Returns its level (0 = it took none).
+     */
+    static int curse(Player player, ServerLevel sl, LivingEntity target, int levels, int max, int ticks, boolean catastrophe) {
+        if (Spells.isFriend(player, target)) return 0;
+        int level = Misfortune.add(target, player, levels, max, ticks, catastrophe);
+        if (level <= 0) return 0;
+        KnightOfMisfortuneFx.misfortune(sl, target, level, ticks, "km_misfortune_" + target.getId());
+        if (target instanceof Player cursed) KnightOfMisfortuneFx.status(cursed, Status.MISFORTUNE, ticks);
+        return level;
     }
 
     /** A spirit to this Pathway: the undead, a summon, a marionette. */
@@ -888,6 +1072,8 @@ public class KnightOfMisfortune {
         for (String key : List.of(VISION_UNTIL, DOWSE_TAG, LIMBS_UNTIL, LIMBS_TAG)) data.remove(key);
         ConjuredArmor.takeOff(player, LIMBS_ARMOR);
         KnightOfMisfortuneSpirits.clearState(player);
+        KnightOfMisfortuneNightwatcher.clearState(player);
+        KnightOfMisfortuneDarkness.clearState(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) KnightOfMisfortuneFx.statusEnd(player, status);   // a clock left running before death
     }
