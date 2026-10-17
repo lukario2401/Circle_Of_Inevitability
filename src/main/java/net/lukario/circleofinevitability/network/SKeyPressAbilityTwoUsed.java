@@ -22,7 +22,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderDecree;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsDash;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorDoor;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionFlame;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageFlame;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility2;
 
 public class SKeyPressAbilityTwoUsed {
@@ -53,7 +53,7 @@ public class SKeyPressAbilityTwoUsed {
         keyOfStarsDash(player,level,serverLevel, false);
         attendantOfMysteriesFlamingJump(player,level,serverLevel, false);
         handOfOrderDecree(player,level,serverLevel, false);
-        princeOfAbolitionFlame(player,level,serverLevel,false);
+        frenziedMageFlame(player,level,serverLevel,false);
         paleEmperorDoor(player,serverLevel,false);
         wormOfTimeAbility2(player,level,serverLevel,false);
         conquerorProvocation(player,level,serverLevel,false);

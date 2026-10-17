@@ -58,7 +58,7 @@ import java.util.function.Supplier;
  * Nothing here breaks blocks or lights fires. The numbers for every ability are right below;
  * the 3D models are in models/model_fx/ (see docs/MODEL_FX.md).
  */
-public class PrinceOfAbolition {
+public class FrenziedMage {
 
     // =========================
     // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
@@ -367,18 +367,18 @@ public class PrinceOfAbolition {
             .randomRotation();
 
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Prince Of Abolition")
-            .step(PrinceOfAbolition::edgeCrossCut)
-            .step(PrinceOfAbolition::edgeGroundRend)
-            .step(PrinceOfAbolition::edgeWideSweep)
-            .step(PrinceOfAbolition::edgeCleave)
-            .step(PrinceOfAbolition::edgeRing)
+            .step(FrenziedMage::edgeCrossCut)
+            .step(FrenziedMage::edgeGroundRend)
+            .step(FrenziedMage::edgeWideSweep)
+            .step(FrenziedMage::edgeCleave)
+            .step(FrenziedMage::edgeRing)
             .resetAfter(40)
             .minCharge(0.8f);
 
     // =========================
     // Ability 1 - Spear of Abolition
     // =========================
-    public static void princeOfAbolitionSpear(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void frenziedMageSpear(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 9)) return;
         if (!paySpirituality(player, SPEAR_COST)) return;
@@ -478,7 +478,7 @@ public class PrinceOfAbolition {
     // =========================
     // Ability 2 - Corroding Flame
     // =========================
-    public static void princeOfAbolitionFlame(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void frenziedMageFlame(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 8)) return;
         if (!paySpirituality(player, FLAME_COST)) return;
@@ -558,7 +558,7 @@ public class PrinceOfAbolition {
     // =========================
     // Ability 3 - Frost
     // =========================
-    public static void princeOfAbolitionFrost(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void frenziedMageFrost(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 7)) return;
 
@@ -660,7 +660,7 @@ public class PrinceOfAbolition {
     // =========================
     // Ability 4 - Gavel of Ruin
     // =========================
-    public static void princeOfAbolitionHammer(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void frenziedMageHammer(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 6)) return;
         if (!paySpirituality(player, HAMMER_COST)) return;
@@ -731,7 +731,7 @@ public class PrinceOfAbolition {
     // =========================
     // Ability 5 - Meteor
     // =========================
-    public static void princeOfAbolitionMeteor(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void frenziedMageMeteor(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 5)) return;
         if (!paySpirituality(player, METEOR_COST)) return;
@@ -808,7 +808,7 @@ public class PrinceOfAbolition {
     // =========================
     // Ability 6 - Entropy
     // =========================
-    public static void princeOfAbolitionEntropy(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void frenziedMageEntropy(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 4)) return;
         if (!paySpirituality(player, ENTROPY_COST)) return;
@@ -911,7 +911,7 @@ public class PrinceOfAbolition {
     // =========================
     // Ability 7 - Abolition
     // =========================
-    public static void princeOfAbolitionAbolition(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void frenziedMageAbolition(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 3)) return;
         if (!paySpirituality(player, ABOLITION_COST)) return;

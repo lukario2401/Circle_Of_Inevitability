@@ -25,7 +25,7 @@ public class SequenceCommands {
 
     /** The Pathway names exactly as the classes check them. */
     public static final List<String> PATHWAYS = List.of(
-            "Key Of Stars", "Worm Of Time", "Hand Of Order", "Attendant Of Mysteries", "Prince Of Abolition", "Pale Emperor",
+            "Key Of Stars", "Worm Of Time", "Hand Of Order", "Attendant Of Mysteries", "Frenzied Mage", "Pale Emperor",
             "Conqueror", "Apocalypse", "Dark Angel", "Beauty Goddess", "Hand Of God","Knight Of Misfortune",
             "Abomination");
 

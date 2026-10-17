@@ -19,7 +19,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManDegeneration;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessMoonWheel;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderBind;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionAbolition;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageAbolition;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesGrafting;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodTwilight.handOfGodTwilight;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneDarkness.knightOfMisfortuneDarkness;
@@ -51,7 +51,7 @@ public class SKeyPressAbilitySevenUsed {
 
         keyOfStarsCosmicPlague(player,level,serverLevel,false);
         handOfOrderBind(player,level,serverLevel,false);
-        princeOfAbolitionAbolition(player,level,serverLevel,false);
+        frenziedMageAbolition(player,level,serverLevel,false);
         attendantOfMysteriesGrafting(player,level,serverLevel,false);
         paleEmperorWraiths(player,level,serverLevel,false);
         conquerorFogOfWar(player,level,serverLevel,false);

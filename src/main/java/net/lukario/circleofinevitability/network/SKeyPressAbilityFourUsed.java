@@ -20,7 +20,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderAbility4;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsSeal;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionHammer;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageHammer;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn.handOfGodDawn;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune.knightOfMisfortuneRequiem;
 
@@ -51,7 +51,7 @@ public class SKeyPressAbilityFourUsed {
 
         keyOfStarsSeal(player,level,serverLevel,false);
         attendantOfMysteriesAirCannon(player,level,serverLevel,false);
-        princeOfAbolitionHammer(player,level,serverLevel,false);
+        frenziedMageHammer(player,level,serverLevel,false);
         handOfOrderAbility4(player,level,serverLevel,false);
         paleEmperorSpearSkull(player,level,serverLevel,false);
         conquerorFlameTransformation(player,level,serverLevel,false);

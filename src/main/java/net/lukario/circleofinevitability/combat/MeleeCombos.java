@@ -26,7 +26,7 @@ public final class MeleeCombos {
         register(HandOfOrder.MELEE_COMBO);
         register(AttendantOfMysteries.MELEE_COMBO);
         register(KeyOfStars.MELEE_COMBO);
-        register(PrinceOfAbolition.MELEE_COMBO);
+        register(FrenziedMage.MELEE_COMBO);
         register(PaleEmperor.MELEE_COMBO);
         register(WormOfTime.MELEE_COMBO);
         register(Conqueror.MELEE_COMBO);

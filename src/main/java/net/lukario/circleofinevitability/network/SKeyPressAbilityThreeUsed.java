@@ -22,7 +22,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderEdict;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsBuff;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSerpent;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionFrost;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageFrost;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility3;
 
 public class SKeyPressAbilityThreeUsed {
@@ -53,7 +53,7 @@ public class SKeyPressAbilityThreeUsed {
         keyOfStarsBuff(player,level,serverLevel,false);
         attendantOfMysteriesDamageTransfer(player,level,serverLevel,false);
         handOfOrderEdict(player,level,serverLevel,false);
-        princeOfAbolitionFrost(player,level,serverLevel,false);
+        frenziedMageFrost(player,level,serverLevel,false);
         paleEmperorSerpent(player,level,serverLevel,false);
         wormOfTimeAbility3(player,level,serverLevel,false);
         conquerorFireRavens(player,level,serverLevel,false);

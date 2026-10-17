@@ -22,7 +22,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderBuff;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsStarBurst;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorRoot;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionSpear;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageSpear;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility1;
 
 public class SKeyPressAbilityOneUsed {
@@ -52,7 +52,7 @@ public class SKeyPressAbilityOneUsed {
 
         keyOfStarsStarBurst(player,level,serverLevel,false);
         attendantOfMysteriesPaperDagger(player,level,serverLevel,false);
-        princeOfAbolitionSpear(player,level,serverLevel,false);
+        frenziedMageSpear(player,level,serverLevel,false);
         handOfOrderBuff(player,level,serverLevel,false);
         paleEmperorRoot(player,serverLevel,false);
         wormOfTimeAbility1(player,level,serverLevel,false);

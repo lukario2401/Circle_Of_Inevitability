@@ -18,7 +18,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManCull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessGaze;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderWords;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PrinceOfAbolition.princeOfAbolitionEntropy;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageEntropy;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesHistoricalVoid;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationChains.abominationChains;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting.handOfGodDemonHunting;
@@ -51,7 +51,7 @@ public class SKeyPressAbilitySixUsed {
 
         keyOfStarsOrbital(player,level,serverLevel,false);
         handOfOrderWords(player,level,serverLevel,false);
-        princeOfAbolitionEntropy(player,level,serverLevel,false);
+        frenziedMageEntropy(player,level,serverLevel,false);
         attendantOfMysteriesHistoricalVoid(player,level,serverLevel,false);
         paleEmperorWings(player,level,serverLevel,false);
         conquerorGalvanization(player,level,serverLevel,false);
