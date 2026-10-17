@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx.Status;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
@@ -812,6 +813,7 @@ public class DarkAngel {
             case "Apocalypse" -> 0xB0B050FF;
             case "Beauty Goddess" -> 0xB0DCE8FF;
             case HandOfGod.PATHWAY -> 0xB0FF7A1A;
+            case Abomination.PATHWAY -> 0xB06C3082;
             case PATHWAY -> 0xB0D0283C;
             default -> HangedManFx.SOUL;
         };

@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationWraith.abominationWraith;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypsePlague;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesCountdown;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorCull;
@@ -59,6 +60,7 @@ public class SKeyPressAbilityFiveUsed {
         beautyGoddessLunarBattlefield(player,level,serverLevel,false);
         handOfGodProtection(player,level,serverLevel,false);
         knightOfMisfortuneSpiritCommanding(player,level,serverLevel,false);
+        abominationWraith(player,level,serverLevel,false);
 
 
 

@@ -1,5 +1,8 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationWraith;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationZombie;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting;
@@ -229,7 +232,19 @@ public final class PathwayAbilities {
             new Ability("Hand Of God", 6, "Demon Hunting", 4, SNEAK, STEALABLE,              // stolen: no wheel; Giant Form refuses a thief
                     (player, level, sl) -> HandOfGodDemonHunting.handOfGodDemonHunting(player, level, sl, true)),
             new Ability("Hand Of God", 7, "Silver and Twilight", 3, SNEAK, STEALABLE,        // stolen: no wheel, its last (or a random) entry
-                    (player, level, sl) -> HandOfGodTwilight.handOfGodTwilight(player, level, sl, true)));
+                    (player, level, sl) -> HandOfGodTwilight.handOfGodTwilight(player, level, sl, true)),
+
+            // ---- Abomination (docs/ABOMINATION.md). Keys 6 and 7 are not written yet ----
+            new Ability("Abomination", 1, "Blood Chain", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> Abomination.abominationBloodChain(player, level, sl, true)),
+            new Ability("Abomination", 2, "Moonstruck", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> Abomination.abominationMoonstruck(player, level, sl, true)),
+            new Ability("Abomination", 3, "Rending Pounce", 7, SNEAK, STEALABLE,              // Werewolf Form refuses a thief
+                    (player, level, sl) -> Abomination.abominationRendingPounce(player, level, sl, true)),
+            new Ability("Abomination", 4, "Zombie", 6, SNEAK, STEALABLE,                      // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> AbominationZombie.abominationZombie(player, level, sl, true)),
+            new Ability("Abomination", 5, "Wraith", 5, SNEAK, OWN_PATHWAY_ONLY,               // Possession needs this key to step out
+                    (player, level, sl) -> AbominationWraith.abominationWraith(player, level, sl, true)));
 
 
 

@@ -41,6 +41,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | "My next normal hit is special" (a backstab, a charged blow) | [`EmpoweredHit`](#empoweredhit) | `status/` |
 | Write down everything someone takes for a while, then hit them with all of it at once (a curse that comes due) | [`StoredDamage`](#storeddamage) | `status/` |
 | Nothing heals them for a while (frostbite, a festering wound) | [`NoHeal`](#noheal) | `status/` |
+| An open wound: damage once a second for a while, counted as the caster's (a chain of blood, claws, thorns) | [`Bleeding`](#bleeding) | `status/` |
+| Who died near a spot lately, and raising them again as what they were (risen dead, a sentence carried out) | [`Fallen`](#fallen-the-dead-that-can-rise) | `combat/` |
 | Take over a mob | [`Marionette`](#marionette) | `status/` |
 | Call up creatures that fight for you for a while, then vanish without drops (a door of summoning, risen dead) | [`Marionette.spawnSummon`](#marionette) | `status/` |
 | Everyone in a circle, enemies and allies alike, or only the caster's side | [`Spells.livingAround`, `alliesAround`](#1-spells-aiming-and-enemies) | `combat/` |
@@ -66,6 +68,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Armor that is not an item: less damage, a layer of absorption, no knockback (plates of light, a coat of silver) | [`ConjuredArmor`](#conjuredarmor) | `status/` |
 | A weapon that is not an item: while it is drawn, the player's normal hits are its hits (a sword of light, claws of flame) | [`ConjuredWeapon`](#conjuredweapon) | `status/` |
 | The light sources near a spot or near the crosshair, and whether a spot is in daylight | [`Spells.lightNear`, `lightAimed`, `inDaylight`](#1-spells-aiming-and-enemies) | `combat/` |
+| The reflections (still water, ice, glass, polished metal) near a spot or near the crosshair | [`Spells.reflectionNear`, `reflectionAimed`, `isReflective`](#1-spells-aiming-and-enemies) | `combat/` |
+| Is it a full-moon night? | [`Spells.isFullMoonNight`](#1-spells-aiming-and-enemies) | `combat/` |
 | A hit that no shield, substitute or death ward stops | [`Spells.strikeThrough`](#1-spells-aiming-and-enemies) | `combat/` |
 | "Burns evil and undead" in one call | [`Spells.isEvil`](#1-spells-aiming-and-enemies) | `combat/` |
 | Particles only one player sees (a trail for the hunter) | `ParticleShapes.spawnFor(viewer, particle, at, velocity)` | `particles/fx/` |
@@ -177,6 +181,10 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `lightNear(sl, center, radius, minLight)` | The blocks giving off at least `minLight` light (torch 14, lantern and glowstone 15) within `radius` (8 at most: every block is looked at), nearest first |
 | `lightAimed(player, sl, range, around, minLight)` | The light source nearest to what the crosshair is on, within `around` of it, or `null` |
 | `inDaylight(sl, pos)` | `true` by day for a spot under the open sky: sunlight as a light source |
+| `isReflective(sl, pos)` | `true` for a block that shows a reflection: still water at the surface (a source block with no water on top), ice of every kind, glass and glass panes (stained and tinted too), and blocks of polished metal (iron, gold, unweathered copper, netherite, diamond) |
+| `reflectionNear(sl, center, radius)` | The reflective blocks within `radius` (8 at most, as for `lightNear`), nearest first |
+| `reflectionAimed(player, sl, range, around)` | The reflection nearest to what the crosshair is on, within `around` of it, or `null`. The crosshair stops on still water here, so looking at a lake finds the lake |
+| `isFullMoonNight(sl)` | `true` at night when the moon is full: the world's first night and every eighth after it (`MOON_DAYS`). Counted from the world's age, so sleeping through a night or `/time set` does not move it |
 | `clearStart(player, sl, wanted)` | `wanted`, or just in front of the wall if a wall is between it and the player's eyes. For things that appear beside the player |
 | `clearLine(player, sl, from, to)` | `true` when nothing solid is between two points |
 | `freeSpotNear(player, sl, from, direction, distance)` | A spot to blink to: about `distance` blocks from `from`, in or near `direction`, where the player fits. `null` if walled in |
@@ -571,6 +579,32 @@ Used in `plague` in `Apocalypse.java`.
 
 ---
 
+## Fallen: the dead that can rise
+
+Every mob that dies is written down for a while: what it was, where it fell, which way it faced, when. Players, bosses (`Fallen.MAX_HEALTH`, 150, or more) and summons that vanish are left out.
+
+```java
+for (Fallen.Body body : Fallen.near(sl, spot, 10, 200)) {        // fell within 10 blocks in the last 10 seconds, nearest first
+    if (!Fallen.take(body)) continue;                             // taken: no other cast raises it
+    showItRising(body.where());
+    Later.run(sl, 14, () -> Fallen.rise(body, player, sl, 600));  // up again as what it was, fighting for the player
+}
+```
+
+| Part | What it does |
+|---|---|
+| `Fallen.near(sl, center, radius, maxAgeTicks)` | The bodies that fell there lately, nearest first |
+| `Fallen.take(body)` | Takes it off the list so nothing finds it again. `false` if something took it first |
+| `Fallen.rise(body, master, sl, ticks)` | Spawns what it was where it fell (a skeleton as a skeleton, a baby as a baby) as a `Marionette.summon` of `master` for `ticks`: it fights for them and vanishes after, with no drops. `null` if it cannot (not a mob, no room, it never really died) |
+| `body.type()`, `where()`, `yaw()`, `tick()`, `age(sl)`, `baby()`, `id()` | What was written down |
+
+- Bodies are forgotten after `Fallen.KEEP_TICKS` (400). Nothing is saved: a restart forgets them all.
+- Take a body when you start showing it rise and `rise` it when the look is done; `rise` takes it too if nobody did.
+- A death that a `DeathWard` cheats is written down all the same, but `rise` sees that it is still up and does nothing.
+- Used by Raise the Dead and Death Sentence (`raiseTheDead`, `sentenceFalls` in `AbominationZombie.java`).
+
+---
+
 ## Reel: drawn along a line
 
 An entity is drawn straight to a point, fast, the way a grappling line pulls: a player swinging to a ledge, a mob yanked in, everyone tangled dragged to the middle.
@@ -819,6 +853,21 @@ NoHeal.isApplied(entity);   NoHeal.ticksLeft(entity);   NoHeal.remove(target);
 
 Health set straight away (`setHealth`, a `DeathWard` bringing someone back) is not healing and still works. Saved with the entity. Used by the Hopeless Ice Age (`iceAge` in `Apocalypse.java`).
 
+### Bleeding
+
+An open wound: the entity loses health once a second for a while, and the damage counts as the one who opened it (`DamageFx.credit`).
+
+```java
+Bleeding.apply(target, player, 80, 2f);          // 4 seconds, 2 a second; false if it cannot bleed
+Bleeding.isBleeding(entity);   Bleeding.ticksLeft(entity);   Bleeding.perSecond(entity);   Bleeding.remove(target);
+Bleeding.addImmunity(entity -> ...);             // some cannot bleed (a body that feels no pain)
+Bleeding.addListener((victim, amount, source) -> ...);   // the look and sound of each drip
+```
+
+- Applying again makes it last longer if the new time is longer and keeps the bigger of the two numbers, so a scratch never softens a deep wound. The newest source gets the credit.
+- Magic damage: armor does not soften it. It ends when the target dies, or at once when it becomes immune. Creative players do not bleed.
+- The look is a listener's: Abomination shows `AbominationFx.bleed` for the wounds its own players open. Saved with the entity. Used by Blood Chain, Rending Pounce and Werewolf Form's claws (`Abomination.java`).
+
 ### SupernaturalResistance
 
 For a while the supernatural has less hold on an entity: supernatural damage is cut, and blindness and nausea cannot be put on it. A grant that shakes off also ends roots, freezing, `Blind`, taunts and darkness on it every tick.
@@ -995,6 +1044,7 @@ Armor that is not an item: it weighs nothing and cannot be taken off or dropped.
 ConjuredArmor.of("my_class_bone_shell")
         .lasts(900)                     // 0 = until ConjuredArmor.takeOff(...)
         .cut(0.4f)                      // 40% less damage from everything
+        .projectileCut(0.6f)            // projectiles 60% less (the bigger of the two counts for them)
         .absorption(8f).regrow(40)      // a layer of absorption, one point back every 2 s without a hit
         .steady()                       // no knockback, slowness does not take
         .onHit((wearer, amount) -> ...)
@@ -1004,7 +1054,7 @@ ConjuredArmor.isWorn(entity, name);   ConjuredArmor.ticksLeft(entity, name);   C
 ```
 
 - Several under different names: the biggest cut counts and the layers add up. Works on mobs too. Not saved.
-- Used by Hand Of God's Dawn Armor and Silver Armor (`dawnArmor` in `HandOfGodDawn.java`) and by Mercury Liquefaction on an ally.
+- Used by Hand Of God's Dawn Armor and Silver Armor (`dawnArmor` in `HandOfGodDawn.java`), by Mercury Liquefaction on an ally, and by Abomination's Undying Flesh (`undyingFlesh` in `AbominationZombie.java`, with `projectileCut`).
 
 ### ConjuredWeapon
 
@@ -1602,6 +1652,9 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | A hurricane that rolls along a line tick by tick and hits each one once | `releaseHurricane`, `hurricaneReaches` in `HandOfGodDawn.java` |
 | `WeaponCoat` chosen by the target, `Unnoticed`, `GiantForm` with madness, reading an enemy into chat | `alchemy`, `coatFor`, `mindConcealment`, `giantForm`, `giantSecond`, `read` in `HandOfGodDemonHunting.java` |
 | `Concealment` riding along with a host, `Reel` while hidden, `Spells.lightNear` / `lightAimed`, `Spells.strikeThrough`, `Burial`, `StoredDamage` paid back twice, a `Zone` that weakens what enemies deal | `mercuryLiquefaction`, `mercuryStep`, `lightConcealment`, `twilightSword`, `slam`, `passageOfTime`, `divineKingdom`, `kingdomCut` in `HandOfGodTwilight.java` |
+| `Reel` that drags an enemy in and a `Root` that holds it until a fixed moment, `Bleeding`, `Reel` on the caster for a leap, `GiantForm` + `ConjuredWeapon` claws, `Taunt` or `Fear` by what the target is, `Spells.isFullMoonNight` | `chainOne`, `restraint`, `moonstruck`, `pounce`, `claws`, `werewolfForm`, `fullMoonTick` in `Abomination.java` |
+| `Fallen` (the dead rise, reserved first), `Zone.around` that freezes each one once, `ConjuredArmor.projectileCut`, one `Countdown` for several targets | `raiseTheDead`, `graveChill`, `undyingFlesh`, `deathSentence` in `AbominationZombie.java` |
+| `Spells.reflectionNear` / `reflectionAimed` with `Concealment` on the way, `Parasite` entered a moment after the cast (paid back if it fails) with an upkeep and the key that steps out, `Marionette.control` on wild vexes before summoning the rest | `mirrorStep`, `possession`, `HOOKS`, `ghostHost` in `AbominationWraith.java` |
 
 ## Tricks worth copying
 
@@ -1830,4 +1883,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`). `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`). `combat/Fallen` remembers the dead. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

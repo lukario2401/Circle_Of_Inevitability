@@ -6,7 +6,7 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 
 | Word | Meaning | Where |
 | --- | --- | --- |
-| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God, Knight Of Misfortune (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God, Knight Of Misfortune, Abomination (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
@@ -57,9 +57,10 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Dark Angel | Divination 9 | Whispers 8 | Shadow Binding 7 | Flesh Bomb 6 | Grazing 5 (7 slots of stolen abilities) | Cull of Spiritual Flesh 4 | Degeneration 3 |
 | Beauty Goddess | Medicine Concoction 9 | Taming 8 | Wings of Darkness 7 | Potions 6 (wheel: potions at 6, 6, 5, 4) | Lunar Battlefield 5 | Gaze of Darkness 4 | Moon 3 (wheel: Door of Summoning 3, Creation 2, Beauty 1, Blood Moon 0) |
 | Hand Of God | Warrior's Charge 9 | Gladiator's Flurry 8 | Grandmaster's Edge 7 | Dawn 6 (wheel: Light of Dawn, Dawn Armor, Sword of Dawn, Hurricane of Light, all at 6) | Protection 5 | Demon Hunting 4 (wheel: Eye, Alchemy, Mind Concealment, Giant Form, all at 4) | Silver and Twilight 3 (wheel: Mercury 3, Silver Rapier 3, Light Concealment 3, Twilight Sword 2, Divine Right Hand 1, Passage of Time 0, Decay 0, Divine Kingdom 0) |
+| Abomination | Blood Chain 9 | Moonstruck 8 | Rending Pounce 7 | Zombie 6 (wheel: Raise the Dead, Grave Chill, Undying Flesh, Death Sentence, all at 6) | Wraith 5 (wheel: Mirror Step, Possession, Ghost Host, all at 5) | - (Chains 4, not written yet) | - (Curses 3, not written yet) |
 | Knight Of Misfortune | Night Sight 9 | Midnight Poem 8 (wheel: Tranquilize, Lullaby, Pacify, Fear at 8, Agitating 6) | Nightmare 7 | Requiem 6 | Spirit Commanding 5 (wheel: Terror Banshee, Earthen Spirit, Gale Spirit at 5, Command Spirits 1) | Nightwatcher 4 (wheel: Night Domain, Hair Entanglement, Curse of Misfortune, Demonic Wolf Form at 4) | Darkness and Concealment 3 (wheel: Sword of Darkness, Nightmare World at 3, Concealed State, Secret Concealment, Concealed World at 2, Mantle of Darkness 1, Eternal Rest, Destination of All Things 0) |
 
-The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md). So do Knight Of Misfortune's four wheels (H, L, N, M); its Nightmare (J) becomes Dream Invasion while the soul is out of the body; see [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md).
+The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md). So do Knight Of Misfortune's four wheels (H, L, N, M); its Nightmare (J) becomes Dream Invasion while the soul is out of the body; see [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md). Abomination's two wheels (K, L) work the same way; a Possession is left with the Wraith key (L) again; see [ABOMINATION.md](ABOMINATION.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
@@ -120,6 +121,12 @@ What a Beyonder always has from a Sequence on (that Sequence and every stronger 
 | Presence of Concealment: no ability can pick you in the dark or while you sneak; enemies within 10 blocks are always slowed and cannot sprint (in `KnightOfMisfortune`) | Knight Of Misfortune | 2 |
 | Archangel Body: six more hearts, Strength I, Speed I; Ill Omen: whoever hurts you has a 25% chance to carry a level of Misfortune; Misfortune does not take on you (in `KnightOfMisfortune`) | Knight Of Misfortune | 1 |
 | Eternal Slumber: sleep, fear and taunts do not take, supernatural damage halved; Horror: every 6 s whoever looks at you within 24 blocks flinches; Ill Omen always, as Catastrophe | Knight Of Misfortune | 0 |
+| Strength I | Abomination | 9 |
+| Lunatic Mind: fear and nausea do not take; Full Moon: on a full-moon night under the open sky Strength II and Speed I, Werewolf Form's madness fills twice as fast, Restraint cuts only 35% and Lunar Frenzy's crash lasts twice as long (in `Abomination`) | Abomination | 8 |
+| Keen Senses: Speed I, Night Vision, and a sound only you hear when a mob starts hunting you out of sight (in `Abomination`) | Abomination | 7 |
+| Unliving Body: Regeneration I; poison, hunger and freezing do not take; projectiles do 25% less (in `Abomination`) | Abomination | 6 |
+| Weightless: no fall damage; spirits, ghosts and summons within 16 blocks are marked for you alone (in `Abomination`) | Abomination | 5 |
+| Puppeteer: what you summon or take over lasts 1.5 times as long (in `Abomination`, `servantTicks`) | Abomination | 4 |
 
 To add one, add a line to that list (and a row here):
 

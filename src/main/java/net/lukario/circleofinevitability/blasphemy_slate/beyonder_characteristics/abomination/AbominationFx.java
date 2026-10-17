@@ -92,7 +92,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *          blight(sl, target, stage, ticks, tag), blightJump(sl, from, to, stage)
  *          abominationForm(sl, player, height, ticks, tag) (whole at FORM_RISEN), abominationTick(sl, player, radius),
  *              abominationCursed(sl, attacker), calamity(sl, victim), abominationFormEnd(sl, player, height, tag)
- *   Passives: fullMoonRises(sl, player), keenSenses(player), whisperingCurse(sl, attacker), baneAura(sl, player, radius),
+ *   Passives: fullMoonRises(sl, player), keenSenses(player), spiritSeen(viewer, spirit), whisperingCurse(sl, attacker), baneAura(sl, player, radius),
  *          chainedAura(sl, player, radius), thornsBack(sl, attacker)
  *   Every timed cast: status(player, Status.X, ticks) shows its picture and its clock; statusEnd(player, Status.X) takes them away.
  *
@@ -570,7 +570,7 @@ public final class AbominationFx {
         ParticleShapes.burst(sl, BLOOD_DROP, chestOf(target), 6, 0.03, 0.1);
     }
 
-    /** Once a second while something bleeds (the planned status/Bleeding): drops fall, now and then a pool. */
+    /** Once a second while something bleeds (status/Bleeding, through its listener in Abomination): drops fall, now and then a pool. */
     public static void bleed(ServerLevel sl, LivingEntity target) {
         ParticleShapes.cone(sl, BLOOD_DROP, chestOf(target), new Vec3(0, -1, 0), 120, 5, 0.02, 0.08);
         ParticleShapes.burst(sl, BLOOD_MIST, chestOf(target), 1, 0.01, 0.02);
@@ -1586,6 +1586,11 @@ public final class AbominationFx {
     /** Werewolf's Keen Senses: something started hunting the player out of sight. A sound only they hear. */
     public static void keenSenses(ServerPlayer player) {
         privateSound(player, ModSounds.ABOMINATION_GROAN, 0.25f, 1.8f);
+    }
+
+    /** Wraith's Weightless, once a second: a wisp over a spirit, ghost or summon near the player, only they see it. */
+    public static void spiritSeen(ServerPlayer viewer, LivingEntity spirit) {
+        ParticleShapes.spawnFor(viewer, GHOST_WISP, headOf(spirit).add(0, 0.4, 0), new Vec3(0, 0.02, 0));
     }
 
     /** Disciple of Silence's Whispering Curse (and the Abomination's): a melee attacker is cursed. */
