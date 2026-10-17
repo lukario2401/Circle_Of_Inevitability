@@ -30,6 +30,7 @@ public class PathwayHudIcon {
         ICONS.put("Beauty Goddess", icon("beauty_goddess"));            // shows once the Pathway exists (docs/BEAUTY_GODDESS.md)
         ICONS.put("Hand Of God", icon("hand_of_god"));                  // shows once the Pathway exists (docs/HAND_OF_GOD.md)
         ICONS.put("Knight Of Misfortune", icon("knight_of_misfortune")); // docs/KNIGHT_OF_MISFORTUNE.md
+        ICONS.put("Abomination", icon("abomination"));                  // shows once the Pathway exists (docs/ABOMINATION.md)
     }
 
     private static Identifier icon(String fileName) {
