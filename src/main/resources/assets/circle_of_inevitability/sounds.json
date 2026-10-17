@@ -870,5 +870,379 @@
         "name": "circle_of_inevitability:knight_of_misfortune/dissolve"
       }
     ]
+  },
+  "abomination.chain_whip": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.chain_whip",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/chain_whip"
+      }
+    ]
+  },
+  "abomination.chain_bind": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.chain_bind",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/chain_bind"
+      }
+    ]
+  },
+  "abomination.bleed": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.bleed",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/bleed"
+      }
+    ]
+  },
+  "abomination.restraint": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.restraint",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/restraint"
+      }
+    ]
+  },
+  "abomination.unchain": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.unchain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/unchain"
+      }
+    ]
+  },
+  "abomination.moonstruck": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.moonstruck",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/moonstruck"
+      }
+    ]
+  },
+  "abomination.madness": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.madness",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/madness"
+      }
+    ]
+  },
+  "abomination.frenzy": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.frenzy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/frenzy"
+      }
+    ]
+  },
+  "abomination.frenzy_crash": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.frenzy_crash",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/frenzy_crash"
+      }
+    ]
+  },
+  "abomination.pounce": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.pounce",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/pounce"
+      }
+    ]
+  },
+  "abomination.claw": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.claw",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/claw_1"
+      },
+      {
+        "name": "circle_of_inevitability:abomination/claw_2"
+      }
+    ]
+  },
+  "abomination.werewolf_form": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.werewolf_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/werewolf_form"
+      }
+    ]
+  },
+  "abomination.howl": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.howl",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/howl"
+      }
+    ]
+  },
+  "abomination.raise_dead": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.raise_dead",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/raise_dead"
+      }
+    ]
+  },
+  "abomination.groan": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.groan",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/groan_1"
+      },
+      {
+        "name": "circle_of_inevitability:abomination/groan_2"
+      }
+    ]
+  },
+  "abomination.grave_chill": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.grave_chill",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/grave_chill"
+      }
+    ]
+  },
+  "abomination.freeze": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.freeze",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/freeze"
+      }
+    ]
+  },
+  "abomination.undying": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.undying",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/undying"
+      }
+    ]
+  },
+  "abomination.sentence": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.sentence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/sentence"
+      }
+    ]
+  },
+  "abomination.sentence_tick": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.sentence_tick",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/sentence_tick"
+      }
+    ]
+  },
+  "abomination.sentence_fall": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.sentence_fall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/sentence_fall"
+      }
+    ]
+  },
+  "abomination.mirror_enter": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.mirror_enter",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/mirror_enter"
+      }
+    ]
+  },
+  "abomination.mirror_exit": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.mirror_exit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/mirror_exit"
+      }
+    ]
+  },
+  "abomination.possession": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.possession",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/possession"
+      }
+    ]
+  },
+  "abomination.possession_exit": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.possession_exit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/possession_exit"
+      }
+    ]
+  },
+  "abomination.ghost_host": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.ghost_host",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/ghost_host"
+      }
+    ]
+  },
+  "abomination.ghost_wail": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.ghost_wail",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/ghost_wail"
+      }
+    ]
+  },
+  "abomination.animate": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.animate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/animate"
+      }
+    ]
+  },
+  "abomination.hurl": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.hurl",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/hurl"
+      }
+    ]
+  },
+  "abomination.shackles": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.shackles",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/shackles"
+      }
+    ]
+  },
+  "abomination.pain_link": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.pain_link",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/pain_link"
+      }
+    ]
+  },
+  "abomination.curse": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.curse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/curse"
+      }
+    ]
+  },
+  "abomination.relic_set": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.relic_set",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/relic_set"
+      }
+    ]
+  },
+  "abomination.relic_trigger": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.relic_trigger",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/relic_trigger"
+      }
+    ]
+  },
+  "abomination.silence": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.silence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/silence"
+      }
+    ]
+  },
+  "abomination.bane_mist": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.bane_mist",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/bane_mist"
+      }
+    ]
+  },
+  "abomination.blight_jump": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.blight_jump",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/blight_jump"
+      }
+    ]
+  },
+  "abomination.abomination_form": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.abomination_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/abomination_form"
+      }
+    ]
+  },
+  "abomination.calamity": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.calamity",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/calamity"
+      }
+    ]
+  },
+  "abomination.thorn_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.thorn_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/thorn_burst"
+      }
+    ]
+  },
+  "abomination.thorn_hit": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.thorn_hit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/thorn_hit"
+      }
+    ]
+  },
+  "abomination.mausoleum": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.mausoleum",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/mausoleum"
+      }
+    ]
+  },
+  "abomination.coffin_close": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.coffin_close",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/coffin_close"
+      }
+    ]
+  },
+  "abomination.coffin_open": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.coffin_open",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/coffin_open"
+      }
+    ]
+  },
+  "abomination.thorn_garden": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.thorn_garden",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/thorn_garden"
+      }
+    ]
+  },
+  "abomination.rose_heal": {
+    "subtitle": "subtitles.circle_of_inevitability.abomination.rose_heal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:abomination/rose_heal"
+      }
+    ]
   }
 }

@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination.abominationMoonstruck;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseBlackFlame;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesFlamingJump;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorProvocation;
@@ -61,6 +62,7 @@ public class SKeyPressAbilityTwoUsed {
         beautyGoddessTaming(player,level,serverLevel,false);
         handOfGodGladiatorsFlurry(player,level,serverLevel,false);
         knightOfMisfortuneMidnightPoem(player,level,serverLevel,false);
+        abominationMoonstruck(player,level,serverLevel,false);
 
     }
 }

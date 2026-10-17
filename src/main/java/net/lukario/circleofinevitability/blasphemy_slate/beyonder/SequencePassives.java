@@ -78,6 +78,14 @@ public final class SequencePassives {
         effect("Knight Of Misfortune", 1, MobEffects.STRENGTH, 0);                              // Knight of Misfortune: the Archangel's
         effect("Knight Of Misfortune", 1, MobEffects.SPEED, 0);                                 // body (and its hearts, in KnightOfMisfortune)
         custom("Knight Of Misfortune", 0, KnightOfMisfortune::eternalSlumber);                  // Darkness: Eternal Slumber, Horror
+
+        // ---- Abomination (docs/ABOMINATION.md). Also in Abomination itself: Lunatic Mind and the Full Moon (Sequence 8),
+        // Keen Senses' warning (7), Unliving Body's immunities and projectile cut (6), Weightless (5). Sequences 4 to 0
+        // have no passives yet.
+        effect("Abomination", 9, MobEffects.STRENGTH, 0);                                       // Prisoner: Strength I
+        effect("Abomination", 7, MobEffects.SPEED, 0);                                          // Werewolf: Keen Senses, Speed I...
+        effect("Abomination", 7, MobEffects.NIGHT_VISION, 0);                                   // ...and Night Vision
+        effect("Abomination", 6, MobEffects.REGENERATION, 0);                                   // Zombie: Unliving Body, Regeneration I
     }
 
     // =========================

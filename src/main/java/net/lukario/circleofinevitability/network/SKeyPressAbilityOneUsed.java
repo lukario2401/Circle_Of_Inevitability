@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination.abominationBloodChain;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseFatalStep;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesPaperDagger;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorHuntersTrap;
@@ -61,5 +62,6 @@ public class SKeyPressAbilityOneUsed {
         beautyGoddessMedicine(player,level,serverLevel,false);
         handOfGodWarriorsCharge(player,level,serverLevel,false);
         knightOfMisfortuneNightSight(player,level,serverLevel,false);
+        abominationBloodChain(player,level,serverLevel,false);
     }
 }

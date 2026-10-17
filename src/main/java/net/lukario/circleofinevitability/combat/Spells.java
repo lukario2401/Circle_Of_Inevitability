@@ -6,11 +6,14 @@ import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Unnoticed;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.EntityTypeTags;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -24,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -49,6 +53,8 @@ import java.util.function.Consumer;
  *   Spells.alliesAround(player, sl, spot, 6)                        // the caster's side there (livingAround: everyone)
  *   Spells.strikeThrough(player, target, 90f)                       // a hit no shield, substitute or death ward stops
  *   BlockPos light = Spells.lightAimed(player, sl, 32, 4, 10);      // the light source nearest the crosshair, or null
+ *   BlockPos mirror = Spells.reflectionAimed(player, sl, 32, 3);    // the reflection nearest the crosshair, or null
+ *   if (Spells.isFullMoonNight(sl)) ...                             // night, and the moon is full
  *
  * "Enemy" means: anything alive except the caster, what the caster rides or owns (pets, tamed horses), the
  * caster's marionettes, team mates, armor stands, spectators and whoever is concealed. Add your own rule with
@@ -525,6 +531,79 @@ public final class Spells {
     /** True by day for a spot under the open sky (sunlight counts as a light source). */
     public static boolean inDaylight(ServerLevel sl, BlockPos pos) {
         return !sl.isDarkOutside() && sl.canSeeSky(pos);
+    }
+
+    // =========================
+    // The moon
+    // =========================
+
+    /** Days in one round of the moon: full on the first night, then every eighth. */
+    public static final int MOON_DAYS = 8;
+
+    /**
+     * True at night when the moon is full (the first night of the world, and every eighth after it). The day is
+     * counted from the world's age (game time), so a /time set or a night slept through moves the moon in the sky
+     * but not this: it stays the same for everyone and cannot be skipped by sleeping.
+     */
+    public static boolean isFullMoonNight(ServerLevel sl) {
+        return sl.isDarkOutside() && Math.floorMod(sl.getGameTime() / 24000L, (long) MOON_DAYS) == 0;
+    }
+
+    // =========================
+    // Reflections
+    // =========================
+
+    /** Polished metal that shows a reflection (by block name). */
+    private static final Set<String> MIRROR_METALS = Set.of("iron_block", "gold_block", "netherite_block",
+            "copper_block", "waxed_copper_block", "diamond_block");
+
+    /**
+     * True for a block that shows a reflection: still water at the surface (a source block with no water on top),
+     * ice of every kind, glass and glass panes (stained and tinted too), and blocks of polished metal (iron, gold,
+     * copper that has not weathered, netherite, diamond). For walking through mirrors.
+     */
+    public static boolean isReflective(ServerLevel sl, BlockPos pos) {
+        FluidState fluid = sl.getFluidState(pos);
+        if (fluid.is(FluidTags.WATER)) return fluid.isSource() && !sl.getFluidState(pos.above()).is(FluidTags.WATER);
+        BlockState state = sl.getBlockState(pos);
+        if (state.isAir()) return false;
+        if (state.is(BlockTags.ICE)) return true;
+        String name = BuiltInRegistries.BLOCK.getKey(state.getBlock()).getPath();
+        return name.contains("glass") || MIRROR_METALS.contains(name);
+    }
+
+    /**
+     * The reflective blocks (see isReflective) within 'radius' blocks of a point, nearest first. Empty if there is
+     * none. 'radius' is capped at LIGHT_SEARCH_LIMIT, as for lightNear.
+     *
+     *   List<BlockPos> mirrors = Spells.reflectionNear(sl, player.position(), 6);
+     */
+    public static List<BlockPos> reflectionNear(ServerLevel sl, Vec3 center, double radius) {
+        double reach = Math.min(radius, LIGHT_SEARCH_LIMIT);
+        int r = (int) Math.ceil(reach);
+        BlockPos middle = BlockPos.containing(center);
+        List<BlockPos> found = new ArrayList<>();
+        for (BlockPos pos : BlockPos.betweenClosed(middle.offset(-r, -r, -r), middle.offset(r, r, r))) {
+            if (Vec3.atCenterOf(pos).distanceTo(center) > reach) continue;
+            if (isReflective(sl, pos)) found.add(pos.immutable());
+        }
+        found.sort(Comparator.comparingDouble(pos -> Vec3.atCenterOf(pos).distanceToSqr(center)));
+        return found;
+    }
+
+    /**
+     * The reflection nearest to what the crosshair is on, within 'around' blocks of it, as far as 'range' away. The
+     * crosshair stops on the surface of still water here (unlike aimPoint), so looking at a lake finds the lake.
+     * Null if there is none.
+     */
+    public static BlockPos reflectionAimed(Player caster, ServerLevel sl, double range, double around) {
+        Vec3 eye = caster.getEyePosition();
+        Vec3 end = eye.add(caster.getLookAngle().scale(range));
+        BlockHitResult hit = sl.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, caster));
+        Vec3 point = hit.getLocation();
+        if (hit.getType() == HitResult.Type.BLOCK && isReflective(sl, hit.getBlockPos())) return hit.getBlockPos().immutable();
+        List<BlockPos> mirrors = reflectionNear(sl, point, around);
+        return mirrors.isEmpty() ? null : mirrors.get(0);
     }
 
     // =========================

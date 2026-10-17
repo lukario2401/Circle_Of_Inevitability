@@ -34,6 +34,7 @@ import java.util.function.Consumer;
  *   ConjuredArmor.of("my_class_bone_shell")
  *           .lasts(900)                        // ticks; 0 = until ConjuredArmor.takeOff(...)   (default 0)
  *           .cut(0.4f)                         // 40% less damage from everything            (optional)
+ *           .projectileCut(0.6f)               // projectiles 60% less (the bigger of the two) (optional)
  *           .absorption(8f)                    // a layer of absorption health on top        (optional)
  *           .regrow(40)                        // one point of that layer back every 40 ticks without a hit (optional)
  *           .steady()                          // no knockback, and slowness does not take    (optional)
@@ -59,6 +60,7 @@ public final class ConjuredArmor {
     private final String name;
     private int lasts;
     private float cut;
+    private float projectileCut;
     private float absorption;
     private int regrow;
     private boolean steady;
@@ -89,6 +91,8 @@ public final class ConjuredArmor {
 
     public ConjuredArmor lasts(int ticks) { this.lasts = Math.max(0, ticks); return this; }
     public ConjuredArmor cut(float fraction) { this.cut = Math.max(0f, Math.min(1f, fraction)); return this; }
+    /** Projectiles (arrows, tridents, fireballs...) are cut by this instead of 'cut' when it is the bigger one. */
+    public ConjuredArmor projectileCut(float fraction) { this.projectileCut = Math.max(0f, Math.min(1f, fraction)); return this; }
     public ConjuredArmor absorption(float health) { this.absorption = Math.max(0f, health); return this; }
     public ConjuredArmor regrow(int ticksPerPoint) { this.regrow = Math.max(0, ticksPerPoint); return this; }
     public ConjuredArmor steady() { this.steady = true; return this; }
@@ -211,10 +215,12 @@ public final class ConjuredArmor {
         if (entity.level().isClientSide() || !WORN.containsKey(entity.getUUID())) return;
         if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
         Map<String, Worn> mine = WORN.get(entity.getUUID());
+        boolean projectile = event.getSource().is(DamageTypeTags.IS_PROJECTILE);
         float best = 0f;
         long now = entity.level().getGameTime();
         for (Worn worn : mine.values()) {
             best = Math.max(best, worn.armor.cut);
+            if (projectile) best = Math.max(best, worn.armor.projectileCut);
             worn.lastHit = now;
         }
         float amount = event.getAmount() * (1f - best);

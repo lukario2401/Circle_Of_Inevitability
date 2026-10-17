@@ -622,6 +622,43 @@ Three parts are worth using for other Pathways too:
 
 Statuses: `KnightOfMisfortuneFx.status(player, Status.MANTLE, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
 
+### Abomination: ready-made displays
+
+`AbominationFx` (in `beyonder_characteristics/abomination/`) holds the Abomination (Chained pathway) looks for all seven keys, both casts, the four wheels (Zombie on key 4, Wraith on key 5, Chains on key 6, Curses on key 7) and the passives that show. The abilities are not written yet; the displays are ready for them. They only show things; the binding, damage, curses, hiding and moving are the ability's, at the ticks the constants name (`CHAIN_REACHES`, `RESTRAINT_LOCKED`, `MOON_SHOWN`, `WOLF_RISEN`, `HANDS_UP`, `CHILL_SPREAD`, `SENTENCE_LANDS`, `MIRROR_OPENS`, `GHOST_ARRIVES`, `GHOSTS_RISEN`, `OBJECTS_RISE`, `SHACKLES_LOCK`, `MAUSOLEUM_SEALED`, `COFFIN_SHUT`, `COFFIN_OPENED`, `GARDEN_GROWN`, `CURSE_LANDS`, `RITE_FALLS`, `FORM_RISEN`). The class comment lists every call by key; [ABOMINATION.md](ABOMINATION.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/abomination/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` (+ `textures.py`) | The models and their textures in `models/model_fx/abomination/` and `textures/model_fx/abomination/` (`../hanged_man/render.py` draws any of them without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/abomination/`), the status pictures (`textures/gui/abomination/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/chain_link`, `thorn`, `bandage`, `curse_0`, `curse_1`, `claw`, `padlock`, `stitch` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/abomination/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`ABOMINATION_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` and `../hand_of_god/sounds.py` |
+
+**See them in game** (cheats on): `/abominationfx all` or `/abominationfx coffin` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+| Model | What it is | Pivot | Notes |
+|---|---|---|---|
+| `abomination/blood_chain`, `iron_chain` | A chain of congealed blood with a barbed hook / of black iron with an open cuff, 3 blocks, standing up | the lower end `(8, -16, 8)` | For `modelAlong`; `.scale(1, length / 3, 1)` |
+| `abomination/restraint` | Chains wound round a standing player, a padlock on the chest | default (the feet) | Worn with `modelOnTurning`, `.seeThrough()` |
+| `abomination/shackle` | An eight-sided cuff with glowing purple runes and a broken chain, 1.2 blocks across | its middle `(8, 8, 8)` | `.color(...)` turns it to blood for Blood Chain |
+| `abomination/werewolf` | A hunched wolf-man, 2 blocks tall | default (the feet) | Worn with `modelOnTurning`, `.scale(height / 2)` |
+| `abomination/grave_hand` | A rotting hand clawing out of a grave, 3 steps (0 = straight, 2 = hooked) | the forearm's end `(8, -16, 8)` | `.frames(3).smooth()`; start it under the ground |
+| `abomination/coffin` | A dark coffin bound in iron and crowned with thorns, a rose on its lid, 2.4 blocks tall, 4 steps (0 = lid wide open, 3 = shut) | the middle of its foot `(8, -16, 8)` | `.frames(4).smooth()`. Lid = front |
+| `abomination/bandage_wrap` | A body mummified in yellow oily bandages, player-sized | default (the feet) | Worn with `modelOnTurning` |
+| `abomination/doll_vessel` | The Mythical Creature Form's vessel: a rag doll bound by thorny vines, 2.75 blocks tall | between its feet `(8, -16, 8)` | Worn with `modelOnTurning`; `.scale(0.3f)` is Cursed Artifact's relic |
+| `abomination/thorn_spikes`, `rose` | Black thorny vines bursting from the ground (1.9 blocks); one rose on a thorny stem (0.8 blocks) | the roots `(8, -16, 8)`; the rose's foot (default) | |
+| `abomination/ghost` | A see-through ghost, 2 blocks, 2 steps (arms hanging, reaching) | the tail's end (default) | `.frames(2).smooth().glow().seeThrough()` |
+| `abomination/seal_ring`, `seal_core` | The Pathway's seal: a ring of chain and thorns, and an eye crossed by two chains | default | Flat, white: tint them. `AbominationFx.seal(...)` plays both |
+| `abomination/silence_sigil`, `frost_ring` | Sewn lips in a ring; a jagged ring of grave-frost | default | Flat, white |
+| `abomination/sentence_mark`, `curse_mark`, `claw_marks` | A coffin with skull and hourglass; an eye in thorns; three gashes | their middle `(8, 8, 8)` | Standing, white |
+| `abomination/mad_moon` | A pale moon with a staring eye and a crooked grin | its middle `(8, 8, 8)` | Standing, its own colors |
+| `abomination/blood_pool` | A pool of blood | default | Flat, its own colors, no glow |
+| `abomination/mirror_ripple` | An oval of reflection with ripples (animated) | the middle of its bottom edge | Standing, white; `.scale(1.2f, 2.2f, 1f)` for a doorway |
+| `abomination/thorn_wall` | A tile of thorns over bandages | the middle of its bottom edge | Standing, its own colors. The Mausoleum's sphere is made of these |
+
+Statuses: `AbominationFx.status(player, Status.RESTRAINT, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.

@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationZombie.abominationZombie;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseSilkWeaver;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesAirCannon;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFlameTransformation;
@@ -59,6 +60,7 @@ public class SKeyPressAbilityFourUsed {
         beautyGoddessPotions(player,level,serverLevel,false);
         handOfGodDawn(player,level,serverLevel,false);
         knightOfMisfortuneRequiem(player,level,serverLevel,false);
+        abominationZombie(player,level,serverLevel,false);
     }
 
 }

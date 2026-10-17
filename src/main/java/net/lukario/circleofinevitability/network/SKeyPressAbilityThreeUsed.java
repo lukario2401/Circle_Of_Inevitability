@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination.abominationRendingPounce;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseMirrorWorld;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesDamageTransfer;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFireRavens;
@@ -61,6 +62,7 @@ public class SKeyPressAbilityThreeUsed {
         beautyGoddessWings(player,level,serverLevel,false);
         handOfGodGrandmastersEdge(player,level,serverLevel,false);
         knightOfMisfortuneNightmare(player,level,serverLevel,false);
+        abominationRendingPounce(player,level,serverLevel,false);
 
 
     }

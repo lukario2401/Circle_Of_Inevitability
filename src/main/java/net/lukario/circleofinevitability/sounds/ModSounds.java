@@ -15,7 +15,8 @@ import net.minecraftforge.registries.RegistryObject;
  *
  * A new sound: its .ogg (mono, so it is placed in the world) in sounds/, an event in sounds.json with the same name
  * as here, a subtitle in lang/en_us.json, and a line below. The Beauty Goddess ones are made by
- * tools/model_gen/beauty_goddess/sounds.py and the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, which write
+ * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py and the Abomination ones by
+ * tools/model_gen/abomination/sounds.py, which write
  * the .ogg files, sounds.json and the subtitles' names.
  */
 public final class ModSounds {
@@ -250,4 +251,98 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> KNIGHT_DESTINATION = sound("knight_of_misfortune.destination");
     /** Something dissolves into darkness. */
     public static final RegistryObject<SoundEvent> KNIGHT_DISSOLVE = sound("knight_of_misfortune.dissolve");
+
+    // ---- Abomination (made by tools/model_gen/abomination/sounds.py, played by AbominationFx)
+    /** A chain of blood lashes out. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_CHAIN_WHIP = sound("abomination.chain_whip");
+    /** Chains bind tight. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_CHAIN_BIND = sound("abomination.chain_bind");
+    /** Blood drips. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_BLEED = sound("abomination.bleed");
+    /** Chains lock round a body. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_RESTRAINT = sound("abomination.restraint");
+    /** Chains fall away. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_UNCHAIN = sound("abomination.unchain");
+    /** A false moon stares. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_MOONSTRUCK = sound("abomination.moonstruck");
+    /** Mad laughter. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_MADNESS = sound("abomination.madness");
+    /** A heart races in frenzy. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_FRENZY = sound("abomination.frenzy");
+    /** The frenzy fades. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_FRENZY_CRASH = sound("abomination.frenzy_crash");
+    /** A werewolf pounces. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_POUNCE = sound("abomination.pounce");
+    /** Claws rend. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_CLAW = sound("abomination.claw");
+    /** Bones twist into a wolf. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_WEREWOLF_FORM = sound("abomination.werewolf_form");
+    /** A werewolf howls. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_HOWL = sound("abomination.howl");
+    /** The dead claw out of the ground. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_RAISE_DEAD = sound("abomination.raise_dead");
+    /** A zombie groans. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_GROAN = sound("abomination.groan");
+    /** A grave chill spreads. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_GRAVE_CHILL = sound("abomination.grave_chill");
+    /** Ice locks a body. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_FREEZE = sound("abomination.freeze");
+    /** A heart stops, yet goes on. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_UNDYING = sound("abomination.undying");
+    /** A death knell tolls. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_SENTENCE = sound("abomination.sentence");
+    /** The sentence counts down. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_SENTENCE_TICK = sound("abomination.sentence_tick");
+    /** A death sentence falls. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_SENTENCE_FALL = sound("abomination.sentence_fall");
+    /** Someone steps into a reflection. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_MIRROR_ENTER = sound("abomination.mirror_enter");
+    /** Someone steps out of a reflection. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_MIRROR_EXIT = sound("abomination.mirror_exit");
+    /** A spirit takes a body. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_POSSESSION = sound("abomination.possession");
+    /** A spirit leaves a body. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_POSSESSION_EXIT = sound("abomination.possession_exit");
+    /** Ghosts rise. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_GHOST_HOST = sound("abomination.ghost_host");
+    /** A ghost wails. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_GHOST_WAIL = sound("abomination.ghost_wail");
+    /** Objects rise on strings. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_ANIMATE = sound("abomination.animate");
+    /** Something is hurled. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_HURL = sound("abomination.hurl");
+    /** Grave shackles close. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_SHACKLES = sound("abomination.shackles");
+    /** Shared pain. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_PAIN_LINK = sound("abomination.pain_link");
+    /** A curse is laid. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_CURSE = sound("abomination.curse");
+    /** A cursed relic is placed. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_RELIC_SET = sound("abomination.relic_set");
+    /** A cursed relic wakes. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_RELIC_TRIGGER = sound("abomination.relic_trigger");
+    /** A hush falls. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_SILENCE = sound("abomination.silence");
+    /** A baneful mist rolls in. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_BANE_MIST = sound("abomination.bane_mist");
+    /** A blight spreads. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_BLIGHT_JUMP = sound("abomination.blight_jump");
+    /** An abomination takes form. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_ABOMINATION_FORM = sound("abomination.abomination_form");
+    /** Calamity strikes. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_CALAMITY = sound("abomination.calamity");
+    /** Thorns burst from the ground. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_THORN_BURST = sound("abomination.thorn_burst");
+    /** Thorns pierce. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_THORN_HIT = sound("abomination.thorn_hit");
+    /** A thorned mausoleum seals. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_MAUSOLEUM = sound("abomination.mausoleum");
+    /** A coffin is sealed. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_COFFIN_CLOSE = sound("abomination.coffin_close");
+    /** A coffin opens. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_COFFIN_OPEN = sound("abomination.coffin_open");
+    /** A garden of thorns grows. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_THORN_GARDEN = sound("abomination.thorn_garden");
+    /** Roses heal. */
+    public static final RegistryObject<SoundEvent> ABOMINATION_ROSE_HEAL = sound("abomination.rose_heal");
 }
