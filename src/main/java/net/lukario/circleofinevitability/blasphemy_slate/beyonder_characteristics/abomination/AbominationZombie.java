@@ -10,6 +10,7 @@ import net.lukario.circleofinevitability.combat.Zone;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.root.Freeze;
 import net.lukario.circleofinevitability.status.Bleeding;
+import net.lukario.circleofinevitability.status.Connection;
 import net.lukario.circleofinevitability.status.ConjuredArmor;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.StoredDamage;
@@ -126,6 +127,7 @@ public final class AbominationZombie {
     private static final AbilityWheel WHEEL = AbilityWheel.create("abomination_zombie", "Zombie")
             .radius(72)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .castsWhileSilenced(Abomination::castsThroughHush)
             .entry("raise_the_dead", AbominationFx.WHEEL_RAISE_THE_DEAD, "Raise the Dead", RAISE_SEQUENCE,
                     RAISE_COST, RAISE_COOLDOWN, AbominationZombie::raiseTheDead)
             .entry("grave_chill", AbominationFx.WHEEL_GRAVE_CHILL, "Grave Chill", CHILL_SEQUENCE,
@@ -325,7 +327,10 @@ public final class AbominationZombie {
                     AbominationFx.statusEnd(player, Status.SENTENCE);
                 })
                 .start(player);
-        for (LivingEntity one : sentenced) AbominationFx.deathSentence(sl, player, one, ticks, tag);
+        for (LivingEntity one : sentenced) {
+            AbominationFx.deathSentence(sl, player, one, ticks, tag);
+            Connection.touch(player, one);                               // the sentenced are your connections
+        }
         AbominationFx.status(player, Status.SENTENCE, ticks);
         return AbilityWheel.Result.DONE;
     }

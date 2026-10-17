@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationCurses.abominationCurses;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseCatastrophe;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsCosmicPlague;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFogOfWar;
@@ -59,6 +60,7 @@ public class SKeyPressAbilitySevenUsed {
         beautyGoddessMoonWheel(player,level,serverLevel,false);
         handOfGodTwilight(player,level,serverLevel,false);
         knightOfMisfortuneDarkness(player,level,serverLevel,false);
+        abominationCurses(player,level,serverLevel,false);
 
 
     }

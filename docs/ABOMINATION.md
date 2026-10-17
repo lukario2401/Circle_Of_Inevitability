@@ -2,7 +2,7 @@
 
 The Abomination Pathway is the Chained Pathway of Lord of the Mysteries, the Temperance tarot card: Prisoner (9), Lunatic (8), Werewolf (7), Zombie (6), Wraith (5), Puppet (4), Disciple of Silence (3), Ancient Bane (2), Abomination (1), Chained (0). Source: the Chained Pathway and Chained Pathway/Advancement pages of the Lord of the Mysteries wiki. The Chained Pathway/Abilities page could not be fetched when this was written, so every ability below is designed from the theme and from the general abilities the Pathway page lists, not copied from a per-Sequence list. See "Open questions".
 
-Sequences 9 to 5 are written as code: keys 1 to 5 (13 abilities), their passives, and the new parts they need (see "What is built"). Keys 6 and 7 (11 abilities), the passives of Sequences 4 to 0 and two more new parts are still the plan (see "Planned"). The looks and sounds of all of them are there already (see "Looks and sounds"). This file says what every ability does, the numbers it starts from, which parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts were worth writing.
+All of it is written as code: the seven keys (24 abilities), the passives of every Sequence, and the new parts they needed (see "What is built"), with their looks and sounds (see "Looks and sounds"). It has not been compiled or played yet. This file says what every ability does, the numbers it starts from, which parts of the [spell kit](SPELL_KIT.md) build it, and which new reusable parts were worth writing.
 
 Pathway name in code: `"Abomination"`.
 
@@ -84,7 +84,7 @@ The abilities do not each get a Sequence of their own. Sequences 9, 8, 7, 4 and 
 | Rite of Silence | Disciple of Silence (3) | A rite of silence over the spot you aim at, 16 blocks wide, for 8 seconds. Enemies in it cannot use abilities, and mobs cannot attack. |
 | Bane Mist | Ancient Bane (2) | A pale mist stained with blood and black spots spreads 20 blocks round where you aim for 15 seconds. Everything evil in it goes mad: mobs fight each other, players flinch and slow, and every second in it takes more of their luck (Misfortune up to level 5). |
 | Ancient Blight | Ancient Bane (2) | The enemy you look at carries an ancient curse. Every few seconds it jumps to the 2 or 3 nearest enemies, each worse than the last, up to 5 in a chain and 30 in all. What it carries is Misfortune, one level deeper at every jump. |
-| Abomination Form | Abomination (1) | Your Mythical Creature Form. For 60 seconds you are the vessel: a doll bound by thorny vines holds a collection of curses. Strength III and 30% less damage. Whoever comes within 8 blocks of you slowly loses luck, and whoever hurts you is cursed. When the form ends, every curse you laid comes due at once: each enemy with your Misfortune in 32 blocks suffers a calamity. |
+| Abomination Form | Abomination (1) | Your Mythical Creature Form. For 60 seconds you are the vessel: you shrink to half your size, a doll bound by thorny vines that holds a collection of curses, with longer reach to make up for it. Strength III and 30% less damage. Whoever comes within 8 blocks of you slowly loses luck, and whoever hurts you is cursed. When the form ends (its time, or you pick it again, free), every curse you laid comes due at once: each enemy with your Misfortune in 32 blocks suffers a calamity. |
 
 ## Grows with the Sequence
 
@@ -153,7 +153,7 @@ Spirituality is what each Sequence can pay: 9 holds 20, 8 holds 400, 7 holds 198
 
 ## What is built
 
-`blasphemy_slate/beyonder_characteristics/abomination/`: `Abomination.java` (keys 1 to 3, the events, the passives that react to things), `AbominationZombie.java` (key 4), `AbominationWraith.java` (key 5). Every number is a constant at the top of its class. Set a player up with `/sequence pathway <player> "Abomination"`.
+`blasphemy_slate/beyonder_characteristics/abomination/`: `Abomination.java` (keys 1 to 3, the events, the passives that react to things, and the helpers every wheel shares), `AbominationZombie.java` (key 4), `AbominationWraith.java` (key 5), `AbominationChains.java` (key 6), `AbominationCurses.java` (key 7). Every number is a constant at the top of its class. Set a player up with `/sequence pathway <player> "Abomination"`.
 
 | Ability | Method | Built from |
 | --- | --- | --- |
@@ -163,56 +163,60 @@ Spirituality is what each Sequence can pay: 9 holds 20, 8 holds 400, 7 holds 198
 | Lunar Frenzy | `lunarFrenzy`, `crash` | Plain effects for its time, then the crash. Begun under the full moon, the crash lasts twice as long (Lunar Frenzy has no madness meter to fill faster) |
 | Rending Pounce | `pounce`, `claws` | `Reel.in` on yourself toward the target, `FallGuard`, three claws with `Later.run`, `Bleeding`; the last one pushes and roots for a second. A leap that stops just short still claws if the target is within reach |
 | Werewolf Form | `werewolfForm`, `wolfSecond`, `wolfGone` | `GiantForm` (size, reach, step, madness) and `ConjuredWeapon` claws (`Bleeding`, `NoHeal` in `onHit`). Refuses a thief. Cooldown 1200 of its own, as key 3 is no wheel |
-| Raise the Dead | `raiseTheDead`, `risen` in `AbominationZombie` | `Marionette.spawnSummon` (husks instead of zombies where the sun shines, so they do not burn), new `Fallen` for those who just died (reserved with `take` when their hand shows), fire resistance on all of them, `BANE_TOUCH` from Sequence 2 |
+| Raise the Dead | `raiseTheDead`, `risen` in `AbominationZombie` | `Marionette.spawnSummon` (husks instead of zombies where the sun shines, so they do not burn), `Fallen` for those who just died (reserved with `take` when their hand shows), fire resistance on all of them, `BANE_TOUCH` from Sequence 2 |
 | Grave Chill | `graveChill` | `Zone.around` opened at `CHILL_SPREAD`: slowness one level deeper each second inside (up to IV), `Freeze` once each after 3 seconds |
-| Undying Flesh | `undyingFlesh` | `ConjuredArmor` with `.cut`, the new `.projectileCut` and `.steady()`; bleeding removed and `Bleeding.addImmunity` while worn, poison denied, 2% healed each second in `AbominationZombie.tick` |
-| Death Sentence | `deathSentence`, `sentenceFalls` | One `Countdown` for all the sentenced (one at Sequence 6, up to three in sight from Sequence 2); `StoredDamage.deal` for the magic blow at `SENTENCE_LANDS`; one it kills rises through `Fallen` |
-| Mirror Step | `mirrorStep`, `stepOut` in `AbominationWraith` | New `Spells.reflectionNear` / `reflectionAimed`; `Concealment` for the second on the way, a teleport at `MIRROR_OPENS`. You come out standing on the far reflection (water, ice, a metal floor) or beside it (a pane, a wall). A refused step costs nothing and makes the reflections near you glint (`reflectionHint`) |
+| Undying Flesh | `undyingFlesh` | `ConjuredArmor` with `.cut`, `.projectileCut` and `.steady()`; bleeding removed and `Bleeding.addImmunity` while worn, poison denied, 2% healed each second in `AbominationZombie.tick` |
+| Death Sentence | `deathSentence`, `sentenceFalls` | One `Countdown` for all the sentenced (one at Sequence 6, up to three in sight from Sequence 2); `StoredDamage.deal` for the magic blow at `SENTENCE_LANDS`; one it kills rises through `Fallen`. The sentenced become your `Connection`s |
+| Mirror Step | `mirrorStep`, `stepOut` in `AbominationWraith` | `Spells.reflectionNear` / `reflectionAimed`; `Concealment` for the second on the way, a teleport at `MIRROR_OPENS`. You come out standing on the far reflection (water, ice, a metal floor) or beside it (a pane, a wall). A refused step costs nothing and makes the reflections near you glint (`reflectionHint`) |
 | Possession | `possession`, `HOOKS` | `Parasite.enter` at `GHOST_ARRIVES` (you are held still until then; paid back if the host slipped away), steered with `ParasiteControl`, an upkeep of 100 each second, the Wraith key steps out (`allowsKey(5)`). `Parasite` carries your body inside the host, so there is no body left behind and `bodyLeft` is not used. Not stealable: a thief could not step out |
 | Ghost Host | `ghostHost` | At `GHOSTS_RISEN`: `Marionette.control` on wild vexes and phantoms within 24 blocks first, then `Marionette.spawnSummon` vexes for the rest, one every 4 ticks |
-| Passives 9 to 5 | `SequencePassives` and `Abomination` | Strength I; Lunatic Mind (`Fear.addImmunity`, nausea denied), the Full Moon (`fullMoonTick`); Speed I and Night Vision, Keen Senses (`onAbominationTarget`); Regeneration I, Unliving Body (poison and hunger denied, freezing cancelled, projectiles cut); Weightless (falls cancelled, `spiritSeen` once a second). Puppeteer's 1.5 times longer servants (Sequence 4) is in already as `servantTicks`, because Raise the Dead, Possession and Ghost Host use it |
+| Animate Objects | `animateObjects` in `AbominationChains` | `Spells.looseThingsAround` and `Hurled`: each thing rises for `OBJECTS_RISE` (plus 2 ticks per thing, so they go one after another), then flies at the enemies in sight (60 degrees, 32 blocks) in turn. Refused with nothing loose near you or no one to throw at. Projectiles become yours and fly as they would, so an arrow an enemy shot hits for an arrow's damage, not 10 |
+| Grave Shackles | `graveShackles`, `renewHold` | `Root.apply` (MOVEMENT) at `SHACKLES_LOCK`, `DamageLink.share` (half, 8 seconds) with its `addShareListener` showing `painShared`. From Sequence 0 every enemy in sight within 24, and the hold is renewed each second while you stay within 1.5 blocks of where you cast |
+| Thorned Mausoleum | `thornedMausoleum` | `Dome.sphere` round the aimed ground (`keepsEnemiesIn`, `stopsProjectiles`, `shields(0.4)`) raised at `MAUSOLEUM_SEALED`, and a `Zone` inside: Slowness II, `NoHeal`, `Bleeding` 8 a second. One at a time: a new one makes the old crumble |
+| Coffin of Ages | `coffinOfAges`, `coffinEnemy`, `coffinSelf` | An enemy: held at once (`Root`, EVERYTHING), then from `COFFIN_SHUT` asleep (`Slumber`, ETERNAL) and untouchable (its own `SEALED_UNTIL`, cancelled in `onAbominationAttacked`); it wakes at `COFFIN_OPENED` with Misfortune III and `Vulnerable` 20%. Yourself: untouchable and held at once, then healed by half, `Spells.cleanse`, and every enemy within 6 struck and held. A boss refuses. `Concealment` was not used: it would hide the coffin too |
+| Thorn Garden | `thornGarden`, `rose` | Two `Zone`s from `GARDEN_GROWN`: one on enemies (slowness one level deeper each second, held after 3 seconds, `Bleeding` from 2 up to 6 a second), one on allies (`.affects(...)`: 2 health a second and Absorption I). You get the roses in `onPulse`, as the owner is never inside a zone |
+| Curse by Connection | `curseByConnection` in `AbominationCurses` | `Connection`: the one you look at (64 blocks) if you are connected to it, else your newest connection anywhere on the server. At `CURSE_LANDS`: Misfortune II and `Vulnerable` 15% for 30 seconds. From Sequence 2 a connection counts for 30 minutes and the curse lasts twice as long |
+| Cursed Artifact | `cursedArtifact` | `Trap.at(...).set(player, sl, "abomination_relic", 3)`, `relicTick` for the owner's eyes only; the one who springs it gets Misfortune III, `Silence` and becomes your `Connection` |
+| Rite of Silence | `riteOfSilence` | `Zone.at` from `RITE_FALLS`: `Silence.apply` for a second, renewed every half second inside |
+| Bane Mist | `baneMist` | `Zone.at` (20 blocks): one level more Misfortune allowed every 3 seconds inside, up to 5; players get `Fear` and slowness; every 3 seconds `Taunt.brawl` among the mobs in it; `Nocturnality.forceNight` over it |
+| Ancient Blight | `ancientBlight` | `Contagion.spread()` (`passesTo(2, 3)`, `generations(5)`, `maxVictims(30)`), Misfortune of its stage on each carrier |
+| Abomination Form | `abominationForm`, `formGone`, `calamity` | `GiantForm.of(0.5)` (half your size, 1.5 more reach), `ConjuredArmor` (30%), Strength III each second, a `Zone.around` you (a level of Misfortune every 3 seconds), `hurtInForm` from `onAbominationHurt`. At the end by time or by your hand, `Misfortune.befall(CALAMITY)` on every enemy within 32 whose Misfortune is yours (`Misfortune.sourceId`). Picking it again in the form ends it for free (the wheel's `.free(...)`). Refuses a thief. From Sequence 0 it has no timer |
+| Passives 9 to 5 | `SequencePassives` and `Abomination` | Strength I; Lunatic Mind (`Fear.addImmunity`, nausea denied), the Full Moon (`fullMoonTick`); Speed I and Night Vision, Keen Senses (`onAbominationTarget`); Regeneration I, Unliving Body (poison and hunger denied, freezing cancelled, projectiles cut); Weightless (falls cancelled, `spiritSeen` once a second) |
+| Passives 4 to 0 | `SequencePassives` and `Abomination` | Puppeteer (`servantTicks`); Whispering Curse (`meleeAnswered`, and `castsThroughHush` through `Silence.addCastsThrough` and every wheel's `.castsWhileSilenced`); Bane Aura (`baneAura`, and `Misfortune` / `Decay` immunity; `Fear` is already covered by Lunatic Mind); Collection of Curses (`curseTicks`, and the 25% chance in `meleeAnswered`); Chained Aura (`chainedAura`: slowness and `Root` TELEPORT; thorns in `meleeAnswered`) |
 
-How each grows with the Sequence ("Grows with the Sequence") is in for all of these, Sequences 4 to 0 included.
+How each grows with the Sequence ("Grows with the Sequence") is in for all of these.
+
+**One way to curse.** Every curse of the Pathway goes through `Abomination.curse(target, player, levels, max, ticks, catastrophe)`: it lays the Misfortune, never makes a longer curse shorter, and makes the cursed one a `Connection`. Give it `Abomination.curseTicks(player, ticks)` so Collection of Curses can lengthen it. A new curse ability is one call.
+
+**Adding an entry to a wheel** is one `.entry(...)` line and one method that returns `DONE`, `FREE` or `REFUSED`; the wheel checks the Sequence, the cooldown and the cost. Its numbers go at the top of the class, its looks in `AbominationFx`.
 
 **Choices made while writing it**, worth a look:
 
 - **The full moon** is counted from the world's age (`Spells.isFullMoonNight`): the first night and every eighth after it. Sleeping through a night or `/time set` moves the moon in the sky but not this. Minecraft 26.2 keeps the moon phase in an environment attribute whose name could not be checked without the game's code; `isFullMoonNight` is the one place to change if it should follow the sky.
 - **Sequence 9 holds only 20 spirituality**, so Blood Chain and Restraint (250) are first paid at Sequence 8, as for every other Pathway.
-- **Keys 6 and 7** do nothing yet for this Pathway: `PathwayAbilities` has no line for them, and the key packets do not call them.
-
-## Planned: what the rest is built from
-
-| Ability | Built from |
-| --- | --- |
-| Animate Objects | new `Spells.looseThingsAround` and `Hurled`, `Spells.enemiesInSight`, `Spells.strike` |
-| Grave Shackles | `Root.apply` (movement), `DamageLink.share`, `SpellFx.tether` from ground points (the chain gang recipe in the kit), `Spells.enemiesAround` |
-| Thorned Mausoleum | `Dome.sphere` (`keepsEnemiesIn`, `stopsProjectiles`, `shields`), a `Zone` inside for slow, `NoHeal` and `Bleeding`, `HandOfGodFx.sphere`-style shell in thorns and bandages |
-| Coffin of Ages | `Slumber.put` (ETERNAL), `Root.apply` (EVERYTHING), `Concealment.hide` (so nothing can reach it), `Misfortune.add` and `Vulnerable.add` when it wakes; the self-seal is `Concealment.hide` on you plus `Spells.cleanse`, then `Root.apply` round you |
-| Thorn Garden | Two `Zone`s: one on enemies (`Spells.keepEffect` slowness, `Root.apply` after `ticksInside`, `Bleeding`), one on allies (`.affects(one -> !Spells.isEnemy(player, one))`, Regeneration, absorption), `Spells.groundNear` and `SpellFx.risingRings` for the roses |
-| Curse by Connection | new `Connection`, `Misfortune.add`, `Vulnerable.add`, `SpellFx.circleUnder` on the far enemy, a `HudTimer` |
-| Cursed Artifact | `Trap.at(...).set(player, sl, "abomination_relic", 3)`, `ParticleShapes.spawnFor` so only you see it, `Misfortune.add`, `Silence.apply`, `Connection` |
-| Rite of Silence | `Zone.at` (`Silence.apply` every beat to whoever is inside), `SpellFx.runeCircle`, `Spells.sound` |
-| Bane Mist | `Zone.at` (`Taunt.brawl` on mobs every 3 seconds, `Fear.apply` on players, `Misfortune.add` growing with `ticksInside`), `Nocturnality.forceNight` for the dark look, mist particles |
-| Ancient Blight | `Contagion.spread()` (`every` adds Misfortune by `stage`, `passesTo(2, 3)`, `generations(5)`, `maxVictims(30)`), `SpellFx.circleUnder` |
-| Abomination Form | `GiantForm` (reach, ending, no growth), `ConjuredArmor`, `Zone.around` (Misfortune for those near), a `LivingHurtEvent` hook for "whoever hurts you", `Misfortune.befall(victim, CALAMITY)` on everyone with your Misfortune at the end, the vessel as a model round you |
-| Passives 4 to 0 | `SequencePassives` (`effect(...)` and `custom(...)` lines), `Silence.addCastsThrough`, `Decay.addImmunity`, `Misfortune.addImmunity`, and `Spells.strike` touching `Connection` |
-
-Keys 6 and 7 go in as `AbominationChains.abominationChains` and `AbominationCurses.abominationCurses` beside the others, with a line each in `SKeyPressAbilitySixUsed` / `SevenUsed` and `PathwayAbilities.ALL`, and a call to their `tick` and `clearState` from `Abomination`.
+- **A hit is a connection.** `Connection` writes down every hit any player lands (it is a kit part, so other Pathways can use it too); this Pathway's curses, chains and sentences make one as well. The padlock that shows a new one is seen from Sequence 3 only.
+- **Whispering Curse lets a Disciple cast through a hush**, but not while asleep or held fast (a root with MOVE), since a coffin or a full root also stops abilities and should still hold.
+- **Bane Aura** only touches enemies that carry no Misfortune at all, so it never cuts a deeper or longer curse short.
+- **Chained's thorns** are thorns damage and do not answer thorns, so two Chained players do not prick each other forever.
+- **Abomination Form and Werewolf Form** are both a `GiantForm`, so taking one ends the other. Ended that way, Abomination Form's curses do not come due.
 
 ## New reusable parts
 
-Each is one small class in `status/` or `combat/` (or a method in `Spells`) that looks after itself, like the rest of the kit, with a section in [SPELL_KIT.md](SPELL_KIT.md).
+Each is one small class in `status/` or `combat/` (or a method on one that was there) that looks after itself, like the rest of the kit, with a section in [SPELL_KIT.md](SPELL_KIT.md).
 
-| Part | Where | State | What it does | Used by |
-| --- | --- | --- | --- | --- |
-| `Bleeding` | `status/` | Done | `Bleeding.apply(target, owner, ticks, perSecond)`: damage once a second, credited to the owner. Applying again keeps the longer time and the bigger number. `isBleeding`, `ticksLeft`, `perSecond`, `remove`, `addImmunity`, `addListener` (the look of each drip). Saved with the entity | Blood Chain, Rending Pounce, Werewolf Form; later Thorned Mausoleum, Thorn Garden |
-| `Fallen` | `combat/` | Done | `Fallen.near(sl, center, radius, maxAgeTicks)`, `take(body)`, `rise(body, master, sl, ticks)`: who died where lately, raised as what they were. Forgets after 20 seconds; bosses and players left out | Raise the Dead, Death Sentence; `riseAsServant` in `Apocalypse.java` could use it |
-| `Spells.reflectionNear`, `reflectionAimed`, `isReflective` | `combat/` | Done | The reflective blocks near a point and the one nearest the crosshair, as `lightNear` and `lightAimed` are for light | Mirror Step; the Apocalypse's Mirror World could use them |
-| `ConjuredArmor.projectileCut(f)` | `status/` | Done | Projectiles are cut by this when it is bigger than `.cut(...)` | Undying Flesh |
-| `Spells.isFullMoonNight(sl)` | `combat/` | Done | `true` at night when the moon is full | The Full Moon, Lunar Frenzy, Werewolf Form, Restraint |
-| `Connection` | `status/` | Planned | Who you are connected to: `Connection.touch(player, target, ticks)`, `has(player, target)`, `all(player)`, `nearestTo(player, point)`, `latest(player)`, `clear(player, target)`. `Spells.strike` touches it for a short time by itself, so a hit is a connection; abilities may touch it for longer. Not saved | Curse by Connection, Cursed Artifact, Abomination Form |
-| `Hurled` and `Spells.looseThingsAround` | `combat/` | Planned | `looseThingsAround(player, sl, center, radius)` lists what is not alive and moves: dropped items, projectiles, armor stands, boats, minecarts, nearest first. `Hurled.at(thing, owner, target).speed(1.4).damage(10f).onHit(...).launch(sl)` flies it straight at the target each tick and hits the first enemy it touches; a projectile has its owner changed to the caster and is turned round instead. Nothing here touches blocks | Animate Objects |
-| `AbominationFx` | `beyonder_characteristics/abomination/` | Done | Looks and sounds only, as `HandOfGodFx` does (see "Looks and sounds") | All |
+| Part | Where | What it does | Used by |
+| --- | --- | --- | --- |
+| `Bleeding` | `status/` | `Bleeding.apply(target, owner, ticks, perSecond)`: damage once a second, credited to the owner. Applying again keeps the longer time and the bigger number. `isBleeding`, `ticksLeft`, `perSecond`, `remove`, `addImmunity`, `addListener` (the look of each drip). Saved with the entity | Blood Chain, Rending Pounce, Werewolf Form, Thorned Mausoleum, Thorn Garden |
+| `Fallen` | `combat/` | `Fallen.near(sl, center, radius, maxAgeTicks)`, `take(body)`, `rise(body, master, sl, ticks)`: who died where lately, raised as what they were. Forgets after 20 seconds; bosses and players left out | Raise the Dead, Death Sentence; `riseAsServant` in `Apocalypse.java` could use it |
+| `Spells.reflectionNear`, `reflectionAimed`, `isReflective` | `combat/` | The reflective blocks near a point and the one nearest the crosshair, as `lightNear` and `lightAimed` are for light | Mirror Step; the Apocalypse's Mirror World could use them |
+| `ConjuredArmor.projectileCut(f)` | `status/` | Projectiles are cut by this when it is bigger than `.cut(...)` | Undying Flesh |
+| `Spells.isFullMoonNight(sl)` | `combat/` | `true` at night when the moon is full | The Full Moon, Lunar Frenzy, Werewolf Form, Restraint |
+| `Connection` | `status/` | Who a player is connected to: `touch(player, target)`, `has(player, target, withinTicks)`, `ticksSince`, `all`, `latest(player, withinTicks)` (alive anywhere on the server), `find(server, id)`, `clear`, `addListener`. Every hit a player lands touches one by itself. Not saved | Curse by Connection, Cursed Artifact, every curse (`Abomination.curse`), Death Sentence |
+| `Hurled`, `Spells.looseThingsAround` and `isLoose` | `combat/` | `looseThingsAround(player, sl, center, radius)`: dropped items, projectiles, armor stands, boats and minecarts nobody rides, nearest first. `Hurled.at(thing, owner, target).risesFor(12).speed(1.4).damage(10f).onHit(...).launch(sl)` floats it up, flies it straight at the target and hits the first enemy it touches; a projectile becomes the thrower's and is shot instead. Nothing here touches blocks | Animate Objects |
+| `DamageLink.addShareListener` | `status/` | `(from, to, amount, credit) -> ...` each time shared pain passes on, for its look | Grave Shackles |
+| `Misfortune.sourceId(entity)` | `status/` | Who laid the Misfortune it carries now | Abomination Form's calamity |
+| `GiantForm.of(0.5)` | `status/` | Smaller forms always worked (the scale is a multiplier); the guide now says so | Abomination Form |
+| `AbominationFx` | `beyonder_characteristics/abomination/` | Looks and sounds only, as `HandOfGodFx` does (see "Looks and sounds") | All |
 
 ## Looks and sounds
 
@@ -259,23 +263,21 @@ What is there:
 ## Open questions
 
 1. **The Abilities page.** The wiki's Chained Pathway/Abilities page failed to load when this was written, so the abilities are my design from the theme, not from its list. If you paste its text I will line the names and effects up with it.
-2. **The full moon.** The Pathway loses power or control under the full moon. The design softens it: bonuses at night under a full moon, but madness fills twice as fast and Restraint is weaker. Would you rather have it as a plain drawback, or as a pure bonus?
-3. **Key 6 mixes Sequences 4 and 0.** The Chains wheel holds Puppet's strings (Sequence 4) and Chained's mausoleum, coffin and thorns (Sequence 0) because both are about binding. The alternative is to put all of Sequence 0 on key 7, which would make that wheel nine entries.
-4. **Abomination Form's body.** The wiki's example vessel is a doll bound by thorny vines. The design keeps your own size and shows the doll as a model round you. Should it shrink you to a doll instead?
-5. **Stealing.** Proposed: everything is stealable except Werewolf Form and Abomination Form, which refuse anyone whose own Pathway is not Abomination (as Giant Form does for Hand Of God).
+
+Settled: the full moon stays mixed (bonuses, but madness fills faster and Restraint holds less); key 6 keeps Puppet and Chained together; Abomination Form shrinks you to a doll; everything is stealable except Werewolf Form and Abomination Form (and key 5, which a thief could not step out of).
 
 ## Checklist for the code
 
 Following the same steps as Hand Of God ([SPELL_KIT.md](SPELL_KIT.md), "The shape of an ability"):
 
-1. Done for keys 1 to 5: `Abomination.java` (`PATHWAY = "Abomination"`, `abominationBloodChain`, `abominationMoonstruck`, `abominationRendingPounce`), `AbominationZombie.abominationZombie`, `AbominationWraith.abominationWraith`. Still to do: `AbominationChains.abominationChains` and `AbominationCurses.abominationCurses`.
-2. Done: wheels `"abomination_zombie"` (key 4) and `"abomination_wraith"` (key 5), each with `.quickCastCooldown(false).quickCastCost(2f)`. Still to do: `"abomination_chains"` (key 6, radius 80 for its five entries) and `"abomination_curses"` (key 7, radius 88 for its six).
-3. Done for `SKeyPressAbilityOneUsed` to `FiveUsed`. Still to do: `SixUsed` and `SevenUsed`.
-4. Done for keys 1 to 5 in `PathwayAbilities.ALL` (key 5 is not stealable: a thief could not step out of a Possession). Still to do: key 6 at Sequence 4, key 7 at Sequence 3.
+1. Done: `Abomination.java` (`PATHWAY = "Abomination"`, `abominationBloodChain`, `abominationMoonstruck`, `abominationRendingPounce`), `AbominationZombie.abominationZombie`, `AbominationWraith.abominationWraith`, `AbominationChains.abominationChains`, `AbominationCurses.abominationCurses`.
+2. Done: wheels `"abomination_zombie"` (key 4), `"abomination_wraith"` (key 5), `"abomination_chains"` (key 6, radius 80) and `"abomination_curses"` (key 7, radius 88), each with `.quickCastCooldown(false).quickCastCost(2f)` and `.castsWhileSilenced(Abomination::castsThroughHush)`.
+3. Done: `SKeyPressAbilityOneUsed` to `SevenUsed`.
+4. Done: all seven keys in `PathwayAbilities.ALL` (key 5 is not stealable; Werewolf Form and Abomination Form refuse a thief in their own code).
 5. Done: `"Abomination"` in `SequenceCommands.PATHWAYS`.
-6. Done for Sequences 9 to 5 (lines in `SequencePassives`, the rest in `Abomination`). Still to do: Sequences 4 to 0 (Puppeteer's longer servants is in already).
-7. Done: a row in [SEQUENCES.md](SEQUENCES.md) (the Pathway list, the key table, the passives) and the README. Keys 6 and 7 and the passives of 4 to 0 get their entries there when they are written.
+6. Done: the passives of every Sequence (lines in `SequencePassives`, the rest in `Abomination`).
+7. Done: [SEQUENCES.md](SEQUENCES.md) (the Pathway list, the key table, the passives) and the README.
 8. Done: `AbominationFx.java`, its icon in `PathwayHudIcon` under `"Abomination"`, and the Pathway color in `DarkAngel.pathwayColor`.
 9. Done: models, wheel pictures (32 px), status pictures (16 px), particles and sounds, generated by the scripts in `tools/model_gen/abomination/`, and `/abominationfx all` to play every display (see "Looks and sounds").
 10. Set it with `/sequence pathway <player> "Abomination"`.
-11. Not done: it has not been compiled or played. Run `./gradlew build` and try keys 1 to 5 at Sequence 5.
+11. Not done: it has not been compiled or played. Run `./gradlew build`, then try each key at its Sequence (`/sequence` down to 0 for the Chained entries).

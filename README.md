@@ -3,7 +3,7 @@
 A Minecraft Forge mod by Luka (Lukario2401): a soul system (stage, tier, shards, Soul Essence, corruption)
 and beyonder characteristics to take on: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries,
 Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse (the Demoness), Dark Angel (the Hanged Man), Beauty Goddess (the Moon),
-Hand Of God (the Twilight Giant), Knight Of Misfortune and Abomination (the Chained; Sequences 9 to 5 so far). They come
+Hand Of God (the Twilight Giant), Knight Of Misfortune and Abomination (the Chained). They come
 with abilities on seven keys, melee combos and their own particles, slashes and 3D effects.
 
 - Minecraft 26.2, Forge 65.1.0 or newer, Java 25

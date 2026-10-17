@@ -109,6 +109,7 @@ public final class AbominationWraith {
     private static final AbilityWheel WHEEL = AbilityWheel.create("abomination_wraith", "Wraith")
             .radius(72)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .castsWhileSilenced(Abomination::castsThroughHush)
             .entry("mirror_step", AbominationFx.WHEEL_MIRROR_STEP, "Mirror Step", MIRROR_SEQUENCE,
                     MIRROR_COST, MIRROR_COOLDOWN, AbominationWraith::mirrorStep)
             .entry("possession", AbominationFx.WHEEL_POSSESSION, "Possession", POSSESSION_SEQUENCE,

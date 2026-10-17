@@ -17,11 +17,14 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -55,6 +58,7 @@ import java.util.function.Consumer;
  *   BlockPos light = Spells.lightAimed(player, sl, 32, 4, 10);      // the light source nearest the crosshair, or null
  *   BlockPos mirror = Spells.reflectionAimed(player, sl, 32, 3);    // the reflection nearest the crosshair, or null
  *   if (Spells.isFullMoonNight(sl)) ...                             // night, and the moon is full
+ *   Spells.looseThingsAround(player, sl, spot, 16)                  // dropped items, arrows, boats... to throw (combat/Hurled)
  *
  * "Enemy" means: anything alive except the caster, what the caster rides or owns (pets, tamed horses), the
  * caster's marionettes, team mates, armor stands, spectators and whoever is concealed. Add your own rule with
@@ -168,6 +172,26 @@ public final class Spells {
         List<LivingEntity> result = livingAround(caster, sl, center, radius);
         result.removeIf(other -> isEnemy(caster, other));
         return result;
+    }
+
+    /**
+     * The loose things within 'radius' of a point that a power could lift and throw (combat/Hurled), nearest first:
+     * dropped items, projectiles (flying or stuck in a wall), armor stands, and boats, minecarts and the like that
+     * nobody rides. Never anything alive and never blocks; things already being thrown are left out.
+     */
+    public static List<Entity> looseThingsAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+        AABB area = new AABB(center, center).inflate(radius + 1.0);
+        List<Entity> result = new ArrayList<>(sl.getEntities((Entity) null, area,
+                entity -> isLoose(caster, entity) && entity.position().distanceToSqr(center) <= radius * radius));
+        result.sort(Comparator.comparingDouble(entity -> entity.position().distanceToSqr(center)));
+        return result;
+    }
+
+    /** True for a loose thing (see looseThingsAround). */
+    public static boolean isLoose(Player caster, Entity entity) {
+        if (!entity.isAlive() || entity == caster || entity.isPassenger() || entity.isVehicle() || Hurled.isFlying(entity)) return false;
+        if (entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ArmorStand) return true;
+        return !(entity instanceof LivingEntity) && entity.isPushable();                // boats, minecarts
     }
 
     /** Every enemy whose body (grown by 'grow' blocks) the line from..to passes through, nearest to 'from' first. */

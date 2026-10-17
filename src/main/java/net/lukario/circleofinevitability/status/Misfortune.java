@@ -35,6 +35,7 @@ import java.util.function.Predicate;
  *   Misfortune.add(target, player, 1, 5, 400);          // one more level, up to 5 (a field that worsens it each beat)
  *   Misfortune.add(target, player, 2, 5, 400, true);    // Catastrophe: its worst mishap is a disaster
  *   Misfortune.level(entity)    Misfortune.ticksLeft(entity)    Misfortune.clear(target)
+ *   Misfortune.sourceId(entity)                         // who laid it (the last to add to it), or null
  *   Misfortune.addImmunity(entity -> ...)               // some cannot be cursed (a Pathway's own authority)
  *   Misfortune.addHalfLevels(entity -> ...)             // some carry only half the levels (bosses)
  *   Misfortune.addListener((victim, mishap, source) -> ...)   // the look and sound of each mishap
@@ -142,6 +143,12 @@ public final class Misfortune {
     public static int ticksLeft(Entity entity) {
         if (level(entity) <= 0) return 0;
         return (int) Math.max(0, entity.getPersistentData().getCompoundOrEmpty(TAG).getLongOr(UNTIL, 0L) - entity.level().getGameTime());
+    }
+
+    /** Who laid the Misfortune it carries now (the last to add to it), or null: none, or laid by nobody. */
+    public static UUID sourceId(Entity entity) {
+        if (level(entity) <= 0) return null;
+        return entity.getPersistentData().getCompoundOrEmpty(TAG).read(SOURCE, UUIDUtil.CODEC).orElse(null);
     }
 
     public static boolean isCatastrophe(Entity entity) {

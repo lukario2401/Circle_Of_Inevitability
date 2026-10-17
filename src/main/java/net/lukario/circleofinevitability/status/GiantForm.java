@@ -25,7 +25,7 @@ import java.util.function.Consumer;
  * and, if you want, a madness that rises while it stays. A Mythical Creature Form, a titan's shape, a curse of growth.
  * Works from any class/ability, on players and mobs:
  *
- *   GiantForm.of(1.5)                          // 1.5 times the size it has now
+ *   GiantForm.of(1.5)                          // 1.5 times the size it has now (of(0.5): half, a doll's body)
  *           .reach(1.5)                        // blocks more reach (players)            (optional)
  *           .stepHeight(1.0)                   // blocks more it steps up without jumping (optional)
  *           .lasts(800)                        // ticks; 0 = until GiantForm.end(...)    (default 0)

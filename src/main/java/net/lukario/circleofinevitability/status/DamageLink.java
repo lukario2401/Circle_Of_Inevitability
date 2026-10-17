@@ -39,6 +39,7 @@ import java.util.UUID;
  *   DamageLink.isShared(entity)                        // (player = who gets the kill; may be null)
  *   DamageLink.sharedWith(entity)                      // the others in its group that are still alive
  *   DamageLink.unshare(entity)                         // take one out of its group
+ *   DamageLink.addShareListener((from, to, amount, credit) -> ...)   // each time pain passes on: its look
  *
  * Passed-on damage is never passed on again, so links cannot bounce damage back and forth forever.
  * A link ends when its time is up or when the entity at either end dies. Not saved: gone after a server restart.
@@ -69,6 +70,14 @@ public final class DamageLink {
     private static final Map<UUID, Redirect> REDIRECTS = new HashMap<>();   // who is protected -> where it goes
     private static final Map<UUID, Bond> BONDS = new HashMap<>();           // each member -> the bond it is in
     private static boolean passing;                                         // true while WE are dealing passed-on damage
+
+    /** Pain passed from one of a shared group to another: 'from' was hurt, 'to' takes 'amount'. 'credit' may be null. */
+    @FunctionalInterface
+    public interface ShareListener {
+        void shared(LivingEntity from, LivingEntity to, float amount, Player credit);
+    }
+
+    private static final List<ShareListener> SHARE_LISTENERS = new ArrayList<>();
 
     private static final ParticleFx PASSED = ParticleFx.of("fx/spark")
             .color(0xFFFFE9C0).endColor(0x00FF7A5A)
@@ -145,6 +154,11 @@ public final class DamageLink {
         }
     }
 
+    /** Runs each time shared pain passes from one to another (after it is dealt): the look of a link. */
+    public static void addShareListener(ShareListener listener) {
+        SHARE_LISTENERS.add(listener);
+    }
+
     public static boolean isShared(LivingEntity entity) {
         return entity.level() instanceof ServerLevel sl && liveBond(entity, sl) != null;
     }
@@ -216,7 +230,17 @@ public final class DamageLink {
         if (bond != null && amount > 0f) {
             Player credit = bond.credit == null ? null : sl.getPlayerByUUID(bond.credit);
             DamageSource source = credit == null ? sl.damageSources().magic() : sl.damageSources().indirectMagic(credit, credit);
-            for (LivingEntity other : sharedWith(victim)) pass(sl, other, source, amount * bond.fraction);
+            for (LivingEntity other : sharedWith(victim)) {
+                float part = amount * bond.fraction;
+                pass(sl, other, source, part);
+                for (ShareListener listener : SHARE_LISTENERS) {
+                    try {
+                        listener.shared(victim, other, part, credit);
+                    } catch (Exception e) {
+                        CircleOfInevitability.LOGGER.error("A damage link listener failed", e);
+                    }
+                }
+            }
         }
     }
 

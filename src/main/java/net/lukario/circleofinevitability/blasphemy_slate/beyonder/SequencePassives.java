@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune;
 import net.minecraft.core.Holder;
@@ -80,12 +81,14 @@ public final class SequencePassives {
         custom("Knight Of Misfortune", 0, KnightOfMisfortune::eternalSlumber);                  // Darkness: Eternal Slumber, Horror
 
         // ---- Abomination (docs/ABOMINATION.md). Also in Abomination itself: Lunatic Mind and the Full Moon (Sequence 8),
-        // Keen Senses' warning (7), Unliving Body's immunities and projectile cut (6), Weightless (5). Sequences 4 to 0
-        // have no passives yet.
+        // Keen Senses' warning (7), Unliving Body's immunities and projectile cut (6), Weightless (5), Puppeteer (4, in
+        // the summons' times), Whispering Curse (3), the Bane's immunities (2), Collection of Curses (1), Chained's thorns (0).
         effect("Abomination", 9, MobEffects.STRENGTH, 0);                                       // Prisoner: Strength I
         effect("Abomination", 7, MobEffects.SPEED, 0);                                          // Werewolf: Keen Senses, Speed I...
         effect("Abomination", 7, MobEffects.NIGHT_VISION, 0);                                   // ...and Night Vision
         effect("Abomination", 6, MobEffects.REGENERATION, 0);                                   // Zombie: Unliving Body, Regeneration I
+        custom("Abomination", 2, Abomination::baneAura);                                        // Ancient Bane: enemies near you lose their luck
+        custom("Abomination", 0, Abomination::chainedAura);                                     // Chained: enemies near you are slowed and held to the ground
     }
 
     // =========================

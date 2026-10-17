@@ -43,6 +43,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Nothing heals them for a while (frostbite, a festering wound) | [`NoHeal`](#noheal) | `status/` |
 | An open wound: damage once a second for a while, counted as the caster's (a chain of blood, claws, thorns) | [`Bleeding`](#bleeding) | `status/` |
 | Who died near a spot lately, and raising them again as what they were (risen dead, a sentence carried out) | [`Fallen`](#fallen-the-dead-that-can-rise) | `combat/` |
+| Who a player has touched lately (hit, cursed, chained), to reach them again anywhere in the world (a curse through a connection, a scrying) | [`Connection`](#connection) | `status/` |
+| Lift loose things (dropped items, arrows, armor stands, boats) and throw them at enemies (a poltergeist, a puppeteer) | [`Hurled`, `Spells.looseThingsAround`](#hurled-loose-things-thrown) | `combat/` |
 | Take over a mob | [`Marionette`](#marionette) | `status/` |
 | Call up creatures that fight for you for a while, then vanish without drops (a door of summoning, risen dead) | [`Marionette.spawnSummon`](#marionette) | `status/` |
 | Everyone in a circle, enemies and allies alike, or only the caster's side | [`Spells.livingAround`, `alliesAround`](#1-spells-aiming-and-enemies) | `combat/` |
@@ -184,6 +186,7 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `isReflective(sl, pos)` | `true` for a block that shows a reflection: still water at the surface (a source block with no water on top), ice of every kind, glass and glass panes (stained and tinted too), and blocks of polished metal (iron, gold, unweathered copper, netherite, diamond) |
 | `reflectionNear(sl, center, radius)` | The reflective blocks within `radius` (8 at most, as for `lightNear`), nearest first |
 | `reflectionAimed(player, sl, range, around)` | The reflection nearest to what the crosshair is on, within `around` of it, or `null`. The crosshair stops on still water here, so looking at a lake finds the lake |
+| `looseThingsAround(player, sl, center, radius)`, `isLoose(player, entity)` | The things within `radius` a power could lift and throw (combat/Hurled), nearest first: dropped items, projectiles (flying or stuck in a wall), armor stands, and boats, minecarts and the like that nobody rides. Never anything alive or a block; things already being thrown are left out |
 | `isFullMoonNight(sl)` | `true` at night when the moon is full: the world's first night and every eighth after it (`MOON_DAYS`). Counted from the world's age, so sleeping through a night or `/time set` does not move it |
 | `clearStart(player, sl, wanted)` | `wanted`, or just in front of the wall if a wall is between it and the player's eyes. For things that appear beside the player |
 | `clearLine(player, sl, from, to)` | `true` when nothing solid is between two points |
@@ -605,6 +608,40 @@ for (Fallen.Body body : Fallen.near(sl, spot, 10, 200)) {        // fell within 
 
 ---
 
+## Hurled: loose things thrown
+
+A loose thing in the world (a dropped item, an arrow, an armor stand, a boat) lifted and thrown at an enemy by a power: a poltergeist, a puppeteer's strings. Find them with `Spells.looseThingsAround`, then throw each one.
+
+```java
+List<Entity> things = Spells.looseThingsAround(player, sl, player.position(), 16);   // nearest first
+for (int i = 0; i < things.size(); i++) {
+    Hurled.at(things.get(i), player, enemy)
+            .risesFor(12 + i * 2)                       // floats up first, one after another (default 0)
+            .speed(1.4)                                 // blocks a tick (default 1.2)
+            .damage(10f)                                // to the first enemy it touches (default 6)
+            .lasts(60)                                  // ticks of flight before it gives up and falls (default 60)
+            .onLaunch(thing -> MyFx.whoosh(sl, thing))
+            .onTrail(thing -> MyFx.trail(sl, thing))    // every tick it flies
+            .onHit((thing, victim) -> MyFx.thud(sl, thing.position()))
+            .launch(sl);                                // false if it cannot be thrown (gone, already flying)
+}
+```
+
+| Part | What it does |
+|---|---|
+| `Hurled.at(thing, owner, target)` | A new throw. Nothing happens until `.launch(sl)` |
+| `.risesFor(ticks)` | It floats straight up this long before it flies |
+| `.speed(blocks)`, `.damage(amount)`, `.lasts(ticks)` | How fast, how hard, and how long it may fly |
+| `.onLaunch`, `.onTrail`, `.onHit` | It starts flying / every tick of the flight / it hit someone (after the damage) |
+| `Hurled.isFlying(entity)` | Being thrown right now |
+
+- **What it carries itself** flies straight at the target's middle every tick with no gravity, hits the first of the owner's enemies it touches (`Spells.strike`, so the hit is the owner's), bounces off and drops. It falls when it bumps into a wall, when its time is up, or when the target is gone. A dropped item cannot be picked up while it flies.
+- **A projectile is different**: its owner becomes the thrower and it is shot at the target, then flies and hits as it always would (an arrow does an arrow's damage). `damage` and `onHit` are not used for it. An arrow stuck in a wall is pulled out first.
+- Nothing here touches blocks. Not saved: if the server stops mid-flight, the thing falls where it was.
+- Used by Animate Objects (`animateObjects` in `AbominationChains.java`).
+
+---
+
 ## Reel: drawn along a line
 
 An entity is drawn straight to a point, fast, the way a grappling line pulls: a player swinging to a ledge, a mob yanked in, everyone tangled dragged to the middle.
@@ -779,6 +816,7 @@ DamageLink.share(enemies, 0.5f, 200, player);      // 10 seconds; 'player' gets 
 DamageLink.isShared(entity);
 DamageLink.sharedWith(entity);                     // the others in its group that are still alive
 DamageLink.unshare(entity);                        // takes one out; the rest stay linked
+DamageLink.addShareListener((from, to, amount, credit) -> ...);   // each time pain passes on: its look (Grave Shackles)
 ```
 
 - The amounts are what the entity really lost, after its armor.
@@ -987,6 +1025,7 @@ Misfortune.add(target, player, 3, 3, 400);          // 3 levels at once, at most
 Misfortune.add(target, player, 1, 5, 400);          // one more, up to 5 (a field that worsens it each beat)
 Misfortune.add(target, player, 2, 5, 400, true);    // Catastrophe: its worst mishap is a disaster
 Misfortune.level(entity);   Misfortune.ticksLeft(entity);   Misfortune.clear(target);   Misfortune.befall(victim, Misfortune.Mishap.STUMBLE);
+Misfortune.sourceId(entity);                        // who laid it (the last to add to it), or null
 Misfortune.addImmunity(entity -> ...);              // some cannot be cursed
 Misfortune.addHalfLevels(entity -> ...);            // some carry only half (bosses)
 Misfortune.addListener((victim, mishap, source) -> ...);   // the look and sound of each mishap
@@ -1000,7 +1039,27 @@ Misfortune.addListener((victim, mishap, source) -> ...);   // the look and sound
 | `FALLING_STONE` | 4 | Magic damage, 5% of its maximum health, counted as the curser's (`DamageFx.credit`) |
 | `CALAMITY` | 5 | 15% of its maximum health; with Catastrophe 30%, and it is thrown up for a fall it did not see coming |
 
-The damage is the status's own; the look is a listener's (Knight Of Misfortune's shows the mishaps it caused). Adding never lowers the level and makes all of it last again. Saved with the entity. Every number is a `public static` at the top of the class. Used by the Curse of Misfortune, the Night Domain, Misfortune, Catastrophe and Ill Omen.
+The damage is the status's own; the look is a listener's (Knight Of Misfortune's shows the mishaps it caused). Adding never lowers the level and makes all of it last again. Saved with the entity. Every number is a `public static` at the top of the class. Used by the Curse of Misfortune, the Night Domain, Misfortune, Catastrophe and Ill Omen, and by every Abomination curse (through `Abomination.curse`, which never shortens a longer curse and makes the cursed one a `Connection`).
+
+### Connection
+
+Who a player is connected to: someone they hit, cursed, chained or sentenced lately. For a curse that reaches across the world, a scrying, a mark that finds its bearer anywhere.
+
+```java
+Connection.touch(player, target);                   // connected now (every hit a player lands does this by itself)
+Connection.has(player, target, 12000);              // touched in the last 10 minutes?
+Connection.ticksSince(player, target);              // how long ago (-1 = never, or forgotten)
+Connection.latest(player, 12000);                   // the newest one still alive anywhere on the server, or null
+Connection.all(player, 12000);                      // all of them alive anywhere, newest first
+Connection.find(server, id);                        // a living entity by id, in any dimension
+Connection.clear(player, target);   Connection.clearAll(player);
+Connection.addListener((owner, target, fresh) -> ...);   // fresh = new, or it had run out: a look only the owner sees
+```
+
+- The ability says how long ago still counts, so one connection serves them all (10 minutes for one, 30 for a stronger one). Nothing older than `KEEP_TICKS` (30 minutes) is kept, and each player keeps their `MAX_PER_OWNER` (64) newest.
+- Hits connect by themselves: any damage whose source is a player (melee, arrows, spells), once it really lands. `Connection.HITS_CONNECT = false` leaves it to `touch` alone.
+- A mob that dies is forgotten by everyone; a player is not (they come back). Time is the server's, so it counts the same in every dimension. Not saved.
+- Used by Curse by Connection and Cursed Artifact (`AbominationCurses.java`), and every Abomination curse (`Abomination.curse`) and Death Sentence make one.
 
 ### Nocturnality
 
@@ -1021,7 +1080,7 @@ It only changes what `darkness()` says: the sky the players see is not touched. 
 The entity swells to a bigger body for a while, with longer reach and step, and a madness that can rise until it breaks the form.
 
 ```java
-GiantForm.of(1.5)                       // 1.5 times the size it has now
+GiantForm.of(1.5)                       // 1.5 times the size it has now (of(0.5): half, a doll's body)
         .reach(1.5).stepHeight(1.0)     // more reach and step (optional)
         .lasts(800)                     // 0 = until GiantForm.end(...)
         .madness(1f / 30f)              // madness each second (0..1); 0 = none
@@ -1034,7 +1093,7 @@ GiantForm.isGiant(entity);   GiantForm.madness(entity);   GiantForm.scale(entity
 
 - The body is attribute modifiers with fixed ids, so one form at a time; it is on top of what the entity already has (a Pathway's own `Physique` stays).
 - It ends, and shrinks back, on death, logout and a change of dimension. Nothing is saved: after a restart nobody is left giant.
-- The look is yours (`HandOfGodFx.giantForm` shows the one-eyed Giant round the caster; show it before `grow`, so it grows from the old size). Used by Hand Of God's Giant Form.
+- The look is yours (`HandOfGodFx.giantForm` shows the one-eyed Giant round the caster; show it before `grow`, so it grows from the old size). Used by Hand Of God's Giant Form, the Abomination's Werewolf Form, and Abomination Form, which shrinks to half.
 
 ### ConjuredArmor
 
@@ -1654,6 +1713,8 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Concealment` riding along with a host, `Reel` while hidden, `Spells.lightNear` / `lightAimed`, `Spells.strikeThrough`, `Burial`, `StoredDamage` paid back twice, a `Zone` that weakens what enemies deal | `mercuryLiquefaction`, `mercuryStep`, `lightConcealment`, `twilightSword`, `slam`, `passageOfTime`, `divineKingdom`, `kingdomCut` in `HandOfGodTwilight.java` |
 | `Reel` that drags an enemy in and a `Root` that holds it until a fixed moment, `Bleeding`, `Reel` on the caster for a leap, `GiantForm` + `ConjuredWeapon` claws, `Taunt` or `Fear` by what the target is, `Spells.isFullMoonNight` | `chainOne`, `restraint`, `moonstruck`, `pounce`, `claws`, `werewolfForm`, `fullMoonTick` in `Abomination.java` |
 | `Fallen` (the dead rise, reserved first), `Zone.around` that freezes each one once, `ConjuredArmor.projectileCut`, one `Countdown` for several targets | `raiseTheDead`, `graveChill`, `undyingFlesh`, `deathSentence` in `AbominationZombie.java` |
+| `Hurled` things shared out among the enemies in sight, `DamageLink.share` with a listener for its look, a `Root` renewed while the caster stands still, `Dome.sphere` with a `Zone` inside, a seal that is `Slumber` + `Root` + its own "untouchable" mark (not `Concealment`, which would hide the coffin too), two `Zone`s on one spot (foes and friends) | `animateObjects`, `graveShackles`, `thornedMausoleum`, `coffinOfAges`, `thornGarden` in `AbominationChains.java` |
+| `Connection` (the one in sight, else the newest anywhere), `Trap` seen by its owner only, `Zone` + `Taunt.brawl` + `Nocturnality.forceNight`, `Contagion` that deepens by stage, a shrinking `GiantForm` whose end is a `Misfortune.befall` on everyone with your curse (`Misfortune.sourceId`), a wheel entry that ends itself for free (`.free(...)`) | `curseByConnection`, `cursedArtifact`, `riteOfSilence`, `baneMist`, `ancientBlight`, `abominationForm` in `AbominationCurses.java` |
 | `Spells.reflectionNear` / `reflectionAimed` with `Concealment` on the way, `Parasite` entered a moment after the cast (paid back if it fails) with an upkeep and the key that steps out, `Marionette.control` on wild vexes before summoning the rest | `mirrorStep`, `possession`, `HOOKS`, `ghostHost` in `AbominationWraith.java` |
 
 ## Tricks worth copying
@@ -1883,4 +1944,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`). `combat/Fallen` remembers the dead. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`). `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

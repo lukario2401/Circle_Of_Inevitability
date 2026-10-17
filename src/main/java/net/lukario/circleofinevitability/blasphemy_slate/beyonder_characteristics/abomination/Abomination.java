@@ -11,13 +11,18 @@ import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Bleeding;
+import net.lukario.circleofinevitability.status.Connection;
 import net.lukario.circleofinevitability.status.ConjuredWeapon;
+import net.lukario.circleofinevitability.status.DamageLink;
+import net.lukario.circleofinevitability.status.Decay;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Fear;
 import net.lukario.circleofinevitability.status.GiantForm;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Misfortune;
 import net.lukario.circleofinevitability.status.NoHeal;
+import net.lukario.circleofinevitability.status.Silence;
+import net.lukario.circleofinevitability.status.Slumber;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -28,6 +33,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -69,18 +75,23 @@ import java.util.UUID;
  *                                 (AbominationZombie)                          | sneak: the last pick again
  *   5 Wraith          (Wraith)    the Wraith wheel: Mirror Step, Possession, Ghost Host (AbominationWraith)
  *                                                                              | sneak: the last pick again
- *   6 Chains          (Puppet)    not written yet (docs/ABOMINATION.md, "Planned")
- *   7 Curses          (Disciple of Silence) not written yet
+ *   6 Chains          (Puppet)    the Chains wheel: Animate Objects, Grave Shackles, and from Chained (0) Thorned
+ *                                 Mausoleum, Coffin of Ages, Thorn Garden (AbominationChains) | sneak: the last pick again
+ *   7 Curses          (Disciple of Silence) the Curses wheel: Curse by Connection, Cursed Artifact, Rite of Silence,
+ *                                 Bane Mist, Ancient Blight, Abomination Form (AbominationCurses) | sneak: the last pick again
  *
  * The wheels each have a class of their own beside this one, with their numbers at the top; this class ticks them
  * and starts them clean after a relog or a death. Every look and sound is in AbominationFx (see /abominationfx);
  * the ability classes only decide who is hurt, held and helped, and when. The reusable pieces come from
  * docs/SPELL_KIT.md: status/Bleeding (the wounds), combat/Fallen (the dead that rise), combat/Reel (the chain and
- * the pounce), status/GiantForm + status/ConjuredWeapon (Werewolf Form), Taunt and Fear (Moonstruck), root/Root.
+ * the pounce), status/GiantForm + status/ConjuredWeapon (Werewolf Form), Taunt and Fear (Moonstruck), root/Root,
+ * combat/Hurled (Animate Objects), status/Connection (Curse by Connection) and status/Misfortune (every curse, laid
+ * with curse(...) below so that Collection of Curses makes them all last longer).
  *
- * The passives that are a potion effect are in SequencePassives; the ones that react to hits, effects, falls and
- * mobs (Lunatic Mind, the Full Moon, Keen Senses, Unliving Body, Weightless) are here. Sequences 4 to 0 have no
- * passives yet. Nothing here breaks blocks. The numbers for every ability are right below.
+ * The passives that are a potion effect or an aura are in SequencePassives (the auras' bodies, baneAura and
+ * chainedAura, are here); the ones that react to hits, effects, falls and mobs (Lunatic Mind, the Full Moon, Keen
+ * Senses, Unliving Body, Weightless, Whispering Curse, Collection of Curses, Chained's thorns) are here too.
+ * Nothing here breaks blocks. The numbers for every ability are right below.
  */
 public class Abomination {
 
@@ -175,6 +186,18 @@ public class Abomination {
     private static final double WEIGHTLESS_SIGHT = 16.0;
     private static final int PUPPETEER_SEQUENCE = 4;             // Puppeteer: what you summon or take over lasts longer
     private static final float PUPPETEER_LONGER = 1.5f;
+    private static final int WHISPER_SEQUENCE = 3;               // Whispering Curse: a melee attacker may be cursed...
+    private static final float WHISPER_CHANCE = 0.15f;
+    private static final int WHISPER_CURSE_TICKS = 200;          // ...Misfortune I this long; a hush does not stop your keys
+    private static final int BANE_AURA_SEQUENCE = 2;             // Bane Aura: enemies near you carry Misfortune I...
+    private static final double BANE_AURA_RADIUS = 10.0;
+    private static final int BANE_AURA_TICKS = 40;               // ...for 2 seconds after they leave; Misfortune, Fear, Decay do not take
+    private static final int COLLECTION_SEQUENCE = 1;            // Collection of Curses: curses you lay last longer...
+    private static final float COLLECTION_LONGER = 1.5f;
+    private static final float COLLECTION_CHANCE = 0.25f;        // ...and a melee attacker is cursed more often
+    private static final int CHAINED_SEQUENCE = 0;               // Chained Aura: enemies near you are slowed and cannot teleport...
+    private static final double CHAINED_AURA_RADIUS = 16.0;
+    private static final float CHAINED_THORNS = 4f;              // ...and a melee attacker takes thorn damage
 
     // =========================
     // Saved on the player (game times are "until" this tick)
@@ -219,6 +242,23 @@ public class Abomination {
             Bleeding.addImmunity(entity -> entity instanceof Player player && AbominationZombie.isUndying(player));
             // Lunatic Mind: fear does not take
             Fear.addImmunity(entity -> entity instanceof Player player && isAbomination(player, LUNATIC_SEQUENCE));
+            // Bane Aura: the Bane's own curses do not take on it, nor does decay
+            Misfortune.addImmunity(entity -> entity instanceof Player player && isAbomination(player, BANE_AURA_SEQUENCE));
+            Decay.addImmunity(entity -> entity instanceof Player player && isAbomination(player, BANE_AURA_SEQUENCE));
+            // Whispering Curse: a hush does not stop a Disciple of Silence's keys
+            Silence.addCastsThrough((player, key) -> castsThroughHush(player));
+            // Grave Shackles: each time pain passes along the chains, it shows
+            DamageLink.addShareListener((from, to, amount, credit) -> {
+                if (credit != null && SoulCore.getPathway(credit).equals(PATHWAY) && to.level() instanceof ServerLevel sl) {
+                    AbominationFx.painShared(sl, from, to);
+                }
+            });
+            // a new connection blinks over its target, for the Disciple's eyes only
+            Connection.addListener((owner, target, fresh) -> {
+                if (fresh && owner instanceof ServerPlayer viewer && isAbomination(owner, WHISPER_SEQUENCE)) {
+                    AbominationFx.connectionMade(viewer, target);
+                }
+            });
         }
 
         @SubscribeEvent
@@ -253,13 +293,15 @@ public class Abomination {
             if (source.getEntity() instanceof Mob servant && servant.getPersistentData().getBooleanOr(BANE_TOUCH, false)) {
                 UUID master = Marionette.masterId(servant);
                 Player owner = master == null ? null : sl.getPlayerByUUID(master);
-                if (owner != null && victim != owner) Misfortune.add(victim, owner, 1, Misfortune.MAX_LEVEL, BANE_TOUCH_TICKS);
+                if (owner != null && victim != owner) curse(victim, owner, 1, Misfortune.MAX_LEVEL, curseTicks(owner, BANE_TOUCH_TICKS), false);
             }
 
             if (!(victim instanceof Player player)) return;
             boolean projectile = source.is(DamageTypeTags.IS_PROJECTILE);
-            boolean melee = !projectile && source.getEntity() instanceof LivingEntity attacker
-                    && source.getDirectEntity() == attacker && attacker != player;
+            LivingEntity attacker = source.getEntity() instanceof LivingEntity living && living != player ? living : null;
+            boolean melee = !projectile && attacker != null && source.getDirectEntity() == attacker && !source.is(DamageTypes.THORNS);
+            if (attacker != null && AbominationCurses.inForm(player)) AbominationCurses.hurtInForm(player, sl, attacker);
+            if (melee) meleeAnswered(player, sl, attacker);
             if (isActive(player, RESTRAINT_UNTIL) && (melee || projectile)) {
                 event.setAmount(event.getAmount() * (1f - restraintCut(player, sl)));
                 AbominationFx.restraintHit(sl, player);
@@ -269,10 +311,13 @@ public class Abomination {
             }
         }
 
-        /** Unliving Body: freezing does not hurt. */
+        /** Coffin of Ages: nothing hurts the sealed. Unliving Body: freezing does not hurt. */
         @SubscribeEvent
         public static boolean onAbominationAttacked(LivingAttackEvent event) {
-            if (!(event.getEntity() instanceof Player player) || player.level().isClientSide()) return false;
+            LivingEntity victim = event.getEntity();
+            if (victim.level().isClientSide()) return false;
+            if (AbominationChains.isSealed(victim) && !event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return true;
+            if (!(victim instanceof Player player)) return false;
             return event.getSource().is(DamageTypeTags.IS_FREEZING) && isAbomination(player, UNLIVING_SEQUENCE);
         }
 
@@ -757,6 +802,62 @@ public class Abomination {
         return isAbomination(player, PUPPETEER_SEQUENCE) ? Math.round(ticks * PUPPETEER_LONGER) : ticks;
     }
 
+    /** Whispering Curse and Collection of Curses: a melee attacker may be cursed. Chained: it is pricked by thorns. */
+    private static void meleeAnswered(Player player, ServerLevel sl, LivingEntity attacker) {
+        if (isAbomination(player, WHISPER_SEQUENCE)) {
+            float chance = isAbomination(player, COLLECTION_SEQUENCE) ? COLLECTION_CHANCE : WHISPER_CHANCE;
+            if (player.getRandom().nextFloat() < chance
+                    && curse(attacker, player, 1, Misfortune.MAX_LEVEL, curseTicks(player, WHISPER_CURSE_TICKS), false) > 0) {
+                AbominationFx.whisperingCurse(sl, attacker);
+            }
+        }
+        if (isAbomination(player, CHAINED_SEQUENCE) && attacker.isAlive()) {
+            attacker.hurt(player.damageSources().thorns(player), CHAINED_THORNS);
+            AbominationFx.thornsBack(sl, attacker);
+        }
+    }
+
+    /** Bane Aura, once a second (SequencePassives): enemies near the Bane carry Misfortune I while they stay. */
+    public static void baneAura(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), BANE_AURA_RADIUS)) {
+            if (Misfortune.level(enemy) == 0) curse(enemy, player, 1, 1, curseTicks(player, BANE_AURA_TICKS), false);
+        }
+        AbominationFx.baneAura(sl, player, BANE_AURA_RADIUS);
+    }
+
+    /** Chained Aura, once a second (SequencePassives): enemies near the Chained are slowed and cannot teleport. */
+    public static void chainedAura(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), CHAINED_AURA_RADIUS)) {
+            Spells.keepEffect(enemy, MobEffects.SLOWNESS, 0, 40);
+            Root.apply(enemy, 30, RootRestriction.TELEPORT);
+        }
+        AbominationFx.chainedAura(sl, player, CHAINED_AURA_RADIUS);
+    }
+
+    /** Whispering Curse: a Disciple of Silence (or stronger) casts through a hush, but not asleep or held fast. */
+    static boolean castsThroughHush(Player player) {
+        return isAbomination(player, WHISPER_SEQUENCE) && !Root.has(player, RootRestriction.MOVE) && !Slumber.isAsleep(player);
+    }
+
+    /** Collection of Curses: curses an Abomination (1) or stronger lays last COLLECTION_LONGER as long. */
+    static int curseTicks(Player player, int ticks) {
+        return isAbomination(player, COLLECTION_SEQUENCE) ? Math.round(ticks * COLLECTION_LONGER) : ticks;
+    }
+
+    /**
+     * Every curse of this Pathway: Misfortune ('levels' more, up to 'max') for 'ticks' (give it curseTicks), and the
+     * cursed one becomes the caster's connection (status/Connection). Unlike a plain Misfortune.add it never makes a
+     * longer curse shorter. Returns the level it has now (0 = it cannot be cursed).
+     */
+    static int curse(LivingEntity target, Player source, int levels, int max, int ticks, boolean catastrophe) {
+        if (target == null || source == null || target == source || !target.isAlive()) return 0;
+        int level = Misfortune.add(target, source, levels, max, Math.max(ticks, Misfortune.ticksLeft(target)), catastrophe);
+        if (level > 0) Connection.touch(source, target);
+        return level;
+    }
+
     /** True for this Pathway at this Sequence or stronger. */
     static boolean isAbomination(Player player, int sequence) {
         return SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, sequence);
@@ -801,6 +902,8 @@ public class Abomination {
         restraintBody(player, false);
         AbominationZombie.clearState(player);
         AbominationWraith.clearState(player);
+        AbominationChains.clearState(player);
+        AbominationCurses.clearState(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) AbominationFx.statusEnd(player, status);      // a clock left running before death
     }
