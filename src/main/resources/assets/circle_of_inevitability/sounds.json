@@ -1244,5 +1244,339 @@
         "name": "circle_of_inevitability:abomination/rose_heal"
       }
     ]
+  },
+  "prince_of_abolition.verdict": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.verdict",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/verdict"
+      }
+    ]
+  },
+  "prince_of_abolition.brainwash": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.brainwash",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/brainwash"
+      }
+    ]
+  },
+  "prince_of_abolition.brute_force": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.brute_force",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/brute_force"
+      }
+    ]
+  },
+  "prince_of_abolition.iron_will": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.iron_will",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/iron_will"
+      }
+    ]
+  },
+  "prince_of_abolition.bribe": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.bribe",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/bribe_1"
+      },
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/bribe_2"
+      }
+    ]
+  },
+  "prince_of_abolition.weaken": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.weaken",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/weaken"
+      }
+    ]
+  },
+  "prince_of_abolition.charm": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.charm",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/charm"
+      }
+    ]
+  },
+  "prince_of_abolition.arrogance": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.arrogance",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/arrogance"
+      }
+    ]
+  },
+  "prince_of_abolition.connect": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.connect",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/connect"
+      }
+    ]
+  },
+  "prince_of_abolition.coin_shot": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.coin_shot",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/coin_shot_1"
+      },
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/coin_shot_2"
+      }
+    ]
+  },
+  "prince_of_abolition.ricochet": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.ricochet",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/ricochet"
+      }
+    ]
+  },
+  "prince_of_abolition.distort": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.distort",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/distort"
+      }
+    ]
+  },
+  "prince_of_abolition.reflect": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.reflect",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/reflect"
+      }
+    ]
+  },
+  "prince_of_abolition.door_rise": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.door_rise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/door_rise"
+      }
+    ]
+  },
+  "prince_of_abolition.seal": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.seal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/seal"
+      }
+    ]
+  },
+  "prince_of_abolition.seal_break": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.seal_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/seal_break"
+      }
+    ]
+  },
+  "prince_of_abolition.corrosion": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.corrosion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/corrosion"
+      }
+    ]
+  },
+  "prince_of_abolition.ruin": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.ruin",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/ruin"
+      }
+    ]
+  },
+  "prince_of_abolition.step": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/step"
+      }
+    ]
+  },
+  "prince_of_abolition.disorder": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.disorder",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/disorder"
+      }
+    ]
+  },
+  "prince_of_abolition.paces": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.paces",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/paces"
+      }
+    ]
+  },
+  "prince_of_abolition.decoy_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.decoy_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/decoy_burst"
+      }
+    ]
+  },
+  "prince_of_abolition.majesty": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.majesty",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/majesty"
+      }
+    ]
+  },
+  "prince_of_abolition.bestowment": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.bestowment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/bestowment"
+      }
+    ]
+  },
+  "prince_of_abolition.exploit": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.exploit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/exploit"
+      }
+    ]
+  },
+  "prince_of_abolition.magnify": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.magnify",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/magnify"
+      }
+    ]
+  },
+  "prince_of_abolition.quake": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.quake",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/quake"
+      }
+    ]
+  },
+  "prince_of_abolition.mausoleum_raise": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.mausoleum_raise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/mausoleum_raise"
+      }
+    ]
+  },
+  "prince_of_abolition.mausoleum_crumble": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.mausoleum_crumble",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/mausoleum_crumble"
+      }
+    ]
+  },
+  "prince_of_abolition.salvo": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.salvo",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/salvo"
+      }
+    ]
+  },
+  "prince_of_abolition.sanctuary": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.sanctuary",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/sanctuary"
+      }
+    ]
+  },
+  "prince_of_abolition.rebirth": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.rebirth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/rebirth"
+      }
+    ]
+  },
+  "prince_of_abolition.frenzy": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.frenzy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/frenzy"
+      }
+    ]
+  },
+  "prince_of_abolition.entropy": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.entropy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/entropy"
+      }
+    ]
+  },
+  "prince_of_abolition.abolition": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.abolition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/abolition"
+      }
+    ]
+  },
+  "prince_of_abolition.exile": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.exile",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/exile"
+      }
+    ]
+  },
+  "prince_of_abolition.exile_return": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.exile_return",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/exile_return"
+      }
+    ]
+  },
+  "prince_of_abolition.inversion": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.inversion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/inversion"
+      }
+    ]
+  },
+  "prince_of_abolition.coronation": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.coronation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/coronation"
+      }
+    ]
+  },
+  "prince_of_abolition.decree": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.decree",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/decree"
+      }
+    ]
+  },
+  "prince_of_abolition.order": {
+    "subtitle": "subtitles.circle_of_inevitability.prince_of_abolition.order",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:prince_of_abolition/order"
+      }
+    ]
   }
 }

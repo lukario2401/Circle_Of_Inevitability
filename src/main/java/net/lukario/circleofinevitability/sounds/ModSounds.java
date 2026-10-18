@@ -15,8 +15,8 @@ import net.minecraftforge.registries.RegistryObject;
  *
  * A new sound: its .ogg (mono, so it is placed in the world) in sounds/, an event in sounds.json with the same name
  * as here, a subtitle in lang/en_us.json, and a line below. The Beauty Goddess ones are made by
- * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py and the Abomination ones by
- * tools/model_gen/abomination/sounds.py, which write
+ * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, the Abomination ones by
+ * tools/model_gen/abomination/sounds.py and the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py, which write
  * the .ogg files, sounds.json and the subtitles' names.
  */
 public final class ModSounds {
@@ -345,4 +345,89 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> ABOMINATION_THORN_GARDEN = sound("abomination.thorn_garden");
     /** Roses heal. */
     public static final RegistryObject<SoundEvent> ABOMINATION_ROSE_HEAL = sound("abomination.rose_heal");
+
+    // ---------- Prince Of Abolition (tools/model_gen/prince_of_abolition/sounds.py) ----------
+
+    /** A gavel falls. */
+    public static final RegistryObject<SoundEvent> ABOLITION_VERDICT = sound("prince_of_abolition.verdict");
+    /** Quiet words are spoken. */
+    public static final RegistryObject<SoundEvent> ABOLITION_BRAINWASH = sound("prince_of_abolition.brainwash");
+    /** A crushing blow. */
+    public static final RegistryObject<SoundEvent> ABOLITION_BRUTE_FORCE = sound("prince_of_abolition.brute_force");
+    /** A will hardens. */
+    public static final RegistryObject<SoundEvent> ABOLITION_IRON_WILL = sound("prince_of_abolition.iron_will");
+    /** Coins change hands. */
+    public static final RegistryObject<SoundEvent> ABOLITION_BRIBE = sound("prince_of_abolition.bribe");
+    /** Strength drains away. */
+    public static final RegistryObject<SoundEvent> ABOLITION_WEAKEN = sound("prince_of_abolition.weaken");
+    /** Someone is won over. */
+    public static final RegistryObject<SoundEvent> ABOLITION_CHARM = sound("prince_of_abolition.charm");
+    /** Pride swells. */
+    public static final RegistryObject<SoundEvent> ABOLITION_ARROGANCE = sound("prince_of_abolition.arrogance");
+    /** A thread pulls taut. */
+    public static final RegistryObject<SoundEvent> ABOLITION_CONNECT = sound("prince_of_abolition.connect");
+    /** A coin is flicked. */
+    public static final RegistryObject<SoundEvent> ABOLITION_COIN_SHOT = sound("prince_of_abolition.coin_shot");
+    /** A coin ricochets. */
+    public static final RegistryObject<SoundEvent> ABOLITION_RICOCHET = sound("prince_of_abolition.ricochet");
+    /** Something is distorted. */
+    public static final RegistryObject<SoundEvent> ABOLITION_DISTORT = sound("prince_of_abolition.distort");
+    /** A shot is turned back. */
+    public static final RegistryObject<SoundEvent> ABOLITION_REFLECT = sound("prince_of_abolition.reflect");
+    /** An illusory door appears. */
+    public static final RegistryObject<SoundEvent> ABOLITION_DOOR_RISE = sound("prince_of_abolition.door_rise");
+    /** A door slams shut. */
+    public static final RegistryObject<SoundEvent> ABOLITION_SEAL = sound("prince_of_abolition.seal");
+    /** A Seal breaks. */
+    public static final RegistryObject<SoundEvent> ABOLITION_SEAL_BREAK = sound("prince_of_abolition.seal_break");
+    /** Greed spreads. */
+    public static final RegistryObject<SoundEvent> ABOLITION_CORROSION = sound("prince_of_abolition.corrosion");
+    /** A beam of ruin. */
+    public static final RegistryObject<SoundEvent> ABOLITION_RUIN = sound("prince_of_abolition.ruin");
+    /** Someone steps through a mausoleum. */
+    public static final RegistryObject<SoundEvent> ABOLITION_STEP = sound("prince_of_abolition.step");
+    /** Order comes apart. */
+    public static final RegistryObject<SoundEvent> ABOLITION_DISORDER = sound("prince_of_abolition.disorder");
+    /** Distance is disordered. */
+    public static final RegistryObject<SoundEvent> ABOLITION_PACES = sound("prince_of_abolition.paces");
+    /** A false self bursts. */
+    public static final RegistryObject<SoundEvent> ABOLITION_DECOY_BURST = sound("prince_of_abolition.decoy_burst");
+    /** Majesty presses down. */
+    public static final RegistryObject<SoundEvent> ABOLITION_MAJESTY = sound("prince_of_abolition.majesty");
+    /** A feeling is bestowed. */
+    public static final RegistryObject<SoundEvent> ABOLITION_BESTOWMENT = sound("prince_of_abolition.bestowment");
+    /** A rule gives way. */
+    public static final RegistryObject<SoundEvent> ABOLITION_EXPLOIT = sound("prince_of_abolition.exploit");
+    /** Something is magnified. */
+    public static final RegistryObject<SoundEvent> ABOLITION_MAGNIFY = sound("prince_of_abolition.magnify");
+    /** The ground quakes. */
+    public static final RegistryObject<SoundEvent> ABOLITION_QUAKE = sound("prince_of_abolition.quake");
+    /** A mausoleum rises. */
+    public static final RegistryObject<SoundEvent> ABOLITION_MAUSOLEUM_RAISE = sound("prince_of_abolition.mausoleum_raise");
+    /** A mausoleum crumbles. */
+    public static final RegistryObject<SoundEvent> ABOLITION_MAUSOLEUM_CRUMBLE = sound("prince_of_abolition.mausoleum_crumble");
+    /** A mausoleum fires. */
+    public static final RegistryObject<SoundEvent> ABOLITION_SALVO = sound("prince_of_abolition.salvo");
+    /** A sanctuary hums. */
+    public static final RegistryObject<SoundEvent> ABOLITION_SANCTUARY = sound("prince_of_abolition.sanctuary");
+    /** The Emperor rises again. */
+    public static final RegistryObject<SoundEvent> ABOLITION_REBIRTH = sound("prince_of_abolition.rebirth");
+    /** Black bolts burst out. */
+    public static final RegistryObject<SoundEvent> ABOLITION_FRENZY = sound("prince_of_abolition.frenzy");
+    /** Order unravels. */
+    public static final RegistryObject<SoundEvent> ABOLITION_ENTROPY = sound("prince_of_abolition.entropy");
+    /** The world falls silent. */
+    public static final RegistryObject<SoundEvent> ABOLITION_ABOLITION = sound("prince_of_abolition.abolition");
+    /** Something is abolished. */
+    public static final RegistryObject<SoundEvent> ABOLITION_EXILE = sound("prince_of_abolition.exile");
+    /** Something returns. */
+    public static final RegistryObject<SoundEvent> ABOLITION_EXILE_RETURN = sound("prince_of_abolition.exile_return");
+    /** Everything turns over. */
+    public static final RegistryObject<SoundEvent> ABOLITION_INVERSION = sound("prince_of_abolition.inversion");
+    /** A coronation. */
+    public static final RegistryObject<SoundEvent> ABOLITION_CORONATION = sound("prince_of_abolition.coronation");
+    /** A Decree is spoken. */
+    public static final RegistryObject<SoundEvent> ABOLITION_DECREE = sound("prince_of_abolition.decree");
+    /** An order stands. */
+    public static final RegistryObject<SoundEvent> ABOLITION_ORDER = sound("prince_of_abolition.order");
 }
