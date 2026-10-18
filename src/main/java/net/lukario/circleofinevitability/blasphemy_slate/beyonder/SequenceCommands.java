@@ -27,7 +27,7 @@ public class SequenceCommands {
     public static final List<String> PATHWAYS = List.of(
             "Key Of Stars", "Worm Of Time", "Hand Of Order", "Attendant Of Mysteries", "Frenzied Mage", "Pale Emperor",
             "Conqueror", "Apocalypse", "Dark Angel", "Beauty Goddess", "Hand Of God","Knight Of Misfortune",
-            "Abomination");
+            "Abomination", "Prince Of Abolition");
 
     @SubscribeEvent
     public static void onRegisterSequenceCommands(RegisterCommandsEvent event) {

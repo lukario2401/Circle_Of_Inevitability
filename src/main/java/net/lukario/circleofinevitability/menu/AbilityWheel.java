@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.function.ToDoubleFunction;
 
 /**
  * A wheel of spells on one key: a round menu of entries, each with its own Sequence, spirituality cost and
@@ -40,6 +41,10 @@ import java.util.function.Predicate;
  * - .quickCastCooldown(false).quickCastCost(2f): a sneak recast ignores the cooldown and costs double.
  * - .free(player -> ...) after an entry: while it says true, that entry skips the cost and cooldown checks
  *   (pair it with FREE: the cast that ties off a spell already paid for).
+ * - .costBy((player, cost) -> ...) after an entry: its cost worked out at the moment of casting (more for every
+ *   mausoleum already standing, half against a marked enemy). 'cost' is what it would cost otherwise.
+ * - .quickCastCostBy(player -> ...): the recast price read from the player (3x at Sequence 9, 1x at Sequence 5...).
+ * - .noCooldownsWhen(player -> ...): while it says true for a player, none of the wheel's entries has a cooldown.
  *
  * Cast through Beyonder.castUnbound (a stolen ability) there is no screen: the last pick is cast at once,
  * or a random entry if there is none.
@@ -60,6 +65,12 @@ public final class AbilityWheel {
         void run(ServerPlayer player, ServerLevel sl, Entry entry);
     }
 
+    /** An entry's cost worked out when it is cast: 'cost' is what it costs otherwise (already times a recast price). */
+    @FunctionalInterface
+    public interface CostRule {
+        int cost(ServerPlayer player, int cost);
+    }
+
     public static final class Entry {
         private final String key;
         private final String icon;
@@ -69,6 +80,7 @@ public final class AbilityWheel {
         private final int cooldown;
         private final Cast cast;
         private Predicate<ServerPlayer> free;
+        private CostRule costBy;
 
         private Entry(String key, String icon, String name, int sequence, int cost, int cooldown, Cast cast) {
             this.key = key;
@@ -89,6 +101,12 @@ public final class AbilityWheel {
         private boolean isFree(ServerPlayer player) {
             return free != null && free.test(player);
         }
+
+        /** What it costs this player now, at 'multiplier' times its own cost (a recast's price). */
+        private int costFor(ServerPlayer player, float multiplier) {
+            int base = Math.round(cost * Math.max(0f, multiplier));
+            return costBy == null ? base : Math.max(0, costBy.cost(player, base));
+        }
     }
 
     private final String id;
@@ -98,6 +116,8 @@ public final class AbilityWheel {
     private CastDone onCast;
     private boolean quickCastCooldown = true;        // false: a sneak recast neither waits for nor starts a cooldown
     private float quickCastCost = 1f;                // a sneak recast costs this many times the entry's cost
+    private ToDoubleFunction<Player> quickCastCostBy; // ...or this, read from the player (null: quickCastCost)
+    private Predicate<Player> noCooldowns;           // true: no entry has a cooldown for this player
     private Predicate<ServerPlayer> castsWhileSilenced; // true: picks from the wheel go through a root's ABILITIES
     private AbilityMenu menu;                        // built the first time it is opened
 
@@ -127,7 +147,30 @@ public final class AbilityWheel {
         return this;
     }
 
-    /** Runs after every cast that went off with DONE (a stack, a sound, leaving a form...). */
+    /**
+     * The entry added last costs what this says when it is cast: (player, cost) -> new cost. 'cost' is what it would
+     * cost otherwise (already times a recast's price). Shown under its icon too.
+     */
+    public AbilityWheel costBy(CostRule rule) {
+        if (!entries.isEmpty()) entries.get(entries.size() - 1).costBy = rule;
+        return this;
+    }
+
+    /**
+     * The price of a recast read from the player, instead of one fixed quickCastCost: player -> 3.0 at Sequence 9,
+     * 1.0 from Sequence 5 (the Prince Of Abolition's wheels).
+     */
+    public AbilityWheel quickCastCostBy(ToDoubleFunction<Player> multiplier) {
+        this.quickCastCostBy = multiplier;
+        return this;
+    }
+
+    /** While this says true for a player, none of the entries has a cooldown for them, from the wheel or recast. */
+    public AbilityWheel noCooldownsWhen(Predicate<Player> when) {
+        this.noCooldowns = when;
+        return this;
+    }
+
     /**
      * false: quickCast ignores cooldowns. It casts the last pick even while that pick is cooling down, and starts
      * no cooldown of its own (the cost is still paid). Picking from the wheel keeps its cooldowns as before.
@@ -188,7 +231,13 @@ public final class AbilityWheel {
             open(player);
             return;
         }
-        cast(serverPlayer, entry, !quickCastCooldown, quickCastCost);
+        float multiplier = quickCastCostBy != null ? (float) quickCastCostBy.applyAsDouble(player) : quickCastCost;
+        cast(serverPlayer, entry, !quickCastCooldown, multiplier);
+    }
+
+    /** True while none of the entries has a cooldown for this player (noCooldownsWhen). */
+    public boolean noCooldowns(Player player) {
+        return noCooldowns != null && noCooldowns.test(player);
     }
 
     /** Casts one entry with every check, its cooldown included. */
@@ -208,7 +257,8 @@ public final class AbilityWheel {
     /** The same, paying 'costMultiplier' times the entry's cost (a sneak recast with quickCastCost). */
     public Result cast(ServerPlayer player, Entry entry, boolean ignoreCooldown, float costMultiplier) {
         if (!(player.level() instanceof ServerLevel sl)) return Result.REFUSED;
-        int cost = Math.round(entry.cost * Math.max(0f, costMultiplier));
+        int cost = entry.costFor(player, costMultiplier);
+        if (noCooldowns(player)) ignoreCooldown = true;
         if (!unlocked(player, entry)) {
             player.sendSystemMessage(Component.literal(entry.name + " needs Sequence " + entry.sequence + "."));
             return Result.REFUSED;
@@ -313,9 +363,11 @@ public final class AbilityWheel {
     private String details(ServerPlayer player, Entry entry) {
         if (!unlocked(player, entry)) return "Sequence " + entry.sequence;
         if (entry.isFree(player)) return "free now";
+        int cost = entry.costFor(player, 1f);
+        if (noCooldowns(player)) return String.valueOf(cost);
         int wait = cooldownLeft(player, entry);
         if (wait > 0) return "ready in " + seconds(wait);
-        return entry.cooldown > 0 ? entry.cost + " · " + seconds(entry.cooldown) : String.valueOf(entry.cost);
+        return entry.cooldown > 0 ? cost + " · " + seconds(entry.cooldown) : String.valueOf(cost);
     }
 
     private static String seconds(int ticks) {

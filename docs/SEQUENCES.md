@@ -6,7 +6,7 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 
 | Word | Meaning | Where |
 | --- | --- | --- |
-| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God, Knight Of Misfortune, Abomination (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Frenzied Mage, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God, Knight Of Misfortune, Abomination, Prince Of Abolition (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
@@ -50,7 +50,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Worm Of Time | Life Theft 9 | Theft 8 | Parasite 4 | - | - | - | - |
 | Hand Of Order | Buff 9 | Decree 8 | Edict 7 | Ability 4: 6 | Ability 5: 5 | Words 4 | Bind 3 |
 | Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |
-| Prince Of Abolition | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
+| Frenzied Mage | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
 | Pale Emperor | Root 9 | Door 8 | Serpent 7 | Spear Skull 7 | Spikes 6 | Wings 5 | Wraiths 4 |
 | Conqueror | Hunter's Trap 9 | Provocation 8 | Fire Ravens 7 | Flame Transformation 6 | Cull 5 | Galvanization 4 | Fog of War 3 |
 | Apocalypse | Fatal Step 9 | Black Flame 8 | Mirror World 7 | Silk Weaver 6 (wheel: silks at 6, 5, 4, 3) | Plague 5 | Unaging 4 | Catastrophe 3 (wheel: disasters at 3, 2, 1) |
@@ -59,8 +59,9 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Hand Of God | Warrior's Charge 9 | Gladiator's Flurry 8 | Grandmaster's Edge 7 | Dawn 6 (wheel: Light of Dawn, Dawn Armor, Sword of Dawn, Hurricane of Light, all at 6) | Protection 5 | Demon Hunting 4 (wheel: Eye, Alchemy, Mind Concealment, Giant Form, all at 4) | Silver and Twilight 3 (wheel: Mercury 3, Silver Rapier 3, Light Concealment 3, Twilight Sword 2, Divine Right Hand 1, Passage of Time 0, Decay 0, Divine Kingdom 0) |
 | Abomination | Blood Chain 9 | Moonstruck 8 | Rending Pounce 7 | Zombie 6 (wheel: Raise the Dead, Grave Chill, Undying Flesh, Death Sentence, all at 6) | Wraith 5 (wheel: Mirror Step, Possession, Ghost Host, all at 5) | Chains 4 (wheel: Animate Objects 4, Grave Shackles 4, Thorned Mausoleum 0, Coffin of Ages 0, Thorn Garden 0) | Curses 3 (wheel: Curse by Connection 3, Cursed Artifact 3, Rite of Silence 3, Bane Mist 2, Ancient Blight 2, Abomination Form 1) |
 | Knight Of Misfortune | Night Sight 9 | Midnight Poem 8 (wheel: Tranquilize, Lullaby, Pacify, Fear at 8, Agitating 6) | Nightmare 7 | Requiem 6 | Spirit Commanding 5 (wheel: Terror Banshee, Earthen Spirit, Gale Spirit at 5, Command Spirits 1) | Nightwatcher 4 (wheel: Night Domain, Hair Entanglement, Curse of Misfortune, Demonic Wolf Form at 4) | Darkness and Concealment 3 (wheel: Sword of Darkness, Nightmare World at 3, Concealed State, Secret Concealment, Concealed World at 2, Mantle of Darkness 1, Eternal Rest, Destination of All Things 0) |
+| Prince Of Abolition | Verdict 9 (sneak: Brainwash) | Brute Force 8 (sneak: Iron Will) | Bribe 7 (wheel: Weaken, Charm, Arrogance, Connect, Coin Shot, all at 7) | Distort 6 (sneak: Seal) | Disorder 5 (sneak: Paces) | The Fallen 8 (wheel: Raise Mausoleum 8, Corrosion 6, Step 6, Majesty 5, Mausoleum Salvo 4; Bestowment, Exploit, Magnify 4 still to come) | Sovereign 6 (wheel: Ruin 6; Frenzy 3, Entropy 2, Abolition 1, Exile 1, Inversion 0, Coronation 0, Decree 0 still to come) |
 
-The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md). So do Knight Of Misfortune's four wheels (H, L, N, M); its Nightmare (J) becomes Dream Invasion while the soul is out of the body; see [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md). Abomination's four wheels (K, L, N, M) work the same way; a Possession is left with the Wraith key (L) again, and Abomination Form is ended by picking it again (free); see [ABOMINATION.md](ABOMINATION.md).
+The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md). So do Knight Of Misfortune's four wheels (H, L, N, M); its Nightmare (J) becomes Dream Invasion while the soul is out of the body; see [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md). Abomination's four wheels (K, L, N, M) work the same way; a Possession is left with the Wraith key (L) again, and Abomination Form is ended by picking it again (free); see [ABOMINATION.md](ABOMINATION.md). The Prince Of Abolition's three wheels (J, N, M) are the other way round: sneak opens the wheel and a plain press recasts the last pick with no cooldown, for 3 times its cost at Sequences 9 to 7, twice at 6 and once from 5; from Sequence 4 no entry has a cooldown at all; see [PRINCE_OF_ABOLITION.md](PRINCE_OF_ABOLITION.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
@@ -131,6 +132,12 @@ What a Beyonder always has from a Sequence on (that Sequence and every stronger 
 | Bane Aura: enemies within 10 blocks carry Misfortune I; Misfortune, fear and decay do not take on you (`Abomination.baneAura`) | Abomination | 2 |
 | Collection of Curses: the curses you lay last 1.5 times as long; a melee attacker is cursed 25% of the time (in `Abomination`) | Abomination | 1 |
 | Chained Aura: enemies within 16 blocks are slowed and cannot teleport; a melee attacker takes 4 thorn damage (`Abomination.chainedAura`) | Abomination | 0 |
+| Sequence Might: 5% more attack, defense, range, area and duration for every Sequence reached (5% at 9, 50% at 0), and 5% more attack and defense for every standing mausoleum; Law & Order: 2% less damage taken for every standing order (in `PrinceOfAbolition`) | Prince Of Abolition | 9 |
+| Silver Tongue: Hero of the Village (better prices) | Prince Of Abolition | 9 |
+| Physical Enhancement: Strength I and two more hearts; Mental Resistance: mind effects of this Pathway last half as long on you (hearts in `PrinceOfAbolition`, the rest in `PrinceOfAbolitionMarks`) | Prince Of Abolition | 8 |
+| Everyone Has A Price: piglins never turn on you; Sanctuary round your mausoleums (in `PrinceOfAbolition`, `PrinceOfAbolitionMausoleums`) | Prince Of Abolition | 7 |
+| Weakness Detection: a gold keyhole over the enemy you look at, for you alone; the first hit on a mob that was not after you is a crit (in `PrinceOfAbolition`) | Prince Of Abolition | 6 |
+| Presence: weak hostile mobs (30 health or less) within 6 blocks are slowed and half as likely to pick you (`PrinceOfAbolition.presence`) | Prince Of Abolition | 5 |
 
 To add one, add a line to that list (and a row here):
 

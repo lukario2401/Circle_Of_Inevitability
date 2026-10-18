@@ -4,6 +4,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -89,6 +90,13 @@ public final class SequencePassives {
         effect("Abomination", 6, MobEffects.REGENERATION, 0);                                   // Zombie: Unliving Body, Regeneration I
         custom("Abomination", 2, Abomination::baneAura);                                        // Ancient Bane: enemies near you lose their luck
         custom("Abomination", 0, Abomination::chainedAura);                                     // Chained: enemies near you are slowed and held to the ground
+
+        // ---- Prince Of Abolition (docs/PRINCE_OF_ABOLITION.md). Also in PrinceOfAbolition itself: Sequence Might and Law &
+        // Order (Sequence 9), Physical Enhancement's hearts and Mental Resistance (8), Everyone Has A Price (7), Weakness
+        // Detection (6), Presence's hesitation (5); the mausoleums' Sanctuary (7) in PrinceOfAbolitionMausoleums.
+        effect("Prince Of Abolition", 9, MobEffects.HERO_OF_THE_VILLAGE, 0);                     // Lawyer: Silver Tongue, better prices
+        effect("Prince Of Abolition", 8, MobEffects.STRENGTH, 0);                                // Barbarian: Physical Enhancement, Strength I
+        custom("Prince Of Abolition", 5, PrinceOfAbolition::presence);                           // Mentor of Disorder: weak hostile mobs hesitate
     }
 
     // =========================

@@ -10,6 +10,10 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodTwilight;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.*;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFallen;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionSovereign;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -250,7 +254,23 @@ public final class PathwayAbilities {
             new Ability("Abomination", 6, "Chains", 4, SNEAK, STEALABLE,                      // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> AbominationChains.abominationChains(player, level, sl, true)),
             new Ability("Abomination", 7, "Curses", 3, SNEAK, STEALABLE,                      // stolen: no wheel; Abomination Form refuses a thief
-                    (player, level, sl) -> AbominationCurses.abominationCurses(player, level, sl, true)));
+                    (player, level, sl) -> AbominationCurses.abominationCurses(player, level, sl, true)),
+
+            // ---- Prince Of Abolition (docs/PRINCE_OF_ABOLITION.md). Its wheels open on sneak; a plain press recasts.
+            new Ability("Prince Of Abolition", 1, "Verdict", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> PrinceOfAbolition.princeOfAbolitionVerdict(player, level, sl, true)),
+            new Ability("Prince Of Abolition", 2, "Brute Force", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> PrinceOfAbolition.princeOfAbolitionBruteForce(player, level, sl, true)),
+            new Ability("Prince Of Abolition", 3, "Bribe", 7, SNEAK, STEALABLE,                // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> PrinceOfAbolitionBribes.princeOfAbolitionBribe(player, level, sl, true)),
+            new Ability("Prince Of Abolition", 4, "Distort", 6, SNEAK, STEALABLE,
+                    (player, level, sl) -> PrinceOfAbolition.princeOfAbolitionDistort(player, level, sl, true)),
+            new Ability("Prince Of Abolition", 5, "Disorder", 5, SNEAK, STEALABLE,
+                    (player, level, sl) -> PrinceOfAbolition.princeOfAbolitionDisorder(player, level, sl, true)),
+            new Ability("Prince Of Abolition", 6, "The Fallen", 8, SNEAK, OWN_PATHWAY_ONLY,    // the mausoleums are the Black Emperor's own
+                    (player, level, sl) -> PrinceOfAbolitionFallen.princeOfAbolitionFallen(player, level, sl, true)),
+            new Ability("Prince Of Abolition", 7, "Sovereign", 6, SNEAK, STEALABLE,            // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> PrinceOfAbolitionSovereign.princeOfAbolitionSovereign(player, level, sl, true)));
 
 
 

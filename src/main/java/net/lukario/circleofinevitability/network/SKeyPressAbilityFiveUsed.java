@@ -23,6 +23,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageMeteor;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition.princeOfAbolitionDisorder;
 
 public class SKeyPressAbilityFiveUsed {
 
@@ -61,6 +62,7 @@ public class SKeyPressAbilityFiveUsed {
         handOfGodProtection(player,level,serverLevel,false);
         knightOfMisfortuneSpiritCommanding(player,level,serverLevel,false);
         abominationWraith(player,level,serverLevel,false);
+        princeOfAbolitionDisorder(player,level,serverLevel,false);
 
 
 
