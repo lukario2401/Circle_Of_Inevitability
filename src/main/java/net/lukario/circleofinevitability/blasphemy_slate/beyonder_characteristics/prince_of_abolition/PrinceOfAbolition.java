@@ -654,7 +654,7 @@ public class PrinceOfAbolition {
     public static void princeOfAbolitionDisorder(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, DISORDER_SEQUENCE)) return;
 
-        if (player.isShiftKeyDown()) {
+        if (!player.isShiftKeyDown()) {
             if (Root.has(player, RootRestriction.TELEPORT) || Root.has(player, RootRestriction.MOVE)) {
                 player.sendSystemMessage(Component.literal("You are held fast; distance will not bend for you."));
                 return; // nothing spent
