@@ -65,6 +65,8 @@ import java.util.function.Predicate;
  *   Dome.isInside(player, name, entity)                                Dome.center(player, name)
  *   Dome.weaken(player, name, 60)    // for 3 seconds: projectiles go through and the shield is halved
  *   Dome.renew(player, name)         // its whole time again
+ *   Dome.raisedAt(sl, spot)          Dome.crossedBy(sl, from, to)       // anyone's domes at a spot / on a line
+ *   Dome.flip(player, name)          // turned inside out: now a cage for its own owner (Duke of Entropy's Distort)
  *
  * Raising one with a name that player already has closes the old one first. It ends by itself when its time is
  * up, when .keepWhile(...) says false, or when its owner dies, logs out or changes dimension. It has no look of
@@ -83,6 +85,9 @@ public final class Dome {
 
     private static final List<Dome> RAISED = new ArrayList<>();
 
+    /** A dome standing somewhere, as Dome.raisedAt and Dome.crossedBy hand it out: whose it is and where. */
+    public record Raised(Player owner, String name, Vec3 center, double radius, boolean whole) {}
+
     // ---------- what it is ----------
 
     private final Vec3 center;              // the ground under a half sphere, the middle of a whole one
@@ -93,6 +98,7 @@ public final class Dome {
     private boolean keepsIn;
     private boolean stopsProjectiles;
     private boolean holdsOwner;
+    private boolean flipped;
     private boolean wardsEffects;
     private float shield;
     private Predicate<LivingEntity> outsiders;
@@ -256,6 +262,72 @@ public final class Dome {
         }
     }
 
+    /** Every dome (anyone's) whose inside holds 'point' in this level. */
+    public static List<Raised> raisedAt(ServerLevel level, Vec3 point) {
+        List<Raised> found = new ArrayList<>();
+        for (Dome dome : RAISED) {
+            if (!dome.closed && dome.level == level && dome.contains(point)) found.add(dome.raised());
+        }
+        return found;
+    }
+
+    /**
+     * Every dome (anyone's) whose shell the line from..to passes through, nearest first: what a player aims at
+     * when they aim at a shell.  Dome.crossedBy(sl, player.getEyePosition(), Spells.aimPoint(player, sl, 24))
+     */
+    public static List<Raised> crossedBy(ServerLevel level, Vec3 from, Vec3 to) {
+        List<Raised> found = new ArrayList<>();
+        List<Double> at = new ArrayList<>();
+        double length = from.distanceTo(to);
+        int steps = Math.max(1, (int) Math.ceil(length / 0.25));
+        for (Dome dome : RAISED) {
+            if (dome.closed || dome.level != level) continue;
+            boolean start = dome.contains(from);
+            for (int i = 1; i <= steps; i++) {
+                if (dome.contains(from.add(to.subtract(from).scale(i / (double) steps))) != start) {
+                    int place = 0;
+                    while (place < at.size() && at.get(place) <= i) place++;
+                    at.add(place, (double) i);
+                    found.add(place, dome.raised());
+                    break;
+                }
+            }
+        }
+        return found;
+    }
+
+    /**
+     * The dome is turned inside out: what it kept out now keeps its owner in. From now on it is a cage for its owner
+     * and the owner's friends (neither can cross it, nor can their projectiles), it no longer shields or wards anyone,
+     * and everyone else crosses it freely. It keeps its time and its look. False if there is no such dome or it was
+     * flipped already. For an ability that turns a rule against the one who made it.
+     */
+    public static boolean flip(Player owner, String name) {
+        Dome dome = find(owner, name);
+        if (dome == null || dome.flipped) return false;
+        dome.flipped = true;
+        dome.keepsOut = false;
+        dome.keepsIn = true;
+        dome.holdsOwner = true;
+        dome.stopsProjectiles = true;
+        dome.shield = 0f;
+        dome.wardsEffects = false;
+        Player caged = dome.owner;
+        dome.outsiders = entity -> Spells.isFriend(caged, entity);             // the owner's side, hidden or not
+        dome.wasInside.clear();
+        dome.wasInside.put(caged.getUUID(), dome.contains(caged));
+        return true;
+    }
+
+    public static boolean isFlipped(Player owner, String name) {
+        Dome dome = find(owner, name);
+        return dome != null && dome.flipped;
+    }
+
+    private Raised raised() {
+        return new Raised(owner, name, center, radius, whole);
+    }
+
     private static Dome find(Player owner, String name) {
         for (Dome dome : RAISED) {
             if (!dome.closed && dome.name.equals(name) && dome.owner.getUUID().equals(owner.getUUID())) return dome;
@@ -362,7 +434,8 @@ public final class Dome {
     private void stopProjectiles(AABB box) {
         for (Projectile projectile : level.getEntitiesOfClass(Projectile.class, box, Entity::isAlive)) {
             Entity shooter = projectile.getOwner();
-            if (shooter != null && (isOwner(shooter) || (shooter instanceof LivingEntity living && !isOutsider(living)))) continue;
+            if (shooter != null && isOwner(shooter) && !flipped) continue;
+            if (shooter != null && !isOwner(shooter) && shooter instanceof LivingEntity living && !isOutsider(living)) continue;
             Vec3 now = projectile.position();
             Vec3 next = now.add(projectile.getDeltaMovement());
             boolean in = contains(now), willBeIn = contains(next);

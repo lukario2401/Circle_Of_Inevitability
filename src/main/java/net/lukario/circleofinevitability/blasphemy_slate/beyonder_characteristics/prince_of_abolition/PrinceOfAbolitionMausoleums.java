@@ -5,10 +5,12 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFx.Status;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.DeathWard;
+import net.lukario.circleofinevitability.status.Exile;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -42,7 +44,11 @@ import java.util.UUID;
  *     that mausoleum crumbles.
  *   - Sanctuary (Briber, 7): within SANCTUARY_RADIUS of one, the owner and their allies mend half a heart a second, the
  *     owner's spirituality comes back half as fast again, and enemies are slowed.
- *   - Step, Salvo (PrinceOfAbolitionFallen) and, later, Coronation read the same records.
+ *   - Step, Salvo, Mausoleum Blast and Exploit (PrinceOfAbolitionFallen) and Coronation (PrinceOfAbolitionSovereign)
+ *     read the same records. Coronation doubles their bonus while it lasts.
+ *   - Last Rebirth (Black Emperor, 0): with none left but LAST_REBIRTH_ORDERS other orders standing, a killing blow
+ *     still does not end the owner, once every LAST_REBIRTH_COOLDOWN: out of the world (status/Exile), back where
+ *     they fell at a quarter of their health.
  *
  * Only the mausoleums in the owner's own world count. They crumble when their owner logs out or loses the Pathway.
  * Not saved: a server restart forgets them (their pictures are gone with it).
@@ -73,7 +79,16 @@ public final class PrinceOfAbolitionMausoleums {
     static final double REBIRTH_MAJESTY = 10.0;         // the rising makes enemies this close kneel...
     static final int REBIRTH_KNEEL = 30;                // ...this long
 
+    // Last Rebirth (Black Emperor): no mausoleum left, but enough other orders standing
+    static final int LAST_REBIRTH_SEQUENCE = 0;
+    static final int LAST_REBIRTH_ORDERS = 3;           // at least this many orders must stand...
+    static final int LAST_REBIRTH_TICKS = 200;          // ...out of the world this long...
+    static final float LAST_REBIRTH_HEALTH = 0.25f;     // ...back where they fell at a quarter of their health...
+    static final int LAST_REBIRTH_COOLDOWN = 12000;     // ...once every 10 minutes
+
     private static final String WARD = "poa_rebirth_ward";
+    private static final String LAST_WARD = "poa_last_rebirth_ward";
+    private static final String LAST_READY = "poa_last_rebirth_ready";       // game time it can save them again
     private static final String REBORN_UNTIL = "poa_reborn_until";
     private static final String IN_SANCTUARY = "poa_in_sanctuary";
 
@@ -163,15 +178,48 @@ public final class PrinceOfAbolitionMausoleums {
         }
     }
 
+    /**
+     * It goes off (Mausoleum Blast): taken out of the records and its order goes, with no crumbling look (the blast
+     * is its look). False if it was gone already (struck down, run out) so nothing should go off.
+     */
+    static boolean detonate(Mausoleum mausoleum) {
+        List<Mausoleum> owned = BY_OWNER.get(mausoleum.owner);
+        if (owned == null || !owned.remove(mausoleum)) return false;
+        if (owned.isEmpty()) BY_OWNER.remove(mausoleum.owner);
+        Player owner = mausoleum.level.getPlayerByUUID(mausoleum.owner);
+        if (owner != null) PrinceOfAbolitionOrders.remove(owner, mausoleum.orderKey());
+        return true;
+    }
+
+    /**
+     * Every standing one's remaining time is doubled, by at most 'most' ticks each (Exploit). Their pictures are
+     * drawn again for the new time and their orders moved. Returns how many were stretched.
+     */
+    static int stretchAll(Player player, int most) {
+        int stretched = 0;
+        long now = player.level().getGameTime();
+        for (Mausoleum mausoleum : standing(player)) {
+            long extra = Math.min(most, mausoleum.until - now);
+            if (extra <= 0) continue;
+            mausoleum.until += extra;
+            ParticleShapes.clearModels(mausoleum.level, mausoleum.ground, mausoleum.tag);
+            PrinceOfAbolitionFx.mausoleumAgain(mausoleum.level, mausoleum.ground, mausoleum.yaw, (int) (mausoleum.until - now), mausoleum.tag);
+            PrinceOfAbolitionOrders.add(player, mausoleum.orderKey(), mausoleum.until, null);
+            stretched++;
+        }
+        return stretched;
+    }
+
     /** All of the player's mausoleums crumble (logout, a lost Pathway). */
     static void crumbleAll(Player player, ServerLevel sl) {
         List<Mausoleum> owned = BY_OWNER.get(player.getUUID());
         if (owned == null) return;
         for (Mausoleum mausoleum : new ArrayList<>(owned)) crumble(mausoleum, null);
         BY_OWNER.remove(player.getUUID());
-        if (player.getPersistentData().getBooleanOr(WARD, false)) {
+        if (player.getPersistentData().getBooleanOr(WARD, false) || player.getPersistentData().getBooleanOr(LAST_WARD, false)) {
             DeathWard.disarm(player);
             player.getPersistentData().remove(WARD);
+            player.getPersistentData().remove(LAST_WARD);
         }
     }
 
@@ -201,10 +249,11 @@ public final class PrinceOfAbolitionMausoleums {
         return owned == null ? 0 : owned.size();
     }
 
-    /** The extra attack and defense they give (0.05 for each). Only for a Prince Of Abolition. */
+    /** The extra attack and defense they give (0.05 for each, twice that while crowned). Only for a Prince Of Abolition. */
     static float might(Player player) {
         if (!SoulCore.getPathway(player).equals(PrinceOfAbolition.PATHWAY)) return 0f;
-        return PrinceOfAbolition.MIGHT_PER_MAUSOLEUM * count(player);
+        float each = PrinceOfAbolition.MIGHT_PER_MAUSOLEUM * (PrinceOfAbolitionSovereign.isCrowned(player) ? PrinceOfAbolitionSovereign.CORONATION_MIGHT : 1f);
+        return each * count(player);
     }
 
     /** The standing one nearest to a point, or null. */
@@ -361,22 +410,60 @@ public final class PrinceOfAbolitionMausoleums {
     // Rebirth
     // =========================
 
-    /** Once a second: the death ward is armed while a mausoleum stands, and taken off when none does. */
+    /**
+     * Once a second: the death ward is armed while a mausoleum stands (Rebirth), or, for a Black Emperor with none
+     * left, while at least LAST_REBIRTH_ORDERS orders stand and Last Rebirth is ready; it is taken off otherwise.
+     */
     private static void rebirthWard(Player player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         boolean ours = data.getBooleanOr(WARD, false);
-        if (count(player) > 0) {
-            if (isReborn(player) || (DeathWard.isArmed(player) && !ours)) return;   // rising, or another ward is on
-            if (!DeathWard.isArmed(player) || DeathWard.ticksLeft(player) < 40) {
+        boolean last = data.getBooleanOr(LAST_WARD, false);
+        if (isReborn(player) || Exile.isExiled(player)) return;                  // out of the world right now
+        if (DeathWard.isArmed(player) && !ours && !last) return;                 // another Pathway's ward is on
+        boolean rebirth = count(player) > 0;
+        boolean lastRebirth = !rebirth && PrinceOfAbolition.isPrince(player, LAST_REBIRTH_SEQUENCE)
+                && PrinceOfAbolitionOrders.count(player) >= LAST_REBIRTH_ORDERS
+                && sl.getGameTime() >= data.getLongOr(LAST_READY, 0L);
+        if (rebirth) {
+            if (last || !DeathWard.isArmed(player) || DeathWard.ticksLeft(player) < 40) {
+                data.remove(LAST_WARD);
                 DeathWard.arm(player, WARD_TICKS, REBIRTH_HEALTH, (saved, source, level) -> {
                     if (saved instanceof Player reborn) fall(reborn, level);
                 });
                 data.putBoolean(WARD, true);
             }
-        } else if (ours) {
+        } else if (lastRebirth) {
+            if (ours || !DeathWard.isArmed(player) || DeathWard.ticksLeft(player) < 40) {
+                data.remove(WARD);
+                DeathWard.arm(player, WARD_TICKS, LAST_REBIRTH_HEALTH, (saved, source, level) -> {
+                    if (saved instanceof Player reborn) lastFall(reborn, level);
+                });
+                data.putBoolean(LAST_WARD, true);
+            }
+        } else if (ours || last) {
             data.remove(WARD);
+            data.remove(LAST_WARD);
             DeathWard.disarm(player);
         }
+    }
+
+    /**
+     * Last Rebirth: the killing blow did not take though no mausoleum stands; the orders hold the Black Emperor up.
+     * Out of the world for LAST_REBIRTH_TICKS (status/Exile), then back where they fell.
+     */
+    private static void lastFall(Player player, ServerLevel sl) {
+        CompoundTag data = player.getPersistentData();
+        data.remove(LAST_WARD);
+        data.putLong(LAST_READY, sl.getGameTime() + LAST_REBIRTH_COOLDOWN);
+        PrinceOfAbolitionFx.rebirthFall(sl, player);
+        PrinceOfAbolitionFx.status(player, Status.REBIRTH, LAST_REBIRTH_TICKS);
+        player.sendSystemMessage(Component.literal("Your orders still stand, and they will not let you fall. You slip out of the world..."));
+        Exile.banish(player, LAST_REBIRTH_TICKS, player.position(), (who, level) -> {
+            if (!(who instanceof Player back)) return;
+            PrinceOfAbolitionFx.statusEnd(back, Status.REBIRTH);
+            PrinceOfAbolitionFx.lastRebirth(level, back);
+            back.sendSystemMessage(Component.literal("You rise again where you fell."));
+        });
     }
 
     /** The killing blow did not take: the owner slips out of the world, and rises later from a mausoleum. */
@@ -430,6 +517,7 @@ public final class PrinceOfAbolitionMausoleums {
         boolean was = data.contains(REBORN_UNTIL);
         data.remove(REBORN_UNTIL);
         data.remove(WARD);
+        data.remove(LAST_WARD);
         data.remove(IN_SANCTUARY);
         return was;
     }

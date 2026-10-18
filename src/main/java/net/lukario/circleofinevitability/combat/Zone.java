@@ -58,6 +58,9 @@ import java.util.function.Predicate;
  *   Zone.close(player, "my_class_land");       // ends it now (its onLeave and onEnd run)
  *   Zone.ticksInside(player, "my_class_land", enemy)
  *
+ * Asking from outside its beat: Zone.covers(player, name, spot) (is a spot in it), centerOf, radiusOf, ticksOpen.
+ * Zone.addShelter((zoneOwner, entity) -> ...) keeps some entities out of other players' zones altogether.
+ *
  * The name tells one player's zones apart: opening one with a name that player already has open closes the old
  * one first. Start the name with your class.
  *
@@ -81,7 +84,14 @@ public final class Zone {
         boolean inside;
     }
 
+    /** Says whether 'entity' is sheltered from a zone 'zoneOwner' opened (see addShelter). */
+    @FunctionalInterface
+    public interface Shelter {
+        boolean shelters(Player zoneOwner, LivingEntity entity);
+    }
+
     private static final List<Zone> OPEN = new ArrayList<>();
+    private static final List<Shelter> SHELTERS = new ArrayList<>();
 
     // ---------- what it is ----------
 
@@ -225,6 +235,47 @@ public final class Zone {
         return stay == null || !stay.inside ? 0 : stay.ticks;
     }
 
+    /** Where the middle of this player's zone is right now (an aura moves with its entity), or null. */
+    public static Vec3 centerOf(Player owner, String name) {
+        Zone zone = find(owner, name);
+        return zone == null ? null : zone.center();
+    }
+
+    /** How far this player's zone reaches (0 = there is none). */
+    public static double radiusOf(Player owner, String name) {
+        Zone zone = find(owner, name);
+        return zone == null ? 0.0 : zone.radius;
+    }
+
+    /** How long this player's zone has been open, in ticks (0 = there is none). */
+    public static int ticksOpen(Player owner, String name) {
+        Zone zone = find(owner, name);
+        return zone == null ? 0 : zone.age;
+    }
+
+    /**
+     * True if 'at' lies in this player's zone: within its radius across, and between 1.5 blocks under its ground and
+     * its height above. For "is this one standing in my field" outside the zone's own beat (a hurt event, a cost).
+     */
+    public static boolean covers(Player owner, String name, Vec3 at) {
+        Zone zone = find(owner, name);
+        if (zone == null || at == null) return false;
+        Vec3 center = zone.center();
+        double dx = at.x - center.x;
+        double dz = at.z - center.z;
+        return dx * dx + dz * dz <= zone.radius * zone.radius && at.y >= center.y - zone.below && at.y <= center.y + zone.above;
+    }
+
+    /**
+     * Some entities are sheltered from other players' zones: no zone acts on them while this says true (they are
+     * skipped as if they stood outside). For a pocket out of the world, a sanctuary no field can reach:
+     *   Zone.addShelter((zoneOwner, entity) -> insideMyPocket(entity) && !insideMyPocket(zoneOwner));
+     * Call it once (a static block). The zone's own owner is never acted on anyway.
+     */
+    public static void addShelter(Shelter shelter) {
+        SHELTERS.add(shelter);
+    }
+
     /** Ends the zone now (its onLeave and onEnd run). Does nothing if there is none. */
     public static void close(Player owner, String name) {
         Zone zone = find(owner, name);
@@ -243,6 +294,7 @@ public final class Zone {
     private boolean isAffected(LivingEntity entity) {
         if (entity == owner || entity.getUUID().equals(owner.getUUID())) return false;
         if (!entity.isAlive() || entity.isSpectator()) return false;
+        for (Shelter shelter : SHELTERS) if (shelter.shelters(owner, entity)) return false;
         return affects != null ? affects.test(entity) : Spells.isEnemy(owner, entity);
     }
 

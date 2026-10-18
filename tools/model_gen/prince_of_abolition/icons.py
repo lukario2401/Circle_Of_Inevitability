@@ -296,6 +296,21 @@ def w_mausoleum_salvo():
     return draw(FALLEN_INSIDE, f)
 
 
+def w_mausoleum_blast():
+    def f(img, d):
+        for r, col in ((11, GOLD_DARK), (8, GOLD), (5, GOLD_LIGHT)):                         # the burst
+            pts = []
+            for i in range(16):
+                a = math.pi * 2 * i / 16
+                rr = r if i % 2 == 0 else r * 0.55
+                pts.append((15.5 + math.cos(a) * rr, 17 + math.sin(a) * rr))
+            d.polygon(pts, fill=col)
+        stele(d, 15.5, 25, 3, JET_LIGHT, GOLD)                                             # the stele breaking
+        for (x, y) in ((6, 9), (25, 8), (4, 22), (27, 21), (15, 4)):                           # black stone flying
+            d.rectangle([x, y, x + 1, y + 1], fill=JET_LIGHT)
+    return draw(FALLEN_INSIDE, f)
+
+
 # ---- key 7: Sovereign
 
 def w_ruin():
@@ -377,6 +392,7 @@ WHEEL = {
     'weaken': w_weaken, 'charm': w_charm, 'arrogance': w_arrogance, 'connect': w_connect, 'coin_shot': w_coin_shot,
     'raise_mausoleum': w_raise_mausoleum, 'corrosion': w_corrosion, 'step': w_step, 'majesty': w_majesty,
     'bestowment': w_bestowment, 'exploit': w_exploit, 'magnify': w_magnify, 'mausoleum_salvo': w_mausoleum_salvo,
+    'mausoleum_blast': w_mausoleum_blast,
     'ruin': w_ruin, 'frenzy': w_frenzy, 'entropy': w_entropy, 'abolition': w_abolition, 'exile': w_exile,
     'inversion': w_inversion, 'coronation': w_coronation, 'decree': w_decree,
 }

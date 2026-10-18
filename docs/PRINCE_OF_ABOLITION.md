@@ -1,10 +1,10 @@
 # Prince Of Abolition: ability design
 
-Half built · design and code for the Circle Of Inevitability repo · drafted by Claude, October 18, 2026 · revised twice, first half of the code October 18, 2026
+Built · design and code for the Circle Of Inevitability repo · drafted by Claude, October 18, 2026 · revised twice, first half of the code October 18, 2026, second half the same day
 
 The Prince Of Abolition Pathway is the Black Emperor Pathway of Lord of the Mysteries, the Emperor tarot card: Lawyer (9), Barbarian (8), Briber (7), Baron of Corruption (6), Mentor of Disorder (5), Earl of the Fallen (4), Frenzied Mage (3), Duke of Entropy (2), Prince of Abolition (1), Black Emperor (0). Source: the Black Emperor Pathway and Black Emperor Pathway/Abilities pages of the Lord of the Mysteries wiki. The wiki lists no abilities for the Frenzied Mage (3) and only one or two for Sequences 2, 1 and 0, so those are designed from the Pathway's themes.
 
-**Status: half built.** Every look, sound and picture is ready (see "Looks, sounds and pictures (ready)"), and the first half of the game code is written: everything up to Mentor of Disorder (5), plus Mausoleum Salvo (see "What is built"). The rest of this file is the design both halves follow; "Still to come" lists what is left.
+**Status: built.** Every Sequence from Lawyer (9) to Black Emperor (0) is written, with its looks, sounds and pictures (see "What is built"). The rest of this file is the design the code follows; "Where the code differs from the design" lists the few places it does not, yet.
 
 Pathway name in code: `"Prince Of Abolition"`.
 
@@ -82,7 +82,7 @@ The abilities do not each get a Sequence of their own. Sequences 3 and 2 have on
 | Briber (7) | Weaken, Charm, Arrogance, Connect, Coin Shot |
 | Baron of Corruption (6) | Distort, Seal, Corrosion, Ruin, Step |
 | Mentor of Disorder (5) | Disorder, Paces, Majesty |
-| Earl of the Fallen (4) | Bestowment, Exploit, Magnify, Mausoleum Salvo |
+| Earl of the Fallen (4) | Bestowment, Exploit, Magnify, Mausoleum Salvo, Mausoleum Blast |
 | Frenzied Mage (3) | Frenzy |
 | Duke of Entropy (2) | Entropy |
 | Prince of Abolition (1) | Abolition, Exile |
@@ -96,8 +96,8 @@ The abilities do not each get a Sequence of their own. Sequences 3 and 2 have on
 | 2 | Brute Force | Barbarian (8) | Where the law fails, force rules. One blow with your whole body on the enemy in front of you (reach 4): 60 damage, thrown back 5 blocks, shield and block stance broken for 5 seconds. Enemies within 2 blocks of it take half and are knocked aside. | **Iron Will**: Mental Resistance. For 8 seconds every mind effect (Brainwash, Charm, Arrogance, Bestowment, Corrosion, Majesty, taunts) ends on you at once and cannot be put on you, and you cannot be staggered. |
 | 3 | Bribe wheel | Briber (7) | Recast the last Bribe pick, no wheel. | Open the Bribe wheel: Weaken, Charm, Arrogance, Connect, Coin Shot. |
 | 4 | Distort | Baron of Corruption (6) | Twist what you look at, up to 24 blocks. A projectile or spell in flight (arrow, fireball, Shot) becomes yours and flies back at whoever sent it. An enemy has its intent Distorted for 5 seconds: its next 3 attacks, melee, ranged or spell, land on its nearest ally instead, or miss if it has none. | **Seal**: you summon an illusory door and close it, and the space is Sealed. A door of black fog with gold trim rises in front of you, swings open for a heartbeat, and you slam it shut. A room of 6 blocks radius around you holds for 8 seconds. Nothing crosses its shell but you and your allies: enemies cannot come in or go out, projectiles and spells stop at it, and enemies already inside are held in. |
-| 5 | Disorder | Mentor of Disorder (5) | Bring chaos into the enemy's order. The enemy you look at (up to 20 blocks) has its perception and the order of its actions scrambled for 6 seconds: 40% of its attacks and spells miss, its selected hotbar slot jumps about, and a mob loses its target. If you are held (rooted, strung up, counted down on), the cast frees you instead: every hold, thread and countdown on you ends and none takes for 3 seconds. | **Paces**: Disorder the distance. You cross up to 24 blocks in a few paces, to where you aim, and a fake version of you stays where you stood for 4 seconds. Enemies go for it, and when it is hit it bursts and Disorders everything within 3 blocks for 2 seconds. |
-| 6 | Fallen wheel | Barbarian (8) | Recast the last Fallen pick, no wheel. | Open the Fallen wheel: Raise Mausoleum (8), Corrosion (6), Step (6), Majesty (5), Bestowment (4), Exploit (4), Magnify (4), Mausoleum Salvo (4). |
+| 5 | Disorder (a plain press is Paces, sneak is Disorder: swapped in play) | Mentor of Disorder (5) | Bring chaos into the enemy's order. The enemy you look at (up to 20 blocks) has its perception and the order of its actions scrambled for 6 seconds: 40% of its attacks and spells miss, its selected hotbar slot jumps about, and a mob loses its target. If you are held (rooted, strung up, counted down on), the cast frees you instead: every hold, thread and countdown on you ends and none takes for 3 seconds. | **Paces**: Disorder the distance. You cross up to 24 blocks in a few paces, to where you aim, and a fake version of you stays where you stood for 4 seconds. Enemies go for it, and when it is hit it bursts and Disorders everything within 3 blocks for 2 seconds. |
+| 6 | Fallen wheel | Barbarian (8) | Recast the last Fallen pick, no wheel. | Open the Fallen wheel: Raise Mausoleum (8), Corrosion (6), Step (6), Majesty (5), Bestowment (4), Exploit (4), Magnify (4), Mausoleum Salvo (4), Mausoleum Blast (4). |
 | 7 | Sovereign wheel | Baron of Corruption (6) | Recast the last pick, no wheel. | Open the Sovereign wheel: Ruin (6), Frenzy (3), Entropy (2), Abolition (1), Exile (1), Inversion (0), Coronation (0), Decree (0). |
 
 ### Key 3 wheel: Bribe
@@ -117,19 +117,20 @@ A Bribe is actual or symbolic. With nothing in your off hand it is symbolic. Hol
 | Entry | Sequence | What it does |
 |---|---|---|
 | **Raise Mausoleum** | Barbarian (8) | Raise a mausoleum where you look (up to 12 blocks). It lasts 2 minutes, gives +5% attack and defense, and revives you once (see "Mausoleums"). |
-| Corrosion | Baron of Corruption (6) | Everyone within 10 blocks of you turns dark and greedy for 10 seconds. Enemies lose their discipline: a mob picks a random target nearby 40% of the time (mostly its own friends) and 20% of all enemy attacks go wide. Your allies are not touched. |
+| Corrosion | Baron of Corruption (6) | Everyone within 10 blocks of you turns dark and greedy. For 10 seconds enemies lose their discipline: a mob picks a random target nearby 40% of the time (mostly its own friends) and 20% of all enemy attacks go wide (a mind effect). And a rot sets in that does not wear off: 2 damage a second, 1 more every second, until it is cleansed (any cleanse ability, or a milk bucket) or they die; after 5 seconds of it they cannot heal at all (status/Corrosion). Your allies are not touched. |
 | **Step** | Baron of Corruption (6) | You step through a mausoleum: look at one (up to 40 blocks) and you vanish into a gold door and come out of it at once. With none in view, the nearest one. From Sequence 4 you bring allies within 3 blocks with you. |
 | Majesty | Mentor of Disorder (5) | Your presence presses down on everyone within 10 blocks. Enemies kneel for 1.5 seconds (Slowness IV, no jumping, sprinting or attacking), plus a second for every 2 standing orders; mobs of up to 60 maximum health stay down for 6 seconds. |
 | Bestowment | Earl of the Fallen (4) | Bestow a feeling on the enemy you look at (up to 16 blocks) for 10 seconds. The feeling is picked from the target: Sluggish (slow, slow attacks) for fast things, Anxious (aim shakes, cannot sprint) for archers and casters, Defeated (damage cut by 60%, mobs drop their target) for anything under 40% health, Rash (attacks 40% faster, takes 40% more damage, cannot stop moving forward) for slow brutes, Avaricious (ignores everything to chase the nearest dropped gold, emerald or diamond) for the rest. |
 | Exploit | Earl of the Fallen (4) | Exploit a state; which one depends on what you do it to. In the air: the state of being off the ground is stretched and you hang and glide for 8 seconds (hold jump to rise, which is flight). Looking at an enemy (up to 24 blocks): its states end ahead of time, so good effects, shields and charges are stripped and any countdown it runs is cut short. Otherwise: everything running on you (buffs, concealment, your own seals and fields) has its remaining time doubled, up to 30 seconds; standing mausoleums have theirs doubled by up to 2 minutes. |
 | Magnify | Earl of the Fallen (4) | The next blow or ability within 10 seconds is magnified: 2.5 times the damage, 1.5 times the range and area, and a hit that would leave a non-boss under 25% health kills it on the spot. A magnified Bribe travels as a thrown flower and lands as a quake: everything within 6 blocks is shaken and gets the Bribe. Cast with a Connected enemy in view (up to 100 blocks), Magnify seizes it at once: it is pulled 10 blocks toward you and held for 2 seconds. |
 | **Mausoleum Salvo** (direct hit) | Earl of the Fallen (4) | Every standing mausoleum fires a gold beam at the enemy you look at (up to 40 blocks from you): 35 damage each, 0.15 seconds apart. If other enemies stand within 8 blocks of the target, the beams share out between them. With no mausoleum it does nothing and costs nothing. |
+| **Mausoleum Blast** | Earl of the Fallen (4) | Every mausoleum within 24 blocks of you goes off: its seams glow gold for a moment, then it bursts, 90 damage to every enemy within 5 blocks of it, thrown away from it. An enemy between two takes both. The mausoleums are gone, orders and all, so Rebirth has less to rise from. With none near it does nothing and costs nothing. |
 
 ### Key 7 wheel: Sovereign
 
 | Entry | Sequence | What it does |
 |---|---|---|
-| **Ruin** (direct hit) | Baron of Corruption (6) | A black-and-gold beam leaves your hand along a line 24 blocks long: 70 damage to every enemy on it, hitscan. Whatever it hits is Corroded for 6 seconds: 5 damage per second and its healing is halved. |
+| **Ruin** (direct hit) | Baron of Corruption (6) | A black-and-gold beam leaves your hand along a line 24 blocks long: 70 damage to every enemy on it, hitscan. Whatever it hits starts to rot (status/Corrosion): 5 damage a second, 1.5 more every second, until it is cleansed or dies, and after 5 seconds of it no healing at all. A second Ruin on a rotting enemy bites 5 deeper. |
 | Frenzy | Frenzied Mage (3) | You throw your arms open and a storm of black bolts bursts out: 12 bolts, each Distorted to curve onto a different enemy within 24 blocks (the same ones again if there are fewer). Each does 25 damage and Disorders what it hits for 2 seconds. With no enemies they fly out in a ring and fade. |
 | Entropy | Duke of Entropy (2) | Order comes undone around the spot you aim at (up to 24 blocks): a field of 16 blocks radius for 20 seconds that grows stronger the longer it stands (full after 8 seconds). Enemies in it: projectiles and spells fly off course, movement stumbles (Slowness I and random shoves), and the damage they deal swings between half and one and a half times what it should be. You and your allies are untouched and physics bends for you: Exploit and Magnify cost nothing inside it. |
 | Abolition | Prince of Abolition (1) | You abolish the area around you: a sphere of 12 blocks radius slips out of the real world for 15 seconds, a grey fog without sound. Nothing outside reaches in and nothing inside reaches out: abilities, projectiles, summons, lightning and explosions stop at the shell, and nobody outside can see or target what is inside. Everyone inside can still fight each other. Cast it again to close the pocket early. |
@@ -196,7 +197,7 @@ Costs follow the Attendant Of Mysteries curve (250 at Sequence 9 up to 12000 at 
 | Distort, Seal | 2450 | |
 | Disorder, Paces | 3000 | |
 | Raise Mausoleum (+100 per mausoleum already standing) | 700 | 5 |
-| Corrosion, Step, Majesty, Bestowment, Exploit, Magnify, Mausoleum Salvo | 2450, 800, 3000, 6000, 4000, 5000, 4000 | 20, 4, 18, 12, 15, 20, 8 |
+| Corrosion, Step, Majesty, Bestowment, Exploit, Magnify, Mausoleum Salvo, Mausoleum Blast | 2450, 800, 3000, 6000, 4000, 5000, 4000, 5000 | 20, 4, 18, 12, 15, 20, 8, 10 |
 | Ruin | 2800 | 10 |
 | Frenzy, Entropy, Abolition, Exile, Inversion, Coronation, Decree | 12000, 20000, 30000, 15000, 45000, 30000, 25000 | — |
 
@@ -238,7 +239,7 @@ In this order, most abilities unlocked first. Each one is general, so other Path
 - Mythical Creature Form, a curly-haired baboon: the wiki gives only the name and it needs a model. It stays out for now.
 - Collapsing buildings with Disorder and magnifying wind into hurricanes: both change the world, which nothing here does.
 - Raising the dead with mausoleums: mausoleums are yours alone.
-- Sentence (four-gavel direct hit): cut so the wheels stay at 8 entries.
+- Sentence (four-gavel direct hit): cut so the wheels stay small (the Fallen wheel has 9 entries since Mausoleum Blast).
 
 ## Open balance notes
 
@@ -282,43 +283,52 @@ The game code is in `beyonder_characteristics/prince_of_abolition/`, next to `Pr
 
 | Class | What is in it |
 | --- | --- |
-| `PrinceOfAbolition` | The Pathway's name, Sequence Might (`attack`, `defense`, `range`, `area`, `duration`), the recast rules of the wheels (`recastCost`, `noCooldowns`), the events (damage in and out, misses, Distorted blows, mobs that will not pick you, Corroded healing, cleanup on login, respawn and logout), keys 1 (Verdict / Brainwash), 2 (Brute Force / Iron Will), 4 (Distort / Seal) and 5 (Disorder / Paces), the passives from 9 to 5, and the melee combo |
-| `PrinceOfAbolitionMarks` | The small statuses put on others: Compromised, Brainwashed, Weakened, Charmed, Arrogant, Connected, Distorted, Disordered, Corrupted (Corrosion), Corroded (Ruin), Kneeling. One kind, who put it there, when it ends; mind marks do not take through Iron Will and last half as long on a Barbarian of this Pathway |
+| `PrinceOfAbolition` | The Pathway's name, Sequence Might (`attack`, `defense`, `range`, `area`, `duration`; Magnify widens range and area while it waits), the recast rules of the wheels (`recastCost`, `noCooldowns`), the events (damage in and out, Abolition's shell, Inversion, Distorted blows, mobs that will not pick you, Beyond the World, cleanup on login, respawn and logout), keys 1 (Verdict / Brainwash), 2 (Brute Force / Iron Will), 4 (Distort, the shell flip / Seal, the gate) and 5 (Paces / Disorder), every passive, the look of the rot and of this Pathway's misses, and the melee combo |
+| `PrinceOfAbolitionMarks` | The small statuses put on others: Compromised, Brainwashed, Weakened, Charmed, Arrogant, Connected, Distorted, Disordered, Corrupted (Corrosion's greed), Kneeling, and Bestowment's Sluggish, Anxious, Defeated, Rash, Avaricious. One kind, who put it there, when it ends; mind marks do not take through Iron Will and last half as long on a Barbarian of this Pathway; a kind with a miss share hands it to `status/Falter` |
 | `PrinceOfAbolitionOrders` | Order: every standing order with its end, nine counted at most, and the `[sigil] Order 4/9` counter |
-| `PrinceOfAbolitionMausoleums` | The mausoleums: raising, the 2-minute life, health and who can strike them, the +5% bonus, Sanctuary, Rebirth |
-| `PrinceOfAbolitionBribes` | Key 3, the Bribe wheel: Weaken, Charm, Arrogance, Connect, Coin Shot, and actual Bribes |
-| `PrinceOfAbolitionFallen` | Key 6, the Fallen wheel: Raise Mausoleum, Corrosion, Step, Majesty, Mausoleum Salvo |
-| `PrinceOfAbolitionSovereign` | Key 7, the Sovereign wheel: Ruin |
+| `PrinceOfAbolitionMausoleums` | The mausoleums: raising, the 2-minute life, health and who can strike them, the +5% bonus (doubled while crowned), Sanctuary, Rebirth, Last Rebirth, detonating (Blast) and stretching (Exploit) |
+| `PrinceOfAbolitionBribes` | Key 3, the Bribe wheel: Weaken, Charm, Arrogance, Connect, Coin Shot, actual Bribes, and the magnified Bribe (a thrown flower that lands as a quake) |
+| `PrinceOfAbolitionFallen` | Key 6, the Fallen wheel: Raise Mausoleum, Corrosion, Step, Majesty, Bestowment, Exploit, Magnify, Mausoleum Salvo, Mausoleum Blast |
+| `PrinceOfAbolitionSovereign` | Key 7, the Sovereign wheel: Ruin, Frenzy, Entropy, Abolition, Exile, Inversion, Coronation, Decree |
 
-Also changed: `menu/AbilityWheel` has three new options (`quickCastCostBy`, `noCooldownsWhen`, `costBy`; see [SPELL_KIT.md](SPELL_KIT.md)); the seven key packets, `PathwayAbilities`, `SequenceCommands`, `SequencePassives` (Silver Tongue, Strength I, Presence), `MeleeCombos` and Dark Angel's soul colors know the Pathway. `FrenziedMage.java` still checked for the old name "Prince Of Abolition" (in its abilities and its melee combo); it now checks "Frenzied Mage", the name `/sequence pathway` offers, so the two Pathways no longer share their keys.
+New parts of the spell kit this Pathway brought, each usable by any other Pathway (see [SPELL_KIT.md](SPELL_KIT.md)):
 
-What already works from Earl of the Fallen (4), since it belongs to abilities of this half: no cooldowns on any wheel, every Bribe spreads and Charm turns twice as often, Paces reaches 48 blocks and everything aimed at you misses for 2 seconds after Disorder or Paces, and Step brings allies along.
+| Part | What it is | Used here by |
+| --- | --- | --- |
+| `status/Corrosion` | A rot that grows every second until cleansed, and stops all healing after 5 seconds | Corrosion, Ruin |
+| `status/Cleansing` | What "cleansed" means: `Spells.cleanse` and a milk bucket take off every status that listens | Corrosion's rot |
+| `status/Falter` | A share of someone's attacks go wide, one named reason at a time | Arrogance, Disorder, Corrosion, Anxious |
+| `status/Exile` | Out of the world for a while: unseen, unhurt, unable to act, back where it left or where you say | Exile, Last Rebirth |
+| `combat/Wall` | A flat barrier in the air that enemies and their projectiles cannot cross | Seal's gate (Earl of the Fallen) |
+| `Zone.covers`, `centerOf`, `radiusOf`, `ticksOpen`, `addShelter` | Asking whether a spot is in a zone; keeping some entities out of other players' zones | Entropy, Black Emperor's Abolition |
+| `Dome.raisedAt`, `crossedBy`, `flip` | Anyone's domes at a spot or on a line; turning one into a cage for its owner | Distort's shell flip (Duke of Entropy) |
+| `Spells.strikeTrue` | A hit no raised shield, armor, Protection or Resistance softens | Decree |
+| `AbilityWheel.quickCastCostBy`, `noCooldownsWhen`, `costBy` | The first half's wheel options (recast price by Sequence, no cooldowns, a cost worked out at the cast) | all three wheels |
+
+Also changed in the first half: the seven key packets, `PathwayAbilities`, `SequenceCommands`, `SequencePassives` (Silver Tongue, Strength I, Presence), `MeleeCombos` and Dark Angel's soul colors know the Pathway, and `FrenziedMage.java` checks "Frenzied Mage" (it still checked the old name "Prince Of Abolition", so the two Pathways shared their keys).
 
 ### Where the code differs from the design above
 
-Each of these is the nearest thing the existing spell kit could do without breaking blocks, new entities or Minecraft calls the repository does not use yet. Change them when the parts exist.
+Each of these is the nearest thing the spell kit can do today without breaking blocks, new entities or Minecraft calls the repository does not use yet. Change them when the parts exist.
 
 - **Disorder:** a player's view swims (Nausea) instead of the hotbar slot jumping about.
 - **Weaken:** the holds a Weakened enemy puts on you do not yet last half as long (holds do not know who laid them).
-- **Arrogance:** the misses work; mobs retreating or healing is not touched.
+- **Arrogance:** the misses work; mobs retreating or healing is not touched, and ranged attacks miss rather than scatter.
 - **Charm:** a mob that turns on its own side attacks its nearest ally for 5 seconds (status/Taunt) rather than becoming your marionette, which would drop it dead when the time runs out. Players cannot be turned.
 - **Connect:** the enemy glows (Glowing), which everyone sees, not only you.
 - **Paces:** the fake self is a picture, so nothing can strike it. It bursts when an enemy walks into it, and the mobs that hunted you are sent to it.
-- **Iron Will:** it shakes off this Pathway's mind marks, fear, sleep and nausea, and gives full knockback resistance. Other stagger is not stopped.
+- **Iron Will:** it shakes off this Pathway's mind marks, fear, sleep and nausea, and gives full knockback resistance. Other stagger is not stopped. Corrosion's rot is not a mind effect: Iron Will stops the greed but not the rot.
 - **Silver Tongue:** Hero of the Village only; neutral mobs' grudges are not shortened.
 - **Weakness Detection:** the keyhole and the crit; the health and effect readout is not written.
-- **Ruin's Corroded:** half of its heals do not take (each one has an even chance), rather than every heal being halved.
 - **Mausoleum health:** a hostile mob that hunts you (or one of your allies) and stands next to a mausoleum strikes it once a second with its own attack damage; an enemy player swinging at one within 3.5 blocks strikes it with theirs. Explosions and enemy abilities do not hurt them.
 - **Mausoleums** only count, fire and revive in the world their owner is in, and crumble when the owner logs out.
 - **Brute Force's broken guard:** the shield comes down and no item can be used for 5 seconds.
+- **Bestowment:** Anxious slows instead of stopping sprinting and shaking the aim (40% of its attacks go wide); Avaricious on a player cuts their damage by 30% (there is no mob mind to steer); Rash's "cannot stop moving forward" is a shove every second.
+- **Exploit on yourself:** good potion effects, hiding, flight, a Coronation and the mausoleums are stretched; your own Seal, gate and fields are not (their looks are drawn for a fixed time).
+- **Magnify:** the 1.5 times range and area count for every cast while it waits, not only the one it is spent on.
+- **Entropy:** projectiles turn off course; abilities of other Pathways that are not projectiles do not.
+- **Abolition:** blows, aimed abilities, projectiles, mobs' attention and explosions with a source are stopped at the shell; nobody outside is kept from seeing in (there is no per-viewer hiding).
+- **Coronation:** you cannot be knocked back; pulls by other abilities are not stopped.
+- **The gate** is 10 by 5 blocks whatever the Sequence, the size its lattice is drawn at.
 
-## Still to come (the second half)
-
-All of these have their looks, sounds and pictures in `PrinceOfAbolitionFx` already; the timing constants they need are there too.
-
-- The Fallen wheel: Bestowment, Exploit (and the Moon leap at Duke of Entropy), Magnify.
-- The Sovereign wheel: Frenzy, Entropy, Abolition, Exile, Inversion, Coronation (doubles `PrinceOfAbolitionMausoleums.might`), Decree.
-- Seal becomes a gate at Earl of the Fallen (a wall where you look); Distort flips enemy shells at Duke of Entropy; Abolition keeps fields out at Black Emperor.
-- Passives from Sequence 4: Favorable Ground, Loose Order, Beyond the World, Last Rebirth (Their Order already lengthens everything, in `PrinceOfAbolition.duration`).
-
-Before merging, run `./gradlew build` (this half was compiled only against stand-ins of the Minecraft and Forge classes it uses, since the build server could not be reached from where it was written) and try each key in game with `/sequence pathway "Prince Of Abolition"`.
+Before playing, run `./gradlew build`: this code was compiled only against stand-ins of the Minecraft and Forge classes it uses, since the build server could not be reached from where it was written. Then try each key in game with `/sequence pathway "Prince Of Abolition"` and `/abolitionfx` for the looks.

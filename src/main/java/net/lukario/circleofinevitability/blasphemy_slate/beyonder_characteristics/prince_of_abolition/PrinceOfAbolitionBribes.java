@@ -39,6 +39,9 @@ import java.util.List;
  * half as long again and spreads to every enemy within BRIBE_SPREAD of the target (Coin Shot: more damage, and its
  * first enemy is Weakened). From Earl of the Fallen (4) every Bribe spreads, and Charm turns them twice as often.
  *
+ * Magnify (Earl of the Fallen) turns a Weaken, Charm or Arrogance into a thrown flower that lands as a quake: every
+ * enemy round where the target stood gets it.
+ *
  * Sneak opens the wheel; a normal press casts the last pick again (no cooldown; 3x the cost at Briber, 2x at Baron of
  * Corruption, 1x from Mentor of Disorder; no cooldowns at all from Earl of the Fallen). PrinceOfAbolition.recastCost.
  */
@@ -154,6 +157,10 @@ public final class PrinceOfAbolitionBribes {
             default -> ARROGANCE_TICKS;
         };
         int ticks = PrinceOfAbolition.duration(player, actual ? Math.round(base * ACTUAL_LONGER) : base);
+        if (PrinceOfAbolitionFallen.spendMagnify(player, sl)) {
+            magnifiedBribe(player, sl, target, bribe, ticks);
+            return AbilityWheel.Result.DONE;
+        }
         PrinceOfAbolitionFx.bribe(sl, player, target, bribe, actual);
         Later.run(sl, PrinceOfAbolitionFx.BRIBE_LANDS, () -> {
             if (!Spells.casterStillHere(player, sl) || !target.isAlive() || target.level() != sl) return;
@@ -169,6 +176,25 @@ public final class PrinceOfAbolitionBribes {
             for (LivingEntity one : bribed) takes(player, sl, one, bribe, ticks);
         });
         return AbilityWheel.Result.DONE;
+    }
+
+    /**
+     * Magnify (Earl of the Fallen): the Bribe travels as a thrown flower to where the target stands and lands as a
+     * quake: every enemy within PrinceOfAbolitionFallen.MAGNIFIED_BRIBE_RADIUS of it is shaken and gets the Bribe.
+     */
+    private static void magnifiedBribe(Player player, ServerLevel sl, LivingEntity target, Bribe bribe, int ticks) {
+        Vec3 at = target.position();
+        int flight = PrinceOfAbolitionFx.magnifiedFlower(sl, player, at);
+        Later.run(sl, flight, () -> {
+            if (!Spells.casterStillHere(player, sl)) return;
+            double radius = PrinceOfAbolition.area(player, PrinceOfAbolitionFallen.MAGNIFIED_BRIBE_RADIUS);
+            PrinceOfAbolitionFx.quake(sl, at, radius);
+            for (LivingEntity one : Spells.enemiesAround(player, sl, at, radius)) {
+                if (bribe == Bribe.CHARM && one.getMaxHealth() > PrinceOfAbolition.BOSS_HEALTH) continue;
+                Spells.push(one, at, 0.4, 0.35);
+                takes(player, sl, one, bribe, ticks);
+            }
+        });
     }
 
     /** One Bribe takes on one enemy. */

@@ -1,6 +1,8 @@
 package net.lukario.circleofinevitability.combat;
 
+import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.status.Cleansing;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Unnoticed;
@@ -35,11 +37,18 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.eventbus.api.listener.Priority;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
@@ -708,6 +717,45 @@ public final class Spells {
         }
     }
 
+    /** What a strikeTrue lands with, by the entity it is landing on (only during the strike itself; -1 = not yet known). */
+    private static final Map<UUID, Float> TRUE_DAMAGE = new HashMap<>();
+
+    /**
+     * A strikeThrough that nothing softens either: a raised shield or block stance is dropped first, and the target
+     * loses what the hit comes to after every damage event has had its say (bonuses such as Vulnerable or a Pathway's
+     * might, and the target's own Pathway defenses) but before armor, Protection, Resistance and absorption hearts
+     * take anything off. Something that cancels the hit outright (Concealment, an Exile, a miss) still stops it.
+     * For a decree, an execution, a word that cannot be argued with.
+     */
+    public static void strikeTrue(Player caster, LivingEntity target, float damage) {
+        target.stopUsingItem();
+        TRUE_DAMAGE.put(target.getUUID(), -1f);
+        try {
+            strikeThrough(caster, target, damage);
+        } finally {
+            TRUE_DAMAGE.remove(target.getUUID());
+        }
+    }
+
+    /** The two halves of Spells.strikeTrue: what the hit comes to before armor, and that amount landing whole. */
+    @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
+    public static final class TrueDamageEvents {
+        private TrueDamageEvents() {}
+
+        @SubscribeEvent(priority = Priority.LOWEST)
+        public static void onSpellsTrueHurt(LivingHurtEvent event) {
+            if (TRUE_DAMAGE.isEmpty() || event.getEntity().level().isClientSide()) return;
+            if (TRUE_DAMAGE.containsKey(event.getEntity().getUUID())) TRUE_DAMAGE.put(event.getEntity().getUUID(), event.getAmount());
+        }
+
+        @SubscribeEvent(priority = Priority.LOW)
+        public static void onSpellsTrueDamage(LivingDamageEvent event) {
+            if (TRUE_DAMAGE.isEmpty() || event.getEntity().level().isClientSide()) return;
+            Float exact = TRUE_DAMAGE.get(event.getEntity().getUUID());
+            if (exact != null && exact >= 0f) event.setAmount(exact);
+        }
+    }
+
     /** True while a strikeThrough is landing on this entity: shields and wards must let it through. */
     public static boolean isPiercing(LivingEntity entity) {
         return !PIERCING.isEmpty() && PIERCING.contains(entity.getUUID());
@@ -785,10 +833,14 @@ public final class Spells {
         return grew;
     }
 
-    /** Takes every harmful potion effect off the entity and puts out the fire on it. */
+    /**
+     * Takes every harmful potion effect off the entity, puts out the fire on it, and takes off every status that
+     * listens to status/Cleansing (Corrosion, and any status of your own that calls Cleansing.addListener).
+     */
     public static void cleanse(LivingEntity entity) {
         for (MobEffectInstance effect : harmfulEffects(entity)) entity.removeEffect(effect.getEffect());
         entity.clearFire();
+        Cleansing.cleanseStatuses(entity);
     }
 
     public static void sound(ServerLevel sl, Vec3 at, SoundEvent event, float volume, float pitch) {

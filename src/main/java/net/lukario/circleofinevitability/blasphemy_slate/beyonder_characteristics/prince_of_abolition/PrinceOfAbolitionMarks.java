@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFx.Status;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
+import net.lukario.circleofinevitability.status.Falter;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -13,9 +14,13 @@ import java.util.UUID;
 
 /**
  * The small statuses the Prince Of Abolition puts on others: Compromised, Brainwashed, the Bribes, Distorted,
- * Disordered, Corrupted (Corrosion), Corroded (Ruin), Kneeling. One kind, who put it there, when it ends; saved
- * with the entity. What each one DOES is read by the events in PrinceOfAbolition (a miss, less damage, a mob that
- * will not pick its briber); this class only keeps them.
+ * Disordered, Corrupted (Corrosion's greed), Kneeling and Bestowment's five feelings. One kind, who put it there,
+ * when it ends; saved with the entity. What each one DOES is read by the events in PrinceOfAbolition (less damage,
+ * a mob that will not pick its briber); this class only keeps them, and hands the misses to status/Falter (a kind
+ * with a 'miss' share makes that share of the bearer's attacks go wide while it lasts).
+ *
+ * A new kind is one line in Kind (its picture, mind or not, order or not, its miss share) plus whatever it does in
+ * the events. The rot of Corrosion and Ruin is not a mark: it is status/Corrosion, which any Pathway can use.
  *
  *   int ticks = PrinceOfAbolitionMarks.put(player, target, Kind.COMPROMISED, 200);   // 0: it did not take
  *   PrinceOfAbolitionFx.compromised(sl, target, ticks, PrinceOfAbolitionMarks.tag(target, Kind.COMPROMISED));
@@ -32,32 +37,40 @@ public final class PrinceOfAbolitionMarks {
     private PrinceOfAbolitionMarks() {}
 
     public enum Kind {
-        //           shows on a player       mind   order
-        COMPROMISED(Status.COMPROMISED, false, true),
-        BRAINWASHED(Status.BRAINWASHED, true, false),
-        WEAKENED(Status.WEAKENED, false, true),
-        CHARMED(Status.CHARMED, true, true),
-        ARROGANT(Status.ARROGANT, true, true),
-        CONNECTED(null, false, true),               // the briber shows Status.CONNECT instead
-        DISTORTED(Status.DISTORTED, false, false),
-        DISORDERED(Status.DISORDERED, false, false),
-        CORRUPTED(Status.CORRODED, true, false),    // Corrosion: dark and greedy
-        CORRODED(Status.CORRODED, false, false),    // Ruin: burning, healing halved
-        KNEELING(Status.KNEELING, true, false);
+        //           shows on a player       mind   order  miss (status/Falter)
+        COMPROMISED(Status.COMPROMISED, false, true, 0f),
+        BRAINWASHED(Status.BRAINWASHED, true, false, 0f),
+        WEAKENED(Status.WEAKENED, false, true, 0f),
+        CHARMED(Status.CHARMED, true, true, 0f),
+        ARROGANT(Status.ARROGANT, true, true, PrinceOfAbolitionBribes.ARROGANCE_MISS),
+        CONNECTED(null, false, true, 0f),               // the briber shows Status.CONNECT instead
+        DISTORTED(Status.DISTORTED, false, false, 0f),
+        DISORDERED(Status.DISORDERED, false, false, PrinceOfAbolition.DISORDER_MISS),
+        CORRUPTED(Status.CORROSION, true, false, PrinceOfAbolitionFallen.CORROSION_MISS),   // Corrosion's greed (its rot is status/Corrosion)
+        KNEELING(Status.KNEELING, true, false, 0f),
+        // Bestowment's feelings (PrinceOfAbolitionFallen)
+        SLUGGISH(Status.SLUGGISH, true, true, 0f),
+        ANXIOUS(Status.ANXIOUS, true, true, PrinceOfAbolitionFallen.ANXIOUS_MISS),
+        DEFEATED(Status.DEFEATED, true, true, 0f),
+        RASH(Status.RASH, true, true, 0f),
+        AVARICIOUS(Status.AVARICIOUS, true, true, 0f);
 
         final Status status;
         /** A mind effect: Iron Will shakes it off, Mental Resistance halves it. */
         public final boolean mind;
         /** One of the owner's standing orders while it lasts. */
         public final boolean order;
+        /** The share of the bearer's attacks that go wide while it lasts (0: none). */
+        public final float miss;
 
-        Kind(Status status, boolean mind, boolean order) {
+        Kind(Status status, boolean mind, boolean order, float miss) {
             this.status = status;
             this.mind = mind;
             this.order = order;
+            this.miss = miss;
         }
 
-        private String key() {
+        String key() {
             return "poa_mark_" + name().toLowerCase();
         }
     }
@@ -91,6 +104,7 @@ public final class PrinceOfAbolitionMarks {
         data.putLong(kind.key() + "_until", until);
         data.putString(kind.key() + "_by", owner.getUUID().toString());
         if (kind.status != null && target instanceof Player victim) PrinceOfAbolitionFx.status(victim, kind.status, ticks);
+        if (kind.miss > 0f) Falter.apply(target, kind.key(), kind.miss, ticks);
         if (kind.order && PrinceOfAbolition.isPrince(owner, PrinceOfAbolition.ANY_SEQUENCE)) {
             PrinceOfAbolitionOrders.add(owner, orderKey(target, kind), until, target);
         }
@@ -139,6 +153,7 @@ public final class PrinceOfAbolitionMarks {
         String by = data.getStringOr(kind.key() + "_by", "");
         data.remove(kind.key() + "_until");
         data.remove(kind.key() + "_by");
+        if (kind.miss > 0f) Falter.remove(target, kind.key());
         if (!(target.level() instanceof ServerLevel sl)) return;
         ParticleShapes.clearModels(sl, target, tag(target, kind));
         if (kind.status != null && target instanceof Player victim) PrinceOfAbolitionFx.statusEnd(victim, kind.status);

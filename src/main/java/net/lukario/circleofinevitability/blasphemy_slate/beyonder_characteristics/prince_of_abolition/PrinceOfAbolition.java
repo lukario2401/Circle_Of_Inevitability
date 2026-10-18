@@ -9,11 +9,18 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.combat.Dome;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;
+import net.lukario.circleofinevitability.combat.DamageFx;
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.combat.Wall;
+import net.lukario.circleofinevitability.combat.Zone;
+import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.root.Freeze;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Concealment;
+import net.lukario.circleofinevitability.status.Corrosion;
+import net.lukario.circleofinevitability.status.Exile;
+import net.lukario.circleofinevitability.status.Falter;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Fear;
 import net.lukario.circleofinevitability.status.Slumber;
@@ -58,15 +65,19 @@ import java.util.List;
  *   1 Verdict        (Lawyer)        a gavel no one dodges; the enemy is Compromised    | sneak: Brainwash
  *   2 Brute Force    (Barbarian)     one blow with the whole body                       | sneak: Iron Will
  *   3 Bribe          (Briber)        the Bribe wheel: Weaken, Charm, Arrogance, Connect, Coin Shot (PrinceOfAbolitionBribes)
- *   4 Distort        (Baron of Corruption) a shot turned back, or an enemy's intent      | sneak: Seal (the illusory door)
- *   5 Disorder       (Mentor of Disorder) perception and the order of actions scrambled | sneak: Paces
- *   6 The Fallen     (Barbarian)     the Fallen wheel: Raise Mausoleum, Corrosion, Step, Majesty, Mausoleum Salvo
- *                                    (PrinceOfAbolitionFallen; the mausoleums themselves in PrinceOfAbolitionMausoleums)
- *   7 Sovereign      (Baron of Corruption) the Sovereign wheel: Ruin (PrinceOfAbolitionSovereign)
+ *   4 Distort        (Baron of Corruption) a shot turned back, an enemy's intent, or (Duke of Entropy) an enemy
+ *                                    shell flipped                                     | sneak: Seal (the illusory door;
+ *                                                                                        a gate where you look from Earl of the Fallen)
+ *   5 Paces          (Mentor of Disorder) distance Disordered: a few strides, a fake self | sneak: Disorder
+ *   6 The Fallen     (Barbarian)     the Fallen wheel: Raise Mausoleum, Corrosion, Step, Majesty, Bestowment, Exploit,
+ *                                    Magnify, Mausoleum Salvo, Mausoleum Blast (PrinceOfAbolitionFallen; the
+ *                                    mausoleums themselves in PrinceOfAbolitionMausoleums)
+ *   7 Sovereign      (Baron of Corruption) the Sovereign wheel: Ruin, Frenzy, Entropy, Abolition, Exile, Inversion,
+ *                                    Coronation, Decree (PrinceOfAbolitionSovereign)
  *
- * Written so far: everything up to Mentor of Disorder (5), plus Mausoleum Salvo. Still to come (the design is in the
- * doc): Bestowment, Exploit and Magnify on the Fallen wheel, Frenzy to Decree on the Sovereign wheel, Seal as a gate
- * at Earl of the Fallen (4) and the passives from Sequence 4 on.
+ * Every Sequence is written, Lawyer (9) to Black Emperor (0). Passives: Law & Order, Silver Tongue (9), Physical
+ * Enhancement and Mental Resistance (8), Everyone Has A Price (7), Weakness Detection (6), Presence (5), Favorable
+ * Ground (4), Loose Order (2), Beyond the World (1), Their Order and Last Rebirth (0).
  *
  * Sequence Might: every Sequence reached adds 5% attack, defense, range, area and duration (range(...), area(...),
  * duration(...) below; attack and defense in the hurt event), and every standing mausoleum another 5% attack and
@@ -134,6 +145,15 @@ public class PrinceOfAbolition {
     private static final double SEAL_RADIUS = 6.0;
     private static final int SEAL_TICKS = 160;
     static final String SEAL_DOME = "poa_seal";
+    // Earl of the Fallen: the door anywhere you look, and a wall instead of a room (combat/Wall)
+    private static final int GATE_SEQUENCE = 4;
+    private static final double GATE_RANGE = 24.0;
+    private static final double GATE_WIDTH = 10.0;
+    private static final double GATE_HEIGHT = 5.0;
+    private static final int GATE_TICKS = 200;
+    static final String GATE_WALL = "poa_gate";
+    // Duke of Entropy: Distort aimed at an enemy's shell flips it (combat/Dome.flip)
+    private static final int FLIP_SEQUENCE = 2;
 
     // Ability 5 - Disorder (Sequence 5)
     private static final int DISORDER_SEQUENCE = 5;
@@ -167,6 +187,13 @@ public class PrinceOfAbolition {
     private static final double PRESENCE_RADIUS = 6.0;
     private static final float PRESENCE_MAX_HEALTH = 30f;
     private static final float PRESENCE_IGNORE = 0.5f;  // ...and are half as likely to pick you
+    private static final int FAVORABLE_SEQUENCE = 4;    // Favorable Ground: hidden or invisible enemies this close...
+    private static final double FAVORABLE_RADIUS = 16.0;    // ...glow for you and cannot stay hidden
+    private static final int LOOSE_SEQUENCE = 2;        // Loose Order: projectiles coming at you...
+    private static final double LOOSE_RADIUS = 10.0;    // ...this close...
+    private static final double LOOSE_DEGREES = 10.0;   // ...drift up to this many degrees off
+    private static final int BEYOND_SEQUENCE = 1;       // Beyond the World: damage with no attacker...
+    private static final float BEYOND_CUT = 0.5f;       // ...is half lost
 
     // =========================
     // Saved on the player (game times are "until" this tick)
@@ -182,9 +209,12 @@ public class PrinceOfAbolition {
 
     private static final Identifier HEARTS_ID = Physique.id("poa_physical_enhancement");
     private static final Identifier IRON_FOOTING_ID = Physique.id("poa_iron_will_footing");
+    private static final String DRIFTED = "poa_drifted";      // on a projectile Loose Order has bent already
 
     /** True while a Distorted blow is being passed on (so the passed-on blow is not Distorted again). */
     private static boolean redirecting;
+    /** True while Inversion turns a heal into harm (so nothing that harm sets off is turned again). */
+    private static boolean inverting;
 
     /** The melee combo (docs/PRINCE_OF_ABOLITION.md, "Melee combo"), registered in combat/MeleeCombos. */
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
@@ -204,6 +234,37 @@ public class PrinceOfAbolition {
             // Iron Will: fear and sleep do not take
             Fear.addImmunity(entity -> entity instanceof Player player && shrugsMind(player));
             Slumber.addImmunity(entity -> entity instanceof Player player && shrugsMind(player));
+            // Abolition: nothing is aimed across the shell, either way; Black Emperor: no outside zone reaches in
+            Spells.addUnchoosableCheck((chooser, target) -> chooser != null && PrinceOfAbolitionSovereign.separated(chooser, target));
+            Zone.addShelter(PrinceOfAbolitionSovereign::shelteredFromZone);
+            // the look of a miss this Pathway caused (status/Falter does the missing)
+            Falter.addListener((attacker, victim, name) -> {
+                if (name.startsWith("poa_") && victim.level() instanceof ServerLevel sl) {
+                    PrinceOfAbolitionFx.looseOrder(sl, victim.position().add(0, victim.getBbHeight() * 0.6, 0));
+                }
+            });
+            // the look of the rot of Corrosion and Ruin (status/Corrosion does the rotting)
+            Corrosion.addListener(new Corrosion.Listener() {
+                @Override
+                public void started(LivingEntity victim, Player source) {
+                    if (source == null || !isPrince(source, ANY_SEQUENCE) || !(victim.level() instanceof ServerLevel sl)) return;
+                    PrinceOfAbolitionFx.corroded(sl, victim, PrinceOfAbolitionFx.FOREVER, rotTag(victim));
+                    if (victim instanceof Player bearer) PrinceOfAbolitionFx.statusForever(bearer, Status.CORRODED);
+                }
+
+                @Override
+                public void bit(LivingEntity victim, float amount, Player source) {
+                    if (source != null && isPrince(source, ANY_SEQUENCE) && victim.level() instanceof ServerLevel sl) {
+                        PrinceOfAbolitionFx.corrosionBite(sl, victim, amount);
+                    }
+                }
+
+                @Override
+                public void ended(LivingEntity victim, Corrosion.End why) {
+                    if (victim.level() instanceof ServerLevel sl) ParticleShapes.clearModels(sl, victim, rotTag(victim));
+                    if (victim instanceof Player bearer) PrinceOfAbolitionFx.statusEnd(bearer, Status.CORRODED);
+                }
+            });
         }
 
         @SubscribeEvent
@@ -218,9 +279,11 @@ public class PrinceOfAbolition {
             }
             player.getPersistentData().putBoolean(WAS_PRINCE, true);
             if (isActive(player, UNBOUND_UNTIL)) shakeHolds(player);
+            if (player.tickCount % 2 == 0 && isPrince(player, LOOSE_SEQUENCE)) looseOrder(player, sl);
             if (player.tickCount % 10 == 0 && isPrince(player, WEAKNESS_SEQUENCE)) weaknessDetection(player, sl);
             if (player.tickCount % 20 == 0) {
                 bodyTick(player);
+                if (isPrince(player, FAVORABLE_SEQUENCE)) favorableGround(player, sl);
                 PrinceOfAbolitionOrders.tick(player);
                 PrinceOfAbolitionMausoleums.ownerTick(player, sl);
             }
@@ -239,6 +302,9 @@ public class PrinceOfAbolition {
                 if (PrinceOfAbolitionMarks.has(attacker, Kind.WEAKENED)) amount *= 1f - PrinceOfAbolitionBribes.WEAKEN_CUT;
                 if (PrinceOfAbolitionMarks.from(attacker, Kind.CHARMED, victim)) amount *= 1f - PrinceOfAbolitionBribes.CHARM_CUT;
                 if (PrinceOfAbolitionMarks.from(attacker, Kind.BRAINWASHED, victim)) amount *= 1f - BRAINWASH_CUT;
+                if (PrinceOfAbolitionMarks.has(attacker, Kind.DEFEATED)) amount *= 1f - PrinceOfAbolitionFallen.DEFEATED_CUT;
+                if (attacker instanceof Player && PrinceOfAbolitionMarks.has(attacker, Kind.AVARICIOUS)) amount *= 1f - PrinceOfAbolitionFallen.AVARICE_CUT;
+                if (victim.level() instanceof ServerLevel sl) amount *= PrinceOfAbolitionSovereign.entropySwing(sl, attacker);
             }
             // the Prince Of Abolition strikes: Sequence Might, the mausoleums, and what it has put on the victim
             if (attacker instanceof Player prince && isPrince(prince, ANY_SEQUENCE)) {
@@ -251,16 +317,25 @@ public class PrinceOfAbolition {
                     if (victim.level() instanceof ServerLevel sl) PrinceOfAbolitionFx.magnifiedHit(sl, victim.position().add(0, victim.getBbHeight() * 0.6, 0));
                 }
                 if (isPrince(prince, WEAKNESS_SEQUENCE)) victim.getPersistentData().putString(NOTICED_BY, prince.getUUID().toString());
+                amount = PrinceOfAbolitionFallen.magnifyHit(prince, victim, amount);
             }
             // the Prince Of Abolition is struck: Sequence Might, the mausoleums, Law & Order
             if (victim instanceof Player prince && isPrince(prince, ANY_SEQUENCE) && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 amount /= defense(prince);
                 amount *= 1f - LAW_AND_ORDER_CUT * PrinceOfAbolitionOrders.count(prince);
+                if (attacker == null && source.getEntity() == null && isPrince(prince, BEYOND_SEQUENCE)) {
+                    amount *= 1f - BEYOND_CUT;                           // Beyond the World: harm with no hand behind it
+                    if (prince.tickCount % 10 == 0 && prince.level() instanceof ServerLevel sl) PrinceOfAbolitionFx.beyondTheWorld(sl, prince);
+                }
             }
             if (amount != event.getAmount()) event.setAmount(Math.max(0f, amount));
         }
 
-        /** Misses (Arrogance, Disorder, Corrosion), Distorted blows landing on an ally, the untouchable Earl. */
+        /**
+         * Blows that do not land: across an Abolition shell, turned into healing by Inversion, the untouchable Earl,
+         * Distorted blows landing on an ally. (The misses of Arrogance, Disorder, Corrosion and Anxious are
+         * status/Falter's, put on by PrinceOfAbolitionMarks.)
+         */
         @SubscribeEvent
         public static boolean onPrinceOfAbolitionAttacked(LivingAttackEvent event) {
             LivingEntity victim = event.getEntity();
@@ -268,21 +343,24 @@ public class PrinceOfAbolition {
             DamageSource source = event.getSource();
             if (source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
             LivingEntity attacker = source.getEntity() instanceof LivingEntity living && living != victim ? living : null;
+            Entity from = attacker != null ? attacker : source.getDirectEntity();
+            if (from != null && PrinceOfAbolitionSovereign.separated(from, victim)) {
+                PrinceOfAbolitionFx.looseOrder(sl, victim.position().add(0, victim.getBbHeight() * 0.6, 0));
+                return true;                                             // Abolition: nothing reaches across
+            }
             if (attacker == null) return false;
 
+            Player inverter = PrinceOfAbolitionSovereign.inverterGuarding(victim, attacker);
+            if (inverter != null) {
+                inverter.heal(event.getAmount());                        // Inversion: their blow heals you
+                PrinceOfAbolitionFx.inverted(sl, attacker);
+                return true;
+            }
             if (victim instanceof Player prince && isActive(prince, UNTOUCHABLE_UNTIL)) {
                 PrinceOfAbolitionFx.untouchable(sl, prince);
                 return true;
             }
             if (PrinceOfAbolitionMarks.has(attacker, Kind.DISTORTED)) return distortedBlow(sl, attacker, victim, source, event.getAmount());
-            float miss = 0f;
-            if (PrinceOfAbolitionMarks.has(attacker, Kind.ARROGANT)) miss = Math.max(miss, PrinceOfAbolitionBribes.ARROGANCE_MISS);
-            if (PrinceOfAbolitionMarks.has(attacker, Kind.DISORDERED)) miss = Math.max(miss, DISORDER_MISS);
-            if (PrinceOfAbolitionMarks.has(attacker, Kind.CORRUPTED)) miss = Math.max(miss, PrinceOfAbolitionFallen.CORROSION_MISS);
-            if (miss > 0f && attacker.getRandom().nextFloat() < miss) {
-                PrinceOfAbolitionFx.looseOrder(sl, victim.position().add(0, victim.getBbHeight() * 0.6, 0));
-                return true;
-            }
             return false;
         }
 
@@ -290,7 +368,10 @@ public class PrinceOfAbolition {
         @SubscribeEvent
         public static boolean onPrinceOfAbolitionTarget(LivingChangeTargetEvent event) {
             LivingEntity mob = event.getEntity();
-            if (mob.level().isClientSide() || !(event.getNewTarget() instanceof Player wanted)) return false;
+            if (mob.level().isClientSide() || event.getNewTarget() == null) return false;
+            if (PrinceOfAbolitionMarks.has(mob, Kind.DEFEATED) || PrinceOfAbolitionMarks.has(mob, Kind.AVARICIOUS)) return true;
+            if (PrinceOfAbolitionSovereign.separated(mob, event.getNewTarget())) return true;      // Abolition
+            if (!(event.getNewTarget() instanceof Player wanted)) return false;
             if (PrinceOfAbolitionMarks.from(mob, Kind.BRAINWASHED, wanted)) return true;
             if (PrinceOfAbolitionMarks.from(mob, Kind.CHARMED, wanted)) return true;
             if (PrinceOfAbolitionMarks.has(mob, Kind.DISORDERED) && mob.getRandom().nextFloat() < DISORDER_MISS) return true;
@@ -300,12 +381,22 @@ public class PrinceOfAbolition {
                     && mob.getRandom().nextFloat() < PRESENCE_IGNORE;
         }
 
-        /** Corroded (Ruin): healing is halved (every other heal, on average, does not take). */
+        /** Inversion: the healing an enemy receives in the field hurts it instead. (Corrosion's no-healing is status/NoHeal.) */
         @SubscribeEvent
         public static boolean onPrinceOfAbolitionHeal(LivingHealEvent event) {
             LivingEntity entity = event.getEntity();
-            if (entity.level().isClientSide() || !PrinceOfAbolitionMarks.has(entity, Kind.CORRODED)) return false;
-            return entity.getRandom().nextFloat() < PrinceOfAbolitionSovereign.RUIN_HEAL_CUT;
+            if (!(entity.level() instanceof ServerLevel sl) || inverting) return false;
+            Player inverter = PrinceOfAbolitionSovereign.inverterOver(entity);
+            if (inverter == null) return false;
+            inverting = true;
+            try {
+                DamageFx.credit(inverter, entity);
+                entity.invulnerableTime = 0;
+                entity.hurt(sl.damageSources().magic(), event.getAmount());
+            } finally {
+                inverting = false;
+            }
+            return true;
         }
 
         /** A mark does not outlive its bearer: its order goes too. */
@@ -490,16 +581,28 @@ public class PrinceOfAbolition {
     // Normal: twist what you look at (DISTORT_RANGE). A projectile in flight (arrow, fireball, trident...) becomes
     //         yours and flies back at whoever sent it. Otherwise the enemy you look at has its intent Distorted for
     //         DISTORT_TICKS: its next DISTORT_CHARGES attacks (melee, ranged or ability) land on its nearest ally within
-    //         DISTORT_ALLY_REACH instead, or miss if it has none.
+    //         DISTORT_ALLY_REACH instead, or miss if it has none. Duke of Entropy (2): aimed at an enemy's shell (a
+    //         dome: a Seal, a Protection, a Kingdom), it flips it: what it kept out now keeps its owner in (Dome.flip).
     // Sneak:  Seal. An illusory door of black fog and gold rises before you, swings open for a heartbeat, and you slam
     //         it shut (PrinceOfAbolitionFx.SEAL_SLAMS): a room of SEAL_RADIUS round you is Sealed for SEAL_TICKS.
     //         Nothing crosses its shell but you and your allies: enemies cannot come in or go out, and their
-    //         projectiles stop at it (combat/Dome). Casting it again closes the old room first.
+    //         projectiles stop at it (combat/Dome). Casting it again closes the old room first. Earl of the Fallen
+    //         (4): a gate instead, anywhere you look (gate).
     // =========================
     public static void princeOfAbolitionDistort(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, DISTORT_SEQUENCE)) return;
 
         if (player.isShiftKeyDown()) {
+            if (Beyonder.hasSequence(player, GATE_SEQUENCE)) {
+                Vec3 middle = gateSpot(player, sl);
+                if (middle == null) {
+                    player.sendSystemMessage(Component.literal("There is nowhere there for a door to stand."));
+                    return; // nothing spent
+                }
+                if (!Spells.paySpirituality(player, SEAL_COST)) return;
+                gate(player, sl, middle);
+                return;
+            }
             if (!Spells.paySpirituality(player, SEAL_COST)) return;
             seal(player, sl);
             return;
@@ -510,6 +613,16 @@ public class PrinceOfAbolition {
             if (!Spells.paySpirituality(player, DISTORT_COST)) return;
             distortShot(player, sl, shot);
             return;
+        }
+        if (Beyonder.hasSequence(player, FLIP_SEQUENCE)) {
+            Dome.Raised shell = aimedShell(player, sl, range);
+            if (shell != null) {
+                if (!Spells.paySpirituality(player, DISTORT_COST)) return;
+                Dome.flip(shell.owner(), shell.name());
+                PrinceOfAbolitionFx.shellFlip(sl, shell.center(), shell.radius());
+                shell.owner().sendSystemMessage(Component.literal("Your shell turns inside out: it holds you in now."));
+                return;
+            }
         }
         LivingEntity target = aim(player, sl, DISTORT_RANGE);
         if (target == null) {
@@ -611,6 +724,57 @@ public class PrinceOfAbolition {
         return best;
     }
 
+    /** The nearest shell (a dome) of an enemy that the line of sight passes through within 'range', or null. */
+    private static Dome.Raised aimedShell(Player player, ServerLevel sl, double range) {
+        Vec3 eye = player.getEyePosition();
+        for (Dome.Raised shell : Dome.crossedBy(sl, eye, Spells.aimPoint(player, sl, range))) {
+            if (shell.owner() != player && shell.owner().isAlive() && Spells.isEnemy(player, shell.owner())
+                    && !Dome.isFlipped(shell.owner(), shell.name())) return shell;
+        }
+        return null;
+    }
+
+    /** Where the gate stands: on the ground where you look (GATE_RANGE), or the spot in the air you look at. */
+    private static Vec3 gateSpot(Player player, ServerLevel sl) {
+        double range = range(player, GATE_RANGE);
+        Vec3 aimed = Spells.aimPoint(player, sl, range);
+        Vec3 ground = Spells.groundNear(player, sl, aimed, 3.0);
+        return ground != null ? ground : aimed;
+    }
+
+    /**
+     * Earl of the Fallen's Seal: the illusory door is summoned where you look and slams at once
+     * (PrinceOfAbolitionFx.GATE_SLAMS): a wall GATE_WIDTH wide and GATE_HEIGHT tall (the size its lattice is drawn
+     * at, so Sequence Might does not widen it) stands across your view for GATE_TICKS. Enemies cannot cross it either way and their projectiles stop at it (combat/Wall).
+     */
+    private static void gate(Player player, ServerLevel sl, Vec3 middle) {
+        float yaw = player.getYRot();
+        int ticks = duration(player, GATE_TICKS);
+        double width = GATE_WIDTH;                                  // the size its lattice is drawn at
+        double height = GATE_HEIGHT;
+        String tag = "poa_gate_" + player.getId() + "_" + sl.getGameTime();
+        PrinceOfAbolitionFx.gate(sl, player, middle, yaw, ticks, tag);
+        Later.run(sl, PrinceOfAbolitionFx.GATE_SLAMS, () -> {
+            if (!Spells.casterStillHere(player, sl)) {
+                PrinceOfAbolitionFx.gateEnd(sl, middle, yaw, tag);
+                return;
+            }
+            int stands = Math.max(20, ticks - PrinceOfAbolitionFx.GATE_SLAMS);
+            Wall.at(middle, yaw, width, height)
+                    .lasts(stands)
+                    .stopsProjectiles()
+                    .onBlock(at -> PrinceOfAbolitionFx.distortShot(sl, player, at, null))
+                    .onEnd(() -> {
+                        PrinceOfAbolitionFx.gateEnd(sl, middle, yaw, tag);
+                        PrinceOfAbolitionOrders.remove(player, "seal");
+                        PrinceOfAbolitionFx.statusEnd(player, Status.SEAL);
+                    })
+                    .raise(player, sl, GATE_WALL);
+            PrinceOfAbolitionFx.status(player, Status.SEAL, stands);
+            if (isPrince(player, ANY_SEQUENCE)) PrinceOfAbolitionOrders.add(player, "seal", sl.getGameTime() + stands, null);
+        });
+    }
+
     private static void seal(Player player, ServerLevel sl) {
         double radius = area(player, SEAL_RADIUS);
         int ticks = duration(player, SEAL_TICKS);
@@ -641,12 +805,12 @@ public class PrinceOfAbolition {
     }
 
     // =========================
-    // Ability 5 - Disorder
-    // Normal: chaos in the enemy's order. The enemy you look at (DISORDER_RANGE) has its perception and the order of its
+    // Ability 5 - Disorder (the casts were swapped in play: a normal press is Paces, sneak is Disorder)
+    // Sneak:  chaos in the enemy's order. The enemy you look at (DISORDER_RANGE) has its perception and the order of its
     //         actions scrambled for DISORDER_TICKS: DISORDER_MISS of its attacks miss, a mob loses its target (and often
     //         cannot pick one), a player's view swims. If you are held (rooted, frozen, asleep, afraid) the cast frees
     //         you instead: every hold on you ends and none takes for UNBOUND_TICKS.
-    // Sneak:  Paces. Disorder the distance: you cross up to PACES_RANGE (PACES_EARL_RANGE from Earl of the Fallen) to
+    // Normal: Paces. Disorder the distance: you cross up to PACES_RANGE (PACES_EARL_RANGE from Earl of the Fallen) to
     //         where you aim in a few strides, and a fake you stays where you stood for DECOY_TICKS. Mobs that hunted you
     //         go for it; when an enemy reaches it, it bursts and Disorders everything within DECOY_BURST for
     //         DECOY_DISORDER. Earl of the Fallen (4): after either cast, everything aimed at you misses for UNTOUCHABLE_TICKS.
@@ -761,12 +925,12 @@ public class PrinceOfAbolition {
     // Passives (the plain potion effects are in SequencePassives)
     // =========================
 
-    /** Once a second: two more hearts from Barbarian on, Iron Will's footing while it lasts. */
+    /** Once a second: two more hearts from Barbarian on, a footing nothing moves while Iron Will or Coronation lasts. */
     private static void bodyTick(Player player) {
         Physique.keep(player, Attributes.MAX_HEALTH, HEARTS_ID, 4.0, AttributeModifier.Operation.ADD_VALUE,
                 isPrince(player, PHYSICAL_SEQUENCE));
         Physique.keep(player, Attributes.KNOCKBACK_RESISTANCE, IRON_FOOTING_ID, 1.0, AttributeModifier.Operation.ADD_VALUE,
-                shrugsMind(player));
+                shrugsMind(player) || PrinceOfAbolitionSovereign.isCrowned(player));
     }
 
     /** Weakness Detection, twice a second: a gold keyhole over the enemy you look at, for your eyes only. */
@@ -792,6 +956,56 @@ public class PrinceOfAbolition {
         return entity instanceof Enemy && entity.getMaxHealth() <= PRESENCE_MAX_HEALTH;
     }
 
+    /**
+     * Favorable Ground (Earl of the Fallen), once a second: enemies within FAVORABLE_RADIUS cannot stay hidden near
+     * you (Concealment and Unnoticed end; the Exiled and those rising from a mausoleum are left alone), and the
+     * invisible ones glow.
+     */
+    private static void favorableGround(Player player, ServerLevel sl) {
+        Vec3 at = player.position();
+        AABB box = player.getBoundingBox().inflate(FAVORABLE_RADIUS);
+        for (LivingEntity enemy : sl.getEntitiesOfClass(LivingEntity.class, box, e -> e != player && e.isAlive())) {
+            if (enemy.position().distanceTo(at) > FAVORABLE_RADIUS || Spells.isFriend(player, enemy)) continue;   // isFriend: hidden ones count
+            if (Exile.isExiled(enemy) || (enemy instanceof Player other && PrinceOfAbolitionMausoleums.isReborn(other))) continue;
+            boolean found = false;
+            if (Concealment.isHidden(enemy)) {
+                Concealment.reveal(enemy);
+                found = true;
+            }
+            if (Unnoticed.isUnnoticed(enemy)) {
+                Unnoticed.end(enemy);
+                found = true;
+            }
+            if (enemy.hasEffect(MobEffects.INVISIBILITY)) {
+                Spells.keepEffect(enemy, MobEffects.GLOWING, 0, 40);
+                found = true;
+            }
+            if (found && player instanceof ServerPlayer viewer) PrinceOfAbolitionFx.weaknessDetection(viewer, enemy);
+        }
+    }
+
+    /**
+     * Loose Order (Duke of Entropy), every other tick: a projectile of an enemy (or of nobody) within LOOSE_RADIUS that
+     * is coming at you drifts up to LOOSE_DEGREES off, once.
+     */
+    private static void looseOrder(Player player, ServerLevel sl) {
+        Vec3 body = player.position().add(0, player.getBbHeight() * 0.5, 0);
+        for (Projectile shot : sl.getEntitiesOfClass(Projectile.class, player.getBoundingBox().inflate(LOOSE_RADIUS), Entity::isAlive)) {
+            if (shot.getPersistentData().getBooleanOr(DRIFTED, false)) continue;
+            Entity owner = shot.getOwner();
+            if (owner == player || (owner instanceof LivingEntity living && !Spells.isEnemy(player, living))) continue;
+            Vec3 velocity = shot.getDeltaMovement();
+            Vec3 toMe = body.subtract(shot.position());
+            if (velocity.lengthSqr() < 1.0E-3 || velocity.normalize().dot(toMe.normalize()) < 0.9) continue;   // not at me
+            double off = (shot.getRandom().nextDouble() * 2 - 1) * LOOSE_DEGREES;
+            double rise = (shot.getRandom().nextDouble() * 2 - 1) * Math.tan(Math.toRadians(LOOSE_DEGREES)) * velocity.length();
+            shot.setDeltaMovement(Spells.turned(velocity, off).add(0, rise, 0));
+            shot.hurtMarked = true;
+            shot.getPersistentData().putBoolean(DRIFTED, true);
+            PrinceOfAbolitionFx.looseOrder(sl, shot.position());
+        }
+    }
+
     // =========================
     // Sequence Might and the mausoleums
     // =========================
@@ -814,12 +1028,17 @@ public class PrinceOfAbolition {
 
     /** A distance this Beyonder aims or reaches, with Sequence Might. */
     public static double range(Player player, double blocks) {
-        return blocks * (1.0 + MIGHT_PER_SEQUENCE * mightSteps(player));
+        return blocks * (1.0 + MIGHT_PER_SEQUENCE * mightSteps(player)) * magnified(player);
     }
 
     /** A radius, width or height of something this Beyonder makes, with Sequence Might. */
     public static double area(Player player, double blocks) {
-        return blocks * (1.0 + MIGHT_PER_SEQUENCE * mightSteps(player));
+        return blocks * (1.0 + MIGHT_PER_SEQUENCE * mightSteps(player)) * magnified(player);
+    }
+
+    /** Magnify waiting for its blow: everything reaches PrinceOfAbolitionFallen.MAGNIFY_REACH times as far and wide. */
+    private static double magnified(Player player) {
+        return PrinceOfAbolitionFallen.isMagnified(player) ? PrinceOfAbolitionFallen.MAGNIFY_REACH : 1.0;
     }
 
     /** How long something this Beyonder puts on others or leaves standing lasts: Sequence Might and Their Order. */
@@ -874,6 +1093,11 @@ public class PrinceOfAbolition {
         return Beyonder.hasSequence(player, sequence);
     }
 
+    /** The tag the rot's picture on an entity is shown with (status/Corrosion's look, cleared when it ends). */
+    static String rotTag(Entity entity) {
+        return "poa_rot_" + entity.getId();
+    }
+
     /** True while the game time saved under 'key' is still ahead. */
     static boolean isActive(Entity entity, String key) {
         return entity.getPersistentData().getLongOr(key, 0L) > entity.level().getGameTime();
@@ -887,12 +1111,17 @@ public class PrinceOfAbolition {
         bodyTick(player);
         for (Status status : Status.values()) PrinceOfAbolitionFx.statusEnd(player, status);
         if (Dome.isRaised(player, SEAL_DOME)) Dome.close(player, SEAL_DOME);
+        if (Wall.isRaised(player, GATE_WALL)) Wall.close(player, GATE_WALL);
+        PrinceOfAbolitionSovereign.endAll(player);
+        PrinceOfAbolitionFallen.clearState(player);
     }
 
     /** After a relog or a death: nothing of the timed casts is left over (their looks did not survive either). */
     private static void clearState(Player player) {
         CompoundTag data = player.getPersistentData();
         for (String key : List.of(IRON_UNTIL, IRON_TAG, UNBOUND_UNTIL, UNTOUCHABLE_UNTIL)) data.remove(key);
+        PrinceOfAbolitionFallen.clearState(player);
+        PrinceOfAbolitionSovereign.clearState(player);
         PrinceOfAbolitionOrders.showAgain(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) PrinceOfAbolitionFx.statusEnd(player, status);      // a clock left running before death

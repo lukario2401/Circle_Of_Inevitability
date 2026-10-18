@@ -15,6 +15,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Ground that keeps doing something to whoever stands on it, worse the longer they stay (cursed land, a healing circle, an aura) | [`Zone`](#zone-ground-that-keeps-doing-something) | `combat/` |
 | A hidden spot that springs once when an enemy steps on it (a snare, a mine, a rune) | [`Trap`](#trap-a-hidden-spot-that-springs-once) | `combat/` |
 | A shell round a spot that enemies and their projectiles cannot cross, and that shelters allies inside (a dome of light, a barrier, a cage) | [`Dome`](#dome-a-shell-that-holds-a-line) | `combat/` |
+| A flat wall in the air that enemies and their projectiles cannot cross, either way (a gate slammed shut, a curtain of fire) | [`Wall`](#wall-a-flat-barrier-in-the-air) | `combat/` |
+| Is this spot inside my zone? Keep some entities out of other players' zones | [`Zone.covers`, `Zone.addShelter`](#zone-ground-that-keeps-doing-something) | `combat/` |
+| Anyone's domes at a spot or on a line, and turning one inside out against its owner | [`Dome.raisedAt`, `crossedBy`, `flip`](#dome-a-shell-that-holds-a-line) | `combat/` |
 | Something one enemy carries for a while and then passes on to the nearest ones, stronger each time (a plague, a spreading curse) | [`Contagion`](#contagion-it-passes-from-one-enemy-to-the-next) | `combat/` |
 | A potion effect kept up for as long as something lasts | [`Spells.keepEffect`](#1-spells-aiming-and-enemies) | `combat/` |
 | A line that keeps joining two moving things (thread, chain, beam) | [`SpellFx.tether`](#4-spellfx-looks-that-many-abilities-share) | `combat/` |
@@ -43,6 +46,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Write down everything someone takes for a while, then hit them with all of it at once (a curse that comes due) | [`StoredDamage`](#storeddamage) | `status/` |
 | Nothing heals them for a while (frostbite, a festering wound) | [`NoHeal`](#noheal) | `status/` |
 | An open wound: damage once a second for a while, counted as the caster's (a chain of blood, claws, thorns) | [`Bleeding`](#bleeding) | `status/` |
+| A rot that eats deeper every second until it is cleansed, and stops all healing after a while (corrosion, a curse that festers) | [`Corrosion`](#corrosion) | `status/` |
+| A status of your own that every cleanse (and a milk bucket) takes off | [`Cleansing`](#cleansing) | `status/` |
+| Part of someone's attacks go wide for a while (arrogance, a scrambled mind, smoke in the eyes) | [`Falter`](#falter) | `status/` |
 | Who died near a spot lately, and raising them again as what they were (risen dead, a sentence carried out) | [`Fallen`](#fallen-the-dead-that-can-rise) | `combat/` |
 | Who a player has touched lately (hit, cursed, chained), to reach them again anywhere in the world (a curse through a connection, a scrying) | [`Connection`](#connection) | `status/` |
 | Lift loose things (dropped items, arrows, armor stands, boats) and throw them at enemies (a poltergeist, a puppeteer) | [`Hurled`, `Spells.looseThingsAround`](#hurled-loose-things-thrown) | `combat/` |
@@ -51,6 +57,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Everyone in a circle, enemies and allies alike, or only the caster's side | [`Spells.livingAround`, `alliesAround`](#1-spells-aiming-and-enemies) | `combat/` |
 | Make plants grow in a circle, as bone meal does | [`Spells.growPlants`](#1-spells-aiming-and-enemies) | `combat/` |
 | Vanish: unseen, untargeted, unhurt | [`Concealment`](#concealment) | `status/` |
+| Throw someone (or yourself) out of the world for a while: unseen, unhurt, unable to act, back where they left or where you say | [`Exile`](#exile) | `status/` |
 | Leave your body and live inside a mob or a player, which carries you | [`Parasite`](#parasite) | `status/` |
 | Cheat death once | [`DeathWard`](#deathward) | `status/` |
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
@@ -74,6 +81,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | The reflections (still water, ice, glass, polished metal) near a spot or near the crosshair | [`Spells.reflectionNear`, `reflectionAimed`, `isReflective`](#1-spells-aiming-and-enemies) | `combat/` |
 | Is it a full-moon night? | [`Spells.isFullMoonNight`](#1-spells-aiming-and-enemies) | `combat/` |
 | A hit that no shield, substitute or death ward stops | [`Spells.strikeThrough`](#1-spells-aiming-and-enemies) | `combat/` |
+| A hit that nothing softens at all: no raised shield, armor, Protection or Resistance (a decree, an execution) | [`Spells.strikeTrue`](#1-spells-aiming-and-enemies) | `combat/` |
 | "Burns evil and undead" in one call | [`Spells.isEvil`](#1-spells-aiming-and-enemies) | `combat/` |
 | Particles only one player sees (a trail for the hunter) | `ParticleShapes.spawnFor(viewer, particle, at, velocity)` | `particles/fx/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
@@ -181,6 +189,8 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `isEvil(entity)` | Undead, every monster (`Enemy`), and what an `addEvilCheck(entity -> ...)` rule names. For "burns evil and undead" |
 | `canBeChosen(entity)` | `false` for one an ability may not pick as its target (an `Unnoticed` mind) though it is there. The aiming above already asks it; ask it yourself when you pick a target another way |
 | `strikeThrough(player, target, damage)` | Like `strike`, but no `Dome` shield softens it, no `Substitute` takes it and no `DeathWard` saves from it (none of them is used up). `isPiercing(entity)` is `true` while one lands: a shield or ward of your own should let it through too |
+| `strikeTrue(player, target, damage)` | Like `strikeThrough`, and nothing softens it either: a raised shield is dropped first, and the target loses what the hit comes to after the damage events (bonuses such as `Vulnerable` or a Pathway's might, the target's own Pathway defenses) with nothing taken off by armor, Protection, Resistance or absorption hearts. Something that cancels the hit outright (`Concealment`, `Exile`, a `Falter` miss) still stops it. Decree (`PrinceOfAbolitionSovereign`) |
+| `cleanse(entity)` | Every harmful potion effect off, the fire out, and every status that listens to [`Cleansing`](#cleansing) (Corrosion, and any of your own) |
 | `lightNear(sl, center, radius, minLight)` | The blocks giving off at least `minLight` light (torch 14, lantern and glowstone 15) within `radius` (8 at most: every block is looked at), nearest first |
 | `lightAimed(player, sl, range, around, minLight)` | The light source nearest to what the crosshair is on, within `around` of it, or `null` |
 | `inDaylight(sl, pos)` | `true` by day for a spot under the open sky: sunlight as a light source |
@@ -452,7 +462,13 @@ Zone.at(ground, 8)                                       // its middle on the gr
 | `.onEnd(() -> ...)` | It is over, however it ended |
 | `.open(player, sl, name)` | Opens it |
 
-`Zone.isOpen(player, name)`, `Zone.ticksLeft(player, name)`, `Zone.ticksInside(player, name, entity)` and `Zone.close(player, name)` work from anywhere.
+`Zone.isOpen(player, name)`, `Zone.ticksLeft(player, name)`, `Zone.ticksInside(player, name, entity)` and `Zone.close(player, name)` work from anywhere. So do these, for questions asked outside the zone's own beat (a hurt event, a wheel entry's cost):
+
+| Call | What you get |
+|---|---|
+| `Zone.covers(player, name, spot)` | `true` if the spot is in that zone right now: within its radius across, and between 1.5 blocks under its ground and its height above. "Is the attacker standing in my field?" (Entropy's swing, `PrinceOfAbolitionSovereign.entropySwing`) |
+| `Zone.centerOf(player, name)`, `radiusOf`, `ticksOpen` | Where its middle is now (an aura moves), how far it reaches, how long it has been open (a field that grows stronger the longer it stands) |
+| `Zone.addShelter((zoneOwner, entity) -> ...)` | Once, in a static block: while it says `true`, no zone of `zoneOwner` acts on `entity` (it is skipped as if it stood outside). A pocket out of the world, a sanctuary no field reaches (the Black Emperor's Abolition) |
 
 Good to know:
 
@@ -545,6 +561,14 @@ Dome.at(ground, 6)                                       // a half sphere on the
 
 `Dome.isRaised(player, name)`, `ticksLeft`, `center` (the ground under it, or the middle of a sphere), `isInside(player, name, entity)`, `close`, `weaken(player, name, ticks)` (projectiles go through and the shield is halved), `isWeakened`, and `renew(player, name)` (its whole time again) work from anywhere.
 
+Anyone's domes, for powers that act on other people's shells:
+
+| Call | What it does |
+|---|---|
+| `Dome.raisedAt(sl, spot)` | Every dome whose inside holds that spot, as `Dome.Raised(owner, name, center, radius, whole)` |
+| `Dome.crossedBy(sl, from, to)` | Every dome whose shell the line passes through, nearest first: what a player aims at when they aim at a shell. `Dome.crossedBy(sl, player.getEyePosition(), Spells.aimPoint(player, sl, 24))` |
+| `Dome.flip(owner, name)` | Turns it inside out: from now on it is a cage for its own owner and the owner's side (neither they nor their projectiles cross it), it no longer shields or wards anyone, and everyone else crosses freely. It keeps its time and its look. `false` if there is none or it was flipped already; `Dome.isFlipped(owner, name)` asks. Duke of Entropy's Distort (`PrinceOfAbolition`) |
+
 Good to know:
 
 - **Crossing is checked every tick** from where each one is, so walking, being knocked back, an ender pearl or any other teleport all count. Someone put back stands just on their own side of the shell and is pushed off it. Creative players and riders (their mount is moved instead) are left alone.
@@ -552,6 +576,39 @@ Good to know:
 - A shot that gets through between two ticks still does not land on someone sheltered when its shooter stands outside (`LivingAttackEvent`).
 - **It has no look of its own.** Draw it when you raise it (`HandOfGodFx.dome` and `HandOfGodFx.sphere` draw a shell of light tiles in any color) and clear the look in `onEnd`.
 - It falls when its owner dies, logs out or changes dimension. Build a new one for every cast. Not saved: a server restart drops it.
+
+---
+
+## Wall: a flat barrier in the air
+
+The flat cousin of `Dome`: a wall standing in the air that enemies cannot cross, either way, and whose plane their projectiles end at. A gate slammed shut, a curtain of fire, a line of shields, a ward across a corridor. Used by the Prince Of Abolition's Seal from Earl of the Fallen (`gate` in `PrinceOfAbolition.java`).
+
+```java
+Wall.at(middle, player.getYRot(), 10, 5)                 // the middle of its bottom edge, the way its face looks, width, height
+        .lasts(200)
+        .stopsProjectiles()                              // projectiles of enemies (or of nobody) end at it
+        .onBlock(at -> MyFx.ripple(sl, at))              // something was stopped, at this spot on the wall
+        .onEnd(() -> MyFx.wallEnd(sl, middle, tag))
+        .raise(player, sl, "my_pathway_wall");
+```
+
+| Part | What it does |
+|---|---|
+| `Wall.at(middle, yaw, width, height)` | A wall whose bottom edge's middle is `middle`. `yaw` is a direction like a player's: `player.getYRot()` stands it across the player's view, face toward them. Nothing happens until `.raise(...)` |
+| `.lasts(ticks)` | How long it stands (default 200) |
+| `.stopsProjectiles()` | A projectile of an outsider (or of nobody) whose next step goes through the wall ends there, both ways |
+| `.outsiders(entity -> ...)` | Who cannot cross, instead of the owner's enemies. The owner always can |
+| `.onBlock(at -> ...)` | Runs with the spot on the wall where someone was put back or a projectile stopped |
+| `.onEnd(() -> ...)` | It fell, however it ended |
+| `.raise(player, sl, name)` | Raises it. One of the same name and player falls first |
+
+`Wall.isRaised(player, name)`, `ticksLeft`, `close` and `renew` (its whole time again) work from anywhere.
+
+Good to know:
+
+- **Crossing its plane is what counts**, checked every tick, so walking, being knocked through or a teleport across all count; someone put back stands just on their own side and is pushed off it. Its ends and its top are open: going round or over is allowed.
+- It has no thickness and no look of its own. Draw it when you raise it (`PrinceOfAbolitionFx.gate` draws a lattice 10 wide and 5 tall) and clear the look in `onEnd`.
+- It falls when its owner dies, logs out or changes dimension. Build a new one for every cast. Not saved.
 
 ---
 
@@ -921,6 +978,54 @@ Bleeding.addListener((victim, amount, source) -> ...);   // the look and sound o
 - Magic damage: armor does not soften it. It ends when the target dies, or at once when it becomes immune. Creative players do not bleed.
 - The look is a listener's: Abomination shows `AbominationFx.bleed` for the wounds its own players open. Saved with the entity. Used by Blood Chain, Rending Pounce and Werewolf Form's claws (`Abomination.java`).
 
+### Corrosion
+
+A rot that eats deeper the longer it is left. The entity loses health once a second, a little more every second, until it is cleansed or dies; after a while (`Corrosion.NO_HEAL_AFTER`, 5 seconds) it cannot heal at all. The damage counts as the caster's.
+
+```java
+Corrosion.apply(target, player, 2f, 1f);           // 2 a second, 1 more every second, until cleansed
+Corrosion.apply(target, player, 2f, 1f, 200);      // the same, but it also wears off after 10 seconds
+Corrosion.isCorroding(entity)   Corrosion.perSecond(entity)   Corrosion.ticksCorroding(entity)   Corrosion.blocksHealing(entity)
+Corrosion.remove(target)
+Corrosion.addImmunity(entity -> ...)
+Corrosion.addListener(new Corrosion.Listener() {   // every method optional: its look
+    @Override public void started(LivingEntity victim, Player source) { ... }
+    @Override public void bit(LivingEntity victim, float amount, Player source) { ... }
+    @Override public void ended(LivingEntity victim, Corrosion.End why) { ... }   // CLEANSED, TIME, DIED, REMOVED
+});
+```
+
+- **What ends it:** anything that calls `Spells.cleanse` (every cleanse ability), a milk bucket (both through [`Cleansing`](#cleansing)), death, or the time limit when you gave one.
+- Applying again keeps the bigger bite and the faster growth and never restarts its clock, so the no-healing time counts from the first touch. To make a second hit bite deeper: `Corrosion.apply(target, player, Corrosion.perSecond(target) + 5f, 1.5f)` (Ruin).
+- `Corrosion.MAX_PER_SECOND` (40) caps a single bite; `Corrosion.EVERY` is the beat (20 ticks).
+- Magic damage: armor does not soften it. Creative players do not rot. Saved with the entity. Used by Corrosion and Ruin (`PrinceOfAbolitionFallen`, `PrinceOfAbolitionSovereign`); their look is a listener in `PrinceOfAbolition`.
+
+### Cleansing
+
+The one place that says what "cleansed" means, so a status of your own can be washed off by every cleanse in the mod without any of them knowing about it.
+
+```java
+static { Cleansing.addListener(MyStatus::remove); }   // once: every cleanse now takes MyStatus off too
+Spells.cleanse(entity);                               // what cleanse abilities call: harmful effects, fire, and the listeners
+Cleansing.cleanseStatuses(entity);                    // only the listening statuses
+```
+
+Drinking a milk bucket runs the listeners too (`Cleansing.MILK_CLEANSES`). Corrosion listens. Bleeding, Decay and the rest do not on purpose (a wound is not a curse); give them a listener if a Pathway should wash them off.
+
+### Falter
+
+For a while part of an entity's attacks go wide: melee, arrows and abilities, everything that has an attacker. Every reason has a name, so two abilities never cut each other short: the chance is the biggest of the reasons still running.
+
+```java
+Falter.apply(target, "my_pathway_smoke", 0.4f, 120);   // 6 seconds: 40% of its attacks miss
+Falter.chance(entity)    Falter.ticksLeft(entity, "my_pathway_smoke")
+Falter.remove(target, "my_pathway_smoke")              // this reason ends; the others go on
+Falter.clear(target)
+Falter.addListener((attacker, victim, name) -> ...)    // the look of a miss
+```
+
+Damage that bypasses invulnerability is never missed. Saved with the entity. The Prince Of Abolition's Arrogance, Disorder, Corrosion's greed and Anxious use it (`PrinceOfAbolitionMarks`: a kind with a `miss` share).
+
 ### SupernaturalResistance
 
 For a while the supernatural has less hold on an entity: supernatural damage is cut, and blindness and nausea cannot be put on it. A grant that shakes off also ends roots, freezing, `Blind`, taunts and darkness on it every tick.
@@ -1210,6 +1315,21 @@ Your abilities decide whether casting ends it. If it should, call `Concealment.r
 Settings: `Concealment.SHOW_PARTICLES` (the puff of fog), `Concealment.BREAKS_ON_ATTACK`.
 
 It works on mobs too, and it is saved with the entity.
+
+### Exile
+
+Someone is put out of the real world for a while and comes back where they left, or where you say. A banishment, a step into a parallel world, a pocket of nowhere.
+
+```java
+Exile.banish(target, 120);                                    // 6 seconds; back where it stood
+Exile.banish(player, 80, there, (who, sl) -> MyFx.back(sl, who));   // back at 'there', and this runs when it is back
+Exile.isExiled(entity)    Exile.ticksLeft(entity)    Exile.bringBack(target)
+Exile.addListener(new Exile.Listener() { ... })               // banished / returned: the look of every exile
+```
+
+- While out it is hidden, unhurt and untargeted (`Concealment`) and can do nothing at all (`Root`, `EVERYTHING`); it hangs where it was. Coming back takes off the hiding and every hold.
+- Banishing what is out already only keeps it out longer. Saved with the entity (the end and the spot); the code given to `banish` does not survive a restart.
+- Used by Exile and Last Rebirth (`PrinceOfAbolitionSovereign`, `PrinceOfAbolitionMausoleums`).
 
 ### DeathWard
 
@@ -1737,6 +1857,8 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Connection` (the one in sight, else the newest anywhere), `Trap` seen by its owner only, `Zone` + `Taunt.brawl` + `Nocturnality.forceNight`, `Contagion` that deepens by stage, a shrinking `GiantForm` whose end is a `Misfortune.befall` on everyone with your curse (`Misfortune.sourceId`), a wheel entry that ends itself for free (`.free(...)`) | `curseByConnection`, `cursedArtifact`, `riteOfSilence`, `baneMist`, `ancientBlight`, `abominationForm` in `AbominationCurses.java` |
 | `Spells.reflectionNear` / `reflectionAimed` with `Concealment` on the way, `Parasite` entered a moment after the cast (paid back if it fails) with an upkeep and the key that steps out, `Marionette.control` on wild vexes before summoning the rest | `mirrorStep`, `possession`, `HOOKS`, `ghostHost` in `AbominationWraith.java` |
 
+| `Corrosion` with a listener for its look, `Falter` through a mark's miss share, `Wall` (a gate), `Dome.crossedBy` + `Dome.flip`, `Zone.covers` (a field that swings damage and makes casts free), `Zone.addShelter`, `Exile` (an enemy, an ally, yourself), `Spells.strikeTrue`, `AbilityWheel.free` for a recast that closes | `corrosion`, `blast`, `magnify`, `exploit` in `PrinceOfAbolitionFallen.java`; `ruin`, `entropy`, `abolition`, `exile`, `decree` in `PrinceOfAbolitionSovereign.java`; `gate`, `aimedShell`, the events in `PrinceOfAbolition.java` |
+
 ## Tricks worth copying
 
 All in `AttendantOfMysteries.java`, with the method to look at in brackets.
@@ -1964,4 +2086,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`). `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`). `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

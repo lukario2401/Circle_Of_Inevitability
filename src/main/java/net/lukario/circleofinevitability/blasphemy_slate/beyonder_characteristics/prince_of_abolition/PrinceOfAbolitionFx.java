@@ -64,16 +64,17 @@ import java.util.concurrent.ThreadLocalRandom;
  *   Key 4  distortShot(sl, player, at, backToward), distortIntent(sl, player, target, ticks, tag), distortedStrike(sl, attacker,
  *              victim), distortIntentEnd(sl, target, tag); shellFlip(sl, center, radius) (Duke of Entropy)
  *          sneak: seal(sl, player, center, radius, ticks, tag) (shut at SEAL_SLAMS), sealEnd(sl, center, radius, tag);
- *              gate(sl, player, middle, yaw, ticks, tag) (Earl of the Fallen: a wall, shut at GATE_SLAMS)
+ *              gate(sl, player, middle, yaw, ticks, tag) (Earl of the Fallen: a wall, shut at GATE_SLAMS),
+ *              gateEnd(sl, middle, yaw, tag)
  *   Key 5  disorder(sl, player, target, ticks, tag), disorderEnd(sl, target, tag), unbound(sl, player) (holds broken)
  *          sneak: paces(sl, player, from, to, ticks, tag) (the fake self stays at 'from'), decoyBurst(sl, at, tag),
  *              untouchable(sl, player) (Earl of the Fallen: everything misses)
  *   Key 6  the wheel's pictures: WHEEL_RAISE_MAUSOLEUM, WHEEL_CORROSION, WHEEL_STEP, WHEEL_MAJESTY, WHEEL_BESTOWMENT,
- *              WHEEL_EXPLOIT, WHEEL_MAGNIFY, WHEEL_MAUSOLEUM_SALVO
+ *              WHEEL_EXPLOIT, WHEEL_MAGNIFY, WHEEL_MAUSOLEUM_SALVO, WHEEL_MAUSOLEUM_BLAST
  *          raiseMausoleum(sl, ground, yaw, ticks, tag) (standing at MAUSOLEUM_RISEN), mausoleumHit(sl, ground),
  *              mausoleumCrumble(sl, ground, yaw, tag), sanctuaryPulse(sl, ground, radius), sanctuaryHum(sl, ground),
- *              sanctuaryMend(sl, ally)
- *          corrosion(sl, player, radius), corroded(sl, enemy, ticks, tag)
+ *              sanctuaryMend(sl, ally), mausoleumAgain(sl, ground, yaw, ticks, tag) (shown again, already standing)
+ *          corrosion(sl, player, radius), corroded(sl, enemy, ticks, tag), corrosionBite(sl, victim, perSecond)
  *          step(sl, player, from, to) (out at STEP_OUT)
  *          majesty(sl, player, radius), kneel(sl, victim, ticks, tag)
  *          bestowment(sl, player, target, Feeling.X, ticks, tag) (it lands at BESTOW_LANDS)
@@ -82,6 +83,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *          magnify(sl, player, ticks, tag), magnifyEnd(sl, player, tag), magnifiedHit(sl, at),
  *              magnifiedFlower(sl, player, to) which returns its flight ticks, quake(sl, at, radius), seize(sl, player, target)
  *          salvo(sl, tops, target) (beam i hits at SALVO_STEP * i), salvoHit(sl, victim)
+ *          mausoleumBlast(sl, ground, yaw, radius, tag) (it goes off at BLAST_LANDS; the standing one is cleared then)
  *   Key 7  the wheel's pictures: WHEEL_RUIN, WHEEL_FRENZY, WHEEL_ENTROPY, WHEEL_ABOLITION, WHEEL_EXILE, WHEEL_INVERSION,
  *              WHEEL_CORONATION, WHEEL_DECREE
  *          ruin(sl, player, to) (it fires at RUIN_FIRES), ruinHit(sl, victim)
@@ -428,6 +430,7 @@ public final class PrinceOfAbolitionFx {
     public static final String WHEEL_EXPLOIT = "ability_menus/prince_of_abolition/exploit";
     public static final String WHEEL_MAGNIFY = "ability_menus/prince_of_abolition/magnify";
     public static final String WHEEL_MAUSOLEUM_SALVO = "ability_menus/prince_of_abolition/mausoleum_salvo";
+    public static final String WHEEL_MAUSOLEUM_BLAST = "ability_menus/prince_of_abolition/mausoleum_blast";
     public static final String WHEEL_RUIN = "ability_menus/prince_of_abolition/ruin";
     public static final String WHEEL_FRENZY = "ability_menus/prince_of_abolition/frenzy";
     public static final String WHEEL_ENTROPY = "ability_menus/prince_of_abolition/entropy";
@@ -857,6 +860,17 @@ public final class PrinceOfAbolitionFx {
         });
     }
 
+    /** The gate falls (or runs out): its lattice is cleared and gold sparks run along where it stood. */
+    public static void gateEnd(ServerLevel sl, Vec3 middle, float yaw, String tag) {
+        ParticleShapes.clearModels(sl, middle, tagged(tag));
+        Vec3 side = ahead(yaw + 90f);
+        for (int up = 0; up < 5; up += 2) {
+            ParticleShapes.line(sl, SPARK, middle.add(side.scale(-5)).add(0, up + 0.5, 0), middle.add(side.scale(5)).add(0, up + 0.5, 0), 2);
+        }
+        ParticleShapes.burst(sl, KEYHOLE, middle.add(0, 2.5, 0), 8, 0.08, 0.2);
+        sound(sl, middle, ModSounds.ABOLITION_SEAL_BREAK, 1.2f, 1.1f);
+    }
+
     // =====================================================================================
     // Key 5: Disorder (Mentor of Disorder) / Paces
     // =====================================================================================
@@ -956,6 +970,52 @@ public final class PrinceOfAbolitionFx {
         sound(sl, ground, ModSounds.ABOLITION_MAUSOLEUM_RAISE, 1.2f, 1.0f);
     }
 
+    /**
+     * A mausoleum that already stands is drawn again for 'ticks' more (its time was stretched: Exploit), with no
+     * rising. Clear the old one first: ParticleShapes.clearModels(sl, ground, tag).
+     */
+    public static void mausoleumAgain(ServerLevel sl, Vec3 ground, float yaw, int ticks, String tag) {
+        int life = Math.max(10, ticks);
+        ModelFx stele = MAUSOLEUM.lifetime(life).fade(0, 8).tag(tagged(tag)).key(0, pose().frame(0f));
+        ParticleShapes.model(sl, stele, ground, yaw + 180f, 0f, 0f);
+        ModelFx sigil = MAUSOLEUM_SIGIL.color(0xE0E0B04A).scale(0.55f).lifetime(life).fade(0, 8).spin(2f).tag(tagged(tag))
+                .during(0, life, pose().up(0.2f));
+        ParticleShapes.model(sl, sigil, ground.add(0, 3.6, 0), yaw, 0f, 0f);
+        ParticleShapes.burst(sl, GOLD_MOTE, ground.add(0, 3.2, 0), 6, 0.03, 0.08);
+    }
+
+    /** The tick a detonated mausoleum goes off (Mausoleum Blast); the standing one is cleared at that tick. */
+    public static final int BLAST_LANDS = 12;
+
+    /**
+     * Mausoleum Blast: the stele's seams glow gold, its sigil spins faster and sinks into it, then it bursts: a ring
+     * of gold fire 'radius' wide, black stone and gold sparks flung out, the ground shaking.
+     */
+    public static void mausoleumBlast(ServerLevel sl, Vec3 ground, float yaw, double radius, String tag) {
+        Vec3 middle = ground.add(0, 1.5, 0);
+        SpellFx.warningCircle(sl, ground, radius, 0xA0E0B04A, BLAST_LANDS);
+        ModelFx sigil = MAUSOLEUM_SIGIL.color(0xFFFFE08A).scale(0.55f).lifetime(BLAST_LANDS).fade(0, 2).spin(14f)
+                .key(0, pose().up(0f)).key(BLAST_LANDS, pose().up(-2.4f).scale(0.4f), Ease.IN);
+        ParticleShapes.model(sl, sigil, ground.add(0, 3.6, 0), yaw, 0f, 0f);
+        for (int t = 0; t < BLAST_LANDS; t += 3) {
+            int h = t;
+            Later.run(sl, t, () -> ParticleShapes.burst(sl, SPARK, ground.add(0, 0.4 + h * 0.2, 0), 3, 0.04, 0.1));
+        }
+        sound(sl, ground, ModSounds.ABOLITION_MAUSOLEUM_RAISE, 1.0f, 1.6f);
+        Later.run(sl, BLAST_LANDS, () -> {
+            ParticleShapes.clearModels(sl, ground, tagged(tag));
+            SpellFx.blast(sl, middle, radius * 0.6, 0xFFFFE08A, SPARK);
+            SpellFx.shockRing(sl, ground, radius, 0xF0E0B04A, 12, 0);
+            SpellFx.shockRing(sl, ground, radius * 0.7, 0xC016121F, 10, 2);
+            ParticleShapes.burst(sl, STONE_CHIP, middle, 24, 0.25, 0.6);
+            ParticleShapes.burst(sl, JET_SMOKE, middle, 12, 0.08, 0.2);
+            ParticleShapes.burst(sl, STELE, middle.add(0, 1, 0), 6, 0.1, 0.25);
+            ParticleShapes.ring(sl, ASH_DUST, ground.add(0, 0.2, 0), 1.0, 20, radius / 10.0);
+            sound(sl, ground, ModSounds.ABOLITION_QUAKE, 1.6f, 0.7f);
+            sound(sl, ground, ModSounds.ABOLITION_MAUSOLEUM_CRUMBLE, 1.3f, 0.8f);
+        });
+    }
+
     /** A mausoleum is struck: chips of jet fly off it. */
     public static void mausoleumHit(ServerLevel sl, Vec3 ground) {
         ParticleShapes.burst(sl, STONE_CHIP, ground.add(0, 1.4, 0), 6, 0.08, 0.18);
@@ -1029,6 +1089,13 @@ public final class PrinceOfAbolitionFx {
         SpellFx.circleUnder(sl, enemy, widthOf(enemy) * 0.8, 0x909A6AC0, ticks, tagged(tag));
         ParticleShapes.burst(sl, JET_SMOKE, chestOf(enemy), 4, 0.01, 0.03);
         ParticleShapes.spawn(sl, COIN, headOf(enemy), new Vec3(0, 0.04, 0));
+    }
+
+    /** One bite of Corrosion (once a second): dark smoke and violet motes drip off it, thicker as the rot deepens. */
+    public static void corrosionBite(ServerLevel sl, LivingEntity victim, float perSecond) {
+        int count = 2 + Math.min(10, (int) (perSecond / 3f));
+        ParticleShapes.burst(sl, JET_SMOKE, chestOf(victim), count, 0.02, 0.05);
+        ParticleShapes.burst(sl, VIOLET_MOTE, chestOf(victim), count, 0.03, 0.06);
     }
 
     /** Majesty: a crown of light over the Beyonder, the seal of the Black Emperor slams down under them. */
@@ -1619,7 +1686,13 @@ public final class PrinceOfAbolitionFx {
             }),
             new Case("corrosion", 60, true, (sl, v, t, spot) -> {
                 corrosion(sl, v, 10);
-                if (t != v) Later.run(sl, 10, () -> corroded(sl, t, 40, tagFor("corroded")));
+                if (t != v) {
+                    Later.run(sl, 10, () -> corroded(sl, t, 40, tagFor("corroded")));
+                    for (int i = 1; i < 3; i++) {
+                        float bite = i * 6f;
+                        Later.run(sl, 10 + i * 20, () -> corrosionBite(sl, t, bite));
+                    }
+                }
             }),
             new Case("majesty", 60, true, (sl, v, t, spot) -> {
                 majesty(sl, v, 10);
@@ -1666,6 +1739,12 @@ public final class PrinceOfAbolitionFx {
                     salvo(sl, tops, t);
                     for (int i = 0; i < tops.size(); i++) Later.run(sl, i * SALVO_STEP, () -> salvoHit(sl, t));
                 });
+            }),
+            new Case("mausoleum_blast", 80, false, (sl, v, t, spot) -> {
+                String tag = tagFor("blast_m");
+                float yaw = yawToward(spot, v.position());
+                raiseMausoleum(sl, spot, yaw, 200, tag);
+                Later.run(sl, MAUSOLEUM_RISEN + 10, () -> mausoleumBlast(sl, spot, yaw, 5, tag));
             }),
             new Case("ruin", 40, false, (sl, v, t, spot) -> {
                 Vec3 to = t == v ? v.getEyePosition().add(v.getLookAngle().scale(24)) : chestOf(t);
