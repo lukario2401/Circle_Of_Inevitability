@@ -31,6 +31,7 @@ public class PathwayHudIcon {
         ICONS.put("Hand Of God", icon("hand_of_god"));                  // shows once the Pathway exists (docs/HAND_OF_GOD.md)
         ICONS.put("Knight Of Misfortune", icon("knight_of_misfortune")); // docs/KNIGHT_OF_MISFORTUNE.md
         ICONS.put("Abomination", icon("abomination"));                  // shows once the Pathway exists (docs/ABOMINATION.md)
+        ICONS.put("Prince Of Abolition", icon("prince_of_abolition"));  // docs/PRINCE_OF_ABOLITION.md
     }
 
     private static Identifier icon(String fileName) {

@@ -11,6 +11,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A model with an animation of my own that hits what it reaches | [`AnimatedShot`](#animatedshot-a-model-that-hits-along-its-own-animation) | `combat/` |
 | 5, 4, 3, 2, 1 on the screen and then something happens | [`Countdown`](#3-countdown) | `combat/` |
 | A small clock next to the hotbar ("Revive 27s") | [`HudTimer`](#hudtimer-a-small-clock-next-to-the-hotbar) | `combat/` |
+| A small counter next to the hotbar ("[sigil] Order 4/9") | [`HudCounter`](#hudcounter-a-small-counter-next-to-the-hotbar) | `combat/` |
 | Ground that keeps doing something to whoever stands on it, worse the longer they stay (cursed land, a healing circle, an aura) | [`Zone`](#zone-ground-that-keeps-doing-something) | `combat/` |
 | A hidden spot that springs once when an enemy steps on it (a snare, a mine, a rune) | [`Trap`](#trap-a-hidden-spot-that-springs-once) | `combat/` |
 | A shell round a spot that enemies and their projectiles cannot cross, and that shelters allies inside (a dome of light, a barrier, a cage) | [`Dome`](#dome-a-shell-that-holds-a-line) | `combat/` |
@@ -401,6 +402,20 @@ HudTimer.hide(player, "my_pathway_ward");                            // it ended
 - Only that player sees it. It is gone when they log out.
 
 `Countdown` or `HudTimer`? `Countdown` is loud, sits in the middle of the screen and runs your code at the end. `HudTimer` is quiet, sits by the hotbar and only shows.
+
+### HudCounter: a small counter next to the hotbar
+
+A picture, a word and a number out of a cap, to the left of the hotbar: `[sigil] Order 4/9`. For anything a Pathway counts and the player should keep an eye on, when a number reads better than a row of pictures (the Prince Of Abolition's standing orders, charges, stacks).
+
+```java
+HudCounter.show(player, "my_pathway_charges", "my_pathway/charge", "Charges", 3, 5, 0xE0B04A);   // picture under textures/gui/, "" = none
+HudCounter.hide(player, "my_pathway_charges");
+```
+
+- The first text is its **name**: showing it again with the same name updates it, so call `show` whenever the number changes. Counters with different names stand above one another. Start the name with your Pathway.
+- `max` 0 or less shows the number alone (`Charges 3`). The color is the number's (0xRRGGBB); the word is grey.
+- It stays until you `hide` it or the player logs out. It only **shows**: what the number does is yours.
+- `HudTimer` is on the right of the hotbar and counts down by itself; `HudCounter` is on the left and changes only when you send it.
 
 ---
 

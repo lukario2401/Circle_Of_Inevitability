@@ -32,6 +32,7 @@ public class HudLayerHook {
         ScreenImageRenderer.render(guiGraphics);
         AbilityHudOverlay.render(guiGraphics);
         HudTimerOverlay.render(guiGraphics);
+        HudCounterOverlay.render(guiGraphics);
     }
 
     @SubscribeEvent

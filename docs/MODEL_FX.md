@@ -620,6 +620,26 @@ Three parts are worth using for other Pathways too:
 - **A dark seal**: `KnightOfMisfortuneFx.seal(sl, ground, radius, color, ticks, tag)`, a crescent and star in a ring of script, white so any color works.
 - **The moving tide**: `DARK_TIDE` tiles side by side with `.during(0, ticks, pose().forward(length))` (`darkTide`) is a wave that rolls forward; any liquid wall can be made the same way.
 
+### Prince Of Abolition: ready-made displays
+
+`PrinceOfAbolitionFx` (in `beyonder_characteristics/prince_of_abolition/`) holds the Prince Of Abolition (Black Emperor pathway) looks for all seven keys, both casts, the three wheels (Bribe on key 3, the Fallen on key 6, Sovereign on key 7), the mausoleums, Rebirth, the Order counter and what grows at higher Sequences (the gate, the flipped shell, the Moon leap). They only show things; the damage, holding, sealing, hiding and reviving are the ability's, at the ticks the constants name (`VERDICT_LANDS`, `WORDS_LAND`, `BRUTE_LANDS`, `BRIBE_LANDS`, `SEAL_SLAMS`, `GATE_SLAMS`, `MAUSOLEUM_RISEN`, `STEP_OUT`, `BESTOW_LANDS`, `SALVO_STEP`, `RUIN_FIRES`, `FRENZY_FIRST`, `ABOLITION_CLOSED`, `CROWNED`, `DECREE_LANDS`). The class comment lists every call by key; [PRINCE_OF_ABOLITION.md](PRINCE_OF_ABOLITION.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/prince_of_abolition/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` | The models and their textures in `models/model_fx/prince_of_abolition/` and `textures/model_fx/prince_of_abolition/` (`../hanged_man/render.py` draws any of them without the game). The five older models in that folder (`blade`, `entropy_disc`, `entropy_orb`, `hammer`, `spear`) are the Frenzied Mage's; the script never writes those names |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/prince_of_abolition/`), the status pictures and the Order sigil (`textures/gui/prince_of_abolition/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/coin`, `section`, `crown`, `cog`, `keyhole`, `stele`, `twist`, `gavel` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/prince_of_abolition/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`ABOLITION_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` and `../knight_of_misfortune/sounds.py` |
+
+**See them in game** (cheats on): `/abolitionfx all` or `/abolitionfx seal` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+Three parts are worth using for other Pathways too:
+- **A shell of tiles**: `PrinceOfAbolitionFx.shell(sl, center, radius, Shell.SEAL or Shell.ABOLITION, color, ticks, tag)` lays gold lattice or grey fog into a whole sphere, like `KnightOfMisfortuneFx.veilShell`.
+- **A beam**: `PrinceOfAbolitionFx.beam(sl, from, to, width, ticks)`, two crossed planes stretched between two points; anything that fires a ray can use it.
+- **A door that slams**: the `illusory_door` model has four frames from closed to wide open; key `frame` 0 -> 3 -> 0 to swing it.
+
 Statuses: `KnightOfMisfortuneFx.status(player, Status.MANTLE, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
 
 ### Abomination: ready-made displays

@@ -144,6 +144,14 @@ public class PacketHandler {
                 .decoder(CConcealPacket::new)
                 .consumerMainThread(CConcealPacket::handle)
                 .add();
+
+        // Server -> Client: a small counter next to the hotbar (see combat/HudCounter). Kept last so the ids of the
+        // packets above stay as they were.
+        INSTANCE.messageBuilder(CHudCounterPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CHudCounterPacket::encode)
+                .decoder(CHudCounterPacket::new)
+                .consumerMainThread(CHudCounterPacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {
