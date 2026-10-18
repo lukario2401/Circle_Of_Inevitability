@@ -38,7 +38,7 @@ import java.util.Set;
 import java.util.function.Supplier;
 
 /**
- * Prince Of Abolition: a frenzied caster who throws a different conjured weapon or element with every key.
+ * Frenzied Mage: a frenzied caster who throws a different conjured weapon or element with every key.
  * Every ability has a normal cast and a sneak cast:
  *
  *   1 Spear of Abolition : a spear thrown through everything in its way    | sneak: spears rain on the spot you aim at
@@ -250,7 +250,7 @@ public class FrenziedMage {
             .lifetime(14).sweep(3);
 
     // =========================
-    // Melee combo "Edgeflow" (hitting mobs as Prince Of Abolition), registered in combat/MeleeCombos
+    // Melee combo "Edgeflow" (hitting mobs as Frenzied Mage), registered in combat/MeleeCombos
     // 1 = crossing cut on the target, 2 = rend along the ground, 3 = wide sweep in front,
     // 4 = tall cleave down onto the target, 5 = ring around you. Then it starts over.
     // Every slash starts as a dotted line, turns into a solid blade of light, then shatters into flakes.
@@ -366,7 +366,7 @@ public class FrenziedMage {
             .lifetime(30, 10).friction(0.85f)
             .randomRotation();
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Prince Of Abolition")
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Frenzied Mage")
             .step(FrenziedMage::edgeCrossCut)
             .step(FrenziedMage::edgeGroundRend)
             .step(FrenziedMage::edgeWideSweep)
@@ -1015,7 +1015,7 @@ public class FrenziedMage {
 
     private static boolean canUseClass(Player player, boolean dontCheck) {
         if (dontCheck) return true;
-        return SoulCore.getPathway(player).equals("Prince Of Abolition");
+        return SoulCore.getPathway(player).equals("Frenzied Mage");
     }
 
     /** False once the caster died, logged out or went to another dimension: spells that stay around them stop then. */

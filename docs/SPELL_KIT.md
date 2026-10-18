@@ -1494,6 +1494,9 @@ private static AbilityWheel.Result fireball(ServerPlayer player, ServerLevel sl)
 | `.radius(pixels)` | How far from the middle of the screen the icons sit (default 72) |
 | `.quickCastCooldown(false)` | A sneak recast (`quickCast`) ignores cooldowns: it works while the pick is cooling down and starts none. The cost is still paid. Picks from the wheel keep their cooldowns |
 | `.quickCastCost(2f)` | A sneak recast costs that many times the entry's cost (default 1). With `.quickCastCooldown(false)`: no cooldown, double the price (Beauty Goddess's two wheels) |
+| `.quickCastCostBy(player -> ...)` | The recast price read from the player instead of one fixed number: 3 at Sequence 9, 1 from Sequence 5 (the Prince Of Abolition's wheels, `PrinceOfAbolition.recastCost`) |
+| `.noCooldownsWhen(player -> ...)` | While this says true for a player, no entry has a cooldown for them, picked from the wheel or recast (the Prince Of Abolition from Sequence 4) |
+| `.costBy((player, cost) -> ...)` | After an entry: its cost worked out when it is cast and shown under its icon. `cost` is what it costs otherwise (already times a recast's price). Raise Mausoleum costs 100 more for every mausoleum standing; a Bribe on a Connected enemy costs half |
 | `open(player)`, `quickCast(player)`, `cast(player, entry)` | Show it / cast the last pick / cast one entry with every check |
 | `lastPick(player)`, `entry(key)`, `entries()`, `unlocked(player)`, `cooldownLeft(player, entry)`, `reset(player)` | Asking about it |
 
@@ -1508,6 +1511,8 @@ The wheel checks the Sequence, the cooldown and that the spirituality is there *
 It is built on `AbilityMenu` (`menu/`), which any menu can use for the same look: `.ring(radius)` lays its icons round a circle, and `.details(player -> ...)` and `.lockedWhen(player -> ...)` after an option give it a second line and grey it out.
 
 Used for keys 4 and 7 in `Apocalypse.java` (`SILKS`, `CATASTROPHES`). A new disaster there is one line in `DISASTERS` and a method.
+
+**The other way round** (sneak opens the wheel, a plain press recasts): call `open` on sneak and `quickCast` otherwise. `quickCast` opens the wheel by itself while there is no last pick. The Prince Of Abolition's three wheels do this (`PrinceOfAbolitionBribes`, `PrinceOfAbolitionFallen`, `PrinceOfAbolitionSovereign`).
 
 ---
 

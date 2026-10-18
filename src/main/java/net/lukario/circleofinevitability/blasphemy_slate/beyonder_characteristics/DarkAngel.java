@@ -6,6 +6,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx.Status;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
@@ -807,7 +808,8 @@ public class DarkAngel {
             case "Worm Of Time" -> 0xB052E3C4;
             case "Hand Of Order" -> 0xB0FFD27A;
             case "Attendant Of Mysteries" -> 0xB09CFFE6;
-            case "Prince Of Abolition" -> 0xB0FF7A3A;
+            case "Frenzied Mage" -> 0xB0FF7A3A;
+            case PrinceOfAbolition.PATHWAY -> 0xB0E0B04A;
             case "Pale Emperor" -> 0xB0E8E4D0;
             case "Conqueror" -> 0xB0FF4A1A;
             case "Apocalypse" -> 0xB0B050FF;

@@ -24,6 +24,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSerpent;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageFrost;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility3;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes.princeOfAbolitionBribe;
 
 public class SKeyPressAbilityThreeUsed {
 
@@ -63,6 +64,7 @@ public class SKeyPressAbilityThreeUsed {
         handOfGodGrandmastersEdge(player,level,serverLevel,false);
         knightOfMisfortuneNightmare(player,level,serverLevel,false);
         abominationRendingPounce(player,level,serverLevel,false);
+        princeOfAbolitionBribe(player,level,serverLevel,false);
 
 
     }

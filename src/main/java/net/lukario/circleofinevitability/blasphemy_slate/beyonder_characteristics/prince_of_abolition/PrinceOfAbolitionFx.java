@@ -350,6 +350,17 @@ public final class PrinceOfAbolitionFx {
         HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
     }
 
+    /** Shows the status's picture with no clock, until statusEnd (for what lasts as long as something else does). */
+    public static void statusForever(Player player, Status status) {
+        int slot = status.ordinal();
+        ScreenImages.show(player, status.id(), "prince_of_abolition/" + status.image,
+                ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
+        HudTimer.hide(player, status.id());
+    }
+
+    /** A picture shown with statusForever stays this long (until statusEnd takes it away). */
+    public static final int FOREVER = 72000;
+
     /** It ended early. */
     public static void statusEnd(Player player, Status status) {
         ScreenImages.hide(player, status.id());
