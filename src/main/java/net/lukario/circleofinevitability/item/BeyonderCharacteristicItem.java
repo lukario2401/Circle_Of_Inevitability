@@ -22,7 +22,7 @@ import java.util.List;
  * blasphemy_slate/beyonder/CharacteristicConsumption.
  *
  * Make stacks with of(pathway, sequence): it sets the component, the name ("Key Of Stars Characteristic,
- * Sequence 5") and the lore line.
+ * Sequence 5") and the description lines (Pathway, Sequence, "Right-click to consume").
  */
 public class BeyonderCharacteristicItem extends Item {
 
@@ -40,6 +40,10 @@ public class BeyonderCharacteristicItem extends Item {
         stack.set(DataComponents.ITEM_NAME,
                 Component.translatable("item.circle_of_inevitability.beyonder_characteristic.named", pathway, sequence));
         stack.set(DataComponents.LORE, new ItemLore(List.of(
+                Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.pathway", pathway)
+                        .withStyle(ChatFormatting.GRAY),
+                Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.sequence", sequence)
+                        .withStyle(ChatFormatting.GRAY),
                 Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.use")
                         .withStyle(ChatFormatting.DARK_PURPLE))));
         return stack;
