@@ -269,5 +269,16 @@
   "subtitles.circle_of_inevitability.prince_of_abolition.inversion": "Everything turns over",
   "subtitles.circle_of_inevitability.prince_of_abolition.coronation": "A coronation",
   "subtitles.circle_of_inevitability.prince_of_abolition.decree": "A Decree is spoken",
-  "subtitles.circle_of_inevitability.prince_of_abolition.order": "An order stands"
+  "subtitles.circle_of_inevitability.prince_of_abolition.order": "An order stands",
+  "item.circle_of_inevitability.beyonder_characteristic": "Beyonder Characteristic",
+  "item.circle_of_inevitability.beyonder_characteristic.named": "%s Characteristic, Sequence %s",
+  "tooltip.circle_of_inevitability.beyonder_characteristic.use": "Right-click to consume",
+  "creativetab.circle_of_inevitability.characteristics": "Beyonder Characteristics",
+  "message.circle_of_inevitability.characteristic.empty": "This characteristic is empty. It belongs to no Pathway.",
+  "message.circle_of_inevitability.characteristic.unknown_pathway": "No Pathway is called \"%s\". The characteristic does nothing.",
+  "message.circle_of_inevitability.characteristic.too_weak": "A Sequence %s characteristic has nothing to give you at Sequence %s.",
+  "message.circle_of_inevitability.characteristic.joined": "You consume the characteristic. You are a Sequence 9 Beyonder of the %s Pathway.",
+  "message.circle_of_inevitability.characteristic.jump_survived": "Against the odds (%3$s%%), your body holds. You are Sequence %1$s of the %2$s Pathway.",
+  "message.circle_of_inevitability.characteristic.switch_survived": "Against the odds (%3$s%%), the foreign characteristic takes. You are Sequence %1$s of the %2$s Pathway.",
+  "message.circle_of_inevitability.characteristic.failed": "The characteristic tears you apart (%s%% chance to survive)."
 }

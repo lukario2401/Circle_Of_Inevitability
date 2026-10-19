@@ -2,6 +2,9 @@ package net.lukario.circleofinevitability;
 
 import com.mojang.logging.LogUtils;
 import net.lukario.circleofinevitability.effects.ModEffects;
+import net.lukario.circleofinevitability.item.ModCreativeTabs;
+import net.lukario.circleofinevitability.item.ModDataComponents;
+import net.lukario.circleofinevitability.item.ModItems;
 import net.lukario.circleofinevitability.particles.ModParticles;
 import net.lukario.circleofinevitability.sounds.ModSounds;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,6 +41,9 @@ public class CircleOfInevitability
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         ModEffects.register(modEventBus);
+        ModDataComponents.register(modEventBus);
+        ModItems.register(modEventBus);
+        ModCreativeTabs.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

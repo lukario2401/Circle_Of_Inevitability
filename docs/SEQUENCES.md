@@ -178,6 +178,26 @@ Target: a full bar in about 45 minutes of normal active play, roughly 40% from t
 
 `/sequence advance` (anyone, for themselves): at 100 percent the Sequence goes down by one, digestion resets to 0, the maximum spirituality follows the new Sequence, with a chat message and the level-up sound. Refused at Sequence 0 ("You are already at Sequence 0...") and below 100 percent ("Your current Sequence is only P% digested..."). There is no loss of control.
 
+## Beyonder Characteristics (the item)
+
+One item, `circle_of_inevitability:beyonder_characteristic`, is every Pathway and every Sequence: which one it is lives in its data component `circle_of_inevitability:characteristic` (`item/BeyonderCharacteristic`: `pathway`, `sequence`). Right-click consumes it. The creative tab "Beyonder Characteristics" has one of every Pathway, Sequence 9 to 0. In code, `BeyonderCharacteristicItem.of(pathway, sequence)` makes a named stack. By command (no name of its own, but it works):
+
+```
+/give @s circle_of_inevitability:beyonder_characteristic[circle_of_inevitability:characteristic={pathway:"Key Of Stars",sequence:5}]
+```
+
+What consuming one does (`blasphemy_slate/beyonder/CharacteristicConsumption`):
+
+| The player | The characteristic | Result |
+| --- | --- | --- |
+| No Pathway | Sequence 9, any Pathway | Starts on that Pathway at Sequence 9. Safe. |
+| Their Pathway, Sequence N | Sequence N - 1 | Advances (as `/sequence advance`), only at 100% digestion. Below that: refused, the item is kept. |
+| Their Pathway, Sequence N | Sequence N or weaker | Refused, the item is kept. |
+| Their Pathway (or none), Sequence N | Stronger than N - 1 | A gamble: `JUMP_CHANCE_PER_SKIPPED` (0.5) for every Sequence skipped. 5 -> 3: 50%, 5 -> 2: 25%. No Pathway counts as Sequence 10, so a Sequence 8 is a 50% gamble. |
+| Another Pathway | Any | A gamble: `PATHWAY_SWITCH_CHANCE` (0.2), times the jump chance if it is also more than one Sequence up. On success: the new Pathway, at the stronger of the two Sequences. |
+
+Every gamble uses the item up. Won: the new Pathway and Sequence, digestion at 0. Lost: the player dies and keeps their Pathway, Sequence and digestion (they are copied on death). The gambles ignore digestion; only the safe advance needs 100%. Both chances are constants at the top of `CharacteristicConsumption`.
+
 ## Commands
 
 | Command | Who | Does |
