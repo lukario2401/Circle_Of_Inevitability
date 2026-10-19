@@ -16,7 +16,8 @@ import net.minecraftforge.registries.RegistryObject;
  * A new sound: its .ogg (mono, so it is placed in the world) in sounds/, an event in sounds.json with the same name
  * as here, a subtitle in lang/en_us.json, and a line below. The Beauty Goddess ones are made by
  * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, the Abomination ones by
- * tools/model_gen/abomination/sounds.py and the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py, which write
+ * tools/model_gen/abomination/sounds.py, the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py and the
+ * Knowledge Emperor ones by tools/model_gen/knowledge_emperor/sounds.py, which write
  * the .ogg files, sounds.json and the subtitles' names.
  */
 public final class ModSounds {
@@ -430,4 +431,105 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> ABOLITION_DECREE = sound("prince_of_abolition.decree");
     /** An order stands. */
     public static final RegistryObject<SoundEvent> ABOLITION_ORDER = sound("prince_of_abolition.order");
+
+    // ---------- Knowledge Emperor (tools/model_gen/knowledge_emperor/sounds.py) ----------
+
+    /** Hidden things are pried open. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_PRY = sound("knowledge_emperor.pry");
+    /** A pendulum swings. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_DOWSE = sound("knowledge_emperor.dowse");
+    /** The Hidden Sage whispers. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_WHISPER = sound("knowledge_emperor.whisper");
+    /** Something stirs out of sight. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_CHIME = sound("knowledge_emperor.chime");
+    /** A weak point is struck. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_WEAK_POINT = sound("knowledge_emperor.weak_point");
+    /** Someone slips aside. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_SIDESTEP = sound("knowledge_emperor.sidestep");
+    /** Glyphs sweep the air. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_GLYPH_SWING = sound("knowledge_emperor.glyph_swing");
+    /** A hex is laid. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_HEX = sound("knowledge_emperor.hex");
+    /** A hex passes on. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_HEX_JUMP = sound("knowledge_emperor.hex_jump");
+    /** A frost bolt flies. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_BOLT_FROST = sound("knowledge_emperor.bolt_frost");
+    /** A lightning bolt crackles. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_BOLT_LIGHTNING = sound("knowledge_emperor.bolt_lightning");
+    /** A fire bolt roars. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_BOLT_FIRE = sound("knowledge_emperor.bolt_fire");
+    /** A scroll is read. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_SCROLL_READ = sound("knowledge_emperor.scroll_read");
+    /** A scroll is inscribed. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_SCROLL_INSCRIBE = sound("knowledge_emperor.scroll_inscribe");
+    /** A scroll is ready. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_SCROLL_READY = sound("knowledge_emperor.scroll_ready");
+    /** A freezing ray falls. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_FREEZE_RAY = sound("knowledge_emperor.freeze_ray");
+    /** A paralysing ray strikes. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_PARALYSIS_RAY = sound("knowledge_emperor.paralysis_ray");
+    /** Starlight gathers. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_STARLIGHT_GATHER = sound("knowledge_emperor.starlight_gather");
+    /** Amber sets. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_AMBER_SET = sound("knowledge_emperor.amber_set");
+    /** Amber shatters. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_AMBER_BREAK = sound("knowledge_emperor.amber_break");
+    /** A body flows as starlight. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_STELLAR_SELF = sound("knowledge_emperor.stellar_self");
+    /** A star falls. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_STAR_FALL = sound("knowledge_emperor.star_fall");
+    /** A star bursts. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_STAR_BURST = sound("knowledge_emperor.star_burst");
+    /** Stars take their places. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_STAR_GUARD = sound("knowledge_emperor.star_guard");
+    /** A star turns a shot aside. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_STAR_BLOCK = sound("knowledge_emperor.star_block");
+    /** A tale is told. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_TALE = sound("knowledge_emperor.tale");
+    /** A lullaby plays. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_SLEEPING_BEAUTY = sound("knowledge_emperor.sleeping_beauty");
+    /** A sleeper wakes. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_AWAKEN = sound("knowledge_emperor.awaken");
+    /** Avalon rises from the mist. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_AVALON = sound("knowledge_emperor.avalon");
+    /** A weak spot is laid bare. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_ACHILLES = sound("knowledge_emperor.achilles");
+    /** Pandora's box opens. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_PANDORA = sound("knowledge_emperor.pandora");
+    /** The future is glimpsed. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_FORESIGHT = sound("knowledge_emperor.foresight");
+    /** A blow is foreseen and dodged. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_DODGE = sound("knowledge_emperor.dodge");
+    /** A fate is pronounced. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_PROPHECY = sound("knowledge_emperor.prophecy");
+    /** Fate draws nearer. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_PROPHECY_TICK = sound("knowledge_emperor.prophecy_tick");
+    /** The prophecy comes true. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_RUIN = sound("knowledge_emperor.ruin");
+    /** A body becomes information. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_INFORMATIZE = sound("knowledge_emperor.informatize");
+    /** Information takes shape again. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_REFORM = sound("knowledge_emperor.reform");
+    /** A false copy bursts into text. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_DECOY_BURST = sound("knowledge_emperor.decoy_burst");
+    /** Something is erased. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_ERASE = sound("knowledge_emperor.erase");
+    /** Knowledge floods a mind. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_OVERLOAD = sound("knowledge_emperor.overload");
+    /** A mind bursts. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_MIND_BURST = sound("knowledge_emperor.mind_burst");
+    /** A Lance of Knowledge forms. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_LANCE_FORM = sound("knowledge_emperor.lance_form");
+    /** A Lance of Knowledge strikes. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_LANCE_IMPACT = sound("knowledge_emperor.lance_impact");
+    /** Knowledge is condensed. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_CONDENSE = sound("knowledge_emperor.condense");
+    /** Someone vanishes into knowledge. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_EMBODIMENT = sound("knowledge_emperor.embodiment");
+    /** A pulse of knowledge. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_INDOCTRINATION = sound("knowledge_emperor.indoctrination");
+    /** The Knowledge Moor opens. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_KINGDOM = sound("knowledge_emperor.kingdom");
+    /** The Law of Three. */
+    public static final RegistryObject<SoundEvent> KNOWLEDGE_LAW_OF_THREE = sound("knowledge_emperor.law_of_three");
 }

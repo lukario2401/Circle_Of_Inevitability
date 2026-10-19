@@ -1578,5 +1578,400 @@
         "name": "circle_of_inevitability:prince_of_abolition/order"
       }
     ]
+  },
+  "knowledge_emperor.pry": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.pry",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/pry"
+      }
+    ]
+  },
+  "knowledge_emperor.dowse": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.dowse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/dowse"
+      }
+    ]
+  },
+  "knowledge_emperor.whisper": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.whisper",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/whisper"
+      }
+    ]
+  },
+  "knowledge_emperor.chime": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.chime",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/chime"
+      }
+    ]
+  },
+  "knowledge_emperor.weak_point": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.weak_point",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/weak_point"
+      }
+    ]
+  },
+  "knowledge_emperor.sidestep": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.sidestep",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/sidestep"
+      }
+    ]
+  },
+  "knowledge_emperor.glyph_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.glyph_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/glyph_swing_1"
+      },
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/glyph_swing_2"
+      }
+    ]
+  },
+  "knowledge_emperor.hex": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.hex",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/hex"
+      }
+    ]
+  },
+  "knowledge_emperor.hex_jump": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.hex_jump",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/hex_jump"
+      }
+    ]
+  },
+  "knowledge_emperor.bolt_frost": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.bolt_frost",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/bolt_frost"
+      }
+    ]
+  },
+  "knowledge_emperor.bolt_lightning": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.bolt_lightning",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/bolt_lightning"
+      }
+    ]
+  },
+  "knowledge_emperor.bolt_fire": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.bolt_fire",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/bolt_fire"
+      }
+    ]
+  },
+  "knowledge_emperor.scroll_read": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.scroll_read",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/scroll_read"
+      }
+    ]
+  },
+  "knowledge_emperor.scroll_inscribe": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.scroll_inscribe",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/scroll_inscribe"
+      }
+    ]
+  },
+  "knowledge_emperor.scroll_ready": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.scroll_ready",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/scroll_ready"
+      }
+    ]
+  },
+  "knowledge_emperor.freeze_ray": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.freeze_ray",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/freeze_ray"
+      }
+    ]
+  },
+  "knowledge_emperor.paralysis_ray": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.paralysis_ray",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/paralysis_ray"
+      }
+    ]
+  },
+  "knowledge_emperor.starlight_gather": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.starlight_gather",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/starlight_gather"
+      }
+    ]
+  },
+  "knowledge_emperor.amber_set": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.amber_set",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/amber_set"
+      }
+    ]
+  },
+  "knowledge_emperor.amber_break": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.amber_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/amber_break"
+      }
+    ]
+  },
+  "knowledge_emperor.stellar_self": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.stellar_self",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/stellar_self"
+      }
+    ]
+  },
+  "knowledge_emperor.star_fall": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.star_fall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/star_fall"
+      }
+    ]
+  },
+  "knowledge_emperor.star_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.star_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/star_burst"
+      }
+    ]
+  },
+  "knowledge_emperor.star_guard": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.star_guard",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/star_guard"
+      }
+    ]
+  },
+  "knowledge_emperor.star_block": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.star_block",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/star_block"
+      }
+    ]
+  },
+  "knowledge_emperor.tale": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.tale",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/tale"
+      }
+    ]
+  },
+  "knowledge_emperor.sleeping_beauty": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.sleeping_beauty",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/sleeping_beauty"
+      }
+    ]
+  },
+  "knowledge_emperor.awaken": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.awaken",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/awaken"
+      }
+    ]
+  },
+  "knowledge_emperor.avalon": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.avalon",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/avalon"
+      }
+    ]
+  },
+  "knowledge_emperor.achilles": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.achilles",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/achilles"
+      }
+    ]
+  },
+  "knowledge_emperor.pandora": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.pandora",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/pandora"
+      }
+    ]
+  },
+  "knowledge_emperor.foresight": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.foresight",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/foresight"
+      }
+    ]
+  },
+  "knowledge_emperor.dodge": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.dodge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/dodge"
+      }
+    ]
+  },
+  "knowledge_emperor.prophecy": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.prophecy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/prophecy"
+      }
+    ]
+  },
+  "knowledge_emperor.prophecy_tick": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.prophecy_tick",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/prophecy_tick"
+      }
+    ]
+  },
+  "knowledge_emperor.ruin": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.ruin",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/ruin"
+      }
+    ]
+  },
+  "knowledge_emperor.informatize": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.informatize",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/informatize"
+      }
+    ]
+  },
+  "knowledge_emperor.reform": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.reform",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/reform"
+      }
+    ]
+  },
+  "knowledge_emperor.decoy_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.decoy_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/decoy_burst"
+      }
+    ]
+  },
+  "knowledge_emperor.erase": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.erase",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/erase"
+      }
+    ]
+  },
+  "knowledge_emperor.overload": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.overload",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/overload"
+      }
+    ]
+  },
+  "knowledge_emperor.mind_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.mind_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/mind_burst"
+      }
+    ]
+  },
+  "knowledge_emperor.lance_form": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.lance_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/lance_form"
+      }
+    ]
+  },
+  "knowledge_emperor.lance_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.lance_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/lance_impact"
+      }
+    ]
+  },
+  "knowledge_emperor.condense": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.condense",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/condense"
+      }
+    ]
+  },
+  "knowledge_emperor.embodiment": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.embodiment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/embodiment"
+      }
+    ]
+  },
+  "knowledge_emperor.indoctrination": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.indoctrination",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/indoctrination"
+      }
+    ]
+  },
+  "knowledge_emperor.kingdom": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.kingdom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/kingdom"
+      }
+    ]
+  },
+  "knowledge_emperor.law_of_three": {
+    "subtitle": "subtitles.circle_of_inevitability.knowledge_emperor.law_of_three",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:knowledge_emperor/law_of_three"
+      }
+    ]
   }
 }

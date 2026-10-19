@@ -679,6 +679,44 @@ Everything it uses is generated, from `tools/model_gen/abomination/` (run each f
 
 Statuses: `AbominationFx.status(player, Status.RESTRAINT, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away.
 
+### Knowledge Emperor: ready-made displays
+
+`KnowledgeEmperorFx` (in `beyonder_characteristics/knowledge_emperor/`) holds the Knowledge Emperor (Hermit pathway) looks for all seven keys, both casts, the three wheels (Stars on key 5, Retellings and Prophecy on key 6, Knowledge on key 7), the Study eye, the scroll pouch, the passives that show, the melee combo and what grows at higher Sequences (Eyes of Secret Inquiry, the Knowledge Orbs, the Hermit's three lances and Overload on everyone). The abilities are not written yet; the displays are ready for them. They only show things; the damage, holding, hiding, healing and moving are the ability's, at the ticks the constants name (`STRIKE_LANDS`, `HEX_LANDS`, `BOLT_FLIGHT`, `BOLT_STEP`, `ORB_FLIGHT`, `READ_FIRES`, `RAY_FALLS`, `RAY_HITS`, `INSCRIBED`, `CAGE_LANDS`, `STELLAR_ARRIVES`, `STAR_LANDS`, `SPINDLE_SLEEPS`, `AVALON_RISEN`, `ARROW_LANDS`, `BOX_OPENS`, `HOPE_RISES`, `ERASE_LANDS`, `OVERLOAD_REACHES`, `LANCE_THROWN`, `CONDENSED`, `KINGDOM_RISEN`). The class comment lists every call by key; [KNOWLEDGE_EMPEROR.md](KNOWLEDGE_EMPEROR.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/knowledge_emperor/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` (+ `textures.py`) | The models and their textures in `models/model_fx/knowledge_emperor/` and `textures/model_fx/knowledge_emperor/` (`../hanged_man/render.py` draws any of them without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/knowledge_emperor/`), the status pictures and the three scrolls of the pouch (`textures/gui/knowledge_emperor/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/glyph_0` to `glyph_3`, `star5`, `ink`, `page`, `quill`, `text_line` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/knowledge_emperor/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`KNOWLEDGE_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` |
+
+**See them in game** (cheats on): `/knowledgefx all` or `/knowledgefx star_fall` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+| Model | What it is | Pivot | Notes |
+|---|---|---|---|
+| `knowledge_emperor/study_eye_0`, `_1`, `_2` | The Study eye: shut, half open, wide open; orchid lids, an indigo iris full of stars | its middle `(8, 8, 8)` | Standing, its own colors. `KnowledgeEmperorFx.studyEye(viewer, target, percent, ticks)` shows it to the Hermit only. `ModelFx.of("knowledge_emperor/study_eye").frames(3)` opens it |
+| `knowledge_emperor/hermit_eyes` | The Pathway's symbol: a pair of cold eyes full of stars in a ring of glyphs | its middle | Standing; the rings and lids are white (tint them), the irises keep their stars |
+| `knowledge_emperor/pendulum` | Dowsing's violet crystal on a silver chain, 1.2 blocks | the ring on top `(8, 16, 8)` | Swing it with `roll` and `pitch` keys |
+| `knowledge_emperor/scroll` | A rolled scroll on a dark rod with gold caps and an orchid seal, 1 block, lying east-west | its middle | |
+| `knowledge_emperor/star` | A small star, six long points and four short ones, 0.9 blocks | its heart `(8, 8, 8)` | `.glow().unshaded()`; Star Fall, Star Guard, Stellar Self |
+| `knowledge_emperor/amber` | The Starlight Cage: a block of clear amber with crystal facets and frozen starlight | default (bottom middle) | `.seeThrough()`; `.scale(width, height, width)` round the one held |
+| `knowledge_emperor/spindle` | Sleeping Beauty's golden spindle, wound with thread, 1.6 blocks | its middle `(8, 10, 8)` | |
+| `knowledge_emperor/black_box`, `black_box_lid` | Pandora's ebony box with gold corners and an eye-lock; its lid | default; the lid's hinge `(8, 7, 13)` | Play both at one spot; a key of `pitch(-105)` throws the lid open. Lock = front |
+| `knowledge_emperor/white_spear` | The Lance of Knowledge, white light with faint script, 2.8 blocks | its middle `(8, 8, 8)` | Top = the point: `modelAlong` or a `Shot` |
+| `knowledge_emperor/light_ball` | A ball of illusory light, 0.75 blocks | its middle | White: tint it (gold for Condense, orchid for the Knowledge Orbs) |
+| `knowledge_emperor/spell_bolt` | A bolt of a spell, a crystal of light pointed at both ends, 0.9 blocks | its middle | Top = its front; white: tint it per element |
+| `knowledge_emperor/tale_book` | The book of tales lying open in a V, indigo and gold | the bottom of the spine | `modelOnTurning` before the teller |
+| `knowledge_emperor/glyph_ring`, `constellation_circle`, `knowledge_moor`, `avalon_seal` | A ring of glyphs; six constellations in a zodiac ring; the Knowledge Moor's floor; Avalon's isle and apple tree | default | Flat, white: tint them |
+| `knowledge_emperor/hex_mark`, `fate_wheel`, `erase_sigil`, `heel_mark`, `weak_point`, `scroll_sheet` | A hexagram round a downcast eye; a wheel of fate; symbols struck out; a heel struck by an arrow; cross hairs on a crack; an unrolled scroll | their middle `(8, 8, 8)` | Standing; white (tint them), except `scroll_sheet` which has its own colors |
+| `knowledge_emperor/library_shelf`, `data_stream` | A tile of shelves of books of light; a panel of glyphs streaming down (both animated) | the middle of their bottom edge | Standing, white. The Divine Kingdom's walls; Informatization's body |
+| `knowledge_emperor/light_column` | A column of light, two crossed planes, bands running down it (animated) | default | `.scale(width, height, width)`: the Scroll of Freezing, Prophecy of Ruin, Indoctrination |
+
+Star Guard's stars circle the caster with `ParticleShapes.moveModel`: call `starGuardTick(sl, player, tag, age)` every tick while it lasts (a model's own keys cannot orbit a moving entity; the planned `combat/Orbit` can take this over).
+
+Statuses: `KnowledgeEmperorFx.status(player, Status.FORESIGHT, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away. `pouch(player, scrolls)` shows the scrolls in the row beside the hotbar, where the Attendant's stacks are.
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.
