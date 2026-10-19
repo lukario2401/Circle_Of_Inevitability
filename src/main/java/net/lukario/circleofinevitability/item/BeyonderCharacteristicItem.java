@@ -36,17 +36,38 @@ public class BeyonderCharacteristicItem extends Item {
     /** A stack of one characteristic of that Pathway and Sequence, named for it. */
     public static ItemStack of(String pathway, int sequence) {
         ItemStack stack = new ItemStack(ModItems.BEYONDER_CHARACTERISTIC.get());
-        stack.set(ModDataComponents.CHARACTERISTIC.get(), new BeyonderCharacteristic(pathway, sequence));
-        stack.set(DataComponents.ITEM_NAME,
-                Component.translatable("item.circle_of_inevitability.beyonder_characteristic.named", pathway, sequence));
-        stack.set(DataComponents.LORE, new ItemLore(List.of(
-                Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.pathway", pathway)
+        BeyonderCharacteristic characteristic = new BeyonderCharacteristic(pathway, sequence);
+        stack.set(ModDataComponents.CHARACTERISTIC.get(), characteristic);
+        applyLooks(stack, characteristic);
+        return stack;
+    }
+
+    /**
+     * Gives the stack the name and description of its characteristic, if it does not have them yet.
+     * Returns true if anything changed. of() calls it; so does CharacteristicLooks for stacks made any other way
+     * (/give, a changed component).
+     */
+    public static boolean applyLooks(ItemStack stack, BeyonderCharacteristic characteristic) {
+        Component name = Component.translatable("item.circle_of_inevitability.beyonder_characteristic.named",
+                characteristic.pathway(), characteristic.sequence());
+        ItemLore lore = new ItemLore(List.of(
+                Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.pathway", characteristic.pathway())
                         .withStyle(ChatFormatting.GRAY),
-                Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.sequence", sequence)
+                Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.sequence", characteristic.sequence())
                         .withStyle(ChatFormatting.GRAY),
                 Component.translatable("tooltip.circle_of_inevitability.beyonder_characteristic.use")
-                        .withStyle(ChatFormatting.DARK_PURPLE))));
-        return stack;
+                        .withStyle(ChatFormatting.DARK_PURPLE)));
+
+        boolean changed = false;
+        if (!name.equals(stack.get(DataComponents.ITEM_NAME))) {
+            stack.set(DataComponents.ITEM_NAME, name);
+            changed = true;
+        }
+        if (!lore.equals(stack.get(DataComponents.LORE))) {
+            stack.set(DataComponents.LORE, lore);
+            changed = true;
+        }
+        return changed;
     }
 
     @Override

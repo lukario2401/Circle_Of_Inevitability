@@ -180,7 +180,7 @@ Target: a full bar in about 45 minutes of normal active play, roughly 40% from t
 
 ## Beyonder Characteristics (the item)
 
-One item, `circle_of_inevitability:beyonder_characteristic`, is every Pathway and every Sequence: which one it is lives in its data component `circle_of_inevitability:characteristic` (`item/BeyonderCharacteristic`: `pathway`, `sequence`). Right-click consumes it. The creative tab "Beyonder Characteristics" has one of every Pathway, Sequence 9 to 0. In code, `BeyonderCharacteristicItem.of(pathway, sequence)` makes a named stack. By command (no name of its own, but it works):
+One item, `circle_of_inevitability:beyonder_characteristic`, is every Pathway and every Sequence: which one it is lives in its data component `circle_of_inevitability:characteristic` (`item/BeyonderCharacteristic`: `pathway`, `sequence`). Right-click consumes it. The creative tab "Beyonder Characteristics" has one of every Pathway, Sequence 9 to 0. In code, `BeyonderCharacteristicItem.of(pathway, sequence)` makes a named stack. By command (the name and description are added within a second once it is in a player's inventory, `item/CharacteristicLooks`):
 
 ```
 /give @s circle_of_inevitability:beyonder_characteristic[circle_of_inevitability:characteristic={pathway:"Key Of Stars",sequence:5}]

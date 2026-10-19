@@ -16,7 +16,7 @@ import net.minecraft.network.codec.StreamCodec;
  *   BeyonderCharacteristic c = stack.get(ModDataComponents.CHARACTERISTIC.get());   // null on a bare stack
  *
  * In commands: /give @s circle_of_inevitability:beyonder_characteristic[circle_of_inevitability:characteristic={pathway:"Key Of Stars",sequence:5}]
- * (a stack made that way has no name of its own; BeyonderCharacteristicItem.of gives it one).
+ * (a stack made that way gets its name and description once it is in a player's inventory: CharacteristicLooks).
  */
 public record BeyonderCharacteristic(String pathway, int sequence) {
 
