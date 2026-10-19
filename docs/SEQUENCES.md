@@ -194,7 +194,7 @@ What consuming one does (`blasphemy_slate/beyonder/CharacteristicConsumption`):
 | Their Pathway, Sequence N | Sequence N - 1 | Advances (as `/sequence advance`), only at 100% digestion. Below that: refused, the item is kept. |
 | Their Pathway, Sequence N | Sequence N or weaker | Refused, the item is kept. |
 | Their Pathway (or none), Sequence N | Stronger than N - 1 | A gamble: `JUMP_CHANCE_PER_SKIPPED` (0.5) for every Sequence skipped. 5 -> 3: 50%, 5 -> 2: 25%. No Pathway counts as Sequence 10, so a Sequence 8 is a 50% gamble. |
-| Another Pathway | Any | A gamble: `PATHWAY_SWITCH_CHANCE` (0.2), times the jump chance if it is also more than one Sequence up. On success: the new Pathway, at the stronger of the two Sequences. |
+| Another Pathway, Sequence N | Any | A gamble: `PATHWAY_SWITCH_CHANCE` (0.2) when it is Sequence N, times `JUMP_CHANCE_PER_SKIPPED` (0.5) for every Sequence it is apart, up or down. At 5: a 5 is 20%, a 4 or 6 is 10%, a 3 or 7 is 5%. On success: the new Pathway, at the stronger of the two Sequences. |
 
 Every gamble uses the item up. Won: the new Pathway and Sequence, digestion at 0. Lost: the player dies and keeps their Pathway, Sequence and digestion (they are copied on death). The gambles ignore digestion; only the safe advance needs 100%. Both chances are constants at the top of `CharacteristicConsumption`.
 

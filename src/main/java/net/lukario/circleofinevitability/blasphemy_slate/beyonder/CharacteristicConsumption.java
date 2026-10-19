@@ -18,9 +18,11 @@ import net.minecraft.world.item.ItemStack;
  *   Their Pathway, more than one Sequence up (5 -> 2) -> a gamble: JUMP_CHANCE_PER_SKIPPED for every Sequence
  *                                                       skipped (5 -> 3 skips one, 5 -> 2 skips two). Also from
  *                                                       no Pathway (anything stronger than Sequence 9).
- *   Another Pathway                                   -> a gamble: PATHWAY_SWITCH_CHANCE, times the jump chance
- *                                                       if it is also more than one Sequence up. On success they
- *                                                       take the new Pathway at the stronger of the two Sequences.
+ *   Another Pathway                                   -> a gamble: PATHWAY_SWITCH_CHANCE if it is their own
+ *                                                       Sequence, times JUMP_CHANCE_PER_SKIPPED for every Sequence
+ *                                                       it is apart, up or down (at 5: a 5 is 20%, a 4 or a 6 is
+ *                                                       10%, a 3 or a 7 is 5%). On success they take the new
+ *                                                       Pathway at the stronger of the two Sequences.
  *
  * A gamble that fails: the characteristic is gone and the player dies. They keep their Pathway, Sequence and
  * digestion (SoulCore copies them over on death). Every gamble uses up the characteristic, won or lost.
@@ -48,10 +50,13 @@ public final class CharacteristicConsumption {
     /** The chance (0..1) that this player survives consuming this characteristic. 1 for the safe cases. */
     public static double successChance(ServerPlayer player, BeyonderCharacteristic characteristic) {
         int current = currentSequence(player);
+        if (!sharesPathway(player, characteristic)) {
+            // a switch wants the same Sequence: every Sequence apart, up or down, halves it again
+            int apart = Math.abs(current - characteristic.sequence());
+            return PATHWAY_SWITCH_CHANCE * Math.pow(JUMP_CHANCE_PER_SKIPPED, apart);
+        }
         int skipped = Math.max(0, (current - 1) - characteristic.sequence());
-        double chance = Math.pow(JUMP_CHANCE_PER_SKIPPED, skipped);
-        if (!sharesPathway(player, characteristic)) chance *= PATHWAY_SWITCH_CHANCE;
-        return chance;
+        return Math.pow(JUMP_CHANCE_PER_SKIPPED, skipped);
     }
 
     /** Consumes the characteristic in 'stack' (see the class comment). True if it was used up. */
