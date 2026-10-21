@@ -24,6 +24,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn.handOfGodDawn;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune.knightOfMisfortuneRequiem;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition.princeOfAbolitionDistort;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor.knowledgeEmperorScrolls;
 
 public class SKeyPressAbilityFourUsed {
 
@@ -63,6 +64,7 @@ public class SKeyPressAbilityFourUsed {
         knightOfMisfortuneRequiem(player,level,serverLevel,false);
         abominationZombie(player,level,serverLevel,false);
         princeOfAbolitionDistort(player,level,serverLevel,false);
+        knowledgeEmperorScrolls(player,level,serverLevel,false);
     }
 
 }

@@ -4,7 +4,7 @@ Circle Of Inevitability · Pathway plan
 
 The Knowledge Emperor Pathway is the Hermit Pathway (also called the Mystery Pryer Pathway) of Lord of the Mysteries, the Hermit tarot card: Mystery Pryer (9), Melee Scholar (8), Warlock (7), Scrolls Professor (6), Constellations Master (5), Mysticologist (4), Clairvoyant (3), Sage (2), Knowledge Emperor (1), Hermit (0). Source: the Hermit Pathway page of the Lord of the Mysteries wiki. The Hermit Pathway/Abilities page could not be opened while this was written, so the lower Sequences follow summaries of it and the series itself. Check names against the wiki before coding.
 
-The abilities are not written as code yet. This file is the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. Its looks, sounds and pictures are ready (see "Looks, sounds and pictures (ready)" at the end). When the code is written, move "Planned" to "What is built" (see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md)).
+Half of it is written: keys 1 to 5 (Sequences 9 to 5) with every growth they get at stronger Sequences, the passives of Sequences 9 to 5, the melee combo, and the three systems the rest leans on (`status/Study`, `status/Scrolls`, `combat/Orbit`). See "What is built". Keys 6 and 7 and the passives of Sequences 4 to 0 are the second half; "The second half: how to write the rest" gives a recipe for each, with the hooks already in place. The rest of this file is the design both halves are built from. Its looks, sounds and pictures are all ready (see "Looks, sounds and pictures (ready)" at the end).
 
 Pathway name in code: "Knowledge Emperor".
 
@@ -49,7 +49,7 @@ Three small systems tie the Pathway together. Each one is worth writing once and
 
 ## Keys
 
-Costs for keys 1 to 4 (spirituality, both casts): 250, 1250, 1250 and 2450. Reading a scroll costs nothing. These follow the Attendant's scale; the wheel entries carry their own costs below.
+Costs for keys 1 to 4 (spirituality, both casts): 250, 350, 1250, and for Inscribe the spell's own cost plus 25% (Hex or Spellbolts 1563, Starlight Cage 3750, Star Fall 4375). Reading a scroll costs nothing. Key 2 is 350 rather than the planned 1250 so a Melee Scholar can pay it (Sequence 8 holds 400). The wheel entries carry their own costs below. The code's constants are the truth now.
 
 | Key | Ability | Sequence | Normal cast | Sneak cast |
 | --- | --- | --- | --- | --- |
@@ -138,7 +138,7 @@ These do not get their own key or entry. The same ability is stronger from the S
 | Law of Three (the symbolism of numbers): every third ability you cast within 20 seconds of the last is empowered, with +50% damage and no cost | Knowledge Emperor (1) |
 | Embodiment: enemies within 24 blocks gain 2% Study a second just for being near you, and your Study on them decays half as fast | Hermit (0) |
 
-## Planned: built from the existing kit
+## Built from the existing kit
 
 | Ability | Built from |
 | --- | --- |
@@ -157,28 +157,89 @@ These do not get their own key or entry. The same ability is stronger from the S
 | Erase | `Substitute`, `DeathWard`, `DamageLink`, `Concealment`, `Marionette`, through a new `Dispel` |
 | Embodiment, Indoctrination | `Concealment.hide` with a "cannot be read" flag; `Spells.enemiesAround` plus an allies version |
 
-## New reusable parts worth writing first
+## New reusable parts
 
-In this order. Most of them also help other Pathways.
+Written (each has a section in [SPELL_KIT.md](SPELL_KIT.md)):
 
-1. `combat/Study`: get, add, bonus (the damage multiplier), understood, setFull, drainAround, decay on tick, and the eye model above the head (`KnowledgeEmperorFx.studyEye` already draws it). Nearly every ability touches it.
-2. `Spells.strikeStudied(player, target, damage)`: `Spells.strike` plus the Study bonus plus the Study gain, so every ability calls one method.
-3. `status/Scrolls`: the pouch and a registry of Scrollable spells. Write every spell's effect as `effect(player, sl, aim, power)` with no payment inside, the way the Attendant's `echo(...)` takes a runnable. Inscribe stores it, Read calls it, and Law of Three and Divine Kingdom reuse the same call.
-4. `combat/Zone`: an area that lasts, with onEnter, onTick and onLeave. Avalon, the Cage and the Kingdom need it, and so do Hand Of God's Protection and Light of Dawn. (`combat/Zone` exists now: check it covers these before writing another.)
-5. `combat/Tellings`: a use history with decay that returns a multiplier. It is the Obscurity rule, but works for any "less each time" effect.
-6. `status/Dispel`: strips kit statuses and potion effects by kind. Erase uses it; Light of Dawn-style abilities could too.
-7. `status/Invulnerable`: no damage and untargetable for N ticks, with an absorbed-damage counter (Informatization, Embodiment).
-8. `combat/Orbit`: ModelFx bodies circling an entity that can intercept projectiles (Star Guard). Until it exists, `KnowledgeEmperorFx.starGuardTick` moves the stars round every tick.
-9. `status/Marks` and `Spells.alliesAround`: a small timed mark on an entity (Hex), and the mirror of enemiesAround. (Both exist now.)
+| Part | Where | What it does | Used by |
+| --- | --- | --- | --- |
+| `Study` | `status/` | Each caster's 0..100 gauge on each entity: `get`, `add`, `set`, `hold` (at least this much for a while), `take`, `takeAround`, `knownBy`, `knowsWeakness` (50), `isUnderstood` (100), `bonus`, `strike` (`Spells.strike`, then a gain). It falls 5 a second after 10 seconds alone. Every hit by a caster on what they know gets the bonus by itself (a `LivingHurtEvent`), so nothing multiplies by hand. Rules: `addImmunity`, `addDecayScale`, `addListener` (the look). | every key; the planned Achilles' Heel, Prophecy, Overload, Lance, Condense, Indoctrination, Kingdom, Sage's Mind, Embodiment |
+| `Scrolls` | `status/` | Spells kept on paper. `register(key, name, cost, (reader, sl, power) -> ...)` once; `cast(player, key)` when cast by hand (what Inscribe writes); a pouch saved on the player: `add`, `takeOldest`, `putBack`, `pouch`, `lastCast`, `addListener` (the pictures). | keys 3, 4 and 5; the planned Sleeping Beauty and Pandora's Box (register them and they can be written), Divine Kingdom (keeps the pouch full) |
+| `Orbit` | `combat/` | Bodies circling a player: each stops one hostile projectile and comes back, and one strikes an enemy that comes close every so often. It draws nothing: `onTick`, `onCatch`, `onBack`, `onEnd` are the look. | Star Guard |
 
-Build order: Study and strikeStudied, then keys 1 to 3, then Scrolls, then Zone, then the wheels (Tellings, Dispel, Invulnerable and Orbit as each entry needs them).
+The planned `Spells.strikeStudied` became `Study.strike`. `combat/Zone`, `status/Marks` and `Spells.alliesAround` already existed. Still to write, for the second half (each in the shape of the others: one small class that looks after itself; see "Making a status of your own" in [SPELL_KIT.md](SPELL_KIT.md)):
 
-## To confirm before coding
+| Part | Where | What it should do | Used by |
+| --- | --- | --- | --- |
+| `Tellings` | `combat/` | A use history with decay that returns a multiplier: `Tellings.tell(player, key)` notes one use now; `Tellings.strength(player, key, window, step, floor)` is 1 minus `step` for each use within the last `window` ticks, never under `floor` (Obscurity: `6000, 0.2f, 0.4f`). Kept on the player as a list of game times per key (persistent data, so it survives a relog); old ones dropped when read. | Sleeping Beauty, Avalon, Achilles' Heel, Pandora's Box |
+| `Dispel` | `status/` | `Dispel.boons(entity)`: every beneficial potion effect off. `Dispel.statuses(entity)`: every kit status a target keeps for itself off: `Substitute.disarm`, `DeathWard.disarm`, `DamageLink.clearRedirect` and `unshare`, `Concealment.reveal`, `Unnoticed.end`, `ConjuredArmor`/`ConjuredWeapon` taken off, `Marionette.release` for a mob on strings. `Dispel.addRule(entity -> ...)` so a Pathway can add its own. `Dispel.isConjured(entity)`: summons (`Marionette.isSummoned`), decoys and projections a rule names. | Erase; any later "break every ward" ability |
+| `Invulnerable` | `status/` | `Invulnerable.grant(entity, ticks)`: no damage (a `LivingAttackEvent` at HIGH that cancels and adds the amount to a counter), no target (`Spells.addUnchoosableCheck` and a `LivingChangeTargetEvent`), no root (`Root.remove` every tick). `absorbed(entity)`, `end(entity)` returning what was absorbed, `isGranted(entity)`. | Informatization, Embodiment |
 
-- Should Hex and Study work on other players, or only on mobs?
-- Costs for Sequences 2, 1 and 0 extend the Attendant's scale (250 to 12000); adjust them to your spirituality pools.
-- Cooldowns are only given for wheel entries; keys 1 to 4 follow the Attendant and have none.
+## To confirm
+
+- Decided while writing the first half: Hex and Study work on players too (as every other curse in the kit does). Their pictures show on a hexed or caged player's screen.
+- Costs for Sequences 2, 1 and 0 extend the Attendant's scale (250 to 12000); from Sequence 2 the bar refills at once, so only the size of the bar (78400) limits them.
+- Cooldowns are only given for wheel entries; keys 1 to 4 have none.
 - Three wheels plus four single keys mirrors Hand Of God. Say if you want more or fewer wheels.
+
+## What is built
+
+Keys 1 to 5, their growth at stronger Sequences, the passives from Mystery Pryer (9) to Constellations Master (5) and the melee combo. Keys 1 to 4 and the passives are in `blasphemy_slate/beyonder_characteristics/knowledge_emperor/KnowledgeEmperor.java`, the Stars wheel (key 5) in `KnowledgeEmperorStars.java` beside it, which `KnowledgeEmperor` registers, cleans after a relog or death and tells of damage and deaths. Every number is a constant at the top of its class. One line each in `PathwayAbilities.ALL` (Read Scroll is not stealable: it reads the Professor's own pouch), a row in [SEQUENCES.md](SEQUENCES.md), the passives in `SequencePassives` and `KnowledgeEmperor`, the combo in `MeleeCombos`, the color in `DarkAngel.pathwayColor`. Set the Pathway with `/sequence pathway <player> "Knowledge Emperor"`.
+
+How it works where the tables above do not say:
+- **Study** is `status/Study`. Gains: a Pry 25, a Hex 20, a Weak-Point Strike 10, the first bolt or orb of a cast on each enemy 10, a Scroll of Freezing or Paralysis 10, the Starlight Cage 15, the first Star Fall burst on each enemy 10, a Star Guard strike 5, a melee hit 5 (a full swing at any Sequence, every swing from Melee Scholar). The bonus (5% for every 10%) is on every hit the caster lands, abilities and melee alike. The eye over each studied enemy is sent to the Hermit alone and shown again every 5 seconds; a player who is Understood sees the Understood picture. Study is forgotten when the Hermit logs out or dies and when the studied one dies.
+- **Mystery Prying** lasts 10 seconds. Every second, what is hidden within reach (30; 60 from Sequence 5; 80 from 3) glows (the vanilla glowing effect, so everyone sees the outline): the invisible, the unnoticed, summons, vexes and allays; from Sequence 4 also those with a Substitute ready and marionettes. A concealed body cannot be drawn at all, so from Sequence 4 stars trace round it instead. Eyes of Secret Inquiry (5): everything alive within 30 glows as well. Each enemy the crosshair rests on while the eyes are open is read once into chat (health, mood, effects, and from 50% Study its weakness; from Clairvoyant a player's Pathway, Sequence and the abilities that Sequence opens) and gains 25% Study.
+- **Dowsing** finds the nearest player, monster or mob hunting you within 64 that you cannot see (behind blocks, invisible, unnoticed or concealed). Found: 250, a pendulum and a thread to it for 12 seconds, the distance in chat. Nothing: it hangs still and costs nothing.
+- **Weak-Point Strike** needs an enemy under the crosshair within 6.5 blocks. Further than a short reach, you step up to 3 blocks toward it (not while held in place). The cut lands at `STRIKE_LANDS`: 30 through armor and everything else that softens a hit (`Spells.strikeTrue`), held from moving and attacking for 0.75 seconds.
+- **Sidestep** is `status/Substitute` for 2 seconds: the next blow, arrow or explosion does not land. You step to the attacker's side if it is within 8 blocks, else 4 blocks aside, and your next melee hit within 2 seconds (`status/EmpoweredHit`) does 30 more, staggers and adds 10% Study.
+- **Hex** is `status/Vulnerable` (20%, not stacking) with Weakness I and Slowness I. When the hexed dies, the hex jumps to the nearest enemy of its caster within 6 that is not hexed already, for the time left (if more than a second).
+- **Spellbolts**: three bolts at the enemy under the crosshair (24). The element is random until you know its weakness (50% Study): fire-immune things fear frost; arthropods, the undead and the freeze-immune fear fire; water creatures and anyone in metal armor fear lightning; otherwise the big (40 health or more) are frosted and the quick are stunned. Frost: Slowness II for 3 s. Lightning: held from moving, jumping and attacking for 0.5 s. Fire: burning for 4 s (never the ground). With no enemy in sight one Lightning bolt flies where you aim (a `Shot`). Sage (2): five Knowledge Orbs shared out over the enemies in sight (45 degrees round the crosshair), each 20, stunned 0.5 s and no abilities for 1 s.
+- **Scrolls** (`status/Scrolls`): Read burns the oldest scroll; its spell fires at `READ_FIRES` where you aim then. A spell that finds nothing (no enemy for Hex, Freezing, Paralysis or the Cage) puts the scroll back in front, unspent. Inscribe writes the last Scrollable spell you cast by hand (Hex, Spellbolts, Starlight Cage, Star Fall); a read scroll does not count as cast by hand. The pouch is saved with you through a relog; dying burns it. The free scrolls come every 25 seconds (15 from Sequence 4), Freezing and Paralysis in turn, only while there is room.
+- **Starlight Cage**: the amber sets at `CAGE_LANDS` round the target and every enemy within 3 (5 from Sage). Each is held completely (`Root`, EVERYTHING) for 5 seconds, bosses 2 (the full 5 from Sage); the amber round one breaks when 100 damage has got through to it.
+- **Stellar Self**: the path is followed along your look through glass, panes, bars, fences, leaves, chains, cobwebs, scaffolding and anything open (doors, trapdoors, gates); any other block stops it, and you re-form at the nearest place before that where you fit. You are concealed for the second it takes (unhurt, untargeted), enemies within 4 of where you were are blinded for 2 s (`status/Blind`), and you land with no fall damage. Clairvoyant (3): 40 blocks, and allies within 3 who are not held come along, set down round you.
+- **Star Fall** always goes off (on the ground you aim at, 28 at most). Each star picks an enemy within 6 of the middle that no earlier star picked, the best known first; with none left, a spot on the ground. Where it will land is fixed a second before (the warning ring), so it can be dodged.
+- **Star Guard** is `combat/Orbit`: the four stars circle at the radius, height and speed `KnowledgeEmperorFx.starGuardTick` draws them at. Casting it again starts a fresh guard.
+- **Whisper of the Hidden Sage**: every 4 to 6 minutes; the next cast that costs something is free (keys and wheel entries alike, through `KnowledgeEmperor.costFor` and `afterCast`), and the Whisper picture shows until then (also after a relog).
+- **Spiritual Intuition**: the chime is a sound only you hear, at most every 3 seconds; the outlines of hidden things within 6 are particles only you see.
+- **Fighting Knowledge**: 10% faster attacks, half a block more reach (`beyonder/Physique`, checked once a second, off again if the Pathway changes).
+- **Warlock's Mind**: a harmful effect put on you is turned away and put on again a tick later, a quarter shorter.
+- **Starlight**: at night under open sky, a quarter of your normal regeneration again every second.
+
+## The second half: how to write the rest
+
+Everything below plugs into hooks that are already there. The looks and sounds for every entry are ready in `KnowledgeEmperorFx` (the table under "Looks, sounds and pictures"), with the ticks to act at as constants.
+
+**The two wheels.** Copy `KnowledgeEmperorStars.java` twice: `KnowledgeEmperorRetellings.java` (key 6, `"knowledge_emperor_retellings"`, title "Retellings", key Sequence 4, method `knowledgeEmperorRetellings`) and `KnowledgeEmperorKnowledge.java` (key 7, `"knowledge_emperor_knowledge"`, title "Knowledge", key Sequence 2, method `knowledgeEmperorKnowledge`, `.radius(92)` for eight entries). Keep, on every entry, `.costBy(KnowledgeEmperor::costFor)`, and on the wheel `.onCast((player, sl, entry) -> KnowledgeEmperor.afterCast(player, entry.cost()))`: that is what makes the Whisper, Law of Three and the Kingdom's half cost work for them. The pictures are `KnowledgeEmperorFx.WHEEL_...`. Then:
+1. One line each in `PathwayAbilities.ALL` (key 6 at Sequence 4, key 7 at Sequence 2; both `STEALABLE`), next to the five that are there.
+2. One `import static` and one call each in `network/SKeyPressAbilitySixUsed` and `SevenUsed`.
+3. In `KnowledgeEmperor`: a `registerScrolls()` call for each in the events' static block (if it has Scrollable entries), and calls from `clearState`, `onKnowledgeEmperorDamage` and `onKnowledgeEmperorDeath` as `KnowledgeEmperorStars` has, for whatever the wheel must hear of.
+4. Fill in the N and M cells of the Knowledge Emperor row in [SEQUENCES.md](SEQUENCES.md), and move each entry from here to "What is built".
+
+**Key 6: Retellings and Prophecy** (`KnowledgeEmperorRetellings`):
+- Obscurity first: write `combat/Tellings` (above). Each Retelling begins `float strength = Tellings.strength(player, KEY, 6000, 0.2f, 0.4f); Tellings.tell(player, KEY); KnowledgeEmperorFx.tale(sl, player, Tale.X, strength);` and multiplies its numbers by `strength`. The shared 10 second wait: a `"knowledge_emperor_tale_ready"` game time on the player, checked at the top of the four Retellings (return `REFUSED` with the seconds left).
+- Sleeping Beauty (Scrollable: `Scrolls.register("knowledge_emperor_sleeping_beauty", "Sleeping Beauty", 6000, ...)`): `KnowledgeEmperorFx.sleepingBeauty(sl, player, center, 8)`, then at `SPINDLE_SLEEPS` for each enemy within 8: `KnowledgeEmperor.isBoss(enemy)` or a player gets Slowness IV for 3 s; any other is put to sleep with `Slumber.put(enemy, 120, Slumber.Kind.SLEEP)` (it already wakes on the first blow) and `KnowledgeEmperorFx.asleep(...)`. The +50% on the waking blow: remember the sleepers in a `Set<UUID>`, and in a `LivingHurtEvent` (in `KnowledgeEmperor`'s events, calling `KnowledgeEmperorRetellings.hurt(event)`) multiply by 1.5 and remove the one hit; `Slumber.addWakeListener` calls `awaken`.
+- Avalon: `Zone.at(ground, 10).lasts(240).every(20).affects(one -> true)`; `onInside`: an ally (`!Spells.isEnemy`) heals 2 and is `Spells.cleanse`d (`avalonBlessed`), an enemy gets `Spells.keepEffect(..., SLOWNESS, 1, 40)` and `NoHeal.apply(enemy, 40)`; the caster's part in `onPulse`; `avalon` at the cast and `avalonEnd` in `onEnd`.
+- Achilles' Heel: `Study.hold(player, target, 100, 160)` (it already makes every hit stronger by 50%), `Vulnerable.add(target, 0.4f, 0.4f, 160)`, and for "your hits ignore armor" keep a map target -> caster until a time, and do what `Spells.TrueDamageEvents` does for those hits: note the amount in a `LivingHurtEvent` at `Priority.LOWEST`, put it back in a `LivingDamageEvent` at `Priority.LOW`.
+- Pandora's Box (Scrollable): at `BOX_OPENS`, enemies within 10, each a different `Misfortune` in turn: `Blind.apply`, Slowness II, Weakness I, Poison I, Nausea, `NoHeal.apply`, each for 160 ticks (`misfortune(...)`); at `HOPE_RISES` you and `Spells.alliesAround(..., 10)` get Regeneration II for 160 (`hope`).
+- Foresight: `Substitute.arm(player, 200, 3, (saved, source, amount, level) -> ...)`: slide 2 blocks aside with `Spells.freeSpotNear`, `foresightDodge`. Ghosts: while it lasts, every 10 ticks each `Mob` within 16 whose `getTarget()` is you shows `foresightGhost(sl, mob, player.position())`. Knowledge Emperor (1): 400 ticks and 6 charges.
+- Prophecy of Ruin: `Countdown.seconds(4).silent().keepWhile(() -> target.isAlive() && player.distanceTo(target) <= 24)`, `onSecond` -> `prophecyTick`, `onFinish` -> `Spells.strikeTrue(player, target, 80)` (40, and 8 back on you with `player.hurt(player.damageSources().magic(), 8)` against a boss or a player of a stronger Sequence), `Study.hold(player, target, 100, 200)`, `prophecyFulfilled`; `onCancel` -> `prophecyFails`.
+
+**Key 7: Knowledge** (`KnowledgeEmperorKnowledge`):
+- Informatization: write `status/Invulnerable` (above). `Invulnerable.grant(player, 120)` (200 from Sequence 1), Speed III for as long, a decoy where you stood (an armor stand or a summoned mob like the Attendant's `paperFigurineDecoy` in `AttendantOfMysteries.java`; `Taunt` the enemies near onto it) that bursts for 40 within 3 when hit or when it ends (`decoy`, `decoyBurst`); at the end 30% of `Invulnerable.end(player)` to every enemy within 4. Sequence 1 also flows through gaps: `KnowledgeEmperorStars.stellarSpot(player, sl, range)` is package-visible for this.
+- Erase: write `status/Dispel` (above). Aimed at something `Dispel.isConjured`: it is deleted (`Marionette.collapse` or `discard`, `deleted`); else `Dispel.boons` and `Dispel.statuses` at `ERASE_LANDS`.
+- Knowledge Overload: `Root.apply(target, 40, EVERYTHING)` (20 for a boss or player) at `OVERLOAD_REACHES`, then 120 (`Study.strike`) and `overloadHit`. When `Study.isUnderstood(player, target)` and it is neither a boss nor a player: `Spells.strikeTrue(player, target, target.getHealth() + 1000)`, then `mindBurst` and 60 to each enemy within 4. Hermit (0): the same for every enemy within 16 (`overloadAll`).
+- Lance of Knowledge: `Shot.of(KnowledgeEmperorFx.LANCE).speed(2.5).range(40).width(0.5).tip(1.4)` fired at `LANCE_THROWN` after `lanceForm(sl, player, count)`; in `onEnd`, each enemy within 5 takes 200 scaled down to half at the edge (`Study.strike`; the Study bonus is already the "grows with Study"), held 1 s, Nausea for 600; `lanceImpact`. Hermit (0): three, turned -12, 0 and 12 degrees with `Spells.turned`.
+- Condense Knowledge: `List<Study.Known> taken = Study.takeAround(player, sl, player.position(), 32)`; the sum of their percents / 100 times 10% of `Beyonder.maxSpirituality(player)` back (`SoulCore.setSpiritualityQuietly`) and Strength II for 200; `condenseKnowledge(sl, player, the targets)`. With nothing taken: `EmpoweredHit.arm(player, "knowledge_emperor_condensed", 200, (a, t, amount, l) -> amount * (1f + Study.MOST_BONUS))`, `condenseInverse`.
+- Embodiment of Knowledge: `Invulnerable` is not it (it can be hurt); `Concealment.hide(player, 300)` plus a flag on the player that `Study.addImmunity`, `Spells.addUnchoosableCheck` and the Pry's `glowHidden` respect; ending it on any other cast is one line in `KnowledgeEmperor.afterCast` (every key and wheel entry passes through it).
+- Indoctrination: `Spells.alliesAround(player, sl, pos, 24)` that are Knowledge Emperors: twice the spirituality back for 30 s (a game time on them, read by a `custom(...)` passive line that adds `spiritualityRegenPerTick * 20` a second). The 30% shorter cooldowns need one more option on `menu/AbilityWheel`, a `cooldownBy((player, ticks) -> ...)` like `costBy`. Enemies within 24: Nausea, Blindness and Weakness for 160 and `Study.set(player, enemy, 100)`.
+- Divine Kingdom: `Zone.at(ground, 40).lasts(1200).every(20).affects(one -> true)`; enemies: `Concealment.reveal` / `Unnoticed.end` (`kingdomForcedOut`) and `Study.add(player, enemy, 5)`; the caster and allied Hermits: three times the spirituality back. Half cost: one line in `KnowledgeEmperor.costFor` (`if (Zone.covers(player, KINGDOM, player.position())) cost /= 2;`). A full pouch: in `onPulse`, `Scrolls.add` Freezing or Paralysis until it holds `KnowledgeEmperor.pouchSize(player)`. Cast again to end: `.free(player -> Zone.isOpen(player, KINGDOM))` on the entry and `Zone.close` at the top of the cast.
+
+**Passives of Sequences 4 to 0** (each is a few lines in `KnowledgeEmperor`, plus a `custom(...)` line in `SequencePassives` and a row in [SEQUENCES.md](SEQUENCES.md)):
+- Information Skin (4): in a `LivingHurtEvent`, for a Knowledge Emperor at 4 hurt by damage with no attacker entity (`event.getSource().getEntity() == null`), times 0.75 and `informationSkin`; knockback: one more `Physique.keep(... Attributes.KNOCKBACK_RESISTANCE ...)` in `bodyTick`.
+- Clairaudience (3): once a second, each `Concealment.isHidden` enemy within 32 that moved more than half a block since the last check, or attacked (an `AttackEntityEvent` by a hidden player), plays `clairaudience(viewer, its position)`.
+- Sage's Mind (2): in `onKnowledgeEmperorEffect`, before Warlock's Mind, `DENY` Nausea, Blindness and Darkness for a Knowledge Emperor at 2; in the events' static block `Study.addImmunity(one -> one instanceof Player p && isKnowledgeEmperor(p, 2))`.
+- Law of Three (1): in `afterCast`, keep the last cast times on the player; in `costFor`, when the two casts before were within 20 seconds of each other and of now, return 0 and set an "empowered until now + 40" time; a `LivingHurtEvent` times 1.5 for hits by the caster while it lasts; `lawOfThree(sl, player)`.
+- Embodiment (0): once a second `Study.add(player, enemy, 2)` for each enemy within 24; in the static block `Study.addDecayScale(caster -> isKnowledgeEmperor(caster, 0) ? 0.5 : 1.0)`.
 
 ## Looks, sounds and pictures (ready)
 
@@ -202,7 +263,7 @@ Everything the abilities need to look and sound right is in `KnowledgeEmperorFx.
 Every timed cast can show its picture and clock above the hotbar: `KnowledgeEmperorFx.status(player, Status.X, ticks)`, and `statusEnd` to take it away (24 statuses: 13 for what the Hermit holds, 11 for what is done to others when they are players). The Pathway's icon beside the hotbar is registered in `PathwayHudIcon` under `"Knowledge Emperor"`.
 
 Things to know when the abilities are written:
-- Star Guard's four stars do not follow the caster by themselves: a model's own keys cannot orbit a moving entity, so `starGuardTick` moves them with `ParticleShapes.moveModel` and must run every tick (the planned `combat/Orbit` can take that over).
+- Star Guard's four stars do not follow the caster by themselves: a model's own keys cannot orbit a moving entity, so `starGuardTick` moves them with `ParticleShapes.moveModel` every tick. `combat/Orbit` calls it from its `onTick` and catches the projectiles at the same spots.
 - The Study eye is sent to one player only (`ParticleShapes.spawnFor`), so other players never see your Study. It lasts the ticks you give it: show it again every few seconds while the Study is above 0.
 - The melee combo's step 1 alternates its lean on every call, shared by everyone; give it per-player state if two Emperors fighting side by side ever look odd.
 

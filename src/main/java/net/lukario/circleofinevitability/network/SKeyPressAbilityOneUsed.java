@@ -25,6 +25,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageSpear;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility1;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition.princeOfAbolitionVerdict;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor.knowledgeEmperorMysteryPrying;
 
 public class SKeyPressAbilityOneUsed {
 
@@ -65,5 +66,6 @@ public class SKeyPressAbilityOneUsed {
         knightOfMisfortuneNightSight(player,level,serverLevel,false);
         abominationBloodChain(player,level,serverLevel,false);
         princeOfAbolitionVerdict(player,level,serverLevel,false);
+        knowledgeEmperorMysteryPrying(player,level,serverLevel,false);
     }
 }

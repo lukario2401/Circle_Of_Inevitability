@@ -4,6 +4,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
@@ -97,6 +98,11 @@ public final class SequencePassives {
         effect("Prince Of Abolition", 9, MobEffects.HERO_OF_THE_VILLAGE, 0);                     // Lawyer: Silver Tongue, better prices
         effect("Prince Of Abolition", 8, MobEffects.STRENGTH, 0);                                // Barbarian: Physical Enhancement, Strength I
         custom("Prince Of Abolition", 5, PrinceOfAbolition::presence);                           // Mentor of Disorder: weak hostile mobs hesitate
+
+        // ---- Knowledge Emperor (docs/KNOWLEDGE_EMPEROR.md). Also in KnowledgeEmperor itself: Spiritual Intuition's chime
+        // (Sequence 9), Fighting Knowledge's reach, speed and Study on every hit (8), Warlock's Mind (7).
+        custom("Knowledge Emperor", 9, KnowledgeEmperor::mysteryPryerSenses);                    // Mystery Pryer: hidden things show faintly; the Whisper
+        custom("Knowledge Emperor", 5, KnowledgeEmperor::starlight);                             // Constellations Master: Starlight
     }
 
     // =========================

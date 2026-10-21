@@ -91,6 +91,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Let a player hold an ability that is not theirs, and take it from its owner meanwhile | [`StolenAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
 | Something a Pathway always has from a Sequence on, with no key press (a potion effect, or code of your own once a second) | `SequencePassives` ([SEQUENCES.md](SEQUENCES.md#passives)) | `blasphemy_slate/beyonder/` |
 | Damage that names no attacker (`damageSources().magic()`, an explosion or lightning with no owner) showing as the caster's damage number | `DamageFx.credit(player, target)` right before it ([DAMAGE_FX.md](DAMAGE_FX.md)) | `combat/` |
+| Know an enemy better and better (0 to 100%, one gauge per caster): every hit on it grows stronger the more you know, and it fades when left alone | [`Study`](#study) | `status/` |
+| Keep spells on paper: a pouch of scrolls, each one a stored cast that goes off for free when read; any spell can be one | [`Scrolls`](#scrolls) | `status/` |
+| A few bodies circling a player (stars, blades, motes) that each stop a projectile and come back, and strike enemies that come close | [`Orbit`](#orbit-bodies-that-circle-and-guard) | `combat/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 
@@ -609,6 +612,39 @@ Good to know:
 - **Crossing its plane is what counts**, checked every tick, so walking, being knocked through or a teleport across all count; someone put back stands just on their own side and is pushed off it. Its ends and its top are open: going round or over is allowed.
 - It has no thickness and no look of its own. Draw it when you raise it (`PrinceOfAbolitionFx.gate` draws a lattice 10 wide and 5 tall) and clear the look in `onEnd`.
 - It falls when its owner dies, logs out or changes dimension. Build a new one for every cast. Not saved.
+
+---
+
+## Orbit: bodies that circle and guard
+
+A few small bodies circling a player for a while. Each can stop one hostile projectile (and is back some time later), and one of them strikes an enemy that comes too close every so often. Guarding stars, orbiting blades, motes of light, a ring of shields. Knowledge Emperor's Star Guard (`KnowledgeEmperorStars.starGuard`).
+
+```java
+String tag = "my_pathway_guard_" + player.getId() + "_" + sl.getGameTime();
+MyFx.guard(sl, player, 600, tag);                                   // the models, put down once
+Orbit.around(player, 4)                                             // four bodies
+        .radius(1.2).height(1.1).speed(6f)                          // how far out, how high above the feet, degrees a tick
+        .lasts(600)
+        .catchesProjectiles(100)                                    // each stops one, and is back 5 seconds later
+        .strikes(3.0, 40, (enemy, index) -> Spells.strike(player, enemy, 15f))   // within 3 blocks, every 2 seconds
+        .onTick(age -> MyFx.guardTick(sl, player, tag, age))        // every tick: move the models (ParticleShapes.moveModel)
+        .onCatch((index, projectile, at) -> MyFx.blocked(sl, tag, index, at))   // take that body's model away
+        .onBack((index, ticksLeft, age) -> MyFx.back(sl, tag, index, ticksLeft, age))   // put it back
+        .onEnd(() -> MyFx.guardEnd(sl, player, tag))
+        .open(player, sl, "my_pathway_guard");
+```
+
+| Part | What it does |
+|---|---|
+| `Orbit.around(player, count)` | `count` bodies round a player. Nothing happens until `.open(...)` |
+| `.radius(blocks)`, `.height(blocks)`, `.speed(degrees)` | Where the ring is: body `i` sits at `age * speed + i * 360 / count` degrees round the feet, `radius` out and `height` up (`spot(i, age)`). Use the same three numbers in the look and it lines up |
+| `.lasts(ticks)` | How long (default 200) |
+| `.catchesProjectiles(returnTicks)` | A projectile of anyone not on the owner's side (or of nobody) within `radius + 1` of the owner is stopped by the ready body nearest to it, which is away for `returnTicks`. A hit by a projectile too fast to be seen first is cancelled the same way |
+| `.strikes(range, everyTicks, (enemy, index) -> ...)` | Every `everyTicks`, the nearest enemy within `range` of the owner's body is struck by the ready body nearest to it (your code does the damage) |
+| `.onTick(age -> ...)`, `.onCatch(...)`, `.onBack(...)`, `.onEnd(...)` | The look. It draws nothing itself |
+| `.open(player, sl, name)` | Opens it; one with the same name is closed first |
+
+`Orbit.isOpen(player, name)`, `ticksLeft`, `ready` (bodies there now), `close`. It ends when its time is up or its owner dies, logs out or changes dimension. Not saved.
 
 ---
 
@@ -1160,6 +1196,55 @@ Misfortune.addListener((victim, mishap, source) -> ...);   // the look and sound
 | `CALAMITY` | 5 | 15% of its maximum health; with Catastrophe 30%, and it is thrown up for a fall it did not see coming |
 
 The damage is the status's own; the look is a listener's (Knight Of Misfortune's shows the mishaps it caused). Adding never lowers the level and makes all of it last again. Saved with the entity. Every number is a `public static` at the top of the class. Used by the Curse of Misfortune, the Night Domain, Misfortune, Catastrophe and Ill Omen, and by every Abomination curse (through `Abomination.curse`, which never shortens a longer curse and makes the cursed one a `Connection`).
+
+### Study
+
+How well one caster knows one entity, from 0 to 100%. Every caster has a gauge of their own on everything; two casters never share theirs. Everything a caster does to what they know hits harder: every full 10% is 5% more damage, 50% at most (`BONUS_PER_TEN`, `MOST_BONUS`). The bonus is put on in a `LivingHurtEvent` for every hit whose attacker (or the owner of the projectile) has a gauge on the one hurt, melee and abilities alike, so nothing has to multiply anything by hand. Left alone for 10 seconds (`IDLE_TICKS`), a gauge falls 5 a second (`DECAY_PER_SECOND`). Knowledge Emperor is built on it.
+
+```java
+Study.add(player, target, 25);               // 25% more (100 at most); returns the new value
+Study.strike(player, target, 20f, 10);       // Spells.strike (with the bonus), then 10% more
+if (Study.knowsWeakness(player, target)) ... // 50% or more (Study.WEAKNESS)
+if (Study.isUnderstood(player, target)) ...  // 100% (Study.FULL)
+Study.hold(player, target, 100, 160);        // at least 100% for 8 seconds, whatever it was; it does not fall meanwhile
+Study.set(player, target, 100);              // straight to a value
+int had = Study.take(player, target);        // all of it gathered up, and forgotten
+List<Study.Known> taken = Study.takeAround(player, sl, center, 32);
+for (Study.Known known : Study.knownBy(player)) { known.target(); known.percent(); }   // most known first
+```
+
+`get(caster, target)`, `bonus(caster, target)`, `forget(caster, target)`, `forgetAll(caster)`, `isImmune(target)`. Rules, once in a static block:
+
+```java
+Study.addImmunity(entity -> ...);                     // nobody can build Study on it (a mind that cannot be read)
+Study.addDecayScale(caster -> 0.5);                   // this caster's gauges fall at half the speed
+Study.addListener(new Study.Listener() {              // the look: Study shows nothing itself
+    public void changed(Player caster, LivingEntity target, int before, int after) { ... }
+    public void forgotten(Player caster, LivingEntity target) { ... }
+});
+```
+
+Not saved: a restart forgets everything; a caster who logs out or dies forgets what they knew, and a gauge on something that dies is gone. `hold` works on the immune too (it is a power over that one entity, not study). Knowledge Emperor's listener draws an eye over each enemy that only the caster sees (`KnowledgeEmperor.showStudy`).
+
+### Scrolls
+
+Spells kept on paper. A player carries a pouch of scrolls, oldest first; reading one casts its spell at once, for free. Any spell can be a scroll: register it once with a key, written as a function of who reads it and how strong it is, with no payment inside. The same code then runs when it is cast by hand, read from a scroll, repeated by an echo or empowered by a passive (see "Write a spell as a function" under "Tricks worth copying").
+
+```java
+// once, in a static block: key (no commas), name, what it costs by hand, the spell
+Scrolls.register("my_pathway_hex", "Hex", 1250, (reader, sl, power) -> hex(reader, sl, power));
+
+// cast by hand: pay, cast, and remember it as the last Scrollable spell (what an Inscribe writes)
+if (Spells.paySpirituality(player, 1250) && hex(player, sl, 1f)) Scrolls.cast(player, "my_pathway_hex");
+
+String dropped = Scrolls.add(player, "my_pathway_hex", 3);   // into the pouch, 3 at most: the one that fell out, or null
+String key = Scrolls.takeOldest(player);                      // null when empty
+Scrolls.Kind kind = Scrolls.kind(key);                        // kind.name(), kind.cost(), kind.spell()
+if (!kind.spell().cast(reader, sl, 1f)) Scrolls.putBack(player, key);   // it found nothing to do: back in front, unspent
+Scrolls.addListener((player, pouch) -> MyFx.showPouch(player, pouch));  // the pouch changed: its pictures
+```
+
+`pouch(player)` (a copy), `size`, `isFull(player, capacity)`, `lastCast(player)` (a `Kind` or null), `clear`, `show(player)` (tell the listeners again, after a relog). A spell returns `true` when it went off and `false` when it found nothing to do. The pouch and the last cast are kept in the player's persistent data, so they survive a relog; dying burns them. Keys that are no longer registered are left out when the pouch is read, so register every kind before any pouch is read (Knowledge Emperor does it in its events' static block).
 
 ### Connection
 
@@ -1856,7 +1941,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Hurled` things shared out among the enemies in sight, `DamageLink.share` with a listener for its look, a `Root` renewed while the caster stands still, `Dome.sphere` with a `Zone` inside, a seal that is `Slumber` + `Root` + its own "untouchable" mark (not `Concealment`, which would hide the coffin too), two `Zone`s on one spot (foes and friends) | `animateObjects`, `graveShackles`, `thornedMausoleum`, `coffinOfAges`, `thornGarden` in `AbominationChains.java` |
 | `Connection` (the one in sight, else the newest anywhere), `Trap` seen by its owner only, `Zone` + `Taunt.brawl` + `Nocturnality.forceNight`, `Contagion` that deepens by stage, a shrinking `GiantForm` whose end is a `Misfortune.befall` on everyone with your curse (`Misfortune.sourceId`), a wheel entry that ends itself for free (`.free(...)`) | `curseByConnection`, `cursedArtifact`, `riteOfSilence`, `baneMist`, `ancientBlight`, `abominationForm` in `AbominationCurses.java` |
 | `Spells.reflectionNear` / `reflectionAimed` with `Concealment` on the way, `Parasite` entered a moment after the cast (paid back if it fails) with an upkeep and the key that steps out, `Marionette.control` on wild vexes before summoning the rest | `mirrorStep`, `possession`, `HOOKS`, `ghostHost` in `AbominationWraith.java` |
-
+| `Study` (every hit on what you know is stronger; an eye only the caster sees through a listener), `Scrolls` (four kinds registered at once, read later, written by hand), `Orbit` with `KnowledgeEmperorFx.starGuardTick` as its look, a wheel whose every entry's cost goes through one rule (`.costBy(KnowledgeEmperor::costFor)`: a free next cast), `Substitute` + `EmpoweredHit` (slip a blow, the next hit is a strike), `Spells.strikeTrue` for "ignores armor" | `pry`, `spellbolts`, `readScroll`, `inscribe`, `sidestep`, `costFor` / `pay` / `afterCast` in `KnowledgeEmperor.java`; `cage`, `stellarSelf`, `fall`, `starGuard` in `KnowledgeEmperorStars.java` |
 | `Corrosion` with a listener for its look, `Falter` through a mark's miss share, `Wall` (a gate), `Dome.crossedBy` + `Dome.flip`, `Zone.covers` (a field that swings damage and makes casts free), `Zone.addShelter`, `Exile` (an enemy, an ally, yourself), `Spells.strikeTrue`, `AbilityWheel.free` for a recast that closes | `corrosion`, `blast`, `magnify`, `exploit` in `PrinceOfAbolitionFallen.java`; `ruin`, `entropy`, `abolition`, `exile`, `decree` in `PrinceOfAbolitionSovereign.java`; `gate`, `aimedShell`, the events in `PrinceOfAbolition.java` |
 
 ## Tricks worth copying
@@ -2086,4 +2171,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`). `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`, `Study`, `Scrolls`). `combat/Orbit` circles a player with guarding bodies. `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

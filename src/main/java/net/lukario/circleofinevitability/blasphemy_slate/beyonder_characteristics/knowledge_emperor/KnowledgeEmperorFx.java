@@ -1186,7 +1186,7 @@ public final class KnowledgeEmperorFx {
 
     /**
      * Four small stars take their places round the caster for 'ticks'. They do not follow by themselves: call
-     * starGuardTick every tick, which moves them round the caster (the planned combat/Orbit can do that later).
+     * starGuardTick every tick, which moves them round the caster (Star Guard does it from combat/Orbit's onTick).
      */
     public static void starGuard(ServerLevel sl, Player player, int ticks, String tag) {
         for (int i = 0; i < 4; i++) spawnGuardStar(sl, player, tag, i, ticks, 0);
