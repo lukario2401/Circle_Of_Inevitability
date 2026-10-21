@@ -45,6 +45,7 @@ import java.util.function.ToDoubleFunction;
  *   mausoleum already standing, half against a marked enemy). 'cost' is what it would cost otherwise.
  * - .quickCastCostBy(player -> ...): the recast price read from the player (3x at Sequence 9, 1x at Sequence 5...).
  * - .noCooldownsWhen(player -> ...): while it says true for a player, none of the wheel's entries has a cooldown.
+ * - .cooldownBy((player, ticks) -> ...): every entry's cooldown worked out when it starts (30% shorter while blessed).
  *
  * Cast through Beyonder.castUnbound (a stolen ability) there is no screen: the last pick is cast at once,
  * or a random entry if there is none.
@@ -63,6 +64,12 @@ public final class AbilityWheel {
     @FunctionalInterface
     public interface CastDone {
         void run(ServerPlayer player, ServerLevel sl, Entry entry);
+    }
+
+    /** A cooldown worked out when it starts: 'ticks' is the entry's own cooldown. */
+    @FunctionalInterface
+    public interface CooldownRule {
+        int cooldown(ServerPlayer player, int ticks);
     }
 
     /** An entry's cost worked out when it is cast: 'cost' is what it costs otherwise (already times a recast price). */
@@ -118,6 +125,7 @@ public final class AbilityWheel {
     private float quickCastCost = 1f;                // a sneak recast costs this many times the entry's cost
     private ToDoubleFunction<Player> quickCastCostBy; // ...or this, read from the player (null: quickCastCost)
     private Predicate<Player> noCooldowns;           // true: no entry has a cooldown for this player
+    private CooldownRule cooldownBy;                 // null: every entry's own cooldown
     private Predicate<ServerPlayer> castsWhileSilenced; // true: picks from the wheel go through a root's ABILITIES
     private AbilityMenu menu;                        // built the first time it is opened
 
@@ -169,6 +177,20 @@ public final class AbilityWheel {
     public AbilityWheel noCooldownsWhen(Predicate<Player> when) {
         this.noCooldowns = when;
         return this;
+    }
+
+    /**
+     * Every entry's cooldown worked out when it starts: (player, ticks) -> new ticks, 'ticks' being the entry's own.
+     * Shown under the icons too. For "your cooldowns are 30% shorter while this lasts".
+     */
+    public AbilityWheel cooldownBy(CooldownRule rule) {
+        this.cooldownBy = rule;
+        return this;
+    }
+
+    /** The cooldown this entry starts for this player now. */
+    public int cooldownFor(ServerPlayer player, Entry entry) {
+        return cooldownBy == null ? entry.cooldown : Math.max(0, Math.min(entry.cooldown, cooldownBy.cooldown(player, entry.cooldown)));
     }
 
     /**
@@ -283,7 +305,8 @@ public final class AbilityWheel {
         if (result == Result.DONE) {
             if (!free) {
                 Spells.paySpirituality(player, cost);
-                if (entry.cooldown > 0 && !ignoreCooldown) player.getPersistentData().putLong(id + "_ready_" + entry.key, sl.getGameTime() + entry.cooldown);
+                int cooldown = cooldownFor(player, entry);
+                if (cooldown > 0 && !ignoreCooldown) player.getPersistentData().putLong(id + "_ready_" + entry.key, sl.getGameTime() + cooldown);
             }
             if (onCast != null) onCast.run(player, sl, entry);
         }
@@ -367,7 +390,8 @@ public final class AbilityWheel {
         if (noCooldowns(player)) return String.valueOf(cost);
         int wait = cooldownLeft(player, entry);
         if (wait > 0) return "ready in " + seconds(wait);
-        return entry.cooldown > 0 ? cost + " · " + seconds(entry.cooldown) : String.valueOf(cost);
+        int cooldown = cooldownFor(player, entry);
+        return cooldown > 0 ? cost + " · " + seconds(cooldown) : String.valueOf(cost);
     }
 
     private static String seconds(int ticks) {

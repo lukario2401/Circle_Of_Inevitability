@@ -25,6 +25,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageFlame;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility2;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition.princeOfAbolitionBruteForce;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor.knowledgeEmperorWeakPointStrike;
 
 public class SKeyPressAbilityTwoUsed {
 
@@ -65,6 +66,7 @@ public class SKeyPressAbilityTwoUsed {
         knightOfMisfortuneMidnightPoem(player,level,serverLevel,false);
         abominationMoonstruck(player,level,serverLevel,false);
         princeOfAbolitionBruteForce(player,level,serverLevel,false);
+        knowledgeEmperorWeakPointStrike(player,level,serverLevel,false);
 
     }
 }
