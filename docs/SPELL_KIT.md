@@ -94,6 +94,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Know an enemy better and better (0 to 100%, one gauge per caster): every hit on it grows stronger the more you know, and it fades when left alone | [`Study`](#study) | `status/` |
 | Keep spells on paper: a pouch of scrolls, each one a stored cast that goes off for free when read; any spell can be one | [`Scrolls`](#scrolls) | `status/` |
 | A few bodies circling a player (stars, blades, motes) that each stop a projectile and come back, and strike enemies that come close | [`Orbit`](#orbit-bodies-that-circle-and-guard) | `combat/` |
+| "Less each time": how often a player used something lately, as a multiplier (a story told too often, a trick that wears thin) | [`Tellings`](#tellings-less-each-time) | `combat/` |
+| Take every blessing and every ward off someone at once, or unmake a summon (a deletion, a word of unmaking) | [`Dispel`](#dispel) | `status/` |
+| Nothing can hurt, choose or hold someone for a while, though they are seen, and what would have hurt them is added up | [`Invulnerable`](#invulnerable) | `status/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 
@@ -645,6 +648,21 @@ Orbit.around(player, 4)                                             // four bodi
 | `.open(player, sl, name)` | Opens it; one with the same name is closed first |
 
 `Orbit.isOpen(player, name)`, `ticksLeft`, `ready` (bodies there now), `close`. It ends when its time is up or its owner dies, logs out or changes dimension. Not saved.
+
+---
+
+## Tellings: less each time
+
+A player's use history of something, kept for a while and turned into a multiplier. The Knowledge Emperor's Obscurity (`KnowledgeEmperorRetellings.tell`): a story told often loses its power.
+
+```java
+float strength = Tellings.strength(player, "my_pathway_tale", 6000, 0.2f, 0.4f);   // 1, less 0.2 for each telling in the
+                                                                                 // last 5 minutes, never under 0.4
+Tellings.tell(player, "my_pathway_tale");                                        // one more, now
+int told = Tellings.count(player, "my_pathway_tale", 6000);
+```
+
+Ask `strength` before you `tell`, so the first is at full power. `sinceLast(player, key)` (ticks, `Integer.MAX_VALUE` for never) and `forget(player, key)`. Kept in the player's persistent data, so it survives a relog. A key may hold anything but commas.
 
 ---
 
@@ -1246,6 +1264,32 @@ Scrolls.addListener((player, pouch) -> MyFx.showPouch(player, pouch));  // the p
 
 `pouch(player)` (a copy), `size`, `isFull(player, capacity)`, `lastCast(player)` (a `Kind` or null), `clear`, `show(player)` (tell the listeners again, after a relog). A spell returns `true` when it went off and `false` when it found nothing to do. The pouch and the last cast are kept in the player's persistent data, so they survive a relog; dying burns them. Keys that are no longer registered are left out when the pouch is read, so register every kind before any pouch is read (Knowledge Emperor does it in its events' static block).
 
+### Dispel
+
+Everything that keeps someone safe, off at once. Knowledge Emperor's Erase (`KnowledgeEmperorKnowledge.erase`).
+
+```java
+if (Dispel.isConjured(target)) {                 // a summon, or what a rule names (a decoy, a projection)
+    Dispel.unmake(target);                       // gone, no drops
+} else {
+    int boons = Dispel.boons(target);            // every beneficial potion effect off
+    int wards = Dispel.statuses(target);         // Substitute, DeathWard, DamageLink (both kinds), Concealment,
+}                                                // Unnoticed, Invulnerable, a marionette's strings
+```
+
+A Pathway with a ward of its own adds it once, in a static block: `Dispel.addRule(entity -> MyWard.isUp(entity) && MyWard.breakIt(entity))` (true when something was taken off), and `Dispel.addConjuredCheck(entity -> ...)` for its decoys. Nothing is saved; it only acts when called.
+
+### Invulnerable
+
+For a while nothing can hurt, choose or hold an entity, and what would have hurt it is added up. Unlike `Concealment` it is still seen and its models drawn. Knowledge Emperor's Informatization.
+
+```java
+Invulnerable.grant(player, 120);                 // 6 seconds (granting again keeps the longer)
+float taken = Invulnerable.end(player);          // ends now; everything it absorbed
+```
+
+`isGranted(entity)`, `ticksLeft`, `absorbed` (so far). Every hit is cancelled (not the void or `/kill`) and its amount added; mobs that had it as their target forget it and cannot pick it again; `Spells` aiming passes over it; every `Root` on it is lifted. When its time runs out it simply ends: call `end` yourself to read what it took. Not saved.
+
 ### Connection
 
 Who a player is connected to: someone they hit, cursed, chained or sentenced lately. For a curse that reaches across the world, a scrying, a mark that finds its bearer anywhere.
@@ -1701,6 +1745,7 @@ private static AbilityWheel.Result fireball(ServerPlayer player, ServerLevel sl)
 | `.quickCastCost(2f)` | A sneak recast costs that many times the entry's cost (default 1). With `.quickCastCooldown(false)`: no cooldown, double the price (Beauty Goddess's two wheels) |
 | `.quickCastCostBy(player -> ...)` | The recast price read from the player instead of one fixed number: 3 at Sequence 9, 1 from Sequence 5 (the Prince Of Abolition's wheels, `PrinceOfAbolition.recastCost`) |
 | `.noCooldownsWhen(player -> ...)` | While this says true for a player, no entry has a cooldown for them, picked from the wheel or recast (the Prince Of Abolition from Sequence 4) |
+| `.cooldownBy((player, ticks) -> ...)` | Every entry's cooldown worked out when it starts and shown under its icon; never longer than the entry's own. Knowledge Emperor's three wheels: 30% shorter while Indoctrination enlightens you (`KnowledgeEmperor.cooldownFor`) |
 | `.costBy((player, cost) -> ...)` | After an entry: its cost worked out when it is cast and shown under its icon. `cost` is what it costs otherwise (already times a recast's price). Raise Mausoleum costs 100 more for every mausoleum standing; a Bribe on a Connected enemy costs half |
 | `open(player)`, `quickCast(player)`, `cast(player, entry)` | Show it / cast the last pick / cast one entry with every check |
 | `lastPick(player)`, `entry(key)`, `entries()`, `unlocked(player)`, `cooldownLeft(player, entry)`, `reset(player)` | Asking about it |
@@ -1942,6 +1987,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Connection` (the one in sight, else the newest anywhere), `Trap` seen by its owner only, `Zone` + `Taunt.brawl` + `Nocturnality.forceNight`, `Contagion` that deepens by stage, a shrinking `GiantForm` whose end is a `Misfortune.befall` on everyone with your curse (`Misfortune.sourceId`), a wheel entry that ends itself for free (`.free(...)`) | `curseByConnection`, `cursedArtifact`, `riteOfSilence`, `baneMist`, `ancientBlight`, `abominationForm` in `AbominationCurses.java` |
 | `Spells.reflectionNear` / `reflectionAimed` with `Concealment` on the way, `Parasite` entered a moment after the cast (paid back if it fails) with an upkeep and the key that steps out, `Marionette.control` on wild vexes before summoning the rest | `mirrorStep`, `possession`, `HOOKS`, `ghostHost` in `AbominationWraith.java` |
 | `Study` (every hit on what you know is stronger; an eye only the caster sees through a listener), `Scrolls` (four kinds registered at once, read later, written by hand), `Orbit` with `KnowledgeEmperorFx.starGuardTick` as its look, a wheel whose every entry's cost goes through one rule (`.costBy(KnowledgeEmperor::costFor)`: a free next cast), `Substitute` + `EmpoweredHit` (slip a blow, the next hit is a strike), `Spells.strikeTrue` for "ignores armor" | `pry`, `spellbolts`, `readScroll`, `inscribe`, `sidestep`, `costFor` / `pay` / `afterCast` in `KnowledgeEmperor.java`; `cage`, `stellarSelf`, `fall`, `starGuard` in `KnowledgeEmperorStars.java` |
+| `Tellings` (Obscurity), `Slumber` with a stronger waking blow, an armor-free hit on one marked target (as `strikeTrue` does, by hand), `Countdown` with a rebound, `Invulnerable` + a lure to a decoy, `Dispel`, `Study.takeAround`, `Concealment` that ends on any other cast, `AbilityWheel.cooldownBy`, a `Zone` that halves costs and refills a pouch | `beauty`, `achillesHeel`, `prophecyOfRuin` in `KnowledgeEmperorRetellings.java`; `informatization`, `erase`, `condenseKnowledge`, `embodiment`, `indoctrination`, `divineKingdom` in `KnowledgeEmperorKnowledge.java` |
 | `Corrosion` with a listener for its look, `Falter` through a mark's miss share, `Wall` (a gate), `Dome.crossedBy` + `Dome.flip`, `Zone.covers` (a field that swings damage and makes casts free), `Zone.addShelter`, `Exile` (an enemy, an ally, yourself), `Spells.strikeTrue`, `AbilityWheel.free` for a recast that closes | `corrosion`, `blast`, `magnify`, `exploit` in `PrinceOfAbolitionFallen.java`; `ruin`, `entropy`, `abolition`, `exile`, `decree` in `PrinceOfAbolitionSovereign.java`; `gate`, `aimedShell`, the events in `PrinceOfAbolition.java` |
 
 ## Tricks worth copying
@@ -2171,4 +2217,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`, `Study`, `Scrolls`). `combat/Orbit` circles a player with guarding bodies. `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`, `Study`, `Scrolls`, `Dispel`, `Invulnerable`). `combat/Orbit` circles a player with guarding bodies, `combat/Tellings` counts uses. `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.

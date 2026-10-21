@@ -11,6 +11,8 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodTwilight;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorKnowledge;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorRetellings;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorStars;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes;
@@ -274,7 +276,7 @@ public final class PathwayAbilities {
             new Ability("Prince Of Abolition", 7, "Sovereign", 6, SNEAK, STEALABLE,            // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> PrinceOfAbolitionSovereign.princeOfAbolitionSovereign(player, level, sl, true)),
 
-            // ---- Knowledge Emperor (docs/KNOWLEDGE_EMPEROR.md). Keys 6 and 7 are not written yet.
+            // ---- Knowledge Emperor (docs/KNOWLEDGE_EMPEROR.md) ----
             new Ability("Knowledge Emperor", 1, "Mystery Prying", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> KnowledgeEmperor.knowledgeEmperorMysteryPrying(player, level, sl, true)),
             new Ability("Knowledge Emperor", 2, "Weak-Point Strike", 8, SNEAK, STEALABLE,
@@ -284,7 +286,11 @@ public final class PathwayAbilities {
             new Ability("Knowledge Emperor", 4, "Read Scroll", 6, SNEAK, OWN_PATHWAY_ONLY,     // reads the Professor's own pouch
                     (player, level, sl) -> KnowledgeEmperor.knowledgeEmperorScrolls(player, level, sl, true)),
             new Ability("Knowledge Emperor", 5, "Stars", 5, SNEAK, STEALABLE,                  // stolen: no wheel, its last (or a random) entry
-                    (player, level, sl) -> KnowledgeEmperorStars.knowledgeEmperorStars(player, level, sl, true)));
+                    (player, level, sl) -> KnowledgeEmperorStars.knowledgeEmperorStars(player, level, sl, true)),
+            new Ability("Knowledge Emperor", 6, "Retellings and Prophecy", 4, SNEAK, STEALABLE,  // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> KnowledgeEmperorRetellings.knowledgeEmperorRetellings(player, level, sl, true)),
+            new Ability("Knowledge Emperor", 7, "Knowledge", 2, SNEAK, STEALABLE,                // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> KnowledgeEmperorKnowledge.knowledgeEmperorKnowledge(player, level, sl, true)));
 
 
 

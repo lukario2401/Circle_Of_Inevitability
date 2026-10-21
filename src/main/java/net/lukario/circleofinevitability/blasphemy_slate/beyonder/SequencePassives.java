@@ -100,9 +100,14 @@ public final class SequencePassives {
         custom("Prince Of Abolition", 5, PrinceOfAbolition::presence);                           // Mentor of Disorder: weak hostile mobs hesitate
 
         // ---- Knowledge Emperor (docs/KNOWLEDGE_EMPEROR.md). Also in KnowledgeEmperor itself: Spiritual Intuition's chime
-        // (Sequence 9), Fighting Knowledge's reach, speed and Study on every hit (8), Warlock's Mind (7).
+        // (Sequence 9), Fighting Knowledge's reach, speed and Study on every hit (8), Warlock's Mind (7), Information
+        // Skin's footing (4), Clairaudience on a blow (3), Sage's Mind (2), Law of Three (1), the Hermit's slow fading (0).
         custom("Knowledge Emperor", 9, KnowledgeEmperor::mysteryPryerSenses);                    // Mystery Pryer: hidden things show faintly; the Whisper
         custom("Knowledge Emperor", 5, KnowledgeEmperor::starlight);                             // Constellations Master: Starlight
+        custom("Knowledge Emperor", 4, KnowledgeEmperor::informationSkin);                       // Mysticologist: Information Skin
+        custom("Knowledge Emperor", 3, KnowledgeEmperor::clairaudience);                         // Clairvoyant: Clairaudience
+        custom("Knowledge Emperor", 0, KnowledgeEmperor::hermitPresence);                        // Hermit: enemies near come to be known
+        custom("Knowledge Emperor", 9, KnowledgeEmperor::enlightenment);                         // an Indoctrination's blessing
     }
 
     // =========================

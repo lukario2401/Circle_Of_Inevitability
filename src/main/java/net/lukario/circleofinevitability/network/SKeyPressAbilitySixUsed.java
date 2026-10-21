@@ -24,6 +24,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting.handOfGodDemonHunting;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneNightwatcher.knightOfMisfortuneNightwatcher;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFallen.princeOfAbolitionFallen;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorRetellings.knowledgeEmperorRetellings;
 
 public class SKeyPressAbilitySixUsed {
 
@@ -63,6 +64,7 @@ public class SKeyPressAbilitySixUsed {
         knightOfMisfortuneNightwatcher(player,level,serverLevel,false);
         abominationChains(player,level,serverLevel,false);
         princeOfAbolitionFallen(player,level,serverLevel,false);
+        knowledgeEmperorRetellings(player,level,serverLevel,false);
 
     }
 }

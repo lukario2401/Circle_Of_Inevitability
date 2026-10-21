@@ -20,6 +20,7 @@ import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Scrolls;
 import net.lukario.circleofinevitability.status.Study;
 import net.lukario.circleofinevitability.status.Substitute;
+import net.lukario.circleofinevitability.status.SupernaturalResistance;
 import net.lukario.circleofinevitability.status.Unnoticed;
 import net.lukario.circleofinevitability.status.Vulnerable;
 import net.minecraft.core.Holder;
@@ -69,7 +70,7 @@ import java.util.UUID;
 /**
  * Knowledge Emperor: the Hermit Pathway of Lord of the Mysteries (docs/KNOWLEDGE_EMPEROR.md). Seven keys in the
  * Attendant Of Mysteries pattern, from Mystery Pryer (Sequence 9) up to Hermit (Sequence 0); every ability has a
- * normal and a sneak cast. Written so far (the first half of the plan):
+ * normal and a sneak cast:
  *
  *   1 Mystery Prying   (Mystery Pryer)       10 s: hidden things near glow, each enemy you look at is read (health,
  *                                            mood, effects; its weakness from 50% Study) and gains 25% Study
@@ -82,14 +83,17 @@ import java.util.UUID;
  *   4 Read Scroll      (Scrolls Professor)   the oldest scroll in the pouch goes off, free | sneak: Inscribe Scroll
  *   5 Stars            (Constellations Master) the Stars wheel: Starlight Cage, Stellar Self, Star Fall, Star Guard
  *                                            (KnowledgeEmperorStars)            | sneak: the last pick again
- *   6 Retellings and Prophecy (Mysticologist)  not written yet (docs/KNOWLEDGE_EMPEROR.md, "The second half")
- *   7 Knowledge        (Sage)                  not written yet
+ *   6 Retellings       (Mysticologist)       the wheel: Sleeping Beauty, Avalon, Achilles' Heel (4), Pandora's Box,
+ *                                            Foresight, Prophecy of Ruin (3) (KnowledgeEmperorRetellings) | sneak: the last pick
+ *   7 Knowledge        (Sage)                the wheel: Informatization, Erase (2), Knowledge Overload, Lance of
+ *                                            Knowledge, Condense Knowledge (1), Embodiment of Knowledge,
+ *                                            Indoctrination, Divine Kingdom (0) (KnowledgeEmperorKnowledge) | sneak: the last pick
  *
  * The three systems the whole Pathway leans on are reusable parts of the kit: status/Study (what you know of an
- * enemy; every hit on it is stronger the more you know), status/Scrolls (spells kept on paper, read for free) and
- * combat/Orbit (the guarding stars). The hooks every later ability uses are here: costFor / pay / afterCast (what a
- * cast costs: the Whisper of the Hidden Sage makes the next one free; Law of Three and the Divine Kingdom go in the
- * same two methods), studyGain (the Study an ability adds), weaknessOf (the element a studied enemy fears).
+ * enemy; every hit on it is stronger the more you know), status/Scrolls (spells kept on paper, read for free),
+ * combat/Orbit (the guarding stars), combat/Tellings (Obscurity), status/Dispel (Erase) and status/Invulnerable
+ * (Informatization). Every cast's cost goes through costFor / pay / afterCast (the Whisper, Law of Three and the
+ * Divine Kingdom's half price live there) and every wheel's cooldown through cooldownFor (Indoctrination).
  *
  * Every look and sound is in KnowledgeEmperorFx (see /knowledgefx); this class only decides who is hurt, held, read
  * and helped, and when. Nothing here breaks blocks or lights real fire. The numbers for every ability are below.
@@ -192,6 +196,21 @@ public class KnowledgeEmperor {
     private static final float MIND_SHORTER = 0.25f;
     private static final int STARLIGHT_SEQUENCE = 5;             // Starlight: at night under open sky...
     private static final float STARLIGHT_REGEN = 0.25f;          // ...spirituality returns this much faster
+    private static final int SKIN_SEQUENCE = 4;                  // Information Skin: damage with no attacker...
+    private static final float SKIN_CUT = 0.25f;                 // ...this much less (status/SupernaturalResistance)...
+    private static final double SKIN_FOOTING = 0.25;             // ...and knockback this much less
+    private static final int CLAIRAUDIENCE_SEQUENCE = 3;         // Clairaudience: a concealed enemy this close that acts
+    private static final double CLAIRAUDIENCE_RADIUS = 32.0;     // (moves, strikes) chimes from where it is
+    private static final double CLAIRAUDIENCE_MOVED = 0.5;
+    private static final int SAGE_MIND_SEQUENCE = 2;             // Sage's Mind: nausea, blindness, darkness do not take; no Study on you
+    private static final int LAW_SEQUENCE = 1;                   // Law of Three: the third cast in a row, each within...
+    private static final int LAW_GAP = 400;                      // ...this of the last, is free...
+    private static final float LAW_POWER = 1.5f;                 // ...and hits this much harder...
+    private static final int LAW_EMPOWERED = 60;                 // ...for this long
+    private static final int HERMIT_SEQUENCE = 0;                // Embodiment (passive): enemies this close...
+    private static final double HERMIT_PRESENCE = 24.0;
+    private static final int HERMIT_STUDY = 2;                   // ...gain this much Study a second...
+    private static final double HERMIT_DECAY = 0.5;              // ...and what you know fades this much slower
 
     static final float BOSS_HEALTH = 150f;
 
@@ -206,9 +225,13 @@ public class KnowledgeEmperor {
     private static final String WHISPER_NEXT = "knowledge_emperor_whisper_next";
     private static final String WHISPER_WAITING = "knowledge_emperor_whisper_waiting";
     private static final String INTUITION_READY = "knowledge_emperor_intuition_ready";
+    private static final String LAW_LAST = "knowledge_emperor_law_last";          // when the last cast went off
+    private static final String LAW_CHAIN = "knowledge_emperor_law_chain";        // casts in a row so far
+    private static final String LAW_UNTIL = "knowledge_emperor_law_until";        // an empowered cast's hits land harder
 
     // Names
     private static final String SIDESTEP_STRIKE = "knowledge_emperor_sidestep_strike";
+    private static final String SKIN_GRANT = "knowledge_emperor_information_skin";
     static final String SCROLL_HEX = "knowledge_emperor_hex";
     static final String SCROLL_SPELLBOLTS = "knowledge_emperor_spellbolts";
     static final String SCROLL_FREEZING = "knowledge_emperor_freezing";
@@ -216,6 +239,7 @@ public class KnowledgeEmperor {
 
     private static final Identifier FIGHTING_SPEED_ID = Physique.id("knowledge_emperor_fighting_speed");
     private static final Identifier FIGHTING_REACH_ID = Physique.id("knowledge_emperor_fighting_reach");
+    private static final Identifier SKIN_FOOTING_ID = Physique.id("knowledge_emperor_skin_footing");
 
     private static final Set<Item> METAL_ARMOR = Set.of(
             Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS,
@@ -237,6 +261,9 @@ public class KnowledgeEmperor {
     /** Players whose own shortened effect is being put back on (Warlock's Mind must let that one through). */
     private static final Set<UUID> SHORTENING = new HashSet<>();
 
+    /** Clairaudience: where each concealed body near each listener was a second ago. Not saved. */
+    private static final Map<UUID, Map<UUID, Vec3>> HEARD = new HashMap<>();
+
     // =========================
     // The melee combo (combat/MeleeCombos): three hits that repeat; KnowledgeEmperorFx.combo is the look of each
     // =========================
@@ -257,6 +284,10 @@ public class KnowledgeEmperor {
             Scrolls.register(SCROLL_FREEZING, "Freezing", 0, KnowledgeEmperor::freezingSpell);
             Scrolls.register(SCROLL_PARALYSIS, "Paralysis", 0, KnowledgeEmperor::paralysisSpell);
             KnowledgeEmperorStars.registerScrolls();
+            KnowledgeEmperorRetellings.registerScrolls();
+            // Sage's Mind: nobody builds Study on a Sage; the Hermit's knowledge fades half as fast
+            Study.addImmunity(one -> one instanceof Player sage && isKnowledgeEmperor(sage, SAGE_MIND_SEQUENCE));
+            Study.addDecayScale(caster -> isKnowledgeEmperor(caster, HERMIT_SEQUENCE) ? HERMIT_DECAY : 1.0);
             Scrolls.addListener(KnowledgeEmperor::showPouch);
             Study.addListener(new Study.Listener() {
                 @Override
@@ -276,6 +307,8 @@ public class KnowledgeEmperor {
             Player player = event.player();
             if (!(player.level() instanceof ServerLevel sl)) return;
             if (isActive(player, PRY_UNTIL)) pryTick(player, sl);
+            KnowledgeEmperorRetellings.tick(player, sl);
+            KnowledgeEmperorKnowledge.tick(player, sl);
             if (player.tickCount % EYE_REFRESH == 0) refreshEyes(player);
             if (player.tickCount % 20 == 0) {
                 bodyTick(player);
@@ -288,8 +321,31 @@ public class KnowledgeEmperor {
         @SubscribeEvent(priority = Priority.LOWEST)
         public static void onKnowledgeEmperorSwing(AttackEntityEvent event) {
             Player player = event.getEntity();
-            if (!(player.level() instanceof ServerLevel sl) || !SoulCore.getPathway(player).equals(PATHWAY)) return;
+            if (!(player.level() instanceof ServerLevel sl)) return;
+            if (Concealment.isHidden(player)) heardStrike(player, sl);
+            if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
             SWINGS.put(player.getUUID(), new Swing(event.getTarget().getUUID(), sl.getGameTime(), player.getAttackStrengthScale(0.5f)));
+        }
+
+        /** Before the others: the blow that wakes a Sleeping Beauty sleeper, and an empowered cast (Law of Three). */
+        @SubscribeEvent(priority = Priority.HIGH)
+        public static void onKnowledgeEmperorHurtEarly(LivingHurtEvent event) {
+            LivingEntity target = event.getEntity();
+            if (target.level().isClientSide()) return;
+            KnowledgeEmperorRetellings.hurtEarly(event);
+            if (event.getSource().getEntity() instanceof Player caster && isActive(caster, LAW_UNTIL)) {
+                event.setAmount(event.getAmount() * LAW_POWER);
+            }
+            if (target instanceof Player skin && event.getSource().getEntity() == null && event.getAmount() > 0f
+                    && isKnowledgeEmperor(skin, SKIN_SEQUENCE) && target.level() instanceof ServerLevel sl) {
+                KnowledgeEmperorFx.informationSkin(sl, skin);                   // the cut itself is SupernaturalResistance's
+            }
+        }
+
+        /** Last of all: what a hit on an Achilles' Heel lands with before armor. */
+        @SubscribeEvent(priority = Priority.LOWEST)
+        public static void onKnowledgeEmperorHurtLate(LivingHurtEvent event) {
+            if (!event.getEntity().level().isClientSide()) KnowledgeEmperorRetellings.hurtLate(event);
         }
 
         /** A real melee hit landed: Study grows (Fighting Knowledge). */
@@ -312,7 +368,9 @@ public class KnowledgeEmperor {
         // LOW: after armor and the rest, what really got through
         @SubscribeEvent(priority = Priority.LOW)
         public static void onKnowledgeEmperorDamage(LivingDamageEvent event) {
-            if (event.getEntity().level() instanceof ServerLevel sl) KnowledgeEmperorStars.damaged(event.getEntity(), sl, event.getAmount());
+            if (!(event.getEntity().level() instanceof ServerLevel sl)) return;
+            KnowledgeEmperorRetellings.damaged(event);
+            KnowledgeEmperorStars.damaged(event.getEntity(), sl, event.getAmount());
         }
 
         /** A hexed one died: the hex jumps to the nearest enemy of its caster, for the time it had left. */
@@ -323,6 +381,7 @@ public class KnowledgeEmperor {
             Hex hex = HEXES.remove(dead.getUUID());
             if (hex != null) hexJump(sl, dead, hex);
             KnowledgeEmperorStars.died(dead, sl);
+            KnowledgeEmperorRetellings.died(dead, sl);
         }
 
         /** Spiritual Intuition: a mob starts hunting the Hermit from where they cannot see it. */
@@ -348,6 +407,11 @@ public class KnowledgeEmperor {
         public static void onKnowledgeEmperorEffect(MobEffectEvent.Applicable event) {
             if (!(event.getEntity() instanceof Player player) || !(player.level() instanceof ServerLevel sl)) return;
             MobEffectInstance effect = event.getEffectInstance();
+            if (isKnowledgeEmperor(player, SAGE_MIND_SEQUENCE) && (effect.getEffect() == MobEffects.NAUSEA
+                    || effect.getEffect() == MobEffects.BLINDNESS || effect.getEffect() == MobEffects.DARKNESS)) {
+                event.setResult(Result.DENY);                                       // Sage's Mind
+                return;
+            }
             if (effect.getEffect().value().isBeneficial() || effect.isInfiniteDuration() || effect.getDuration() < 20) return;
             if (SHORTENING.contains(player.getUUID()) || !isKnowledgeEmperor(player, MIND_SEQUENCE)) return;
             event.setResult(Result.DENY);
@@ -383,7 +447,9 @@ public class KnowledgeEmperor {
             SWINGS.remove(player.getUUID());
             PRY_READ.remove(player.getUUID());
             SHORTENING.remove(player.getUUID());
+            HEARD.remove(player.getUUID());
             HEXES.values().removeIf(hex -> hex.caster().equals(player.getUUID()));
+            KnowledgeEmperorKnowledge.forget(player);
         }
     }
 
@@ -443,6 +509,7 @@ public class KnowledgeEmperor {
         boolean seeThrough = Beyonder.hasSequence(player, SEE_THROUGH_SEQUENCE);
         boolean inquiry = Beyonder.hasSequence(player, INQUIRY_SEQUENCE);
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), reach)) {
+            if (KnowledgeEmperorKnowledge.isEmbodied(one)) continue;                 // it cannot be read, not even by Prying
             boolean everything = inquiry && one.distanceTo(player) <= INQUIRY_LIVING;
             boolean hidden = isHiddenThing(one, seeThrough);
             if (!everything && !hidden) continue;
@@ -518,7 +585,7 @@ public class KnowledgeEmperor {
         LivingEntity nearest = null;
         double best = Double.MAX_VALUE;
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), DOWSE_RANGE)) {
-            if (Spells.isFriend(player, one)) continue;
+            if (Spells.isFriend(player, one) || KnowledgeEmperorKnowledge.isEmbodied(one)) continue;
             boolean hostile = one instanceof Player || one instanceof Enemy || (one instanceof Mob mob && mob.getTarget() == player);
             if (!hostile) continue;
             boolean unseen = Concealment.isHidden(one) || one.hasEffect(MobEffects.INVISIBILITY) || Unnoticed.isUnnoticed(one)
@@ -885,6 +952,13 @@ public class KnowledgeEmperor {
         if (now < next) return;
         data.putLong(NEXT_SCROLL, now + every);
         if (Scrolls.isFull(player, pouchSize(player))) return;
+        giveFreeScroll(player, sl);
+    }
+
+    /** A Scroll of Freezing or of Paralysis (in turn) into the pouch, if there is room (also the Divine Kingdom's). */
+    static void giveFreeScroll(Player player, ServerLevel sl) {
+        if (Scrolls.isFull(player, pouchSize(player))) return;
+        CompoundTag data = player.getPersistentData();
         boolean paralysis = data.getBooleanOr(SCROLL_TURN, false);
         data.putBoolean(SCROLL_TURN, !paralysis);
         Scrolls.add(player, paralysis ? SCROLL_PARALYSIS : SCROLL_FREEZING, pouchSize(player));
@@ -1007,14 +1081,21 @@ public class KnowledgeEmperor {
     // =========================
 
     /**
-     * What a cast of 'cost' really costs this player now: nothing while a Whisper of the Hidden Sage is waiting. The
-     * one place for every rule that changes a Knowledge Emperor's costs: the planned Law of Three (every third cast in
-     * a row is free) and Divine Kingdom (half) go here too. Wheel entries call it through .costBy(...).
+     * What a cast of 'cost' really costs this player now: nothing while a Whisper of the Hidden Sage is waiting or when
+     * it is the third of a Law of Three, half while they stand in their own Divine Kingdom. The one place for every rule
+     * that changes a Knowledge Emperor's costs. Wheel entries call it through .costBy(...).
      */
     public static int costFor(Player player, int cost) {
         if (cost <= 0 || Beyonder.isCastingUnbound(player) || !SoulCore.getPathway(player).equals(PATHWAY)) return cost;
-        if (whisperWaiting(player)) return 0;
+        if (whisperWaiting(player) || lawOfThreeDue(player)) return 0;
+        if (KnowledgeEmperorKnowledge.inKingdom(player)) return cost / 2;
         return cost;
+    }
+
+    /** What a wheel cooldown of 'ticks' is for this player now: 30% shorter while Indoctrination enlightens them. */
+    public static int cooldownFor(Player player, int ticks) {
+        if (KnowledgeEmperorKnowledge.isEnlightened(player)) return Math.round(ticks * KnowledgeEmperorKnowledge.ENLIGHTENED_COOLDOWN);
+        return ticks;
     }
 
     /** Pays for a cast by key (after costFor) and runs afterCast. False, with the usual message, if it cannot. */
@@ -1026,14 +1107,40 @@ public class KnowledgeEmperor {
     }
 
     /**
-     * Every cast that went off (a key through pay, a wheel entry through .onCast(...)): a waiting Whisper is spent on
-     * it. The place for whatever counts casts (the planned Law of Three).
+     * Every cast that went off (a key through pay, a wheel entry through .onCast(...)): the Law of Three counts it (the
+     * third in a row is free and empowered), a waiting Whisper is spent on it (unless the Law paid already), and it
+     * ends an Embodiment of Knowledge.
      */
     public static void afterCast(Player player, int cost) {
-        if (cost > 0 && whisperWaiting(player) && !Beyonder.isCastingUnbound(player)
-                && SoulCore.getPathway(player).equals(PATHWAY)) {
-            spendWhisper(player);
+        if (Beyonder.isCastingUnbound(player) || !SoulCore.getPathway(player).equals(PATHWAY)) return;
+        KnowledgeEmperorKnowledge.castSomething(player);
+        if (cost <= 0) return;
+        boolean lawPaid = lawOfThreeDue(player);
+        countForTheLaw(player, lawPaid);
+        if (!lawPaid && whisperWaiting(player)) spendWhisper(player);
+    }
+
+    /** Law of Three (1): this cast is the third in a row, each within LAW_GAP of the last. */
+    private static boolean lawOfThreeDue(Player player) {
+        if (!Beyonder.hasSequence(player, LAW_SEQUENCE)) return false;
+        CompoundTag data = player.getPersistentData();
+        return data.getIntOr(LAW_CHAIN, 0) >= 2 && player.level().getGameTime() - data.getLongOr(LAW_LAST, 0L) <= LAW_GAP;
+    }
+
+    private static void countForTheLaw(Player player, boolean third) {
+        if (!Beyonder.hasSequence(player, LAW_SEQUENCE)) return;
+        CompoundTag data = player.getPersistentData();
+        long now = player.level().getGameTime();
+        if (third) {
+            data.putInt(LAW_CHAIN, 0);
+            data.putLong(LAW_UNTIL, now + LAW_EMPOWERED);
+            if (player.level() instanceof ServerLevel sl) KnowledgeEmperorFx.lawOfThree(sl, player);
+            KnowledgeEmperorFx.status(player, Status.LAW_OF_THREE, LAW_EMPOWERED);
+        } else {
+            boolean inARow = now - data.getLongOr(LAW_LAST, 0L) <= LAW_GAP;
+            data.putInt(LAW_CHAIN, inARow ? data.getIntOr(LAW_CHAIN, 0) + 1 : 1);
         }
+        data.putLong(LAW_LAST, now);
     }
 
     // =========================
@@ -1047,7 +1154,7 @@ public class KnowledgeEmperor {
     public static void mysteryPryerSenses(Player player) {
         if (!(player instanceof ServerPlayer viewer) || !(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), INTUITION_RADIUS)) {
-            if (Spells.isFriend(player, one)) continue;
+            if (Spells.isFriend(player, one) || KnowledgeEmperorKnowledge.isEmbodied(one)) continue;
             if (Concealment.isHidden(one) || one.hasEffect(MobEffects.INVISIBILITY) || Unnoticed.isUnnoticed(one)) {
                 KnowledgeEmperorFx.intuitionOutline(viewer, one);
             }
@@ -1075,6 +1182,50 @@ public class KnowledgeEmperor {
         if (player.tickCount % 60 == 0) KnowledgeEmperorFx.starlight(sl, player);
     }
 
+    /** Mysticologist (4), once a second: Information Skin, damage with no attacker SKIN_CUT less. */
+    public static void informationSkin(Player player) {
+        SupernaturalResistance.grant(player, SKIN_GRANT, 40, SKIN_CUT, false, null);
+    }
+
+    /** Clairvoyant (3), once a second: each concealed enemy within CLAIRAUDIENCE_RADIUS that moved chimes from where it is. */
+    public static void clairaudience(Player player) {
+        if (!(player instanceof ServerPlayer listener) || !(player.level() instanceof ServerLevel sl)) return;
+        Map<UUID, Vec3> was = HEARD.computeIfAbsent(player.getUUID(), id -> new HashMap<>());
+        Map<UUID, Vec3> now = new HashMap<>();
+        for (LivingEntity one : Spells.livingAround(player, sl, player.position(), CLAIRAUDIENCE_RADIUS)) {
+            if (!Concealment.isHidden(one) || Spells.isFriend(player, one) || KnowledgeEmperorKnowledge.isEmbodied(one)) continue;
+            now.put(one.getUUID(), one.position());
+            Vec3 before = was.get(one.getUUID());
+            if (before != null && before.distanceTo(one.position()) > CLAIRAUDIENCE_MOVED) {
+                KnowledgeEmperorFx.clairaudience(listener, one.position());
+            }
+        }
+        HEARD.put(player.getUUID(), now);
+    }
+
+    /** A concealed one struck a blow: every Clairvoyant near who is not on its side hears it. */
+    private static void heardStrike(Player hidden, ServerLevel sl) {
+        if (KnowledgeEmperorKnowledge.isEmbodied(hidden)) return;
+        for (ServerPlayer listener : sl.players()) {
+            if (listener == hidden || listener.distanceTo(hidden) > CLAIRAUDIENCE_RADIUS) continue;
+            if (!isKnowledgeEmperor(listener, CLAIRAUDIENCE_SEQUENCE) || Spells.isFriend(listener, hidden)) continue;
+            KnowledgeEmperorFx.clairaudience(listener, hidden.position());
+        }
+    }
+
+    /** Hermit (0), once a second: enemies within HERMIT_PRESENCE come to be known just by being near. */
+    public static void hermitPresence(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), HERMIT_PRESENCE)) {
+            Study.add(player, enemy, HERMIT_STUDY);
+        }
+    }
+
+    /** Any Hermit, once a second: an Indoctrination's enlightenment gives a second's spirituality back again. */
+    public static void enlightenment(Player player) {
+        if (KnowledgeEmperorKnowledge.isEnlightened(player)) KnowledgeEmperorKnowledge.tide(player, 1f);
+    }
+
     private static int whisperGap(Player player) {
         return WHISPER_EVERY - WHISPER_SPREAD + player.getRandom().nextInt(WHISPER_SPREAD * 2 + 1);
     }
@@ -1095,6 +1246,8 @@ public class KnowledgeEmperor {
         boolean fighting = isKnowledgeEmperor(player, FIGHTING_SEQUENCE);
         Physique.keep(player, Attributes.ATTACK_SPEED, FIGHTING_SPEED_ID, FIGHTING_ATTACK_SPEED, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, fighting);
         Physique.keep(player, Attributes.ENTITY_INTERACTION_RANGE, FIGHTING_REACH_ID, FIGHTING_REACH, AttributeModifier.Operation.ADD_VALUE, fighting);
+        Physique.keep(player, Attributes.KNOCKBACK_RESISTANCE, SKIN_FOOTING_ID, SKIN_FOOTING, AttributeModifier.Operation.ADD_VALUE,
+                isKnowledgeEmperor(player, SKIN_SEQUENCE));
     }
 
     // =========================
@@ -1124,6 +1277,9 @@ public class KnowledgeEmperor {
         PRY_READ.remove(player.getUUID());
         SWINGS.remove(player.getUUID());
         KnowledgeEmperorStars.clearState(player);
+        KnowledgeEmperorRetellings.clearState(player);
+        KnowledgeEmperorKnowledge.clearState(player);
+        for (String key : List.of(LAW_LAST, LAW_CHAIN, LAW_UNTIL)) data.remove(key);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) KnowledgeEmperorFx.statusEnd(player, status);   // a clock left running before death
         Scrolls.show(player);

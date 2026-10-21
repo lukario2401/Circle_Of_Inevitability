@@ -49,7 +49,7 @@ import java.util.UUID;
  *                    comes close is struck
  *
  * Sneak casts the last pick again without the wheel (no cooldown, double the cost), as for Hand Of God. Every entry's
- * cost goes through KnowledgeEmperor.costFor (the Whisper makes it free). The looks are KnowledgeEmperorFx's; every
+ * cost goes through KnowledgeEmperor.costFor, every cooldown through cooldownFor. The looks are KnowledgeEmperorFx's; every
  * number is right below.
  */
 public final class KnowledgeEmperorStars {
@@ -139,6 +139,7 @@ public final class KnowledgeEmperorStars {
     private static final AbilityWheel WHEEL = AbilityWheel.create("knowledge_emperor_stars", "Stars")
             .radius(72)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .cooldownBy(KnowledgeEmperor::cooldownFor)
             .entry("starlight_cage", KnowledgeEmperorFx.WHEEL_STARLIGHT_CAGE, "Starlight Cage", CAGE_SEQUENCE,
                     CAGE_COST, CAGE_COOLDOWN, KnowledgeEmperorStars::starlightCage)
             .costBy(KnowledgeEmperor::costFor)
