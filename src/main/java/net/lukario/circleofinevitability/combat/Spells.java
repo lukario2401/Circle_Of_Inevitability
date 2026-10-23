@@ -348,6 +348,32 @@ public final class Spells {
         return firstChosenOnLine(caster, sl, eye, aimPoint(caster, sl, range), 0.4);
     }
 
+    /**
+     * The ally the caster is looking at within range (not through walls), or null: the friendly half of aimEnemy, for
+     * a ward pinned on a friend, a blessing, a step back sent to someone else. Allies are the caster's side
+     * (isFriend: team mates, pets, marionettes, summons); the caster themself is never it.
+     */
+    public static LivingEntity aimAlly(Player caster, ServerLevel sl, double range) {
+        Vec3 eye = caster.getEyePosition();
+        Vec3 to = aimPoint(caster, sl, range);
+        if (eye.distanceToSqr(to) < 1.0E-6) return null;
+        LivingEntity nearest = null;
+        double best = Double.MAX_VALUE;
+        AABB area = new AABB(eye, to).inflate(0.9);
+        for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> other != caster
+                && !other.getUUID().equals(caster.getUUID()) && other.isAlive() && !other.isSpectator()
+                && !(other instanceof ArmorStand) && isFriend(caster, other))) {
+            AABB body = candidate.getBoundingBox().inflate(0.4);
+            if (!body.contains(eye) && body.clip(eye, to).isEmpty()) continue;
+            double distance = candidate.getBoundingBox().getCenter().distanceToSqr(eye);
+            if (distance < best) {
+                best = distance;
+                nearest = candidate;
+            }
+        }
+        return nearest;
+    }
+
     /** Where the crosshair ends: on the first block in the way, or 'range' blocks out if there is none. */
     public static Vec3 aimPoint(Player caster, ServerLevel sl, double range) {
         Vec3 eye = caster.getEyePosition();

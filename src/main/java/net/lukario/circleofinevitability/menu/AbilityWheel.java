@@ -358,6 +358,11 @@ public final class AbilityWheel {
         return (int) Math.max(0, left);
     }
 
+    /** That one entry is ready again now (a form that lets it fire without a pause, a refund). */
+    public void resetCooldown(Player player, String key) {
+        player.getPersistentData().remove(id + "_ready_" + key);
+    }
+
     /** Forgets the cooldowns and the last pick (a respec, a new Pathway). */
     public void reset(Player player) {
         CompoundTag data = player.getPersistentData();

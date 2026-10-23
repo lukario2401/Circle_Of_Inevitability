@@ -2,7 +2,7 @@
 
 The Illuminator Pathway is the Paragon Pathway of Lord of the Mysteries, the High Priestess tarot card: Savant (9), Archaeologist (8), Appraiser (7), Artisan (6), Astronomer (5), Alchemist (4), Arcane Scholar (3), Knowledge Magister (2), Illuminator (1), Paragon (0). Source: the Paragon Pathway and Paragon Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-The abilities are not written as code yet; their looks and sounds are (see "Looks, sounds and pictures" at the end: `IlluminatorFx` and everything it plays). The rest of this file is the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see BEAUTY_GODDESS.md).
+Half of it is written: keys 1 to 5 (Sequences 9 to 5) with every growth they get at stronger Sequences, the passives of Sequences 9 to 5, the melee combo, and the shared parts the rest leans on (`status/Appraisal` with `WeaknessTable`, `Exposed`, `Enfeebled`, `Gravity`, `Unreadable`, `Construct`, `combat/History`, `combat/Cooldowns`, `Spells.aimAlly`). See "What is built". Keys 6 and 7 and the passives of Sequences 4 to 0 are the second half; "The second half: how to write the rest" gives a recipe for each, with the hooks already in place. The rest of this file is the design both halves are built from. Its looks and sounds are all ready (see "Looks, sounds and pictures" at the end: `IlluminatorFx` and everything it plays).
 
 Pathway name in code: "Illuminator".
 
@@ -157,14 +157,14 @@ Hitting mobs as the Illuminator, registered in combat/MeleeCombos like the other
 
 ## Numbers to start from: cost and cooldown
 
-Costs follow the Attendant Of Mysteries scale (250 at Sequence 9, 12000 at Sequence 3) and keep climbing; check them against the spirituality pool each Sequence gives. A cooldown of 0 means "cost only", like Attendant. Damage numbers are in the tables above. A boss is anything with more than 150 maximum health (the same line Marionette uses).
+Recall, Survey and Ritual Circle cost 300, 350 and 400 rather than the planned 400, 600 and 900, so an Archaeologist can pay them (Sequence 8 holds 400); the code's constants are the truth now. Costs follow the Attendant Of Mysteries scale (250 at Sequence 9, 12000 at Sequence 3) and keep climbing; check them against the spirituality pool each Sequence gives. A cooldown of 0 means "cost only", like Attendant. Damage numbers are in the tables above. A boss is anything with more than 150 maximum health (the same line Marionette uses).
 
 | Ability | Sequence | Cost | Cooldown (s) |
 |---|---|---|---|
 | Compound Flask | 9 | 250 | 2 |
-| Recall | 9 | 400 | 25 |
-| Survey | 8 | 600 | 15 |
-| Ritual Circle | 8 | 900 | 25 |
+| Recall | 9 | 300 | 25 |
+| Survey | 8 | 350 | 15 |
+| Ritual Circle | 8 | 400 | 25 |
 | Appraise | 7 | 1250 | 3 |
 | Exploit Flaw | 7 | 1500 | 10 |
 | Clockwork Rifle | 6 | 1800 | 5 |
@@ -188,7 +188,7 @@ Costs follow the Attendant Of Mysteries scale (250 at Sequence 9, 12000 at Seque
 | Illusory Book | 0 | 45000 | 45 |
 | Mechanical Heaven | 0 | 60000 | 120 |
 
-## Built from what already exists
+## Built from the existing kit
 
 | Ability | Existing parts | New parts it needs |
 |---|---|---|
@@ -219,37 +219,33 @@ Costs follow the Attendant Of Mysteries scale (250 at Sequence 9, 12000 at Seque
 | Illusory Book | Concealment.hide, Root.apply, a ModelFx book, Later.run | Concealment on mobs (check) |
 | Mechanical Heaven | SpellFx.runeCircle, a ModelFx sky dome, Later.run, MobEffects | Zone, Ability lock, Construct bonus |
 
-## New reusable parts worth writing first
+## New reusable parts
 
-Written once, used by many abilities, and by other pathways too (Hand Of God already needs several of these; Knowledge Emperor is the neighboring pathway, so any mark or information status built for it should be shared rather than duplicated).
+Written (each has a section in [SPELL_KIT.md](SPELL_KIT.md)):
 
-| Part | What it is | Used by |
-|---|---|---|
-| Appraisal (status/) | The mark: who marked it, until when, its weakness. Questions: is it marked by me, what is its weakness. Adds the 15% damage. | Appraise, Exploit Flaw, Rifle, Cannon, Flask, Dissociation, Hand Of God's Eye of Demon Hunting |
-| Weakness table | Data-driven: what a target is (undead, armored, flying, mechanical, player) maps to a weakness kind and the matching bonus. | Appraisal, Hand Of God's Alchemy coating |
-| Vulnerable (status/) | Takes X% more damage for N ticks, stackable, with a source. | Flask (Corroded), Star of Curses (Mutation), Appraisal, Hand Of God's Sword of Dawn |
-| Deployable (generalized SpiritFlame) | Owner, level, spot, expiry, an optional pulse every N ticks, an optional ModelFx. Cleared on level unload and when the owner is gone. Attendant's flames could move onto it. | Spirit Cannon, Ritual Circle, Blessing of Stars, False Constellations, Principles, Scrolls, Mechanical Heaven |
-| Zone | A Deployable with an area: who is inside on each pulse, and "is this player inside a zone of type T" (for the Rite bonus). | Ritual Circle, Blessing of Stars, False Constellations, Principles, Masterwork, Mechanical Heaven |
-| Construct (status/) | Spawns a vanilla mob, hides it and dresses it with a ModelFx, hands it to Marionette.control, tracks per-owner limits (one Golem, up to three dolls), removes it on death, timer or owner far away. Flags it "mechanical" for Exploit Flaw and Dissociation. Holds the material table for dolls. | Living Doll, Golem, Mechanical Heaven bonus, Exploit Flaw, Dissociation |
-| Recall buffer | A small ring buffer per player: position, facing and health for the last 8 seconds. Restoring takes a number of seconds. | Recall (and Recall on an ally); reusable for any history or time effect |
-| Ability lock | Blocks a target's Beyonder abilities (players) and ranged and special attacks (mobs) for N ticks, with a scope (spells, special, all). Checked at the start of every ability. | Mathematical Maze, Reality Knowledge, Knowledge Spirit, Hand Of God's Decay |
-| Unreadable (status) | Cannot be picked out from further than N blocks: mobs forget, abilities that need to see or read cannot choose. | False Constellations, Hand Of God's Mind Concealment |
-| Gravity (status) | Per-entity gravity factor for N ticks (lift, crush, normal) applied by a tick event, with no potion swirls. | Blessing of Stars, Principles, Mechanical Heaven |
-| Held model | A ModelFx held in your hand for N seconds. | Clockwork Rifle, Mechanical Body arm cannon, Hand Of God's Sword of Dawn |
-| Beam helper | Spells.enemiesAlong(from, to, width) plus a SpellFx.beam that draws a SlashFx line with a flash. | Star of Curses, Dissociation, Fusion Beam, Exploit Flaw |
-| Shot options | Arc (gravity) and pierce (does not stop at the first enemy). | Flask, cannonballs, Fusion rounds |
-| Residue (later) | Remembers where Beyonder abilities were cast (spot, pathway, Sequence, tick) for 60 seconds. | Survey at Arcane Scholar (3) |
-| Assets | Done: see "Looks, sounds and pictures" below. | all of the above |
+| Part | Where | What it does | Used by |
+| --- | --- | --- | --- |
+| `Appraisal` | `status/` | One caster's mark on an entity: its weakness (a word), how long, and a bonus on every **ability** hit of that caster on it, `MATCH_BONUS` (50%) more when the hit's kind is the weakness. `mark`, `isMarked`, `weakness`, `spend`, `wipe`, `markedBy`, `strike` / `strikeTrue` / `as(kind, ...)` (hits counted as ability hits of a kind), `addListener` (the look). | Appraise, Exploit Flaw, every Illuminator hit (`Illuminator.hit`); Hand Of God's Eye of Demon Hunting could use it |
+| `WeaknessTable` | `status/` | What something is weak to, as data: `otherwise("pierce").rule("starlight", one -> ...)...`, the first rule from the top that fits. Each Pathway keeps its own. | `Illuminator.WEAKNESS`; Hand Of God's Alchemy coating could use one |
+| `Exposed` | `status/` | Cannot hide for a while: `Concealment`, `Unnoticed` and invisibility end every tick and cannot take hold. `addException` for hiding that must be left alone (Exile is). | Survey, Appraise; Analysis (2) |
+| `Enfeebled` | `status/` | Deals less damage for a while, named reasons, the biggest counts. The other half of `Vulnerable`. | Mutation; Eroded (3) |
+| `Gravity` | `status/` | Heavier or lighter through the game's gravity attribute, named reasons that multiply; below 0 lifts. | Blessing of Stars; Rewrite Principles (2), Mechanical Heaven (0) |
+| `Unreadable` | `status/` | Cannot be picked out from further than N blocks: far mobs forget, far abilities cannot choose (`Spells.addUnchoosableCheck`). | False Constellations |
+| `Construct` | `status/` | What is made, not born: iron and snow golems, anything `mark`ed, `addCheck` rules. | Exploit Flaw; Dissociation (3); the dolls and golems (4) mark themselves |
+| `History` | `combat/` | Where every player stood and how hurt they were, for the last 10 seconds. `ago`, `asFarAs`, `healthLost`, `forget`. | Recall (and Recall on an ally from 1) |
+| `Cooldowns` | `combat/` | A cooldown on a single key with the wheels' "ready again in" message. | keys 1 to 3 |
+| `Spells.aimAlly` | `combat/` | The ally under the crosshair. | Mystic Brooch, Recall on an ally (1); Enlightenment (1) |
+| `AbilityWheel.resetCooldown` | `menu/` | One entry ready again now. | the arm cannon (4) |
 
-## Build order when the code is written
+Planned parts that turned out to exist already: **Vulnerable** (`status/Vulnerable`: Corroded, Mutation), **Deployable** and **Zone** (`combat/Zone` is both: the Spirit Cannon is a Zone that fires on its own beat; the Ritual Circle, Blessing and False Constellations are Zones; `Zone.covers` is the Rite and the false sky's bonus), the **Beam helper** (`Spells.enemiesOnLine(player, sl, from, to, width / 2)` plus the beam models in `IlluminatorFx`), the **Held model** (`IlluminatorFx.rifle` and `armCannon` hold the rifle themselves), and the **Mystic Brooch's ward** (`status/ConjuredArmor`'s absorption).
 
-1. Appraisal, Weakness table and Vulnerable (keys 1 to 3 need them).
-2. Recall buffer (key 1 sneak).
-3. Deployable and Zone, then the Beam helper and Shot options (keys 2, 4, 5).
-4. Construct (keys 4 and 6).
-5. Gravity, Unreadable and Ability lock (keys 5, 6, 7).
-6. Held model and the jetpack (the assets are done).
-7. Then the abilities themselves, key by key: constants grouped per ability at the top of the class like Attendant, methods named illuminator plus the ability name, the same (Player, Level, ServerLevel, bypassClassCheck) arguments, and the melee combo last.
+Still to write, for the second half (each in the shape of the others: one small class that looks after itself; see "Making a status of your own" in [SPELL_KIT.md](SPELL_KIT.md)):
+
+| Part | Where | What it should do | Used by |
+| --- | --- | --- | --- |
+| The spawning half of `Construct` | `status/Construct` | `Construct.build(owner, EntityTypes.X, sl, feet, yaw, ticks, maxHealth, limitName, limit)`: `Marionette.spawnSummon` (it already fights for the owner and vanishes without drops), `Construct.mark` it, set its maximum health, hide the vanilla body (the invisibility effect with no particles, or `Physique` SCALE down) so only the model shows; per owner and `limitName` keep a list and remove the oldest past `limit`; end it when the owner is further than a leash. A material table for the dolls: the block under the feet (`BlockTags.BASE_STONE_OVERWORLD`, logs, leaves, `DIRT`, metal blocks by name, `SAND`, `ICE` and snow) to `IlluminatorFx.Material`. | Living Doll, Golem; Mechanical Heaven's bonus |
+| Ability lock | `status/` or a `Root` preset | `Silence` already blocks a player's keys and a mob's attacks. Reality Knowledge and the Maze want "no abilities, still melee" for mobs too: `Root.apply(target, ticks, RootRestriction.ABILITIES)` on a player; for a mob, a flag that a `LivingAttackEvent` checks to cancel its projectiles and non-melee damage. | Mathematical Maze, Reality Knowledge |
+| Residue | `combat/` | Remembers where Beyonder abilities were cast for 60 seconds: one `record (pathway, sequence, spot, tick)` in a list, written from each key packet (`SKeyPressAbility...Used`, after the casts) when the player paid something (spirituality before and after). `Residue.near(sl, center, radius, ticks)`. | Survey at Arcane Scholar (3): `IlluminatorFx.surveyResidue(viewer, at, pathwayColor)` for each, every second for the Survey's 8 seconds |
 
 ## Ideas left on the shelf
 
@@ -265,13 +261,78 @@ Ready to add later, not in the seven keys:
 | Civilization effects (clear corruption, rebuild a city, move people) | Illuminator (1) | Not combat, and the ground is never changed |
 | Spirituality Gems | Alchemist (4) | Needs a living-being cost; left out |
 
-## Assumptions to check
+## To confirm
 
-- Constructs are vanilla mobs run by Marionette and dressed with a ModelFx. If custom entities come later, only Construct changes.
-- Concealment is used on enemy mobs for Illusory Book and Knowledge Spirit; check that it accepts any living entity, not only players.
-- Outlines (Survey) use the Glowing effect, so everyone sees them; a private outline would be a client-side part.
-- The Flask flies flat until Shot has an arc option.
+- Decided while writing the first half: the Appraised mark, Corroded and the curses work on players too (as every other curse in the kit does), and their pictures show on that player's screen. A player is always weak to pierce.
+- "Appraised: it cannot hide from you" is `status/Exposed` for the mark's time, so it cannot hide from anyone meanwhile. Making it private would need a per-viewer concealment (a client-side part).
+- Outlines (Survey) use the glowing effect, so everyone sees them; a private outline would be a client-side part.
+- The Flask flies straight (a fast lob): `Shot` has no arc yet. An arc would be a new `Shot` option (keys that rise and fall along the flight; `modelAlong`'s frame makes "up" sideways, so it needs `ModelFx.pose()` in world space first).
+- Recall on an ally (1) works on players only: `combat/History` follows players. A pet would need a record of its own.
+- Constructs are vanilla mobs run by Marionette and dressed with a ModelFx. If custom entities come later, only `Construct` changes.
 - Costs and cooldowns are first guesses, to be balanced against the spirituality pool.
+
+## What is built
+
+Keys 1 to 5, their growth at stronger Sequences, the passives from Savant (9) to Astronomer (5) and the melee combo. Keys 1 to 3 and the passives are in `blasphemy_slate/beyonder_characteristics/illuminator/Illuminator.java`, the Workshop wheel (key 4) in `IlluminatorWorkshop.java` and the Astronomy wheel (key 5) in `IlluminatorAstronomy.java` beside it. Every number is a constant at the top of its class. One line each in `PathwayAbilities.ALL`, a row in [SEQUENCES.md](SEQUENCES.md), `"Illuminator"` in `SequenceCommands.PATHWAYS` (so `/sequence pathway` offers it and its Beyonder Characteristics exist), the Starlight passive in `SequencePassives`, the combo in `MeleeCombos`, the color in `DarkAngel.pathwayColor`, the icon in `PathwayHudIcon`. Set the Pathway with `/sequence pathway <player> "Illuminator"`.
+
+How it works where the tables above do not say:
+- **Every Illuminator hit** goes through `Illuminator.hit(player, target, damage, Weakness kind)`, which is `Appraisal.strike`: on an enemy you Appraised it is 15% stronger (25% from Magister), and 50% more again when `kind` is its weakness. The kinds: the Flask and its acid are corrosion, the Rifle and Cannon pierce (a Rifle round on an Appraised enemy carries its weakness instead, so it always matches), the Star of Curses and Meteor Shower starlight, Blessing of Stars gravity. Exploit Flaw and the Brooch's burst have no kind (the bonus, never the match).
+- **The weakness table** is `Illuminator.WEAKNESS`, read from the top: players are pierce; the undead, vexes, allays and every summon are starlight; constructs and anything with 8 armor or more are corrosion; whatever floats (no gravity), bats, bees, blazes, ghasts, parrots, breezes, slimes, magma cubes, rabbits, frogs, endermen and anything with a walking speed of 0.3 or more are gravity; the rest pierce.
+- **Costs** go through `Illuminator.costFor(player, cost, ability, group)`: Quick Study (the same ability again within 20 s, 10% less), the Rite (a Workshop cast from inside your Ritual Circle, 20% less; from Alchemist also Alchemy and Arcana), then every `Illuminator.addCostRule`. Keys pay through `pay`, wheel entries through `.costBy(...)`; both end in `afterCast`, which Quick Study reads and every `addAfterCast` hears.
+- **Cooldowns**: keys 1 to 3 use `combat/Cooldowns` (Flask 2 s, Recall 25, Survey 15, Ritual Circle 25, Appraise 3, Exploit Flaw 10), checked after the target and before the cost; a cast that finds nothing to do starts none.
+- **Compound Flask**: a `Shot` at 1.4 blocks a tick (so a flask can be seen coming), a drop of acid behind it every tick. The one it hits takes 36; the burst 18 to the rest within 3; everyone it caught is shoved and Corroded (`Vulnerable`, 15%, not stacking, 8 s; a green circle under them). Artisan: the second flask 4 ticks later, aimed anew. Arcane Scholar: a puddle of 3 for 5 s (a `Zone`), 4 a second and Corroded again while they stand in it; up to three puddles at once.
+- **Recall**: `combat/History.asFarAs(player, 60)` (100 from 5, 160 from 1): where you stood that long ago, or as far back as it goes. Refused (free) when held (`Root` MOVE or TELEPORT), when you have not moved, or when that spot is blocked now. Half of the health lost since then comes back; no fall damage for 2 s; the record starts afresh so it cannot chain. From Illuminator, the player ally under the crosshair (24) is sent back instead of you.
+- **Survey**: at `SURVEY_PULSE`, everything hostile within reach (a monster, a player not on your side, a mob hunting you) glows for 8 s and is `Exposed` for 3 (whatever hid is pulled out, with its look). Chat names how many and the one with the most maximum health, with its health and distance. Reach 40, 64 from Astronomer, half again while the Mechanical Body is worn (key 6 sets `MECH_UNTIL`).
+- **Ritual Circle**: a `Zone` named `Illuminator.RITUAL`, opened when the chalk is drawn (`RITUAL_DRAWN`). Every second: enemies inside get Slowness I; allies inside, and you, Regeneration I; every 3 seconds each ally loses its first harmful effect. Casting again moves it. `Illuminator.inRite(player, group)` is the Rite, `Illuminator.lasting(player, ticks, group)` the longer durations (Craftsman's Hands and the Rite).
+- **Appraise**: the mark lands at `APPRAISE_LANDS` (`status/Appraisal`, 12 s; 24 from Paragon), with the lens over the head in its weakness's picture, `Exposed` for as long, and a line in chat: health, effects, weakness and the abilities that match it. A player Appraised sees the Appraised picture. Magister: a ready Substitute is stripped as well. Appraising again renews the mark.
+- **Exploit Flaw**: needs your mark on the enemy under the crosshair (24; 64 from Paragon); without one it costs nothing and says so. At `FLAW_LANDS`: 90 that nothing softens (`Appraisal.strikeTrue`, so the mark's bonus is in it), held from moving and attacking for 1 s, the mark spent. A construct (`status/Construct`) is held 3 s, or taken apart outright under 150 maximum health. Arcane Scholar: its Substitute goes first. Illuminator: every other enemy you Appraised within 24 is struck too, for 60%.
+- **Clockwork Rifle**: hitscan, each round at what the crosshair is on at that moment (the volley follows your aim), 48 blocks, the first enemy on the line. 3 rounds, 5 from Alchemist. Through the Mechanical Body's arm cannon (`MECH_UNTIL`): it fires at once, half the cost, and the wheel's cooldown is reset after it (`AbilityWheel.resetCooldown`).
+- **Spirit Cannon**: a `Zone` named `illuminator_cannon_0` (and `_1` from Alchemist) on the ground you aim at (12 at most), 20 s (25 with Craftsman's Hands, more under the Rite). Every 2 s after it unfolds, a cannonball (`Shot`, 1.6 a tick) at the nearest enemy within 24 that the barrel can see and that can be chosen: 30 to the one it hits, 15 to the rest within 2.5. A new cannon replaces the one with the least time left.
+- **Mystic Brooch**: `status/ConjuredArmor` named `illuminator_brooch` with 60 absorption, on the ally under the crosshair (`Spells.aimAlly`, 24) or you; 60 s (75 with Craftsman's Hands). When the absorption is gone a tick after a blow, or the time runs out, or the wearer dies, it bursts: enemies within 5 are shoved and take 20. A new brooch on the same wearer replaces the old one quietly.
+- **Star of Curses**: 40 at `CURSE_LANDS`. The ladder is kept per enemy (`IlluminatorAstronomy.LADDERS`): struck by the same caster within 12 s it climbs one step; the first strike and the one after Mutation are plain rays. Weakness II 8 s; Trauma: `Bleeding` 4 a second and `NoHeal` for 8 s; Mutation: `Enfeebled` 30% and `Vulnerable` 20% and glowing for 10 s.
+- **Blessing of Stars**: a `Zone` from `BLESSING_RISEN` for the rest of 8 s, 8 wide, once a second. Enemies: Slowness III, no jumping (`Root` JUMP), 2.5 times as heavy (`status/Gravity`), 3 damage. Allies and you: Jump Boost II, Slow Falling, Speed I. Players inside see Pressed Down or Weightless.
+- **False Constellations**: a `Zone` named `IlluminatorAstronomy.SKY`, 14 wide, 20 s. Your side inside, you too, is `Unreadable` from further than 6 (renewed every half second). A Meteor Shower whose middle is under it is 1.5 times as strong, 3.2 wide.
+- **Meteor Shower**: 8 meteors, one every half second, on random ground within 8 of where you aim (32). Each lands at `METEOR_LANDS` after its warning ring: 28 and a shove to every enemy within 2.5.
+- **Appraiser's Eye**: every 5 ticks, the name and health of the enemy under the crosshair within 24, as a `HudCounter` left of the hotbar (in its weakness's color once you Appraised it); it goes when you look away.
+- **Field Physique**: two more hearts (`beyonder/Physique`, checked once a second, off again if the Pathway changes); fall, drowning, cactus, berry-bush, in-wall and fly-into-wall damage a quarter less.
+- **Starlight**: at night under open sky, a fifth of your normal regeneration again every second, and Night Vision kept up.
+
+## The second half: how to write the rest
+
+Everything below plugs into hooks that are already there. The looks and sounds for every entry are ready in `IlluminatorFx` (the table under "Looks, sounds and pictures"), with the ticks to act at as constants.
+
+**The two wheels.** Copy `IlluminatorAstronomy.java` twice: `IlluminatorAlchemy.java` (key 6, `"illuminator_alchemy"`, title "Alchemy and Arcana", key Sequence 4, method `illuminatorAlchemy`) and `IlluminatorCivilization.java` (key 7, `"illuminator_civilization"`, title "Civilization", key Sequence 2, method `illuminatorCivilization`, `.radius(92)` for eight entries). On every entry keep `.costBy((player, cost) -> Illuminator.costFor(player, cost, "<entry key>", Group.ALCHEMY))` (`Group.CIVILIZATION` for key 7), and on the wheel `.onCast((player, sl, entry) -> Illuminator.afterCast(player, entry.key()))`: that is what makes Quick Study and the Rite work for them. Use `Illuminator.lasting(player, ticks, Group.ALCHEMY)` for anything that lasts (the Rite covers Alchemy from Sequence 4). The pictures are `IlluminatorFx.WHEEL_...`. Then:
+1. One line each in `PathwayAbilities.ALL` (key 6 at Sequence 4, key 7 at Sequence 2; `STEALABLE`), next to the five that are there.
+2. One `import static` and one call each in `network/SKeyPressAbilitySixUsed` and `SevenUsed` (the same two lines keys 1 to 5 have).
+3. In `Illuminator`: calls from `clearState` and `IlluminatorEvents.onIlluminatorLogout` for whatever the wheel keeps, as `IlluminatorWorkshop.clearState` and `IlluminatorAstronomy.forget` are.
+4. Fill in the N and M cells of the Illuminator row in [SEQUENCES.md](SEQUENCES.md), and move each entry from here to "What is built".
+
+**Key 6: Alchemy and Arcana** (`IlluminatorAlchemy`):
+- First write the spawning half of `Construct` (the table above). Every construct of the Illuminator: `Construct.mark` it, `Spells.addAllyCheck` is not needed (`Marionette.spawnSummon` already makes it the owner's).
+- Living Doll: the material from the block under the feet (`Construct`'s table), `IlluminatorFx.dollRise(sl, at, yaw, material)`, at `DOLL_STANDS` `Construct.build(...)` with the material's health (Stone 80 slow and steady, Straw 30 fast, Iron 50, Dust 20, Frost 30) and `IlluminatorFx.dollBody(sl, doll, material, ticks, tag)`. Their hits: a `LivingHurtEvent` whose attacker is a doll of that material (Dust: `Blind.apply(target, 40)`; Frost: Slowness II 40); the Iron Doll every 2 s throws a bolt (`IlluminatorFx.dollBolt`, `Illuminator.hit`-like damage 14 credited to the owner). On death `dollFall` (the Straw Doll shoves everything within 3). Arcane Scholar: two (the decoy one wears no model: `Taunt` the enemies within 10 onto it, it looks like the player); Magister: three. Limit name `"illuminator_doll"`.
+- Golem: `IlluminatorFx.golemAssemble`, a silent `Countdown.seconds(4).silent()`, at `GOLEM_STANDS` `Construct.build(..., EntityTypes.IRON_GOLEM, ..., 1800 ticks, 200 health, "illuminator_golem", 1)` and `golemBody`; every 3 s `golemTaunt(sl, golem, 10)` and `Taunt.apply(mob, golem, 60)` on each mob within 10; on each of its hits `golemStrike`. Leash 40. Arcane Scholar: two; Paragon: no timer (`ticks` 0 and `IlluminatorFx.FOREVER` for the model, shown again on login).
+- Mechanical Body: set `player.getPersistentData().putLong(Illuminator.MECH_UNTIL, now + ticks)` (Survey, Appraise and the Rifle already read it through `Illuminator.wearsMechanicalBody`), `ConjuredArmor.of("illuminator_mech").lasts(ticks).absorption(20)` with Resistance I kept up, Night Vision, and `IlluminatorFx.mechanicalBody`. The jetpack: in `IlluminatorEvents.onIlluminatorTick`, while `wearsMechanicalBody` and the player is not on the ground and holding jump (the server sees `player.getDeltaMovement().y` rising, or send the jump key with a small packet like `SKeyPressAbility...`), add 0.12 upward, spend one tick of 100 fuel (refilled on the ground), `IlluminatorFx.jet` every 2 ticks, `FallGuard.protect(player, 40)`. Cast again: the body comes off (`MECH_UNTIL` removed, `mechanicalBodyEnd`). Magister: cast again while worn turns into steam instead (`Concealment.hide(player, 80)`, Speed III, `steamForm` / `steamTrail`, re-form with `Spells.blinkSpot(player, sl, 24)` and `steamReform`). Illuminator: no timer (`statusForever`).
+- Dissociation: `Spells.enemiesOnLine(player, sl, eye, end, width / 2)` (1.5 wide; 3 from Magister) for 70 each (a corrosion hit: `Illuminator.hit(..., Weakness.CORROSION)`), `Construct.isConstruct` under 150 maximum health destroyed, `Substitute.disarm` and `Concealment.reveal` on each, a quarter of each armor piece's durability (`stack.setDamageValue(...)`), `IlluminatorFx.dissociation`, `dissolved`, and `blockFades` for the blocks the line crosses (`BlockPos.betweenClosed` along it; never changed). Paragon: `Appraisal.wipe(target)`, `Exposed.apply(target, 100)` (the Information Shredder).
+- Knowledge Spirit: `Concealment.hide(player, flight + 40)`, Speed III, `knowledgeSpirit(sl, player, from, to, flight)`; at the end beside the target (`Spells.freeSpotNear`) `mindEntered`, `spiritStepOut`, Eroded for 8 s: Nausea, `Enfeebled.apply(target, "illuminator_eroded", 0.3f, 160)`, and abilities 50% dearer (an `Illuminator.addCostRule` for an Eroded Illuminator; for any player a ticking flag that the key packets could read). No enemy in view: step out at `Spells.blinkSpot(player, sl, 20)`.
+
+**Key 7: Civilization** (`IlluminatorCivilization`):
+- Rewrite Principles: a `Zone` 14 wide, 12 s: enemies `Gravity.set(enemy, "illuminator_lifted", -0.05, 25)` (they float off the ground), no sprint (`Root` is too strong; `Spells.keepEffect(SLOWNESS, 0, ...)`), `FallGuard.protect` as it ends; allies Slow Falling and Speed I. "Combustion makes no flame": a `LivingHurtEvent` where the victim is an ally inside and the source is fire or an explosion from an enemy: cancel. `Illuminator.hit(..., Weakness.GRAVITY)` for any damage it does.
+- Colossus: `GiantForm` (Hand Of God's Giant Form) or `Physique` SCALE 1.0 more, Strength III, Resistance II, `ConjuredArmor` absorption 40 whose end (`onEnd`) ends the Colossus, `colossus` / `colossusStride` / `colossusStep` while walking (a tick check of horizontal speed); every step `Spells.keepEffect(enemy, SLOWNESS, 0, 20)` within 6. Cast again while it stands: the Fusion Beam (`fusionCharge`, then at `FUSION_FIRES` `Spells.enemiesOnLine(player, sl, eye, end, 2.0)` for 120 each and `fusionBeam`), its own 8 s `Cooldowns`.
+- Scrolls of Civilization: a `Dome.at(player.position(), 5).stopsProjectiles()` that follows nothing (or `Zone.around(player, 5)` with a `LivingHurtEvent` halving melee from outside it), `scrollsOfCivilization`; at the end `scrollsRelease` and for each enemy within 12 `Root.apply(enemy, 60, EVERYTHING)`, `immersed`, 40.
+- Mathematical Maze: on an enemy, `Root.apply(target, 160, RootRestriction.ABILITIES)` and a cage (`Dome.sphere(center, 1.6).keepsEnemiesIn()` with `.onBlock` doing 10 and `mazeTouch`), `mathematicalMaze`, `mazeEnd` at the spot. On an ally (`Spells.aimAlly`): Haste II, `Spells.cleanse`, and 20% cheaper abilities for 30 s (an `Illuminator.addCostRule` reading a flag on the ally), `enlightenment`.
+- Masterwork: `Zone.around(player, 20)` for 10 s, every 10 ticks `masterworkTick`; allies Strength I, Haste I, Regeneration I; enemies Slowness II, Weakness I, no sprint. `Illuminator.addAfterCast(player -> Zone.close(player, "illuminator_masterwork"))` ends it when anything else is cast (register it once; close only if the cast was not Masterwork itself).
+- Reality Knowledge: the ability lock (above) for 10 s (5 on a boss: `Illuminator.isBoss`), `realityKnowledge`, `forgottenEnd`. It also ends information abilities on you: Knowledge Emperor's Prying keeps a `PRY_UNTIL` on its caster; a general "being read" status is the clean way (Paragon's passive needs it too).
+- Illusory Book: up to three enemies within 4 of the target (not bosses): `Exile.banish(victim, 160, book, ...)` (100 for players) with `written` at the cast and `bookRelease` at the end, then 20% of their current health (`Spells.strikeTrue`). Exile already hides, holds and protects them, and `Exposed` leaves an Exile alone.
+- Mechanical Heaven: a `Zone` named `"illuminator_heaven"` 40 wide for 60 s: `addCostRule` 30% less for allies inside (and the Illuminator); enemies inside Slowness I, `Decay` with no health loss for the gear wear (or one durability a second by hand), and every 2 s one of their projectiles within the zone discarded with `heavenStatic`; constructs 1.5 times as strong (a `LivingHurtEvent` for hits whose attacker is `Construct.isConstruct` and the owner's heaven covers it) and no timer while inside. Cast again: it ends early.
+
+**Passives of Sequences 4 to 0** (lines in `SequencePassives` as `custom("Illuminator", N, Illuminator::...)`, or checks in `IlluminatorEvents`):
+- Constructor's Bond (4): once a second, for each of your constructs within 32, heal 1% and `IlluminatorFx.constructorsBond(viewer, construct)`.
+- Absorption (3): once a second, each enemy within 6 loses 1 (`Spells.strike(player, enemy, 1f)`), you heal half of it, 2 a second at most, `IlluminatorFx.absorption`.
+- Analysis (2): once a second, `Exposed.apply(one, 30)` on every enemy within 16 that hides, and `IlluminatorFx.analysis(viewer, one)`; a `Substitute` on them shows as `analysis` too.
+- Enlightenment Aura (1): allies within 16 spend 10% less (`addCostRule` for an Illuminator ally; others need a general hook in `Spells.paySpirituality`), and confusion, blindness and nausea on them are shortened (the Warlock's Mind trick in `KnowledgeEmperor`: deny the effect and put it on again shorter).
+- Reality Knowledge (0): `appraisedTicks` already doubles the marks; "nobody can read what you know" is `Study.addImmunity(one -> isIlluminator(one, 0))` and an `Exposed.addException` for the Paragon, with `IlluminatorFx.realityGuard` when one is refused.
+
+**Growth still to add with them:** Survey's residue at Arcane Scholar (Residue, above); the Ritual Circle's Rite already covers Alchemy from Sequence 4 once that wheel passes `Group.ALCHEMY`.
 
 ## Looks, sounds and pictures
 

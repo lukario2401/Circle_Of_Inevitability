@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
@@ -108,6 +109,11 @@ public final class SequencePassives {
         custom("Knowledge Emperor", 3, KnowledgeEmperor::clairaudience);                         // Clairvoyant: Clairaudience
         custom("Knowledge Emperor", 0, KnowledgeEmperor::hermitPresence);                        // Hermit: enemies near come to be known
         custom("Knowledge Emperor", 9, KnowledgeEmperor::enlightenment);                         // an Indoctrination's blessing
+
+        // ---- Illuminator (docs/ILLUMINATOR.md). Also in Illuminator itself: Quick Study's cheaper recasts (Sequence 9,
+        // in costFor), Field Physique's hearts and lighter falls (8), Appraiser's Eye by the hotbar (7), Craftsman's
+        // Hands in the Workshop wheel (6).
+        custom("Illuminator", 5, Illuminator::starlight);                                        // Astronomer: Starlight
     }
 
     // =========================

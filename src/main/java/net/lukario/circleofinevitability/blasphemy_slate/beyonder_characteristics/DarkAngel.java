@@ -9,6 +9,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityMenu;
@@ -818,6 +819,7 @@ public class DarkAngel {
             case HandOfGod.PATHWAY -> 0xB0FF7A1A;
             case Abomination.PATHWAY -> 0xB06C3082;
             case KnowledgeEmperor.PATHWAY -> 0xB0C070E8;
+            case Illuminator.PATHWAY -> 0xB0D9A441;
             case PATHWAY -> 0xB0D0283C;
             default -> HangedManFx.SOUL;
         };

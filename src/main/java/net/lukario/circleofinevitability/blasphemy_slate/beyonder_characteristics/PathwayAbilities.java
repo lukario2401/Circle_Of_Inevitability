@@ -9,6 +9,9 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodTwilight;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorAstronomy;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorWorkshop;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorKnowledge;
@@ -290,7 +293,19 @@ public final class PathwayAbilities {
             new Ability("Knowledge Emperor", 6, "Retellings and Prophecy", 4, SNEAK, STEALABLE,  // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> KnowledgeEmperorRetellings.knowledgeEmperorRetellings(player, level, sl, true)),
             new Ability("Knowledge Emperor", 7, "Knowledge", 2, SNEAK, STEALABLE,                // stolen: no wheel, its last (or a random) entry
-                    (player, level, sl) -> KnowledgeEmperorKnowledge.knowledgeEmperorKnowledge(player, level, sl, true)));
+                    (player, level, sl) -> KnowledgeEmperorKnowledge.knowledgeEmperorKnowledge(player, level, sl, true)),
+
+            // ---- Illuminator (docs/ILLUMINATOR.md). Keys 6 and 7 are the second half.
+            new Ability("Illuminator", 1, "Compound Flask", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> Illuminator.illuminatorCompoundFlask(player, level, sl, true)),
+            new Ability("Illuminator", 2, "Survey", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> Illuminator.illuminatorSurvey(player, level, sl, true)),
+            new Ability("Illuminator", 3, "Appraise", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> Illuminator.illuminatorAppraise(player, level, sl, true)),
+            new Ability("Illuminator", 4, "Workshop", 6, SNEAK, STEALABLE,                     // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> IlluminatorWorkshop.illuminatorWorkshop(player, level, sl, true)),
+            new Ability("Illuminator", 5, "Astronomy", 5, SNEAK, STEALABLE,                    // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> IlluminatorAstronomy.illuminatorAstronomy(player, level, sl, true)));
 
 
 
