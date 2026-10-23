@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
+import net.lukario.circleofinevitability.combat.Residue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -113,12 +114,18 @@ public class SoulCore {
             float seen = stored / multiplier;
             if (value < seen) Beyonder.costWaived();                         // (it paid: it went off)
             float after = storeSpirituality(player, stored + (value - seen) * multiplier);
-            if (after < stored) Digestion.onSpiritualitySpent(player, stored - after);
+            if (after < stored) {
+                Digestion.onSpiritualitySpent(player, stored - after);
+                Residue.spent(player);                                       // where it was cast (combat/Residue)
+            }
             return;
         }
         float before = getSpirituality(player);
         float after = setSpiritualityQuietly(player, value);
-        if (after < before) Digestion.onSpiritualitySpent(player, before - after);
+        if (after < before) {
+            Digestion.onSpiritualitySpent(player, before - after);
+            Residue.spent(player);                                           // where it was cast (combat/Residue)
+        }
     }
 
     /** Sets spirituality without feeding digestion (commands, a lower maximum after a Sequence change). Returns the stored value. */

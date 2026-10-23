@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraftforge.event.entity.player.AttackEntityEvent;
@@ -34,6 +35,7 @@ public final class MeleeCombos {
         register(Conqueror.MELEE_COMBO);
         register(PrinceOfAbolition.MELEE_COMBO);
         register(KnowledgeEmperor.MELEE_COMBO);
+        register(Illuminator.MELEE_COMBO);
     }
 
     private MeleeCombos() {}

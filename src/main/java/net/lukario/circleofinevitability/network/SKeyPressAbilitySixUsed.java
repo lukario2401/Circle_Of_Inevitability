@@ -25,6 +25,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneNightwatcher.knightOfMisfortuneNightwatcher;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFallen.princeOfAbolitionFallen;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorRetellings.knowledgeEmperorRetellings;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorAlchemy.illuminatorAlchemy;
 
 public class SKeyPressAbilitySixUsed {
 
@@ -65,6 +66,7 @@ public class SKeyPressAbilitySixUsed {
         abominationChains(player,level,serverLevel,false);
         princeOfAbolitionFallen(player,level,serverLevel,false);
         knowledgeEmperorRetellings(player,level,serverLevel,false);
+        illuminatorAlchemy(player,level,serverLevel,false);
 
     }
 }

@@ -26,6 +26,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility3;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes.princeOfAbolitionBribe;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor.knowledgeEmperorSpells;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator.illuminatorAppraise;
 
 public class SKeyPressAbilityThreeUsed {
 
@@ -67,6 +68,7 @@ public class SKeyPressAbilityThreeUsed {
         abominationRendingPounce(player,level,serverLevel,false);
         princeOfAbolitionBribe(player,level,serverLevel,false);
         knowledgeEmperorSpells(player,level,serverLevel,false);
+        illuminatorAppraise(player,level,serverLevel,false);
 
 
     }

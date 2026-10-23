@@ -97,6 +97,21 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | "Less each time": how often a player used something lately, as a multiplier (a story told too often, a trick that wears thin) | [`Tellings`](#tellings-less-each-time) | `combat/` |
 | Take every blessing and every ward off someone at once, or unmake a summon (a deletion, a word of unmaking) | [`Dispel`](#dispel) | `status/` |
 | Nothing can hurt, choose or hold someone for a while, though they are seen, and what would have hurt them is added up | [`Invulnerable`](#invulnerable) | `status/` |
+| "I have studied you": one caster's mark on an enemy for a while, its weakness, and every ability hit of theirs on it stronger (more again with the kind it is weak to) | [`Appraisal`](#appraisal) | `status/` |
+| What something is weak to, as data: rules read from the top, the first that fits wins | [`WeaknessTable`](#appraisal) | `status/` |
+| Someone cannot hide for a while: concealment, unnoticed and invisibility end and cannot take hold | [`Exposed`](#exposed) | `status/` |
+| Someone deals less damage for a while, with everything (the other half of `Vulnerable`) | [`Enfeebled`](#enfeebled) | `status/` |
+| Someone is heavier or lighter for a while: pressed down, floating, lifted off the ground | [`Gravity`](#gravity) | `status/` |
+| Someone cannot be picked out from further than a few blocks: far mobs forget them, far abilities cannot choose them | [`Unreadable`](#unreadable) | `status/` |
+| Build a creature that fights for you: a vanilla body of your choice, hidden under your model, with its own health, blow, size, timer, leash and a limit per owner (dolls, golems) | [`Construct.of(...).build(...)`](#construct) | `status/` |
+| Is this made rather than born (golems, constructs, an ability's own creations)? | [`Construct`](#construct) | `status/` |
+| No abilities for a while, but still melee: a player's keys refused, a mob's projectiles and special hits stopped | [`AbilityLock`](#abilitylock) | `status/` |
+| Where abilities were cast lately (who, Pathway, Sequence, where) | [`Residue`](#residue-where-abilities-were-cast) | `combat/` |
+| Every ability of every Pathway costs a player more or less while something lasts (an eroded mind, a blessing, a kingdom) | [`Spells.addCostScale`](#1-spells-aiming-and-enemies) | `combat/` |
+| Every cooldown a player starts is longer or shorter while something lasts | [`Cooldowns.addScale`](#cooldowns-for-single-keys) | `combat/` |
+| Where a player stood, and how hurt they were, a few seconds ago (a step back in time) | [`History`](#history-where-a-player-was) | `combat/` |
+| A cooldown on a single ability key, with the "ready again in" message | [`Cooldowns`](#cooldowns-for-single-keys) | `combat/` |
+| The ally under the crosshair (a ward pinned on a friend) | [`Spells.aimAlly`](#1-spells-aiming-and-enemies) | `combat/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 
@@ -173,6 +188,7 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | Call | What you get |
 |---|---|
 | `aimEnemy(player, sl, range)` | The enemy the player is looking at (not through walls), or `null`. It passes over one whose mind is concealed (`Unnoticed`), as do `aimFrom`, `aimGround` and `enemiesInSight` |
+| `aimAlly(player, sl, range)` | The ally the player is looking at (not through walls), or `null`: the caster's side (`isFriend`: team mates, pets, marionettes, summons), never the caster. For a ward pinned on a friend, a blessing, a step back sent to someone else |
 | `aimPoint(player, sl, range)` | Where the crosshair ends: on the first block in the way, else `range` blocks out |
 | `aimGround(player, sl, range)` | The ground being aimed at. Under the first enemy in the way, if there is one. Aimed at the open sky, with no ground within 24 blocks below, it is a point in the air |
 | `aimFrom(player, sl, from, range)` | The direction from `from` to what the crosshair is on. For things thrown from a hand or by a summon standing beside the player: thrown along the plain look direction they land a step to the side |
@@ -215,7 +231,8 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `keepEffect(entity, MobEffects.X, amplifier, ticks)` | A potion effect you put on again and again while something lasts (a zone, an aura, a beam). It leaves the effect alone while more than half of `ticks` is left, so wither and poison keep hurting (started afresh every few ticks they never would), and it never replaces a stronger effect by a weaker one |
 | `cleanse(entity)` | Removes every harmful potion effect and puts out fire |
 | `harmfulEffects(entity)` | The harmful effects on it right now |
-| `paySpirituality(player, cost)` | Takes the spirituality and returns `true`. If there is too little it takes nothing, tells the player and returns `false` |
+| `paySpirituality(player, cost)` | Takes the spirituality (after every `addCostScale` rule) and returns `true`. If there is too little it takes nothing, tells the player and returns `false` |
+| `addCostScale(player -> 1.5f)`, `costFor(player, cost)` | A rule, once in a static block, for what every ability of every Pathway costs a player now (1.5 = half again, 0.8 = 20% less); rules multiply. `paySpirituality` and the wheels (their check, their price and the cost under each icon) ask it; a stolen cast is never scaled. The Illuminator's Eroded, Enlightenment, Enlightenment Aura and Mechanical Heaven |
 | `sound(sl, at, SoundEvents.X, volume, pitch)` | A sound at a spot |
 | `casterStillHere(player, sl)` | `false` once the player died, left or changed dimension. Check it in the later steps of a spell |
 | `yawOf(direction)`, `flatLook(player)`, `rightOf(player)`, `turned(direction, degrees)`, `UP` | Directions. `turned` is how you make a fan of projectiles |
@@ -665,6 +682,46 @@ int told = Tellings.count(player, "my_pathway_tale", 6000);
 Ask `strength` before you `tell`, so the first is at full power. `sinceLast(player, key)` (ticks, `Integer.MAX_VALUE` for never) and `forget(player, key)`. Kept in the player's persistent data, so it survives a relog. A key may hold anything but commas.
 
 ---
+
+## History: where a player was
+
+Where every player stood, which way they looked and how much health they had, over the last 10 seconds (`KEEP_TICKS`), written every 2 ticks (`EVERY`). For anything that goes back in time: a step back, a wound undone, an echo that walks your path again. The Illuminator's Recall (`Illuminator.recall`).
+
+```java
+History.Moment then = History.asFarAs(player, 60);      // 3 seconds ago, or as far back as it goes (null: nothing yet)
+if (then != null && Spells.fits(player, sl, then.position())) {
+    float lost = Math.max(0f, then.health() - player.getHealth());
+    player.teleportTo(then.position().x, then.position().y, then.position().z);
+    player.heal(lost * 0.5f);
+    History.forget(player);                              // a step back cannot be stepped back again
+}
+```
+
+`ago(player, ticks)` (exactly that far back, or `null`), `asFarAs(player, ticks)`, `healthLost(player, ticks)`, `forget(player)`. A `Moment` is `position`, `yRot`, `xRot`, `health`, `tick`, `dimension`. Only players are followed; dying, logging out or changing dimension starts the record afresh. Not saved.
+
+## Residue: where abilities were cast
+
+Every time a player spends spirituality on an ability (`SoulCore.setSpirituality` going down: `SoulCore` writes it itself), a cast is written where they stand: who, their Pathway and Sequence, where, when. At most one a second for each player, kept a minute (`KEEP_TICKS`), not saved.
+
+```java
+for (Residue.Cast cast : Residue.near(sl, center, 64, 1200)) {   // newest first
+    MyFx.trace(viewer, cast.at(), DarkAngel.pathwayColor(cast.pathway()));
+}
+```
+
+`Cast` is `caster`, `pathway`, `sequence`, `at`, `dimension`, `tick`, and `age(sl)`. The Illuminator's Survey from Arcane Scholar.
+
+## Cooldowns: for single keys
+
+The wheels keep their own cooldowns; a single ability key can have one too, with the wheels' message.
+
+```java
+if (!Cooldowns.ready(player, "my_pathway_flask", "Compound Flask")) return;   // "Compound Flask is ready again in 1.5s."
+if (!Spells.paySpirituality(player, 250)) return;
+Cooldowns.start(player, "my_pathway_flask", 40);
+```
+
+`left(player, key)` (ticks, 0 = ready), `reset(player, key)`, `seconds(ticks)` ("1.5s"). `Cooldowns.addScale(player -> 1.5f)` (once, in a static block) makes every cooldown a player starts longer or shorter while it says so, single keys and every wheel alike (`AbilityWheel.cooldownFor` asks `Cooldowns.scaled`): the enemies in a Mechanical Heaven. Check it with the other "can it be cast" checks and start it after the cast went off. Saved on the player in game time. The Illuminator's keys 1 to 3 use it.
 
 ## Contagion: it passes from one enemy to the next
 
@@ -1290,6 +1347,118 @@ float taken = Invulnerable.end(player);          // ends now; everything it abso
 
 `isGranted(entity)`, `ticksLeft`, `absorbed` (so far). Every hit is cancelled (not the void or `/kill`) and its amount added; mobs that had it as their target forget it and cannot pick it again; `Spells` aiming passes over it; every `Root` on it is lifted. When its time runs out it simply ends: call `end` yourself to read what it took. Not saved.
 
+### Appraisal
+
+One caster has read an entity for a while: they know what it is weak to, and their **ability** hits on it land harder, by the mark's own bonus and by `MATCH_BONUS` (50%) more when the hit is of the kind it is weak to. Every caster has marks of their own. The Illuminator is built on it (`Illuminator.appraise`); it fits any "I have studied you, now I know where to strike".
+
+```java
+Appraisal.mark(player, target, "corrosion", 240, 0.15f);   // 12 s: weak to corrosion, +15% from my abilities
+Appraisal.strike(player, target, 36f, "corrosion");         // Spells.strike as an ability hit of that kind: +15% and +50%
+Appraisal.strikeTrue(player, target, 90f, null);            // Spells.strikeTrue, an ability hit of no kind: +15% only
+Appraisal.as("pierce", () -> Spells.strikeThrough(player, target, 30f));   // any damage code, counted the same way
+Appraisal.weakness(player, target);   Appraisal.isMarked(player, target);   Appraisal.markedBy(player);
+Appraisal.spend(player, target);      // a finisher used it up (false: there was none)
+Appraisal.wipe(target);               // every caster's mark off it
+Appraisal.addListener(new Appraisal.Listener() { ... });    // marked / ended(caster id, target, End): the look
+Appraisal.addImmunity(entity -> ...);                       // nobody can mark it (mark returns false)
+```
+
+- Only hits made inside `strike`, `strikeTrue` or `as` get the bonus: a melee swing does not, nor damage that comes later on its own (bleeding, corrosion). `isAbilityHit()` and `hitKind()` say what is landing right now, for a status of your own that cares.
+- The kind is any word your Pathway uses. What a target is weak to comes from a **`WeaknessTable`** of your own:
+
+```java
+private static final WeaknessTable WEAKNESS = WeaknessTable.otherwise("pierce")
+        .rule("pierce", one -> one instanceof Player)
+        .rule("starlight", one -> one.is(EntityTypeTags.UNDEAD) || Marionette.isSummoned(one))
+        .rule("corrosion", one -> Construct.isConstruct(one) || one.getArmorValue() >= 8);
+String weak = WEAKNESS.of(target);    // the first rule that fits, from the top; else "pierce"
+```
+
+- A mark ends when its time is up, when it is spent or wiped, when the target dies and when the caster logs out (`End`: `TIME`, `SPENT`, `WIPED`, `DIED`, `CASTER_GONE`). Not saved.
+
+### Exposed
+
+Someone cannot hide for a while: a `Concealment` on it ends, an `Unnoticed` ends, invisibility comes off and cannot be put on, every tick while it lasts. A survey that drags the hidden out, a mark that will not let go. The Illuminator's Survey and Appraise.
+
+```java
+Exposed.apply(target, 60);                 // 3 seconds; longer is kept
+Exposed.isExposed(entity)   Exposed.ticksLeft(entity)   Exposed.end(target)
+Exposed.addListener(one -> ...)            // it just pulled someone out of hiding: the look
+Exposed.addException(one -> ...)           // hiding that must be left alone (Exile already is)
+```
+
+An ability of your own that hides something on purpose while it may be Exposed (a body written into a book, a soul inside a host) needs an `addException`. Saved with the entity.
+
+### Enfeebled
+
+The other half of `Vulnerable`: something **deals** less damage for a while, with everything that names it as the attacker (melee, its arrows, its abilities).
+
+```java
+Enfeebled.apply(target, "my_pathway_sapped", 0.3f, 200);   // 10 s: 30% less
+Enfeebled.cut(entity)   Enfeebled.ticksLeft(entity, name)   Enfeebled.remove(target, name)   Enfeebled.clear(target)
+```
+
+Every reason has a name; the biggest running cut counts, and applying a name again never makes it shorter or smaller. Made before the target's armor. Saved with the entity. The Illuminator's Mutation (`IlluminatorAstronomy`); the planned Eroded uses it too.
+
+### Gravity
+
+Something is heavier or lighter for a while, through the game's own gravity attribute (no potion swirls, and a player's own screen agrees).
+
+```java
+Gravity.set(enemy, "my_pathway_crush", 3.0, 40);   // three times as heavy: it drops like a stone
+Gravity.set(ally, "my_pathway_float", 0.3, 40);    // long, slow jumps and falls
+Gravity.set(enemy, "my_pathway_lift", -0.15, 40);  // below 0: it falls upward, slowly (lifted off the ground)
+Gravity.factor(entity)   Gravity.ticksLeft(entity, name)   Gravity.clear(entity, name)   Gravity.clearAll(entity)
+```
+
+Reasons multiply together. It does not stop fall damage: lift someone with `FallGuard` as well. Saved with the entity. Blessing of Stars presses enemies down with it; Rewrite Principles and Mechanical Heaven are planned on it.
+
+### Unreadable
+
+Someone cannot be picked out from further than a few blocks: mobs further away cannot target it (and those hunting it from further lose it), and abilities cannot **choose** it from further (`Spells.canBeChosen`; with no chooser named, not at all). It is seen and can be hurt; what hits an area still catches it.
+
+```java
+Unreadable.apply(ally, 20, 6.0);       // 1 s, 6 blocks: put it on again every half second from a zone
+Unreadable.isUnreadable(entity)   Unreadable.range(entity)   Unreadable.ticksLeft(entity)   Unreadable.end(entity)
+```
+
+Saved with the entity. The Illuminator's False Constellations.
+
+### Construct
+
+What is made rather than born: iron and snow golems, anything built or `mark`ed, anything an `addCheck` rule names. Abilities that take things apart ask `isConstruct` (the Illuminator's Exploit Flaw and Dissociation).
+
+```java
+Construct.isConstruct(target)   Construct.mark(mob)   Construct.addCheck(entity -> ...)
+```
+
+It also **builds** them: a vanilla mob called up for its owner (`Marionette`'s summon: it fights for them and vanishes without drops), with the body you say, invisible and silent so only your model shows.
+
+```java
+Mob golem = Construct.of(EntityTypes.IRON_GOLEM)
+        .health(200).damage(20).steady()            // its health, its blow, no knockback
+        .speed(1.2f).scale(0.75f)                   // times its own (optional)
+        .lasts(1800).leash(40)                      // 0 = no timer; gone when the owner is further than 40 (or gone)
+        .limit("my_pathway_golem", 1)               // one at a time: a new one ends the oldest (REPLACED)
+        .onEnd((made, why) -> MyFx.golemEnd(sl, made, tag))   // DIED, TIME, REPLACED, LEASH, OWNER_GONE, ENDED
+        .build(player, sl, feet, yaw);              // null if it could not be made there
+MyFx.golemBody(sl, golem, 1800, tag);               // the look is yours
+```
+
+`.shown()` keeps the vanilla body visible (a decoy that looks like a person). `ofOwner(player, group)` (oldest first; `null` = all), `ownerOf(entity)`, `isBuilt(entity)`, `ticksLeft(mob)`, `extend(mob, ticks)` (a kingdom where made things do not run out), `end(mob)`, `endAll(player, group)`. After a restart a built one is a plain summon that runs out (`lasts` plus two seconds, or an hour). The Illuminator's Living Doll and Golem (`IlluminatorAlchemy`).
+
+### AbilityLock
+
+No abilities for a while, but the hands still work: a player's ability keys are refused (`Root`'s ABILITIES), a mob's projectiles vanish as they are fired and every hit it makes that is not its own body striking is stopped, so it fights only in melee. Unlike `Silence`, a mob keeps its melee.
+
+```java
+AbilityLock.apply(target, 160);        // false: immune or dead
+AbilityLock.isLocked(entity)   AbilityLock.ticksLeft(entity)   AbilityLock.lift(target)
+AbilityLock.addImmunity(entity -> ...)
+```
+
+Saved with the entity. The Illuminator's Mathematical Maze and Reality Knowledge (`IlluminatorCivilization`).
+
 ### Connection
 
 Who a player is connected to: someone they hit, cursed, chained or sentenced lately. For a curse that reaches across the world, a scrying, a mark that finds its bearer anywhere.
@@ -1749,6 +1918,7 @@ private static AbilityWheel.Result fireball(ServerPlayer player, ServerLevel sl)
 | `.costBy((player, cost) -> ...)` | After an entry: its cost worked out when it is cast and shown under its icon. `cost` is what it costs otherwise (already times a recast's price). Raise Mausoleum costs 100 more for every mausoleum standing; a Bribe on a Connected enemy costs half |
 | `open(player)`, `quickCast(player)`, `cast(player, entry)` | Show it / cast the last pick / cast one entry with every check |
 | `lastPick(player)`, `entry(key)`, `entries()`, `unlocked(player)`, `cooldownLeft(player, entry)`, `reset(player)` | Asking about it |
+| `resetCooldown(player, key)` | That one entry is ready again now (the Illuminator's arm cannon fires again at once: `IlluminatorWorkshop`) |
 
 What the cast returns:
 
@@ -1989,6 +2159,9 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `Study` (every hit on what you know is stronger; an eye only the caster sees through a listener), `Scrolls` (four kinds registered at once, read later, written by hand), `Orbit` with `KnowledgeEmperorFx.starGuardTick` as its look, a wheel whose every entry's cost goes through one rule (`.costBy(KnowledgeEmperor::costFor)`: a free next cast), `Substitute` + `EmpoweredHit` (slip a blow, the next hit is a strike), `Spells.strikeTrue` for "ignores armor" | `pry`, `spellbolts`, `readScroll`, `inscribe`, `sidestep`, `costFor` / `pay` / `afterCast` in `KnowledgeEmperor.java`; `cage`, `stellarSelf`, `fall`, `starGuard` in `KnowledgeEmperorStars.java` |
 | `Tellings` (Obscurity), `Slumber` with a stronger waking blow, an armor-free hit on one marked target (as `strikeTrue` does, by hand), `Countdown` with a rebound, `Invulnerable` + a lure to a decoy, `Dispel`, `Study.takeAround`, `Concealment` that ends on any other cast, `AbilityWheel.cooldownBy`, a `Zone` that halves costs and refills a pouch | `beauty`, `achillesHeel`, `prophecyOfRuin` in `KnowledgeEmperorRetellings.java`; `informatization`, `erase`, `condenseKnowledge`, `embodiment`, `indoctrination`, `divineKingdom` in `KnowledgeEmperorKnowledge.java` |
 | `Corrosion` with a listener for its look, `Falter` through a mark's miss share, `Wall` (a gate), `Dome.crossedBy` + `Dome.flip`, `Zone.covers` (a field that swings damage and makes casts free), `Zone.addShelter`, `Exile` (an enemy, an ally, yourself), `Spells.strikeTrue`, `AbilityWheel.free` for a recast that closes | `corrosion`, `blast`, `magnify`, `exploit` in `PrinceOfAbolitionFallen.java`; `ruin`, `entropy`, `abolition`, `exile`, `decree` in `PrinceOfAbolitionSovereign.java`; `gate`, `aimedShell`, the events in `PrinceOfAbolition.java` |
+| `Appraisal` with a `WeaknessTable` and a listener for the lens, every hit routed through one helper that names its kind (`hit`), `Exposed`, `History` (a step back with half the lost health), `Cooldowns` on single keys, one cost rule for keys and wheels (`costFor` / `pay` / `afterCast`, with `addCostRule` for later), a `Zone` that helps allies and slows enemies and counts its own beats, `Zone.covers` for a bonus to casts made inside it | `appraise`, `exploitFlaw`, `flawGives`, `recall`, `survey`, `ritualCircle`, `costFor`, `lasting` in `Illuminator.java` |
+| `Construct` builders with a material table and a decoy (`.shown()` with copied gear and `Taunt`), creative flight with fuel as a jetpack, `Concealment` + `Spells.blinkSpot` as a steam form, a beam through blocks that touches the hidden too (`Spells.isFriend`), `Enfeebled` + `Spells.addCostScale` (Eroded), a wheel entry that is free while what it made lasts (`.free(...)`); `GiantForm` + `ConjuredArmor` that end each other, a held target kept in its cube by hand, `AbilityLock`, `Exile` with a toll on return, a `Zone` that keeps constructs going (`Construct.extend`) and scales costs and cooldowns (`Cooldowns.addScale`) | `livingDoll`, `golem`, `mechanicalBody`, `bodyTick`, `dissociation`, `knowledgeSpirit` in `IlluminatorAlchemy.java`; `rewritePrinciples`, `colossus`, `mathematicalMaze`, `illusoryBook`, `mechanicalHeaven` in `IlluminatorCivilization.java` |
+| A hitscan volley that carries the target's weakness, a `Zone` used as a turret (it fires on its own beat, a `Shot` each time), `ConjuredArmor` as a ward that bursts when used up, `Spells.aimAlly`, `AbilityWheel.resetCooldown`; a ladder of curses (`Bleeding` + `NoHeal`, `Enfeebled` + `Vulnerable`), `Gravity` in a `Zone`, `Unreadable` put on again by a `Zone`, a shower that is stronger under another of your zones | `clockworkRifle`, `spiritCannon`, `mysticBrooch` in `IlluminatorWorkshop.java`; `starOfCurses`, `blessingOfStars`, `falseConstellations`, `meteorShower` in `IlluminatorAstronomy.java` |
 
 ## Tricks worth copying
 
@@ -2217,4 +2390,4 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | "Not enough spirituality." is in chat, not above the hotbar | The line above the hotbar is rewritten every tick by the spirituality display |
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
-The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`, `Study`, `Scrolls`, `Dispel`, `Invulnerable`). `combat/Orbit` circles a player with guarding bodies, `combat/Tellings` counts uses. `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`, `Study`, `Scrolls`, `Dispel`, `Invulnerable`, `Appraisal`, `WeaknessTable`, `Exposed`, `Enfeebled`, `Gravity`, `Unreadable`, `Construct`, `AbilityLock`). `combat/History` remembers where players were, `combat/Cooldowns` keeps single keys' cooldowns, `combat/Residue` where abilities were cast. `combat/Orbit` circles a player with guarding bodies, `combat/Tellings` counts uses. `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
