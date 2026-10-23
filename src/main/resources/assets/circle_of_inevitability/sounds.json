@@ -1973,5 +1973,462 @@
         "name": "circle_of_inevitability:knowledge_emperor/law_of_three"
       }
     ]
+  },
+  "illuminator.flask_throw": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.flask_throw",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/flask_throw"
+      }
+    ]
+  },
+  "illuminator.flask_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.flask_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/flask_burst_1"
+      },
+      {
+        "name": "circle_of_inevitability:illuminator/flask_burst_2"
+      }
+    ]
+  },
+  "illuminator.acid_hiss": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.acid_hiss",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/acid_hiss"
+      }
+    ]
+  },
+  "illuminator.recall": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.recall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/recall"
+      }
+    ]
+  },
+  "illuminator.survey": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.survey",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/survey"
+      }
+    ]
+  },
+  "illuminator.ritual_circle": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.ritual_circle",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/ritual_circle"
+      }
+    ]
+  },
+  "illuminator.ritual_pulse": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.ritual_pulse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/ritual_pulse"
+      }
+    ]
+  },
+  "illuminator.appraise": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.appraise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/appraise"
+      }
+    ]
+  },
+  "illuminator.exploit_flaw": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.exploit_flaw",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/exploit_flaw"
+      }
+    ]
+  },
+  "illuminator.construct_break": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.construct_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/construct_break"
+      }
+    ]
+  },
+  "illuminator.rifle_wind": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.rifle_wind",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/rifle_wind"
+      }
+    ]
+  },
+  "illuminator.rifle_shot": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.rifle_shot",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/rifle_shot_1"
+      },
+      {
+        "name": "circle_of_inevitability:illuminator/rifle_shot_2"
+      }
+    ]
+  },
+  "illuminator.cannon_unfold": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.cannon_unfold",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/cannon_unfold"
+      }
+    ]
+  },
+  "illuminator.cannon_fire": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.cannon_fire",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/cannon_fire"
+      }
+    ]
+  },
+  "illuminator.cannon_blast": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.cannon_blast",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/cannon_blast"
+      }
+    ]
+  },
+  "illuminator.brooch_pin": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.brooch_pin",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/brooch_pin"
+      }
+    ]
+  },
+  "illuminator.brooch_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.brooch_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/brooch_burst"
+      }
+    ]
+  },
+  "illuminator.star_curse": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.star_curse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/star_curse"
+      }
+    ]
+  },
+  "illuminator.curse_step": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.curse_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/curse_step"
+      }
+    ]
+  },
+  "illuminator.blessing_stars": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.blessing_stars",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/blessing_stars"
+      }
+    ]
+  },
+  "illuminator.false_constellations": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.false_constellations",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/false_constellations"
+      }
+    ]
+  },
+  "illuminator.meteor_fall": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.meteor_fall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/meteor_fall"
+      }
+    ]
+  },
+  "illuminator.meteor_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.meteor_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/meteor_impact"
+      }
+    ]
+  },
+  "illuminator.doll_rise": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.doll_rise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/doll_rise"
+      }
+    ]
+  },
+  "illuminator.doll_fall": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.doll_fall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/doll_fall"
+      }
+    ]
+  },
+  "illuminator.golem_assemble": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.golem_assemble",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/golem_assemble"
+      }
+    ]
+  },
+  "illuminator.golem_strike": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.golem_strike",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/golem_strike"
+      }
+    ]
+  },
+  "illuminator.golem_taunt": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.golem_taunt",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/golem_taunt"
+      }
+    ]
+  },
+  "illuminator.mech_on": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.mech_on",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/mech_on"
+      }
+    ]
+  },
+  "illuminator.jetpack": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.jetpack",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/jetpack"
+      }
+    ]
+  },
+  "illuminator.mech_off": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.mech_off",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/mech_off"
+      }
+    ]
+  },
+  "illuminator.dissociation": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.dissociation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/dissociation"
+      }
+    ]
+  },
+  "illuminator.knowledge_spirit": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.knowledge_spirit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/knowledge_spirit"
+      }
+    ]
+  },
+  "illuminator.mind_enter": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.mind_enter",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/mind_enter"
+      }
+    ]
+  },
+  "illuminator.absorption": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.absorption",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/absorption"
+      }
+    ]
+  },
+  "illuminator.rewrite_principles": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.rewrite_principles",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/rewrite_principles"
+      }
+    ]
+  },
+  "illuminator.colossus_assemble": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.colossus_assemble",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/colossus_assemble"
+      }
+    ]
+  },
+  "illuminator.colossus_step": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.colossus_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/colossus_step"
+      }
+    ]
+  },
+  "illuminator.fusion_charge": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.fusion_charge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/fusion_charge"
+      }
+    ]
+  },
+  "illuminator.fusion_beam": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.fusion_beam",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/fusion_beam"
+      }
+    ]
+  },
+  "illuminator.steam_form": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.steam_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/steam_form"
+      }
+    ]
+  },
+  "illuminator.steam_reform": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.steam_reform",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/steam_reform"
+      }
+    ]
+  },
+  "illuminator.analysis": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.analysis",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/analysis"
+      }
+    ]
+  },
+  "illuminator.scrolls_unfold": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.scrolls_unfold",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/scrolls_unfold"
+      }
+    ]
+  },
+  "illuminator.scrolls_release": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.scrolls_release",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/scrolls_release"
+      }
+    ]
+  },
+  "illuminator.immersion": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.immersion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/immersion"
+      }
+    ]
+  },
+  "illuminator.maze_close": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.maze_close",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/maze_close"
+      }
+    ]
+  },
+  "illuminator.enlightenment": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.enlightenment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/enlightenment"
+      }
+    ]
+  },
+  "illuminator.masterwork": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.masterwork",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/masterwork"
+      }
+    ]
+  },
+  "illuminator.reality_knowledge": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.reality_knowledge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/reality_knowledge"
+      }
+    ]
+  },
+  "illuminator.book_write": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.book_write",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/book_write"
+      }
+    ]
+  },
+  "illuminator.book_release": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.book_release",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/book_release"
+      }
+    ]
+  },
+  "illuminator.mechanical_heaven": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.mechanical_heaven",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/mechanical_heaven"
+      }
+    ]
+  },
+  "illuminator.gear_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.gear_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/gear_swing_1"
+      },
+      {
+        "name": "circle_of_inevitability:illuminator/gear_swing_2"
+      }
+    ]
+  },
+  "illuminator.page_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.page_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/page_swing"
+      }
+    ]
+  },
+  "illuminator.blueprint_strike": {
+    "subtitle": "subtitles.circle_of_inevitability.illuminator.blueprint_strike",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:illuminator/blueprint_strike"
+      }
+    ]
   }
 }

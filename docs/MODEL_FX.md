@@ -717,6 +717,46 @@ Star Guard's stars circle the caster with `ParticleShapes.moveModel`: call `star
 
 Statuses: `KnowledgeEmperorFx.status(player, Status.FORESIGHT, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away. `pouch(player, scrolls)` shows the scrolls in the row beside the hotbar, where the Attendant's stacks are.
 
+### Illuminator: ready-made displays
+
+`IlluminatorFx` (in `beyonder_characteristics/illuminator/`) holds the Illuminator (Paragon pathway) looks for all seven keys, both casts, the four wheels (Workshop on key 4, Astronomy on key 5, Alchemy and Arcana on key 6, Civilization on key 7), the Appraised mark, the statuses, the passives that show, the melee combo and what grows at higher Sequences (the acid puddle, Recall on an ally, Exploit Flaw on every mark, the arm cannon, the steam form). The abilities are not written yet; the displays are ready for them. They only show things; the damage, holding, hiding, healing and moving are the ability's, at the ticks the constants name (`SURVEY_PULSE`, `RITUAL_DRAWN`, `APPRAISE_LANDS`, `FLAW_LANDS`, `RIFLE_FIRES`, `RIFLE_STEP`, `CANNON_READY`, `CURSE_LANDS`, `BLESSING_RISEN`, `METEOR_LANDS`, `DOLL_STANDS`, `GOLEM_STANDS`, `GOLEM_STRIKE_LANDS`, `MECH_ON`, `PRINCIPLES_RISEN`, `COLOSSUS_READY`, `FUSION_FIRES`, `SCROLLS_FLY`, `MAZE_CLOSED`, `REALITY_LANDS`, `BOOK_OPEN`, `BOOK_RELEASES`, `HEAVEN_RISEN`). The class comment lists every call by key; [ILLUMINATOR.md](ILLUMINATOR.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/illuminator/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` (+ `textures.py`, `pictures.py`) | The models and their textures in `models/model_fx/illuminator/` and `textures/model_fx/illuminator/` (`../hanged_man/render.py` draws the box models without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/illuminator/`), the status pictures (`textures/gui/illuminator/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/gear`, `steam`, `equation_0` to `equation_2`, `spring`, `screw`, `lens`, `compass` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/illuminator/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`ILLUMINATOR_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` and `../knowledge_emperor/sounds.py` |
+
+**See them in game** (cheats on): `/illuminatorfx all` or `/illuminatorfx golem` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+| Model | What it is | Pivot | Notes |
+|---|---|---|---|
+| `illuminator/flask` | The Compound Flask: a round-bottomed flask of glowing yellow-green acid, cork, brass collar, 0.85 blocks | its belly `(8, 5, 8)` | `.glow().seeThrough()`; `FLASK_FLYING` tumbles it for a `Shot` |
+| `illuminator/clockwork_rifle` | A brass-and-walnut rifle with a spring drum, a gear, a winding key, a copper scope, a gauge and a line of blueprint light; 2.3 blocks | the grip `(8, 6, 13)` | Muzzle north at `(8, 10, -13)`. `.scale(0.55f)` in the hands |
+| `illuminator/rifle_round` | A brass bullet with a ring of blue light and a short streak | `(8, 8, 8)` | Top = its front: `Shot`, `modelAlong` |
+| `illuminator/spirit_cannon`, `spirit_cannon_barrel` | The cannon's carriage on two gear-wheels with a little boiler; its barrel with blue runes and a glowing bore | default; the trunnions `(8, 10, 9)` | Play both at one spot; aim the barrel with `moveModel` (pitch: negative raises it) |
+| `illuminator/cannonball` | An iron ball girdled with blue light, 0.4 blocks | `(8, 8, 8)` | |
+| `illuminator/mystic_brooch` | Brass filigree with a toothed rim round a blue gem with a gear inside, 0.5 blocks, standing | `(8, 8, 8)` | Gem = north |
+| `illuminator/doll_stone`, `doll_straw`, `doll_iron`, `doll_dust`, `doll_frost` | The five Living Dolls, about 1.45 blocks, jointed, each of its own material (the straw one with a hat and stitched face, the iron one with a bolt-thrower, the dust one hooded, the frost one crowned with ice) | between the feet | `modelOnTurning` on the doll's mob, `.scale(height / 1.45)`. Frost: `.seeThrough()` |
+| `illuminator/golem` | A brass-and-iron golem 3 blocks tall in 3 steps: 0 standing, 1 arms drawn back, 2 striking | between the feet `(8, -16, 8)` | `.frames(3).smooth()` |
+| `illuminator/mechanical_body`, `mechanical_goggles`, `arm_cannon` | Brass plates over a player with a jetpack of two copper tanks; goggles with a magnifier; the right arm's cannon | default; the goggles `(8, 0, 8)` = the top of the head | `modelOnTurning`; the goggles with `modelOnHead(..., 0, ...)` |
+| `illuminator/colossus` | A walking machine 3 blocks tall at scale 1, in 3 steps: 0 standing, 1 a stride, 2 the Fusion Beam raised; the pilot stands in the cage between its legs | the cage floor `(8, -16, 8)` | `.frames(3).smooth().scale(2f)` (6 blocks) |
+| `illuminator/gear` | A brass gear, 16 teeth, 1 block, lying flat | its hub `(8, 8, 8)` | `.spin(...)`; pitch 90 stands it up |
+| `illuminator/scroll` | A rolled scroll with brass caps and a band of blue light, lying east-west | `(8, 8, 8)` | |
+| `illuminator/baton` | A conductor's baton with a point of white-gold light, tip up | the grip `(8, 2, 8)` | |
+| `illuminator/star_meteor` | A meteor of starlight with two crossed planes of tail | the core `(8, 8, 8)` | Top = its front; drop it head first (pitch 180) |
+| `illuminator/illusory_book` | A great book in 3 steps: 0 shut on its spine, 1 falling open, 2 wide open | the bottom of the spine | `.frames(3).smooth()` |
+| `illuminator/appraisal_starlight`, `_corrosion`, `_gravity`, `_pierce` | The Appraised lens with the weakness in it; their own colors | `(8, 8, 8)` | Standing |
+| `illuminator/flaw_mark`, `curse_weakness`, `curse_trauma`, `curse_mutation`, `eroded_mark`, `rejection_seal`, `recall_clock`, `illuminator_emblem` | A measured crack; the three steps of the curse ladder; a dissolving page; a struck-out book; a clock turning back (animated); the lamp in its gear | `(8, 8, 8)` | Standing, white: tint them |
+| `illuminator/blueprint_circle`, `chalk_circle`, `blueprint_spiral`, `star_chart`, `principle_circle`, `symphony_ring` | Flat circles: blueprint, chalk, a compass-drawn spiral, a star chart, struck-out laws with rising arrows, a ring of music | default | Flat, white: tint them |
+| `illuminator/acid_pool`, `false_sky`, `gear_sky` | The acid's puddle, a disc of fake night sky, the sky of gears (all animated) | default | Flat, their own colors |
+| `illuminator/equation_lattice` | A cube of lattice bars with equations drifting along them (animated), six faces | default | `.scale(3f)` is the maze's cube |
+| `illuminator/mist_beam`, `fusion_beam` | Two crossed planes of misty light / a white-hot core with rings (animated) | default = the middle of their start | `modelAlong` and `.scale(width, length, width)` |
+| `illuminator/mural_0` to `mural_3` | Murals of the ancients, the seafarers, a cathedral and the age of steam between brass rods; their own colors | default | Standing, `.scale(width, height, 1)` |
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.

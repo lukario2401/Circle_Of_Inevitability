@@ -16,8 +16,9 @@ import net.minecraftforge.registries.RegistryObject;
  * A new sound: its .ogg (mono, so it is placed in the world) in sounds/, an event in sounds.json with the same name
  * as here, a subtitle in lang/en_us.json, and a line below. The Beauty Goddess ones are made by
  * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, the Abomination ones by
- * tools/model_gen/abomination/sounds.py, the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py and the
- * Knowledge Emperor ones by tools/model_gen/knowledge_emperor/sounds.py, which write
+ * tools/model_gen/abomination/sounds.py, the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py, the
+ * Knowledge Emperor ones by tools/model_gen/knowledge_emperor/sounds.py and the Illuminator ones by
+ * tools/model_gen/illuminator/sounds.py, which write
  * the .ogg files, sounds.json and the subtitles' names.
  */
 public final class ModSounds {
@@ -532,4 +533,119 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> KNOWLEDGE_KINGDOM = sound("knowledge_emperor.kingdom");
     /** The Law of Three. */
     public static final RegistryObject<SoundEvent> KNOWLEDGE_LAW_OF_THREE = sound("knowledge_emperor.law_of_three");
+
+    // ---------- Illuminator (tools/model_gen/illuminator/sounds.py) ----------
+
+    /** A flask is thrown. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_FLASK_THROW = sound("illuminator.flask_throw");
+    /** A flask bursts. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_FLASK_BURST = sound("illuminator.flask_burst");
+    /** Acid hisses. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_ACID_HISS = sound("illuminator.acid_hiss");
+    /** Someone steps back in time. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_RECALL = sound("illuminator.recall");
+    /** A survey pulse spreads. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_SURVEY = sound("illuminator.survey");
+    /** A chalk circle is drawn. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_RITUAL_CIRCLE = sound("illuminator.ritual_circle");
+    /** The ritual circle hums. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_RITUAL_PULSE = sound("illuminator.ritual_pulse");
+    /** Something is appraised. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_APPRAISE = sound("illuminator.appraise");
+    /** A flaw is struck. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_EXPLOIT_FLAW = sound("illuminator.exploit_flaw");
+    /** A construct falls apart. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_CONSTRUCT_BREAK = sound("illuminator.construct_break");
+    /** Clockwork winds. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_RIFLE_WIND = sound("illuminator.rifle_wind");
+    /** A clockwork rifle fires. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_RIFLE_SHOT = sound("illuminator.rifle_shot");
+    /** A cannon unfolds. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_CANNON_UNFOLD = sound("illuminator.cannon_unfold");
+    /** A spirit cannon fires. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_CANNON_FIRE = sound("illuminator.cannon_fire");
+    /** A cannonball bursts. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_CANNON_BLAST = sound("illuminator.cannon_blast");
+    /** A brooch is pinned. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_BROOCH_PIN = sound("illuminator.brooch_pin");
+    /** A brooch shatters. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_BROOCH_BURST = sound("illuminator.brooch_burst");
+    /** A ray of cursed starlight. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_STAR_CURSE = sound("illuminator.star_curse");
+    /** A curse deepens. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_CURSE_STEP = sound("illuminator.curse_step");
+    /** Starlight presses down. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_BLESSING_STARS = sound("illuminator.blessing_stars");
+    /** A false sky opens. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_FALSE_CONSTELLATIONS = sound("illuminator.false_constellations");
+    /** A meteor falls. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_METEOR_FALL = sound("illuminator.meteor_fall");
+    /** A meteor strikes. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_METEOR_IMPACT = sound("illuminator.meteor_impact");
+    /** A doll rises from the ground. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_DOLL_RISE = sound("illuminator.doll_rise");
+    /** A doll crumbles. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_DOLL_FALL = sound("illuminator.doll_fall");
+    /** A golem assembles. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_GOLEM_ASSEMBLE = sound("illuminator.golem_assemble");
+    /** A golem strikes. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_GOLEM_STRIKE = sound("illuminator.golem_strike");
+    /** A golem calls out. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_GOLEM_TAUNT = sound("illuminator.golem_taunt");
+    /** Mechanical plates clamp on. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_MECH_ON = sound("illuminator.mech_on");
+    /** A jetpack roars. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_JETPACK = sound("illuminator.jetpack");
+    /** Mechanical plates come away. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_MECH_OFF = sound("illuminator.mech_off");
+    /** Dissociation beams out. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_DISSOCIATION = sound("illuminator.dissociation");
+    /** Someone turns into pages. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_KNOWLEDGE_SPIRIT = sound("illuminator.knowledge_spirit");
+    /** A mind is entered. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_MIND_ENTER = sound("illuminator.mind_enter");
+    /** Life is absorbed. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_ABSORPTION = sound("illuminator.absorption");
+    /** The laws are rewritten. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_REWRITE_PRINCIPLES = sound("illuminator.rewrite_principles");
+    /** A colossus assembles. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_COLOSSUS_ASSEMBLE = sound("illuminator.colossus_assemble");
+    /** A colossus steps. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_COLOSSUS_STEP = sound("illuminator.colossus_step");
+    /** A fusion beam charges. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_FUSION_CHARGE = sound("illuminator.fusion_charge");
+    /** A fusion beam fires. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_FUSION_BEAM = sound("illuminator.fusion_beam");
+    /** Someone dissolves into steam. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_STEAM_FORM = sound("illuminator.steam_form");
+    /** Steam takes shape again. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_STEAM_REFORM = sound("illuminator.steam_reform");
+    /** Something is seen through. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_ANALYSIS = sound("illuminator.analysis");
+    /** Scrolls of civilization unfold. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_SCROLLS_UNFOLD = sound("illuminator.scrolls_unfold");
+    /** Scrolls fly outward. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_SCROLLS_RELEASE = sound("illuminator.scrolls_release");
+    /** A vision of a lost age. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_IMMERSION = sound("illuminator.immersion");
+    /** A lattice of equations closes. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_MAZE_CLOSE = sound("illuminator.maze_close");
+    /** Enlightenment. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_ENLIGHTENMENT = sound("illuminator.enlightenment");
+    /** A symphony plays. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_MASTERWORK = sound("illuminator.masterwork");
+    /** Knowledge is rejected. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_REALITY_KNOWLEDGE = sound("illuminator.reality_knowledge");
+    /** Someone is written into a book. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_BOOK_WRITE = sound("illuminator.book_write");
+    /** Someone steps out of a book. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_BOOK_RELEASE = sound("illuminator.book_release");
+    /** Mechanical Heaven descends. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_MECHANICAL_HEAVEN = sound("illuminator.mechanical_heaven");
+    /** Gears sweep the air. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_GEAR_SWING = sound("illuminator.gear_swing");
+    /** Pages sweep the air. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_PAGE_SWING = sound("illuminator.page_swing");
+    /** A blueprint strike. */
+    public static final RegistryObject<SoundEvent> ILLUMINATOR_BLUEPRINT_STRIKE = sound("illuminator.blueprint_strike");
 }
