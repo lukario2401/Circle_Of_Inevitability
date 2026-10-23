@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.menu;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.combat.Cooldowns;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -190,7 +191,8 @@ public final class AbilityWheel {
 
     /** The cooldown this entry starts for this player now. */
     public int cooldownFor(ServerPlayer player, Entry entry) {
-        return cooldownBy == null ? entry.cooldown : Math.max(0, Math.min(entry.cooldown, cooldownBy.cooldown(player, entry.cooldown)));
+        int own = cooldownBy == null ? entry.cooldown : Math.max(0, Math.min(entry.cooldown, cooldownBy.cooldown(player, entry.cooldown)));
+        return Cooldowns.scaled(player, own);                    // every Cooldowns.addScale rule (a Divine Kingdom's enemies)
     }
 
     /**
@@ -292,7 +294,7 @@ public final class AbilityWheel {
                 player.sendSystemMessage(Component.literal(entry.name + " is ready again in " + seconds(wait) + "."));
                 return Result.REFUSED;
             }
-            if (SoulCore.getSpirituality(player) < cost) {
+            if (SoulCore.getSpirituality(player) < Spells.costFor(player, cost)) {
                 Spells.paySpirituality(player, cost);            // takes nothing, only says so
                 return Result.REFUSED;
             }
@@ -351,7 +353,7 @@ public final class AbilityWheel {
     public int cooldownLeft(Player player, Entry entry) {
         long ready = player.getPersistentData().getLongOr(id + "_ready_" + entry.key, 0L);
         long left = ready - player.level().getGameTime();
-        if (left > entry.cooldown) {                          // a save from another world's clock: forget it
+        if (left > entry.cooldown * 4L + 20) {                // a save from another world's clock: forget it
             player.getPersistentData().remove(id + "_ready_" + entry.key);
             return 0;
         }
@@ -391,7 +393,7 @@ public final class AbilityWheel {
     private String details(ServerPlayer player, Entry entry) {
         if (!unlocked(player, entry)) return "Sequence " + entry.sequence;
         if (entry.isFree(player)) return "free now";
-        int cost = entry.costFor(player, 1f);
+        int cost = Math.round(Spells.costFor(player, entry.costFor(player, 1f)));
         if (noCooldowns(player)) return String.valueOf(cost);
         int wait = cooldownLeft(player, entry);
         if (wait > 0) return "ready in " + seconds(wait);

@@ -20,6 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * Appraisal: one caster has read an entity for a while. It knows what the entity is weak to, and the caster's
@@ -73,6 +74,7 @@ public final class Appraisal {
     /** target -> caster -> its mark. */
     private static final Map<UUID, Map<UUID, Mark>> MARKS = new HashMap<>();
     private static final List<Listener> LISTENERS = new ArrayList<>();
+    private static final List<Predicate<LivingEntity>> IMMUNE = new ArrayList<>();
 
     /** The kind of ability hit landing right now (only while strike / as runs), and how deep they are nested. */
     private static String hitKind = null;
@@ -86,10 +88,12 @@ public final class Appraisal {
 
     /**
      * 'caster' has appraised 'target' for 'ticks': it is weak to 'weakness' (any word the Pathway uses; may be null),
-     * and the caster's ability hits on it do 'bonus' more (0.15f = 15%). Replaces this caster's old mark on it.
+     * and the caster's ability hits on it do 'bonus' more (0.15f = 15%). Replaces this caster's old mark on it. False when
+     * it cannot be marked (immune, dead).
      */
-    public static void mark(Player caster, LivingEntity target, String weakness, int ticks, float bonus) {
-        if (target.level().isClientSide() || ticks <= 0 || !target.isAlive()) return;
+    public static boolean mark(Player caster, LivingEntity target, String weakness, int ticks, float bonus) {
+        if (target.level().isClientSide() || ticks <= 0 || !target.isAlive()) return false;
+        for (Predicate<LivingEntity> immune : IMMUNE) if (immune.test(target)) return false;
         Mark mark = new Mark(target, weakness, target.level().getGameTime() + ticks, Math.max(0f, bonus));
         MARKS.computeIfAbsent(target.getUUID(), id -> new HashMap<>()).put(caster.getUUID(), mark);
         for (Listener listener : LISTENERS) {
@@ -99,6 +103,12 @@ public final class Appraisal {
                 CircleOfInevitability.LOGGER.error("An appraisal listener failed", e);
             }
         }
+        return true;
+    }
+
+    /** Nobody can mark what this says true for (a mind no reading takes on). Once, in a static block. */
+    public static void addImmunity(Predicate<LivingEntity> immune) {
+        IMMUNE.add(immune);
     }
 
     /** True while 'caster' has a mark on 'target'. */

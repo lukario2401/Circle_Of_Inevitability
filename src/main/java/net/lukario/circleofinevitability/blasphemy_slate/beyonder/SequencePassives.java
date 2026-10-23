@@ -112,8 +112,13 @@ public final class SequencePassives {
 
         // ---- Illuminator (docs/ILLUMINATOR.md). Also in Illuminator itself: Quick Study's cheaper recasts (Sequence 9,
         // in costFor), Field Physique's hearts and lighter falls (8), Appraiser's Eye by the hotbar (7), Craftsman's
-        // Hands in the Workshop wheel (6).
+        // Hands in the Workshop wheel (6), the Enlightenment Aura's cheaper casts and shorter confusion for allies (1,
+        // Illuminator.auraCost and its effect event), Reality Knowledge's marks twice as long and nothing reads it (0).
         custom("Illuminator", 5, Illuminator::starlight);                                        // Astronomer: Starlight
+        custom("Illuminator", 4, Illuminator::constructorsBond);                                 // Alchemist: Constructor's Bond
+        custom("Illuminator", 3, Illuminator::absorption);                                       // Arcane Scholar: Absorption
+        custom("Illuminator", 2, Illuminator::analysis);                                         // Knowledge Magister: Analysis
+        custom("Illuminator", 1, Illuminator::enlightenmentAura);                                // Illuminator: Enlightenment Aura
     }
 
     // =========================

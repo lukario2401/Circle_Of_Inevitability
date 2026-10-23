@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.combat;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.status.Cleansing;
 import net.lukario.circleofinevitability.status.Concealment;
@@ -873,13 +874,42 @@ public final class Spells {
         sl.playSound(null, at.x, at.y, at.z, event, SoundSource.PLAYERS, volume, pitch);
     }
 
-    /** Takes 'cost' spirituality. If the player has too little it takes nothing, tells them and returns false. */
+    /** A rule that makes every ability cost more or less for a player: 1.5f = half again as much, 0.8f = 20% less. */
+    @FunctionalInterface
+    public interface CostScale {
+        float scale(Player player);
+    }
+
+    private static final List<CostScale> COST_SCALES = new ArrayList<>();
+
+    /**
+     * One more rule for what every ability of every Pathway costs this player (an eroded mind pays half again, an
+     * enlightened one 20% less, allies in a Divine Kingdom 30% less). Once, in a static block. paySpirituality and the
+     * wheels ask it; a stolen cast (Beyonder.castUnbound) is never scaled.
+     */
+    public static void addCostScale(CostScale rule) {
+        COST_SCALES.add(rule);
+    }
+
+    /** What 'cost' really costs this player now, after every addCostScale rule. */
+    public static float costFor(Player player, float cost) {
+        if (cost <= 0f || COST_SCALES.isEmpty() || Beyonder.isCastingUnbound(player)) return cost;
+        float scale = 1f;
+        for (CostScale rule : COST_SCALES) scale *= Math.max(0f, rule.scale(player));
+        return cost * scale;
+    }
+
+    /**
+     * Takes 'cost' spirituality (after every addCostScale rule). If the player has too little it takes nothing, tells
+     * them and returns false.
+     */
     public static boolean paySpirituality(Player player, float cost) {
-        if (SoulCore.getSpirituality(player) < cost) {
+        float due = costFor(player, cost);
+        if (SoulCore.getSpirituality(player) < due) {
             player.sendSystemMessage(Component.translatable("message.circle_of_inevitability.not_enough_spirituality"));
             return false;
         }
-        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - cost);
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - due);
         return true;
     }
 

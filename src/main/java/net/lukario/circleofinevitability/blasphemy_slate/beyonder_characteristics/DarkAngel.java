@@ -803,8 +803,8 @@ public class DarkAngel {
         return choices.isEmpty() ? null : choices.get(killer.getRandom().nextInt(choices.size()));
     }
 
-    /** The color of a player's soul: the color of their Pathway. */
-    private static int pathwayColor(String pathway) {
+    /** The color of a player's soul: the color of their Pathway (0xAARRGGBB). Also the Illuminator's residues. */
+    public static int pathwayColor(String pathway) {
         return switch (pathway) {
             case "Key Of Stars" -> 0xB0A0B4FF;
             case "Worm Of Time" -> 0xB052E3C4;

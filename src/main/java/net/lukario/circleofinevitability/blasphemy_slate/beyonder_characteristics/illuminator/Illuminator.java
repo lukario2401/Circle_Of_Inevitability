@@ -16,12 +16,16 @@ import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Zone;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel;
+import net.lukario.circleofinevitability.combat.Residue;
+import net.lukario.circleofinevitability.status.AbilityLock;
 import net.lukario.circleofinevitability.status.Appraisal;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Construct;
 import net.lukario.circleofinevitability.status.Exposed;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Marionette;
+import net.lukario.circleofinevitability.status.Study;
 import net.lukario.circleofinevitability.status.Substitute;
 import net.lukario.circleofinevitability.status.Unnoticed;
 import net.lukario.circleofinevitability.status.Vulnerable;
@@ -29,10 +33,13 @@ import net.lukario.circleofinevitability.status.WeaknessTable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -46,7 +53,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.common.util.Result;
+import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.MobEffectEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -58,7 +68,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 
 /**
  * Illuminator: the Paragon Pathway of Lord of the Mysteries (docs/ILLUMINATOR.md). Seven keys in the Attendant Of
@@ -71,13 +81,18 @@ import java.util.function.Consumer;
  *   4 Workshop        (Artisan)           the wheel: Clockwork Rifle, Spirit Cannon, Mystic Brooch (IlluminatorWorkshop)
  *   5 Astronomy       (Astronomer)        the wheel: Star of Curses, Blessing of Stars, False Constellations, Meteor
  *                                         Shower (IlluminatorAstronomy)
- *   6 Alchemy and Arcana (Alchemist)      not written yet (docs/ILLUMINATOR.md, "The second half")
- *   7 Civilization    (Knowledge Magister) not written yet
+ *   6 Alchemy and Arcana (Alchemist)      the wheel: Living Doll, Golem, Mechanical Body (4), Dissociation, Knowledge
+ *                                         Spirit (3) (IlluminatorAlchemy)
+ *   7 Civilization    (Knowledge Magister) the wheel: Rewrite Principles, Colossus (2), Scrolls of Civilization,
+ *                                         Mathematical Maze, Masterwork (1), Reality Knowledge, Illusory Book,
+ *                                         Mechanical Heaven (0) (IlluminatorCivilization)
  *
  * The Pathway's own mechanic is the mark of status/Appraisal (who appraised what, its weakness, the bonus on every
  * ability hit) with the weakness table WEAKNESS below. Every Illuminator hit goes through hit(...), which says what
  * kind it is, so the match bonus lands by itself. Every cast's cost goes through costFor / pay / afterCast (Quick
- * Study and the Rite live there; the second half adds its own rules with addCostRule / addAfterCast).
+ * Study and the Rite live there; addCostRule / addAfterCast take more). What changes every Pathway's costs and cooldowns
+ * (Eroded, Enlightenment, the Aura, the Kingdom) is registered in IlluminatorEvents with Spells.addCostScale and
+ * Cooldowns.addScale.
  *
  * Every look and sound is in IlluminatorFx (see /illuminatorfx); this class only decides who is hurt, held, read and
  * helped, and when. Nothing here breaks blocks or lights real fire. The numbers for every ability are below.
@@ -130,6 +145,8 @@ public class Illuminator {
     private static final double MECH_EYES_REACH = 1.5;          // the Mechanical Body's eyes see this much further (key 6)
     private static final int SURVEY_TICKS = 160;                // the outlines last this long
     private static final int SURVEY_FORCED_OUT = 60;            // the hidden cannot hide again for this long
+    private static final int RESIDUE_SEQUENCE = 3;              // Arcane Scholar (Environment Controller): where abilities...
+    private static final int RESIDUE_AGE = 1200;                // ...were cast in the last minute show (combat/Residue)...
     // sneak: Ritual Circle
     private static final int RITUAL_COST = 400;
     private static final int RITUAL_COOLDOWN = 500;
@@ -181,6 +198,17 @@ public class Illuminator {
     static final float CRAFTSMAN_LONGER = 1.25f;                // ...and what it makes lasts this much longer
     private static final int STARLIGHT_SEQUENCE = 5;            // Starlight: at night under open sky...
     private static final float STARLIGHT_REGEN = 0.2f;          // ...spirituality returns this much faster, and night vision
+    private static final double BOND_RADIUS = 16.0;             // Constructor's Bond (4): your constructs this close...
+    private static final float BOND_HEAL = 0.01f;               // ...heal this share of their health a second, traced for you
+    private static final double ABSORB_RADIUS = 6.0;            // Absorption (3): every enemy this close...
+    private static final float ABSORB_DRAIN = 1f;               // ...loses this a second...
+    private static final float ABSORB_MOST = 2f;                // ...and you heal half of it, this much a second at most
+    private static final double ANALYSIS_RADIUS = 16.0;         // Analysis (2): the hidden this close are plain to you
+    private static final int ANALYSIS_EXPOSED = 30;
+    private static final int AURA_SEQUENCE = 1;                 // Enlightenment Aura (1): allies this close...
+    private static final double AURA_RADIUS = 16.0;
+    private static final float AURA_COST = 0.9f;                // ...spend this much...
+    private static final float AURA_SHORTER = 0.5f;             // ...and confusion and blindness on them last half as long
 
     static final float BOSS_HEALTH = 150f;
 
@@ -264,15 +292,18 @@ public class Illuminator {
     }
 
     private static final List<CostRule> COST_RULES = new ArrayList<>();
-    private static final List<Consumer<Player>> AFTER_CAST = new ArrayList<>();
+    private static final List<BiConsumer<Player, String>> AFTER_CAST = new ArrayList<>();
 
     /** One more rule for what a cast costs (Enlightenment's -20%, Mechanical Heaven's -30%...). Once, in a static block. */
     public static void addCostRule(CostRule rule) {
         COST_RULES.add(rule);
     }
 
-    /** Runs after every cast that went off (Masterwork stops when anything else is cast). Once, in a static block. */
-    public static void addAfterCast(Consumer<Player> action) {
+    /**
+     * Runs after every cast that went off, with the ability's key ("compound_flask", a wheel entry's key...): Masterwork
+     * stops when anything else is cast. Once, in a static block.
+     */
+    public static void addAfterCast(BiConsumer<Player, String> action) {
         AFTER_CAST.add(action);
     }
 
@@ -306,7 +337,7 @@ public class Illuminator {
     public static void afterCast(Player player, String ability) {
         if (Beyonder.isCastingUnbound(player) || !SoulCore.getPathway(player).equals(PATHWAY)) return;
         player.getPersistentData().putLong(LAST_CAST + ability, player.level().getGameTime());
-        for (Consumer<Player> action : AFTER_CAST) action.accept(player);
+        for (BiConsumer<Player, String> action : AFTER_CAST) action.accept(player, ability);
     }
 
     /** True while the player stands in their own Ritual Circle and the Rite covers a cast of this group. */
@@ -333,6 +364,9 @@ public class Illuminator {
             .resetAfter(40)
             .minCharge(0.8f);
 
+    /** Players whose own shortened effect is being put back on (the Enlightenment Aura must let that one through). */
+    private static final Set<UUID> SHORTENING = new HashSet<>();
+
     /** Which (caster, target) pairs carry an Illuminator's lens, so the end of another Pathway's mark shows nothing. */
     private static final Set<String> LENSES = new HashSet<>();
     /** Who sees the Appraiser's Eye counter right now, and what it says (it is only sent again when that changes). */
@@ -351,6 +385,20 @@ public class Illuminator {
                     if (target instanceof Player appraised && !Appraisal.isMarked(appraised)) IlluminatorFx.statusEnd(appraised, Status.APPRAISED);
                 }
             });
+            // a built construct's vanilla body stays hidden under its model, whatever exposes things
+            Exposed.addException(Construct::isBuilt);
+            // Reality Knowledge (0): nobody can read or lock what the Paragon knows
+            Appraisal.addImmunity(one -> one instanceof Player paragon && isIlluminator(paragon, PARAGON_SEQUENCE));
+            AbilityLock.addImmunity(one -> one instanceof Player paragon && isIlluminator(paragon, PARAGON_SEQUENCE));
+            Study.addImmunity(one -> one instanceof Player paragon && isIlluminator(paragon, PARAGON_SEQUENCE));
+            // what every Pathway's abilities cost, and how long they wait: Eroded, Enlightenment, the Aura, the Kingdom
+            Spells.addCostScale(IlluminatorAlchemy::erodedCost);
+            Spells.addCostScale(IlluminatorCivilization::enlightenedCost);
+            Spells.addCostScale(Illuminator::auraCost);
+            Spells.addCostScale(IlluminatorCivilization::heavenCost);
+            Cooldowns.addScale(IlluminatorCivilization::heavenCooldown);
+            // Masterwork stops when anything else is cast
+            addAfterCast(IlluminatorCivilization::castSomething);
         }
 
         @SubscribeEvent
@@ -359,14 +407,52 @@ public class Illuminator {
             if (!(player.level() instanceof ServerLevel sl)) return;
             if (player.tickCount % EYE_EVERY == 0) appraisersEye(player, sl);
             if (player.tickCount % 20 == 0) bodyTick(player);
+            IlluminatorAlchemy.tick(player, sl);
+            IlluminatorCivilization.tick(player, sl);
         }
 
         /** Field Physique (8): falls, drowning, cacti and being stuck in a wall hurt a quarter less. */
         @SubscribeEvent
         public static void onIlluminatorHurt(LivingHurtEvent event) {
-            if (!(event.getEntity() instanceof Player player) || player.level().isClientSide()) return;
+            if (event.getEntity().level().isClientSide()) return;
+            IlluminatorAlchemy.hurt(event);
+            IlluminatorCivilization.hurt(event);
+            if (!(event.getEntity() instanceof Player player)) return;
             if (!isIlluminator(player, FIELD_SEQUENCE) || !isEnvironment(event.getSource())) return;
             event.setAmount(event.getAmount() * (1f - FIELD_CUT));
+        }
+
+        /** Rewrite Principles: combustion makes no flame for the Magister's side inside it. */
+        @SubscribeEvent
+        public static boolean onIlluminatorAttack(LivingAttackEvent event) {
+            return !event.getEntity().level().isClientSide() && IlluminatorCivilization.shelters(event.getEntity(), event.getSource());
+        }
+
+        /**
+         * Enlightenment Aura (1): confusion and blindness put on an ally near an Illuminator last half as long. The effect
+         * is turned away and put on again a tick later, shorter (SHORTENING lets that one through).
+         */
+        @SubscribeEvent
+        public static void onIlluminatorEffect(MobEffectEvent.Applicable event) {
+            if (!(event.getEntity() instanceof Player player) || !(player.level() instanceof ServerLevel sl)) return;
+            MobEffectInstance effect = event.getEffectInstance();
+            if (effect.getEffect() != MobEffects.NAUSEA && effect.getEffect() != MobEffects.BLINDNESS) return;
+            if (effect.isInfiniteDuration() || effect.getDuration() < 20 || SHORTENING.contains(player.getUUID())) return;
+            if (auraCost(player) >= 1f) return;                                   // no Illuminator's aura on them
+            event.setResult(Result.DENY);
+            Holder<MobEffect> kind = effect.getEffect();
+            int ticks = Math.max(1, Math.round(effect.getDuration() * AURA_SHORTER));
+            int amplifier = effect.getAmplifier();
+            UUID id = player.getUUID();
+            Later.run(sl, 1, () -> {
+                if (!player.isAlive()) return;
+                SHORTENING.add(id);
+                try {
+                    player.addEffect(new MobEffectInstance(kind, ticks, amplifier));
+                } finally {
+                    SHORTENING.remove(id);
+                }
+            });
         }
 
         // what was on the screen does not survive relogging or dying: start clean
@@ -384,6 +470,7 @@ public class Illuminator {
         public static void onIlluminatorLogout(PlayerEvent.PlayerLoggedOutEvent event) {
             EYE_SHOWN.remove(event.getEntity().getUUID());
             IlluminatorAstronomy.forget(event.getEntity());
+            IlluminatorCivilization.forget(event.getEntity());
         }
     }
 
@@ -568,6 +655,7 @@ public class Illuminator {
                 IlluminatorFx.surveyed(sl, one);
                 if (strongest == null || one.getMaxHealth() > strongest.getMaxHealth()) strongest = one;
             }
+            if (Beyonder.hasSequence(player, RESIDUE_SEQUENCE) && player instanceof ServerPlayer viewer) surveyResidue(viewer, sl, reach);
             if (strongest == null) {
                 player.sendSystemMessage(Component.literal("Nothing hostile within " + Math.round(reach) + " blocks."));
                 return;
@@ -804,6 +892,75 @@ public class Illuminator {
         if (player.tickCount % 60 == 0) IlluminatorFx.starlight(sl, player);
     }
 
+    /** Alchemist (4), once a second: Constructor's Bond. Your constructs near you heal, and you see them through walls. */
+    public static void constructorsBond(Player player) {
+        if (!(player instanceof ServerPlayer viewer)) return;
+        for (Mob made : Construct.ofOwner(player, null)) {
+            if (made.level() != player.level() || made.distanceTo(player) > BOND_RADIUS) continue;
+            if (made.getHealth() < made.getMaxHealth()) made.heal(made.getMaxHealth() * BOND_HEAL);
+            IlluminatorFx.constructorsBond(viewer, made);
+        }
+    }
+
+    /** Arcane Scholar (3), once a second: Absorption. Every enemy near you loses a little, and half of it is yours. */
+    public static void absorption(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return;
+        float drawn = 0f;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), ABSORB_RADIUS)) {
+            if (!isHostile(player, enemy)) continue;                             // monsters, enemy players, what hunts you
+            Spells.strike(player, enemy, ABSORB_DRAIN);
+            drawn += ABSORB_DRAIN * 0.5f;
+            IlluminatorFx.absorption(sl, player, enemy.getBoundingBox().getCenter());
+        }
+        if (drawn > 0f && player.getHealth() < player.getMaxHealth()) player.heal(Math.min(ABSORB_MOST, drawn));
+    }
+
+    /** Knowledge Magister (2), once a second: Analysis. The concealed, unnoticed and invisible near you are dragged into
+     *  the open (status/Exposed), and they and those with a Substitute ready are marked for you alone. */
+    public static void analysis(Player player) {
+        if (!(player instanceof ServerPlayer viewer) || !(player.level() instanceof ServerLevel sl)) return;
+        for (LivingEntity one : Spells.livingAround(player, sl, player.position(), ANALYSIS_RADIUS)) {
+            if (Spells.isFriend(player, one)) continue;
+            boolean hiding = Concealment.isHidden(one) || Unnoticed.isUnnoticed(one) || one.hasEffect(MobEffects.INVISIBILITY);
+            if (hiding) Exposed.apply(one, ANALYSIS_EXPOSED);
+            if (hiding || Substitute.isArmed(one)) IlluminatorFx.analysis(viewer, one);
+        }
+    }
+
+    /** Illuminator (1), once a second: the Enlightenment Aura shows on the allies near you now and then. */
+    public static void enlightenmentAura(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return;
+        for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), AURA_RADIUS)) {
+            if (sl.getRandom().nextInt(3) == 0) IlluminatorFx.enlightenmentAura(sl, ally);
+        }
+    }
+
+    /**
+     * The Enlightenment Aura's cost for any player (Spells.addCostScale): AURA_COST when an Illuminator of Sequence 1 or
+     * stronger is within AURA_RADIUS and counts them as an ally (the Illuminator too), else 1.
+     */
+    static float auraCost(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return 1f;
+        for (Player one : sl.players()) {
+            if (one.distanceToSqr(player) > AURA_RADIUS * AURA_RADIUS || !isIlluminator(one, AURA_SEQUENCE)) continue;
+            if (Spells.isFriend(one, player)) return AURA_COST;
+        }
+        return 1f;
+    }
+
+    /** Arcane Scholar's Survey: where abilities were cast in the last minute within reach, for the Survey's 8 seconds. */
+    private static void surveyResidue(ServerPlayer viewer, ServerLevel sl, double reach) {
+        for (int t = 0; t < SURVEY_TICKS; t += 20) {
+            Later.run(sl, t, () -> {
+                if (!Spells.casterStillHere(viewer, sl)) return;
+                for (Residue.Cast cast : Residue.near(sl, viewer.position(), reach, RESIDUE_AGE)) {
+                    if (cast.caster().equals(viewer.getUUID())) continue;
+                    IlluminatorFx.surveyResidue(viewer, cast.at(), DarkAngel.pathwayColor(cast.pathway()));
+                }
+            });
+        }
+    }
+
     /** Once a second, for every player: Field Physique's hearts (8) while they are this Pathway at that Sequence. */
     private static void bodyTick(Player player) {
         Physique.keep(player, Attributes.MAX_HEALTH, FIELD_HEARTS_ID, FIELD_HEARTS, AttributeModifier.Operation.ADD_VALUE,
@@ -872,6 +1029,8 @@ public class Illuminator {
         player.getPersistentData().remove(RITUAL_CAST);
         IlluminatorWorkshop.clearState(player);
         IlluminatorAstronomy.forget(player);
+        IlluminatorAlchemy.clearState(player);
+        IlluminatorCivilization.clearState(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) IlluminatorFx.statusEnd(player, status);   // a clock left running before death
     }
