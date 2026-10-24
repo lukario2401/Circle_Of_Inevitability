@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
 import net.lukario.circleofinevitability.status.Silence;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorWings;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManCull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessGaze;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderWords;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder.handOfOrderJudgment;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageEntropy;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries.attendantOfMysteriesHistoricalVoid;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationChains.abominationChains;
@@ -51,9 +52,12 @@ public class SKeyPressAbilitySixUsed {
         if (StolenAbilities.blocksKey(player, 6)) return;
         // a player who lives inside a host (status/Parasite) has no body to use most abilities with
         if (Parasite.blocksKey(player, 6)) return;
+        // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
+        if (KeySeal.blocksKey(player, 6)) return;
+        KeySeal.pressed(player, 6);
 
         keyOfStarsOrbital(player,level,serverLevel,false);
-        handOfOrderWords(player,level,serverLevel,false);
+        handOfOrderJudgment(player,level,serverLevel,false);
         frenziedMageEntropy(player,level,serverLevel,false);
         attendantOfMysteriesHistoricalVoid(player,level,serverLevel,false);
         paleEmperorWings(player,level,serverLevel,false);

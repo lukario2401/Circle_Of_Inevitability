@@ -112,6 +112,10 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Where a player stood, and how hurt they were, a few seconds ago (a step back in time) | [`History`](#history-where-a-player-was) | `combat/` |
 | A cooldown on a single ability key, with the "ready again in" message | [`Cooldowns`](#cooldowns-for-single-keys) | `combat/` |
 | The ally under the crosshair (a ward pinned on a friend) | [`Spells.aimAlly`](#1-spells-aiming-and-enemies) | `combat/` |
+| Make one mob forget one entity for a while: it drops it as its target and cannot pick it again (a word that makes a hunter lose you) | [`Forgotten`](#forgotten) | `status/` |
+| Remember ONE target a player picked, under a name, for a while (a Convict, a quarry, the one memorized), and do something when it ends | [`Chosen`](#chosen) | `status/` |
+| Seal one ability key of a player for a while, and know which keys they used last (a power stripped away) | [`KeySeal`](#keyseal) | `status/` |
+| How much an entity is bending the order of things right now, as a score (hiding, wards, links, roots, puppets, recent casts) | [`Disorder`](#disorder-how-much-order-is-bent) | `combat/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 
@@ -698,6 +702,17 @@ if (then != null && Spells.fits(player, sl, then.position())) {
 ```
 
 `ago(player, ticks)` (exactly that far back, or `null`), `asFarAs(player, ticks)`, `healthLost(player, ticks)`, `forget(player)`. A `Moment` is `position`, `yRot`, `xRot`, `health`, `tick`, `dimension`. Only players are followed; dying, logging out or changing dimension starts the record afresh. Not saved.
+
+## Disorder: how much order is bent
+
+`Disorder.of(entity)` is a score from 0 up, worked out each time it is asked: +1 for each of Concealment, a Substitute or DeathWard armed, a DamageLink, any root, being a marionette or summon; for a player +1 for each marionette they hold and each ability they cast in the last 10 seconds (`Residue`, at most 3). The Hand Of Order's Sword of Judgment (it strikes the most disorderly hardest), Disorder Sense and Recognition.
+
+```java
+int disorder = Disorder.of(target);
+Disorder.addSource(entity -> MyStatus.isOn(entity) ? 1 : 0);      // once, in a static block: one more thing that counts
+```
+
+The Decrees' Violations are meant to come in through `addSource`.
 
 ## Residue: where abilities were cast
 
@@ -1695,6 +1710,42 @@ switch (Marks.take(target, player, "conqueror_cull")) {    // a finisher that do
 
 Also `add(target, player, name, amount, max, dropEvery)`, `clear(target, player, name)`, `ticksLeft(target, player, name)` (until all are gone) and `ticksToNextDrop(target, player, name)`. Every `add` starts the wear-off clock again, so marks only drop while you stop marking it. They are not shown: use `SpellFx.overHead` with `count(...)` if you want them seen.
 - Saved with the entity. To show them, see `SpellFx.overHead` above.
+
+### Forgotten
+
+A mob forgets ONE entity for a while: it drops it as its target at once and cannot pick it again until the time is up. Everyone else it may still hunt. Unlike `Unnoticed` (every mind slides off the hidden one) and `Unreadable` (nobody far away can pick it out), this is one mob and one target. The Hand Of Order's Halt and Maintain Secrecy.
+
+```java
+for (Mob hunter : Forgotten.huntersOf(sl, player, 32)) Forgotten.apply(hunter, player, 100);   // 5 s: they lose you
+Forgotten.isForgotten(mob, player)   Forgotten.ticksLeft(mob, player)   Forgotten.remember(mob, player)
+```
+
+Applying again keeps the longer time. Not saved.
+
+### Chosen
+
+ONE target a player has picked under a name, for a while: "the enemy I looked at", kept for later. A player has at most one under each name; choosing another lets the first go. The Hand Of Order's Convict (Punishment) and the one memorized by Recognition; the Contract's signer when it is written.
+
+```java
+Chosen.choose(player, "my_pathway_quarry", target, 600);       // 30 s; an old quarry is let go
+LivingEntity quarry = Chosen.of(player, "my_pathway_quarry");    // null: none, dead, or in another world
+Chosen.is(target, player, name)   Chosen.ticksLeft(player, name)   Chosen.release(player, name)   Chosen.choosers(target, name)
+Chosen.addListener("my_pathway_quarry", (chooser, target) -> MyFx.quarryEnd(...));   // once, in a static block
+```
+
+The listener runs whenever a choice ends: its time is up, the target died (then `target` is null), another was chosen, it was released, the chooser died or logged out. Clean up looks and modifiers there, in one place. `Marks` counts how much an entity carries; `Chosen` remembers which entity one player meant. Not saved.
+
+### KeySeal
+
+ONE ability key of a player is dead for a while; the others still work (`Silence` and `AbilityLock` shut every key). The Hand Of Order's Deprivation strips the power used last.
+
+```java
+List<Integer> keys = KeySeal.lastUsed(target, 3);   // up to three different keys it pressed lately, the latest first
+for (int key : keys) KeySeal.seal(target, key, 600);
+KeySeal.lastUsed(target)   KeySeal.isSealed(player, 3)   KeySeal.ticksLeft(player, 3)   KeySeal.unseal(player, 3)   KeySeal.unsealAll(player)
+```
+
+The ability keys ask `KeySeal.blocksKey(player, key)` and then call `KeySeal.pressed(player, key)` (`network/SKeyPressAbility...Used`), so every press is remembered and a sealed key is refused with a message. Only players have keys: for a mob's special attacks use `AbilityLock`. Saved with the player.
 
 ### Blind
 

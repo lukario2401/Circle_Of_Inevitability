@@ -4,7 +4,7 @@ Circle Of Inevitability · Pathway plan
 
 The Hand Of Order Pathway is the Justiciar Pathway of Lord of the Mysteries, the Judgment tarot card: Arbiter (9), Sheriff (8), Interrogator (7), Judge (6), Disciplinary Paladin (5), Imperative Mage (4), Chaos Hunter (3), Balancer (2), Hand of Order (1), Justiciar (0). Source: the Justiciar Pathway and Justiciar Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-The abilities of this design are not written as code yet; the first `HandOfOrder` class (`beyonder_characteristics/HandOfOrder.java`) is still the one in game. This file is the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. Its looks, sounds and pictures are ready (see "Looks, sounds and pictures" at the end). When the code is written, move "Planned" to "What is built" (see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md)).
+About half of it is written (by effort, not by count): keys 1, 2, 3, 4 and 6 with every growth that belongs to them, the passives of Sequences 9 to 1, the melee combo, and the parts of the kit they need. The Decrees (key 5), the Order wheel (key 7) and what hangs on them are not (see "What is built" and "Still to build" at the end). The first `HandOfOrder` class is gone; its keys are this design's now. Every look, sound and picture is ready ("Looks, sounds and pictures").
 
 Pathway name in code: `"Hand Of Order"`.
 
@@ -181,20 +181,23 @@ Key 7
 - **Quell Disorder**: a `clear(entity)` on each status (`Concealment`, `Marionette`, `Substitute`, `DeathWard`, `DamageLink`, `Decree`, `Zone`), then `Spells.cleanse` on allies.
 - **Court of Judgment**: `Zone` + `Decree` with a clause timeline, `ScreenImages` for the clause list, `SpellFx.warningCircle` for the dome edge, `ModelFx` Brass Pillar.
 
-## New reusable parts (write these first, in this order)
+## Reusable parts
 
-Written as parts of the spell kit, not of this pathway, so other pathways can use them. The Hand Of God plan needs several of the same ones.
+Written as parts of the spell kit, not of this pathway, so other pathways can use them. Several turned out to be in the kit already; what each one became:
 
-1. **Zone** (`status/Zone`): an area with an owner, a level, a center (fixed, or following an entity), a radius, a lifetime and a per-second callback, kept in one list the way `FLAMES` is kept now. `Zone.at(level, pos)` returns the zones covering a point and `Zone.inside(entity)` the ones an entity stands in. Used by: Jurisdiction, every Decree, Divide the Battlefield, Court of Judgment. Also by Hand Of God: Light of Dawn, Protection, Decay, Divine Kingdom. Attendant's flames could move onto it later.
-2. **Decree** (`status/Decree`, built on Zone): a Zone with a set of Rule flags: `PASSAGE`, `CONCEALMENT`, `STAND_INS`, `RESURRECTION`, `MARIONETTES`, `HEALING`, `PROJECTILES`, `ABILITIES`, `SEALED`. It has: `Decree.forbids(entity, Rule)` (false for the owner's allies), `Decree.powerOf(pos, kind)` (the Imperative multipliers, read inside `Spells.strike` and `paySpirituality`), and the Violation ladder: `Decree.violate(entity, owner, rule)` runs the next step of a list of consequences (staggered, damage, held, death) and remembers how many times that entity has broken Rules. One line in each of `Concealment.hide`, `Substitute.arm`, `Marionette.control`, `DeathWard.arm` asks `Decree.forbids` first. This is the heart of the pathway.
-3. **Mark** (`status/Mark`): a named mark one caster puts on one target for a time: `Mark.set(player, "convict", target, ticks)`, `Mark.of(player, "convict")`, `Mark.is(target, "convict")`. Used by Punishment, Recognition, Contract. Also useful for Hand Of God's Eye of Demon Hunting and any "the enemy I looked at" ability that lasts.
-4. **TempModifier** (`combat/TempModifier`): a timed attribute change that is removed cleanly and can be refreshed: `TempModifier.add(entity, attribute, amount, ticks, tag)`. Used by Balance, Punishment, Order Proxy, Whip of Pain. Also by Hand Of God: Dawn Armor, Giant Form, Supernatural Resistance.
-5. **Seal** (`combat/Seal`) and an ability tag: `Seal.block(entity, tag, ticks)`. Abilities pass a small tag (movement, concealment, summon, projectile, anything) into `Spells.paySpirituality`, and one check there refuses a sealed tag. Used by Maintain Secrecy (everything), Deprivation (one tag), Decree `ABILITIES`. This is a small change to the shared kit, so it is worth deciding on before the first ability is written.
-6. **WeaponCoat** (`combat/WeaponCoat`): the weapon in hand carries an effect for N hits or N seconds: `WeaponCoat.apply(player, ticks, hits, (target, amount) -> ...)`. Used by Psychic Lashing. Also by Hand Of God: Alchemy and the Sword of Dawn's purifying hits.
-7. **Disorder** (`combat/Disorder`): a score from 0 up for an entity: +1 for each active Concealment, Substitute, Marionette, Death ward, damage link or root on it, +1 for each ability it cast in the last 10 seconds (at most 3), +1 for each Violation. `Disorder.of(entity)`. Used by Sword of Judgment, Disorder Sense, Recognition at Sequence 3.
-8. **Rush** (`combat/Rush`): a short body-rush toward a point or entity with afterimages and an on-contact callback: `Rush.toward(player, target, blocks, onContact)`. Also a "line" check, `Spells.enemiesAlong(player, sl, from, direction, range)`, for Psychic Piercing. Used by Death, Sword of Judgment, Psychic Piercing. Also by Hand Of God: Warrior's Charge, Mercury Liquefaction.
-9. **Quell** (`clear(entity)` on every status, and `Quell.all(entity)` that calls them): one place that ends everything ability-made on an entity. Used by Quell Disorder; also good for any future "dispel".
-10. **SpellFx.speak**: shows a spoken word above a caster or target and plays a low sound. Done for this Pathway as `HandOfOrderFx.speak(sl, who, Word.X)` with 17 word models; move it into `SpellFx` when another Pathway needs words.
+| Planned | Now | State |
+| --- | --- | --- |
+| Zone | `combat/Zone` (already there) | used by Jurisdiction; the Decrees, Divide the Battlefield and the Court will open one too |
+| Decree | not written: `status/Decree`, a Zone with Rule flags and the Violation ladder | **the next thing to write** (see "Still to build") |
+| Mark | `status/Chosen`: `Chosen.choose(player, name, target, ticks)`, `Chosen.of(player, name)`, a listener when it ends | written; the Convict and Recognition use it, the Contract will |
+| TempModifier | `beyonder/Physique.keep` / `remove` (already there: transient attribute modifiers) | the Convict's slow; Balance and Order Proxy will use it |
+| Seal | `status/KeySeal` for one key of a player, with `Silence` (every key) and `AbilityLock` (a mob's special attacks) already there | written; Deprivation and Maintain Secrecy use them, the Decree ABILITIES Rule will |
+| WeaponCoat | `status/WeaponCoat` (already there) | Psychic Lashing |
+| Disorder | `combat/Disorder`: `Disorder.of(entity)`, `Disorder.addSource(...)` | written; the Sword of Judgment, Disorder Sense, Recognition. Violations will come in through `addSource` |
+| Rush | not needed: a stride to `HandOfOrderVerdicts.strideSpot` and a teleport (Death, Sword of Judgment); Psychic Piercing uses `Spells.enemiesOnLine` | done |
+| Quell | not written: one `clear(entity)` per status and `Quell.all(entity)` (`status/Dispel` already takes wards and blessings off, a start) | with Quell Disorder |
+| SpellFx.speak | `HandOfOrderFx.speak(sl, who, Word.X)` | done; move it into `SpellFx` when another Pathway needs words |
+| (new) Forgotten | `status/Forgotten`: one mob cannot pick one entity for a while | written; Halt, Maintain Secrecy |
 
 ## How Decrees stop things in the repo
 
@@ -216,7 +219,7 @@ Keep every number in the tables above as a `private static final` at the top of 
 
 ## Melee combo
 
-`MeleeCombo.forPathway("Hand Of Order")`: 1 = a brass ring sweeping around you with branding-iron sparks, 2 = a crossed pair of lightning slashes on the target, 3 = random between a ring of Rule glyphs spreading on the ground and a straight slash slamming down on the target like a gavel. The look is `HandOfOrderFx.combo(sl, player, target, step)`; register the steps in the new class the way `KnowledgeEmperor` does.
+`MeleeCombo.forPathway("Hand Of Order")`: 1 = a brass ring sweeping around you with branding-iron sparks, 2 = a crossed pair of lightning slashes on the target, 3 = random between a ring of Rule glyphs spreading on the ground and a straight slash slamming down on the target like a gavel. The look is `HandOfOrderFx.combo(sl, player, target, step)`; the steps are `HandOfOrder.MELEE_COMBO`, registered in `combat/MeleeCombos`.
 
 ## Left out on purpose
 
@@ -228,6 +231,31 @@ Keep every number in the tables above as a `private static final` at the top of 
 - The Brass Pillar Mythical Creature Form as its own ability: only a visual for now (`HandOfOrderFx.brassPillar`), it could become a Giant-Form-style entry later.
 - Resurrection through Rules and granting Immunity to chosen people: Immunity is built into every Decree (allies exempt).
 - Official appointment bigger Jurisdiction: not worth a mechanic.
+
+## What is built
+
+Keys 1 to 4 and 6, the growths that belong to them, the passives from Sequence 9 to 1 and the melee combo. Keys 1, 2 and 6 and the passives are in `beyonder_characteristics/hand_of_order/HandOfOrder.java`; the wheels each in a class beside it: `HandOfOrderInterrogation` (key 3) and `HandOfOrderVerdicts` (key 4). Every number is a constant at the top of its class. One line each in `PathwayAbilities.ALL` (keys 5 and 7 too, marked "not written yet"), a row in [SEQUENCES.md](SEQUENCES.md), the passives in `SequencePassives` and `HandOfOrder`, the combo in `MeleeCombos`, the color in `DarkAngel.pathwayColor`, the icon in `PathwayHudIcon`. Set the Pathway with `/sequence pathway <player> "Hand Of Order"`.
+
+How it works where the tables above do not say:
+- **Costs and cooldowns.** Keys 1, 2 and 6 have their cooldowns per cast (`combat/Cooldowns`, the Illuminator's way); the wheels keep theirs. Every cost goes through `HandOfOrder.costFor` (20% less while you stand in your own Jurisdiction) and every wheel cooldown through `HandOfOrder.cooldownFor`: Order Proxy's "free, no cooldown" goes in those two methods. `HandOfOrder.decreeTicksFor` already makes a Decree last 25% longer in your Jurisdiction, for the Decrees to call.
+- **Halt** holds with `Root` EVERYTHING at `HALT_LANDS`; the mobs hunting you within 32 forget you for 5 seconds (`status/Forgotten`). **Presence**: players are only slowed; mobs under 60 max health cannot attack (`Root` ATTACK). Intimidation (4) roots everyone in the wave (`Root` MOVEMENT).
+- **Jurisdiction** is a `Zone` named `hand_of_order_jurisdiction` (`_2` for the second at Sequence 1; a third cast moves the one ending sooner). Each enemy that steps in chimes for you alone, and each second while inside it is seen through walls by you (`HandOfOrderFx.seenThroughWalls`, a model only you are sent). `HandOfOrder.inJurisdiction(player)` asks if you stand in one.
+- **Recognition** is `status/Chosen` (`hand_of_order_recognized`): its distance by the hotbar (`HudCounter`) and its footprints and frame through walls for you alone, each second while within 64. Its glow is yours alone, not the vanilla glowing everyone would see. What it tells is said in chat when you cast it.
+- **Psychic Lashing** is `status/WeaponCoat`: each real swing adds 6 through armor a tick later and staggers. **Psychic Piercing** strikes the first 3 enemies on `Spells.enemiesOnLine`; marionettes and summons take double (there are no spirit bodies in the mod yet). **Whip of Pain** ends a Concealment and puts `Exposed` on for 2 seconds, and tells you every effect on the target in chat.
+- **Imprison** holds with `Root` EVERYTHING; pick it again looking at the one you hold (an ally too) and it is released, free (`AbilityWheel.Result.FREE`). Confinement (4) also disarms its `Substitute`. **Exile** is a push (about 20 blocks); from 4 it is `status/Exile` (the void) and the target comes back where it was; from 3 a hurricane pushes everyone within 5 of it. **Death** strides you before the target (refused while you are held) and strikes through everything at `DEATH_LANDS`; from 5 harder and Wither. **Maintain Secrecy** is `Silence` on a player, `AbilityLock` and `Forgotten` on a mob. **Deprivation** seals the key the player pressed last (`status/KeySeal`; 3 keys from Chaos Hunter) and says which ability that was; on a mob it is `AbilityLock`. **Execution** waits `EXECUTION_LANDS`; any damage that gets through to you meanwhile breaks it (`HandOfOrderVerdicts.casterHurt`), and it fails if the target left your view or range.
+- **Punishment** is `status/Chosen` (`hand_of_order_convict`): 30% more damage from you (a hurt event), 15% slower (`Physique`), glowing (vanilla, so everyone sees it, as in the book). Its looks and the slow come off in the Chosen listener however it ends. `HandOfOrder.convictOf(player)` is for the Decrees' "sure hit" later. **Sword of Judgment** (3) picks the Convict if it is in range and in view, else the enemy in view with the most `Disorder`; range 32, doubled from Balancer and again inside your Jurisdiction (from 3).
+- **Passives**: Order (9) is Strength I and `Fear` on weak hostile mobs within 5; Weapon Proficiency (8) is `Physique`; Sheriff's Intuition (8) a chime when a mob starts hunting you unseen; Demolition Proficiency (7) halves explosion damage; Judge's Aura (6) cuts damage from enemies within 6 by 10%; Self-Restraint (5) is Resistance I and halves nausea, blindness and darkness (not yet Silence: `Root` has no way to shorten a hold); Beyonder Sense (4) marks players who follow a Pathway (mobs join when the characteristic system exists: one line in `HandOfOrder.isBeyonder`); Disorder Sense (3) at Disorder 2 or more; Sense Imbalance (2) puts `Exposed` on concealed enemies within 24; Sense of Order (1) chimes for every cast near (`Residue`). "Recoil of your Rules halved" (4) and "lower-Sequence Rules cannot bind you" (1) wait for the Decrees.
+- The key presses of every Pathway now ask `KeySeal.blocksKey` and tell `KeySeal.pressed` (`network/SKeyPressAbility...Used`).
+
+## Still to build
+
+In the order worth writing them; each says where it plugs in.
+
+1. **`status/Decree`** (the heart). A `Zone` with a set of Rule flags (`HandOfOrderFx.Rule` lists them, with their colors and words) and the Violation ladder: `Decree.forbids(entity, Rule)` (false for the owner's allies), `Decree.violate(entity, owner, rule)` (counts, runs the next consequence, calls `HandOfOrderFx.violation(sl, who, count)`), `Decree.powerOf(pos, kind)` for Imperative: Reality. Count Violations into `Disorder` with `Disorder.addSource`. One check each in `Concealment.hide`, `Substitute.arm`, `Marionette.control`, `DeathWard.arm` (and Flaming Jump already checks `Root.has(.., TELEPORT)`: PASSAGE can simply keep that root on enemies inside, re-applied each beat).
+2. **Key 5, `HandOfOrderDecrees`** (a wheel class like `HandOfOrderVerdicts`): Prohibition: Passage, Prohibition: Concealment (`Exposed` on everyone inside each beat does most of it), Imperative: Reality (`Spells.addCostScale` for the 50% more, a hurt event for the halved ability damage), Contract (`status/Chosen` for the signer, `LivingAttackEvent` to cancel its attacks on you, the ladder). Durations through `HandOfOrder.decreeTicksFor`. Growths: layers (5), stand-ins forbidden (4), marionettes frozen (3), two Decrees (2), three anywhere in view and twice as long (1), Law of Order (0) in `decreeTicksFor` and `costFor`. Replace `HandOfOrder.handOfOrderDecree` with the wheel's key method (same packet line).
+3. **Punishment, Chaos Hunter**: a Violation by your Convict inside your Decree makes your next hit on it sure and +50% (`EmpoweredHit` armed on the caster; `HandOfOrderFx.convictPunished` for the look).
+4. **Key 7, `HandOfOrderOrder`** (a wheel): Balance (`Physique.keep` on the target's attack, armor, speed and max health, for 20 s x your max health / its, never under 3), Divide the Battlefield (`combat/Dome`: `keepsEnemiesIn`, `stopsProjectiles`, throw out the over-strong), Law: No Return (a Decree with RESURRECTION and MARIONETTES), Order Proxy (effects, then `costFor` returns 0 and `cooldownFor` returns 0 while it lasts), Quell Disorder (the Quell part above, `Dispel`, close enemy Zones and Decrees), Court of Judgment (a Decree whose Rules are added one every 10 seconds; `HandOfOrderFx.court`, `clause`, `judged`, `courtClauses`). Replace `HandOfOrder.handOfOrderOrder`.
+5. **The rest of the passives**: Beyonder Sense's halved recoil (4) and Sense of Order's immunity to lower Rules (1) in `Decree.forbids`; Law of Order (0).
 
 ## Looks, sounds and pictures
 
@@ -253,7 +281,6 @@ Every timed cast can show its picture and clock above the hotbar: `HandOfOrderFx
 Things to know when the abilities are written:
 - Models stuck to an entity (Imprison's walls, the Convict's brand, the halo) are taken off with `ParticleShapes.clearModels(sl, entity, tag)`; the ones on the ground (Decrees, the Court, the void) with the same tag from any spot, so give every cast its own tag.
 - The Court's dome is three rings of `order_wall` panels, up to 40 per ring; at radius 40 that is the most models any display here makes at once.
-- The old `textures/gui/ability_menus/hand_of_order/explosion`, `speed` and `judgement` and `models/model_fx/hand_of_order/sword` belong to the first `HandOfOrder` class. Delete them with it.
 
 What is in the repository, all of it generated by the scripts in `tools/model_gen/hand_of_order/` (see "Hand Of Order: ready-made displays" in [MODEL_FX.md](MODEL_FX.md)):
 
