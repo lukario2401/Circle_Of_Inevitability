@@ -37,6 +37,9 @@ import java.util.function.Predicate;
  *           .attribute(Attributes.SCALE, 1.5, AttributeModifier.Operation.ADD_MULTIPLIED_BASE)   // as many as wanted
  *           .effect(MobEffects.STRENGTH, 1)                       // Strength II, kept up while it lasts
  *           .aftermath(200)                                       // 10 seconds of Weakness and Slowness after it
+ *           .flies()                                              // it can fly while it lasts (status/Flight)
+ *           .cutsDamage(0.4f)                                     // it takes 40% less damage while it lasts (ConjuredArmor)
+ *           .every(10, player -> MyFx.glow(...))                  // every 10 ticks: a burn, a beat of the wings
  *           .keepWhile(player -> SoulCore.getPathway(player).equals(PATHWAY))   // ends at once when this is false
  *           .everySecond(player -> MyFx.aura(...))                // an aura, a look, a drain
  *           .onEnd((player, why) -> MyFx.formEnd(...))            // its look ending, whatever the reason
@@ -47,9 +50,10 @@ import java.util.function.Predicate;
  * One form at a time: taking another ends the one there (REPLACED). It ends, and every change is taken off, when its
  * time is up (TIME), when Form.end is called (ENDED), when keepWhile says no (LOST: the Pathway changed), on death
  * (DIED) and on logout (LEFT). Not saved: after a server restart nobody is left transformed. The aftermath runs for
- * TIME and ENDED only (a death or a lost Pathway leaves nothing to recover from). Star Dragon's Scaled Form; the
- * Radiant Angel and the Star Dragon are planned on it, and Hand Of God's Giant Form could move onto it
- * (docs/STAR_DRAGON.md).
+ * TIME and ENDED only (a death or a lost Pathway leaves nothing to recover from). Star Dragon's Scaled Form, Radiant
+ * Angel Form and Star Dragon Form are built on it, and Hand Of God's Giant Form could move onto it
+ * (docs/STAR_DRAGON.md). The look is the ability's own: a worn model (ParticleShapes.modelOnTurning), cleared in
+ * onEnd.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -69,6 +73,10 @@ public final class Form {
     private final List<Kept> effects = new ArrayList<>();
     private Predicate<Player> keepWhile = player -> true;
     private Consumer<Player> everySecond;
+    private int everyTicks;
+    private Consumer<Player> every;
+    private boolean flies;
+    private float cut;
     private BiConsumer<Player, Ending> onEnd;
 
     /** One player in a form: which, and until when (0 = until ended). */
@@ -107,6 +115,15 @@ public final class Form {
 
     public Form everySecond(Consumer<Player> action) { everySecond = action; return this; }
 
+    /** Every 'ticks' while it lasts (a burn every half second, a wingbeat every two seconds). One per form. */
+    public Form every(int ticks, Consumer<Player> action) { everyTicks = Math.max(1, ticks); every = action; return this; }
+
+    /** It can fly while it lasts (status/Flight; the way down after it is safe). */
+    public Form flies() { flies = true; return this; }
+
+    /** It takes 'fraction' less damage from everything while it lasts (a ConjuredArmor under the form's name). */
+    public Form cutsDamage(float fraction) { cut = Math.max(0f, Math.min(1f, fraction)); return this; }
+
     public Form onEnd(BiConsumer<Player, Ending> action) { onEnd = action; return this; }
 
     public String name() { return name; }
@@ -119,7 +136,12 @@ public final class Form {
         long until = lasts > 0 ? player.level().getGameTime() + lasts : 0L;
         ACTIVE.put(player.getUUID(), new Active(this, until));
         apply(player);
+        if (flies) Flight.grant(player, lasts > 0 ? lasts : FLIGHT_UNTIL_ENDED);
+        if (cut > 0f) ConjuredArmor.of(armorName()).cut(cut).wear(player);
     }
+
+    /** A form that lasts until it is ended flies this long at most before it must be taken again. */
+    private static final int FLIGHT_UNTIL_ENDED = 20 * 60 * 60;
 
     // =========================
     // Asking about it
@@ -166,12 +188,18 @@ public final class Form {
         for (Kept kept : effects) Spells.keepEffect(player, kept.effect(), kept.amplifier(), 60);
     }
 
+    private String armorName() {
+        return "form_" + name;
+    }
+
     private void takeOff(Player player) {
         for (Change change : changes) Physique.remove(player, change.attribute(), change.id());
         for (Kept kept : effects) {
             MobEffectInstance on = player.getEffect(kept.effect());
             if (on != null && on.getAmplifier() == kept.amplifier() && on.getDuration() <= 60) player.removeEffect(kept.effect());
         }
+        if (cut > 0f) ConjuredArmor.takeOff(player, armorName());
+        if (flies) Flight.end(player);
     }
 
     private static void finish(Player player, Active active, Ending why) {
@@ -199,6 +227,11 @@ public final class Form {
         if (active.until() != 0L && player.level().getGameTime() >= active.until()) {
             finish(player, active, Ending.TIME);
             return;
+        }
+        Form form = active.form();
+        if (form.every != null && player.tickCount % form.everyTicks == 0) {
+            form.every.accept(player);
+            if (ACTIVE.get(player.getUUID()) != active) return;                // the action ended it
         }
         if (player.tickCount % 20 != 0) return;
         if (!active.form().keepWhile.test(player)) {

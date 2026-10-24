@@ -26,6 +26,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionSovereign.princeOfAbolitionSovereign;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorKnowledge.knowledgeEmperorKnowledge;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorCivilization.illuminatorCivilization;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon.starDragonCosmos;
 
 public class SKeyPressAbilitySevenUsed {
 
@@ -67,6 +68,7 @@ public class SKeyPressAbilitySevenUsed {
         princeOfAbolitionSovereign(player,level,serverLevel,false);
         knowledgeEmperorKnowledge(player,level,serverLevel,false);
         illuminatorCivilization(player,level,serverLevel,false);
+        starDragonCosmos(player,level,serverLevel,false);
 
 
     }

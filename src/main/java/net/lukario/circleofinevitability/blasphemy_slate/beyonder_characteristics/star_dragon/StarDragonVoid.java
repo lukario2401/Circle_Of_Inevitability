@@ -15,6 +15,7 @@ import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Blind;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Exposed;
+import net.lukario.circleofinevitability.status.Falter;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Unnoticed;
 import net.lukario.circleofinevitability.status.Vulnerable;
@@ -31,6 +32,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 import java.util.HashSet;
@@ -40,7 +42,8 @@ import java.util.UUID;
 
 /**
  * Star Dragon, the void and Fate (docs/STAR_DRAGON.md): Cosmic Void (Star Sacrifice, key 2), Void Passage (key 3),
- * Fate Convergence and Remote Sight (Heavybringer, key 5). Every number is right below; the looks are StarDragonFx's.
+ * Fate Convergence and Remote Sight (Heavybringer, key 5), Quantum Uncertainty (the Cosmos wheel, key 7). Every number
+ * is right below; the looks are StarDragonFx's.
  */
 public final class StarDragonVoid {
 
@@ -97,9 +100,20 @@ public final class StarDragonVoid {
     private static final double SIGHT_RANGE = 64.0;
     private static final int SIGHT_PASSAGES = 12;               // doors and portals this close show as passages
 
+    // Quantum Uncertainty (Condenser, the Cosmos wheel)
+    static final int QUANTUM_SEQUENCE = 0;
+    static final int QUANTUM_COST = 45000;
+    static final int QUANTUM_COOLDOWN = 800;
+    private static final double QUANTUM_RADIUS = 20.0;
+    private static final int QUANTUM_TICKS = 300;
+    private static final float QUANTUM_MISS = 0.4f;             // enemies in it miss this share (status/Falter)...
+    private static final double QUANTUM_SLIP = 8.0;             // ...and a teleport into it lands up to this far off
+
     // =========================
     // Names and what is kept
     // =========================
+    private static final String QUANTUM = "star_dragon_quantum";                  // its Zone and its status/Falter reason
+    private static final Set<UUID> QUANTUM_OWNERS = new HashSet<>();               // who has a field open (for teleports)
     private static final String VOID = "star_dragon_cosmic_void";                 // its Dome
     private static final String FATE = "star_dragon_fate_convergence";            // its Zone
     private static final String VOID_TAKEN = "star_dragon_void_taken";            // on the target: health lost inside
@@ -343,8 +357,73 @@ public final class StarDragonVoid {
         return name.contains("portal") || name.contains("gateway");
     }
 
+    // =========================
+    // Quantum Uncertainty (the Cosmos wheel, Condenser): a partial authority over Quantum Mechanics. For QUANTUM_TICKS a
+    // field QUANTUM_RADIUS round you is uncertain: enemies in it miss QUANTUM_MISS of the time (status/Falter), and a
+    // teleport of anyone not on your side (an ender pearl, chorus fruit, an enderman) that would end in it lands at a
+    // random spot up to QUANTUM_SLIP from where it meant to (teleport, from StarDragon's events). You and your allies
+    // are unaffected.
+    // =========================
+    static AbilityWheel.Result quantumUncertainty(ServerPlayer player, ServerLevel sl) {
+        String tag = "sd_quantum_" + player.getId();
+        Zone.close(player, QUANTUM);
+        StarDragonFx.quantumUncertainty(sl, player, QUANTUM_RADIUS, QUANTUM_TICKS, tag);
+        StarDragonFx.status(player, Status.QUANTUM, QUANTUM_TICKS);
+        UUID owner = player.getUUID();
+        QUANTUM_OWNERS.add(owner);
+        Zone.around(player, QUANTUM_RADIUS)
+                .height(QUANTUM_RADIUS)
+                .lasts(QUANTUM_TICKS)
+                .every(10)
+                .onEnter(one -> {
+                    if (one instanceof Player shown) StarDragonFx.status(shown, Status.UNCERTAIN, Zone.ticksLeft(player, QUANTUM));
+                })
+                .onInside((one, inside) -> {
+                    Falter.apply(one, QUANTUM, QUANTUM_MISS, 20);
+                    if (inside % 20 == 0) StarDragonFx.uncertain(sl, one);
+                })
+                .onLeave(one -> {
+                    Falter.remove(one, QUANTUM);
+                    if (one instanceof Player shown) StarDragonFx.statusEnd(shown, Status.UNCERTAIN);
+                })
+                .onEnd(() -> {
+                    QUANTUM_OWNERS.remove(owner);
+                    StarDragonFx.quantumEnd(sl, player, tag);
+                    StarDragonFx.statusEnd(player, Status.QUANTUM);
+                })
+                .open(player, sl, QUANTUM);
+        return AbilityWheel.Result.DONE;
+    }
+
+    /** A teleport that would end in someone's uncertain field (not one of theirs, not a command) slips aside. */
+    static void teleport(EntityTeleportEvent event) {
+        if (QUANTUM_OWNERS.isEmpty()) return;
+        if (event instanceof EntityTeleportEvent.TeleportCommand || event instanceof EntityTeleportEvent.SpreadPlayersCommand) return;
+        if (!(event.getEntity() instanceof LivingEntity one) || !(one.level() instanceof ServerLevel sl)) return;
+        Vec3 meant = event.getTarget();
+        for (UUID id : List.copyOf(QUANTUM_OWNERS)) {
+            Player owner = sl.getPlayerByUUID(id);
+            if (owner == null) continue;                                          // in another world: their field is too
+            if (!Zone.isOpen(owner, QUANTUM)) {
+                QUANTUM_OWNERS.remove(id);
+                continue;
+            }
+            if (owner == one || Spells.isFriend(owner, one) || !Zone.covers(owner, QUANTUM, meant)) continue;
+            double angle = sl.getRandom().nextDouble() * Math.PI * 2;
+            double far = 2.0 + sl.getRandom().nextDouble() * (QUANTUM_SLIP - 2.0);
+            Vec3 spot = Spells.groundAt(owner, sl, meant.add(Math.cos(angle) * far, 2.0, Math.sin(angle) * far));
+            event.setTargetX(spot.x);
+            event.setTargetY(spot.y);
+            event.setTargetZ(spot.z);
+            StarDragonFx.quantumSlip(sl, meant, spot);
+            return;
+        }
+    }
+
     /** After a relog or a death. */
     static void clearState(Player player) {
+        Zone.close(player, QUANTUM);
+        QUANTUM_OWNERS.remove(player.getUUID());
         Dome.close(player, VOID);
         Zone.close(player, FATE);
         player.getPersistentData().remove(SIGHT_CAST);

@@ -187,6 +187,23 @@ public final class Spells {
     }
 
     /**
+     * Projectiles in flight within 'radius' of a point that are not the caster's side's: arrows, fireballs, tridents,
+     * pearls (one with no owner counts too), but not one lying still or stuck in a wall. For fields that slow, stop,
+     * hang or bend what is shot through them (Star Dragon's Time Dilation, the storm, Gravity Authority, the black hole).
+     */
+    public static List<Projectile> hostileShotsAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+        AABB area = new AABB(center, center).inflate(radius);
+        List<Projectile> result = new ArrayList<>();
+        for (Projectile shot : sl.getEntitiesOfClass(Projectile.class, area, Entity::isAlive)) {
+            if (shot.position().distanceToSqr(center) > radius * radius) continue;
+            if (shot.getDeltaMovement().lengthSqr() < 0.0004) continue;                   // lying still, stuck
+            if (shot.getOwner() == caster || shot.getOwner() instanceof LivingEntity owner && isFriend(caster, owner)) continue;
+            result.add(shot);
+        }
+        return result;
+    }
+
+    /**
      * The loose things within 'radius' of a point that a power could lift and throw (combat/Hurled), nearest first:
      * dropped items, projectiles (flying or stuck in a wall), armor stands, and boats, minecarts and the like that
      * nobody rides. Never anything alive and never blocks; things already being thrown are left out.

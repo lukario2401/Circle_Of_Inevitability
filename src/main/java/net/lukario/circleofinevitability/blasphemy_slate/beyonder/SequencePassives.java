@@ -123,12 +123,14 @@ public final class SequencePassives {
 
         // ---- Star Dragon (docs/STAR_DRAGON.md). Also in StarDragon itself: Spiritual Intuition's chime (Sequence 8), Star's
         // Embrace's hearts and half falls (7), Starlight Scales' footing (5), Dense Body's footing, no falls and nothing
-        // moving it (4). Sequences 3 to 0 are the second half.
+        // moving it (4), Fission Touch on a blow (3), Gravity Authority's lightness and slowed projectiles (1), Weight and
+        // Density's steps and nothing rooting or freezing it (0).
         effect("Star Dragon", 9, MobEffects.STRENGTH, 0);                                       // Astronomy Aficionado: Physical Enhancement
         custom("Star Dragon", 9, StarDragon::stargazing);                                       // ...and Stargazing
         custom("Star Dragon", 6, StarDragon::senseOfPassages);                                  // Navigator: Sense of Passages
         effect("Star Dragon", 5, MobEffects.RESISTANCE, 0);                                     // Tidal Scholar: Starlight Scales, Resistance I...
         custom("Star Dragon", 5, StarDragon::starlightScales);                                  // ...and fast swimming
+        custom("Star Dragon", 2, StarDragon::radiance);                                         // Radiant Angel: Radiance
     }
 
     // =========================

@@ -35,8 +35,8 @@ import java.util.function.Predicate;
  * Who it acts on: the owner's enemies, or .affects(...). Allies and the owner are never pulled, pressed or lifted.
  * Pulls go through Spells.pull, so whatever cannot be moved (Spells.addMoveImmunity) stays where it is. A lifted
  * one is put down gently when the field ends or it leaves (no fall damage from the lift itself). Build a new one for
- * every cast. Star Dragon's Gravity Abnormality and Heavybringing; Time Dilation, the Neutron Star and the Singularity
- * are planned on it (docs/STAR_DRAGON.md).
+ * every cast. Star Dragon's Gravity Abnormality, Heavybringing, Time Dilation, the Neutron Star and the Singularity
+ * (docs/STAR_DRAGON.md).
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */

@@ -62,6 +62,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Cheat death once | [`DeathWard`](#deathward) | `status/` |
 | Throw someone into the air without fall damage | [`FallGuard`](#fallguard) | `status/` |
 | Hold in place, freeze | `Root`, `Freeze` (already there) | `root/` |
+| Nothing roots or freezes someone while something is true (a body too dense to hold, a mind no word binds) | [`Root.addImmunity`, `Freeze.addImmunity`](#root-and-freeze-immunities) | `root/` |
 | Less supernatural damage for a while, and blindness, nausea, roots, freezing and taunts shaken off | [`SupernaturalResistance`](#supernaturalresistance) | `status/` |
 | A Beyonder's body: taller, more hearts, longer reach, faster swings, on while something is true | [`Physique`](#physique-a-beyonders-body) | `blasphemy_slate/beyonder/` |
 | Rot: no healing, wither, weakness, armor and weapons wearing out, less maximum health (Twilight, a curse of age) | [`Decay`](#decay) | `status/` |
@@ -75,7 +76,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | "My next few hits are special" (a poison, holy oil, a concoction on the blade) | [`WeaponCoat`](#weaponcoat) | `status/` |
 | Minds slide off you: mobs forget you and abilities cannot choose you, though you are seen and can be hurt | [`Unnoticed`](#unnoticed) | `status/` |
 | A bigger body for a while, with more reach and step, and a madness that can break it (a giant, a titan) | [`GiantForm`](#giantform) | `status/` |
-| A player takes another shape for a while: attributes and effects kept up while it lasts, a weakness after, a clean end on death, logout or a lost Pathway | [`Form`](#form) | `status/` |
+| A player takes another shape for a while: attributes and effects kept up while it lasts, flying, less damage taken, a beat of its own, a weakness after, a clean end on death, logout or a lost Pathway | [`Form`](#form) | `status/` |
 | Armor that is not an item: less damage, a layer of absorption, no knockback (plates of light, a coat of silver) | [`ConjuredArmor`](#conjuredarmor) | `status/` |
 | A weapon that is not an item: while it is drawn, the player's normal hits are its hits (a sword of light, claws of flame) | [`ConjuredWeapon`](#conjuredweapon) | `status/` |
 | The light sources near a spot or near the crosshair, and whether a spot is in daylight | [`Spells.lightNear`, `lightAimed`, `inDaylight`](#1-spells-aiming-and-enemies) | `combat/` |
@@ -95,6 +96,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Know an enemy better and better (0 to 100%, one gauge per caster): every hit on it grows stronger the more you know, and it fades when left alone | [`Study`](#study) | `status/` |
 | Keep spells on paper: a pouch of scrolls, each one a stored cast that goes off for free when read; any spell can be one | [`Scrolls`](#scrolls) | `status/` |
 | A few bodies circling a player (stars, blades, motes) that each stop a projectile and come back, and strike enemies that come close | [`Orbit`](#orbit-bodies-that-circle-and-guard) | `combat/` |
+| Launch one of those bodies yourself (a cluster flung, an asteroid thrown on a blow) and have it back later | [`Orbit.release`](#orbit-bodies-that-circle-and-guard) | `combat/` |
+| The projectiles of the other side near a spot, to slow, stop, hang or bend them | [`Spells.hostileShotsAround`](#1-spells-aiming-and-enemies) | `combat/` |
 | "Less each time": how often a player used something lately, as a multiplier (a story told too often, a trick that wears thin) | [`Tellings`](#tellings-less-each-time) | `combat/` |
 | Ground (or an aura) where gravity is wrong: it pulls things in, presses them down, lifts and holds them, slows them | [`GravityField`](#gravityfield-gravity-gone-wrong) | `combat/` |
 | An instant beam at light speed that shows its line first and cannot be dodged once it fires, through one or everyone on it | [`Ray`](#ray-a-beam-at-light-speed) | `combat/` |
@@ -237,7 +240,8 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `harmfulEffects(entity)` | The harmful effects on it right now |
 | `paySpirituality(player, cost)` | Takes the spirituality (after every `addCostScale` rule) and returns `true`. If there is too little it takes nothing, tells the player and returns `false` |
 | `addCostScale(player -> 1.5f)`, `costFor(player, cost)` | A rule, once in a static block, for what every ability of every Pathway costs a player now (1.5 = half again, 0.8 = 20% less); rules multiply. `paySpirituality` and the wheels (their check, their price and the cost under each icon) ask it; a stolen cast is never scaled. The Illuminator's Eroded, Enlightenment, Enlightenment Aura and Mechanical Heaven |
-| `addMoveImmunity(entity -> ...)`, `cannotBeMoved(entity)` | A rule, once in a static block: while it says true, `push` and `pull` leave that entity where it is (and every field, wave and shove built on them, `GravityField`'s lifting too). The Star Dragon's Dense Body and Heavybringing |
+| `addMoveImmunity(entity -> ...)`, `cannotBeMoved(entity)` | A rule, once in a static block: while it says true, `push` and `pull` leave that entity where it is (and every field, wave and shove built on them, `GravityField`'s lifting too). The Star Dragon's Dense Body, Heavybringing and Neutron Star |
+| `hostileShotsAround(player, sl, center, radius)` | The projectiles in flight within `radius` of a point that are not the caster's side's (one with no owner counts; one lying still or stuck in a wall does not). For a field that slows them, stops them, makes them hang or bends them in: the Star Dragon's Time Dilation, storm, Gravity Authority and Singularity |
 | `isBoss(entity)`, `holdLength(target, ticks)` | A boss: the dragon, the wither, the warden, an elder guardian, or anything with more than `BOSS_HEALTH` (150) maximum health. `holdLength` is the shared rule for how long a hold lasts: `BOSS_HOLD` (half) on a boss, `PLAYER_HOLD` (70%) on a player, all of it on anything else. For lifts, cages, voids, freezes in time |
 | `sound(sl, at, SoundEvents.X, volume, pitch)` | A sound at a spot |
 | `casterStillHere(player, sl)` | `false` once the player died, left or changed dimension. Check it in the later steps of a spell |
@@ -670,13 +674,21 @@ Orbit.around(player, 4)                                             // four bodi
 | `.onTick(age -> ...)`, `.onCatch(...)`, `.onBack(...)`, `.onEnd(...)` | The look. It draws nothing itself |
 | `.open(player, sl, name)` | Opens it; one with the same name is closed first |
 
-`Orbit.isOpen(player, name)`, `ticksLeft`, `ready` (bodies there now), `close`. It ends when its time is up or its owner dies, logs out or changes dimension. Not saved.
+`Orbit.isOpen(player, name)`, `ticksLeft`, `ready` (bodies there now), `age` (what `onTick` was last given), `firstReady` (a body that is there, or -1), `close`. It ends when its time is up or its owner dies, logs out or changes dimension. Not saved.
+
+**Sending one away yourself.** `Orbit.release(player, name, index, awayTicks)` launches body `index`: it returns where the body was (fire a `Shot` from there), or `null` if it is away already, and the body is back `awayTicks` later through `onBack`, or never in this orbit with `0`. The orbit draws nothing, so take its model away yourself. The Star Dragon's asteroid (`StarDragonForms`, thrown on a blow, back 3 seconds later) and Fusion Cluster (`StarDragonSky`, all of them launched after a second of circling):
+
+```java
+int i = Orbit.firstReady(player, "my_pathway_rock");
+Vec3 from = i < 0 ? null : Orbit.release(player, "my_pathway_rock", i, 60);     // back in 3 seconds
+if (from != null) ROCK_SHOT.onHit((target, at) -> Spells.strike(player, target, 40f)).fire(player, sl, from, way);
+```
 
 ---
 
 ## GravityField: gravity gone wrong
 
-A round piece of ground, or an aura round someone, where gravity is not what it should be. It is a `Zone` underneath (its beat, time, owner and name, `Zone.ticksLeft`, `Zone.covers`...), with the pulling, pressing and lifting done for you. Star Dragon's Gravity Abnormality and Heavybringing (`StarDragonGravity`); Time Dilation, the Neutron Star and the Singularity are planned on it.
+A round piece of ground, or an aura round someone, where gravity is not what it should be. It is a `Zone` underneath (its beat, time, owner and name, `Zone.ticksLeft`, `Zone.covers`...), with the pulling, pressing and lifting done for you. Star Dragon's Gravity Abnormality, Heavybringing, Time Dilation, the Neutron Star and the Singularity (`StarDragonGravity`).
 
 ```java
 GravityField.at(ground, 8)                        // on the ground; GravityField.around(player, 16) goes with them
@@ -1481,7 +1493,7 @@ Reasons multiply together. It does not stop fall damage: lift someone with `Fall
 
 ### Weight
 
-Heaviness: something is made Heavy for a while, at a level from 1 to `MAX_LEVEL` (3). Star Dragon's Pressed, Tidal Surge, Scaled Form's blows and Heavybringing.
+Heaviness: something is made Heavy for a while, at a level from 1 to `MAX_LEVEL` (3). Star Dragon's Pressed, Tidal Surge, Scaled Form's blows, Heavybringing and the Neutron Star; Gravity Authority is an `addImmunity` rule.
 
 ```java
 Weight.put(enemy, 1, 60);          // Heavy for 3 seconds
@@ -1592,9 +1604,21 @@ GiantForm.isGiant(entity);   GiantForm.madness(entity);   GiantForm.scale(entity
 - It ends, and shrinks back, on death, logout and a change of dimension. Nothing is saved: after a restart nobody is left giant.
 - The look is yours (`HandOfGodFx.giantForm` shows the one-eyed Giant round the caster; show it before `grow`, so it grows from the old size). Used by Hand Of God's Giant Form, the Abomination's Werewolf Form, and Abomination Form, which shrinks to half.
 
+### Root and Freeze immunities
+
+Some bodies cannot be held. A rule, once in a static block, for as long as it says true:
+
+```java
+Root.addImmunity((entity, restriction) -> restriction == RootRestriction.MOVE && isAnchored(entity));   // per restriction
+Freeze.addImmunity(entity -> isAnchored(entity));                                                     // no ice takes
+Root.isImmune(entity, restriction)   Freeze.isImmune(entity)
+```
+
+A restriction it is immune to is left out when a root is applied, and one it already had ends at its next tick; ice it already had breaks. A frozen player is rooted through `Root` too, so give both rules. A hold you put on yourself must get past your own rule (the Star Dragon's Singularity holds a Condenser while it gathers: its rule says false while `StarDragonGravity.isGathering`). The Star Dragon's Weight and Density and Neutron Star (MOVE, JUMP and TELEPORT, and no freezing), in `StarDragon`'s events.
+
 ### Form
 
-A player takes another shape for a while: the body of that shape (attribute changes and potion effects, kept up while it lasts), a weakness afterwards if you want, and a clean end whatever ends it. One manager for every transformation, so each is a few lines. Star Dragon's Scaled Form and Heavy Body (`StarDragonTides`); the Radiant Angel and Star Dragon forms are planned on it.
+A player takes another shape for a while: the body of that shape (attribute changes and potion effects, kept up while it lasts), a weakness afterwards if you want, and a clean end whatever ends it. One manager for every transformation, so each is a few lines. Star Dragon's Scaled Form and Heavy Body (`StarDragonTides`), Radiant Angel Form and Star Dragon Form (`StarDragonForms`).
 
 ```java
 Form.of("my_pathway_scales")
@@ -1602,13 +1626,16 @@ Form.of("my_pathway_scales")
         .attribute(Attributes.ENTITY_INTERACTION_RANGE, 1.0, AttributeModifier.Operation.ADD_VALUE)
         .effect(MobEffects.STRENGTH, 1)                                  // Strength II while it lasts
         .aftermath(200)                                                  // Weakness I and Slowness I for 10 s after it
+        .flies()                                                         // it can fly while it lasts (status/Flight)
+        .cutsDamage(0.4f)                                                // 40% less damage taken (a ConjuredArmor under its name)
         .keepWhile(player -> SoulCore.getPathway(player).equals(PATHWAY))
         .everySecond(player -> MyFx.aura(...))
+        .every(10, player -> MyFx.glow(...))                             // its own beat: a burn every half second, a wingbeat
         .onEnd((player, why) -> MyFx.formEnd(...))                       // why: TIME, ENDED, REPLACED, LOST, DIED, LEFT
         .take(player);
 ```
 
-`Form.isIn(player, name)`, `current(player)` (its name or `null`), `ticksLeft(player)` (-1 = until ended), `end(player)`, `inAftermath(player)`. One form at a time: taking another ends the first (`REPLACED`). The aftermath follows `TIME` and `ENDED` only. Its model is yours to wear (`ParticleShapes.modelOnTurning`) and take off in `onEnd`. Not saved: after a restart nobody is left transformed.
+`Form.isIn(player, name)`, `current(player)` (its name or `null`), `ticksLeft(player)` (-1 = until ended), `end(player)`, `inAftermath(player)`. One form at a time: taking another ends the first (`REPLACED`). The aftermath follows `TIME` and `ENDED` only. The flight, the damage cut and the beat end with the form, whatever ends it. A form cast again to turn back: end it and return `FREE` from a wheel entry that has `.free(player -> Form.isIn(player, name))`, so the cooldown does not stand in the way (the Radiant Angel and the Star Dragon). Its model is yours to wear (`ParticleShapes.modelOnTurning`) and take off in `onEnd`. Not saved: after a restart nobody is left transformed.
 
 ### ConjuredArmor
 
@@ -1628,7 +1655,7 @@ ConjuredArmor.isWorn(entity, name);   ConjuredArmor.ticksLeft(entity, name);   C
 ```
 
 - Several under different names: the biggest cut counts and the layers add up. Works on mobs too. Not saved.
-- Used by Hand Of God's Dawn Armor and Silver Armor (`dawnArmor` in `HandOfGodDawn.java`), by Mercury Liquefaction on an ally, and by Abomination's Undying Flesh (`undyingFlesh` in `AbominationZombie.java`, with `projectileCut`).
+- Used by Hand Of God's Dawn Armor and Silver Armor (`dawnArmor` in `HandOfGodDawn.java`), by Mercury Liquefaction on an ally, by Abomination's Undying Flesh (`undyingFlesh` in `AbominationZombie.java`, with `projectileCut`), by the Star Dragon's Neutron Star (`steady`), and by every `Form` with `.cutsDamage(...)` (the Star Dragon Form).
 
 ### ConjuredWeapon
 
