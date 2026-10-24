@@ -39,7 +39,7 @@ Open the JSON and check the `textures` part points at the PNG like this:
 
 Blockbench usually writes this for you if the PNG is saved in that folder. Subfolders work too (`model_fx/swords/blade.json` → `"circle_of_inevitability:model_fx/swords/blade"`).
 
-A model can use several textures (`"1"`, `"2"`, `"3"`...), as the Hand Of Order sword does; each one just needs its PNG in `textures/model_fx/` (or a folder inside it). A face whose texture is not found there is not drawn. The PNG can have any size. Animated textures work like on blocks: stack the frames vertically in the PNG and put a `<name>.png.mcmeta` next to it, e.g. `{"animation":{"frametime":3}}`.
+A model can use several textures (`"1"`, `"2"`, `"3"`...); each one just needs its PNG in `textures/model_fx/` (or a folder inside it). A face whose texture is not found there is not drawn. The PNG can have any size. Animated textures work like on blocks: stack the frames vertically in the PNG and put a `<name>.png.mcmeta` next to it, e.g. `{"animation":{"frametime":3}}`.
 
 Every model in `models/model_fx/` is loaded automatically when the game starts, and again whenever the resources are reloaded (F3+T). So a changed model or texture can be looked at without restarting; in the dev client, build the project first so the changed file reaches the running game.
 
@@ -396,7 +396,6 @@ These are in `models/model_fx/` and any Pathway can use them. Sizes are at `.sca
 | `meteor` + `meteor_tail` | Burning rock and the flames behind it | `(8, 6, 8)` for both | Play both with the same keys. The tail points up, so aim the model's up back along the flight |
 | `ice_shell`, `ice_crystals` | The freeze look | default | Used by `Freeze`, see below |
 | `order_hammer` | Hand Of Order's golden hammer | grip `(8, -10, 8)` | |
-| `hand_of_order/sword` | Hand Of Order's sword standing upright, 2.4 blocks tall | its middle `(8, 8, 8)` | Three textures, two of them animated |
 | `prince_of_abolition/spear` | Spear, 3 blocks long, tip up | middle of the shaft `(8, 8, 8)`, tip `(8, 32, 8)` | |
 | `prince_of_abolition/hammer` | Dark hammer | grip `(8, -10, 8)`, flat top of the head `(8, 30, 8)` | |
 | `prince_of_abolition/blade` | Sword hanging point down, 3 blocks tall | its point `(8, -16, 8)` | |
@@ -794,7 +793,7 @@ Everything it uses is generated, from `tools/model_gen/star_dragon/` (run each f
 
 ### Hand Of Order: ready-made displays
 
-`HandOfOrderFx` (in `beyonder_characteristics/hand_of_order/`) holds the Hand Of Order (Justiciar pathway) looks for all seven keys, both casts, the four wheels (Interrogation on key 3, Verdict on key 4, Decree on key 5, Order on key 7), the spoken words of the Verdicts and Decrees, the Convict, the Decree zones and their Violations, the Court of Judgment and its clauses, the statuses, the passives that show, the melee combo and what grows at higher Sequences (Intimidation, Confinement, the void Exile and its hurricane, Death on the latest wound, Prohibition layers, the Brass Pillar). Keys 1 to 4 and 6 use them (`HandOfOrder`, `HandOfOrderInterrogation`, `HandOfOrderVerdicts`); the Decrees and Order displays are ready for the keys still to be written. They only show things; the damage, holding, hiding, healing and moving are the ability's, at the ticks the constants name (`HALT_LANDS`, `JURISDICTION_CLAIMED`, `WHIP_LANDS`, `IMPRISON_LANDS`, `EXILE_LANDS`, `DEATH_LANDS`, `DEPRIVED`, `EXECUTION_LANDS`, `DECREE_RISEN`, `CONTRACT_SIGNED`, `SWORD_LANDS`, `BALANCE_SETTLED`, `DIVIDE_RISEN`, `COURT_RISEN`). The class comment lists every call by key; [HAND_OF_ORDER.md](HAND_OF_ORDER.md) says which call goes with which ability.
+`HandOfOrderFx` (in `beyonder_characteristics/hand_of_order/`) holds the Hand Of Order (Justiciar pathway) looks for all seven keys, both casts, the four wheels (Interrogation on key 3, Verdict on key 4, Decree on key 5, Order on key 7), the spoken words of the Verdicts and Decrees, the Convict, the Decree zones and their Violations, the Court of Judgment and its clauses, the statuses, the passives that show, the melee combo and what grows at higher Sequences (Intimidation, Confinement, the void Exile and its hurricane, Death on the latest wound, Prohibition layers, the Brass Pillar). All seven keys use them (`HandOfOrder`, `HandOfOrderInterrogation`, `HandOfOrderVerdicts`, `HandOfOrderDecrees`, `HandOfOrderOrder`). They only show things; the damage, holding, hiding, healing and moving are the ability's, at the ticks the constants name (`HALT_LANDS`, `JURISDICTION_CLAIMED`, `WHIP_LANDS`, `IMPRISON_LANDS`, `EXILE_LANDS`, `DEATH_LANDS`, `DEPRIVED`, `EXECUTION_LANDS`, `DECREE_RISEN`, `CONTRACT_SIGNED`, `SWORD_LANDS`, `BALANCE_SETTLED`, `DIVIDE_RISEN`, `COURT_RISEN`). The class comment lists every call by key; [HAND_OF_ORDER.md](HAND_OF_ORDER.md) says which call goes with which ability.
 
 Everything it uses is generated, from `tools/model_gen/hand_of_order/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
 

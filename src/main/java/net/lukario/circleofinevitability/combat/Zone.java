@@ -59,6 +59,8 @@ import java.util.function.Predicate;
  *   Zone.ticksInside(player, "my_class_land", enemy)
  *
  * Asking from outside its beat: Zone.covers(player, name, spot) (is a spot in it), centerOf, radiusOf, ticksOpen.
+ * Zone.extend(player, name, 100) makes it last 100 ticks more; Zone.closeNear(sl, spot, 24, owner -> ...) ends every
+ * zone near a spot whose owner the test names (combat/Decree is a zone too, so it ends with them).
  * Zone.addShelter((zoneOwner, entity) -> ...) keeps some entities out of other players' zones altogether.
  *
  * The name tells one player's zones apart: opening one with a name that player already has open closes the old
@@ -274,6 +276,29 @@ public final class Zone {
      */
     public static void addShelter(Shelter shelter) {
         SHELTERS.add(shelter);
+    }
+
+    /** The zone lasts 'ticks' longer. False if there is none. */
+    public static boolean extend(Player owner, String name, int ticks) {
+        Zone zone = find(owner, name);
+        if (zone == null || ticks <= 0) return false;
+        zone.lasts += ticks;
+        return true;
+    }
+
+    /**
+     * Ends every zone in 'level' whose middle lies within 'radius' of 'point' and whose owner 'whose' says true for
+     * (a Quell: Order restores itself, the enemies' fields end). Returns how many ended.
+     */
+    public static int closeNear(ServerLevel level, Vec3 point, double radius, Predicate<Player> whose) {
+        int ended = 0;
+        for (Zone zone : new ArrayList<>(OPEN)) {
+            if (zone.closed || zone.level != level || !whose.test(zone.owner)) continue;
+            if (zone.center().distanceToSqr(point) > radius * radius) continue;
+            zone.end();
+            ended++;
+        }
+        return ended;
     }
 
     /** Ends the zone now (its onLeave and onEnd run). Does nothing if there is none. */

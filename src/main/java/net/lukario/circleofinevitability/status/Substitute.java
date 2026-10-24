@@ -37,6 +37,8 @@ import java.util.UUID;
  * Fire, falling, drowning, poison and the like go through and do not use it up; neither do hits the game would
  * ignore anyway (creative mode, the short invulnerability right after another hit).
  * Arming again replaces the old one. Not saved: gone after a server restart, on logout and on death.
+ * Inside a Decree that forbids stand-ins (status/Decree, STAND_INS) arming does nothing and an armed one does not
+ * take the hit (it stays armed for outside); each try is a Violation.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -71,6 +73,7 @@ public final class Substitute {
 
     public static void arm(LivingEntity entity, int ticks, int charges, Escape escape) {
         if (!(entity.level() instanceof ServerLevel sl) || ticks <= 0 || charges <= 0 || escape == null) return;
+        if (Decree.violate(entity, Decree.Rule.STAND_INS)) return;       // stand-ins are prohibited here
         long now = sl.getGameTime();
         ARMED.values().removeIf(old -> old.expires < now);         // the ones nobody ever hit
         ARMED.put(entity.getUUID(), new Armed(now + ticks, charges, escape));
@@ -127,6 +130,7 @@ public final class Substitute {
         if (!isArmed(entity)) return false;
         if (Spells.isPiercing(entity)) return false;                 // Spells.strikeThrough: nothing takes it in their place
         if (!isRealHit(entity, event.getSource(), event.getAmount())) return false;
+        if (Decree.violate(entity, Decree.Rule.STAND_INS)) return false; // armed before, but nothing stands in for it here
 
         Armed armed = ARMED.get(entity.getUUID());
         armed.charges--;

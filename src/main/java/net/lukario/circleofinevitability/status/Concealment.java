@@ -40,7 +40,8 @@ import net.minecraftforge.fml.common.Mod;
  *   - it can still walk around. A hidden player who attacks something steps back out (BREAKS_ON_ATTACK);
  *     abilities should call Concealment.reveal(player) when they are cast, if casting should end it.
  *
- * Saved with the entity, so someone hidden still comes back properly after a reload.
+ * Saved with the entity, so someone hidden still comes back properly after a reload. Inside a Decree that forbids it
+ * (status/Decree, CONCEALMENT) hide does nothing and counts as a Violation.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -73,6 +74,7 @@ public final class Concealment {
     /** Hides the entity for 'ticks' ticks. Hiding something already hidden only makes it last longer. */
     public static void hide(LivingEntity entity, int ticks) {
         if (ticks <= 0 || !entity.isAlive() || !(entity.level() instanceof ServerLevel sl)) return;
+        if (Decree.violate(entity, Decree.Rule.CONCEALMENT)) return;     // "Concealment is prohibited here!"
 
         CompoundTag tag = concealTag(entity);
         if (tag == null) {

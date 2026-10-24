@@ -27,9 +27,12 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 /**
  * Roots: take away some or all of what an entity (mob or player) can do, for a while.
@@ -43,6 +46,10 @@ import java.util.Set;
  *   Root.isRooted(target)                       // any restriction at all?
  *   Root.remove(target)                         // free it
  *   Root.remove(target, RootRestriction.ATTACK) // give back just one thing
+ *
+ * Something else can hold an entity as a root would, without a root's timer or its ring (a Decree's Rule against
+ * teleporting): Root.addHold((entity, restriction) -> ...) once, in a static block. Root.has then says true for it,
+ * so everything that asks Root.has refuses as for a root; isRooted, remove and ticksLeft only know real roots.
  *
  * Every restriction has its own timer, so roots stack nicely: applying a shorter root never
  * shortens a longer one that's already there. Saved with the entity, cleared on death.
@@ -63,7 +70,14 @@ public final class Root {
             .lifetime(12).friction(1f).gravity(-0.02f)
             .glow();
 
+    private static final List<BiPredicate<Entity, RootRestriction>> HOLDS = new ArrayList<>();
+
     private Root() {}
+
+    /** One more thing that holds entities as a root would (see the class comment). */
+    public static void addHold(BiPredicate<Entity, RootRestriction> hold) {
+        HOLDS.add(hold);
+    }
 
     // =========================
     // API
@@ -103,7 +117,11 @@ public final class Root {
     public static boolean has(Entity entity, RootRestriction restriction) {
         if (entity == null) return false;
         CompoundTag tag = rootTag(entity, false);
-        return tag != null && tag.getIntOr(restriction.name(), 0) > 0;
+        if (tag != null && tag.getIntOr(restriction.name(), 0) > 0) return true;
+        for (BiPredicate<Entity, RootRestriction> hold : HOLDS) {
+            if (hold.test(entity, restriction)) return true;
+        }
+        return false;
     }
 
     public static boolean isRooted(Entity entity) {

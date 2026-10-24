@@ -4,6 +4,7 @@ import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.DamageLink;
 import net.lukario.circleofinevitability.status.DeathWard;
+import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Substitute;
 import net.minecraft.server.level.ServerLevel;
@@ -22,8 +23,8 @@ import java.util.function.ToIntFunction;
  *
  * +1 for each of these on it: Concealment, a Substitute armed, a DeathWard armed, a DamageLink (redirected or shared),
  * a root (Root) of any kind, being a marionette or summon, and for a player each marionette they hold; +1 for each
- * ability a player cast in the last 10 seconds (combat/Residue), at most CASTS_MAX. More can be counted once, in a
- * static block (a Violation of a Decree, a curse of your own):
+ * ability a player cast in the last 10 seconds (combat/Residue), at most CASTS_MAX; +1 for each Violation of a Decree
+ * it stands in (status/Decree), at most VIOLATIONS_MAX. More can be counted once, in a static block (a curse of your own):
  *
  *   Disorder.addSource(entity -> MyStatus.isOn(entity) ? 1 : 0);
  *
@@ -37,6 +38,8 @@ public final class Disorder {
     public static int CASTS_WINDOW = 200;
     /** ...and at most this many of them. */
     public static int CASTS_MAX = 3;
+    /** +1 for each Violation of a Decree it stands in (status/Decree), at most this many. */
+    public static int VIOLATIONS_MAX = 3;
 
     private static final List<ToIntFunction<LivingEntity>> SOURCES = new ArrayList<>();
 
@@ -61,6 +64,7 @@ public final class Disorder {
             score += Marionette.of(player).size();
             score += recentCasts(sl, player);
         }
+        score += Math.min(VIOLATIONS_MAX, Decree.violations(entity));
         for (ToIntFunction<LivingEntity> source : SOURCES) score += Math.max(0, source.applyAsInt(entity));
         return score;
     }

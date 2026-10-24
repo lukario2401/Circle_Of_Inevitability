@@ -17,6 +17,8 @@ import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Chosen;
 import net.lukario.circleofinevitability.status.Concealment;
+import net.lukario.circleofinevitability.status.Decree;
+import net.lukario.circleofinevitability.status.EmpoweredHit;
 import net.lukario.circleofinevitability.status.Exposed;
 import net.lukario.circleofinevitability.status.Fear;
 import net.lukario.circleofinevitability.status.Forgotten;
@@ -46,6 +48,7 @@ import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import net.minecraftforge.event.entity.living.MobEffectEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -69,17 +72,19 @@ import java.util.UUID;
  *                                            (HandOfOrderInterrogation)        | sneak: the last pick again
  *   4 Verdict         (Judge)                the wheel: Imprison (Confinement from 4), Exile, Death, Maintain
  *                                            Secrecy (6), Deprivation, Execution (4) (HandOfOrderVerdicts) | sneak: the last pick
- *   5 Decree          (Judge)                NOT WRITTEN YET: Prohibition: Passage, Prohibition: Concealment,
- *                                            Imperative: Reality, Contract (docs, "Still to build")
+ *   5 Decree          (Judge)                the wheel: Prohibition: Passage, Prohibition: Concealment, Imperative:
+ *                                            Reality, Contract (4) (HandOfOrderDecrees)          | sneak: the last pick
  *   6 Judgment        (Disciplinary Paladin) Punishment: name the Convict   | sneak: Sword of Judgment (Chaos Hunter)
- *   7 Order           (Balancer)             NOT WRITTEN YET: Balance, Divide the Battlefield, Law: No Return, Order
- *                                            Proxy, Quell Disorder, Court of Judgment
+ *   7 Order           (Balancer)             the wheel: Balance, Divide the Battlefield, Law: No Return (2), Order
+ *                                            Proxy, Quell Disorder (1), Court of Judgment (0) (HandOfOrderOrder) | sneak: the last pick
  *
  * The parts of the kit it leans on, any Pathway can use too: status/Chosen (the Convict, the one Recognized),
  * combat/Disorder (what the Sword of Judgment strikes hardest), status/Forgotten (Halt, Maintain Secrecy),
- * status/KeySeal (Deprivation), combat/Zone (Jurisdiction), status/WeaponCoat (Psychic Lashing), status/Exile (the void).
- * Every cast's cost goes through costFor / pay (a Jurisdiction makes Order cheaper) and every wheel's cooldown through
- * cooldownFor: that is where Order Proxy's "free, no cooldown" goes when it is written.
+ * status/KeySeal (Deprivation), combat/Zone (Jurisdiction), status/WeaponCoat (Psychic Lashing), status/Exile (the void),
+ * status/Decree (every Rule, Violation and Law), combat/Dome (Divide the Battlefield).
+ * Every cast's cost goes through costFor / pay (a Jurisdiction makes Order cheaper; a Decree's through decreeCostFor)
+ * and every wheel's cooldown through cooldownFor. Order Proxy's "free, no cooldown" is a Spells.addCostScale and a
+ * Cooldowns.addScale (below, in HandOfOrderEvents), so it reaches every key and every wheel at once.
  *
  * Every look and sound is in HandOfOrderFx (see /orderfx); this class only decides who is held, hurt and judged, and
  * when. Nothing here breaks blocks or lights real fire. The numbers for every ability are below.
@@ -178,9 +183,17 @@ public class HandOfOrder {
     private static final int IMBALANCE_TICKS = 30;
     private static final double SENSE_ORDER_RADIUS = 48.0;               // Sense of Order (1): casts this close chime
 
-    // Keys 5 and 7: not written yet (docs/HAND_OF_ORDER.md, "Still to build")
-    private static final int DECREE_SEQUENCE = 6;
-    private static final int ORDER_SEQUENCE = 2;
+    // What grows on the Decrees and Punishment (keys 5 and 7 are HandOfOrderDecrees and HandOfOrderOrder)
+    private static final int SENSE_OF_ORDER_SEQUENCE = 1;                // Sense of Order (1): Rules written by an enemy of a
+                                                                         // lower Sequence cannot bind you
+    private static final int SURE_HIT_SEQUENCE = 3;                      // Chaos Hunter: the Convict breaking your Rule...
+    private static final int SURE_HIT_TICKS = 200;                       // ...makes your next hit on it within this...
+    private static final float SURE_HIT_MORE = 1.5f;                     // ...sure (no shield) and this much harder
+    private static final int MANY_DECREES_SEQUENCE = 1;                  // Hand of Order: Decrees last twice as long
+    private static final float MANY_DECREES_LONGER = 2f;
+    private static final int LAW_OF_ORDER_SEQUENCE = 0;                  // Justiciar, Law of Order: Decrees cost 25% less...
+    private static final float LAW_OF_ORDER_CHEAPER = 0.75f;
+    private static final float LAW_OF_ORDER_LONGER = 1.25f;              // ...and last 25% longer
 
     static final float BOSS_HEALTH = 150f;
 
@@ -194,6 +207,7 @@ public class HandOfOrder {
     private static final String PUNISHMENT_PENDING = "hand_of_order_punishment_pending";
     private static final String INTUITION_READY = "hand_of_order_intuition_ready";
     private static final String RECOGNITION_COUNTER = "hand_of_order_recognition";  // combat/HudCounter
+    static final String SURE_HIT = "hand_of_order_sure_hit";                         // status/EmpoweredHit
 
     private static final String HALT_KEY = "hand_of_order_halt";          // combat/Cooldowns
     private static final String PRESENCE_KEY = "hand_of_order_presence";
@@ -239,6 +253,13 @@ public class HandOfOrder {
                 HudCounter.hide(chooser, RECOGNITION_COUNTER);
                 HandOfOrderFx.statusEnd(chooser, Status.RECOGNITION);
             });
+            // Order Proxy: every ability costs nothing and has no cooldown while it lasts (every key and wheel asks these)
+            Spells.addCostScale(player -> HandOfOrderOrder.isProxy(player) ? 0f : 1f);
+            Cooldowns.addScale(player -> HandOfOrderOrder.isProxy(player) ? 0f : 1f);
+            // no Rule binds an Order Proxy; from Hand of Order (1) no Rule of a lower Sequence binds you (Sense of Order)
+            Decree.addImmunity((owner, entity, rule) -> entity instanceof Player player
+                    && (HandOfOrderOrder.isProxy(player) || (isHandOfOrder(player, SENSE_OF_ORDER_SEQUENCE)
+                    && SoulCore.getSequence(owner) > SoulCore.getSequence(player))));
         }
 
         @SubscribeEvent
@@ -248,6 +269,7 @@ public class HandOfOrder {
             if (player.tickCount % 20 == 0) bodyTick(player);
             if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
             HandOfOrderInterrogation.tick(player, sl);
+            HandOfOrderOrder.tick(player, sl);
             if (player.tickCount % 20 == 0) {
                 recognitionTick(player, sl);
                 convictTick(player);
@@ -277,6 +299,14 @@ public class HandOfOrder {
             if (Beyonder.hasSequence(victim, DEMOLITION_SEQUENCE) && event.getSource().is(DamageTypeTags.IS_EXPLOSION)) {
                 event.setAmount(event.getAmount() * (1f - DEMOLITION_CUT));
             }
+        }
+
+        /** Chaos Hunter's sure hit: the Convict's raised shield drops before the blow lands. */
+        @SubscribeEvent
+        public static void onHandOfOrderSwing(AttackEntityEvent event) {
+            Player player = event.getEntity();
+            if (player.level().isClientSide() || !EmpoweredHit.isArmed(player, SURE_HIT)) return;
+            if (event.getTarget() instanceof LivingEntity target && Chosen.is(target, player, CONVICT)) target.stopUsingItem();
         }
 
         /** What really got through to a Hand Of Order: a blow breaks an Execution being wound up. */
@@ -587,9 +617,34 @@ public class HandOfOrder {
         return "ho_convict_" + player.getId();
     }
 
-    /** The Convict of this player right now, or null. For other keys (the Decrees' sure hit, when it is written). */
+    /** The Convict of this player right now, or null. */
     public static LivingEntity convictOf(Player player) {
         return Chosen.of(player, CONVICT);
+    }
+
+    /**
+     * Chaos Hunter (3), "Violators will be punished!": 'who' broke a Rule of 'owner''s Decree. If it is the owner's
+     * Convict, the owner's next real hit on it within SURE_HIT_TICKS cannot be blocked and is SURE_HIT_MORE harder
+     * (status/EmpoweredHit; a hit on anything else leaves it armed).
+     */
+    static void violatorPunished(Player owner, LivingEntity who, ServerLevel sl) {
+        if (!isHandOfOrder(owner, SURE_HIT_SEQUENCE) || convictOf(owner) != who) return;
+        armSureHit(owner, SURE_HIT_TICKS);
+        HandOfOrderFx.convictPunished(sl, who);
+        owner.sendSystemMessage(Component.literal("Violators will be punished! Your next blow on the Convict is sure."));
+    }
+
+    private static void armSureHit(Player owner, int ticks) {
+        long until = owner.level().getGameTime() + ticks;
+        EmpoweredHit.arm(owner, SURE_HIT, ticks, (attacker, target, amount, level) -> {
+            if (Chosen.is(target, attacker, CONVICT)) {
+                HandOfOrderFx.convictHit(level, target);
+                return amount * SURE_HIT_MORE;
+            }
+            int left = (int) (until - level.getGameTime());          // another was struck: it waits on for the Convict
+            if (left > 1) Later.run(level, 1, () -> armSureHit(attacker, left - 1));
+            return amount;
+        });
     }
 
     private static void swordOfJudgment(Player player, ServerLevel sl) {
@@ -614,10 +669,20 @@ public class HandOfOrder {
         }
         if (!pay(player, SWORD_COST)) return;
         Cooldowns.start(player, SWORD_KEY, SWORD_COOLDOWN);
+        judge(player, sl, target, stand);
+    }
+
+    /**
+     * The Judgment itself, paid for or not: one stride to 'stand' (null: it falls from where you are), and the cut at
+     * HandOfOrderFx.SWORD_LANDS. The Court of Judgment gives it free on a third breach (HandOfOrderOrder).
+     */
+    static void judge(Player player, ServerLevel sl, LivingEntity target, Vec3 stand) {
         int disorder = Disorder.of(target);
         Vec3 from = player.position();
-        player.teleportTo(stand.x, stand.y, stand.z);
-        player.fallDistance = 0;
+        if (stand != null) {
+            player.teleportTo(stand.x, stand.y, stand.z);
+            player.fallDistance = 0;
+        }
         HandOfOrderFx.swordOfJudgment(sl, player, from, target);
         Spells.cleanse(player);
         HandOfOrderFx.judgmentCleanse(sl, player);
@@ -654,20 +719,7 @@ public class HandOfOrder {
         return best;
     }
 
-    // =========================
-    // Keys 5 and 7: not written yet (docs/HAND_OF_ORDER.md, "Still to build"). Each will be a wheel class like
-    // HandOfOrderVerdicts (HandOfOrderDecrees, HandOfOrderOrder); its key method replaces the one here and its line in
-    // network/SKeyPressAbilityFiveUsed / SevenUsed and PathwayAbilities stays the same.
-    // =========================
-    public static void handOfOrderDecree(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, DECREE_SEQUENCE)) return;
-        player.sendSystemMessage(Component.literal("The Decrees are not written yet."));
-    }
-
-    public static void handOfOrderOrder(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, ORDER_SEQUENCE)) return;
-        player.sendSystemMessage(Component.literal("The powers of Order are not written yet."));
-    }
+    // Keys 5 and 7 are wheels of their own: HandOfOrderDecrees.handOfOrderDecree and HandOfOrderOrder.handOfOrderOrder.
 
     // =========================
     // What a cast costs, how long a cooldown is, how long a Decree lasts (every key and wheel entry goes through these)
@@ -675,8 +727,9 @@ public class HandOfOrder {
 
     /**
      * What a cast of 'cost' really costs this player now: JURISDICTION_DISCOUNT while they stand in their own
-     * Jurisdiction. The one place for every rule that changes a Hand Of Order's costs (Order Proxy's "costs nothing"
-     * goes here). Wheel entries call it through .costBy(...).
+     * Jurisdiction. The one place for the rules that change only a Hand Of Order's own costs (Order Proxy's "costs
+     * nothing" is a Spells.addCostScale in HandOfOrderEvents, so it reaches everything). Wheel entries call it
+     * through .costBy(...).
      */
     public static int costFor(Player player, int cost) {
         if (cost <= 0 || Beyonder.isCastingUnbound(player) || !SoulCore.getPathway(player).equals(PATHWAY)) return cost;
@@ -684,15 +737,30 @@ public class HandOfOrder {
         return cost;
     }
 
-    /** What a wheel cooldown of 'ticks' is for this player now (Order Proxy's "no cooldown" goes here). */
+    /** What a Decree of 'cost' costs: Law of Order (0) makes it LAW_OF_ORDER_CHEAPER, then costFor. */
+    public static int decreeCostFor(Player player, int cost) {
+        if (isHandOfOrder(player, LAW_OF_ORDER_SEQUENCE)) cost = Math.round(cost * LAW_OF_ORDER_CHEAPER);
+        return costFor(player, cost);
+    }
+
+    /**
+     * What a wheel cooldown of 'ticks' is for this player now. (Order Proxy's "no cooldown" is a Cooldowns.addScale,
+     * which the wheels apply after this.) The place for a rule that shortens only this Pathway's wheels.
+     */
     public static int cooldownFor(Player player, int ticks) {
         return ticks;
     }
 
-    /** How long a Decree of 'ticks' lasts for this player: longer in their Jurisdiction (and from Justiciar, Law of Order). */
+    /**
+     * How long a Decree of 'ticks' lasts for this player: JURISDICTION_DECREES_LONGER in their Jurisdiction,
+     * MANY_DECREES_LONGER from Hand of Order (1), and LAW_OF_ORDER_LONGER from Justiciar (0).
+     */
     public static int decreeTicksFor(Player player, int ticks) {
-        if (inJurisdiction(player)) return Math.round(ticks * JURISDICTION_DECREES_LONGER);
-        return ticks;
+        float scale = 1f;
+        if (inJurisdiction(player)) scale *= JURISDICTION_DECREES_LONGER;
+        if (isHandOfOrder(player, MANY_DECREES_SEQUENCE)) scale *= MANY_DECREES_LONGER;
+        if (isHandOfOrder(player, LAW_OF_ORDER_SEQUENCE)) scale *= LAW_OF_ORDER_LONGER;
+        return Math.round(ticks * scale);
     }
 
     /** Pays for a cast by key (after costFor). False, with the usual message, if it cannot. */
@@ -801,6 +869,7 @@ public class HandOfOrder {
         HudCounter.hide(player, RECOGNITION_COUNTER);
         HandOfOrderInterrogation.clearState(player);
         HandOfOrderVerdicts.forget(player);
+        HandOfOrderOrder.clearState(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) HandOfOrderFx.statusEnd(player, status);   // a clock left running before death
     }

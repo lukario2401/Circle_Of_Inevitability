@@ -7,7 +7,9 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationZombie;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderDecrees;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderInterrogation;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderOrder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderVerdicts;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting;
@@ -109,12 +111,12 @@ public final class PathwayAbilities {
                     (player, level, sl) -> HandOfOrderInterrogation.handOfOrderInterrogation(player, level, sl, true)),
             new Ability("Hand Of Order", 4, "Verdict", 6, SNEAK, STEALABLE,                     // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> HandOfOrderVerdicts.handOfOrderVerdict(player, level, sl, true)),
-            new Ability("Hand Of Order", 5, "Decree", 6, NO_SNEAK, OWN_PATHWAY_ONLY,            // not written yet
-                    (player, level, sl) -> HandOfOrder.handOfOrderDecree(player, level, sl, true)),
+            new Ability("Hand Of Order", 5, "Decree", 6, SNEAK, STEALABLE,                      // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> HandOfOrderDecrees.handOfOrderDecree(player, level, sl, true)),
             new Ability("Hand Of Order", 6, "Punishment", 5, SNEAK, STEALABLE,
                     (player, level, sl) -> HandOfOrder.handOfOrderJudgment(player, level, sl, true)),
-            new Ability("Hand Of Order", 7, "Order", 2, NO_SNEAK, OWN_PATHWAY_ONLY,             // not written yet
-                    (player, level, sl) -> HandOfOrder.handOfOrderOrder(player, level, sl, true)),
+            new Ability("Hand Of Order", 7, "Order", 2, SNEAK, OWN_PATHWAY_ONLY,                // a power too great to steal
+                    (player, level, sl) -> HandOfOrderOrder.handOfOrderOrder(player, level, sl, true)),
 
             // ---- Frenzied Mage ----
             new Ability("Frenzied Mage", 1, "Spear", 9, SNEAK, STEALABLE,

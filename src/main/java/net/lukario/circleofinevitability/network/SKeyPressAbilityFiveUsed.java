@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
 import net.lukario.circleofinevitability.status.Silence;
@@ -20,7 +21,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessLunarBattlefield;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod.handOfGodProtection;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneSpirits.knightOfMisfortuneSpiritCommanding;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder.handOfOrderDecree;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderDecrees.handOfOrderDecree;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsTransport;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageMeteor;
@@ -43,6 +44,8 @@ public class SKeyPressAbilityFiveUsed {
 
         if (!(level instanceof ServerLevel serverLevel)) return;
 
+        // a Decree that prohibits abilities here (status/Decree, ABILITIES): refused, and a Violation
+        if (Decree.blocksKey(player, 5)) return;
         // rooted with ABILITIES = can't use any ability (status/Silence lets a power that needs no voice through)
         if (Silence.blocksKey(player, 5)) {
             player.sendOverlayMessage(Component.literal("You are bound by Order."));

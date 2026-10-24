@@ -35,6 +35,8 @@ import java.util.UUID;
  * It saves from everything except the void and /kill. A totem of undying in the hand is used first.
  * For GRACE_TICKS afterwards nothing can hurt them, so whatever killed them does not simply do it again.
  * Arming again replaces the old ward. Not saved: wards are gone after a server restart or when the player logs out.
+ * Inside a Decree that forbids resurrection (status/Decree, RESURRECTION) arming does nothing and an armed ward is
+ * spent without saving them; each is a Violation.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -63,6 +65,7 @@ public final class DeathWard {
 
     public static void arm(LivingEntity entity, int ticks, float healthFraction, Revive onRevive) {
         if (!(entity.level() instanceof ServerLevel sl) || ticks <= 0) return;
+        if (Decree.violate(entity, Decree.Rule.RESURRECTION)) return;    // "Resurrection of the dead is prohibited here!"
         long now = sl.getGameTime();
         WARDS.values().removeIf(old -> old.expires() < now);        // the ones that faded unused
         WARDS.put(entity.getUUID(), new Ward(now + ticks, healthFraction, onRevive));
@@ -101,6 +104,10 @@ public final class DeathWard {
         if (!isArmed(entity)) return false;
         if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;   // the void and /kill still kill
         if (Spells.isPiercing(entity)) return false;                 // Spells.strikeThrough: no ward saves from it (it stays armed)
+        if (Decree.violate(entity, Decree.Rule.RESURRECTION)) {      // a Law: No Return: the ward is void, the dead stay dead
+            WARDS.remove(entity.getUUID());
+            return false;
+        }
 
         Ward ward = WARDS.remove(entity.getUUID());
         // (returning true below cancels the death)

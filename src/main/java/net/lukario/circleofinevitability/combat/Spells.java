@@ -724,8 +724,24 @@ public final class Spells {
      */
     public static void strike(Player caster, LivingEntity target, float damage) {
         target.invulnerableTime = 0;
-        target.hurt(caster.damageSources().playerAttack(caster), damage);
+        SPELL_HITS.add(target.getUUID());
+        try {
+            target.hurt(caster.damageSources().playerAttack(caster), damage);
+        } finally {
+            SPELL_HITS.remove(target.getUUID());
+        }
         caster.setLastHurtMob(target);
+    }
+
+    /** The entities a Spells.strike is landing on right now (only during the strike itself). */
+    private static final Set<UUID> SPELL_HITS = new HashSet<>();
+
+    /**
+     * True while an ability's strike (strike, strikeThrough, strikeTrue) is landing on this entity. Such a hit looks
+     * like a player's attack to the game; this tells it from a swing (an Imperative: Reality weakens only abilities).
+     */
+    public static boolean isSpellHit(LivingEntity entity) {
+        return !SPELL_HITS.isEmpty() && SPELL_HITS.contains(entity.getUUID());
     }
 
     /** The entities a strikeThrough is landing on right now (only during the strike itself). */

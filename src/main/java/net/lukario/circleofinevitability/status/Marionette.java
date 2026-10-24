@@ -120,6 +120,7 @@ public final class Marionette {
      * @return false if it cannot be taken: dead, in another dimension, or another player's marionette
      */
     public static boolean control(Mob mob, Player master, int ticks) {
+        if (Decree.violate(master, Decree.Rule.MARIONETTES)) return false;     // strings are prohibited here
         return take(mob, master, ticks, false);
     }
 

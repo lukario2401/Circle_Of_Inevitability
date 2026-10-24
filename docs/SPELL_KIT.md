@@ -116,6 +116,10 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Remember ONE target a player picked, under a name, for a while (a Convict, a quarry, the one memorized), and do something when it ends | [`Chosen`](#chosen) | `status/` |
 | Seal one ability key of a player for a while, and know which keys they used last (a power stripped away) | [`KeySeal`](#keyseal) | `status/` |
 | How much an entity is bending the order of things right now, as a score (hiding, wards, links, roots, puppets, recent casts) | [`Disorder`](#disorder-how-much-order-is-bent) | `combat/` |
+| Ground where Rules are in force for your enemies (no teleporting, hiding, stand-ins, revival, puppets, healing, shots, abilities, or a Reality that weakens magic), each broken Rule a counted Violation you punish | [`Decree`](#decree-ground-where-rules-are-in-force) | `status/` |
+| Hold an entity as a root would, without a root's timer or ring, while something says so (every `Root.has` check obeys) | [`Root.addHold`](#root-and-freeze) | `root/` |
+| Tell an ability's hit (`Spells.strike...`) from a plain swing in a hurt event | [`Spells.isSpellHit`](#1-spells-aiming-and-enemies) | `combat/` |
+| Make a zone last longer, or end every enemy zone near a spot (a Quell) | [`Zone.extend`, `Zone.closeNear`](#zone-ground-that-keeps-doing-something) | `combat/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 
@@ -216,6 +220,7 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `canBeChosen(entity)` | `false` for one an ability may not pick as its target (an `Unnoticed` mind) though it is there. The aiming above already asks it; ask it yourself when you pick a target another way |
 | `strikeThrough(player, target, damage)` | Like `strike`, but no `Dome` shield softens it, no `Substitute` takes it and no `DeathWard` saves from it (none of them is used up). `isPiercing(entity)` is `true` while one lands: a shield or ward of your own should let it through too |
 | `strikeTrue(player, target, damage)` | Like `strikeThrough`, and nothing softens it either: a raised shield is dropped first, and the target loses what the hit comes to after the damage events (bonuses such as `Vulnerable` or a Pathway's might, the target's own Pathway defenses) with nothing taken off by armor, Protection, Resistance or absorption hearts. Something that cancels the hit outright (`Concealment`, `Exile`, a `Falter` miss) still stops it. Decree (`PrinceOfAbolitionSovereign`) |
+| `isSpellHit(entity)` | `true` while any of the three strikes above is landing on it. Such a hit looks like a player's attack to the game; this tells it from a swing in a hurt event (an Imperative: Reality halves only abilities) |
 | `cleanse(entity)` | Every harmful potion effect off, the fire out, and every status that listens to [`Cleansing`](#cleansing) (Corrosion, and any of your own) |
 | `lightNear(sl, center, radius, minLight)` | The blocks giving off at least `minLight` light (torch 14, lantern and glowstone 15) within `radius` (8 at most: every block is looked at), nearest first |
 | `lightAimed(player, sl, range, around, minLight)` | The light source nearest to what the crosshair is on, within `around` of it, or `null` |
@@ -496,6 +501,8 @@ Zone.at(ground, 8)                                       // its middle on the gr
 | `Zone.covers(player, name, spot)` | `true` if the spot is in that zone right now: within its radius across, and between 1.5 blocks under its ground and its height above. "Is the attacker standing in my field?" (Entropy's swing, `PrinceOfAbolitionSovereign.entropySwing`) |
 | `Zone.centerOf(player, name)`, `radiusOf`, `ticksOpen` | Where its middle is now (an aura moves), how far it reaches, how long it has been open (a field that grows stronger the longer it stands) |
 | `Zone.addShelter((zoneOwner, entity) -> ...)` | Once, in a static block: while it says `true`, no zone of `zoneOwner` acts on `entity` (it is skipped as if it stood outside). A pocket out of the world, a sanctuary no field reaches (the Black Emperor's Abolition) |
+| `Zone.extend(player, name, ticks)` | It lasts that much longer (a second layer of a Prohibition). `false` if there is none |
+| `Zone.closeNear(sl, spot, radius, owner -> ...)` | Ends every zone whose middle is within `radius` of `spot` and whose owner the test names; returns how many. `Decree`s are zones, so they end too (Quell Disorder: `owner -> !Spells.isFriend(player, owner)`) |
 
 Good to know:
 
@@ -712,7 +719,52 @@ int disorder = Disorder.of(target);
 Disorder.addSource(entity -> MyStatus.isOn(entity) ? 1 : 0);      // once, in a static block: one more thing that counts
 ```
 
-The Decrees' Violations are meant to come in through `addSource`.
+Each Violation of a `Decree` it stands in counts +1 too (at most `Disorder.VIOLATIONS_MAX`, 3).
+
+## Decree: ground where Rules are in force
+
+A round piece of ground where Rules hold the owner's enemies (never the owner or their allies). What a Rule forbids is refused there, and every try is a **Violation**: counted one by one per Decree, so the owner can punish each one harder than the last. The Hand Of Order's Prohibitions, Imperative: Reality, Law: No Return and Court of Judgment.
+
+```java
+Decree.at(ground, 14)                                    // its middle on the ground, and how far it reaches
+        .forbid(Decree.Rule.PASSAGE, Decree.Rule.CONCEALMENT)
+        .lasts(240)                                      // ticks (default 300)
+        .height(8)                                       // how far up it still holds (default 6)
+        .binds(enemy -> !isStronger(enemy))              // of the owner's enemies, only these (default: all)
+        .onViolation((who, rule, count, sl) -> {         // count = its 1st, 2nd, 3rd... Violation in this Decree
+            if (count >= 2) Spells.strikeTrue(player, who, 30f * count);
+        })
+        .onEnter(enemy -> ...)                           // one it binds stepped in
+        .onPulse(40, ticksLeft -> MyFx.decreeTick(...))  // every 40 ticks, once: its look
+        .onEnd(() -> MyFx.decreeEnd(...))
+        .write(player, sl, "my_pathway_decree");
+```
+
+| Rule | What it stops for those it binds, while they stand in it |
+|---|---|
+| `PASSAGE` | Teleports (ender pearls, chorus fruit, every ability that asks `Root.has(.., TELEPORT)`: Flaming Jump, the Sword of Judgment...), flying, `Flight`, `Glide`, elytra, levitation |
+| `CONCEALMENT` | `Concealment.hide` is refused; anyone hidden inside is pulled out (`Exposed`) |
+| `STAND_INS` | `Substitute.arm` is refused, and one armed before does not take the hit inside |
+| `RESURRECTION` | `DeathWard.arm` is refused, an armed ward does not save them, a totem of undying does not work |
+| `MARIONETTES` | Their marionettes stand frozen inside; `Marionette.control` is refused |
+| `HEALING` | No healing at all |
+| `PROJECTILES` | Their projectiles end at the edge, or as they are shot |
+| `ABILITIES` | A player's ability keys refuse (`Decree.blocksKey` in the key packets); a mob's special attacks are locked (`AbilityLock`) |
+| `REALITY` | Not a ban but a weight, on **everyone** inside, allies too: ability damage `Decree.REALITY_ABILITY` (0.5), plain weapon, arrow and fall damage `REALITY_PLAIN` (1.25), abilities cost `REALITY_COST` (1.5). The owner's own casts are spared |
+
+While it is written: `Decree.isWritten`, `ticksLeft`, `close`, `extend(player, name, ticks)`, `forbid(player, name, rule)` (one more Rule, now: a Court writing its clauses), `rules`, `centerOf`, `radiusOf`, `violationsIn(player, name, entity)`. From anywhere:
+
+```java
+if (Decree.violate(entity, Decree.Rule.STAND_INS)) return;   // a status of your own: refused here, and the Violation counted
+Decree.forbids(entity, Decree.Rule.PASSAGE)                  // only asks; nothing is counted
+Decree.violations(entity)   Decree.inReality(entity)
+Decree.addImmunity((owner, entity, rule) -> ...)            // once, in a static block: some cannot be bound
+```
+
+- The same Rule broken again by the same one within `Decree.VIOLATION_GAP` (20 ticks) is one Violation, so a heal every tick or a held key does not climb the ladder at once.
+- `onViolation` runs inside whatever caught the try (a heal, a teleport, an attack). Put damage a tick later (`Later.run(sl, 1, ...)`), as `HandOfOrderDecrees.punish` does.
+- `PASSAGE` holds through `Root.addHold`: no root ring, nothing counted toward `Disorder` as a root.
+- It is a `Zone` underneath: writing one with a name the owner has closes the old one first, it ends with its owner, and `Zone.closeNear` ends it. Not saved.
 
 ## Residue: where abilities were cast
 
@@ -1724,7 +1776,7 @@ Applying again keeps the longer time. Not saved.
 
 ### Chosen
 
-ONE target a player has picked under a name, for a while: "the enemy I looked at", kept for later. A player has at most one under each name; choosing another lets the first go. The Hand Of Order's Convict (Punishment) and the one memorized by Recognition; the Contract's signer when it is written.
+ONE target a player has picked under a name, for a while: "the enemy I looked at", kept for later. A player has at most one under each name; choosing another lets the first go. The Hand Of Order's Convict (Punishment), the one memorized by Recognition, the Contract's signer and the one weighed by Balance.
 
 ```java
 Chosen.choose(player, "my_pathway_quarry", target, 600);       // 30 s; an old quarry is let go
@@ -1745,7 +1797,7 @@ for (int key : keys) KeySeal.seal(target, key, 600);
 KeySeal.lastUsed(target)   KeySeal.isSealed(player, 3)   KeySeal.ticksLeft(player, 3)   KeySeal.unseal(player, 3)   KeySeal.unsealAll(player)
 ```
 
-The ability keys ask `KeySeal.blocksKey(player, key)` and then call `KeySeal.pressed(player, key)` (`network/SKeyPressAbility...Used`), so every press is remembered and a sealed key is refused with a message. Only players have keys: for a mob's special attacks use `AbilityLock`. Saved with the player.
+The ability keys ask `Decree.blocksKey(player, key)` first (a Decree that prohibits abilities), then `KeySeal.blocksKey(player, key)`, and then call `KeySeal.pressed(player, key)` (`network/SKeyPressAbility...Used`), so every press is remembered and a sealed key is refused with a message. Only players have keys: for a mob's special attacks use `AbilityLock`. Saved with the player.
 
 ### Blind
 
@@ -1909,6 +1961,8 @@ To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `
 ### Root and Freeze
 
 These were already there and go well with the rest: `Root.apply(target, 80, RootRestriction.EVERYTHING)` holds something in place (see `root/Root.java` for the single restrictions), `Freeze.apply(target, 80)` puts it in ice.
+
+`Root.addHold((entity, restriction) -> ...)`, once in a static block, holds entities as a root would while it says `true`, with no timer and no ring: `Root.has` then answers `true`, so every check of it refuses (the ability keys, teleports, Flaming Jump). `isRooted`, `remove` and `ticksLeft` only know real roots. A `Decree`'s PASSAGE is one.
 
 ### Physique: a Beyonder's body
 

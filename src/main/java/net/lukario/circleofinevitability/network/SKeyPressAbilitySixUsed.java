@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
 import net.lukario.circleofinevitability.status.Silence;
@@ -43,6 +44,8 @@ public class SKeyPressAbilitySixUsed {
 
         if (!(level instanceof ServerLevel serverLevel)) return;
 
+        // a Decree that prohibits abilities here (status/Decree, ABILITIES): refused, and a Violation
+        if (Decree.blocksKey(player, 6)) return;
         // rooted with ABILITIES = can't use any ability (status/Silence lets a power that needs no voice through)
         if (Silence.blocksKey(player, 6)) {
             player.sendOverlayMessage(Component.literal("You are bound by Order."));
