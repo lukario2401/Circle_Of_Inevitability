@@ -7,6 +7,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -119,6 +120,15 @@ public final class SequencePassives {
         custom("Illuminator", 3, Illuminator::absorption);                                       // Arcane Scholar: Absorption
         custom("Illuminator", 2, Illuminator::analysis);                                         // Knowledge Magister: Analysis
         custom("Illuminator", 1, Illuminator::enlightenmentAura);                                // Illuminator: Enlightenment Aura
+
+        // ---- Star Dragon (docs/STAR_DRAGON.md). Also in StarDragon itself: Spiritual Intuition's chime (Sequence 8), Star's
+        // Embrace's hearts and half falls (7), Starlight Scales' footing (5), Dense Body's footing, no falls and nothing
+        // moving it (4). Sequences 3 to 0 are the second half.
+        effect("Star Dragon", 9, MobEffects.STRENGTH, 0);                                       // Astronomy Aficionado: Physical Enhancement
+        custom("Star Dragon", 9, StarDragon::stargazing);                                       // ...and Stargazing
+        custom("Star Dragon", 6, StarDragon::senseOfPassages);                                  // Navigator: Sense of Passages
+        effect("Star Dragon", 5, MobEffects.RESISTANCE, 0);                                     // Tidal Scholar: Starlight Scales, Resistance I...
+        custom("Star Dragon", 5, StarDragon::starlightScales);                                  // ...and fast swimming
     }
 
     // =========================

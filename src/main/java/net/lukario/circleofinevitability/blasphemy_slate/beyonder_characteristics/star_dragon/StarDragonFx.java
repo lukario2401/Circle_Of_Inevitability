@@ -53,7 +53,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *
  * ---------- Use them in an ability ----------
  *   Shared  heavy(sl, target, ticks, tag) / heavyEnd: Heaviness on anyone (Tidal Surge, Scaled Form, Heavybringing...);
- *           rayWarning(sl, from, to, Ray.X) (fires RAY_WARNING ticks later), rayFire(sl, from, to, Ray.X, width)
+ *           rayWarning(sl, from, to, RayKind.X) (fires RAY_WARNING ticks later), rayFire(sl, from, to, RayKind.X, width)
  *   Key 1   starChart(sl, player, target) (the chart settles at CHART_LANDS), charted(viewer, target) every 10 ticks
  *               while it lasts (only the Aficionado sees it), calculatedHit(sl, target) when the bonus is spent,
  *               chartedEnd(viewer, target)
@@ -69,9 +69,9 @@ import java.util.concurrent.ThreadLocalRandom;
  *           cosmicVoid(sl, target, radius, ticks, VoidDepth.X, tag) (closed at VOID_CLOSED), voidManifest(sl, target)
  *               (Tidal Scholar: a ray manifests inside), voidFreeze(sl, target, radius) (Star Dragon, every 2 s),
  *               voidEnd(sl, target, tag)
- *           Weakening Ray: rayWarning + rayFire with Ray.WEAKENING, then weakened(sl, target, stacks, ticks, tag),
- *               weakenedEnd; melting(sl, target, ticks, tag) (the Tidal Scholar's melting, three Series stacks)
- *           sunlightCharge(sl, player) (fires at SUNLIGHT_FIRES), rayFire with Ray.SUNLIGHT, sunburnt(sl, target)
+ *           Weakening Ray: rayWarning + rayFire with RayKind.WEAKENING, then weakened(sl, target, stacks, ticks, tag),
+ *               weakenedEnd; melting(sl, target, ticks, tag) / meltingEnd (the Tidal Scholar's melting, three Series stacks)
+ *           sunlightCharge(sl, player) (fires at SUNLIGHT_FIRES), rayFire with RayKind.SUNLIGHT, sunburnt(sl, target)
  *   Key 3   voidPassage(sl, who, from, to) (they step out at PASSAGE_ARRIVES), voidForcedOut(sl, hidden),
  *               unnoticed(sl, player, ticks, tag) / unnoticedEnd (their faint shimmer while no mob can find them)
  *           sneak: piercingRay(sl, player, to) (both eyes), dimmed(sl, target, ticks, tag), dimmedEnd
@@ -86,7 +86,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *               misfire(sl, at), narrowed(sl, target, ticks, tag), luck(sl, ally), fateConvergenceEnd
  *           heavySphere(sl, center, radius, ticks, tag) (closed at SPHERE_CLOSED), sphereBlock(sl, at),
  *               yanked(sl, entity), heavySphereEnd(sl, center, tag)
- *           seriesOfRays(sl, player) as the light gathers, then rayFire(..., Ray.WEAKENING, ...) per ray (ray i
+ *           seriesOfRays(sl, player) as the light gathers, then rayFire(..., RayKind.WEAKENING, ...) per ray (ray i
  *               fires at SERIES_FIRES + i * SERIES_STEP)
  *           remoteSight(sl, player, ticks, tag), sighted(viewer, entity) and passage(viewer, from, to) every second
  *               (only the Heavybringer sees them), remoteSightEnd
@@ -162,7 +162,7 @@ public final class StarDragonFx {
     public static final int MISFORTUNE_RED = 0xFFE05050;
 
     /** The rays, with the color of their beam and their core (docs/STAR_DRAGON.md, "Theme"). */
-    public enum Ray {
+    public enum RayKind {
         WEAKENING(0xE02E8A4A, 0xFFB8FFC0, 0xFF7CE08A),
         PIERCING(0xE0A8D8FF, 0xFFFFFFFF, 0xFFD8F0FF),
         SUNLIGHT(0xF0FFE9B0, 0xFFFFFFFF, 0xFFFFF4D0),
@@ -172,7 +172,7 @@ public final class StarDragonFx {
         final int core;
         final int spark;
 
-        Ray(int color, int core, int spark) {
+        RayKind(int color, int core, int spark) {
             this.color = color;
             this.core = core;
             this.spark = spark;
@@ -585,7 +585,7 @@ public final class StarDragonFx {
     public static final int RAY_WARNING = 8;
 
     /** The faint line of a ray about to fire: it shows where it will go, then the ray follows RAY_WARNING ticks later. */
-    public static void rayWarning(ServerLevel sl, Vec3 from, Vec3 to, Ray ray) {
+    public static void rayWarning(ServerLevel sl, Vec3 from, Vec3 to, RayKind ray) {
         SpellFx.tether(sl, AIM_LINE.color(withAlpha(ray.color, 0x90)), () -> from, () -> to, RAY_WARNING);
         ParticleShapes.spawn(sl, BLUE_MOTE.color(ray.spark), from, Vec3.ZERO);
         sound(sl, from, ModSounds.STAR_DRAGON_RAY_WARN, 0.6f, 1.0f);
@@ -596,9 +596,9 @@ public final class StarDragonFx {
      * flashes at both ends and fades. The ray's own sound plays (Weakening, Piercing, Sunlight; the Dragon's is the
      * Piercing one lower).
      */
-    public static void rayFire(ServerLevel sl, Vec3 from, Vec3 to, Ray ray, float width) {
-        ModelFx look = ray == Ray.SUNLIGHT || ray == Ray.DRAGON ? PULSE_BEAM : RAY_BEAM;
-        beam(sl, look, from, to, width, ray.color | 0xFF000000, ray == Ray.SUNLIGHT ? 14 : 10);
+    public static void rayFire(ServerLevel sl, Vec3 from, Vec3 to, RayKind ray, float width) {
+        ModelFx look = ray == RayKind.SUNLIGHT || ray == RayKind.DRAGON ? PULSE_BEAM : RAY_BEAM;
+        beam(sl, look, from, to, width, ray.color | 0xFF000000, ray == RayKind.SUNLIGHT ? 14 : 10);
         ParticleShapes.slashBetween(sl, RAY_LINE.color(ray.color).core(ray.core).width(width * 0.4f), from, to);
         ParticleShapes.burst(sl, SPARK.color(ray.spark), from, 6, 0.03, 0.1);
         ParticleShapes.burst(sl, SPARK.color(ray.spark), to, 10, 0.05, 0.18);
@@ -920,6 +920,11 @@ public final class StarDragonFx {
         sound(sl, target.position(), ModSounds.STAR_DRAGON_WEAKENED_MELT, 0.9f, wobble(1.0f));
     }
 
+    /** The melting is over (it ran out or was cleansed). */
+    public static void meltingEnd(ServerLevel sl, LivingEntity target, String tag) {
+        ParticleShapes.clearModels(sl, target, tag);
+    }
+
     // ---------- Sunlight Ray
 
     /** The tick the condensed sunlight fires (after the 0.6 second charge). */
@@ -1003,8 +1008,8 @@ public final class StarDragonFx {
         Vec3 eye = player.getEyePosition();
         Vec3 side = Spells.rightOf(player).scale(0.12);
         flash(sl, STAR_EYE, eye.add(Spells.flatLook(player).scale(0.6)), player.getYRot() + 180f, 0xE0A8D8FF, 0.6f, 10);
-        rayFire(sl, eye.add(side), to.add(side), Ray.PIERCING, 0.3f);
-        rayFire(sl, eye.subtract(side), to.subtract(side), Ray.PIERCING, 0.3f);
+        rayFire(sl, eye.add(side), to.add(side), RayKind.PIERCING, 0.3f);
+        rayFire(sl, eye.subtract(side), to.subtract(side), RayKind.PIERCING, 0.3f);
     }
 
     /** Dimmed: a blue-grey haze clings to the target and its glow fades, for 'ticks'. */
@@ -2099,9 +2104,9 @@ public final class StarDragonFx {
             new Case("weakening_ray", 80, false, (sl, v, t, spot) -> {
                 Vec3 from = v.getEyePosition().add(0, -0.3, 0);
                 Vec3 to = aimAt(v, t, spot);
-                rayWarning(sl, from, to, Ray.WEAKENING);
+                rayWarning(sl, from, to, RayKind.WEAKENING);
                 Later.run(sl, RAY_WARNING, () -> {
-                    rayFire(sl, from, to, Ray.WEAKENING, 0.25f);
+                    rayFire(sl, from, to, RayKind.WEAKENING, 0.25f);
                     if (t != v) {
                         String tag = tagFor("weak");
                         weakened(sl, t, 1, 60, tag);
@@ -2113,7 +2118,7 @@ public final class StarDragonFx {
                 sunlightCharge(sl, v);
                 Later.run(sl, SUNLIGHT_FIRES, () -> {
                     Vec3 from = v.getEyePosition().add(v.getLookAngle().scale(1.0)).add(0, -0.35, 0);
-                    rayFire(sl, from, from.add(aimAt(v, t, spot).subtract(from).normalize().scale(24)), Ray.SUNLIGHT, 2f);
+                    rayFire(sl, from, from.add(aimAt(v, t, spot).subtract(from).normalize().scale(24)), RayKind.SUNLIGHT, 2f);
                     if (t != v) sunburnt(sl, t);
                 });
             }),
@@ -2181,7 +2186,7 @@ public final class StarDragonFx {
                     Later.run(sl, SERIES_FIRES + i * SERIES_STEP, () -> {
                         Vec3 from = handOf(v, sl);
                         Vec3 spread = Spells.rightOf(v).scale((k - 2.5) * 0.25);
-                        rayFire(sl, from, to.add(spread), Ray.WEAKENING, 0.2f);
+                        rayFire(sl, from, to.add(spread), RayKind.WEAKENING, 0.2f);
                         if (t != v && k % 2 == 0) weakened(sl, t, k / 2 + 1, 40, "sd_fx_series");
                     });
                 }
@@ -2295,7 +2300,7 @@ public final class StarDragonFx {
                     Later.run(sl, flight, () -> dragonShotHit(sl, to));
                 });
                 Later.run(sl, 140, () -> dragonAsteroidBack(sl, v, 40, tag, 140));
-                Later.run(sl, 150, () -> rayFire(sl, v.getEyePosition(), v.getEyePosition().add(v.getLookAngle().scale(24)), Ray.DRAGON, 0.8f));
+                Later.run(sl, 150, () -> rayFire(sl, v.getEyePosition(), v.getEyePosition().add(v.getLookAngle().scale(24)), RayKind.DRAGON, 0.8f));
                 Later.run(sl, 180, () -> starDragonFormEnd(sl, v, tag));
             }),
             new Case("neutron_star", 140, true, (sl, v, t, spot) -> {

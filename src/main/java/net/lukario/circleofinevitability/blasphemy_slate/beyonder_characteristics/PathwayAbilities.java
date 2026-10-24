@@ -23,6 +23,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFallen;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionSovereign;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -311,7 +312,18 @@ public final class PathwayAbilities {
             new Ability("Illuminator", 6, "Alchemy and Arcana", 4, SNEAK, STEALABLE,           // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> IlluminatorAlchemy.illuminatorAlchemy(player, level, sl, true)),
             new Ability("Illuminator", 7, "Civilization", 2, SNEAK, STEALABLE,                 // stolen: no wheel, its last (or a random) entry
-                    (player, level, sl) -> IlluminatorCivilization.illuminatorCivilization(player, level, sl, true)));
+                    (player, level, sl) -> IlluminatorCivilization.illuminatorCivilization(player, level, sl, true)),
+            // ---- Star Dragon (docs/STAR_DRAGON.md); keys 6 and 7 are the second half ----
+            new Ability("Star Dragon", 1, "Star Chart", 9, SNEAK, STEALABLE,                       // sneak: Fate Glimpse (8)
+                    (player, level, sl) -> StarDragon.starDragonAstronomy(player, level, sl, true)),
+            new Ability("Star Dragon", 2, "Star Sacrifice", 7, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> StarDragon.starDragonStarSacrifice(player, level, sl, true)),
+            new Ability("Star Dragon", 3, "Void Passage", 6, SNEAK, STEALABLE,                     // sneak: Piercing Ray
+                    (player, level, sl) -> StarDragon.starDragonNavigator(player, level, sl, true)),
+            new Ability("Star Dragon", 4, "Tidal Surge", 5, SNEAK, STEALABLE,                      // sneak: Scaled Form
+                    (player, level, sl) -> StarDragon.starDragonTidalScholar(player, level, sl, true)),
+            new Ability("Star Dragon", 5, "Heavybringing", 4, SNEAK, STEALABLE,                    // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> StarDragon.starDragonHeavybringer(player, level, sl, true)));
 
 
 
