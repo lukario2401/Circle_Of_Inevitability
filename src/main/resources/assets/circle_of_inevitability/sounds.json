@@ -2910,5 +2910,350 @@
         "name": "circle_of_inevitability:star_dragon/dense_step"
       }
     ]
+  },
+  "hand_of_order.halt": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.halt",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/halt"
+      }
+    ]
+  },
+  "hand_of_order.presence": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.presence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/presence"
+      }
+    ]
+  },
+  "hand_of_order.jurisdiction": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.jurisdiction",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/jurisdiction"
+      }
+    ]
+  },
+  "hand_of_order.jurisdiction_enter": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.jurisdiction_enter",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/jurisdiction_enter"
+      }
+    ]
+  },
+  "hand_of_order.recognition": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.recognition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/recognition"
+      }
+    ]
+  },
+  "hand_of_order.intuition": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.intuition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/intuition"
+      }
+    ]
+  },
+  "hand_of_order.lashing": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.lashing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/lashing"
+      }
+    ]
+  },
+  "hand_of_order.lash_hit": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.lash_hit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/lash_hit_1"
+      },
+      {
+        "name": "circle_of_inevitability:hand_of_order/lash_hit_2"
+      },
+      {
+        "name": "circle_of_inevitability:hand_of_order/lash_hit_3"
+      }
+    ]
+  },
+  "hand_of_order.piercing": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.piercing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/piercing"
+      }
+    ]
+  },
+  "hand_of_order.whip": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.whip",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/whip"
+      }
+    ]
+  },
+  "hand_of_order.verdict": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.verdict",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/verdict"
+      }
+    ]
+  },
+  "hand_of_order.imprison": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.imprison",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/imprison"
+      }
+    ]
+  },
+  "hand_of_order.release": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.release",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/release"
+      }
+    ]
+  },
+  "hand_of_order.exile": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.exile",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/exile"
+      }
+    ]
+  },
+  "hand_of_order.exile_void": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.exile_void",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/exile_void"
+      }
+    ]
+  },
+  "hand_of_order.death": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.death",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/death"
+      }
+    ]
+  },
+  "hand_of_order.secrecy": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.secrecy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/secrecy"
+      }
+    ]
+  },
+  "hand_of_order.deprivation": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.deprivation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/deprivation"
+      }
+    ]
+  },
+  "hand_of_order.execution_raise": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.execution_raise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/execution_raise"
+      }
+    ]
+  },
+  "hand_of_order.execution": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.execution",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/execution"
+      }
+    ]
+  },
+  "hand_of_order.prohibition": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.prohibition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/prohibition"
+      }
+    ]
+  },
+  "hand_of_order.refused": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.refused",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/refused"
+      }
+    ]
+  },
+  "hand_of_order.violation": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.violation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/violation"
+      }
+    ]
+  },
+  "hand_of_order.punishment": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.punishment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/punishment"
+      }
+    ]
+  },
+  "hand_of_order.reality": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.reality",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/reality"
+      }
+    ]
+  },
+  "hand_of_order.contract": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.contract",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/contract"
+      }
+    ]
+  },
+  "hand_of_order.contract_tear": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.contract_tear",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/contract_tear"
+      }
+    ]
+  },
+  "hand_of_order.pillar": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.pillar",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/pillar"
+      }
+    ]
+  },
+  "hand_of_order.sword_of_judgment": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.sword_of_judgment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/sword_of_judgment"
+      }
+    ]
+  },
+  "hand_of_order.balance": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.balance",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/balance"
+      }
+    ]
+  },
+  "hand_of_order.divide": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.divide",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/divide"
+      }
+    ]
+  },
+  "hand_of_order.no_return": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.no_return",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/no_return"
+      }
+    ]
+  },
+  "hand_of_order.proxy": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.proxy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/proxy"
+      }
+    ]
+  },
+  "hand_of_order.proxy_end": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.proxy_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/proxy_end"
+      }
+    ]
+  },
+  "hand_of_order.quell": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.quell",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/quell"
+      }
+    ]
+  },
+  "hand_of_order.sense_order": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.sense_order",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/sense_order"
+      }
+    ]
+  },
+  "hand_of_order.court": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.court",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/court"
+      }
+    ]
+  },
+  "hand_of_order.clause": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.clause",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/clause"
+      }
+    ]
+  },
+  "hand_of_order.sentence": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.sentence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/sentence"
+      }
+    ]
+  },
+  "hand_of_order.adjourn": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.adjourn",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/adjourn"
+      }
+    ]
+  },
+  "hand_of_order.order_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.order_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/order_swing_1"
+      },
+      {
+        "name": "circle_of_inevitability:hand_of_order/order_swing_2"
+      }
+    ]
+  },
+  "hand_of_order.gavel_slam": {
+    "subtitle": "subtitles.circle_of_inevitability.hand_of_order.gavel_slam",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:hand_of_order/gavel_slam"
+      }
+    ]
   }
 }

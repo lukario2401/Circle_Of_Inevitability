@@ -771,4 +771,90 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> STAR_DRAGON_STARGAZING = sound("star_dragon.stargazing");
     /** A heavy step. */
     public static final RegistryObject<SoundEvent> STAR_DRAGON_DENSE_STEP = sound("star_dragon.dense_step");
+
+    // ---------- Hand Of Order (tools/model_gen/hand_of_order/sounds.py, docs/HAND_OF_ORDER.md)
+    /** A word: Halt. */
+    public static final RegistryObject<SoundEvent> ORDER_HALT = sound("hand_of_order.halt");
+    /** A wave of Authority. */
+    public static final RegistryObject<SoundEvent> ORDER_PRESENCE = sound("hand_of_order.presence");
+    /** Ground is claimed. */
+    public static final RegistryObject<SoundEvent> ORDER_JURISDICTION = sound("hand_of_order.jurisdiction");
+    /** Someone enters the Jurisdiction. */
+    public static final RegistryObject<SoundEvent> ORDER_JURISDICTION_ENTER = sound("hand_of_order.jurisdiction_enter");
+    /** Someone is memorized. */
+    public static final RegistryObject<SoundEvent> ORDER_RECOGNITION = sound("hand_of_order.recognition");
+    /** Something hunts from out of sight. */
+    public static final RegistryObject<SoundEvent> ORDER_INTUITION = sound("hand_of_order.intuition");
+    /** An Illusory Torture Device ignites. */
+    public static final RegistryObject<SoundEvent> ORDER_LASHING = sound("hand_of_order.lashing");
+    /** Psychic lightning lashes. */
+    public static final RegistryObject<SoundEvent> ORDER_LASH_HIT = sound("hand_of_order.lash_hit");
+    /** Lightning leaps from the eyes. */
+    public static final RegistryObject<SoundEvent> ORDER_PIERCING = sound("hand_of_order.piercing");
+    /** A Whip of Pain cracks. */
+    public static final RegistryObject<SoundEvent> ORDER_WHIP = sound("hand_of_order.whip");
+    /** A Verdict is spoken. */
+    public static final RegistryObject<SoundEvent> ORDER_VERDICT = sound("hand_of_order.verdict");
+    /** Transparent walls close. */
+    public static final RegistryObject<SoundEvent> ORDER_IMPRISON = sound("hand_of_order.imprison");
+    /** The walls open. */
+    public static final RegistryObject<SoundEvent> ORDER_RELEASE = sound("hand_of_order.release");
+    /** Someone is exiled. */
+    public static final RegistryObject<SoundEvent> ORDER_EXILE = sound("hand_of_order.exile");
+    /** The void swallows someone. */
+    public static final RegistryObject<SoundEvent> ORDER_EXILE_VOID = sound("hand_of_order.exile_void");
+    /** Death is declared. */
+    public static final RegistryObject<SoundEvent> ORDER_DEATH = sound("hand_of_order.death");
+    /** Secrecy is imposed. */
+    public static final RegistryObject<SoundEvent> ORDER_SECRECY = sound("hand_of_order.secrecy");
+    /** A power is taken away. */
+    public static final RegistryObject<SoundEvent> ORDER_DEPRIVATION = sound("hand_of_order.deprivation");
+    /** A fist is raised. */
+    public static final RegistryObject<SoundEvent> ORDER_EXECUTION_RAISE = sound("hand_of_order.execution_raise");
+    /** An Execution. */
+    public static final RegistryObject<SoundEvent> ORDER_EXECUTION = sound("hand_of_order.execution");
+    /** Something is prohibited. */
+    public static final RegistryObject<SoundEvent> ORDER_PROHIBITION = sound("hand_of_order.prohibition");
+    /** It is not allowed. */
+    public static final RegistryObject<SoundEvent> ORDER_REFUSED = sound("hand_of_order.refused");
+    /** A Rule is broken. */
+    public static final RegistryObject<SoundEvent> ORDER_VIOLATION = sound("hand_of_order.violation");
+    /** A Convict is named. */
+    public static final RegistryObject<SoundEvent> ORDER_PUNISHMENT = sound("hand_of_order.punishment");
+    /** Reality is enhanced. */
+    public static final RegistryObject<SoundEvent> ORDER_REALITY = sound("hand_of_order.reality");
+    /** A Contract is signed. */
+    public static final RegistryObject<SoundEvent> ORDER_CONTRACT = sound("hand_of_order.contract");
+    /** A Contract tears. */
+    public static final RegistryObject<SoundEvent> ORDER_CONTRACT_TEAR = sound("hand_of_order.contract_tear");
+    /** The Brass Pillar rises. */
+    public static final RegistryObject<SoundEvent> ORDER_PILLAR = sound("hand_of_order.pillar");
+    /** The Sword of Judgment falls. */
+    public static final RegistryObject<SoundEvent> ORDER_SWORD_OF_JUDGMENT = sound("hand_of_order.sword_of_judgment");
+    /** The scales settle. */
+    public static final RegistryObject<SoundEvent> ORDER_BALANCE = sound("hand_of_order.balance");
+    /** The battlefield is divided. */
+    public static final RegistryObject<SoundEvent> ORDER_DIVIDE = sound("hand_of_order.divide");
+    /** The dead shall not return. */
+    public static final RegistryObject<SoundEvent> ORDER_NO_RETURN = sound("hand_of_order.no_return");
+    /** Order acts through someone. */
+    public static final RegistryObject<SoundEvent> ORDER_PROXY = sound("hand_of_order.proxy");
+    /** The proxy is spent. */
+    public static final RegistryObject<SoundEvent> ORDER_PROXY_END = sound("hand_of_order.proxy_end");
+    /** Order is restored. */
+    public static final RegistryObject<SoundEvent> ORDER_QUELL = sound("hand_of_order.quell");
+    /** An ability is sensed. */
+    public static final RegistryObject<SoundEvent> ORDER_SENSE_ORDER = sound("hand_of_order.sense_order");
+    /** The Court of Judgment convenes. */
+    public static final RegistryObject<SoundEvent> ORDER_COURT = sound("hand_of_order.court");
+    /** A clause is written. */
+    public static final RegistryObject<SoundEvent> ORDER_CLAUSE = sound("hand_of_order.clause");
+    /** A sentence is passed. */
+    public static final RegistryObject<SoundEvent> ORDER_SENTENCE = sound("hand_of_order.sentence");
+    /** The Court adjourns. */
+    public static final RegistryObject<SoundEvent> ORDER_ADJOURN = sound("hand_of_order.adjourn");
+    /** Order sweeps the air. */
+    public static final RegistryObject<SoundEvent> ORDER_ORDER_SWING = sound("hand_of_order.order_swing");
+    /** A gavel slams down. */
+    public static final RegistryObject<SoundEvent> ORDER_GAVEL_SLAM = sound("hand_of_order.gavel_slam");
 }
