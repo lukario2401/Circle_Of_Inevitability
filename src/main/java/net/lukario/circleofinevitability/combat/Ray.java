@@ -30,7 +30,7 @@ import java.util.function.Consumer;
  * who steps off the line in time is missed, and someone who steps onto it is hit. Nothing happens if the caster
  * died, left or changed dimension meanwhile. Every method returns a new copy, so a Ray in a constant is safe:
  * keep the parts that never change there and add the rest at the cast. Star Dragon's Weakening, Piercing, Sunlight
- * and Series of Rays (docs/STAR_DRAGON.md); the Dragon's thicker rays are planned on it.
+ * and Series of Rays, thicker in the Star Dragon Form (docs/STAR_DRAGON.md).
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */

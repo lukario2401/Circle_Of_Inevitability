@@ -17,6 +17,9 @@ import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -76,7 +79,7 @@ public final class Freeze {
     // =========================
 
     public static void apply(LivingEntity target, int ticks) {
-        if (ticks <= 0 || !target.isAlive() || !(target.level() instanceof ServerLevel sl)) return;
+        if (ticks <= 0 || !target.isAlive() || !(target.level() instanceof ServerLevel sl) || isImmune(target)) return;
 
         CompoundTag tag = freezeTag(target);
         int left = tag == null ? 0 : tag.getIntOr(TICKS, 0);
@@ -95,6 +98,18 @@ public final class Freeze {
         tag.putInt(TICKS, ticks);
         hold(target);
         if (!(target instanceof Mob)) Root.apply(target, ticks, RootRestriction.EVERYTHING);
+    }
+
+    private static final List<Predicate<LivingEntity>> IMMUNE = new ArrayList<>();
+
+    /** Once, in a static block: while it says true for an entity, nothing freezes it (ice already on it breaks). */
+    public static void addImmunity(Predicate<LivingEntity> immune) {
+        IMMUNE.add(immune);
+    }
+
+    public static boolean isImmune(LivingEntity entity) {
+        for (Predicate<LivingEntity> rule : IMMUNE) if (rule.test(entity)) return true;
+        return false;
     }
 
     public static boolean isFrozen(Entity entity) {
@@ -201,7 +216,7 @@ public final class Freeze {
         if (tag == null) return;
 
         int left = tag.getIntOr(TICKS, 0) - 1;
-        if (left <= 0) {
+        if (left <= 0 || isImmune(entity)) {
             end(entity);
             return;
         }

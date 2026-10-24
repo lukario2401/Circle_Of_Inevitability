@@ -10,17 +10,20 @@ import net.lukario.circleofinevitability.combat.Cooldowns;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
+import net.lukario.circleofinevitability.root.Freeze;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Form;
 import net.lukario.circleofinevitability.status.Marks;
 import net.lukario.circleofinevitability.status.Unnoticed;
+import net.lukario.circleofinevitability.status.Weight;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffects;
@@ -29,13 +32,17 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityTeleportEvent;
 import net.minecraftforge.event.entity.living.LivingAttackEvent;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.AttackEntityEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.listener.Priority;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -56,15 +63,18 @@ import java.util.function.BiConsumer;
  *   4 Tidal Scholar   (Tidal Scholar)      Tidal Surge: a crest that rolls forward          | sneak: Scaled Form
  *   5 Heavybringing   (Heavybringer)       the wheel: Heavybringing, Fate Convergence, Heavy Sphere, Series of Rays,
  *                                          Remote Sight
- *   6 Star Shepherd   (Star Shepherd)      Star Grazing | sneak: Fission Pulse            (the second half: not yet)
- *   7 Cosmos          (Radiant Angel)      the wheel of Sequences 2 to 0                  (the second half: not yet)
+ *   6 Star Shepherd   (Star Shepherd)      Star Grazing: an asteroid out of the sky        | sneak: Fission Pulse
+ *   7 Cosmos          (Radiant Angel)      the wheel: Fusion Cluster, Radiant Angel Form (2), Gravitational Time
+ *                                          Dilation, Planetfall, Star Dragon Form (1), Neutron Star, Singularity,
+ *                                          Quantum Uncertainty (0)
  *
  * Two rules carry it: Heaviness slows (status/Weight, combat/GravityField) and Starlight disorders (rays, voids, Fate:
  * StarDragonMarks). Every Star Dragon hit goes through hit(...) or rayHit(...), which add the Star Chart's calculated
  * shot and the void's manifestation by themselves. Every cast's cost goes through costFor / pay / afterCast (addCostRule
- * and addAfterCast take more, for the second half). The abilities live in StarDragonGravity, StarDragonRays,
- * StarDragonVoid and StarDragonTides beside this class; this one holds the keys, the wheels, the passives and what they
- * share. Every look and sound is in StarDragonFx (see /stardragonfx). Nothing here breaks blocks or lights real fire.
+ * and addAfterCast take more: the Condenser's cheaper Fusion Cluster is one, a Starlight meter would be another). The
+ * abilities live in StarDragonGravity, StarDragonRays, StarDragonVoid, StarDragonTides, StarDragonSky and
+ * StarDragonForms beside this class; this one holds the keys, the wheels, the passives and what they share. Every look
+ * and sound is in StarDragonFx (see /stardragonfx). Nothing here breaks blocks or lights real fire.
  */
 public class StarDragon {
 
@@ -100,6 +110,12 @@ public class StarDragon {
     // Ability 5 - Heavybringing (the wheel, Sequence 4)
     static final int HEAVYBRINGER_SEQUENCE = 4;
 
+    // Ability 6 - Star Grazing / Fission Pulse (Sequence 3): their numbers are in StarDragonSky
+    static final int SHEPHERD_SEQUENCE = 3;
+
+    // Ability 7 - Cosmos (the wheel, Sequence 2): every entry's numbers are in the class it lives in
+    static final int COSMOS_SEQUENCE = 2;
+
     // Passives (docs/STAR_DRAGON.md, "Passives"); the once-a-second ones run from SequencePassives
     private static final int STARGAZING_SEQUENCE = 9;               // Stargazing: still this long under open sky...
     private static final int STARGAZING_STILL = 60;
@@ -115,6 +131,17 @@ public class StarDragon {
     private static final double SCALES_FOOTING = 0.5;
     private static final int DENSE_SEQUENCE = 4;                    // Dense Body: nothing moves you, no fall damage
     private static final double DENSE_FOOTING = 1.0;
+    private static final int TOUCH_SEQUENCE = 3;                    // Fission Touch: a blow arcs on to the nearest enemy...
+    private static final double TOUCH_REACH = 4.0;                  // ...this close to the one struck...
+    private static final float TOUCH_SHARE = 0.25f;                 // ...for this share of it
+    private static final int RADIANCE_SEQUENCE = 2;                 // Radiance: enemies this close are burned...
+    private static final double RADIANCE_RADIUS = 8.0;
+    private static final float RADIANCE_BURN = 4f;                  // ...this much a second (twice on the undead)
+    private static final int AUTHORITY_SEQUENCE = 1;                // Gravity Authority: no Heaviness takes on you...
+    private static final double AUTHORITY_RADIUS = 6.0;             // ...and projectiles this close fly at...
+    private static final double AUTHORITY_SLOWS = 0.5;              // ...half speed
+    private static final int CONDENSER_SEQUENCE = 0;                // Weight and Density: nothing roots, freezes or moves you...
+    private static final double CONDENSER_STEP = 1.5;               // ...and every this many blocks walked the ground shakes
 
     // =========================
     // Saved on the player (game times are "until" this tick)
@@ -125,6 +152,10 @@ public class StarDragon {
     private static final String STILL_AT = "star_dragon_still_at";
     private static final String INTUITION_READY = "star_dragon_intuition_ready";
     private static final String LUCK_WARD = "star_dragon_luck_ward";            // status/Marks: Fate Convergence's halved hit
+    private static final String SWING_AT = "star_dragon_swing_at";              // the last real blow: its target...
+    private static final String SWING_TIME = "star_dragon_swing_time";          // ...and its game time (Fission Touch)
+    private static final String STEP_AT = "star_dragon_step_at";                // where the last shaking step was
+    private static final String AUTHORITY_SLOWED = "star_dragon_authority";     // on a projectile Gravity Authority slowed
 
     private static final Identifier EMBRACE_ID = Physique.id("star_dragon_embrace_hearts");
     private static final Identifier SCALES_ID = Physique.id("star_dragon_scales_footing");
@@ -232,6 +263,51 @@ public class StarDragon {
             .costBy((player, cost) -> costFor(player, cost, "remote_sight"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 
+    private static final AbilityWheel COSMOS = AbilityWheel.create("star_dragon_cosmos", "Cosmos")
+            .radius(84)
+            .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .entry("fusion_cluster", StarDragonFx.WHEEL_FUSION_CLUSTER, "Fusion Cluster",
+                    StarDragonSky.FUSION_SEQUENCE, StarDragonSky.FUSION_COST, StarDragonSky.FUSION_COOLDOWN,
+                    StarDragonSky::fusionCluster)
+            .costBy((player, cost) -> costFor(player, cost, "fusion_cluster"))
+            .entry("radiant_angel_form", StarDragonFx.WHEEL_RADIANT_ANGEL_FORM, "Radiant Angel Form",
+                    StarDragonForms.ANGEL_SEQUENCE, StarDragonForms.ANGEL_COST, StarDragonForms.ANGEL_COOLDOWN,
+                    StarDragonForms::radiantAngelForm)
+            .free(StarDragonForms::isRadiantAngel)                                // turning back
+            .costBy((player, cost) -> costFor(player, cost, "radiant_angel_form"))
+            .entry("time_dilation", StarDragonFx.WHEEL_TIME_DILATION, "Gravitational Time Dilation",
+                    StarDragonGravity.DILATION_SEQUENCE, StarDragonGravity.DILATION_COST, StarDragonGravity.DILATION_COOLDOWN,
+                    StarDragonGravity::timeDilation)
+            .costBy((player, cost) -> costFor(player, cost, "time_dilation"))
+            .entry("planetfall", StarDragonFx.WHEEL_PLANETFALL, "Planetfall",
+                    StarDragonSky.PLANET_SEQUENCE, StarDragonSky.PLANET_COST, StarDragonSky.PLANET_COOLDOWN,
+                    StarDragonSky::planetfall)
+            .costBy((player, cost) -> costFor(player, cost, "planetfall"))
+            .entry("star_dragon_form", StarDragonFx.WHEEL_STAR_DRAGON_FORM, "Star Dragon Form",
+                    StarDragonForms.DRAGON_SEQUENCE, StarDragonForms.DRAGON_COST, StarDragonForms.DRAGON_COOLDOWN,
+                    StarDragonForms::starDragonForm)
+            .free(StarDragonForms::isDragon)                                      // turning back
+            .costBy((player, cost) -> costFor(player, cost, "star_dragon_form"))
+            .entry("neutron_star", StarDragonFx.WHEEL_NEUTRON_STAR, "Neutron Star",
+                    StarDragonGravity.NEUTRON_SEQUENCE, StarDragonGravity.NEUTRON_COST, StarDragonGravity.NEUTRON_COOLDOWN,
+                    StarDragonGravity::neutronStar)
+            .costBy((player, cost) -> costFor(player, cost, "neutron_star"))
+            .entry("singularity", StarDragonFx.WHEEL_SINGULARITY, "Singularity",
+                    StarDragonGravity.SINGULARITY_SEQUENCE, StarDragonGravity.SINGULARITY_COST,
+                    StarDragonGravity.SINGULARITY_COOLDOWN, StarDragonGravity::singularity)
+            .costBy((player, cost) -> costFor(player, cost, "singularity"))
+            .entry("quantum_uncertainty", StarDragonFx.WHEEL_QUANTUM_UNCERTAINTY, "Quantum Uncertainty",
+                    StarDragonVoid.QUANTUM_SEQUENCE, StarDragonVoid.QUANTUM_COST, StarDragonVoid.QUANTUM_COOLDOWN,
+                    StarDragonVoid::quantumUncertainty)
+            .costBy((player, cost) -> costFor(player, cost, "quantum_uncertainty"))
+            .onCast((player, sl, entry) -> afterCast(player, entry.key()));
+
+    static {
+        // Condenser: no confinement needed, the Fusion Cluster costs half
+        addCostRule((player, cost, ability) -> "fusion_cluster".equals(ability) && grown(player, CONDENSER_SEQUENCE)
+                ? Math.round(cost * StarDragonSky.FUSION_CONDENSER_COST) : cost);
+    }
+
     // =========================
     // Events
     // =========================
@@ -240,16 +316,45 @@ public class StarDragon {
     public static class StarDragonEvents {
 
         static {
-            // Dense Body (4): nothing pulls, pushes or lifts you; Heavybringing: you cannot be moved while it holds
-            Spells.addMoveImmunity(one -> one instanceof Player dense
-                    && (isStarDragon(dense, DENSE_SEQUENCE) || StarDragonGravity.isHeavybringing(dense)));
+            // Dense Body (4): nothing pulls, pushes or lifts you; Heavybringing and the Neutron Star: nothing moves you
+            Spells.addMoveImmunity(one -> one instanceof Player dense && (isStarDragon(dense, DENSE_SEQUENCE)
+                    || StarDragonGravity.isHeavybringing(dense) || StarDragonGravity.isNeutronStar(dense)));
+            // Gravity Authority (1) and the Neutron Star: no Heaviness takes on you
+            Weight.addImmunity(one -> one instanceof Player heavy
+                    && (isStarDragon(heavy, AUTHORITY_SEQUENCE) || StarDragonGravity.isNeutronStar(heavy)));
+            // Weight and Density (0) and the Neutron Star: nothing roots you in place or freezes you (your own gathering
+            // for the Singularity is the one hold you put on yourself)
+            Root.addImmunity((one, restriction) -> one instanceof Player dense && heldBody(restriction)
+                    && !StarDragonGravity.isGathering(dense)
+                    && (isStarDragon(dense, CONDENSER_SEQUENCE) || StarDragonGravity.isNeutronStar(dense)));
+            Freeze.addImmunity(one -> one instanceof Player dense
+                    && (isStarDragon(dense, CONDENSER_SEQUENCE) || StarDragonGravity.isNeutronStar(dense)));
         }
 
         @SubscribeEvent
         public static void onStarDragonTick(TickEvent.PlayerTickEvent.Post event) {
             Player player = event.player();
-            if (!(player.level() instanceof ServerLevel)) return;
+            if (!(player.level() instanceof ServerLevel sl)) return;
             if (player.tickCount % 20 == 0) bodyTick(player);
+            if (player.tickCount % 2 == 0 && isStarDragon(player, AUTHORITY_SEQUENCE)) gravityAuthority(player, sl);
+            if (player.tickCount % 4 == 0 && isStarDragon(player, CONDENSER_SEQUENCE)) condenserSteps(player, sl);
+        }
+
+        /** A real blow (not an ability's hit): remembered for Fission Touch, and the Star Dragon's asteroid. */
+        @SubscribeEvent(priority = Priority.LOW)
+        public static void onStarDragonSwing(AttackEntityEvent event) {
+            Player player = event.getEntity();
+            if (!(player.level() instanceof ServerLevel sl) || !(event.getTarget() instanceof LivingEntity target)) return;
+            player.getPersistentData().putString(SWING_AT, target.getUUID().toString());
+            player.getPersistentData().putLong(SWING_TIME, sl.getGameTime());
+            StarDragonForms.swing(player, target);
+        }
+
+        /** Quantum Uncertainty: a teleport into the field slips aside. */
+        @SubscribeEvent
+        public static boolean onStarDragonTeleport(EntityTeleportEvent event) {
+            StarDragonVoid.teleport(event);
+            return false;
         }
 
         /**
@@ -277,6 +382,7 @@ public class StarDragon {
             }
             StarDragonVoid.hurt(event);
             StarDragonTides.hurt(event);
+            fissionTouch(event);
             if (!(hurt instanceof Player player) || !event.getSource().is(DamageTypes.FALL)) return;
             if (isStarDragon(player, DENSE_SEQUENCE)) event.setAmount(0f);
             else if (isStarDragon(player, EMBRACE_SEQUENCE)) event.setAmount(event.getAmount() * EMBRACE_FALL);
@@ -417,6 +523,25 @@ public class StarDragon {
     }
 
     // =========================
+    // Ability 6 - Star Shepherd: Star Grazing / Fission Pulse (StarDragonSky)
+    // =========================
+    public static void starDragonStarShepherd(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, SHEPHERD_SEQUENCE)) return;
+        if (player.isShiftKeyDown()) StarDragonSky.fissionPulse(player, sl);
+        else StarDragonSky.starGrazing(player, sl);
+    }
+
+    // =========================
+    // Ability 7 - Cosmos: the wheel (StarDragonSky, StarDragonForms, StarDragonGravity, StarDragonVoid)
+    // Normal: the wheel. Sneak: the last pick again, without the wheel (no cooldown, QUICK_CAST_COST times the cost).
+    // =========================
+    public static void starDragonCosmos(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!ready(player, bypassClassCheck, COSMOS_SEQUENCE)) return;
+        if (player.isShiftKeyDown()) COSMOS.quickCast(player);
+        else COSMOS.open(player);
+    }
+
+    // =========================
     // Passives (the once-a-second ones run from SequencePassives)
     // =========================
 
@@ -460,6 +585,77 @@ public class StarDragon {
         if (!player.isInWater()) return;
         Spells.keepEffect(player, MobEffects.DOLPHINS_GRACE, 0, 60);
         if (player.level() instanceof ServerLevel sl && player.tickCount % 60 == 0) StarDragonFx.starlightScales(sl, player);
+    }
+
+    /**
+     * Star Shepherd (3), on a real blow (the swing remembered this tick): Fission Touch. It arcs on to the nearest other
+     * enemy within TOUCH_REACH of the one struck, for TOUCH_SHARE of it.
+     */
+    private static void fissionTouch(LivingHurtEvent event) {
+        DamageSource source = event.getSource();
+        if (!(source.getEntity() instanceof Player player) || source.getDirectEntity() != player) return;
+        if (!isStarDragon(player, TOUCH_SEQUENCE) || !(player.level() instanceof ServerLevel sl)) return;
+        LivingEntity struck = event.getEntity();
+        if (player.getPersistentData().getLongOr(SWING_TIME, -1L) != sl.getGameTime()
+                || !struck.getUUID().toString().equals(player.getPersistentData().getStringOr(SWING_AT, ""))) return;
+        player.getPersistentData().remove(SWING_AT);                             // once a blow: the arc's own hit is not one
+        LivingEntity next = null;
+        double best = Double.MAX_VALUE;
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, struck.position(), TOUCH_REACH)) {
+            if (enemy == struck) continue;
+            double d = enemy.distanceToSqr(struck);
+            if (d < best) {
+                best = d;
+                next = enemy;
+            }
+        }
+        if (next == null) return;
+        StarDragonFx.fissionTouch(sl, struck.getBoundingBox().getCenter(), next.getBoundingBox().getCenter());
+        hit(player, next, event.getAmount() * TOUCH_SHARE);
+    }
+
+    /** Radiant Angel (2), once a second: Radiance. Enemies near you are burned (only a glow is drawn, no light blocks). */
+    public static void radiance(Player player) {
+        if (!(player.level() instanceof ServerLevel sl)) return;
+        StarDragonFx.radianceAura(sl, player, RADIANCE_RADIUS);
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), RADIANCE_RADIUS)) {
+            hit(player, enemy, RADIANCE_BURN * (enemy.is(EntityTypeTags.UNDEAD) ? 2f : 1f));
+        }
+    }
+
+    /** Star Dragon (1), every other tick: Gravity Authority. Projectiles of the other side near you fly at half speed. */
+    private static void gravityAuthority(Player player, ServerLevel sl) {
+        for (Projectile shot : Spells.hostileShotsAround(player, sl, player.getBoundingBox().getCenter(), AUTHORITY_RADIUS)) {
+            if (shot.getPersistentData().getBooleanOr(AUTHORITY_SLOWED, false)) continue;   // once a projectile
+            shot.getPersistentData().putBoolean(AUTHORITY_SLOWED, true);
+            shot.setDeltaMovement(shot.getDeltaMovement().scale(AUTHORITY_SLOWS));
+            shot.hurtMarked = true;
+            StarDragonFx.gravityAuthority(sl, shot.position());
+        }
+    }
+
+    /** Condenser (0), every 4 ticks: Weight and Density's steps. Every CONDENSER_STEP blocks walked, the ground shakes. */
+    private static void condenserSteps(Player player, ServerLevel sl) {
+        if (!player.onGround() || player.isSpectator()) return;
+        Vec3 at = player.position();
+        String last = player.getPersistentData().getStringOr(STEP_AT, "");
+        String[] parts = last.split(",");
+        if (parts.length == 2) {
+            try {
+                double dx = at.x - Double.parseDouble(parts[0]);
+                double dz = at.z - Double.parseDouble(parts[1]);
+                if (dx * dx + dz * dz < CONDENSER_STEP * CONDENSER_STEP) return;
+                StarDragonFx.condenserStep(sl, player);
+            } catch (NumberFormatException ignored) {
+                // a broken value: start again from here
+            }
+        }
+        player.getPersistentData().putString(STEP_AT, at.x + "," + at.z);
+    }
+
+    /** The holds Weight and Density (and the Neutron Star) shrug off: held in place, no jumping, no teleporting. */
+    private static boolean heldBody(RootRestriction restriction) {
+        return restriction == RootRestriction.MOVE || restriction == RootRestriction.JUMP || restriction == RootRestriction.TELEPORT;
     }
 
     /** Once a second, for every player: the hearts and footing of Star's Embrace, Starlight Scales and Dense Body. */
@@ -536,6 +732,10 @@ public class StarDragon {
         StarDragonGravity.clearState(player);
         StarDragonVoid.clearState(player);
         StarDragonTides.clearState(player);
+        StarDragonSky.clearState(player);
+        StarDragonForms.clearState(player);
+        player.getPersistentData().remove(SWING_AT);
+        player.getPersistentData().remove(STEP_AT);
         if (Form.current(player) != null && Form.current(player).startsWith("star_dragon")) Form.end(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) StarDragonFx.statusEnd(player, status);   // a clock left running before death

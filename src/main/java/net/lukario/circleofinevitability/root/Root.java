@@ -27,9 +27,12 @@ import net.minecraftforge.event.level.BlockEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
+import java.util.function.BiPredicate;
 
 /**
  * Roots: take away some or all of what an entity (mob or player) can do, for a while.
@@ -46,6 +49,12 @@ import java.util.Set;
  *
  * Every restriction has its own timer, so roots stack nicely: applying a shorter root never
  * shortens a longer one that's already there. Saved with the entity, cleared on death.
+ *
+ *   Root.addImmunity((entity, restriction) -> ...)   // once, in a static block: while it says true, that
+ *                                                    // restriction never takes on it (and one it had ends)
+ *
+ * A body too dense to hold (Star Dragon's Neutron Star and Weight and Density: MOVE, JUMP and TELEPORT), a mind that
+ * no word binds (ABILITIES). Freeze has its own Freeze.addImmunity; a frozen player is rooted through here too.
  */
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class Root {
@@ -77,14 +86,29 @@ public final class Root {
 
     public static void apply(LivingEntity target, int ticks, Set<RootRestriction> restrictions) {
         if (target.level().isClientSide() || ticks <= 0 || restrictions.isEmpty()) return;
+        Set<RootRestriction> taking = EnumSet.noneOf(RootRestriction.class);
+        for (RootRestriction restriction : restrictions) if (!isImmune(target, restriction)) taking.add(restriction);
+        if (taking.isEmpty()) return;
 
         CompoundTag tag = rootTag(target, true);
-        for (RootRestriction restriction : restrictions) {
+        for (RootRestriction restriction : taking) {
             String key = restriction.name();
             tag.putInt(key, Math.max(tag.getIntOr(key, 0), ticks));
         }
         updateModifiers(target);
-        if (restrictions.contains(RootRestriction.MOVE)) holdInPlace(target);
+        if (taking.contains(RootRestriction.MOVE)) holdInPlace(target);
+    }
+
+    private static final List<BiPredicate<LivingEntity, RootRestriction>> IMMUNE = new ArrayList<>();
+
+    /** Once, in a static block: while it says true for an entity and a restriction, that restriction never takes on it. */
+    public static void addImmunity(BiPredicate<LivingEntity, RootRestriction> immune) {
+        IMMUNE.add(immune);
+    }
+
+    public static boolean isImmune(LivingEntity entity, RootRestriction restriction) {
+        for (BiPredicate<LivingEntity, RootRestriction> rule : IMMUNE) if (rule.test(entity, restriction)) return true;
+        return false;
     }
 
     public static void remove(LivingEntity target) {
@@ -121,6 +145,15 @@ public final class Root {
     // =========================
     // Internals
     // =========================
+
+    private static boolean immuneTo(LivingEntity entity, String key) {
+        if (IMMUNE.isEmpty()) return false;
+        try {
+            return isImmune(entity, RootRestriction.valueOf(key));
+        } catch (IllegalArgumentException e) {
+            return false;
+        }
+    }
 
     private static CompoundTag rootTag(Entity entity, boolean create) {
         CompoundTag data = entity.getPersistentData();
@@ -182,7 +215,7 @@ public final class Root {
 
         for (String key : Set.copyOf(tag.keySet())) {
             int left = tag.getIntOr(key, 0) - 1;
-            if (left <= 0) tag.remove(key);
+            if (left <= 0 || immuneTo(entity, key)) tag.remove(key);       // ran out, or it has become immune
             else tag.putInt(key, left);
         }
         if (tag.isEmpty()) entity.getPersistentData().remove(TAG);

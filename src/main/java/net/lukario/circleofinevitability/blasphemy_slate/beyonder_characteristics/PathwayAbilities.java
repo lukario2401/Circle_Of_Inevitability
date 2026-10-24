@@ -313,7 +313,7 @@ public final class PathwayAbilities {
                     (player, level, sl) -> IlluminatorAlchemy.illuminatorAlchemy(player, level, sl, true)),
             new Ability("Illuminator", 7, "Civilization", 2, SNEAK, STEALABLE,                 // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> IlluminatorCivilization.illuminatorCivilization(player, level, sl, true)),
-            // ---- Star Dragon (docs/STAR_DRAGON.md); keys 6 and 7 are the second half ----
+            // ---- Star Dragon (docs/STAR_DRAGON.md) ----
             new Ability("Star Dragon", 1, "Star Chart", 9, SNEAK, STEALABLE,                       // sneak: Fate Glimpse (8)
                     (player, level, sl) -> StarDragon.starDragonAstronomy(player, level, sl, true)),
             new Ability("Star Dragon", 2, "Star Sacrifice", 7, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
@@ -323,7 +323,11 @@ public final class PathwayAbilities {
             new Ability("Star Dragon", 4, "Tidal Surge", 5, SNEAK, STEALABLE,                      // sneak: Scaled Form
                     (player, level, sl) -> StarDragon.starDragonTidalScholar(player, level, sl, true)),
             new Ability("Star Dragon", 5, "Heavybringing", 4, SNEAK, STEALABLE,                    // stolen: no wheel, its last (or a random) entry
-                    (player, level, sl) -> StarDragon.starDragonHeavybringer(player, level, sl, true)));
+                    (player, level, sl) -> StarDragon.starDragonHeavybringer(player, level, sl, true)),
+            new Ability("Star Dragon", 6, "Star Grazing", 3, SNEAK, STEALABLE,                     // sneak: Fission Pulse
+                    (player, level, sl) -> StarDragon.starDragonStarShepherd(player, level, sl, true)),
+            new Ability("Star Dragon", 7, "Cosmos", 2, SNEAK, STEALABLE,                           // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> StarDragon.starDragonCosmos(player, level, sl, true)));
 
 
 

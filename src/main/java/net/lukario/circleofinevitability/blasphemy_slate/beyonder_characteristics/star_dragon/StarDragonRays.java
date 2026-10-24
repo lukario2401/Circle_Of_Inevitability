@@ -25,8 +25,8 @@ import java.util.UUID;
  * Star Dragon, the rays (docs/STAR_DRAGON.md): the Weakening Ray and the Sunlight Ray (Star Sacrifice, key 2), the
  * Piercing Ray (key 3, sneak) and the Series of Rays (Heavybringer, key 5). Every ray is a combat/Ray: it shows its
  * line for StarDragonFx.RAY_WARNING ticks and then it is there at once and cannot be dodged. Its hits go through
- * StarDragon.rayHit (the Star Chart's calculated shot, the void's manifestation). The Dragon's thicker rays of the second
- * half go here too: the same Ray with RayKind.DRAGON and a wider width. Every number is right below.
+ * StarDragon.rayHit (the Star Chart's calculated shot, the void's manifestation). In the Star Dragon Form every ray is
+ * thicker (rayWidth: DRAGON_WIDER) and shows as the Dragon's (rayKind: RayKind.DRAGON). Every number is right below.
  */
 public final class StarDragonRays {
 
@@ -77,7 +77,20 @@ public final class StarDragonRays {
     private static final int MELT_TICKS = 100;                  // three stacks: it melts, and takes...
     private static final float MELT_PER_SECOND = 30f;           // ...this much a second for 5 seconds (very heavy)
 
+    // In the Star Dragon Form (StarDragonForms)
+    private static final double DRAGON_WIDER = 2.0;             // every ray this many times as wide
+
     private static final String CD_PIERCING = "star_dragon_piercing_ray";
+
+    /** How a ray shows: the Dragon's while in the Star Dragon Form, else its own kind. */
+    static RayKind rayKind(Player player, RayKind own) {
+        return StarDragonForms.isDragon(player) ? RayKind.DRAGON : own;
+    }
+
+    /** How wide a ray is: DRAGON_WIDER as wide in the Star Dragon Form. The same for what it hits and how it shows. */
+    static double rayWidth(Player player, double width) {
+        return StarDragonForms.isDragon(player) ? width * DRAGON_WIDER : width;
+    }
 
     // =========================
     // Weakening Ray: a thin dark-green ray from your eyes, WEAKENING_RANGE long, its line shown for RAY_WARNING ticks.
@@ -86,10 +99,12 @@ public final class StarDragonRays {
     // =========================
     static AbilityWheel.Result weakeningRay(ServerPlayer player, ServerLevel sl) {
         Vec3 eye = player.getEyePosition().add(0, -0.2, 0);
+        RayKind kind = rayKind(player, RayKind.WEAKENING);
+        float look = (float) rayWidth(player, 0.25);
         Ray.from(eye, player.getLookAngle())
-                .range(WEAKENING_RANGE).width(WEAKENING_WIDTH).warning(StarDragonFx.RAY_WARNING)
-                .onWarn((from, to) -> StarDragonFx.rayWarning(sl, from, to, RayKind.WEAKENING))
-                .onFire((from, to) -> StarDragonFx.rayFire(sl, from, to, RayKind.WEAKENING, 0.25f))
+                .range(WEAKENING_RANGE).width(rayWidth(player, WEAKENING_WIDTH)).warning(StarDragonFx.RAY_WARNING)
+                .onWarn((from, to) -> StarDragonFx.rayWarning(sl, from, to, kind))
+                .onFire((from, to) -> StarDragonFx.rayFire(sl, from, to, kind, look))
                 .onHit((target, at) -> weaken(player, target, WEAKENING_DAMAGE, WEAKENED_TICKS))
                 .fire(player, sl);
         return AbilityWheel.Result.DONE;
@@ -113,9 +128,11 @@ public final class StarDragonRays {
         Later.run(sl, StarDragonFx.SUNLIGHT_FIRES, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
             Vec3 hands = player.getEyePosition().add(player.getLookAngle().scale(1.0)).add(0, -0.35, 0);
+            RayKind kind = rayKind(player, RayKind.SUNLIGHT);
+            float look = (float) rayWidth(player, 2.0);
             Ray.from(hands, player.getLookAngle())
-                    .range(SUNLIGHT_RANGE).width(SUNLIGHT_WIDTH).pierces()
-                    .onFire((from, to) -> StarDragonFx.rayFire(sl, from, to, RayKind.SUNLIGHT, 2f))
+                    .range(SUNLIGHT_RANGE).width(rayWidth(player, SUNLIGHT_WIDTH)).pierces()
+                    .onFire((from, to) -> StarDragonFx.rayFire(sl, from, to, kind, look))
                     .onHit((target, at) -> {
                         boolean dark = target.is(EntityTypeTags.UNDEAD);
                         StarDragon.rayHit(player, target, SUNLIGHT_DAMAGE * (dark ? SUNLIGHT_UNDEAD : 1f));
@@ -144,7 +161,7 @@ public final class StarDragonRays {
         Cooldowns.start(player, CD_PIERCING, PIERCING_COOLDOWN);
         Vec3 eye = player.getEyePosition();
         Ray.from(eye, player.getLookAngle())
-                .range(PIERCING_RANGE).width(PIERCING_WIDTH).pierces()
+                .range(PIERCING_RANGE).width(rayWidth(player, PIERCING_WIDTH)).pierces()
                 .onFire((from, to) -> StarDragonFx.piercingRay(sl, player, to))
                 .onHit((target, at) -> {
                     StarDragon.rayHit(player, target, PIERCING_DAMAGE);
@@ -172,9 +189,11 @@ public final class StarDragonRays {
                 if (!Spells.casterStillHere(player, sl)) return;
                 Vec3 hand = Spells.clearStart(player, sl, player.getEyePosition().add(Spells.rightOf(player).scale(0.3)).add(0, -0.3, 0));
                 Vec3 aim = target.isAlive() ? target.getBoundingBox().getCenter().subtract(hand) : player.getLookAngle();
+                RayKind kind = rayKind(player, RayKind.WEAKENING);
+                float look = (float) rayWidth(player, 0.2);
                 Ray.from(hand, Spells.turned(aim, turn))
-                        .range(SERIES_RANGE).width(0.6)
-                        .onFire((from, to) -> StarDragonFx.rayFire(sl, from, to, RayKind.WEAKENING, 0.2f))
+                        .range(SERIES_RANGE).width(rayWidth(player, 0.6))
+                        .onFire((from, to) -> StarDragonFx.rayFire(sl, from, to, kind, look))
                         .onHit((hit, at) -> {
                             weaken(player, hit, SERIES_DAMAGE, SERIES_WEAKENED);
                             if (hit.isAlive() && StarDragonMarks.stacks(hit, Mark.WEAKENED) >= StarDragonMarks.MELT_AT
