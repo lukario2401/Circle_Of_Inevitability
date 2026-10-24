@@ -34,6 +34,7 @@ public class PathwayHudIcon {
         ICONS.put("Prince Of Abolition", icon("prince_of_abolition"));  // docs/PRINCE_OF_ABOLITION.md
         ICONS.put("Knowledge Emperor", icon("knowledge_emperor"));      // shows once the Pathway exists (docs/KNOWLEDGE_EMPEROR.md)
         ICONS.put("Illuminator", icon("illuminator"));                  // shows once the Pathway exists (docs/ILLUMINATOR.md)
+        ICONS.put("Star Dragon", icon("star_dragon"));                  // shows once the Pathway exists (docs/STAR_DRAGON.md)
     }
 
     private static Identifier icon(String fileName) {

@@ -2430,5 +2430,485 @@
         "name": "circle_of_inevitability:illuminator/blueprint_strike"
       }
     ]
+  },
+  "star_dragon.star_chart": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.star_chart",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/star_chart"
+      }
+    ]
+  },
+  "star_dragon.fate_glimpse": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.fate_glimpse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/fate_glimpse"
+      }
+    ]
+  },
+  "star_dragon.glimpse_dodge": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.glimpse_dodge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/glimpse_dodge"
+      }
+    ]
+  },
+  "star_dragon.gravity_press": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.gravity_press",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/gravity_press"
+      }
+    ]
+  },
+  "star_dragon.gravity_lift": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.gravity_lift",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/gravity_lift"
+      }
+    ]
+  },
+  "star_dragon.gravity_slam": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.gravity_slam",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/gravity_slam"
+      }
+    ]
+  },
+  "star_dragon.magnet_pull": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.magnet_pull",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/magnet_pull"
+      }
+    ]
+  },
+  "star_dragon.magnet_collide": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.magnet_collide",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/magnet_collide"
+      }
+    ]
+  },
+  "star_dragon.void_open": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.void_open",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/void_open"
+      }
+    ]
+  },
+  "star_dragon.void_close": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.void_close",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/void_close"
+      }
+    ]
+  },
+  "star_dragon.void_freeze": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.void_freeze",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/void_freeze"
+      }
+    ]
+  },
+  "star_dragon.ray_warn": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.ray_warn",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/ray_warn"
+      }
+    ]
+  },
+  "star_dragon.ray_weakening": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.ray_weakening",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/ray_weakening"
+      }
+    ]
+  },
+  "star_dragon.ray_piercing": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.ray_piercing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/ray_piercing"
+      }
+    ]
+  },
+  "star_dragon.weakened_melt": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.weakened_melt",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/weakened_melt"
+      }
+    ]
+  },
+  "star_dragon.void_passage": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.void_passage",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/void_passage"
+      }
+    ]
+  },
+  "star_dragon.tidal_surge": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.tidal_surge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/tidal_surge"
+      }
+    ]
+  },
+  "star_dragon.surge_parry": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.surge_parry",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/surge_parry"
+      }
+    ]
+  },
+  "star_dragon.scales_on": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.scales_on",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/scales_on"
+      }
+    ]
+  },
+  "star_dragon.scales_off": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.scales_off",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/scales_off"
+      }
+    ]
+  },
+  "star_dragon.sunlight_charge": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.sunlight_charge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/sunlight_charge"
+      }
+    ]
+  },
+  "star_dragon.sunlight_ray": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.sunlight_ray",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/sunlight_ray"
+      }
+    ]
+  },
+  "star_dragon.heavybringing": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.heavybringing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/heavybringing"
+      }
+    ]
+  },
+  "star_dragon.fate_convergence": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.fate_convergence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/fate_convergence"
+      }
+    ]
+  },
+  "star_dragon.misfortune": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.misfortune",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/misfortune"
+      }
+    ]
+  },
+  "star_dragon.heavy_sphere": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.heavy_sphere",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/heavy_sphere"
+      }
+    ]
+  },
+  "star_dragon.sphere_block": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.sphere_block",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/sphere_block"
+      }
+    ]
+  },
+  "star_dragon.series_of_rays": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.series_of_rays",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/series_of_rays"
+      }
+    ]
+  },
+  "star_dragon.remote_sight": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.remote_sight",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/remote_sight"
+      }
+    ]
+  },
+  "star_dragon.asteroid_fall": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.asteroid_fall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/asteroid_fall"
+      }
+    ]
+  },
+  "star_dragon.asteroid_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.asteroid_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/asteroid_impact"
+      }
+    ]
+  },
+  "star_dragon.grazed_star": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.grazed_star",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/grazed_star"
+      }
+    ]
+  },
+  "star_dragon.fission_glow": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.fission_glow",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/fission_glow"
+      }
+    ]
+  },
+  "star_dragon.fission_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.fission_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/fission_burst"
+      }
+    ]
+  },
+  "star_dragon.radiation": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.radiation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/radiation"
+      }
+    ]
+  },
+  "star_dragon.arc": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.arc",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/arc"
+      }
+    ]
+  },
+  "star_dragon.fusion_condense": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.fusion_condense",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/fusion_condense"
+      }
+    ]
+  },
+  "star_dragon.fusion_launch": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.fusion_launch",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/fusion_launch"
+      }
+    ]
+  },
+  "star_dragon.fusion_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.fusion_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/fusion_burst"
+      }
+    ]
+  },
+  "star_dragon.radiant_angel": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.radiant_angel",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/radiant_angel"
+      }
+    ]
+  },
+  "star_dragon.radiance": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.radiance",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/radiance"
+      }
+    ]
+  },
+  "star_dragon.form_end": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.form_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/form_end"
+      }
+    ]
+  },
+  "star_dragon.time_dilation": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.time_dilation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/time_dilation"
+      }
+    ]
+  },
+  "star_dragon.time_hang": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.time_hang",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/time_hang"
+      }
+    ]
+  },
+  "star_dragon.planet_descend": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.planet_descend",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/planet_descend"
+      }
+    ]
+  },
+  "star_dragon.planet_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.planet_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/planet_impact"
+      }
+    ]
+  },
+  "star_dragon.light_cracks": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.light_cracks",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/light_cracks"
+      }
+    ]
+  },
+  "star_dragon.star_dragon": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.star_dragon",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/star_dragon"
+      }
+    ]
+  },
+  "star_dragon.dragon_wing": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.dragon_wing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/dragon_wing"
+      }
+    ]
+  },
+  "star_dragon.dragon_shot": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.dragon_shot",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/dragon_shot"
+      }
+    ]
+  },
+  "star_dragon.neutron_star": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.neutron_star",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/neutron_star"
+      }
+    ]
+  },
+  "star_dragon.neutron_crush": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.neutron_crush",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/neutron_crush"
+      }
+    ]
+  },
+  "star_dragon.singularity_gather": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.singularity_gather",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/singularity_gather"
+      }
+    ]
+  },
+  "star_dragon.singularity_open": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.singularity_open",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/singularity_open"
+      }
+    ]
+  },
+  "star_dragon.singularity_collapse": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.singularity_collapse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/singularity_collapse"
+      }
+    ]
+  },
+  "star_dragon.quantum": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.quantum",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/quantum"
+      }
+    ]
+  },
+  "star_dragon.quantum_slip": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.quantum_slip",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/quantum_slip"
+      }
+    ]
+  },
+  "star_dragon.intuition": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.intuition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/intuition"
+      }
+    ]
+  },
+  "star_dragon.stargazing": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.stargazing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/stargazing"
+      }
+    ]
+  },
+  "star_dragon.dense_step": {
+    "subtitle": "subtitles.circle_of_inevitability.star_dragon.dense_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:star_dragon/dense_step"
+      }
+    ]
   }
 }
