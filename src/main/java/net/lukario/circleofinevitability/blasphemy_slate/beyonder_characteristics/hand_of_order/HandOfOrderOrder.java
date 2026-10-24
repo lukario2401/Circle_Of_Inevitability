@@ -1,6 +1,5 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order;
 
-import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
@@ -32,7 +31,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.fml.common.Mod;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -439,22 +437,20 @@ public final class HandOfOrderOrder {
     // Endings
     // =========================
 
-    @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static final class OrderEvents {
-
-        private OrderEvents() {}
-
-        static {
-            // Balance ends however it ends (time, either one dies, another weighed): the weight comes back
-            Chosen.addListener(BALANCED, (chooser, target) -> {
-                if (target != null) {
-                    for (int i = 0; i < WEIGHED.size(); i++) Physique.remove(target, WEIGHED.get(i), WEIGHED_IDS.get(i));
-                }
-                if (chooser != null && chooser.level() instanceof ServerLevel sl) {
-                    HandOfOrderFx.balanceEnd(sl, chooser, target, balanceTag(chooser));
-                }
-            });
-        }
+    /**
+     * Called once from {@link HandOfOrder.HandOfOrderEvents}' static block. (Not its own
+     * EventBusSubscriber: Forge refuses a subscriber class with no @SubscribeEvent methods.)
+     */
+    static void registerListeners() {
+        // Balance ends however it ends (time, either one dies, another weighed): the weight comes back
+        Chosen.addListener(BALANCED, (chooser, target) -> {
+            if (target != null) {
+                for (int i = 0; i < WEIGHED.size(); i++) Physique.remove(target, WEIGHED.get(i), WEIGHED_IDS.get(i));
+            }
+            if (chooser != null && chooser.level() instanceof ServerLevel sl) {
+                HandOfOrderFx.balanceEnd(sl, chooser, target, balanceTag(chooser));
+            }
+        });
     }
 
     /** After a relog or a death: no proxy left half-running (and no price for it either). */
