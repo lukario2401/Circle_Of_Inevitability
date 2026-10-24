@@ -792,6 +792,38 @@ Everything it uses is generated, from `tools/model_gen/star_dragon/` (run each f
 | `star_dragon/radiation_ground`, `accretion_disk` | Flat and animated, their own colors: a radiation zone, the black hole's disc | default | |
 | `star_dragon/ray_beam`, `pulse_beam` | Two crossed planes of light (animated): a ray, and a heavier one with rings | default = the middle of their start | `modelAlong` and `.scale(width, length, width)` |
 
+### Hand Of Order: ready-made displays
+
+`HandOfOrderFx` (in `beyonder_characteristics/hand_of_order/`) holds the Hand Of Order (Justiciar pathway) looks for all seven keys, both casts, the four wheels (Interrogation on key 3, Verdict on key 4, Decree on key 5, Order on key 7), the spoken words of the Verdicts and Decrees, the Convict, the Decree zones and their Violations, the Court of Judgment and its clauses, the statuses, the passives that show, the melee combo and what grows at higher Sequences (Intimidation, Confinement, the void Exile and its hurricane, Death on the latest wound, Prohibition layers, the Brass Pillar). The abilities of the new design are not written yet (the first `HandOfOrder` class is untouched); the displays are ready for them. They only show things; the damage, holding, hiding, healing and moving are the ability's, at the ticks the constants name (`HALT_LANDS`, `JURISDICTION_CLAIMED`, `WHIP_LANDS`, `IMPRISON_LANDS`, `EXILE_LANDS`, `DEATH_LANDS`, `DEPRIVED`, `EXECUTION_LANDS`, `DECREE_RISEN`, `CONTRACT_SIGNED`, `SWORD_LANDS`, `BALANCE_SETTLED`, `DIVIDE_RISEN`, `COURT_RISEN`). The class comment lists every call by key; [HAND_OF_ORDER.md](HAND_OF_ORDER.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/hand_of_order/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` (+ `textures.py`) | The models, pictures and spoken words and their textures in `models/model_fx/hand_of_order/` and `textures/model_fx/hand_of_order/` (`../hanged_man/render.py` draws any of them without the game). The words need a bold TrueType font (DejaVu Serif Bold, Times New Roman Bold on Windows) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/hand_of_order/`), the status pictures, the seven clause pictures and the Court's tablet (`textures/gui/hand_of_order/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/law_0` to `law_2`, `prohibit`, `shackle`, `brand`, `bolt`, `verdict` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/hand_of_order/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`ORDER_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` and `../knowledge_emperor/sounds.py` |
+
+**See them in game** (cheats on): `/orderfx all` or `/orderfx court` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+| Model | What it is | Pivot | Notes |
+|---|---|---|---|
+| `hand_of_order/brass_pillar` | The Brass Pillar: a fluted brass column on a stepped plinth, bands of engraved law, a crown of white-gold light, 2 blocks | default (bottom middle) | Behind the caster: the Imperative Mage's form (1.8), Order Proxy (3.2), the Court (4.5) |
+| `hand_of_order/scales_stand`, `scales_beam` | Balance's scales: a brass post; a beam with a pan on three chains at each end | default; the beam's hinge `(8, 24, 8)` | Play the beam 1.5 blocks times its scale above the stand's foot; `roll` tips it |
+| `hand_of_order/branding_iron` | An Illusory Torture Device: leather grip, iron rod, a cross-brand glowing white-hot, 1.9 blocks | the grip `(8, 4, 8)` | Tint it lightning blue; along the weapon in hand |
+| `hand_of_order/spectral_fist` | A spectral right fist and forearm of white-gold light, knuckles north, 1.5 blocks | the wrist `(8, 8, 14)` | Death and Execution |
+| `hand_of_order/glass_pane`, `confinement_cell` | One transparent wall in an iron frame, 1 x 2 blocks; a glass cell with iron posts and brass studs, 1 x 2 x 1 | default | `.seeThrough()`; scale them to the one held |
+| `hand_of_order/gavel` | A gavel: dark wood bound in brass, 1.25 blocks, handle south | the handle's end `(8, 8, 19)` | Pitch it down to strike: clauses, sentences |
+| `hand_of_order/judgment_sword` | The Sword of Judgment: a blade of white-gold light, a scale-armed brass guard with a red stone, 3 blocks | the grip `(8, -10, 8)` | Point up; pitch it forward to cut |
+| `hand_of_order/order_seal`, `decree_circle`, `court_floor`, `reality_seal`, `no_return_sigil`, `quell_seal` | Jurisdiction's seal; a Decree's chained ring with seven clause seats; the Court's floor; Reality's grid; a shut, barred door; nested squares | default | Flat, white: tint them |
+| `hand_of_order/prohibition_sigil`, `convict_brand`, `recognition_mark`, `execution_ring`, `exile_void`, `dawn_halo` | A ring struck through; a sword point down hung with chains; an eye framed by closing corners; chevrons closing on a point; a torn hole; a sunburst | their middle `(8, 8, 8)` | Standing, white: tint them |
+| `hand_of_order/contract_paper` | The Contract: paper headed CONTRACT, clauses, a signature, a red wax seal | its middle | Standing, its own colors |
+| `hand_of_order/order_wall` | A panel of brass bars with letters of the law climbing them (animated) | default | Standing; set in a ring: Divide the Battlefield, the Court's dome |
+| `hand_of_order/word_halt` ... `word_judgment` | The spoken words (17): engraved capitals between two rules, 3 blocks wide | default | Standing, white; `HandOfOrderFx.speak(sl, who, Word.X)` |
+
+Statuses: `HandOfOrderFx.status(player, Status.CONVICT, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away. `courtClauses(player, written, ticks)` shows the Court's clauses in the row beside the hotbar and the tablet in the top right.
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.
