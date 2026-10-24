@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.menu;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Cooldowns;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.minecraft.nbt.CompoundTag;
@@ -47,10 +48,12 @@ import java.util.function.ToDoubleFunction;
  * - .quickCastCostBy(player -> ...): the recast price read from the player (3x at Sequence 9, 1x at Sequence 5...).
  * - .noCooldownsWhen(player -> ...): while it says true for a player, none of the wheel's entries has a cooldown.
  * - .cooldownBy((player, ticks) -> ...): every entry's cooldown worked out when it starts (30% shorter while blessed).
+ * - .notCopyable() after an entry: Record, Replication and the echoes (combat/Casts) never copy it.
  *
  * Cast through Beyonder.castUnbound (a stolen ability) there is no screen: the last pick is cast at once,
  * or a random entry if there is none.
  * Saved on the player: the last pick and the cooldowns (in game time), so both survive a relog.
+ * Every pick that went off is told to combat/Casts (Record, Replication and the echoes copy it from there).
  */
 public final class AbilityWheel {
 
@@ -89,6 +92,7 @@ public final class AbilityWheel {
         private final Cast cast;
         private Predicate<ServerPlayer> free;
         private CostRule costBy;
+        private boolean copyable = true;
 
         private Entry(String key, String icon, String name, int sequence, int cost, int cooldown, Cast cast) {
             this.key = key;
@@ -105,6 +109,8 @@ public final class AbilityWheel {
         public int sequence() { return sequence; }
         public int cost() { return cost; }
         public int cooldown() { return cooldown; }
+        /** False for an entry that only works for its own Pathway: combat/Casts never copies it (see notCopyable). */
+        public boolean copyable() { return copyable; }
 
         private boolean isFree(ServerPlayer player) {
             return free != null && free.test(player);
@@ -153,6 +159,15 @@ public final class AbilityWheel {
     /** While this says true, the entry added last skips the cost and cooldown checks. */
     public AbilityWheel free(Predicate<ServerPlayer> when) {
         if (!entries.isEmpty()) entries.get(entries.size() - 1).free = when;
+        return this;
+    }
+
+    /**
+     * The entry added last is never copied by another (combat/Casts: Record, Replication, the echoes): it needs its own
+     * Pathway's state or tick, or copying it makes no sense (a copier copying).
+     */
+    public AbilityWheel notCopyable() {
+        if (!entries.isEmpty()) entries.get(entries.size() - 1).copyable = false;
         return this;
     }
 
@@ -304,6 +319,7 @@ public final class AbilityWheel {
         if (result == null || result == Result.REFUSED) return Result.REFUSED;
 
         player.getPersistentData().putString(id + "_last", entry.key);
+        Casts.wheelCast(player, this, entry);                            // who cast what (combat/Casts: Record, echoes)
         if (result == Result.DONE) {
             if (!free) {
                 Spells.paySpirituality(player, cost);

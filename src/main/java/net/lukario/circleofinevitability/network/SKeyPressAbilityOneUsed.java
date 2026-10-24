@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
@@ -61,25 +62,30 @@ public class SKeyPressAbilityOneUsed {
         // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
         if (KeySeal.blocksKey(player, 1)) return;
         KeySeal.pressed(player, 1);
+        Casts.keyPressed(player, 1);                 // combat/Casts: told if the press goes off
+        try {
 
-        wandererStarBurst(player,level,serverLevel,false);
+            wandererStarBurst(player,level,serverLevel,false);
 
-        keyOfStarsDoorOpening(player, level, serverLevel, false);
-        attendantOfMysteriesPaperDagger(player,level,serverLevel,false);
-        frenziedMageSpear(player,level,serverLevel,false);
-        handOfOrderAuthority(player,level,serverLevel,false);
-        paleEmperorRoot(player,serverLevel,false);
-        wormOfTimeAbility1(player,level,serverLevel,false);
-        conquerorHuntersTrap(player,level,serverLevel,false);
-        apocalypseFatalStep(player,level,serverLevel,false);
-        hangedManDivination(player,level,serverLevel,false);
-        beautyGoddessMedicine(player,level,serverLevel,false);
-        handOfGodWarriorsCharge(player,level,serverLevel,false);
-        knightOfMisfortuneNightSight(player,level,serverLevel,false);
-        abominationBloodChain(player,level,serverLevel,false);
-        princeOfAbolitionVerdict(player,level,serverLevel,false);
-        knowledgeEmperorMysteryPrying(player,level,serverLevel,false);
-        illuminatorCompoundFlask(player,level,serverLevel,false);
-        starDragonAstronomy(player,level,serverLevel,false);
+            keyOfStarsDoorOpening(player, level, serverLevel, false);
+            attendantOfMysteriesPaperDagger(player,level,serverLevel,false);
+            frenziedMageSpear(player,level,serverLevel,false);
+            handOfOrderAuthority(player,level,serverLevel,false);
+            paleEmperorRoot(player,serverLevel,false);
+            wormOfTimeAbility1(player,level,serverLevel,false);
+            conquerorHuntersTrap(player,level,serverLevel,false);
+            apocalypseFatalStep(player,level,serverLevel,false);
+            hangedManDivination(player,level,serverLevel,false);
+            beautyGoddessMedicine(player,level,serverLevel,false);
+            handOfGodWarriorsCharge(player,level,serverLevel,false);
+            knightOfMisfortuneNightSight(player,level,serverLevel,false);
+            abominationBloodChain(player,level,serverLevel,false);
+            princeOfAbolitionVerdict(player,level,serverLevel,false);
+            knowledgeEmperorMysteryPrying(player,level,serverLevel,false);
+            illuminatorCompoundFlask(player,level,serverLevel,false);
+            starDragonAstronomy(player,level,serverLevel,false);
+        } finally {
+            Casts.keyDone(player);
+        }
     }
 }

@@ -106,21 +106,21 @@ public final class PathwayAbilities {
             new Ability("Attendant Of Mysteries", 7, "Grafting", 3, SNEAK, STEALABLE,
                     (player, level, sl) -> AttendantOfMysteries.attendantOfMysteriesGrafting(player, level, sl, true)),
 
-            // ---- Key Of Stars (docs/KEY_OF_STARS.md); keys 4, 6 and 7 are not written yet: make them STEALABLE once they are ----
+            // ---- Key Of Stars (docs/KEY_OF_STARS.md) ----
             new Ability("Key Of Stars", 1, "Door Opening", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> KeyOfStars.keyOfStarsDoorOpening(player, level, sl, true)),
             new Ability("Key Of Stars", 2, "Tricks", 8, SNEAK, STEALABLE,                       // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> KeyOfStarsTricks.keyOfStarsTricks(player, level, sl, true)),
             new Ability("Key Of Stars", 3, "Star Divination", 7, SNEAK, STEALABLE,
                     (player, level, sl) -> KeyOfStars.keyOfStarsAstrology(player, level, sl, true)),
-            new Ability("Key Of Stars", 4, "Record", 6, SNEAK, OWN_PATHWAY_ONLY,
+            new Ability("Key Of Stars", 4, "Record", 6, SNEAK, OWN_PATHWAY_ONLY,                 // the pages are the Scribe's own
                     (player, level, sl) -> KeyOfStars.keyOfStarsRecord(player, level, sl, true)),
             new Ability("Key Of Stars", 5, "Travel", 5, SNEAK, OWN_PATHWAY_ONLY,                // Wandering needs its own Pathway's tick and key
                     (player, level, sl) -> KeyOfStarsTravel.keyOfStarsTravel(player, level, sl, true)),
-            new Ability("Key Of Stars", 6, "Secrets and Space", 4, SNEAK, OWN_PATHWAY_ONLY,
+            new Ability("Key Of Stars", 6, "Secrets and Space", 4, SNEAK, STEALABLE,             // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> KeyOfStars.keyOfStarsSecrets(player, level, sl, true)),
-            new Ability("Key Of Stars", 7, "Starlight", 2, SNEAK, OWN_PATHWAY_ONLY,
-                    (player, level, sl) -> KeyOfStars.keyOfStarsStarlight(player, level, sl, true)),
+            new Ability("Key Of Stars", 7, "Starlight", 2, SNEAK, OWN_PATHWAY_ONLY,              // Omnipresence and the Alternate World
+                    (player, level, sl) -> KeyOfStars.keyOfStarsStarlight(player, level, sl, true)),  // run on this Pathway's own rules
 
             // ---- Hand Of Order (docs/HAND_OF_ORDER.md) ----
             new Ability("Hand Of Order", 1, "Halt", 9, SNEAK, STEALABLE,

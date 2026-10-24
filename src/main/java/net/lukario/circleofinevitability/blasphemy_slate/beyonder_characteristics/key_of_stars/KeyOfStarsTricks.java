@@ -145,7 +145,7 @@ public final class KeyOfStarsTricks {
             .entry("escape_trick", KeyOfStarsFx.WHEEL_ESCAPE_TRICK, "Escape Trick", TRICKS_SEQUENCE, ESCAPE_COST,
                     ESCAPE_COOLDOWN, KeyOfStarsTricks::escapeTrick)
             .costBy(KeyOfStars::wheelCostFor)
-            .free(KeyOfStars::doorOfDoors)                                       // Door of Doors: free, no cooldown
+            .free(KeyOfStars::freeTravel)                                        // Door of Doors (or an Alternate World): free
             .onCast((player, sl, entry) -> {
                 if (!entry.key().equals("escape_trick")) player.getPersistentData().putLong(LAST_TRICK, sl.getGameTime());
             });
@@ -158,6 +158,11 @@ public final class KeyOfStarsTricks {
         if (!KeyOfStars.ready(player, bypassClassCheck, TRICKS_SEQUENCE)) return;
         if (player.isShiftKeyDown()) WHEEL.quickCast(player);
         else WHEEL.open(player);
+    }
+
+    /** The tricks an echo (combat/Echo) never repeats from elsewhere: the ones that move you. */
+    static boolean isTravel(String entryKey) {
+        return entryKey.equals("escape_trick");
     }
 
     static void clearState(Player player) {
@@ -347,7 +352,7 @@ public final class KeyOfStarsTricks {
         }
         KeyOfStarsFx.escapeTrick(sl, player, from, to, diversion);
         KeyOfStars.teleport(player, sl, to, false);
-        if (KeyOfStars.doorOfDoors(player)) KeyOfStarsFx.doorOfDoors(sl, player);
+        if (KeyOfStars.freeTravel(player)) KeyOfStarsFx.doorOfDoors(sl, player);
         player.getPersistentData().remove(LAST_TRICK);                          // one diversion, one escape
         return AbilityWheel.Result.DONE;
     }

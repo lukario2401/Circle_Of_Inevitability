@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
@@ -60,25 +61,30 @@ public class SKeyPressAbilityFourUsed {
         // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
         if (KeySeal.blocksKey(player, 4)) return;
         KeySeal.pressed(player, 4);
+        Casts.keyPressed(player, 4);                 // combat/Casts: told if the press goes off
+        try {
 
-        wandererSeal(player,level,serverLevel,false);
+            wandererSeal(player,level,serverLevel,false);
 
-        keyOfStarsRecord(player, level, serverLevel, false);
-        attendantOfMysteriesAirCannon(player,level,serverLevel,false);
-        frenziedMageHammer(player,level,serverLevel,false);
-        handOfOrderVerdict(player,level,serverLevel,false);
-        paleEmperorSpearSkull(player,level,serverLevel,false);
-        conquerorFlameTransformation(player,level,serverLevel,false);
-        apocalypseSilkWeaver(player,level,serverLevel,false);
-        hangedManFleshBomb(player,level,serverLevel,false);
-        beautyGoddessPotions(player,level,serverLevel,false);
-        handOfGodDawn(player,level,serverLevel,false);
-        knightOfMisfortuneRequiem(player,level,serverLevel,false);
-        abominationZombie(player,level,serverLevel,false);
-        princeOfAbolitionDistort(player,level,serverLevel,false);
-        knowledgeEmperorScrolls(player,level,serverLevel,false);
-        illuminatorWorkshop(player,level,serverLevel,false);
-        starDragonTidalScholar(player,level,serverLevel,false);
+            keyOfStarsRecord(player, level, serverLevel, false);
+            attendantOfMysteriesAirCannon(player,level,serverLevel,false);
+            frenziedMageHammer(player,level,serverLevel,false);
+            handOfOrderVerdict(player,level,serverLevel,false);
+            paleEmperorSpearSkull(player,level,serverLevel,false);
+            conquerorFlameTransformation(player,level,serverLevel,false);
+            apocalypseSilkWeaver(player,level,serverLevel,false);
+            hangedManFleshBomb(player,level,serverLevel,false);
+            beautyGoddessPotions(player,level,serverLevel,false);
+            handOfGodDawn(player,level,serverLevel,false);
+            knightOfMisfortuneRequiem(player,level,serverLevel,false);
+            abominationZombie(player,level,serverLevel,false);
+            princeOfAbolitionDistort(player,level,serverLevel,false);
+            knowledgeEmperorScrolls(player,level,serverLevel,false);
+            illuminatorWorkshop(player,level,serverLevel,false);
+            starDragonTidalScholar(player,level,serverLevel,false);
+        } finally {
+            Casts.keyDone(player);
+        }
     }
 
 }

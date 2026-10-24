@@ -5,10 +5,12 @@ import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Unbound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.portal.TeleportTransition;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
@@ -24,6 +26,8 @@ import java.util.List;
  *   Teleport.of(player).ignoringTeleportRoots().go(sl, there);             // an Apprentice's Door Opening
  *   Teleport.of(player).unbinding().go(sl, there);                         // mind control lets go (status/Unbound)
  *   Teleport.canGo(player)                                                 // ask first, so a refusal costs nothing
+ *   Teleport.of(player).goTo(otherLevel, there);                           // to another dimension as well
+ *   ServerLevel nether = Teleport.levelNamed(server, anchor.dimension());  // a dimension kept as text (status/Anchors)
  *
  * Finding where to go:
  *   Teleport.fits(entity, sl, feet)                    // its body fits with its feet there (any entity)
@@ -98,6 +102,41 @@ public final class Teleport {
             }
         }
         return true;
+    }
+
+    /**
+     * Puts it at 'feet' in 'to', which may be another dimension (a Star Anchor left in the Nether). False, and nothing
+     * happens, when it may not go. Across dimensions the game's own teleport carries it (TeleportTransition); the
+     * fall guard and the unbinding come with it, and the listeners are told with 'from' in the old dimension.
+     */
+    public boolean goTo(ServerLevel to, Vec3 feet) {
+        if (to == null || feet == null || !who.isAlive()) return false;
+        if (who.level() == to) return go(to, feet);
+        if (!ignoreRoots && !canGo(who)) return false;
+        Vec3 from = who.position();
+        Entity arrived = who.teleport(new TeleportTransition(to, feet, Vec3.ZERO, who.getYRot(), who.getXRot(),
+                TeleportTransition.DO_NOTHING));
+        if (!(arrived instanceof LivingEntity body)) return false;
+        body.fallDistance = 0;
+        if (fallGuard > 0) FallGuard.protect(body, fallGuard);
+        if (unbind) Unbound.breakControl(body);
+        for (Listener listener : List.copyOf(LISTENERS)) {
+            try {
+                listener.moved(body, from, feet);
+            } catch (Exception e) {
+                CircleOfInevitability.LOGGER.error("A teleport listener failed", e);
+            }
+        }
+        return true;
+    }
+
+    /** The level of a dimension written as Level.dimension().toString() (how status/Anchors keeps it); null if none. */
+    public static ServerLevel levelNamed(MinecraftServer server, String dimension) {
+        if (server == null || dimension == null) return null;
+        for (ServerLevel level : server.getAllLevels()) {
+            if (level.dimension().toString().equals(dimension)) return level;
+        }
+        return null;
     }
 
     // =========================

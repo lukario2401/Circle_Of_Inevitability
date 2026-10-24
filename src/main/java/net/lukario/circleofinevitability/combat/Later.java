@@ -36,7 +36,7 @@ public final class Later {
             action.run();
             return;
         }
-        Task task = new Task(level, level.getGameTime() + ticks, action);
+        Task task = new Task(level, level.getGameTime() + ticks, Echo.carry(action));   // an echo's hits stay weaker
         if (running) ADDED_WHILE_RUNNING.add(task);
         else TASKS.add(task);
     }

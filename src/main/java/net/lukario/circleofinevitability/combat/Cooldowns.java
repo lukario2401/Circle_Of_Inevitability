@@ -20,6 +20,7 @@ import java.util.List;
  * Check it first (with the other "can this be cast" checks), start it after the cast went off, as AbilityWheel does.
  * Cooldowns.addScale(player -> ...) changes every cooldown a player starts (the wheels' too): scaled(player, ticks).
  * The key may be anything; start it with your Pathway.
+ * A copy of an ability (combat/Casts: Record's Replay, an echo) neither waits for these cooldowns nor starts them.
  */
 public final class Cooldowns {
 
@@ -61,6 +62,7 @@ public final class Cooldowns {
 
     /** Starts its cooldown: ready again 'ticks' from now (0 or less: ready at once). */
     public static void start(Player player, String key, int ticks) {
+        if (Casts.isCopying(player)) return;                    // a copy (combat/Casts) starts no cooldown...
         if (ticks <= 0) {
             reset(player, key);
             return;
@@ -70,6 +72,7 @@ public final class Cooldowns {
 
     /** Ticks until it is ready (0 = ready). */
     public static int left(Player player, String key) {
+        if (Casts.isCopying(player)) return 0;                  // ...and waits for none
         long ready = player.getPersistentData().getLongOr(PREFIX + key, 0L);
         long left = ready - player.level().getGameTime();
         if (left > 72000L) {                                    // a save from another world's clock: forget it

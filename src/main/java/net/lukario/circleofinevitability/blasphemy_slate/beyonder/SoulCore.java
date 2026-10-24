@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
+import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Residue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
@@ -117,6 +118,7 @@ public class SoulCore {
             if (after < stored) {
                 Digestion.onSpiritualitySpent(player, stored - after);
                 Residue.spent(player);                                       // where it was cast (combat/Residue)
+                Casts.spent(player);                                         // a key press that paid went off (combat/Casts)
             }
             return;
         }
@@ -125,6 +127,7 @@ public class SoulCore {
         if (after < before) {
             Digestion.onSpiritualitySpent(player, before - after);
             Residue.spent(player);                                           // where it was cast (combat/Residue)
+            Casts.spent(player);                                             // a key press that paid went off (combat/Casts)
         }
     }
 

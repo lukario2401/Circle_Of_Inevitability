@@ -26,7 +26,7 @@ import java.util.List;
  * an Anchor has its spot (at), its dimension (dimension, as Anchors.dimensionOf(level) writes it; isIn(level) asks)
  * and the game time it is gone (until). Saved with the player, and kept through death; the game time keeps running
  * in every dimension.
- * Going to one in another dimension is not in the kit yet: list(...) still lists them.
+ * Going to one in another dimension: Teleport.of(player).goTo(Teleport.levelNamed(server, anchor.dimension()), anchor.at()).
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */

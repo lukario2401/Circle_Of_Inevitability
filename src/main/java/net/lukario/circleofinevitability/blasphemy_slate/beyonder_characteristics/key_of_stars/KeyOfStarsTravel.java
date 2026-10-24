@@ -3,10 +3,13 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx.Form;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx.Status;
+import net.lukario.circleofinevitability.combat.Casts;
+import net.lukario.circleofinevitability.combat.Echo;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Teleport;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
+import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Anchors;
@@ -35,9 +38,11 @@ import java.util.UUID;
  *
  *   Traveler's Door   a Door to the Spirit World and out of another where you aim (or at the Star Anchor you aim at);
  *                     the further, the longer you wait inside; allies touching you come along
- *   Blink             a hop toward where you look, up to three in a row; the hop dodges the next hit
+ *   Blink             a hop toward where you look, up to three in a row; the hop dodges the next hit. Planeswalker:
+ *                     the afterimages it leaves stay a while and repeat what you cast (combat/Echo)
  *   Invisible Hand    an unseen hand: a creature is yanked to your feet and Starlit, loose things fly to you
- *   Star Anchor       a saved place to come back to by Traveler's Door (status/Anchors); cast again on it to lift it
+ *   Star Anchor       a saved place to come back to by Traveler's Door (status/Anchors); cast again on it to lift it.
+ *                     Wanderer: Traveler's Door aimed straight up goes to your newest Anchor in another dimension
  *   Wandering (3)     you are a trail of starlight in the Astral World for a while, through blocks and creatures,
  *                     unseen and unhurt; pressing the key again steps you out. Symbolization (2): longer, and allies
  *                     touching you come along. Conceptualization (0): enemies you fly through are banished for a while
@@ -69,6 +74,9 @@ public final class KeyOfStarsTravel {
     private static final double DOOR_WAIT_PER_BLOCK = 0.5;      // ticks inside for every block of the way
     private static final double DOOR_COMPANY = 2.0;             // allies this close come along
     private static final double ANCHOR_AIM = 6.0;               // aimed this close (degrees) at an Anchor: you go there
+    private static final int DOOR_WORLDS_SEQUENCE = 3;          // Wanderer: Anchors in other dimensions...
+    private static final float DOOR_WORLDS_PITCH = -75f;        // ...by looking at least this far up
+    private static final int DOOR_WORLDS_WAIT = 30;             // the wait inside, whatever the way
 
     // Blink
     private static final int BLINK_COST = 500;
@@ -81,6 +89,10 @@ public final class KeyOfStarsTravel {
     private static final int QUICK_TICKS = 60;                  // powers cost QUICK_COST and cool down in QUICK_COOLDOWN of
     static final float QUICK_COST = 0.7f;                       // the time; a Blink also tears you out of mind control
     static final float QUICK_COOLDOWN = 0.5f;
+    private static final int ECHO_SEQUENCE = 2;                 // Planeswalker: the afterimage each Blink leaves stays...
+    private static final int ECHO_TICKS = 80;                   // ...this long and repeats every power you cast...
+    private static final int ECHO_MAX = 3;                      // ...at most this many at once...
+    private static final float ECHO_STRENGTH = 0.4f;            // ...its hits at this strength (combat/Echo)
 
     // Invisible Hand
     private static final int HAND_COST = 1500;
@@ -126,6 +138,11 @@ public final class KeyOfStarsTravel {
 
     private static final Map<UUID, List<Companion>> WANDER_COMPANY = new HashMap<>();
 
+    /** A Planeswalker's Blink afterimage: where it stands and when it fades. Not saved. */
+    private record Afterimage(Vec3 at, long until, String tag) {}
+
+    private static final Map<UUID, List<Afterimage>> AFTERIMAGES = new HashMap<>();
+
     // =========================
     // The key
     // =========================
@@ -136,10 +153,11 @@ public final class KeyOfStarsTravel {
             .entry("travelers_door", KeyOfStarsFx.WHEEL_TRAVELERS_DOOR, "Traveler's Door", TRAVEL_SEQUENCE, DOOR_COST,
                     DOOR_COOLDOWN, KeyOfStarsTravel::travelersDoor)
             .costBy(KeyOfStars::wheelCostFor)
+            .free(KeyOfStars::freeTravel)                                       // an Alternate World's Open Doors
             .entry("blink", KeyOfStarsFx.WHEEL_BLINK, "Blink", TRAVEL_SEQUENCE, BLINK_COST, BLINK_COOLDOWN,
                     KeyOfStarsTravel::blink)
             .costBy(KeyOfStars::wheelCostFor)
-            .free(player -> KeyOfStars.doorOfDoors(player) || chainOpen(player))
+            .free(player -> KeyOfStars.freeTravel(player) || chainOpen(player) || KeyOfStarsStarlight.isOmnipresent(player))
             .entry("invisible_hand", KeyOfStarsFx.WHEEL_INVISIBLE_HAND, "Invisible Hand", TRAVEL_SEQUENCE, HAND_COST,
                     HAND_COOLDOWN, KeyOfStarsTravel::invisibleHand)
             .costBy(KeyOfStars::wheelCostFor)
@@ -149,7 +167,8 @@ public final class KeyOfStarsTravel {
             .free(KeyOfStarsTravel::onOwnAnchor)                                // lifting one: free, no cooldown
             .entry("wandering", KeyOfStarsFx.WHEEL_WANDERING, "Wandering", WANDERING_SEQUENCE, WANDERING_COST,
                     WANDERING_COOLDOWN, KeyOfStarsTravel::wandering)
-            .costBy(KeyOfStars::wheelCostFor);
+            .costBy(KeyOfStars::wheelCostFor)
+            .notCopyable();                                                      // it flies on this Pathway's tick and key
 
     // =========================
     // Ability 5 - Travel
@@ -171,6 +190,7 @@ public final class KeyOfStarsTravel {
         player.getPersistentData().remove(QUICK_UNTIL);
         if (isWandering(player) && player.level() instanceof ServerLevel sl) endWandering(player, sl);
         WANDER_COMPANY.remove(player.getUUID());
+        AFTERIMAGES.remove(player.getUUID());
     }
 
     /** Every tick for a Key Of Stars: the Wandering moves on. */
@@ -184,12 +204,16 @@ public final class KeyOfStarsTravel {
     // opens before you, you step in at KeyOfStarsFx.TRAVEL_ENTERED and wait inside DOOR_WAIT_PER_BLOCK a block of
     // the way (hidden), then step out of another Door there. Allies within DOOR_COMPANY come along.
     // A teleport: a Teleport root stops it, before it starts or while you wait (you come out where you went in).
-    // (Anchors in another dimension: going there is not in the kit yet.)
+    // Wanderer: looking straight up (DOOR_WORLDS_PITCH), it goes to your newest Anchor in another dimension.
     // =========================
     private static AbilityWheel.Result travelersDoor(ServerPlayer player, ServerLevel sl) {
         if (!Teleport.canGo(player)) {
             player.sendSystemMessage(Component.literal("Something holds you where you are."));
             return AbilityWheel.Result.REFUSED;
+        }
+        if (Beyonder.hasSequence(player, DOOR_WORLDS_SEQUENCE) && player.getXRot() <= DOOR_WORLDS_PITCH) {
+            Anchors.Anchor away = newestElsewhere(player);
+            if (away != null) return toAnotherWorld(player, sl, away);
         }
         Anchors.Anchor anchor = Anchors.aimed(player, KeyOfStars.ANCHOR, ANCHOR_AIM);
         Vec3 there = anchor != null ? Teleport.standNear(player, sl, anchor.at(), 3.0)
@@ -223,6 +247,49 @@ public final class KeyOfStarsTravel {
         return AbilityWheel.Result.DONE;
     }
 
+    /** The newest of this player's Star Anchors that lies in another dimension, or null. */
+    private static Anchors.Anchor newestElsewhere(Player player) {
+        List<Anchors.Anchor> all = Anchors.list(player, KeyOfStars.ANCHOR);
+        for (int i = all.size() - 1; i >= 0; i--) {
+            if (!all.get(i).isIn(player.level())) return all.get(i);
+        }
+        return null;
+    }
+
+    /**
+     * Wanderer: Traveler's Door to a Star Anchor in another dimension. The same Door, DOOR_WORLDS_WAIT inside whatever
+     * the way, and allies touching you come along (combat/Teleport.goTo).
+     */
+    private static AbilityWheel.Result toAnotherWorld(ServerPlayer player, ServerLevel sl, Anchors.Anchor anchor) {
+        ServerLevel there = Teleport.levelNamed(sl.getServer(), anchor.dimension());
+        Vec3 spot = there == null ? null : Teleport.standNear(player, there, anchor.at(), 3.0);
+        if (spot == null) {
+            player.sendSystemMessage(Component.literal("The Door will not open to that Anchor."));
+            return AbilityWheel.Result.REFUSED;
+        }
+        KeyOfStarsFx.travelersDoor(sl, player, player.position());
+        Later.run(sl, KeyOfStarsFx.TRAVEL_ENTERED, () -> {
+            if (!Spells.casterStillHere(player, sl)) return;
+            List<LivingEntity> company = Spells.alliesAround(player, sl, player.position(), DOOR_COMPANY);
+            Concealment.hide(player, DOOR_WORLDS_WAIT + 4);
+            for (LivingEntity ally : company) Concealment.hide(ally, DOOR_WORLDS_WAIT + 4);
+            Later.run(sl, DOOR_WORLDS_WAIT, () -> {
+                if (!Spells.casterStillHere(player, sl)) return;
+                Concealment.reveal(player);
+                float yaw = player.getYRot();
+                int guard = KeyOfStars.safeLanding(player);
+                for (LivingEntity ally : company) {
+                    Concealment.reveal(ally);
+                    if (!ally.isAlive() || ally.level() != sl) continue;
+                    Vec3 near = Teleport.standNear(ally, there, spot, 2.0);
+                    if (near != null) Teleport.of(ally).fallGuard(guard).goTo(there, near);
+                }
+                if (Teleport.of(player).fallGuard(guard).goTo(there, spot)) KeyOfStarsFx.travelersArrive(there, spot, yaw);
+            });
+        });
+        return AbilityWheel.Result.DONE;
+    }
+
     private static double doorRange(Player player) {
         if (Beyonder.hasSequence(player, DOOR_SIGHT_SEQUENCE)) return DOOR_SIGHT;
         if (Beyonder.hasSequence(player, DOOR_FARTHER_SEQUENCE)) return DOOR_FARTHER;
@@ -234,8 +301,9 @@ public final class KeyOfStarsTravel {
     // Blink: a hop of BLINK_RANGE toward where you look, leaving an afterimage; the next hit within BLINK_DODGE
     // misses (status/Substitute). Up to BLINK_CHAIN hops in a row within BLINK_WINDOW: the first starts the cooldown,
     // the others pay their own cost. Secrets Sorcerer: for QUICK_TICKS after, wheel powers are cheaper and cool down
-    // faster, and a Blink tears you out of mind control (status/Unbound). Door of Doors: free.
-    // (Planeswalker's afterimages that echo every power need the Echo part of the plan: not in the kit yet.)
+    // faster, and a Blink tears you out of mind control (status/Unbound). Door of Doors: free. Planeswalker: the
+    // afterimage stays ECHO_TICKS and repeats every power you cast, its hits at ECHO_STRENGTH (combat/Echo), up to
+    // ECHO_MAX of them.
     // =========================
     private static AbilityWheel.Result blink(ServerPlayer player, ServerLevel sl) {
         if (!Teleport.canGo(player)) {
@@ -250,7 +318,7 @@ public final class KeyOfStarsTravel {
             return AbilityWheel.Result.REFUSED;
         }
         boolean chained = chainOpen(player);
-        boolean doorOfDoors = KeyOfStars.doorOfDoors(player);
+        boolean doorOfDoors = KeyOfStars.freeTravel(player) || KeyOfStarsStarlight.isOmnipresent(player);
         if (chained && !doorOfDoors && !Spells.paySpirituality(player, KeyOfStars.wheelCostFor(player, BLINK_COST))) {
             return AbilityWheel.Result.REFUSED;
         }
@@ -264,6 +332,7 @@ public final class KeyOfStarsTravel {
             Unbound.breakControl(player);
         }
         if (doorOfDoors) KeyOfStarsFx.doorOfDoors(sl, player);
+        if (Beyonder.hasSequence(player, ECHO_SEQUENCE)) leaveAfterimage(player, sl, from);
         // the chain: the first hop opens it, the last closes it
         if (hop + 1 >= BLINK_CHAIN) {
             player.getPersistentData().remove(BLINK_HOPS);
@@ -273,6 +342,41 @@ public final class KeyOfStarsTravel {
             if (!chained) player.getPersistentData().putLong(BLINK_UNTIL, sl.getGameTime() + BLINK_WINDOW);
         }
         return AbilityWheel.Result.DONE;
+    }
+
+    /** Planeswalker: the afterimage left at 'at' stays and echoes (the oldest goes past ECHO_MAX). */
+    private static void leaveAfterimage(Player player, ServerLevel sl, Vec3 at) {
+        List<Afterimage> images = AFTERIMAGES.computeIfAbsent(player.getUUID(), id -> new ArrayList<>());
+        long now = sl.getGameTime();
+        images.removeIf(image -> image.until() <= now);
+        while (images.size() >= ECHO_MAX) {
+            Afterimage oldest = images.remove(0);
+            ParticleShapes.clearModels(sl, oldest.at(), oldest.tag());
+        }
+        String tag = "ks_blink_echo_" + player.getId() + "_" + now;
+        images.add(new Afterimage(at, now + ECHO_TICKS, tag));
+        KeyOfStarsFx.blinkEcho(sl, player, at, ECHO_TICKS, tag);
+    }
+
+    /** Every cast of this Key Of Stars: each Blink afterimage still standing casts it too. */
+    static void echo(ServerPlayer player, ServerLevel sl, Casts.Cast cast) {
+        List<Afterimage> images = AFTERIMAGES.get(player.getUUID());
+        if (images == null) return;
+        long now = sl.getGameTime();
+        images.removeIf(image -> image.until() <= now);
+        if (images.isEmpty()) {
+            AFTERIMAGES.remove(player.getUUID());
+            return;
+        }
+        List<Vec3> spots = new ArrayList<>();
+        for (Afterimage image : images) spots.add(image.at());
+        Echo.repeat(player, cast, spots, ECHO_STRENGTH, null);
+    }
+
+    /** The entries an echo (combat/Echo) never repeats from elsewhere: the ones that move you or are yours alone. */
+    static boolean isTravel(String entryKey) {
+        return entryKey.equals("travelers_door") || entryKey.equals("blink") || entryKey.equals("star_anchor")
+                || entryKey.equals("wandering");
     }
 
     /** True while a chain of Blinks is open (a hop or two made within BLINK_WINDOW, fewer than BLINK_CHAIN). */

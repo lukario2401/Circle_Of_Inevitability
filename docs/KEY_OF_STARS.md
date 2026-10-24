@@ -2,7 +2,7 @@
 
 The Key Of Stars Pathway is the Door Pathway of Lord of the Mysteries, the Magician tarot card: Apprentice (9), Trickmaster (8), Astrologer (7), Scribe (6), Traveler (5), Secrets Sorcerer (4), Wanderer (3), Planeswalker (2), Key of Stars (1), Door (0). Source: the Door Pathway and Door Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-Keys 1, 2, 3 and 5 are written, with what grows on them and the passives ("What is built"); keys 4, 6 and 7 are still the plan below and answer "not written yet". This file is the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. Every look, sound and picture is already made ("Looks, sounds and pictures" at the end).
+Every key is written, with what grows on it and every passive ("What is built" at the end says how, and what was left out). This file was the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. Every look, sound and picture is already made ("Looks, sounds and pictures" at the end).
 
 Pathway name in code: `"Key Of Stars"`. The first `KeyOfStars` class (Star Burst, Dash, Buff, Seal, Transport, Orbital, Cosmic Plague) is now the `Wanderer` Pathway (`Wanderer.java`, `"Wanderer"`); it is not part of this design.
 
@@ -96,7 +96,7 @@ All are Trickmaster (8). The book calls them "strange but relatively weak"; they
 | Space Concealment | Secrets Sorcerer (4) | Aimed at a spot (24 blocks) or at yourself: a sphere of 6 blocks radius is split off from the world for 10 seconds. From outside it cannot be seen into or targeted and projectiles stop at the shell. Inside, allies are hidden and slowly healed. Enemies caught in it are Starlit and cannot leave except through the Door, a lit illusory door in the shell on the side facing you. Casting it again shuts the Door: the shell closes completely for the rest of the time. |
 | Transfiguration | Secrets Sorcerer (4) | You turn into layers of illusory Doors for 10 seconds. There are 5 layers. Every hit that would land on you (anything with an attacker, abilities included) tears one layer and you step 3 blocks aside unharmed. No layers left, it ends. |
 | Exile | Secrets Sorcerer (4) | Needs a Starlit or held (rooted, marionette) enemy within 24 blocks. Doors swallow it and throw it into a space-time storm: for 8 seconds it cannot be seen, hit or act, then it comes back out of the same door on the same spot, hurt (40 damage). Bosses are gone for 3 seconds only. Uses up the Starlit mark. |
-| Pocket Space | Secrets Sorcerer (4) | Open a door to your own Concealed space: a private 54-slot storage you carry anywhere. Free to open. (Planned to be the vanilla Ender Chest storage; see the open questions.) |
+| Pocket Space | Secrets Sorcerer (4) | Open a door to your own Concealed space: your vanilla Ender Chest (27 slots), anywhere. |
 | Space Tearing | Wanderer (3) | Aimed at an enemy within 8 blocks: a ring warns for half a second, then space tears around it. It and everything within 3 blocks take 80 damage and then burn in a Space-Time storm for 4 seconds (12 damage per second, Slowness II). |
 
 ## Key 7 wheel: Starlight
@@ -235,33 +235,50 @@ Gas Transfer, Fog, Ignition, Object Manipulation and Electric Shock (the weaker 
 
 ## Open questions
 
-1. Record, Replay and Replication only work if every pathway's abilities are callable through one registry (`AbilityRegistry`). Is that acceptable, or should Record be limited to something simpler?
+1. Record, Replay and Replication only work if every pathway's abilities are callable through one registry (`AbilityRegistry`). Is that acceptable, or should Record be limited to something simpler? (Answered: `PathwayAbilities` and `combat/Casts` instead of a new registry.)
 2. The Starlight wheel has 8 entries. Is there a size limit on the wheel UI?
 3. Should Star Anchors be visible to everyone, or only to their owner (if the effects layer can send to one player)?
-4. Door Opening ignores Teleport roots here, as in the book. Keep that, or make it respect them?
+4. Door Opening ignores Teleport roots here, as in the book. Keep that, or make it respect them? (Answered: kept.)
 5. Costs from Sequence 2 up are guesses. What is the Spirituality pool at those Sequences?
-6. Should Pocket Space be the vanilla Ender Chest storage, or its own?
+6. Should Pocket Space be the vanilla Ender Chest storage, or its own? (Built as the Ender Chest for now.)
 
 ## What is built
 
-The code is in `beyonder_characteristics/key_of_stars/`: `KeyOfStars` (keys 1 and 3, the Starlit mark, the passives, every cost and cooldown rule, and keys 4, 6 and 7 as empty methods already wired to their keys), `KeyOfStarsTricks` (key 2) and `KeyOfStarsTravel` (key 5). Every number is a constant at the top of its class, with the line of this plan it comes from. `PathwayAbilities` lists all seven keys (4, 6 and 7 as not stealable until they do something; Travel never, since Wandering needs its own key).
+The code is in `beyonder_characteristics/key_of_stars/`, one class per key that needs one: `KeyOfStars` (keys 1 and 3, the
+Starlit mark, the passives, the cost, cooldown and free-travel rules, and the events), `KeyOfStarsTricks` (key 2),
+`KeyOfStarsRecord` (key 4 and Quick Study), `KeyOfStarsTravel` (key 5), `KeyOfStarsSecrets` (key 6) and
+`KeyOfStarsStarlight` (key 7). Every number is a constant at the top of its class, with the line of this plan it comes from.
+`PathwayAbilities` lists all seven keys: 1, 2, 3 and 6 can be stolen; 4 (the pages are the Scribe's own), 5 (Wandering needs
+its own key) and 7 (Omnipresence and the Alternate World run on this Pathway's rules) cannot.
 
 | Part | State |
 | --- | --- |
 | 1 Door Opening / Slip Free | Built, with Astrologer (allies come along), Secrets Sorcerer (Teleport roots on you open) and Wanderer (walls up to 16). A real door, trapdoor or gate within 8 swings open or shut, free. |
-| 2 Tricks (all seven) | Built. Escape Trick's longer shift from the Secrets Sorcerer too. Free with Door of Doors. |
-| 3 Star Divination / Interference | Built, with Dimension Sight (Planeswalker). The reading tells health, Pathway and Sequence (players) and effects; "the last ability it used" is not kept anywhere in the mod yet, so it is left out. |
-| 4 Record / Replay | Not yet (Record will use `PathwayAbilities`, not a new registry: replayed powers at full strength) |
-| 5 Travel (all five) | Built, with every growth of Traveler's Door, Blink's quick powers (Secrets Sorcerer), Symbolization and Conceptualization. Not yet: Anchors across dimensions (no cross-dimension teleport in the kit yet), Blink's echoing afterimages (Planeswalker: needs the Echo part). |
-| 6 Secrets and Space, 7 Starlight | Not yet |
+| 2 Tricks (all seven) | Built. Escape Trick's longer shift from the Secrets Sorcerer too. Free with Door of Doors or in an Alternate World. |
+| 3 Star Divination / Interference | Built, with Dimension Sight (Planeswalker). The reading tells health, Pathway and Sequence (players), effects and the last power it cast (`combat/Casts`). |
+| 4 Record / Replay | Built on `combat/Casts`: the first power cast within 32 blocks and in sight while you watch, by any player of any Pathway, key or wheel entry. The roll and the strength are the ones under "Pathway systems"; Replay casts it as a copy (`Casts.recast`: free, no Sequence gate, no cooldown) with its hits at that strength (`combat/Echo`). 3 / 4 / 5 slots, Angel-level powers from the Secrets Sorcerer, no roll from the Planeswalker. The slots live in memory: kept through a relog and a death, not a server restart. Quick Study shows the chance beside the hotbar for every power Record could copy. |
+| 5 Travel (all five) | Built, with every growth: Traveler's Door to Anchors in another dimension (Wanderer: look straight up; `Teleport.goTo`), Blink's quick powers (Secrets Sorcerer) and echoing afterimages (Planeswalker: up to 3, for 4 s, at 40%), Symbolization and Conceptualization. |
+| 6 Secrets and Space (all five) | Built. Space Concealment is a `Dome` (enemies kept in, shots stopped) with a Door enemies may pass until you shut it; Spatial Cage (Wanderer) and the Hostel size (Planeswalker). Transfiguration is `Substitute` with one charge a layer. Exile is `status/Exile`. Pocket Space opens the vanilla Ender Chest. Space Tearing with the Planeswalker's tear round you. |
+| 7 Starlight (all eight) | Built. Toy Box (`status/Toy`), Replication (`Casts.latestNear` and `Casts.recast` at 80%), Space Fragmentation (a `Zone`; Door: the planet-annihilation), Starlight Seal (`status/Seal`, on an ally `Seal.guard`), Space-Time Labyrinth and Alternate World (`combat/Enclosure`), Omnipresence (`combat/Echo` from six afterimages; a hit may strike one of them instead), Close the Door. |
 | Starlit | Built (`status/Starlit`); you and allied players within 64 see your marks through walls, Planeswalker anywhere |
-| Passives | All but Quick Study (6, it goes with Record). Footprints of Freedom: roots 25% shorter, berry bushes and powder snow do not hurt; the slowing in cobwebs, bushes and powder snow is the client's own movement and is left out. Starlit Eyes: blindness and nausea do not take (there are no illusions in the mod to break yet). |
+| Passives | All. Footprints of Freedom: roots 25% shorter, berry bushes and powder snow do not hurt; the slowing in cobwebs, bushes and powder snow is the client's own movement and is left out. Starlit Eyes: blindness and nausea do not take (there are no illusions in the mod to break yet). |
 
-New reusable parts (see SPELL_KIT.md): `combat/Teleport` (with `throughWall` for Door Opening and `standNear`), `status/Unbound` (`free`, `breakControl`, `addBreaker`), `status/Starlit`, `status/Anchors`, `Root.addDurationScale`, `Unreadable.addTurnedAwayListener`.
+Left out or simpler than the plan:
+- The Alternate World's sky does not change (that is the client's sky); its Doors, wall and stars do show.
+- Close the Door doubles the Seals, roots and Starlit marks on enemies within 48 at the moment it shuts, whoever put the roots there.
+- Echoes and copies weaken only hits. A copy of a power that roots, heals or moves is whole.
+- An echo is skipped for this Pathway's travels (Door Opening, Escape Trick, the Travel wheel), Record, Space Concealment,
+  Transfiguration, Exile, Pocket Space, Replication and the three Door powers: they would move you, or shape the world round you.
+- Mobs do not use the keys, so a Beyonder mob's powers are never recorded or replicated.
+- Pocket Space is the vanilla Ender Chest (27 slots), not a 54-slot space of its own.
 
-What the next half needs, already in place: `Starlit.has`/`consume` (Exile, Starlight Seal), `status/Exile` (Exile's space-time storm), `Unbound` (the Seal's "cleansing does not end it": give it an immunity), `KeyOfStars.starlit` and `rootTicks` (Door of Doors' longer roots), the empty `keyOfStarsRecord`, `keyOfStarsSecrets` and `keyOfStarsStarlight`, and every look in `KeyOfStarsFx`.
+New reusable parts (see SPELL_KIT.md): `combat/Teleport` (`throughWall`, `standNear`, `goTo` across dimensions,
+`levelNamed`), `combat/Casts`, `combat/Echo`, `combat/Enclosure`, `status/Unbound`, `status/Starlit` (with `addImmunity`),
+`status/Anchors`, `status/Seal`, `status/Toy`, `Root.addDurationScale`, `Unreadable.addTurnedAwayListener`,
+`AbilityWheel.notCopyable`.
 
-To try it: `/sequence pathway @s "Key Of Stars"`, `/sequence set @s 0`, `/sequence spirituality @s 100000`.
+To try it: `/sequence pathway @s "Key Of Stars"`, `/sequence set @s 0`, `/sequence spirituality @s 100000`. Record needs a
+second player casting near you.
 
 ## Looks, sounds and pictures
 

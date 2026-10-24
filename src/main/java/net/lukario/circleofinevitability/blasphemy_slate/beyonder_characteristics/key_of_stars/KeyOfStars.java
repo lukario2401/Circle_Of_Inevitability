@@ -4,13 +4,16 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx.Status;
+import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Cooldowns;
+import net.lukario.circleofinevitability.combat.Echo;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Teleport;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Anchors;
+import net.lukario.circleofinevitability.status.Seal;
 import net.lukario.circleofinevitability.status.Starlit;
 import net.lukario.circleofinevitability.status.Unbound;
 import net.lukario.circleofinevitability.status.Unreadable;
@@ -58,16 +61,22 @@ import java.util.List;
  *                                        Trick (KeyOfStarsTricks)          | sneak: the last trick again
  *   3 Astrology      (Astrologer)        Star Divination: the creature aimed at is Starlit and read; at nothing, every
  *                                        creature near shows as a star     | sneak: Interference (Unreadable)
- *   4 Record         (Scribe)            not written yet (recordKey)
+ *   4 Record         (Scribe)            for a while the first power cast near you is written down (KeyOfStarsRecord)
+ *                                                                              | sneak: Replay the oldest page
  *   5 Travel         (Traveler)          the wheel: Traveler's Door, Blink, Invisible Hand, Star Anchor, Wandering (3)
  *                                        (KeyOfStarsTravel); while Wandering, the key steps you out | sneak: the last pick
- *   6 Secrets        (Secrets Sorcerer)  not written yet (secretsKey)
- *   7 Starlight      (Planeswalker)      not written yet (starlightKey)
+ *   6 Secrets        (Secrets Sorcerer)  the wheel: Space Concealment, Transfiguration, Exile, Pocket Space, Space
+ *                                        Tearing (3) (KeyOfStarsSecrets)  | sneak: the last pick
+ *   7 Starlight      (Planeswalker)      the wheel: Toy Box, Replication, Space Fragmentation (1), Starlight Seal (1),
+ *                                        Space-Time Labyrinth (1), Alternate World (0), Omnipresence (0), Close the
+ *                                        Door (0) (KeyOfStarsStarlight)   | sneak: the last pick
  *
  * The parts of the kit it leans on, any Pathway can use too: status/Starlit (the mark; KeyOfStars.starlit shows it),
  * status/Anchors (Star Anchors), status/Unbound (Slip Free), status/Unreadable (Interference; its turned-away hook
  * turns the search back), combat/Teleport (every door and hop; Safe Landing is its fall guard), Root.addDurationScale
- * (Footprints of Freedom, Astral Footing).
+ * (Footprints of Freedom, Astral Footing), combat/Casts (what everyone cast: Record, Replication, Quick Study, the
+ * reading), combat/Echo (Omnipresence, the Planeswalker's Blink), combat/Enclosure (the Labyrinth, the Alternate
+ * World), status/Seal (Starlight Seal), status/Toy (Toy Box).
  * Every cast's cost goes through costFor (the wheels through wheelCostFor) and every wheel's cooldown through
  * cooldownFor: the Secrets Sorcerer's quick powers after a Blink live there, Door of Doors in doorOfDoors.
  *
@@ -190,6 +199,23 @@ public class KeyOfStars {
                 if (caster == null || target == null || !(target.level() instanceof ServerLevel sl)) return;
                 KeyOfStarsFx.starlitEnd(sl, target, starlitTag(caster, target));
             });
+            // every cast anyone makes: a watching Scribe records it (Quick Study glints); Omnipresence and the
+            // Planeswalker's Blink afterimages repeat their own Beyonder's
+            Casts.addListener((caster, sl, cast) -> {
+                KeyOfStarsRecord.seen(caster, sl, cast);
+                if (!SoulCore.getPathway(caster).equals(PATHWAY)) return;
+                KeyOfStarsStarlight.echo(caster, sl, cast);
+                KeyOfStarsTravel.echo(caster, sl, cast);
+            });
+            // what an echo never repeats from elsewhere: this Pathway's travels and what shapes the world round you
+            Echo.addSkip(cast -> cast.pathway().equals(PATHWAY) && ((cast.key() == 1 && !cast.sneak()) || cast.key() == 4
+                    || (cast.entry() != null && (KeyOfStarsTravel.isTravel(cast.entry().key())
+                    || KeyOfStarsTricks.isTravel(cast.entry().key()) || KeyOfStarsSecrets.isOwnSpace(cast.entry().key())
+                    || KeyOfStarsStarlight.isWorldShaping(cast.entry().key())))));
+            // Alternate World: roots on the enemies inside last twice as long
+            Root.addDurationScale((target, restriction) -> KeyOfStarsStarlight.worldHoldScale(target));
+            // a Starlight Seal mended itself
+            Seal.addListener((target, sl) -> KeyOfStarsFx.sealRepaired(sl, target));
         }
 
         @SubscribeEvent
@@ -197,10 +223,13 @@ public class KeyOfStars {
             Player player = event.player();
             if (!(player.level() instanceof ServerLevel sl) || !SoulCore.getPathway(player).equals(PATHWAY)) return;
             KeyOfStarsTravel.tick(player, sl);
+            KeyOfStarsSecrets.tick(player, sl);
+            KeyOfStarsStarlight.tick(player, sl);
             if (player.tickCount % 20 == 0) {
                 starlitTick(player, sl);
                 anchorsTick(player);
                 interferenceTick(player, sl);
+                KeyOfStarsRecord.tick(player, sl);
             }
             if (isKeyOfStars(player, STARLIT_EYES_SEQUENCE) && player.tickCount % WORM_AURA_EVERY == 0) {
                 KeyOfStarsFx.wormAura(sl, player, WORM_AURA_EVERY + 20, wormsTag(player));
@@ -218,7 +247,7 @@ public class KeyOfStars {
 
         /**
          * Footprints of Freedom (9): sweet berry bushes and powder snow do not hurt. Afterimages (2): a share of the hits
-         * from an attacker pass through an illusory door and miss.
+         * from an attacker pass through an illusory door and miss. Omnipresence (0): a hit may strike an afterimage instead.
          */
         @SubscribeEvent
         public static boolean onKeyOfStarsAttacked(LivingAttackEvent event) {
@@ -227,6 +256,7 @@ public class KeyOfStars {
             DamageSource source = event.getSource();
             if (source.is(DamageTypes.SWEET_BERRY_BUSH)) return true;
             if (source.is(DamageTypes.FREEZE) && player.level().getBlockState(player.blockPosition()).is(Blocks.POWDER_SNOW)) return true;
+            if (source.getEntity() != null && source.getEntity() != player && KeyOfStarsStarlight.afterimageTakes(player, sl)) return true;
             if (isKeyOfStars(player, AFTERIMAGES_SEQUENCE) && source.getEntity() != null && source.getEntity() != player
                     && player.getRandom().nextFloat() < AFTERIMAGES_MISS) {
                 KeyOfStarsFx.afterimageMiss(sl, player);
@@ -275,8 +305,11 @@ public class KeyOfStars {
         player.getPersistentData().remove(WORMS_SHOWN);
         KeyOfStarsTravel.clearState(player);
         KeyOfStarsTricks.clearState(player);
-        if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
-        for (Status status : Status.values()) KeyOfStarsFx.statusEnd(player, status);       // a clock left running
+        KeyOfStarsSecrets.clearState(player);
+        KeyOfStarsStarlight.clearState(player);
+        boolean mine = SoulCore.getPathway(player).equals(PATHWAY);
+        if (mine) for (Status status : Status.values()) KeyOfStarsFx.statusEnd(player, status);   // a clock left running
+        KeyOfStarsRecord.clearState(player);                                    // the pages are drawn again (or dropped)
     }
 
     // =========================
@@ -298,7 +331,7 @@ public class KeyOfStars {
 
     private static void doorOpening(Player player, ServerLevel sl) {
         if (swingRealDoor(player, sl)) return;                                  // free, no cooldown
-        boolean free = doorOfDoors(player);
+        boolean free = freeTravel(player);
         if (!free && !Cooldowns.ready(player, DOOR_KEY, "Door Opening")) return;
         double thickness = Beyonder.hasSequence(player, DOOR_THICK_SEQUENCE) ? DOOR_THICK_WALL : DOOR_WALL;
         Teleport.WallPass pass = Teleport.throughWall(player, sl, thickness);
@@ -360,7 +393,7 @@ public class KeyOfStars {
     // Ability 3 - Astrology
     // Normal: Star Divination. A crystal ball of starlight in the hand. The enemy aimed at within DIVINATION_RANGE
     //         (Planeswalker: DIMENSION_SIGHT_RANGE) is Starlit for STARLIT_TICKS at KeyOfStarsFx.DIVINED and read to
-    //         you: its health, its Pathway and Sequence, every effect on it. Aimed at nothing: every creature within
+    //         you: its health, its Pathway and Sequence, every effect on it, the last power it cast. Aimed at nothing: every creature within
     //         SWEEP_RADIUS shows as a small star through walls for SWEEP_TICKS, for you alone.
     // Sneak:  Interference. For INTERFERENCE_TICKS you are Unreadable from further than INTERFERENCE_RANGE (status/
     //         Unreadable: abilities cannot pick you, mobs further away forget you). The first search turned away from
@@ -408,6 +441,10 @@ public class KeyOfStars {
             effects.add(effect.getEffect().value().getDisplayName().getString() + " " + (effect.getAmplifier() + 1));
         }
         if (!effects.isEmpty()) text.append(". Effects: ").append(String.join(", ", effects));
+        Casts.Cast last = Casts.last(target);                                   // combat/Casts: what it cast last
+        if (last != null && target.level() instanceof ServerLevel sl) {
+            text.append(". Last power: ").append(last.name()).append(", ").append(Math.max(1, last.age(sl) / 20)).append("s ago");
+        }
         return Component.literal(text.append('.').toString());
     }
 
@@ -440,26 +477,18 @@ public class KeyOfStars {
     }
 
     // =========================
-    // Abilities 4, 6 and 7 - not written yet (docs/KEY_OF_STARS.md: Record, Secrets and Space, Starlight)
-    // Each key is already wired to its packet; write the ability into these and they work.
+    // Abilities 4, 6 and 7 live in their own classes; the keys (network/SKeyPressAbility...Used) call these.
     // =========================
     public static void keyOfStarsRecord(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 6)) return;
-        notYet(player, "Record");
+        KeyOfStarsRecord.keyOfStarsRecord(player, level, sl, bypassClassCheck);
     }
 
     public static void keyOfStarsSecrets(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 4)) return;
-        notYet(player, "Secrets and Space");
+        KeyOfStarsSecrets.keyOfStarsSecrets(player, level, sl, bypassClassCheck);
     }
 
     public static void keyOfStarsStarlight(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!ready(player, bypassClassCheck, 2)) return;
-        notYet(player, "Starlight");
-    }
-
-    private static void notYet(Player player, String name) {
-        player.sendSystemMessage(Component.literal(name + " is not written yet."));
+        KeyOfStarsStarlight.keyOfStarsStarlight(player, level, sl, bypassClassCheck);
     }
 
     // =========================
@@ -469,7 +498,7 @@ public class KeyOfStars {
     /** 'caster' Starlits 'target' for 'ticks' (status/Starlit) and its mark rises over it. Only on enemies. */
     public static void starlit(Player caster, LivingEntity target, int ticks) {
         if (!(target.level() instanceof ServerLevel sl) || !Spells.isEnemy(caster, target)) return;
-        Starlit.mark(target, caster, ticks);
+        if (!Starlit.mark(target, caster, ticks)) return;                       // (sealed connections: status/Seal)
         String tag = starlitTag(caster, target);
         KeyOfStarsFx.starlitEnd(sl, target, tag);                               // marked again: one mark, not two
         KeyOfStarsFx.starlit(sl, caster, target, ticks, tag);
@@ -562,6 +591,14 @@ public class KeyOfStars {
     /** Door of Doors (Door): Door Opening, Escape Trick and Blink cost nothing and have no cooldown. */
     static boolean doorOfDoors(Player player) {
         return isKeyOfStars(player, DOOR_OF_DOORS_SEQUENCE);
+    }
+
+    /**
+     * Door Opening, Escape Trick, Blink and Traveler's Door cost nothing and have no cooldown now: Door of Doors, or
+     * an Alternate World on your side (its Open Doors rule).
+     */
+    static boolean freeTravel(Player player) {
+        return doorOfDoors(player) || (isKeyOfStars(player, DOOR_SEQUENCE) && KeyOfStarsStarlight.inFriendlyWorld(player));
     }
 
     /** How long a root this Beyonder puts on someone lasts: Door of Doors makes it DOOR_OF_DOORS_LONGER. */

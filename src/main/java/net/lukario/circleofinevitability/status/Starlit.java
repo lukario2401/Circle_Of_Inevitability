@@ -17,6 +17,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 /**
  * Starlit: a mark of starlight one player puts on a few creatures. It says "this one is caught": the Key Of Stars'
@@ -31,6 +32,7 @@ import java.util.UUID;
  *   Starlit.markers(target)                    // the players who have it Starlit
  *   Starlit.addListener((caster, target) -> ...)   // once, in a static block: a mark ended (time up, replaced,
  *                                                  // consumed, the target died or left); for taking its look off
+ *   Starlit.addImmunity(entity -> ...)          // once, in a static block: nothing can mark these (mark says false)
  *
  * Nothing shows by itself: the Pathway draws it (KeyOfStarsFx.starlit, starlitSeen each second).
  * Not saved: marks are gone after a restart, and when their caster logs out.
@@ -42,6 +44,8 @@ public final class Starlit {
 
     /** How many creatures one player can have Starlit at once. */
     public static int MAX_PER_CASTER = 3;
+
+    private static final List<Predicate<LivingEntity>> IMMUNE = new ArrayList<>();
 
     /** A mark ended: 'caster' may be null (logged out), 'target' may be null (gone). */
     @FunctionalInterface
@@ -60,9 +64,13 @@ public final class Starlit {
     // API
     // =========================
 
-    /** 'caster' Starlits 'target' for 'ticks' (marked again: its time starts over). */
-    public static void mark(LivingEntity target, Player caster, int ticks) {
-        if (!(target.level() instanceof ServerLevel sl) || ticks <= 0 || !target.isAlive()) return;
+    /**
+     * 'caster' Starlits 'target' for 'ticks' (marked again: its time starts over). False, and nothing is marked, for the
+     * dead and for what an addImmunity rule keeps unmarked (status/Seal's sealed connections).
+     */
+    public static boolean mark(LivingEntity target, Player caster, int ticks) {
+        if (!(target.level() instanceof ServerLevel sl) || ticks <= 0 || !target.isAlive()) return false;
+        for (Predicate<LivingEntity> immune : IMMUNE) if (immune.test(target)) return false;
         List<Mark> marks = BY_CASTER.computeIfAbsent(caster.getUUID(), id -> new ArrayList<>());
         marks.removeIf(mark -> mark.target().equals(target.getUUID()));
         while (marks.size() >= Math.max(1, MAX_PER_CASTER)) {
@@ -70,6 +78,12 @@ public final class Starlit {
             tell(caster, entityOf(oldest));
         }
         marks.add(new Mark(sl, target.getUUID(), sl.getGameTime() + ticks));
+        return true;
+    }
+
+    /** Once, in a static block: while it says true for an entity, nothing can Starlit it. */
+    public static void addImmunity(Predicate<LivingEntity> immune) {
+        IMMUNE.add(immune);
     }
 
     public static boolean has(Entity target, Player caster) {

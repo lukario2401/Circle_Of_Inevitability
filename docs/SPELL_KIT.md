@@ -133,6 +133,14 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Places a player saved, to go back to (waypoints, recall points), kept through death | [`Anchors`](#anchors) | `status/` |
 | Roots on someone last longer or shorter while something is true (feet no hold keeps for long) | [`Root.addDurationScale`](#root-and-freeze-immunities) | `root/` |
 | Know when an ability's aiming was turned away from an Unreadable entity (turn the search back) | [`Unreadable.addTurnedAwayListener`](#unreadable) | `status/` |
+| Teleport someone into another dimension; find a dimension's level from its name | [`Teleport.goTo`, `Teleport.levelNamed`](#teleport-from-here-to-there) | `combat/` |
+| What anyone cast, where and when (any Pathway, keys and wheels); cast it again as a copy (Record, a mimic, a replay) | [`Casts`](#casts-who-cast-what) | `combat/` |
+| Repeat a cast from other spots, weaker (afterimages, a projection, a mirror self); make a copy's hits land weaker | [`Echo`](#echo-a-cast-repeated-elsewhere) | `combat/` |
+| A round place enemies cannot walk out of: stepping out of its edge brings them back in at the other side (a maze, a pocket world) | [`Enclosure`](#enclosure-no-way-out) | `combat/` |
+| A lock that mends itself: no abilities and no teleports, and nothing that cleanses or frees opens it; seal an ally's connections so no enemy can pick them | [`Seal`](#seal) | `status/` |
+| Turn a creature into a small wind-up toy for a while: a quarter of its size, slow, a fifth of its damage | [`Toy`](#toy) | `status/` |
+| Nothing can Starlit these | [`Starlit.addImmunity`](#starlit) | `status/` |
+| A wheel entry that Record, Replication and the echoes never copy | `AbilityWheel.notCopyable()` ([Casts](#casts-who-cast-what)) | `menu/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 
@@ -1015,9 +1023,76 @@ Teleport.fits(entity, sl, feet)                             // its body fits the
 Teleport.standNear(entity, sl, wanted, 3)                   // the nearest spot within 3 blocks where it fits, or null
 Teleport.WallPass pass = Teleport.throughWall(player, sl, 6);   // the wall right ahead (no thicker than 6): face() and exit()
 Teleport.addListener((entity, from, to) -> ...)             // once: told after every teleport made through here
+Teleport.of(player).fallGuard(40).goTo(otherLevel, there);  // into another dimension too (the game's TeleportTransition)
+ServerLevel there = Teleport.levelNamed(server, anchor.dimension());   // a dimension kept as text (Level.dimension().toString())
 ```
 
 `Spells.blinkSpot` (toward the crosshair) and `Spells.freeSpotNear` (to the side) find where to go.
+
+## Casts: who cast what
+
+What every Beyonder cast, where and when: every ability key press that went off and every wheel pick that went off, of
+any Pathway, is told here without that Pathway knowing. For powers that watch, copy or answer other powers (the Key Of
+Stars' Record, Replication and Quick Study, the "last power" a Divination reads).
+
+```java
+Casts.Cast last = Casts.last(entity);                       // what it cast last (null: nothing in KEPT ticks)
+Casts.Cast near = Casts.latestNear(sl, spot, 32, 100, cast -> !cast.caster().equals(me.getUUID()));
+Casts.addListener((caster, sl, cast) -> ...);               // once, in a static block: every cast as it goes off
+boolean wentOff = Casts.recast(player, cast);               // cast it again for this player: free, no Sequence gate,
+                                                            // no cooldown, in the form it was cast in (sneak or not)
+Casts.copying(player, () -> ...);                           // what runs inside is a copy: not told, not copied again
+cast.name()   cast.sequence()   cast.copyable()   cast.pathway()   cast.key()   cast.entry()   cast.at()   cast.age(sl)
+```
+
+A key press counts when it took spirituality (every ability checks first and pays after); a wheel pick when its entry went
+off (DONE or FREE). The keys (`keyPressed`/`keyDone`), `SoulCore` (`spent`) and `AbilityWheel` (`wheelCast`) tell it; nothing
+else has to. `copyable()` is false for an ability `PathwayAbilities` marks `OWN_PATHWAY_ONLY` and for a wheel entry marked
+`.notCopyable()` (it needs its own Pathway's tick or state). While a copy runs, `Cooldowns` neither stops it nor starts.
+Mobs do not use the keys, so a Beyonder mob's powers are not told. Not saved.
+
+## Echo: a cast repeated elsewhere
+
+A cast repeated from other spots, weaker: afterimages that cast what their Beyonder casts (the Key Of Stars' Omnipresence and
+the Planeswalker's Blink), a projection, a mirror self.
+
+```java
+Casts.addListener((caster, sl, cast) -> {
+    if (hasAfterimages(caster)) Echo.repeat(caster, cast, spots, 0.6f, i -> showEcho(caster, i));   // from each spot, 60%
+});
+Echo.weaker(player, 0.8f, () -> Casts.recast(player, cast));   // a copy whose hits land at 80%
+Echo.strength(entity)                                           // what its hits land at right now (1 = whole)
+Echo.addSkip(cast -> ...)                                       // once: never repeated elsewhere (a door that moves you)
+```
+
+`repeat` stands the caster on each spot for the moment of the cast (server only: nobody sees them move), casts it as a copy
+and puts them back; a copy that moved them itself puts them back properly. "Weaker" is every hit the caster makes while it
+runs, and the hits of what it set off: a `Later` task carries the strength with it and a projectile it fired is marked.
+What is not a hit (a root, a heal) is whole.
+
+## Enclosure: no way out
+
+A round place the ones it keeps cannot walk out of: whoever steps out of its edge comes back in at the opposite side. The Key
+Of Stars' Space-Time Labyrinth and Alternate World. Not a wall (that is `Dome`): they walk on, and are somewhere else.
+
+```java
+Enclosure.at(ground, 14)
+        .height(8)                                  // how far above the ground it holds (default 6)
+        .lasts(300)                                 // ticks (default 200)
+        .keeps(entity -> Spells.isEnemy(player, entity))   // who it holds (default: the owner's enemies)
+        .every(20)                                  // how often onInside and onPulse run (default 20)
+        .onInside(enemy -> Root.apply(enemy, 30, RootRestriction.TELEPORT))
+        .onLoop((enemy, from, to) -> MyFx.loop(sl, from, to))
+        .onPulse(ticksLeft -> ...)
+        .onEnd(() -> ...)
+        .open(player, sl, "my_pathway_maze");
+Enclosure.isOpen(player, name)   Enclosure.ticksLeft(player, name)   Enclosure.close(player, name)
+Enclosure.holds(entity)          Enclosure.ownersAround(sl, spot, name)   // name null: any
+```
+
+Only someone who was inside is turned back (one outside can walk in, and is then held). Flying over its height or a teleport
+out is out. The turning back is not their own teleport, so a Teleport root does not stop it. It ends with its owner (death,
+logout, another dimension). No look of its own. Not saved.
 
 ## Transit: travel inside a shot
 
@@ -1640,6 +1715,7 @@ Starlit.mark(target, player, 240);           Starlit.has(target, player)     Sta
 Starlit.ticksLeft(target, player)            Starlit.consume(target, player)  // used up: true if it was there
 Starlit.marked(player)                       Starlit.markers(target)
 Starlit.addListener((caster, target) -> ...) // once: a mark ended (time up, replaced, consumed, died, logged out)
+Starlit.addImmunity(entity -> ...)           // once: nothing can mark these (mark returns false); a Seal's guard
 ```
 
 Nothing shows by itself (`KeyOfStars.starlit` marks and shows it). Not saved.
@@ -1656,7 +1732,36 @@ Anchors.aimed(player, "my_class_marks", 10)                    // the one in thi
 anchor.at()   anchor.isIn(level)   anchor.until()
 ```
 
-Going to one in another dimension is not in the kit yet. The Key Of Stars' Star Anchors.
+Going to one in another dimension: `Teleport.of(player).goTo(Teleport.levelNamed(server, anchor.dimension()), anchor.at())`.
+The Key Of Stars' Star Anchors (the Wanderer's Traveler's Door goes to one in another dimension).
+
+### Seal
+
+A lock that keeps closing itself. The Key Of Stars' Starlight Seal.
+
+```java
+Seal.apply(target, 160);       // Sealed 8 s: no abilities, no teleports (a hold: Root.has says so)
+Seal.isSealed(entity)   Seal.ticksLeft(entity)   Seal.lift(target)     // lift is the one way to open it
+Seal.guard(ally, 240);         // their connections sealed: no enemy ability can pick them, nothing can Starlit them
+Seal.isGuarded(entity)   Seal.guardTicksLeft(entity)
+Seal.addListener((target, sl) -> ...)   // once: something tried to open it and it closed again (its look)
+```
+
+It is not a root, so nothing that takes roots off opens it: not `Unbound` (Slip Free), not `Spells.cleanse` (the listeners
+are told), not milk. A sealed mob's powers are `AbilityLock`ed; taken off, the lock is back within a second. Saved.
+
+### Toy
+
+A creature becomes a little wind-up toy for a while. The Key Of Stars' Toy Box.
+
+```java
+Toy.make(target, 160);         // a quarter of its size (GiantForm), Slowness IV, its hits at a fifth
+Toy.isToy(entity)   Toy.ticksLeft(entity)   Toy.release(target)
+Toy.addListener(target -> ...) // once: a toy is itself again
+```
+
+`SIZE`, `SLOW_LEVEL` and `DAMAGE` are `public static`. One `GiantForm` at a time: growing it again ends the toy. Which
+creatures may become toys is the caller's choice (Toy Box spares players and big creatures). Not saved.
 
 ### Construct
 

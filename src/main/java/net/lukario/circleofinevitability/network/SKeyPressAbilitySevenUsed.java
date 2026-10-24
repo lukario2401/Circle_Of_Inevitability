@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
@@ -60,27 +61,30 @@ public class SKeyPressAbilitySevenUsed {
         // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
         if (KeySeal.blocksKey(player, 7)) return;
         KeySeal.pressed(player, 7);
+        Casts.keyPressed(player, 7);                 // combat/Casts: told if the press goes off
+        try {
 
-        wandererCosmicPlague(player,level,serverLevel,false);
+            wandererCosmicPlague(player,level,serverLevel,false);
 
-        keyOfStarsStarlight(player, level, serverLevel, false);
-        handOfOrderOrder(player,level,serverLevel,false);
-        frenziedMageAbolition(player,level,serverLevel,false);
-        attendantOfMysteriesGrafting(player,level,serverLevel,false);
-        paleEmperorWraiths(player,level,serverLevel,false);
-        conquerorFogOfWar(player,level,serverLevel,false);
-        apocalypseCatastrophe(player,level,serverLevel,false);
-        hangedManDegeneration(player,level,serverLevel,false);
-        beautyGoddessMoonWheel(player,level,serverLevel,false);
-        handOfGodTwilight(player,level,serverLevel,false);
-        knightOfMisfortuneDarkness(player,level,serverLevel,false);
-        abominationCurses(player,level,serverLevel,false);
-        princeOfAbolitionSovereign(player,level,serverLevel,false);
-        knowledgeEmperorKnowledge(player,level,serverLevel,false);
-        illuminatorCivilization(player,level,serverLevel,false);
-        starDragonCosmos(player,level,serverLevel,false);
-
-
+            keyOfStarsStarlight(player, level, serverLevel, false);
+            handOfOrderOrder(player,level,serverLevel,false);
+            frenziedMageAbolition(player,level,serverLevel,false);
+            attendantOfMysteriesGrafting(player,level,serverLevel,false);
+            paleEmperorWraiths(player,level,serverLevel,false);
+            conquerorFogOfWar(player,level,serverLevel,false);
+            apocalypseCatastrophe(player,level,serverLevel,false);
+            hangedManDegeneration(player,level,serverLevel,false);
+            beautyGoddessMoonWheel(player,level,serverLevel,false);
+            handOfGodTwilight(player,level,serverLevel,false);
+            knightOfMisfortuneDarkness(player,level,serverLevel,false);
+            abominationCurses(player,level,serverLevel,false);
+            princeOfAbolitionSovereign(player,level,serverLevel,false);
+            knowledgeEmperorKnowledge(player,level,serverLevel,false);
+            illuminatorCivilization(player,level,serverLevel,false);
+            starDragonCosmos(player,level,serverLevel,false);
+        } finally {
+            Casts.keyDone(player);
+        }
     }
 
 }
