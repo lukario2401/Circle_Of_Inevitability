@@ -230,6 +230,18 @@ public final class Casts {
                 sl.getGameTime());
     }
 
+    /**
+     * A creature that is no player cast something for real (a Beyonder mob, blasphemy_slate/beyonder_mobs/MobCasting):
+     * it is remembered like a player's cast, so last() and latestNear() find it (the crystal ball's "last power",
+     * Replication copying what was just cast nearby). The listeners are not told: they are written for player casters.
+     * Make the cast with madeUpFor.
+     */
+    public static void mobCast(LivingEntity caster, ServerLevel sl, Cast cast) {
+        if (caster == null || cast == null || caster instanceof Player) return;
+        LAST.put(caster.getUUID(), cast);
+        RECENT.add(cast);
+    }
+
     // =========================
     // Being told (the keys, SoulCore, AbilityWheel)
     // =========================
@@ -293,6 +305,7 @@ public final class Casts {
         if (!(event.level() instanceof ServerLevel sl) || sl.getGameTime() % 100 != 0 || RECENT.isEmpty()) return;
         long now = sl.getGameTime();
         RECENT.removeIf(cast -> cast.isIn(sl) && now - cast.time() > KEPT);
+        LAST.values().removeIf(cast -> cast.isIn(sl) && now - cast.time() > KEPT);   // mobs that died never log out
         if (RECENT.size() > 2000) RECENT.subList(0, RECENT.size() - 2000).clear();
     }
 

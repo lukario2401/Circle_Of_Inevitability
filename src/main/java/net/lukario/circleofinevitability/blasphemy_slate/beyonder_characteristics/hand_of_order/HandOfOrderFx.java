@@ -589,7 +589,7 @@ public final class HandOfOrderFx {
     public static final int HALT_LANDS = 4;
 
     /** One word at the enemy looked at: HALT over the Arbiter, a brass ring closing on the target. */
-    public static void halt(ServerLevel sl, Player player, LivingEntity target) {
+    public static void halt(ServerLevel sl, LivingEntity player, LivingEntity target) {
         speak(sl, player, Word.HALT, 0.55f, false);
         sound(sl, player.position(), ModSounds.ORDER_HALT, 1.0f, wobble(1.0f));
         if (target == null) return;
@@ -619,7 +619,7 @@ public final class HandOfOrderFx {
      * A wave of Authority: a brass ring races out 'radius' blocks behind a horn. intimidation = the Imperative Mage's
      * form: the Brass Pillar flashes up behind and iron shackles drop on the ring.
      */
-    public static void presence(ServerLevel sl, Player player, double radius, boolean intimidation) {
+    public static void presence(ServerLevel sl, LivingEntity player, double radius, boolean intimidation) {
         SpellFx.shockRing(sl, player.position(), radius, 0xE0F0D68C, 12, 0);
         SpellFx.shockRing(sl, player.position(), radius * 0.7, 0xA0FFF3D0, 10, 3);
         ParticleShapes.ring(sl, BRASS_MOTE, player.position().add(0, 0.3, 0), 1.0, 16, 0.4);

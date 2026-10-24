@@ -58,7 +58,8 @@ import net.minecraftforge.fml.common.Mod;
  * it is is saved with the mob (persistent data); its extra health and damage are permanent attribute modifiers, so
  * they are saved too.
  *
- * A Beyonder mob does not cast its Pathway's abilities (yet). When that comes, this is the place to give it a brain.
+ * In a fight it casts the mob versions of its Pathway's abilities, up to its Sequence, with its own spirituality:
+ * MobCasting (the brain), MobAbilities (what there is), MobSpirituality.
  */
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID)
 public final class BeyonderMobs {
@@ -140,6 +141,7 @@ public final class BeyonderMobs {
         boost(entity, Attributes.MAX_HEALTH, HEALTH_ID, tier == null ? 0 : tier.extraHealth());
         boost(entity, Attributes.ATTACK_DAMAGE, DAMAGE_ID, tier == null ? 0 : tier.extraDamage());
         entity.setHealth(entity.getMaxHealth());
+        MobSpirituality.fill(entity);                                     // a full bar for its (new) Sequence
 
         if (name) {
             entity.setCustomName(nameFor(entity, pathway, clamped));
@@ -179,6 +181,8 @@ public final class BeyonderMobs {
         if (!isBeyonder(entity)) return;
         boolean named = data(entity).getBooleanOr(NAMED, false);
         entity.getPersistentData().remove(TAG);
+        MobSpirituality.clear(entity);
+        MobCasting.clearCooldowns(entity);
         boost(entity, Attributes.MAX_HEALTH, HEALTH_ID, 0);
         boost(entity, Attributes.ATTACK_DAMAGE, DAMAGE_ID, 0);
         if (named) {

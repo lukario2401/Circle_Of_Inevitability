@@ -88,6 +88,29 @@ public final class BeyonderMobRules {
     public static boolean SUMMONS_NEVER = true;
 
     // =========================
+    // Casting (MobCasting, MobSpirituality; which abilities: MobAbilities)
+    // =========================
+
+    /** False: Beyonder mobs never cast. */
+    public static boolean MOBS_CAST = true;
+    /** Its spirituality bar: this share of a player's of the same Sequence (Beyonder.maxSpirituality; 0.5 = half). */
+    public static float SPIRITUALITY_SHARE = 0.5f;
+    /** Spirituality it gets back: this share of a player's of the same Sequence (Beyonder.spiritualityRegenPerTick). */
+    public static float REGEN_SHARE = 0.5f;
+    /** It thinks about casting this often (ticks; 20 = once a second). */
+    public static int THINK_EVERY = 20;
+    /** Each time it thinks while in a fight, the chance it casts something (if it can). */
+    public static double CAST_CHANCE = 0.35;
+    /** After any cast, nothing else for this long (ticks), whatever the ability's own cooldown. */
+    public static int CAST_PAUSE = 60;
+    /** Every mob ability's own cooldown is multiplied by this (2 = mobs cast half as often). */
+    public static float COOLDOWN_SCALE = 1.0f;
+    /** A fight: its target is no further away than this (blocks). */
+    public static double FIGHT_RANGE = 32.0;
+    /** What its abilities deal to a player is multiplied by this (mob abilities use the player numbers, made for mobs). */
+    public static float DAMAGE_TO_PLAYERS = 0.5f;
+
+    // =========================
     // Which Rule a mob follows
     // =========================
 

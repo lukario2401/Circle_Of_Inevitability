@@ -694,13 +694,13 @@ public final class Spells {
         return (float) Math.toDegrees(Math.atan2(-direction.x, direction.z));
     }
 
-    /** Horizontal direction the player faces. */
-    public static Vec3 flatLook(Player player) {
+    /** Horizontal direction the player (or any caster) faces. */
+    public static Vec3 flatLook(Entity player) {
         return Vec3.directionFromRotation(0f, player.getYRot());
     }
 
     /** Horizontal direction to the player's right. */
-    public static Vec3 rightOf(Player player) {
+    public static Vec3 rightOf(Entity player) {
         return flatLook(player).cross(UP).normalize();
     }
 

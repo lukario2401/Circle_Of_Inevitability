@@ -23,6 +23,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -201,7 +202,18 @@ public final class BeyonderMobCommands {
         if (!Beyonders.isBeyonder(entity)) return Component.literal(name + " is no Beyonder.");
         List<String> takeable = new ArrayList<>();
         for (PathwayAbilities.Ability ability : Beyonders.takeableFrom(entity)) takeable.add(ability.name());
-        return Component.literal(name + ": " + Beyonders.describe(entity) + ". Can be taken: "
+        StringBuilder text = new StringBuilder(name + ": " + Beyonders.describe(entity) + ". Can be taken: "
                 + (takeable.isEmpty() ? "nothing" : String.join(", ", takeable)) + ".");
+        if (entity instanceof Mob mob && BeyonderMobs.isBeyonder(mob)) {
+            text.append("\nSpirituality: ").append(Math.round(MobSpirituality.get(mob))).append(" / ")
+                    .append(Math.round(MobSpirituality.max(mob))).append(". Casts: ");
+            List<String> casts = new ArrayList<>();
+            for (MobAbility ability : MobAbilities.knownBy(mob)) {
+                MobCasting.Refusal why = MobCasting.whyNot(mob, ability);
+                casts.add(ability.name() + " (" + Math.round(ability.cost()) + ", " + why.words() + ")");
+            }
+            text.append(casts.isEmpty() ? "nothing yet for its Pathway and Sequence" : String.join(", ", casts)).append('.');
+        }
+        return Component.literal(text.toString());
     }
 }

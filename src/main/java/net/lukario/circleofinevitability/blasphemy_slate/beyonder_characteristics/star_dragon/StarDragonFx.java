@@ -1004,7 +1004,7 @@ public final class StarDragonFx {
     // ---------- sneak: Piercing Ray
 
     /** Two beams of blue light leave the Navigator's eyes and run to 'to' (28 blocks). */
-    public static void piercingRay(ServerLevel sl, Player player, Vec3 to) {
+    public static void piercingRay(ServerLevel sl, LivingEntity player, Vec3 to) {
         Vec3 eye = player.getEyePosition();
         Vec3 side = Spells.rightOf(player).scale(0.12);
         flash(sl, STAR_EYE, eye.add(Spells.flatLook(player).scale(0.6)), player.getYRot() + 180f, 0xE0A8D8FF, 0.6f, 10);

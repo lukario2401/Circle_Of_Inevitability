@@ -94,7 +94,7 @@ public class KeyOfStars {
 
     // Ability 1 - Door Opening (Sequence 9)
     static final int DOOR_SEQUENCE = 9;
-    private static final int DOOR_COST = 250;
+    static final int DOOR_COST = 250;
     private static final int DOOR_COOLDOWN = 60;
     private static final double DOOR_REAL_RANGE = 8.0;                   // a real door this close just swings open (free)
     private static final double DOOR_WALL = 6.0;                         // the thickest wall it opens a Door in
@@ -102,13 +102,13 @@ public class KeyOfStars {
     private static final double DOOR_THICK_WALL = 16.0;
     private static final int DOOR_COMPANY_SEQUENCE = 7;                  // Astrologer: allies this close come through too
     private static final double DOOR_COMPANY = 2.0;
-    private static final int UNBAR_SEQUENCE = 4;                         // Secrets Sorcerer: Door Opening and Slip Free
+    static final int UNBAR_SEQUENCE = 4;                         // Secrets Sorcerer: Door Opening and Slip Free
                                                                          // open Teleport roots on you
     // sneak: Slip Free
-    private static final int SLIP_COST = 400;
+    static final int SLIP_COST = 400;
     private static final int SLIP_COOLDOWN = 400;
     private static final double SLIP_RANGE = 12.0;
-    private static final int SLIP_GUARD = 30;                            // nothing of that kind takes again for this long
+    static final int SLIP_GUARD = 30;                            // nothing of that kind takes again for this long
 
     // Ability 3 - Star Divination (Sequence 7)
     static final int ASTROLOGY_SEQUENCE = 7;
@@ -137,7 +137,7 @@ public class KeyOfStars {
     private static final int INTUITION_SEQUENCE = 7;                     // Astrologer: a chime when something starts hunting
     private static final int INTUITION_REST = 60;
     static final int SAFE_LANDING_SEQUENCE = 5;                          // Traveler: no fall damage for a while after a
-    private static final int SAFE_LANDING_TICKS = 40;                    // teleport of this Pathway; Anchors shown
+    static final int SAFE_LANDING_TICKS = 40;                    // teleport of this Pathway; Anchors shown
     private static final int STARLIT_EYES_SEQUENCE = 4;                  // Secrets Sorcerer: blindness and nausea do not take
     private static final int WORM_AURA_EVERY = 200;                      // the Worms of Star are drawn again this often
     private static final int ASTRAL_SEQUENCE = 3;                        // Wanderer: Teleport roots last half as long, no fall

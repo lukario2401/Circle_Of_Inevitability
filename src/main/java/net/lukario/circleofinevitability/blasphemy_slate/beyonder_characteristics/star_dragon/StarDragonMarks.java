@@ -102,8 +102,12 @@ public final class StarDragonMarks {
     // API
     // =========================
 
-    /** Lays 'mark' on 'target', by 'caster', for 'ticks' (never shorter than what is there). */
-    public static void put(LivingEntity target, Mark mark, Player caster, int ticks) {
+    /**
+     * Lays 'mark' on 'target', by 'caster', for 'ticks' (never shorter than what is there). The caster can be any
+     * creature (a Beyonder mob casting a Star Dragon ability, blasphemy_slate/beyonder_mobs); a harm over time that
+     * names its source (Weakened, Irradiated) names a player only.
+     */
+    public static void put(LivingEntity target, Mark mark, LivingEntity caster, int ticks) {
         if (ticks <= 0 || !target.isAlive() || !(target.level() instanceof ServerLevel sl)) return;
         CompoundTag all = target.getPersistentData().getCompoundOrEmpty(TAG);
         CompoundTag one = all.getCompoundOrEmpty(mark.name());
@@ -182,7 +186,8 @@ public final class StarDragonMarks {
     // What each mark does when it is laid
     // =========================
 
-    private static void laid(ServerLevel sl, LivingEntity target, Mark mark, Player caster, int ticks, int stacks) {
+    private static void laid(ServerLevel sl, LivingEntity target, Mark mark, LivingEntity caster, int ticks, int stacks) {
+        Player source = caster instanceof Player player ? player : null;
         String tag = tag(target, mark);
         Status picture = null;
         switch (mark) {
@@ -192,7 +197,7 @@ public final class StarDragonMarks {
             }
             case WEAKENED -> {
                 float bite = WEAKENED_PER_SECOND + WEAKENED_PER_STACK * (stacks - 1);
-                Corrosion.apply(target, caster, Math.max(bite, Corrosion.perSecond(target)), 0f, ticks);
+                Corrosion.apply(target, source, Math.max(bite, Corrosion.perSecond(target)), 0f, ticks);
                 NoHeal.apply(target, ticks);
                 StarDragonFx.weakened(sl, target, stacks, ticks, tag);
                 picture = Status.WEAKENED;
@@ -215,7 +220,7 @@ public final class StarDragonMarks {
             }
             case VOIDED -> picture = Status.VOIDED;
             case IRRADIATED -> {
-                Bleeding.apply(target, caster, ticks, IRRADIATED_PER_SECOND);
+                Bleeding.apply(target, source, ticks, IRRADIATED_PER_SECOND);
                 NoHeal.apply(target, ticks);
                 Spells.keepEffect(target, MobEffects.WEAKNESS, 0, ticks);
                 StarDragonFx.irradiated(sl, target, ticks, tag);

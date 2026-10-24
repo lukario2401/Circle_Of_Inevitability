@@ -583,7 +583,7 @@ public final class KeyOfStarsFx {
      * Door Opening: an illusory Door opens in the wall at 'from' (where the Apprentice faces it) and another at 'to' on
      * the far side; the Apprentice steps through at DOOR_OPENED and both shut behind them.
      */
-    public static void doorOpening(ServerLevel sl, Player player, Vec3 from, Vec3 to) {
+    public static void doorOpening(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to) {
         float yaw = player.getYRot();
         door(sl, from, yaw, 1.05f, 0xFFE8EEFF, DOOR_OPENED, DOOR_OPENED + 8, 30, null);
         ParticleShapes.burst(sl, DOOR_SPARK, from.add(0, 1.0, 0), 6, 0.03, 0.08);
@@ -612,8 +612,8 @@ public final class KeyOfStarsFx {
     // ---------- sneak: Slip Free
 
     /** The lock on 'target' (the caster or an ally) springs open: keys and locks fly off it, it is Unbound a moment. */
-    public static void slipFree(ServerLevel sl, Player caster, LivingEntity target) {
-        if (target != caster) ParticleShapes.slashBetween(sl, STAR_BEAM, handOf(caster, sl), chestOf(target));
+    public static void slipFree(ServerLevel sl, LivingEntity caster, LivingEntity target) {
+        if (target != caster) ParticleShapes.slashBetween(sl, STAR_BEAM, caster instanceof Player p ? handOf(p, sl) : chestOf(caster), chestOf(target));
         ModelFx key = STAR_KEY.scale(0.45f).lifetime(18).fade(2, 8)
                 .key(0, pose().roll(0f).alpha(0f))
                 .key(4, pose().alpha(1f), Ease.OUT)

@@ -58,12 +58,12 @@ public final class StarDragonRays {
     private static final float SUNLIGHT_DAY_COST = 0.5f;        // in real daylight under open sky
 
     // Piercing Ray (Navigator, key 3 sneak)
-    private static final int PIERCING_COST = 2450;
+    static final int PIERCING_COST = 2450;
     private static final int PIERCING_COOLDOWN = 160;
-    private static final double PIERCING_RANGE = 28.0;
-    private static final double PIERCING_WIDTH = 0.5;
-    private static final float PIERCING_DAMAGE = 40f;
-    private static final int DIMMED_TICKS = 160;
+    static final double PIERCING_RANGE = 28.0;
+    static final double PIERCING_WIDTH = 0.5;
+    static final float PIERCING_DAMAGE = 40f;
+    static final int DIMMED_TICKS = 160;
 
     // Series of Rays (Heavybringer)
     static final int SERIES_SEQUENCE = 4;

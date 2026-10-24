@@ -99,26 +99,26 @@ public class HandOfOrder {
     // =========================
 
     // Ability 1 - Halt (Sequence 9)
-    private static final int HALT_SEQUENCE = 9;
-    private static final int HALT_COST = 250;
+    static final int HALT_SEQUENCE = 9;
+    static final int HALT_COST = 250;
     private static final int HALT_COOLDOWN = 1;
-    private static final double HALT_RANGE = 16.0;
-    private static final int HALT_TICKS = 40;                    // held this long (a player: HALT_PLAYER_TICKS)
-    private static final int HALT_PLAYER_TICKS = 20;
-    private static final int HALT_JUDGE_TICKS = 60;              // from Judge (6)
-    private static final int HALT_JUDGE_PLAYER_TICKS = 30;
+    static final double HALT_RANGE = 16.0;
+    static final int HALT_TICKS = 40;                    // held this long (a player: HALT_PLAYER_TICKS)
+    static final int HALT_PLAYER_TICKS = 20;
+    static final int HALT_JUDGE_TICKS = 60;              // from Judge (6)
+    static final int HALT_JUDGE_PLAYER_TICKS = 30;
     private static final double HALT_FORGET_RADIUS = 32.0;       // mobs this close that hunt you...
     private static final int HALT_FORGET_TICKS = 100;            // ...cannot pick you again for this long
     // sneak: Presence
-    private static final int PRESENCE_COST = 400;
+    static final int PRESENCE_COST = 400;
     private static final int PRESENCE_COOLDOWN = 1;
-    private static final double PRESENCE_RADIUS = 8.0;
-    private static final double PRESENCE_JUDGE_RADIUS = 12.0;    // from Judge (6)
-    private static final int PRESENCE_TICKS = 120;               // Slowness II and Weakness I this long
-    private static final float COWED_MAX_HEALTH = 60f;           // mobs under this max health...
-    private static final int COWED_TICKS = 60;                   // ...cannot attack for this long
-    private static final int INTIMIDATION_SEQUENCE = 4;          // Imperative Mage: everyone in the wave is also rooted...
-    private static final int INTIMIDATION_TICKS = 30;            // ...this long
+    static final double PRESENCE_RADIUS = 8.0;
+    static final double PRESENCE_JUDGE_RADIUS = 12.0;    // from Judge (6)
+    static final int PRESENCE_TICKS = 120;               // Slowness II and Weakness I this long
+    static final float COWED_MAX_HEALTH = 60f;           // mobs under this max health...
+    static final int COWED_TICKS = 60;                   // ...cannot attack for this long
+    static final int INTIMIDATION_SEQUENCE = 4;          // Imperative Mage: everyone in the wave is also rooted...
+    static final int INTIMIDATION_TICKS = 30;            // ...this long
 
     // Ability 2 - Jurisdiction (Sequence 8)
     static final int JUDGE_SEQUENCE = 6;                         // many things grow at Judge
