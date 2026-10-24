@@ -1049,7 +1049,7 @@ A key press counts when it took spirituality (every ability checks first and pay
 off (DONE or FREE). The keys (`keyPressed`/`keyDone`), `SoulCore` (`spent`) and `AbilityWheel` (`wheelCast`) tell it; nothing
 else has to. `copyable()` is false for an ability `PathwayAbilities` marks `OWN_PATHWAY_ONLY` and for a wheel entry marked
 `.notCopyable()` (it needs its own Pathway's tick or state). While a copy runs, `Cooldowns` neither stops it nor starts.
-Mobs do not use the keys, so a Beyonder mob's powers are not told. Not saved.
+Mobs do not use the keys, so a Beyonder mob's powers are not told. `Casts.madeUpFor(mob, sl, ability, sneak)` (or `BeyonderMobs.castOf(mob, sl, random)`, which picks one it really has) makes a cast of one of them for an ability that copies from a mob directly, as Replication and Record do. Not saved.
 
 ## Echo: a cast repeated elsewhere
 
@@ -2404,6 +2404,8 @@ StolenAbilities.spend(thief, newest);                                           
 ```
 
 `false` is "its normal form"; `true` holds the sneak form. `victim` is the player it was taken from, or `null` when it was taken from a mob or from nobody.
+
+**What can be taken from someone** is in `Beyonders` (blasphemy_slate/beyonder), for players and Beyonder mobs alike: `Beyonders.takeableFrom(target)` is every stealable ability their Pathway gives them at their Sequence, `Beyonders.randomTakeable(target, random, null)` one of them (or `null`). A mob that is no Beyonder has nothing ([BEYONDER_MOBS.md](BEYONDER_MOBS.md)). Theft and Grazing ask it.
 
 `StolenAbilities.count(thief)`, `isFull(thief, max)`, `holds(thief, held)`, `isTaken(victim, ability)` and `blocksKey(player, key)` work from anywhere.
 

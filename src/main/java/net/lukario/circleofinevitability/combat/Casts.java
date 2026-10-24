@@ -8,6 +8,7 @@ import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -49,7 +50,8 @@ import java.util.function.Supplier;
  *
  * Copies (recast, copying) are never told: a copy cannot be copied again, and an echo does not echo. While a copy
  * runs, the caster's single-key cooldowns (combat/Cooldowns) neither stop it nor start.
- * Mobs do not use the keys, so a Beyonder mob's powers are not told here. Not saved: a restart forgets them.
+ * Mobs do not use the keys, so a Beyonder mob's powers are not told here; madeUpFor makes a cast of one of them for
+ * the abilities that copy from a mob directly (Replication, Record). Not saved: a restart forgets them.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -212,6 +214,20 @@ public final class Casts {
                 player.setShiftKeyDown(wasSneaking);
             }
         });
+    }
+
+    /**
+     * A cast as if 'caster' had just cast its Pathway's 'ability' where it stands, for one that does not use the keys
+     * (a Beyonder mob, blasphemy_slate/beyonder_mobs). It is not told to anyone: hand it to recast (Replication) or
+     * keep it (Record). Pick the ability with Beyonders.randomTakeable so it is one the caster really has.
+     *
+     *   PathwayAbilities.Ability ability = Beyonders.randomTakeable(mob, random, null);
+     *   Casts.Cast cast = Casts.madeUpFor(mob, sl, ability, ability.sneakForm() && random.nextBoolean());
+     */
+    public static Cast madeUpFor(LivingEntity caster, ServerLevel sl, PathwayAbilities.Ability ability, boolean sneak) {
+        return new Cast(caster.getUUID(), caster.getName().getString(), ability.pathway(), ability.key(),
+                sneak && ability.sneakForm(), null, null, ability, sl.dimension().toString(), caster.position(),
+                sl.getGameTime());
     }
 
     // =========================

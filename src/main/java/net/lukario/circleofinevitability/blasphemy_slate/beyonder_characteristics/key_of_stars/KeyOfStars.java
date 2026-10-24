@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
@@ -433,8 +434,8 @@ public class KeyOfStars {
         StringBuilder text = new StringBuilder();
         text.append(target.getName().getString()).append(": ")
                 .append(Math.round(target.getHealth())).append(" / ").append(Math.round(target.getMaxHealth())).append(" health");
-        if (target instanceof Player other && !SoulCore.getPathway(other).equals("none")) {
-            text.append(", ").append(SoulCore.getPathway(other)).append(" Sequence ").append(SoulCore.getSequence(other));
+        if (Beyonders.isBeyonder(target)) {                                  // a player or a Beyonder mob
+            text.append(", ").append(Beyonders.pathwayOf(target)).append(" Sequence ").append(Beyonders.sequenceOf(target));
         }
         List<String> effects = new ArrayList<>();
         for (MobEffectInstance effect : target.getActiveEffects()) {

@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
@@ -533,9 +534,8 @@ public class HandOfOrder {
     private static Component recognized(Player player, LivingEntity one) {
         StringBuilder text = new StringBuilder("Memorized: ").append(one.getDisplayName().getString());
         if (Beyonder.hasSequence(player, RECOGNITION_DETAILS_SEQUENCE)) {
-            if (one instanceof Player other) {
-                String pathway = SoulCore.getPathway(other);
-                if (isBeyonder(other)) text.append(", a Beyonder of ").append(pathway).append(" at Sequence ").append(SoulCore.getSequence(other));
+            if (isBeyonder(one)) {
+                text.append(", a Beyonder of ").append(Beyonders.pathwayOf(one)).append(" at Sequence ").append(Beyonders.sequenceOf(one));
             }
             List<String> effects = new ArrayList<>();
             for (MobEffectInstance effect : one.getActiveEffects()) {
@@ -854,14 +854,9 @@ public class HandOfOrder {
                 || one.getMaxHealth() > BOSS_HEALTH;
     }
 
-    /**
-     * True for a Beyonder: a player who follows a Pathway. (Mobs carrying a Beyonder characteristic join this when that
-     * system is written: one more line here.)
-     */
+    /** True for a Beyonder: a player who follows a Pathway, or a Beyonder mob (blasphemy_slate/beyonder_mobs). */
     static boolean isBeyonder(LivingEntity one) {
-        if (!(one instanceof Player player)) return false;
-        String pathway = SoulCore.getPathway(player);
-        return !pathway.isEmpty() && !pathway.equals("none");
+        return Beyonders.isBeyonder(one);
     }
 
     /** After a relog or a death: nothing of the timed casts is left over on the screen. */

@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx.Status;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Echo;
@@ -260,16 +261,20 @@ public final class KeyOfStarsStarlight {
     // =========================
     // Replication: the newest ability another Beyonder cast within REPLICATION_RANGE in the last REPLICATION_AGE ticks
     // (combat/Casts) is cast again by you, now, toward your crosshair, its hits at REPLICATION_STRENGTH. No slot, no
-    // roll. If nothing was cast, or the copy cannot go off (no target), nothing is spent.
+    // roll. Mobs cast nothing, so aiming at a Beyonder mob (blasphemy_slate/beyonder_mobs) within REPLICATION_RANGE
+    // replicates one of its Pathway's abilities, up to its Sequence, instead. If nothing was cast, or the copy cannot
+    // go off (no target), nothing is spent.
     // =========================
     private static AbilityWheel.Result replication(ServerPlayer player, ServerLevel sl) {
-        Casts.Cast cast = Casts.latestNear(sl, player.position(), REPLICATION_RANGE, REPLICATION_AGE,
-                one -> !one.caster().equals(player.getUUID()) && one.copyable());
+        LivingEntity aimed = Spells.aimEnemy(player, sl, REPLICATION_RANGE);
+        Casts.Cast fromMob = BeyonderMobs.castOf(aimed, sl, player.getRandom());         // null unless a Beyonder mob
+        Casts.Cast cast = fromMob != null ? fromMob : Casts.latestNear(sl, player.position(), REPLICATION_RANGE,
+                REPLICATION_AGE, one -> !one.caster().equals(player.getUUID()) && one.copyable());
         if (cast == null) {
             player.sendSystemMessage(Component.literal("Nothing was cast near you to replicate."));
             return AbilityWheel.Result.REFUSED;
         }
-        Player source = sl.getPlayerByUUID(cast.caster());
+        LivingEntity source = fromMob != null ? aimed : sl.getPlayerByUUID(cast.caster());
         if (source != null) KeyOfStarsFx.replication(sl, player, source);
         boolean went = Echo.weaker(player, REPLICATION_STRENGTH, () -> Casts.recast(player, cast));
         if (!went) {

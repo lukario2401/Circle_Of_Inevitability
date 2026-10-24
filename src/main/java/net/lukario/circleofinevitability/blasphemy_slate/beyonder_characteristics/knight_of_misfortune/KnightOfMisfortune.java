@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
@@ -783,6 +784,9 @@ public class KnightOfMisfortune {
                 player.sendSystemMessage(Component.literal("  the " + pathway + " Pathway, Sequence " + SoulCore.getSequence(other)
                         + ", spirituality " + percent + "%."));
             }
+        } else if (Beyonders.isBeyonder(dreamer)) {                          // a Beyonder mob (blasphemy_slate/beyonder_mobs)
+            player.sendSystemMessage(Component.literal("  the " + Beyonders.pathwayOf(dreamer) + " Pathway, Sequence "
+                    + Beyonders.sequenceOf(dreamer) + "."));
         }
         player.sendSystemMessage(Component.literal("  health " + Math.round(dreamer.getHealth()) + " of " + Math.round(dreamer.getMaxHealth()) + "."));
         ItemStack held = dreamer.getItemBySlot(EquipmentSlot.MAINHAND);

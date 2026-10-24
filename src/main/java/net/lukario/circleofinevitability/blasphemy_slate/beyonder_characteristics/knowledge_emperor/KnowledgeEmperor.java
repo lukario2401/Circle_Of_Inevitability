@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
@@ -543,17 +544,11 @@ public class KnowledgeEmperor {
         }
         if (!effects.isEmpty()) text.append(", under ").append(String.join(", ", effects));
         if (Study.knowsWeakness(player, one)) text.append(", weak to ").append(elementName(weaknessOf(one)));
-        if (Beyonder.hasSequence(player, CLAIRVOYANT_PRY_SEQUENCE) && one instanceof Player other) {
-            String pathway = SoulCore.getPathway(other);
-            if (!pathway.equals("none") && !pathway.isEmpty()) {
-                int sequence = SoulCore.getSequence(other);
-                text.append(", a Beyonder of ").append(pathway).append(" at Sequence ").append(sequence);
-                List<String> abilities = new ArrayList<>();
-                for (PathwayAbilities.Ability ability : PathwayAbilities.of(pathway)) {
-                    if (ability.sequence() >= sequence) abilities.add(ability.name());
-                }
-                if (!abilities.isEmpty()) text.append(" (").append(String.join(", ", abilities)).append(")");
-            }
+        if (Beyonder.hasSequence(player, CLAIRVOYANT_PRY_SEQUENCE) && Beyonders.isBeyonder(one)) {   // a player or a Beyonder mob
+            text.append(", a Beyonder of ").append(Beyonders.pathwayOf(one)).append(" at Sequence ").append(Beyonders.sequenceOf(one));
+            List<String> abilities = new ArrayList<>();
+            for (PathwayAbilities.Ability ability : Beyonders.abilitiesOf(one)) abilities.add(ability.name());
+            if (!abilities.isEmpty()) text.append(" (").append(String.join(", ", abilities)).append(")");
         }
         text.append(". Study ").append(Study.get(player, one)).append("%");
         return Component.literal(text.toString());

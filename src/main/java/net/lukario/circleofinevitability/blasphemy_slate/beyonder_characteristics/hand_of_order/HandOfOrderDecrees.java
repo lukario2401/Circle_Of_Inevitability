@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
@@ -409,8 +410,7 @@ public final class HandOfOrderDecrees {
     /** Stronger than the writer: a boss, or a Beyonder of a higher Sequence (a lower number). */
     static boolean strongerThan(Player owner, LivingEntity enemy) {
         if (HandOfOrder.isBoss(enemy)) return true;
-        return enemy instanceof Player other && HandOfOrder.isBeyonder(other)
-                && SoulCore.getSequence(other) < SoulCore.getSequence(owner);
+        return HandOfOrder.isBeyonder(enemy) && Beyonders.sequenceOf(enemy) < SoulCore.getSequence(owner);
     }
 
     // =========================

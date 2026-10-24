@@ -275,6 +275,7 @@
   "tooltip.circle_of_inevitability.beyonder_characteristic.pathway": "Pathway: %s",
   "tooltip.circle_of_inevitability.beyonder_characteristic.sequence": "Sequence: %s",
   "tooltip.circle_of_inevitability.beyonder_characteristic.use": "Right-click to consume",
+  "entity.circle_of_inevitability.beyonder_mob": "%1$s (%2$s, Sequence %3$s)",
   "creativetab.circle_of_inevitability.characteristics": "Beyonder Characteristics",
   "message.circle_of_inevitability.characteristic.empty": "This characteristic is empty. It belongs to no Pathway.",
   "message.circle_of_inevitability.characteristic.unknown_pathway": "No Pathway is called \"%s\". The characteristic does nothing.",

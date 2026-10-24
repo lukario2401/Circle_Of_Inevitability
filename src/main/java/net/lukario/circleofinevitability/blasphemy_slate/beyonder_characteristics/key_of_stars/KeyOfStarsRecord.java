@@ -2,13 +2,16 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Cooldowns;
 import net.lukario.circleofinevitability.combat.Echo;
 import net.lukario.circleofinevitability.combat.HudTimer;
+import net.lukario.circleofinevitability.combat.Spells;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
@@ -22,7 +25,8 @@ import java.util.UUID;
  * Key Of Stars, key 4: Record (Scribe, Sequence 6). docs/KEY_OF_STARS.md, "Keys" and "Pathway systems".
  *
  *   Record   for a while you watch: the first Beyonder ability another caster uses near you and in your sight is
- *            copied into a free Recorded slot, if the roll succeeds ("I came, I saw, I recorded.")
+ *            copied into a free Recorded slot, if the roll succeeds ("I came, I saw, I recorded."). A Beyonder mob
+ *            you look at when you press it is read at once (BeyonderMobs.castOf: mobs cast nothing themselves)
  *   Replay   (sneak) casts the oldest Recorded ability at once, free, at the strength it was written down with, and
  *            empties its slot
  *
@@ -86,7 +90,8 @@ public final class KeyOfStarsRecord {
     // Ability 4 - Record
     // Normal: Record. For RECORD_TICKS you watch: the first ability another Beyonder casts within RECORD_RANGE and in
     //         your sight is rolled for (chance) and, if it succeeds, written into a free slot (SLOTS; Traveler
-    //         MORE_SLOTS; Secrets Sorcerer MOST_SLOTS). Watching ends with that first one, either way.
+    //         MORE_SLOTS; Secrets Sorcerer MOST_SLOTS). Watching ends with that first one, either way. Cast while
+    //         looking at a Beyonder mob, one of its abilities (up to its Sequence) is rolled for at once.
     // Sneak:  Replay. The oldest Recorded Power is cast at once, toward your crosshair, free, at its strength; its
     //         slot empties. One that does not go off (no target) stays.
     // =========================
@@ -110,6 +115,12 @@ public final class KeyOfStarsRecord {
         Cooldowns.start(player, RECORD_KEY, RECORD_COOLDOWN);
         player.getPersistentData().putLong(WATCH_UNTIL, sl.getGameTime() + RECORD_TICKS);
         KeyOfStarsFx.record(sl, player, RECORD_TICKS, recordTag(player));
+
+        // mobs cast nothing: a Beyonder mob you look at (blasphemy_slate/beyonder_mobs) is written down at once, one of
+        // its Pathway's abilities up to its Sequence, with the same roll
+        LivingEntity aimed = Spells.aimEnemy(player, sl, RECORD_RANGE);
+        Casts.Cast fromMob = BeyonderMobs.castOf(aimed, sl, player.getRandom());
+        if (fromMob != null) write(player, sl, aimed, fromMob, chance(player, fromMob.sequence()));
     }
 
     private static void replay(ServerPlayer player, ServerLevel sl) {
@@ -159,7 +170,7 @@ public final class KeyOfStarsRecord {
     }
 
     /** The first cast seen while watching: rolled for, written down if it succeeds. Watching ends either way. */
-    private static void write(ServerPlayer player, ServerLevel sl, ServerPlayer caster, Casts.Cast cast, float chance) {
+    private static void write(ServerPlayer player, ServerLevel sl, LivingEntity caster, Casts.Cast cast, float chance) {
         endWatching(player, sl);
         if (chance <= 0f || player.getRandom().nextFloat() >= chance) {
             KeyOfStarsFx.recordFailed(sl, player);

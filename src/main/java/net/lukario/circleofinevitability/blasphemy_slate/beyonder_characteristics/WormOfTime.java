@@ -13,7 +13,9 @@ import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs;
 import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Marks;
 import net.lukario.circleofinevitability.status.Parasite;
@@ -231,8 +233,8 @@ public class WormOfTime {
     // =========================
     // Ability 2 - Theft
     // Normal: steals an ability from what you look at and holds it. From a player with a Pathway: one of the
-    //         abilities their Sequence gives them, and they cannot use it while you hold it. From anything
-    //         else: a random ability of another Pathway.
+    //         abilities their Sequence gives them, and they cannot use it while you hold it. From a Beyonder mob
+    //         (blasphemy_slate/beyonder_mobs): one of its Pathway's, up to its Sequence. Other mobs have nothing.
     // Sneak:  releases the newest one you hold: it is cast once, whatever its Sequence, at no cost.
     // Who holds what is kept by StolenAbilities; the list of abilities is PathwayAbilities.
     // =========================
@@ -257,9 +259,12 @@ public class WormOfTime {
         }
         PathwayAbilities.Ability ability = pickToSteal(player, target);
         if (ability == null) {
-            player.sendSystemMessage(Component.literal(hasPathway(target)
-                    ? "They have nothing you can steal right now."
-                    : "It has nothing left to give. Look for another."));
+            String why;
+            if (hasPathway(target)) why = "They have nothing you can steal right now.";
+            else if (!BeyonderMobs.isBeyonder(target)) why = "It is no Beyonder. There is no power in it to steal.";
+            else if (Marks.count(target, THEFT_EMPTY) > 0) why = "It has nothing left to give. Look for another.";
+            else why = "Its powers cannot be stolen.";
+            player.sendSystemMessage(Component.literal(why));
             return;
         }
         if (!Spells.paySpirituality(player, THEFT_COST)) return;
@@ -296,11 +301,9 @@ public class WormOfTime {
                 }
             }
         } else {
-            if (Marks.count(target, THEFT_EMPTY) > 0) return null;
-            // anything of another Pathway, whatever its Sequence
-            for (PathwayAbilities.Ability ability : PathwayAbilities.ALL) {
-                if (ability.stealable() && !ability.pathway().equals(PATHWAY)) choices.add(ability);
-            }
+            // only a Beyonder mob has anything: what its Pathway gives at its Sequence (blasphemy_slate/beyonder_mobs)
+            if (!BeyonderMobs.isBeyonder(target) || Marks.count(target, THEFT_EMPTY) > 0) return null;
+            choices.addAll(Beyonders.takeableFrom(target));
         }
         return choices.isEmpty() ? null : choices.get(thief.getRandom().nextInt(choices.size()));
     }

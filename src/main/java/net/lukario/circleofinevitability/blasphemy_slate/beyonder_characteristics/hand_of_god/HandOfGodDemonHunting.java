@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodFx.Coat;
@@ -249,11 +250,8 @@ public final class HandOfGodDemonHunting {
             effects.add(effect.getEffect().value().getDisplayName().getString() + " " + (effect.getAmplifier() + 1));
         }
         if (!effects.isEmpty()) text.append(", under ").append(String.join(", ", effects));
-        if (knight && one instanceof Player other) {
-            String pathway = SoulCore.getPathway(other);
-            if (!pathway.equals("none") && !pathway.isEmpty()) {
-                text.append(", a Beyonder of ").append(pathway).append(" at Sequence ").append(SoulCore.getSequence(other));
-            }
+        if (knight && Beyonders.isBeyonder(one)) {                           // a player or a Beyonder mob
+            text.append(", a Beyonder of ").append(Beyonders.pathwayOf(one)).append(" at Sequence ").append(Beyonders.sequenceOf(one));
         }
         return Component.literal(text.toString());
     }

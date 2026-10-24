@@ -2,7 +2,9 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pathway_fx.HangedManFx.Status;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
@@ -38,7 +40,6 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -67,7 +68,8 @@ import java.util.UUID;
  *   3 Shadow Binding     (Shadow Ascetic)     shadows rise where you aim, hold and hurt everything there
  *                                                                              | sneak: Shadow Lurking (press again to rise)
  *   4 Flesh Bomb         (Rose Bishop)        a lump of flesh that sticks, swells and bursts | sneak: Flesh Cloak
- *   5 Grazing            (Shepherd)           what you kill leaves you an ability, kept for good in 7 slots: the key casts
+ *   5 Grazing            (Shepherd)           a Beyonder you kill (a player, or a Beyonder mob) leaves you one of its
+ *                                             Pathway's abilities, up to its Sequence, kept for good in 7 slots: the key casts
  *                                             the selected one, at full power, for 3x its cost
  *                                                                              | sneak: the wheel of your 7 slots
  *   6 Cull of Spiritual Flesh (Black Knight)  a wide black cut that strips their defense     | sneak: Black Armor
@@ -757,7 +759,7 @@ public class DarkAngel {
 
     private static void grazeKill(Player killer, LivingEntity victim, ServerLevel sl) {
         if (!SoulCore.getPathway(killer).equals(PATHWAY) || !Beyonder.hasSequence(killer, GRAZING_SEQUENCE)) return;
-        if (!(victim instanceof Player) && !(victim instanceof Enemy)) return;     // animals have nothing to give
+        if (!(victim instanceof Player) && !BeyonderMobs.isBeyonder(victim)) return;   // only a Beyonder has a soul to graze
 
         PathwayAbilities.Ability ability = pickSoul(killer, victim);
         if (ability == null) {
@@ -765,7 +767,7 @@ public class DarkAngel {
             return;
         }
         Grazed grazed = new Grazed(ability, ability.sneakForm() && killer.getRandom().nextBoolean());
-        int color = victim instanceof Player other ? pathwayColor(SoulCore.getPathway(other)) : HangedManFx.SOUL;
+        int color = Beyonders.isBeyonder(victim) ? pathwayColor(Beyonders.pathwayOf(victim)) : HangedManFx.SOUL;
         Vec3 corpse = victim.position();
 
         int empty = firstEmpty(killer);
@@ -789,19 +791,12 @@ public class DarkAngel {
                 + " s: stand by it and sneak + press the key to take it in place of one."));
     }
 
-    /** From a player with a Pathway: one of the abilities their Sequence gives them. Otherwise: any of another Pathway. */
+    /**
+     * From a player with a Pathway or a Beyonder mob (blasphemy_slate/beyonder_mobs): one of the abilities their
+     * Pathway gives them at their Sequence. Anything else: nothing.
+     */
     private static PathwayAbilities.Ability pickSoul(Player killer, LivingEntity victim) {
-        List<PathwayAbilities.Ability> choices = new ArrayList<>();
-        if (victim instanceof Player other && !PathwayAbilities.of(SoulCore.getPathway(other)).isEmpty()) {
-            for (PathwayAbilities.Ability ability : PathwayAbilities.of(SoulCore.getPathway(other))) {
-                if (ability.stealable() && Beyonder.hasSequence(other, ability.sequence())) choices.add(ability);
-            }
-        } else {
-            for (PathwayAbilities.Ability ability : PathwayAbilities.ALL) {
-                if (ability.stealable() && !ability.pathway().equals(PATHWAY)) choices.add(ability);
-            }
-        }
-        return choices.isEmpty() ? null : choices.get(killer.getRandom().nextInt(choices.size()));
+        return Beyonders.randomTakeable(victim, killer.getRandom(), null);
     }
 
     /** The color of a player's soul: the color of their Pathway (0xAARRGGBB). Also the Illuminator's residues. */

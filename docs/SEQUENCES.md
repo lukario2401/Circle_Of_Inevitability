@@ -71,9 +71,9 @@ A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole 
 
 Worm Of Time's Parasite (J) is the only key that works while its player is inside a host: J again puts them back out (`status/Parasite`; see "Parasite" in [SPELL_KIT.md](SPELL_KIT.md)). Inside a mob, the walk keys, jump, sprint, mouse and both clicks steer it instead (`status/ParasiteControl`).
 
-Worm Of Time's Theft (H) holds `THEFT_MAX_HELD` (5) stolen abilities at once and releases the newest first (sneak + H).
+Worm Of Time's Theft (H) holds `THEFT_MAX_HELD` (5) stolen abilities at once and releases the newest first (sneak + H). It steals from players with a Pathway and from Beyonder mobs only: one of their Pathway's abilities, up to their Sequence ([BEYONDER_MOBS.md](BEYONDER_MOBS.md)).
 
-Dark Angel's Grazing (L) keeps an ability from every hostile mob or player its owner kills, in 7 slots that are kept for good (through death too). It casts the selected one whatever its Sequence, for three times that ability's own cost (`Beyonder.castUnbound(player, 3f, ...)`). Sneak + L picks the slot; by a soul that waits on its corpse (all slots full), it picks the slot that soul replaces.
+Dark Angel's Grazing (L) keeps an ability from every Beyonder its owner kills (a player with a Pathway, or a Beyonder mob: one of its Pathway's abilities, up to its Sequence; [BEYONDER_MOBS.md](BEYONDER_MOBS.md)), in 7 slots that are kept for good (through death too). It casts the selected one whatever its Sequence, for three times that ability's own cost (`Beyonder.castUnbound(player, 3f, ...)`). Sneak + L picks the slot; by a soul that waits on its corpse (all slots full), it picks the slot that soul replaces.
 
 ## Renaming a Pathway
 
