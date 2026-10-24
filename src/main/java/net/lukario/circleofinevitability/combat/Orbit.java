@@ -49,6 +49,15 @@ import java.util.List;
  * it and is away for 'returnTicks'. A hit by a projectile that was too fast to be seen first is stopped as well.
  *
  *   Orbit.isOpen(player, name)   Orbit.ticksLeft(player, name)   Orbit.ready(player, name)   Orbit.close(player, name)
+ *   Orbit.age(player, name)      Orbit.firstReady(player, name)
+ *
+ * SENDING ONE AWAY. Orbit.release(player, name, index, awayTicks) launches body 'index' yourself (a cluster flung at
+ * an enemy, an asteroid thrown on a blow): it returns where the body was, so a Shot can leave from there, and the
+ * body is back 'awayTicks' later (onBack), or never (0). Star Dragon's Fusion Cluster and the Dragon's asteroid:
+ *
+ *   int i = Orbit.firstReady(player, "my_pathway_rock");
+ *   Vec3 from = i < 0 ? null : Orbit.release(player, "my_pathway_rock", i, 60);   // back in 3 seconds
+ *   if (from != null) ROCK_SHOT.onHit(...).fire(player, sl, from, direction);
  *
  * Opening one with a name that player already has closes the old one first. It ends when its time is up or its
  * owner dies, logs out or changes dimension. Not saved: a server restart drops it.
@@ -204,6 +213,34 @@ public final class Orbit {
         int ready = 0;
         for (int i = 0; i < orbit.count; i++) if (orbit.isHere(i)) ready++;
         return ready;
+    }
+
+    /** How many ticks it has been open (what onTick is given), or -1 if there is none. */
+    public static int age(Player owner, String name) {
+        Orbit orbit = find(owner, name);
+        return orbit == null ? -1 : orbit.age;
+    }
+
+    /** The first body that is here (not away), or -1 (none is, or there is no such orbit). */
+    public static int firstReady(Player owner, String name) {
+        Orbit orbit = find(owner, name);
+        if (orbit == null) return -1;
+        for (int i = 0; i < orbit.count; i++) if (orbit.isHere(i)) return i;
+        return -1;
+    }
+
+    /**
+     * Sends body 'index' away now: thrown, launched, spent. It is back 'awayTicks' later (onBack runs, as after a
+     * catch), or never in this orbit if 'awayTicks' is 0 or less. Returns where it was when it left (fire the Shot
+     * from there), or null if there is no such orbit or that body is away already. The orbit draws nothing: take
+     * its model away yourself.
+     */
+    public static Vec3 release(Player owner, String name, int index, int awayTicks) {
+        Orbit orbit = find(owner, name);
+        if (orbit == null || index < 0 || index >= orbit.count || !orbit.isHere(index)) return null;
+        Vec3 at = orbit.spot(index, orbit.age);
+        orbit.awayUntil[index] = awayTicks > 0 ? orbit.age + awayTicks : Integer.MAX_VALUE;
+        return at;
     }
 
     /** Ends it now (its onEnd runs). Does nothing if there is none. */

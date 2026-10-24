@@ -28,6 +28,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition.princeOfAbolitionDistort;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor.knowledgeEmperorScrolls;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorWorkshop.illuminatorWorkshop;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon.starDragonTidalScholar;
 
 public class SKeyPressAbilityFourUsed {
 
@@ -74,6 +75,7 @@ public class SKeyPressAbilityFourUsed {
         princeOfAbolitionDistort(player,level,serverLevel,false);
         knowledgeEmperorScrolls(player,level,serverLevel,false);
         illuminatorWorkshop(player,level,serverLevel,false);
+        starDragonTidalScholar(player,level,serverLevel,false);
     }
 
 }

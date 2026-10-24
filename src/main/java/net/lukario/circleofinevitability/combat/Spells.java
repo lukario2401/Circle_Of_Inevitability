@@ -21,6 +21,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -53,6 +54,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 
 /**
  * The questions every ability asks, answered once: who is an enemy, what am I aiming at, where is the ground,
@@ -181,6 +183,23 @@ public final class Spells {
     public static List<LivingEntity> alliesAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
         List<LivingEntity> result = livingAround(caster, sl, center, radius);
         result.removeIf(other -> isEnemy(caster, other));
+        return result;
+    }
+
+    /**
+     * Projectiles in flight within 'radius' of a point that are not the caster's side's: arrows, fireballs, tridents,
+     * pearls (one with no owner counts too), but not one lying still or stuck in a wall. For fields that slow, stop,
+     * hang or bend what is shot through them (Star Dragon's Time Dilation, the storm, Gravity Authority, the black hole).
+     */
+    public static List<Projectile> hostileShotsAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+        AABB area = new AABB(center, center).inflate(radius);
+        List<Projectile> result = new ArrayList<>();
+        for (Projectile shot : sl.getEntitiesOfClass(Projectile.class, area, Entity::isAlive)) {
+            if (shot.position().distanceToSqr(center) > radius * radius) continue;
+            if (shot.getDeltaMovement().lengthSqr() < 0.0004) continue;                   // lying still, stuck
+            if (shot.getOwner() == caster || shot.getOwner() instanceof LivingEntity owner && isFriend(caster, owner)) continue;
+            result.add(shot);
+        }
         return result;
     }
 
@@ -806,6 +825,7 @@ public final class Spells {
 
     /** Throws the target away from a point: 'strength' blocks per tick sideways, 'lift' upward. */
     public static void push(LivingEntity target, Vec3 from, double strength, double lift) {
+        if (cannotBeMoved(target)) return;
         double dx = target.getX() - from.x;
         double dz = target.getZ() - from.z;
         double distance = Math.sqrt(dx * dx + dz * dz);
@@ -823,6 +843,7 @@ public final class Spells {
      * Call it every couple of ticks for a steady pull.
      */
     public static void pull(LivingEntity target, Vec3 to, double maxSpeed, double lift) {
+        if (cannotBeMoved(target)) return;
         double dx = to.x - target.getX();
         double dz = to.z - target.getZ();
         double distance = Math.sqrt(dx * dx + dz * dz);
@@ -830,6 +851,45 @@ public final class Spells {
         double speed = Math.min(maxSpeed, distance * 0.4);
         target.setDeltaMovement(dx / distance * speed, lift, dz / distance * speed);
         target.hurtMarked = true;
+    }
+
+    private static final List<Predicate<LivingEntity>> UNMOVABLE = new ArrayList<>();
+
+    /**
+     * Once, in a static block: while it says true for an entity, push and pull leave it where it is (and so does every
+     * field, wave and shove built on them). A body too dense to move, an anchor, a giant's footing. Star Dragon's Dense
+     * Body and Heavybringing.
+     */
+    public static void addMoveImmunity(Predicate<LivingEntity> unmovable) {
+        UNMOVABLE.add(unmovable);
+    }
+
+    /** True while an addMoveImmunity rule keeps it in place. */
+    public static boolean cannotBeMoved(LivingEntity entity) {
+        for (Predicate<LivingEntity> rule : UNMOVABLE) if (rule.test(entity)) return true;
+        return false;
+    }
+
+    /** A mob with more than this maximum health counts as a boss (isBoss). */
+    public static float BOSS_HEALTH = 150f;
+    /** Holds (lifted, caged, slowed in time...) last this share on a boss, and this share on a player (holdLength). */
+    public static float BOSS_HOLD = 0.5f;
+    public static float PLAYER_HOLD = 0.7f;
+
+    /** A boss: the dragon, the wither, the warden, an elder guardian, or anything with more than BOSS_HEALTH. */
+    public static boolean isBoss(LivingEntity one) {
+        return one.getType() == EntityTypes.ENDER_DRAGON || one.getType() == EntityTypes.WITHER
+                || one.getType() == EntityTypes.WARDEN || one.getType() == EntityTypes.ELDER_GUARDIAN
+                || one.getMaxHealth() > BOSS_HEALTH;
+    }
+
+    /**
+     * How long a hold of 'ticks' (lifted, caged, voided, frozen in time) lasts on this one: half on a boss, 70% on a
+     * player, all of it on anything else. The one place for that rule, so every Pathway that wants it agrees.
+     */
+    public static int holdLength(LivingEntity target, int ticks) {
+        float share = isBoss(target) ? BOSS_HOLD : target instanceof Player ? PLAYER_HOLD : 1f;
+        return Math.max(1, Math.round(ticks * share));
     }
 
     /** The harmful potion effects on an entity right now (a copy of the list, so they can be removed while going through it). */
