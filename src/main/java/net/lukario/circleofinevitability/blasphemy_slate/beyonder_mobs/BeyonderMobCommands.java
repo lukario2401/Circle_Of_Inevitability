@@ -14,10 +14,17 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -28,16 +35,22 @@ import java.util.List;
 /**
  * /beyondermob (op level 2), for testing and for maps (docs/BEYONDER_MOBS.md):
  *
+ *   /beyondermob summon <entity> "<Pathway>" <sequence> [pos] [count]
+ *                                                        summons new mobs that already are Beyonders of it (any
+ *                                                        living mob, any Sequence 9 to 0; at most MAX_SUMMON at once)
  *   /beyondermob set <targets> "<Pathway>" <sequence>   makes them Beyonders of that Pathway and Sequence
  *   /beyondermob clear <targets>                         makes them plain mobs again
  *   /beyondermob reroll <targets>                        clears them and rolls again by their Rule (BeyonderMobRules)
  *   /beyondermob info <target>                           what it is, and which abilities can be taken from it
  *
- * Players among the targets are skipped (/sequence is for them). To summon one: /summon it, then
- * /beyondermob set @e[type=zombie,sort=nearest,limit=1] "Hand Of Order" 7
+ * Players among the targets are skipped (/sequence is for them). Example:
+ * /beyondermob summon zombie "Hand Of Order" 7 ~ ~ ~ 3
  */
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID)
 public final class BeyonderMobCommands {
+
+    /** The most mobs one /beyondermob summon makes. */
+    public static final int MAX_SUMMON = 64;
 
     private BeyonderMobCommands() {}
 
@@ -49,6 +62,22 @@ public final class BeyonderMobCommands {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("beyondermob")
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+
+                // /beyondermob summon <entity> "<Pathway>" <sequence> [pos] [count]
+                .then(Commands.literal("summon")
+                        .then(Commands.argument("entity", IdentifierArgument.id())
+                                .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                        BuiltInRegistries.ENTITY_TYPE.keySet().stream().map(BeyonderMobCommands::shortId), builder))
+                                .then(Commands.argument("pathway_name", StringArgumentType.string())
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                SequenceCommands.PATHWAYS.stream().map(name -> "\"" + name + "\""), builder))
+                                        .then(Commands.argument("sequence", IntegerArgumentType.integer(Beyonder.STRONGEST_SEQUENCE, Beyonder.WEAKEST_SEQUENCE))
+                                                .executes(ctx -> summon(ctx, ctx.getSource().getPosition(), 1))
+                                                .then(Commands.argument("pos", Vec3Argument.vec3())
+                                                        .executes(ctx -> summon(ctx, Vec3Argument.getVec3(ctx, "pos"), 1))
+                                                        .then(Commands.argument("count", IntegerArgumentType.integer(1, MAX_SUMMON))
+                                                                .executes(ctx -> summon(ctx, Vec3Argument.getVec3(ctx, "pos"),
+                                                                        IntegerArgumentType.getInteger(ctx, "count")))))))))
 
                 // /beyondermob set <targets> "<Pathway>" <sequence>
                 .then(Commands.literal("set")
@@ -99,6 +128,46 @@ public final class BeyonderMobCommands {
                                     return 1;
                                 })))
         );
+    }
+
+    private static int summon(CommandContext<CommandSourceStack> ctx, Vec3 at, int count) {
+        CommandSourceStack source = ctx.getSource();
+        Identifier id = IdentifierArgument.getId(ctx, "entity");
+        String pathway = StringArgumentType.getString(ctx, "pathway_name");
+        int sequence = IntegerArgumentType.getInteger(ctx, "sequence");
+        if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {      // getValue would quietly give a pig
+            source.sendFailure(Component.literal("No mob is called \"" + id + "\"."));
+            return 0;
+        }
+        if (!SequenceCommands.PATHWAYS.contains(pathway)) {
+            source.sendFailure(Component.literal("No Pathway is called \"" + pathway + "\"."));
+            return 0;
+        }
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.getValue(id);
+        ServerLevel sl = source.getLevel();
+        int made = 0;
+        LivingEntity last = null;
+        for (int i = 0; i < count; i++) {
+            LivingEntity mob = BeyonderMobs.summon(sl, type, at, pathway, sequence);
+            if (mob == null) break;                                  // the same type fails the same way every time
+            last = mob;
+            made++;
+        }
+        if (made == 0) {
+            source.sendFailure(Component.literal("Could not summon \"" + id + "\" as a Beyonder there (it must be a living mob, not a player)."));
+            return 0;
+        }
+        int finalMade = made;
+        Component name = last.getDisplayName();
+        source.sendSuccess(() -> finalMade == 1
+                ? Component.literal("Summoned ").append(name)
+                : Component.literal("Summoned " + finalMade + " x ").append(name), true);
+        return made;
+    }
+
+    /** "zombie" for minecraft:zombie, the full id for any other mod's mob. */
+    private static String shortId(Identifier id) {
+        return "minecraft".equals(id.getNamespace()) ? id.getPath() : id.toString();
     }
 
     private static int set(CommandContext<CommandSourceStack> ctx) throws CommandSyntaxException {

@@ -97,6 +97,7 @@ Beyonders.randomTakeable(target, random, null)
 Beyonders.describe(target)                 // "Hand Of Order, Sequence 7"
 
 BeyonderMobs.make(mob, "Hand Of Order", 7) // whatever its Rule says
+BeyonderMobs.summon(sl, EntityTypes.ZOMBIE, pos, "Star Dragon", 3)  // a new mob that already is one (rituals, structures, boss fights)
 BeyonderMobs.clear(mob)
 BeyonderMobs.roll(mob)                     // by its Rule
 BeyonderMobs.castOf(mob, sl, random)       // a cast of one of its abilities, for Replication-like copies
@@ -112,12 +113,22 @@ Op level 2:
 
 | Command | What it does |
 | --- | --- |
+| `/beyondermob summon <entity> "<Pathway>" <sequence> [pos] [count]` | Summons new mobs that already are Beyonders of that Pathway and Sequence (any living mob, Sequence 9 to 0, up to 64 at once) |
 | `/beyondermob set <targets> "<Pathway>" <sequence>` | Makes them Beyonders of that Pathway and Sequence |
 | `/beyondermob clear <targets>` | Plain mobs again |
 | `/beyondermob reroll <targets>` | Clears them and rolls again by their Rule |
 | `/beyondermob info <target>` | Its Pathway, Sequence, and what can be taken from it |
 
-To summon one for a test: `/summon zombie`, then `/beyondermob set @e[type=zombie,sort=nearest,limit=1] "Hand Of Order" 7`.
+Examples:
+
+```
+/beyondermob summon zombie "Hand Of Order" 7                 a Sequence 7 Hand Of Order zombie where you stand
+/beyondermob summon skeleton "Key Of Stars" 5 ~ ~ ~5 3       three Sequence 5 Key Of Stars skeletons, 5 blocks away
+/beyondermob summon wither "Star Dragon" 0                   a Sequence 0 Star Dragon Wither
+/beyondermob summon villager "Hand Of Order" 9               any living mob works, not only hostile ones
+```
+
+A summoned one spawns the way `/summon` spawns it (a skeleton has its bow), with the health, damage, name and aura of its Sequence, and drops its characteristic when it dies like any other. A mob from another mod is named by its full id (`mymod:ghoul`). The Sequence is not limited by the mob's Rule: a zombie can be Sequence 0.
 
 ## Not done yet
 

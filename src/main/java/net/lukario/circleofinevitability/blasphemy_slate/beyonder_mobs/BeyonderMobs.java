@@ -20,6 +20,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySpawnReason;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -48,6 +50,7 @@ import net.minecraftforge.fml.common.Mod;
  *   BeyonderMobs.isBeyonder(mob)                       // true for a Beyonder mob (never for a player)
  *   BeyonderMobs.pathway(mob) / sequence(mob)          // null / -1 when it is none
  *   BeyonderMobs.make(mob, "Hand Of Order", 7)         // makes it one, whatever its Rule says (commands, abilities)
+ *   BeyonderMobs.summon(sl, type, at, "Star Dragon", 3) // spawns a new mob that already is one
  *   BeyonderMobs.clear(mob)                            // a mob again
  *   BeyonderMobs.roll(mob)                             // rolls for it by its Rule (each mob is rolled once by itself)
  *
@@ -146,6 +149,29 @@ public final class BeyonderMobs {
             entity.setCustomNameVisible(false);
         }
         return true;
+    }
+
+    /**
+     * Summons a 'type' at 'at' that is already a Beyonder of that Pathway and Sequence (/beyondermob summon; a ritual,
+     * a structure or a boss fight can call it too). It spawns the way /summon spawns it (a skeleton gets its bow),
+     * then make() runs before its first tick, so it is never rolled. Any living mob can be one this way, hostile or
+     * not, at any Sequence 9 to 0. Null if 'type' is no living mob (or a player), the Pathway does not exist, or it
+     * could not spawn there.
+     */
+    public static LivingEntity summon(ServerLevel sl, EntityType<?> type, Vec3 at, String pathway, int sequence) {
+        if (sl == null || type == null || at == null || !SequenceCommands.PATHWAYS.contains(pathway)) return null;
+        Entity spawned = type.spawn(sl, BlockPos.containing(at), EntitySpawnReason.COMMAND);
+        if (spawned == null) return null;
+        if (!(spawned instanceof LivingEntity living) || spawned instanceof Player) {
+            spawned.discard();
+            return null;
+        }
+        living.snapTo(at.x, at.y, at.z, living.getYRot(), living.getXRot());       // exactly there, not the block's middle
+        if (!make(living, pathway, sequence)) {
+            living.discard();
+            return null;
+        }
+        return living;
     }
 
     /** It is no Beyonder any more: no characteristic, no extra health or damage, and the name we gave it is gone. */
