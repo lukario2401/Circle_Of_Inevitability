@@ -17,8 +17,8 @@ import net.minecraftforge.registries.RegistryObject;
  * as here, a subtitle in lang/en_us.json, and a line below. The Beauty Goddess ones are made by
  * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, the Abomination ones by
  * tools/model_gen/abomination/sounds.py, the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py, the
- * Knowledge Emperor ones by tools/model_gen/knowledge_emperor/sounds.py and the Illuminator ones by
- * tools/model_gen/illuminator/sounds.py, which write
+ * Knowledge Emperor ones by tools/model_gen/knowledge_emperor/sounds.py, the Illuminator ones by
+ * tools/model_gen/illuminator/sounds.py and the Star Dragon ones by tools/model_gen/star_dragon/sounds.py, which write
  * the .ogg files, sounds.json and the subtitles' names.
  */
 public final class ModSounds {
@@ -648,4 +648,127 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> ILLUMINATOR_PAGE_SWING = sound("illuminator.page_swing");
     /** A blueprint strike. */
     public static final RegistryObject<SoundEvent> ILLUMINATOR_BLUEPRINT_STRIKE = sound("illuminator.blueprint_strike");
+
+    // ---------- Star Dragon (tools/model_gen/star_dragon/sounds.py) ----------
+
+    /** The stars are charted. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_STAR_CHART = sound("star_dragon.star_chart");
+    /** Fate is glimpsed. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FATE_GLIMPSE = sound("star_dragon.fate_glimpse");
+    /** Someone slips aside. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_GLIMPSE_DODGE = sound("star_dragon.glimpse_dodge");
+    /** Gravity presses down. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_GRAVITY_PRESS = sound("star_dragon.gravity_press");
+    /** Gravity lets go. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_GRAVITY_LIFT = sound("star_dragon.gravity_lift");
+    /** Someone is slammed down. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_GRAVITY_SLAM = sound("star_dragon.gravity_slam");
+    /** A magnetic pull. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_MAGNET_PULL = sound("star_dragon.magnet_pull");
+    /** Bodies collide. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_MAGNET_COLLIDE = sound("star_dragon.magnet_collide");
+    /** A void opens. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_VOID_OPEN = sound("star_dragon.void_open");
+    /** A void closes. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_VOID_CLOSE = sound("star_dragon.void_close");
+    /** The void freezes. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_VOID_FREEZE = sound("star_dragon.void_freeze");
+    /** A ray takes aim. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_RAY_WARN = sound("star_dragon.ray_warn");
+    /** A weakening ray fires. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_RAY_WEAKENING = sound("star_dragon.ray_weakening");
+    /** Piercing rays fire. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_RAY_PIERCING = sound("star_dragon.ray_piercing");
+    /** Flesh melts. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_WEAKENED_MELT = sound("star_dragon.weakened_melt");
+    /** Someone passes through the void. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_VOID_PASSAGE = sound("star_dragon.void_passage");
+    /** A wave surges. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_TIDAL_SURGE = sound("star_dragon.tidal_surge");
+    /** A blow is parried. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SURGE_PARRY = sound("star_dragon.surge_parry");
+    /** Scales spread. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SCALES_ON = sound("star_dragon.scales_on");
+    /** Scales fall away. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SCALES_OFF = sound("star_dragon.scales_off");
+    /** Sunlight gathers. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SUNLIGHT_CHARGE = sound("star_dragon.sunlight_charge");
+    /** A ray of sunlight fires. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SUNLIGHT_RAY = sound("star_dragon.sunlight_ray");
+    /** Gravity gathers. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_HEAVYBRINGING = sound("star_dragon.heavybringing");
+    /** Fate converges. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FATE_CONVERGENCE = sound("star_dragon.fate_convergence");
+    /** Misfortune strikes. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_MISFORTUNE = sound("star_dragon.misfortune");
+    /** The air turns dense. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_HEAVY_SPHERE = sound("star_dragon.heavy_sphere");
+    /** Something stops at a shell. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SPHERE_BLOCK = sound("star_dragon.sphere_block");
+    /** A series of rays fires. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SERIES_OF_RAYS = sound("star_dragon.series_of_rays");
+    /** Sight reaches far. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_REMOTE_SIGHT = sound("star_dragon.remote_sight");
+    /** An asteroid falls. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_ASTEROID_FALL = sound("star_dragon.asteroid_fall");
+    /** An asteroid strikes. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_ASTEROID_IMPACT = sound("star_dragon.asteroid_impact");
+    /** A grazed star hums. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_GRAZED_STAR = sound("star_dragon.grazed_star");
+    /** Nuclei loosen. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FISSION_GLOW = sound("star_dragon.fission_glow");
+    /** Fission bursts. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FISSION_BURST = sound("star_dragon.fission_burst");
+    /** Radiation crackles. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_RADIATION = sound("star_dragon.radiation");
+    /** An electric arc. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_ARC = sound("star_dragon.arc");
+    /** Fusion clusters condense. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FUSION_CONDENSE = sound("star_dragon.fusion_condense");
+    /** A fusion cluster flies. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FUSION_LAUNCH = sound("star_dragon.fusion_launch");
+    /** A fusion cluster bursts. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FUSION_BURST = sound("star_dragon.fusion_burst");
+    /** A Radiant Angel unfolds. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_RADIANT_ANGEL = sound("star_dragon.radiant_angel");
+    /** Radiance burns. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_RADIANCE = sound("star_dragon.radiance");
+    /** A form fades. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_FORM_END = sound("star_dragon.form_end");
+    /** Time slows. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_TIME_DILATION = sound("star_dragon.time_dilation");
+    /** Something hangs in time. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_TIME_HANG = sound("star_dragon.time_hang");
+    /** Something vast descends. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_PLANET_DESCEND = sound("star_dragon.planet_descend");
+    /** Planetfall. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_PLANET_IMPACT = sound("star_dragon.planet_impact");
+    /** Cracks of light burn. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_LIGHT_CRACKS = sound("star_dragon.light_cracks");
+    /** A Star Dragon roars. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_STAR_DRAGON = sound("star_dragon.star_dragon");
+    /** Vast wings beat. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_DRAGON_WING = sound("star_dragon.dragon_wing");
+    /** An asteroid is launched. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_DRAGON_SHOT = sound("star_dragon.dragon_shot");
+    /** A body grows impossibly dense. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_NEUTRON_STAR = sound("star_dragon.neutron_star");
+    /** Crushing weight. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_NEUTRON_CRUSH = sound("star_dragon.neutron_crush");
+    /** Light drains away. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SINGULARITY_GATHER = sound("star_dragon.singularity_gather");
+    /** A black hole opens. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SINGULARITY_OPEN = sound("star_dragon.singularity_open");
+    /** A black hole closes. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_SINGULARITY_COLLAPSE = sound("star_dragon.singularity_collapse");
+    /** Certainty dissolves. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_QUANTUM = sound("star_dragon.quantum");
+    /** Something slips. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_QUANTUM_SLIP = sound("star_dragon.quantum_slip");
+    /** A warning chime. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_INTUITION = sound("star_dragon.intuition");
+    /** Starlight answers. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_STARGAZING = sound("star_dragon.stargazing");
+    /** A heavy step. */
+    public static final RegistryObject<SoundEvent> STAR_DRAGON_DENSE_STEP = sound("star_dragon.dense_step");
 }

@@ -757,6 +757,41 @@ Everything it uses is generated, from `tools/model_gen/illuminator/` (run each f
 | `illuminator/mist_beam`, `fusion_beam` | Two crossed planes of misty light / a white-hot core with rings (animated) | default = the middle of their start | `modelAlong` and `.scale(width, length, width)` |
 | `illuminator/mural_0` to `mural_3` | Murals of the ancients, the seafarers, a cathedral and the age of steam between brass rods; their own colors | default | Standing, `.scale(width, height, 1)` |
 
+### Star Dragon: ready-made displays
+
+`StarDragonFx` (in `beyonder_characteristics/star_dragon/`) holds the Star Dragon (Condenser pathway) looks for all seven keys, both casts, the three wheels (Star Sacrifice on key 2, Heavybringer on key 5, Cosmos on key 7), Heaviness and the rays they share, the marks on others, the statuses, the three forms, the passives that show and what grows at higher Sequences (the lightening and the slam, the true and the frozen void, the Heavy Body, three asteroids, the storm, the imploding clusters). The abilities are not written yet; the displays are ready for them. They only show things; the damage, holding, pulling and moving are the ability's, at the ticks the constants name (`RAY_WARNING`, `CHART_LANDS`, `GRAVITY_RISEN`, `VOID_CLOSED`, `SUNLIGHT_FIRES`, `PASSAGE_ARRIVES`, `SURGE_TICKS`, `SCALES_ON`, `SPHERE_CLOSED`, `SERIES_FIRES`, `SERIES_STEP`, `GRAZE_LANDS`, `FISSION_SPLITS`, `FUSION_READY`, `ANGEL_READY`, `DILATION_RISEN`, `PLANET_LANDS`, `DRAGON_READY`, `NEUTRON_READY`, `SINGULARITY_GATHER`). The class comment lists every call by key; [STAR_DRAGON.md](STAR_DRAGON.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/star_dragon/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` (+ `textures.py`, `pictures.py`) | The models and their textures in `models/model_fx/star_dragon/` and `textures/model_fx/star_dragon/` (`../hanged_man/render.py` draws the box models without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/star_dragon/`), the status pictures (`textures/gui/star_dragon/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/star4`, `chevron`, `arc_0`, `arc_1`, `nucleus`, `scale`, `rock`, `flare` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/star_dragon/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`STAR_DRAGON_...`). It borrows the building blocks of `../beauty_goddess/sounds.py`, `../knowledge_emperor/sounds.py` and `../illuminator/sounds.py` |
+
+**See them in game** (cheats on): `/stardragonfx all` or `/stardragonfx planetfall` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+| Model | What it is | Pivot | Notes |
+|---|---|---|---|
+| `star_dragon/asteroid`, `asteroid_flame` | A pitted lump of stone with a glowing leading face, about 1 block; the fire wrapped round it, streaming behind | `(8, 8, 8)` | Top = its front: drop it head first with `modelAlong`; play both with the same keys and scale |
+| `star_dragon/grazed_star` | A white core with six rays of light, 1.5 blocks across | `(8, 8, 8)` | `.spin(...)` slowly |
+| `star_dragon/fusion_cluster` | White-hot plasma inside two rings of violet-blue magnetic light, 1 block | `(8, 8, 8)` | `FUSION_FLYING` for a `Shot` |
+| `star_dragon/neutron_star` | A blinding core with two pulsar beams, 1.4 blocks each way | `(8, 8, 8)` | Tip it (roll) and spin it so the beams sweep |
+| `star_dragon/void_sphere`, `void_frost_shell` | The half-real void (indigo-black with glimmers, a violet skin); the ice that wraps the highest one | `(8, 8, 8)` | `.scale(diameter)` |
+| `star_dragon/heavy_sphere` | Dense air: a dark see-through ball with a bent grid in it | `(8, 8, 8)` | |
+| `star_dragon/black_hole` | A black ball ringed with caught light | `(8, 8, 8)` | With `accretion_disk` round it, a little tipped |
+| `star_dragon/tidal_wave` | A curling crest of silver-teal water with a foam lip, 1 block | the middle of its foot | `.scale(7, 5, 3)`, front = north |
+| `star_dragon/scaled_form` | A humanoid lizard of starlit scales with gold slit eyes, a crest of fins and a tail, 2 blocks | between the feet | `modelOnTurning`; `.scale(2.5f)` for the Heavy Body |
+| `star_dragon/radiant_angel` | A being of starlight 3 blocks tall with a halo, a sun-ring and six pairs of wings | between the feet `(8, -16, 8)` | `modelOnTurning` |
+| `star_dragon/star_dragon` | A dragon of transparent starlight, 3 blocks at scale 1, in 3 steps: 0 wings raised, 1 level, 2 beating down | under the chest `(8, 3, 8)` | `.frames(3).smooth().scale(3.5f)` (10.5 blocks) |
+| `star_dragon/star_eye`, `misfortune_mark`, `weakened_mark`, `star_dragon_emblem` | An eye of stars; a cracked falling star; a ring melting open; a dragon coiled round a star | `(8, 8, 8)` | Standing, white: tint them |
+| `star_dragon/void_door` | A tall almond slit into the void (animated), its own colors | the middle of its foot | Standing, `.scale(1.4f, 2.4f, 1f)` |
+| `star_dragon/astrolabe`, `fate_ring`, `fate_web`, `impact_circle`, `light_cracks` | Flat: an astrolabe, a ring of stars and threads, threads of Fate drawn to a point, the warning of a sky ability, cracks of light | default | Flat, white: tint them |
+| `star_dragon/gravity_well`, `time_field`, `quantum_field`, `field_lines` | Flat and animated: rings sinking into a well, the rings of a slowing clock over bent space-time, interfering waves and jumping points, field lines between two poles | default | Flat, white: tint them |
+| `star_dragon/radiation_ground`, `accretion_disk` | Flat and animated, their own colors: a radiation zone, the black hole's disc | default | |
+| `star_dragon/ray_beam`, `pulse_beam` | Two crossed planes of light (animated): a ray, and a heavier one with rings | default = the middle of their start | `modelAlong` and `.scale(width, length, width)` |
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.
