@@ -37,9 +37,9 @@ public final class CharacteristicConsumption {
     // =========================
 
     /** For every Sequence skipped, the chance is multiplied by this: 1 skipped = 50%, 2 = 25%, 3 = 12.5%... */
-    public static final double JUMP_CHANCE_PER_SKIPPED = 0.5;
+    public static final double JUMP_CHANCE_PER_SKIPPED = 0.12;
     /** The chance that another Pathway's characteristic takes (before any jump chance). */
-    public static final double PATHWAY_SWITCH_CHANCE = 0.2;
+    public static final double PATHWAY_SWITCH_CHANCE = 0.15;
 
     /** "No Pathway" counts as one Sequence weaker than 9, so its next Sequence is 9. */
     private static final int NO_PATHWAY_SEQUENCE = Beyonder.WEAKEST_SEQUENCE + 1;
