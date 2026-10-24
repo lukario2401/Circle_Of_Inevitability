@@ -56,8 +56,9 @@ import java.util.concurrent.ThreadLocalRandom;
  *   Key 1   halt(sl, player, target) (lands at HALT_LANDS), halted(sl, target, ticks, tag), forgets(sl, mob)
  *           sneak: presence(sl, player, radius, intimidation), cowed(sl, mob, ticks, tag)
  *   Key 2   jurisdiction(sl, player, center, radius, ticks, tag) (claimed at JURISDICTION_CLAIMED),
- *               jurisdictionTick(sl, center, radius) every few seconds, jurisdictionEnter(owner, who) (only the owner
- *               sees and hears it), jurisdictionEnd(sl, center, radius, tag)
+ *               jurisdictionTick(sl, center, radius) every few seconds, jurisdictionEnter(owner, who) and
+ *               jurisdictionSense(owner, who) each second (only the owner sees and hears them), jurisdictionEnd(sl, center,
+ *               radius, tag); seenThroughWalls(owner, who, color) for anything one player alone should see through walls
  *           sneak: recognition(owner, target, ticks, tag), recognitionTrack(owner, target) every second (footprints
  *               and the distance mark only the owner sees), recognitionEnd(owner, target, tag)
  *   Key 3   the wheel's pictures: WHEEL_PSYCHIC_LASHING, WHEEL_PSYCHIC_PIERCING, WHEEL_WHIP_OF_PAIN
@@ -690,6 +691,11 @@ public final class HandOfOrderFx {
         soundFor(owner, at, ModSounds.ORDER_JURISDICTION_ENTER, 0.7f, 1.0f);
     }
 
+    /** Each second while an enemy is inside the Jurisdiction: the owner sees it through walls. */
+    public static void jurisdictionSense(ServerPlayer owner, LivingEntity who) {
+        seenThroughWalls(owner, who, 0x90C9A24B);
+    }
+
     public static void jurisdictionEnd(ServerLevel sl, Vec3 center, double radius, String tag) {
         ParticleShapes.clearModels(sl, center, tag);
         SpellFx.closingRing(sl, center, radius, 0x80C9A24B, 12, 0);
@@ -717,7 +723,18 @@ public final class HandOfOrderFx {
      */
     public static void recognitionTrack(ServerPlayer owner, LivingEntity target) {
         ParticleShapes.spawnFor(owner, FOOTPRINT, target.position().add(0, 0.02, 0), Vec3.ZERO);
-        ParticleShapes.spawnFor(owner, EYE_MARK, headOf(target).add(0, 0.5, 0), Vec3.ZERO);
+        seenThroughWalls(owner, target, 0xC0F0D68C);
+    }
+
+    /**
+     * The owner alone sees 'who' through walls for a little over a second: the frame of the law over it, drawn through
+     * blocks. Call it every second for as long as it should be seen (Jurisdiction's sense, Recognition).
+     */
+    public static void seenThroughWalls(ServerPlayer owner, LivingEntity who, int color) {
+        Vec3 offset = new Vec3(0, who.getBbHeight() * 0.55, 0);
+        ModelFx mark = RECOGNITION_MARK.color(color).scale(Math.max(0.8f, who.getBbHeight() * 0.8f)).lifetime(26).fade(2, 4)
+                .spin(0f).following(who, offset);
+        ParticleShapes.spawnFor(owner, mark.rotated(yawToward(who.position(), owner.position()), 0f, 0f), who.position().add(offset), Vec3.ZERO);
     }
 
     public static void recognitionEnd(ServerPlayer owner, LivingEntity target, String tag) {

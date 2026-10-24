@@ -54,7 +54,7 @@ target.hurt(sl.damageSources().magic(), damage);
 
 `credit` changes nothing about the damage itself, who gets the kill, or who the mob gets angry at. It is only remembered for the numbers: for the next 2 seconds anything that hurts `target` without naming an attacker counts as `player`'s, and burning, poison and wither do for 15 seconds.
 
-It is used in four places now: Key Of Stars' orbiting stars and their collapse, Hand Of Order's "The sentence was God" and "Judgement falls".
+It is used for Key Of Stars' orbiting stars and their collapse, the Prince Of Abolition's Inversion, and `Bleeding`, `Misfortune` and `Corrosion`.
 
 Not covered: the damage a sealed entity takes back from Key Of Stars' seals (the code there does not know the player).
 

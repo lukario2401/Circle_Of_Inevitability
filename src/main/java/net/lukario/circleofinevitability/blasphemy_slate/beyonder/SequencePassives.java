@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.minecraft.core.Holder;
@@ -99,6 +100,17 @@ public final class SequencePassives {
         effect("Prince Of Abolition", 9, MobEffects.HERO_OF_THE_VILLAGE, 0);                     // Lawyer: Silver Tongue, better prices
         effect("Prince Of Abolition", 8, MobEffects.STRENGTH, 0);                                // Barbarian: Physical Enhancement, Strength I
         custom("Prince Of Abolition", 5, PrinceOfAbolition::presence);                           // Mentor of Disorder: weak hostile mobs hesitate
+
+        // ---- Hand Of Order (docs/HAND_OF_ORDER.md). Also in HandOfOrder itself: Weapon Proficiency's speed and reach and
+        // Sheriff's Intuition (Sequence 8), Demolition Proficiency (7), Judge's Aura (6), Self-Restraint's shorter mind
+        // effects (5). Law of Order (0) and the rest of Sense of Order (1) come with the Decrees.
+        effect("Hand Of Order", 9, MobEffects.STRENGTH, 0);                                      // Arbiter: Order, Strength I...
+        custom("Hand Of Order", 9, HandOfOrder::order);                                          // ...and weak mobs keep their distance
+        effect("Hand Of Order", 5, MobEffects.RESISTANCE, 0);                                    // Disciplinary Paladin: Self-Restraint, Resistance I
+        custom("Hand Of Order", 4, HandOfOrder::beyonderSense);                                  // Imperative Mage: Beyonders are marked
+        custom("Hand Of Order", 3, HandOfOrder::disorderSense);                                  // Chaos Hunter: the disorderly smoulder
+        custom("Hand Of Order", 2, HandOfOrder::senseImbalance);                                 // Balancer: the concealed cannot hide
+        custom("Hand Of Order", 1, HandOfOrder::senseOfOrder);                                   // Hand of Order: casts near chime
 
         // ---- Knowledge Emperor (docs/KNOWLEDGE_EMPEROR.md). Also in KnowledgeEmperor itself: Spiritual Intuition's chime
         // (Sequence 9), Fighting Knowledge's reach, speed and Study on every hit (8), Warlock's Mind (7), Information

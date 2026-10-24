@@ -808,7 +808,7 @@ public class DarkAngel {
         return switch (pathway) {
             case "Key Of Stars" -> 0xB0A0B4FF;
             case "Worm Of Time" -> 0xB052E3C4;
-            case "Hand Of Order" -> 0xB0FFD27A;
+            case "Hand Of Order" -> 0xB0C9A24B;                       // brass (docs/HAND_OF_ORDER.md)
             case "Attendant Of Mysteries" -> 0xB09CFFE6;
             case "Frenzied Mage" -> 0xB0FF7A3A;
             case PrinceOfAbolition.PATHWAY -> 0xB0E0B04A;

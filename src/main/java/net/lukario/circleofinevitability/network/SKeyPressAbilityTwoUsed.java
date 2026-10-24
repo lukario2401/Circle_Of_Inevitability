@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
 import net.lukario.circleofinevitability.status.Silence;
 import net.minecraft.network.chat.Component;
@@ -19,7 +20,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessTaming;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod.handOfGodGladiatorsFlurry;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortunePoems.knightOfMisfortuneMidnightPoem;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderDecree;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder.handOfOrderJurisdiction;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsDash;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorDoor;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageFlame;
@@ -52,10 +53,13 @@ public class SKeyPressAbilityTwoUsed {
         if (StolenAbilities.blocksKey(player, 2)) return;
         // a player who lives inside a host (status/Parasite) has no body to use most abilities with
         if (Parasite.blocksKey(player, 2)) return;
+        // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
+        if (KeySeal.blocksKey(player, 2)) return;
+        KeySeal.pressed(player, 2);
 
         keyOfStarsDash(player,level,serverLevel, false);
         attendantOfMysteriesFlamingJump(player,level,serverLevel, false);
-        handOfOrderDecree(player,level,serverLevel, false);
+        handOfOrderJurisdiction(player,level,serverLevel, false);
         frenziedMageFlame(player,level,serverLevel,false);
         paleEmperorDoor(player,serverLevel,false);
         wormOfTimeAbility2(player,level,serverLevel,false);

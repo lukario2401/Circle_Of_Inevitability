@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
 import net.lukario.circleofinevitability.status.Silence;
 import net.minecraft.network.chat.Component;
@@ -17,7 +18,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFlameTransformation;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManFleshBomb;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessPotions;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder.handOfOrderAbility4;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderVerdicts.handOfOrderVerdict;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsSeal;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageHammer;
@@ -51,11 +52,14 @@ public class SKeyPressAbilityFourUsed {
         if (StolenAbilities.blocksKey(player, 4)) return;
         // a player who lives inside a host (status/Parasite) has no body to use most abilities with
         if (Parasite.blocksKey(player, 4)) return;
+        // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
+        if (KeySeal.blocksKey(player, 4)) return;
+        KeySeal.pressed(player, 4);
 
         keyOfStarsSeal(player,level,serverLevel,false);
         attendantOfMysteriesAirCannon(player,level,serverLevel,false);
         frenziedMageHammer(player,level,serverLevel,false);
-        handOfOrderAbility4(player,level,serverLevel,false);
+        handOfOrderVerdict(player,level,serverLevel,false);
         paleEmperorSpearSkull(player,level,serverLevel,false);
         conquerorFlameTransformation(player,level,serverLevel,false);
         apocalypseSilkWeaver(player,level,serverLevel,false);

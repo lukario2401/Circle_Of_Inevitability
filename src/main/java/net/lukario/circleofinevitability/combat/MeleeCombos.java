@@ -4,6 +4,7 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
 import net.minecraft.server.level.ServerPlayer;
