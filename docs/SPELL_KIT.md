@@ -75,6 +75,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | "My next few hits are special" (a poison, holy oil, a concoction on the blade) | [`WeaponCoat`](#weaponcoat) | `status/` |
 | Minds slide off you: mobs forget you and abilities cannot choose you, though you are seen and can be hurt | [`Unnoticed`](#unnoticed) | `status/` |
 | A bigger body for a while, with more reach and step, and a madness that can break it (a giant, a titan) | [`GiantForm`](#giantform) | `status/` |
+| A player takes another shape for a while: attributes and effects kept up while it lasts, a weakness after, a clean end on death, logout or a lost Pathway | [`Form`](#form) | `status/` |
 | Armor that is not an item: less damage, a layer of absorption, no knockback (plates of light, a coat of silver) | [`ConjuredArmor`](#conjuredarmor) | `status/` |
 | A weapon that is not an item: while it is drawn, the player's normal hits are its hits (a sword of light, claws of flame) | [`ConjuredWeapon`](#conjuredweapon) | `status/` |
 | The light sources near a spot or near the crosshair, and whether a spot is in daylight | [`Spells.lightNear`, `lightAimed`, `inDaylight`](#1-spells-aiming-and-enemies) | `combat/` |
@@ -95,6 +96,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Keep spells on paper: a pouch of scrolls, each one a stored cast that goes off for free when read; any spell can be one | [`Scrolls`](#scrolls) | `status/` |
 | A few bodies circling a player (stars, blades, motes) that each stop a projectile and come back, and strike enemies that come close | [`Orbit`](#orbit-bodies-that-circle-and-guard) | `combat/` |
 | "Less each time": how often a player used something lately, as a multiplier (a story told too often, a trick that wears thin) | [`Tellings`](#tellings-less-each-time) | `combat/` |
+| Ground (or an aura) where gravity is wrong: it pulls things in, presses them down, lifts and holds them, slows them | [`GravityField`](#gravityfield-gravity-gone-wrong) | `combat/` |
+| An instant beam at light speed that shows its line first and cannot be dodged once it fires, through one or everyone on it | [`Ray`](#ray-a-beam-at-light-speed) | `combat/` |
 | Take every blessing and every ward off someone at once, or unmake a summon (a deletion, a word of unmaking) | [`Dispel`](#dispel) | `status/` |
 | Nothing can hurt, choose or hold someone for a while, though they are seen, and what would have hurt them is added up | [`Invulnerable`](#invulnerable) | `status/` |
 | "I have studied you": one caster's mark on an enemy for a while, its weakness, and every ability hit of theirs on it stronger (more again with the kind it is weak to) | [`Appraisal`](#appraisal) | `status/` |
@@ -102,6 +105,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Someone cannot hide for a while: concealment, unnoticed and invisibility end and cannot take hold | [`Exposed`](#exposed) | `status/` |
 | Someone deals less damage for a while, with everything (the other half of `Vulnerable`) | [`Enfeebled`](#enfeebled) | `status/` |
 | Someone is heavier or lighter for a while: pressed down, floating, lifted off the ground | [`Gravity`](#gravity) | `status/` |
+| Someone is Heavy for a while: slowed, no jumping or flying, falling like a stone and hurt more by falls, its shots slowed | [`Weight`](#weight) | `status/` |
 | Someone cannot be picked out from further than a few blocks: far mobs forget them, far abilities cannot choose them | [`Unreadable`](#unreadable) | `status/` |
 | Build a creature that fights for you: a vanilla body of your choice, hidden under your model, with its own health, blow, size, timer, leash and a limit per owner (dolls, golems) | [`Construct.of(...).build(...)`](#construct) | `status/` |
 | Is this made rather than born (golems, constructs, an ability's own creations)? | [`Construct`](#construct) | `status/` |
@@ -233,6 +237,8 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `harmfulEffects(entity)` | The harmful effects on it right now |
 | `paySpirituality(player, cost)` | Takes the spirituality (after every `addCostScale` rule) and returns `true`. If there is too little it takes nothing, tells the player and returns `false` |
 | `addCostScale(player -> 1.5f)`, `costFor(player, cost)` | A rule, once in a static block, for what every ability of every Pathway costs a player now (1.5 = half again, 0.8 = 20% less); rules multiply. `paySpirituality` and the wheels (their check, their price and the cost under each icon) ask it; a stolen cast is never scaled. The Illuminator's Eroded, Enlightenment, Enlightenment Aura and Mechanical Heaven |
+| `addMoveImmunity(entity -> ...)`, `cannotBeMoved(entity)` | A rule, once in a static block: while it says true, `push` and `pull` leave that entity where it is (and every field, wave and shove built on them, `GravityField`'s lifting too). The Star Dragon's Dense Body and Heavybringing |
+| `isBoss(entity)`, `holdLength(target, ticks)` | A boss: the dragon, the wither, the warden, an elder guardian, or anything with more than `BOSS_HEALTH` (150) maximum health. `holdLength` is the shared rule for how long a hold lasts: `BOSS_HOLD` (half) on a boss, `PLAYER_HOLD` (70%) on a player, all of it on anything else. For lifts, cages, voids, freezes in time |
 | `sound(sl, at, SoundEvents.X, volume, pitch)` | A sound at a spot |
 | `casterStillHere(player, sl)` | `false` once the player died, left or changed dimension. Check it in the later steps of a spell |
 | `yawOf(direction)`, `flatLook(player)`, `rightOf(player)`, `turned(direction, degrees)`, `UP` | Directions. `turned` is how you make a fan of projectiles |
@@ -667,6 +673,66 @@ Orbit.around(player, 4)                                             // four bodi
 `Orbit.isOpen(player, name)`, `ticksLeft`, `ready` (bodies there now), `close`. It ends when its time is up or its owner dies, logs out or changes dimension. Not saved.
 
 ---
+
+## GravityField: gravity gone wrong
+
+A round piece of ground, or an aura round someone, where gravity is not what it should be. It is a `Zone` underneath (its beat, time, owner and name, `Zone.ticksLeft`, `Zone.covers`...), with the pulling, pressing and lifting done for you. Star Dragon's Gravity Abnormality and Heavybringing (`StarDragonGravity`); Time Dilation, the Neutron Star and the Singularity are planned on it.
+
+```java
+GravityField.at(ground, 8)                        // on the ground; GravityField.around(player, 16) goes with them
+        .lasts(100).every(4)                      // 5 seconds, five times a second
+        .presses(2)                               // Heavy, level 2 (status/Weight), while they stay
+        .bossesOnlySlowed(Spells::isBoss)         // these are only slowed, never lifted or pulled
+        .onInside((enemy, ticksInside) -> ...)    // anything more, every beat
+        .onPulse(ticksLeft -> MyFx.tick(sl, ground))
+        .onEnd(() -> MyFx.end(sl, ground))
+        .raise(player, sl, "my_pathway_gravity");
+```
+
+| Part | What it does |
+|---|---|
+| `GravityField.at(ground, radius)` / `around(entity, radius)` | On the ground, or round an entity's feet wherever it goes |
+| `.height(blocks)`, `.lasts(ticks)`, `.every(ticks)`, `.affects(entity -> ...)` | As for `Zone` (default beat 5) |
+| `.presses(level)` | Heavy at that level (`Weight`) while inside and a moment after |
+| `.lifts(blocks)` | Lifted that high off the ground under them and held there (no gravity) while inside |
+| `.liftsFor(entity -> ticks)` | How long each one is held up, counted in ticks inside: `one -> Spells.holdLength(one, 100)` |
+| `.slamsDown(speed)` | A lifted one is thrown down at that speed when it leaves or the field ends, instead of being set down gently (its fall hurts) |
+| `.pulls(speed)` | Drawn toward the middle, at most that many blocks a tick (through `Spells.pull`) |
+| `.slows(amplifier)` | Slowness while inside |
+| `.bossesOnlySlowed(entity -> ...)` | Those are only slowed (Slowness II at least): never pressed, lifted or pulled |
+| `.onEnter`, `.onInside`, `.onLeave`, `.onPulse`, `.onEnd` | As for `Zone` (`onLeave` runs after a lifted one was put down or slammed) |
+| `.raise(player, sl, name)` | Raises it. One of the same name closes first |
+
+`GravityField.isRaised(player, name)` and `GravityField.close(player, name)`. Allies and the owner are never pressed, pulled or lifted. Whatever `Spells.addMoveImmunity` holds is neither pulled nor lifted. A lifted one put down gently takes no damage from the drop. Build a new one for every cast.
+
+## Ray: a beam at light speed
+
+An instant beam from a point along a direction. It cannot be dodged once it fires, so it shows where it will go first and fires a few ticks later along that same line. `Shot` is for things that fly and can be seen coming; a `Ray` is there at once. Star Dragon's Weakening, Piercing, Sunlight and Series of Rays (`StarDragonRays`).
+
+```java
+Ray.from(player.getEyePosition(), player.getLookAngle())
+        .range(30).width(0.3)                    // how far, how fat its line is for hitting
+        .warning(8)                              // the line shows 8 ticks first (0: at once)
+        .onWarn((from, to) -> MyFx.aim(sl, from, to))
+        .onFire((from, to) -> MyFx.beam(sl, from, to))
+        .onHit((target, at) -> Spells.strike(player, target, 40f))
+        .fire(player, sl);                       // returns the ticks until it fires
+```
+
+| Part | What it does |
+|---|---|
+| `Ray.from(from, direction)` | A ray starting there, along that direction |
+| `.range(blocks)`, `.width(blocks)` | How far it reaches, how close to its line a body must be to be hit |
+| `.warning(ticks)` | How long its line shows before it fires |
+| `.pierces()` | Through every enemy on its line (each hit once); otherwise it stops at the first |
+| `.throughBlocks()` | Walls do not stop it |
+| `.along(from, direction)` | The same ray from another start or direction (a fan: `Spells.turned`) |
+| `.onWarn((from, to) -> ...)`, `.onFire((from, to) -> ...)` | Its looks: the aim line, and the beam the moment it fires (`to` is where it stopped) |
+| `.onHit((target, at) -> ...)`, `.onEnd(end -> ...)` | Each one it hits; where it ended |
+| `end(player, sl)` | Where its line ends now (the first block, or its range) |
+| `.fire(player, sl)` | Fires it |
+
+The line is fixed at the cast; who is on it is worked out when it fires, so stepping off the line in time saves you. Every method returns a new copy, like `Shot`, so a `Ray` in a constant is safe. Nothing happens if the caster died, left or changed dimension before it fired.
 
 ## Tellings: less each time
 
@@ -1413,6 +1479,19 @@ Gravity.factor(entity)   Gravity.ticksLeft(entity, name)   Gravity.clear(entity,
 
 Reasons multiply together. It does not stop fall damage: lift someone with `FallGuard` as well. Saved with the entity. Blessing of Stars presses enemies down with it; Rewrite Principles and Mechanical Heaven are planned on it.
 
+### Weight
+
+Heaviness: something is made Heavy for a while, at a level from 1 to `MAX_LEVEL` (3). Star Dragon's Pressed, Tidal Surge, Scaled Form's blows and Heavybringing.
+
+```java
+Weight.put(enemy, 1, 60);          // Heavy for 3 seconds
+Weight.put(enemy, 3, 100);         // very heavy
+Weight.isHeavy(entity)   Weight.level(entity)   Weight.ticksLeft(entity)   Weight.end(target)
+Weight.addImmunity(entity -> ...)  // some cannot be made heavy (and what they had ends)
+```
+
+While Heavy: slowed (`SLOW_PER_LEVEL`, 20% a level, `SLOW_MOST` 70%, through the movement speed attribute), no jumping, no flying (creative-style flight and elytra stop), falling like a stone (`status/Gravity`, `GRAVITY_PER_LEVEL`) with falls hurting `FALL_PER_LEVEL` (30%) more a level, and what it shoots flies at `SHOT_SPEED` (60%). Putting it on again keeps the higher level and the later end. Saved with the entity; all the numbers are `public static` at the top of the class.
+
 ### Unreadable
 
 Someone cannot be picked out from further than a few blocks: mobs further away cannot target it (and those hunting it from further lose it), and abilities cannot **choose** it from further (`Spells.canBeChosen`; with no chooser named, not at all). It is seen and can be hurt; what hits an area still catches it.
@@ -1512,6 +1591,24 @@ GiantForm.isGiant(entity);   GiantForm.madness(entity);   GiantForm.scale(entity
 - The body is attribute modifiers with fixed ids, so one form at a time; it is on top of what the entity already has (a Pathway's own `Physique` stays).
 - It ends, and shrinks back, on death, logout and a change of dimension. Nothing is saved: after a restart nobody is left giant.
 - The look is yours (`HandOfGodFx.giantForm` shows the one-eyed Giant round the caster; show it before `grow`, so it grows from the old size). Used by Hand Of God's Giant Form, the Abomination's Werewolf Form, and Abomination Form, which shrinks to half.
+
+### Form
+
+A player takes another shape for a while: the body of that shape (attribute changes and potion effects, kept up while it lasts), a weakness afterwards if you want, and a clean end whatever ends it. One manager for every transformation, so each is a few lines. Star Dragon's Scaled Form and Heavy Body (`StarDragonTides`); the Radiant Angel and Star Dragon forms are planned on it.
+
+```java
+Form.of("my_pathway_scales")
+        .lasts(600)                                                      // 0 = until Form.end(player)
+        .attribute(Attributes.ENTITY_INTERACTION_RANGE, 1.0, AttributeModifier.Operation.ADD_VALUE)
+        .effect(MobEffects.STRENGTH, 1)                                  // Strength II while it lasts
+        .aftermath(200)                                                  // Weakness I and Slowness I for 10 s after it
+        .keepWhile(player -> SoulCore.getPathway(player).equals(PATHWAY))
+        .everySecond(player -> MyFx.aura(...))
+        .onEnd((player, why) -> MyFx.formEnd(...))                       // why: TIME, ENDED, REPLACED, LOST, DIED, LEFT
+        .take(player);
+```
+
+`Form.isIn(player, name)`, `current(player)` (its name or `null`), `ticksLeft(player)` (-1 = until ended), `end(player)`, `inAftermath(player)`. One form at a time: taking another ends the first (`REPLACED`). The aftermath follows `TIME` and `ENDED` only. Its model is yours to wear (`ParticleShapes.modelOnTurning`) and take off in `onEnd`. Not saved: after a restart nobody is left transformed.
 
 ### ConjuredArmor
 
