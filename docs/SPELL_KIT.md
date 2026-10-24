@@ -2172,8 +2172,8 @@ Three small parts. Worm Of Time's Theft (`wormOfTimeAbility2` in `WormOfTime.jav
 ### PathwayAbilities: every ability as a list
 
 ```java
-for (PathwayAbilities.Ability ability : PathwayAbilities.of("Key Of Stars")) { ... }     // its seven, in key order
-PathwayAbilities.Ability dash = PathwayAbilities.of("Key Of Stars", 2);                  // the one on key 2 (H), or null
+for (PathwayAbilities.Ability ability : PathwayAbilities.of("Wanderer")) { ... }     // its seven, in key order
+PathwayAbilities.Ability dash = PathwayAbilities.of("Wanderer", 2);                  // the one on key 2 (H), or null
 dash.cast().run(player, level, sl);                                                      // casts it for this player
 ```
 

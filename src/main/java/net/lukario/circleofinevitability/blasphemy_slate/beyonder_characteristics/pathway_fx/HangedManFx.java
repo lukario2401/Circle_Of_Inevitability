@@ -152,7 +152,7 @@ public final class HangedManFx {
         Spells.sound(sl, at, sound.value(), volume, pitch);
     }
 
-    /** A sound only this player hears (what 1.21's playNotifySound did; see KeyOfStars.playNotifySound). */
+    /** A sound only this player hears (what 1.21's playNotifySound did; see Wanderer.playNotifySound). */
     private static void playTo(Player player, Holder<SoundEvent> sound, float volume, float pitch) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         serverPlayer.connection.send(new ClientboundSoundPacket(sound, SoundSource.PLAYERS,

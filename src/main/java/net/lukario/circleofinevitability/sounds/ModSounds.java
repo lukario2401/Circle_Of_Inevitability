@@ -18,7 +18,8 @@ import net.minecraftforge.registries.RegistryObject;
  * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, the Abomination ones by
  * tools/model_gen/abomination/sounds.py, the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py, the
  * Knowledge Emperor ones by tools/model_gen/knowledge_emperor/sounds.py, the Illuminator ones by
- * tools/model_gen/illuminator/sounds.py and the Star Dragon ones by tools/model_gen/star_dragon/sounds.py, which write
+ * tools/model_gen/illuminator/sounds.py, the Star Dragon ones by tools/model_gen/star_dragon/sounds.py and the Key Of Stars
+ * ones by tools/model_gen/key_of_stars/sounds.py, which write
  * the .ogg files, sounds.json and the subtitles' names.
  */
 public final class ModSounds {
@@ -857,4 +858,103 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> ORDER_ORDER_SWING = sound("hand_of_order.order_swing");
     /** A gavel slams down. */
     public static final RegistryObject<SoundEvent> ORDER_GAVEL_SLAM = sound("hand_of_order.gavel_slam");
+
+    // ---------- Key Of Stars (tools/model_gen/key_of_stars/sounds.py, played by KeyOfStarsFx) ----------
+
+    /** An illusory Door opens. */
+    public static final RegistryObject<SoundEvent> STARS_DOOR_OPEN = sound("key_of_stars.door_open");
+    /** Someone steps through a Door. */
+    public static final RegistryObject<SoundEvent> STARS_DOOR_STEP = sound("key_of_stars.door_step");
+    /** A lock springs open. */
+    public static final RegistryObject<SoundEvent> STARS_SLIP_FREE = sound("key_of_stars.slip_free");
+    /** A blinding flash. */
+    public static final RegistryObject<SoundEvent> STARS_FLASH = sound("key_of_stars.flash");
+    /** A dark curtain falls. */
+    public static final RegistryObject<SoundEvent> STARS_BLACK_SCREEN = sound("key_of_stars.black_screen");
+    /** A deafening bang. */
+    public static final RegistryObject<SoundEvent> STARS_LOUD_NOISE = sound("key_of_stars.loud_noise");
+    /** A ray of frost. */
+    public static final RegistryObject<SoundEvent> STARS_FROST_RAY = sound("key_of_stars.frost_ray");
+    /** A sudden gale. */
+    public static final RegistryObject<SoundEvent> STARS_GALE = sound("key_of_stars.gale");
+    /** The ground turns slick. */
+    public static final RegistryObject<SoundEvent> STARS_TUMBLE = sound("key_of_stars.tumble");
+    /** A trickster slips away. */
+    public static final RegistryObject<SoundEvent> STARS_ESCAPE_TRICK = sound("key_of_stars.escape_trick");
+    /** A crystal ball glows. */
+    public static final RegistryObject<SoundEvent> STARS_DIVINATION = sound("key_of_stars.divination");
+    /** A star marks someone. */
+    public static final RegistryObject<SoundEvent> STARS_STARLIT = sound("key_of_stars.starlit");
+    /** Someone becomes unreadable. */
+    public static final RegistryObject<SoundEvent> STARS_INTERFERENCE = sound("key_of_stars.interference");
+    /** A search is turned back. */
+    public static final RegistryObject<SoundEvent> STARS_INTERFERENCE_REFLECT = sound("key_of_stars.interference_reflect");
+    /** The Scribe watches. */
+    public static final RegistryObject<SoundEvent> STARS_RECORD = sound("key_of_stars.record");
+    /** A power is recorded. */
+    public static final RegistryObject<SoundEvent> STARS_RECORDED = sound("key_of_stars.recorded");
+    /** A recorded power is replayed. */
+    public static final RegistryObject<SoundEvent> STARS_REPLAY = sound("key_of_stars.replay");
+    /** A power is copied. */
+    public static final RegistryObject<SoundEvent> STARS_REPLICATION = sound("key_of_stars.replication");
+    /** A Door to the Spirit World opens. */
+    public static final RegistryObject<SoundEvent> STARS_TRAVELERS_DOOR = sound("key_of_stars.travelers_door");
+    /** A traveler steps out. */
+    public static final RegistryObject<SoundEvent> STARS_TRAVELERS_ARRIVE = sound("key_of_stars.travelers_arrive");
+    /** Someone blinks away. */
+    public static final RegistryObject<SoundEvent> STARS_BLINK = sound("key_of_stars.blink");
+    /** An unseen hand grabs. */
+    public static final RegistryObject<SoundEvent> STARS_INVISIBLE_HAND = sound("key_of_stars.invisible_hand");
+    /** A Star Anchor is planted. */
+    public static final RegistryObject<SoundEvent> STARS_STAR_ANCHOR = sound("key_of_stars.star_anchor");
+    /** A Star Anchor is lifted. */
+    public static final RegistryObject<SoundEvent> STARS_ANCHOR_LIFT = sound("key_of_stars.anchor_lift");
+    /** Someone enters the Astral World. */
+    public static final RegistryObject<SoundEvent> STARS_WANDERING = sound("key_of_stars.wandering");
+    /** Someone steps out of the Astral World. */
+    public static final RegistryObject<SoundEvent> STARS_WANDERING_END = sound("key_of_stars.wandering_end");
+    /** Space is split off. */
+    public static final RegistryObject<SoundEvent> STARS_SPACE_CONCEALMENT = sound("key_of_stars.space_concealment");
+    /** The Door in space shuts. */
+    public static final RegistryObject<SoundEvent> STARS_CONCEALMENT_SHUT = sound("key_of_stars.concealment_shut");
+    /** Layers of Doors unfold. */
+    public static final RegistryObject<SoundEvent> STARS_TRANSFIGURATION = sound("key_of_stars.transfiguration");
+    /** A layer of Doors tears. */
+    public static final RegistryObject<SoundEvent> STARS_LAYER_TEAR = sound("key_of_stars.layer_tear");
+    /** Doors swallow someone. */
+    public static final RegistryObject<SoundEvent> STARS_EXILE = sound("key_of_stars.exile");
+    /** Someone is thrown back out. */
+    public static final RegistryObject<SoundEvent> STARS_EXILE_RETURN = sound("key_of_stars.exile_return");
+    /** A pocket of space opens. */
+    public static final RegistryObject<SoundEvent> STARS_POCKET_SPACE = sound("key_of_stars.pocket_space");
+    /** Space strains. */
+    public static final RegistryObject<SoundEvent> STARS_TEARING_WARN = sound("key_of_stars.tearing_warn");
+    /** Space tears. */
+    public static final RegistryObject<SoundEvent> STARS_SPACE_TEARING = sound("key_of_stars.space_tearing");
+    /** A Toy Box opens. */
+    public static final RegistryObject<SoundEvent> STARS_TOY_BOX = sound("key_of_stars.toy_box");
+    /** Clockwork winds. */
+    public static final RegistryObject<SoundEvent> STARS_TOY_WIND = sound("key_of_stars.toy_wind");
+    /** Planets of starlight gather. */
+    public static final RegistryObject<SoundEvent> STARS_FRAGMENTATION = sound("key_of_stars.fragmentation");
+    /** The planets collapse. */
+    public static final RegistryObject<SoundEvent> STARS_FRAGMENTATION_COLLAPSE = sound("key_of_stars.fragmentation_collapse");
+    /** A Starlight Seal closes. */
+    public static final RegistryObject<SoundEvent> STARS_STARLIGHT_SEAL = sound("key_of_stars.starlight_seal");
+    /** A labyrinth of stars rises. */
+    public static final RegistryObject<SoundEvent> STARS_LABYRINTH = sound("key_of_stars.labyrinth");
+    /** Someone is turned back into the maze. */
+    public static final RegistryObject<SoundEvent> STARS_LABYRINTH_LOOP = sound("key_of_stars.labyrinth_loop");
+    /** The Alternate World unfolds. */
+    public static final RegistryObject<SoundEvent> STARS_ALTERNATE_WORLD = sound("key_of_stars.alternate_world");
+    /** Someone is everywhere at once. */
+    public static final RegistryObject<SoundEvent> STARS_OMNIPRESENCE = sound("key_of_stars.omnipresence");
+    /** Every Door closes. */
+    public static final RegistryObject<SoundEvent> STARS_CLOSE_THE_DOOR = sound("key_of_stars.close_the_door");
+    /** Something is aimed this way. */
+    public static final RegistryObject<SoundEvent> STARS_INTUITION = sound("key_of_stars.intuition");
+    /** A power could be recorded. */
+    public static final RegistryObject<SoundEvent> STARS_QUICK_STUDY = sound("key_of_stars.quick_study");
+    /** A Key of Stars turns. */
+    public static final RegistryObject<SoundEvent> STARS_KEY_TURN = sound("key_of_stars.key_turn");
 }

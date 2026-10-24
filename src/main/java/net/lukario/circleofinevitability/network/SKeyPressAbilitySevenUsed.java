@@ -15,7 +15,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationCurses.abominationCurses;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseCatastrophe;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars.keyOfStarsCosmicPlague;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Wanderer.wandererCosmicPlague;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorFogOfWar;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorWraiths;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManDegeneration;
@@ -60,7 +60,7 @@ public class SKeyPressAbilitySevenUsed {
         if (KeySeal.blocksKey(player, 7)) return;
         KeySeal.pressed(player, 7);
 
-        keyOfStarsCosmicPlague(player,level,serverLevel,false);
+        wandererCosmicPlague(player,level,serverLevel,false);
         handOfOrderOrder(player,level,serverLevel,false);
         frenziedMageAbolition(player,level,serverLevel,false);
         attendantOfMysteriesGrafting(player,level,serverLevel,false);

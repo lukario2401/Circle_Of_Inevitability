@@ -54,9 +54,9 @@ target.hurt(sl.damageSources().magic(), damage);
 
 `credit` changes nothing about the damage itself, who gets the kill, or who the mob gets angry at. It is only remembered for the numbers: for the next 2 seconds anything that hurts `target` without naming an attacker counts as `player`'s, and burning, poison and wither do for 15 seconds.
 
-It is used for Key Of Stars' orbiting stars and their collapse, the Prince Of Abolition's Inversion, and `Bleeding`, `Misfortune` and `Corrosion`.
+It is used for Wanderer's orbiting stars and their collapse, the Prince Of Abolition's Inversion, and `Bleeding`, `Misfortune` and `Corrosion`.
 
-Not covered: the damage a sealed entity takes back from Key Of Stars' seals (the code there does not know the player).
+Not covered: the damage a sealed entity takes back from Wanderer's seals (the code there does not know the player).
 
 ---
 
@@ -94,7 +94,7 @@ The digits are `textures/particle/fx/damage_digits.png`: `0123456789.` in white,
 2. Hit a pig with your fist: a red `1` above its head for a second (a zombie shows `0.9`: its armor takes a little). With a sword the number is bigger; a critical hit bigger again.
 3. Shoot it with a bow from far away: the number shows, and is still readable.
 4. Hit it with a Fire Aspect sword (or `/enchant`): after the hit, a `1` every second while it burns.
-5. Use an ability that hits several times (any melee combo, Key Of Stars' orbit): numbers stack above each other and do not overlap.
+5. Use an ability that hits several times (any melee combo, Wanderer's orbit): numbers stack above each other and do not overlap.
 6. Walk around the mob and look at it from above: the number always faces you, upright, not mirrored.
 7. Die, respawn, relog: still on. `/damagefx off`: chat says "Damage fx off.", no more numbers.
 8. With a second player: both on, each sees the other's numbers when near; one off, that one sees none and their hits show to nobody.

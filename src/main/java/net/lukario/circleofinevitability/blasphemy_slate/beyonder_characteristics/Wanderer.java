@@ -41,29 +41,29 @@ import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.minecraft.server.level.ServerPlayer;
 
 
-public class KeyOfStars {
+public class Wanderer {
 
-    private static final String NBT_KEY_OF_STARS_STAR_COUNT = "key_of_stars_star_count";
-    private static final String NBT_KEY_OF_STARS_NEW_STAR_CD = "key_of_stars_new_star_cooldown";
-    private static final String NBT_KEY_OF_STARS_IS_DASHING = "key_of_stars_is_dashing";
-    private static final String NBT_KEY_OF_STARS_IS_SEALED_OFFENSE = "key_of_stars_is_sealed_offense";
-    private static final String NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DURATION = "key_of_stars_is_sealed_offense_duration";
-    private static final String NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DAMAGE_STORED = "key_of_stars_is_sealed_offense_damage_stored";
-    private static final String NBT_KEY_OF_STARS_IS_SEALED_DEFENSE = "key_of_stars_is_sealed_defense";
-    private static final String NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DURATION = "key_of_stars_is_sealed_defense_duration";
-    private static final String NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DAMAGE_STORED = "key_of_stars_is_sealed_defense_damage_stored";
+    private static final String NBT_WANDERER_STAR_COUNT = "wanderer_star_count";
+    private static final String NBT_WANDERER_NEW_STAR_CD = "wanderer_new_star_cooldown";
+    private static final String NBT_WANDERER_IS_DASHING = "wanderer_is_dashing";
+    private static final String NBT_WANDERER_IS_SEALED_OFFENSE = "wanderer_is_sealed_offense";
+    private static final String NBT_WANDERER_IS_SEALED_OFFENSE_DURATION = "wanderer_is_sealed_offense_duration";
+    private static final String NBT_WANDERER_IS_SEALED_OFFENSE_DAMAGE_STORED = "wanderer_is_sealed_offense_damage_stored";
+    private static final String NBT_WANDERER_IS_SEALED_DEFENSE = "wanderer_is_sealed_defense";
+    private static final String NBT_WANDERER_IS_SEALED_DEFENSE_DURATION = "wanderer_is_sealed_defense_duration";
+    private static final String NBT_WANDERER_IS_SEALED_DEFENSE_DAMAGE_STORED = "wanderer_is_sealed_defense_damage_stored";
 
-    private static final String NBT_ORBITAL_TARGET = "key_of_stars_orbital_target_uuid";
-    private static final String NBT_ORBITAL_STAR_COUNT = "key_of_stars_orbital_star_count";
-    private static final String NBT_ORBITAL_TICK = "key_of_stars_orbital_tick";
-    private static final String NBT_ORBITAL_ACTIVE = "key_of_stars_orbital_active";
-    private static final String NBT_ORBITAL_COLLAPSE_CD = "key_of_stars_orbital_collapse_cd";
-    private static final String NBT_ORBITAL_BLOCK_X = "key_of_stars_orbital_block_x";
-    private static final String NBT_ORBITAL_BLOCK_Y = "key_of_stars_orbital_block_y";
-    private static final String NBT_ORBITAL_BLOCK_Z = "key_of_stars_orbital_block_z";
-    private static final String NBT_ORBITAL_IS_BLOCK = "key_of_stars_orbital_is_block";
+    private static final String NBT_ORBITAL_TARGET = "wanderer_orbital_target_uuid";
+    private static final String NBT_ORBITAL_STAR_COUNT = "wanderer_orbital_star_count";
+    private static final String NBT_ORBITAL_TICK = "wanderer_orbital_tick";
+    private static final String NBT_ORBITAL_ACTIVE = "wanderer_orbital_active";
+    private static final String NBT_ORBITAL_COLLAPSE_CD = "wanderer_orbital_collapse_cd";
+    private static final String NBT_ORBITAL_BLOCK_X = "wanderer_orbital_block_x";
+    private static final String NBT_ORBITAL_BLOCK_Y = "wanderer_orbital_block_y";
+    private static final String NBT_ORBITAL_BLOCK_Z = "wanderer_orbital_block_z";
+    private static final String NBT_ORBITAL_IS_BLOCK = "wanderer_orbital_is_block";
 
-    private static final String NBT_COSMIC_PLAGUE_DURATION = "key_of_stars_cosmic_plague_duration";
+    private static final String NBT_COSMIC_PLAGUE_DURATION = "wanderer_cosmic_plague_duration";
 
     //Particle instructions
     private static final int STAR_GOLD   = 0xF0FFD36B;   // ARGB: alpha, red, green, blue
@@ -114,40 +114,40 @@ public class KeyOfStars {
             .lifetime(25, 10).gravity(-0.03f)  // floats up slowly
             .glow();
 
-    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Key Of Stars")   // exact pathway name
-            .step(KeyOfStars::starComboSwing)                          // hit 1
-            .step(KeyOfStars::starComboRise)                           // hit 2
-            .randomStep(KeyOfStars::starComboOrbit, KeyOfStars::starComboShootingStars) // hit 3: one at random
+    public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway("Wanderer")   // exact pathway name
+            .step(Wanderer::starComboSwing)                          // hit 1
+            .step(Wanderer::starComboRise)                           // hit 2
+            .randomStep(Wanderer::starComboOrbit, Wanderer::starComboShootingStars) // hit 3: one at random
             .resetAfter(40)                                            // optional: ticks without hitting before it restarts (40 = 2 s)
             .minCharge(0.8f);                                          // optional: 0 = every click counts
 
     @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-    public static class KeyOfStarsEvents {
+    public static class WandererEvents {
         @SubscribeEvent
-        public static void onKeyOfStarsTick(TickEvent.PlayerTickEvent.Post event) {
+        public static void onWandererTick(TickEvent.PlayerTickEvent.Post event) {
             Player player = event.player();
             if (!(player.level() instanceof ServerLevel sl)) return;
-            if (!SoulCore.getPathway(player).equals("Key Of Stars")) return;
+            if (!SoulCore.getPathway(player).equals("Wanderer")) return;
 
             int powerLevel = Beyonder.powerLevel(player);
-            int starCount = player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0);
+            int starCount = player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0);
 
             if (starCount<powerLevel){
-                if (player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_NEW_STAR_CD, 0)==0){
+                if (player.getPersistentData().getIntOr(NBT_WANDERER_NEW_STAR_CD, 0)==0){
 
-                    player.getPersistentData().putInt(NBT_KEY_OF_STARS_STAR_COUNT,starCount+1);
-                    player.getPersistentData().putInt(NBT_KEY_OF_STARS_NEW_STAR_CD,20);
+                    player.getPersistentData().putInt(NBT_WANDERER_STAR_COUNT,starCount+1);
+                    player.getPersistentData().putInt(NBT_WANDERER_NEW_STAR_CD,20);
 
 //                    player.sendSystemMessage(Component.literal("New Star Added [" + (starCount+1) +"/7]"));
-                    String starId = "key_of_stars_star_id_"+starCount;
-                    ScreenImages.show(player, starId, "pathway_icons/key_of_stars_star",
+                    String starId = "wanderer_star_id_"+starCount;
+                    ScreenImages.show(player, starId, "pathway_icons/wanderer_star",
                             ScreenAnchor.CENTER, -96+32*starCount, 200, 16,-1);
 
                 }else{
-                    player.getPersistentData().putInt(NBT_KEY_OF_STARS_NEW_STAR_CD,player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_NEW_STAR_CD, 0)-1);
+                    player.getPersistentData().putInt(NBT_WANDERER_NEW_STAR_CD,player.getPersistentData().getIntOr(NBT_WANDERER_NEW_STAR_CD, 0)-1);
                 }
             }
-            if (player.getPersistentData().getBooleanOr(NBT_KEY_OF_STARS_IS_DASHING, false)){
+            if (player.getPersistentData().getBooleanOr(NBT_WANDERER_IS_DASHING, false)){
 
                 double dx = player.getX() - player.xo;
                 double dy = player.getY() - player.yo;
@@ -156,7 +156,7 @@ public class KeyOfStars {
 
                 double blocksPerSecond = blocksPerTick * 20.0;
                 if (blocksPerSecond < 7.5) {
-                    player.getPersistentData().putBoolean(NBT_KEY_OF_STARS_IS_DASHING, false);
+                    player.getPersistentData().putBoolean(NBT_WANDERER_IS_DASHING, false);
                 }
 
                 List<LivingEntity> hits = sl.getEntitiesOfClass(
@@ -212,51 +212,51 @@ public class KeyOfStars {
                         for (LivingEntity targets : hits) {
                             // Only process actual players
                             if (!(targets instanceof Player player)) continue;
-                            if (!SoulCore.getPathway(player).equals("Key Of Stars")) continue;
+                            if (!SoulCore.getPathway(player).equals("Wanderer")) continue;
 
-                            int current = player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0);
+                            int current = player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0);
                             int max = Beyonder.powerLevel(player); // stars cap at the power level (Beyonder.powerLevel)
                             if (current < max) {
-                                player.getPersistentData().putInt(NBT_KEY_OF_STARS_STAR_COUNT, current + 1);
+                                player.getPersistentData().putInt(NBT_WANDERER_STAR_COUNT, current + 1);
 //                                player.sendSystemMessage(Component.literal("§bPlague feeds you a star §e[" + (current + 1) + "/" + max + "]"));
                             }
                         }
                     }
                 }
             }
-            if (entity.getPersistentData().contains(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DURATION)) {
+            if (entity.getPersistentData().contains(NBT_WANDERER_IS_SEALED_OFFENSE_DURATION)) {
 
-                float duration = entity.getPersistentData().getFloatOr(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DURATION, 0f);
+                float duration = entity.getPersistentData().getFloatOr(NBT_WANDERER_IS_SEALED_OFFENSE_DURATION, 0f);
 
                 if (duration > 0) {
-                    entity.getPersistentData().putFloat(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DURATION, duration - 1);
+                    entity.getPersistentData().putFloat(NBT_WANDERER_IS_SEALED_OFFENSE_DURATION, duration - 1);
 
                     if (entity.level() instanceof ServerLevel sl && duration % 5 == 0) {
                         sl.sendParticles(ParticleTypes.END_ROD,
                                 entity.getX(), entity.getY() + 1.0, entity.getZ(),
                                 4, 0.3, 0.5, 0.3, 0.02);
                     }
-                } else if (entity.getPersistentData().getBooleanOr(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE, false)) {
-                    entity.getPersistentData().putBoolean(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE, false);
-                    float storedDamage = entity.getPersistentData().getFloatOr(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DAMAGE_STORED, 0f);
+                } else if (entity.getPersistentData().getBooleanOr(NBT_WANDERER_IS_SEALED_OFFENSE, false)) {
+                    entity.getPersistentData().putBoolean(NBT_WANDERER_IS_SEALED_OFFENSE, false);
+                    float storedDamage = entity.getPersistentData().getFloatOr(NBT_WANDERER_IS_SEALED_OFFENSE_DAMAGE_STORED, 0f);
                     entity.hurt(entity.level().damageSources().magic(), (float) Math.floor(storedDamage*1.5));
                 }
             }
-            if (entity.getPersistentData().contains(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DURATION)) {
+            if (entity.getPersistentData().contains(NBT_WANDERER_IS_SEALED_DEFENSE_DURATION)) {
 
-                float duration = entity.getPersistentData().getFloatOr(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DURATION, 0f);
+                float duration = entity.getPersistentData().getFloatOr(NBT_WANDERER_IS_SEALED_DEFENSE_DURATION, 0f);
 
                 if (duration > 0) {
-                    entity.getPersistentData().putFloat(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DURATION, duration - 1);
+                    entity.getPersistentData().putFloat(NBT_WANDERER_IS_SEALED_DEFENSE_DURATION, duration - 1);
 
                     if (entity.level() instanceof ServerLevel sl && duration % 5 == 0) {
                         sl.sendParticles(ParticleTypes.END_ROD,
                                 entity.getX(), entity.getY() + 1.0, entity.getZ(),
                                 4, 0.3, 0.5, 0.3, 0.02);
                     }
-                } else if (entity.getPersistentData().getBooleanOr(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE, false)) {
-                    entity.getPersistentData().putBoolean(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE, false);
-                    float storedDamage = entity.getPersistentData().getFloatOr(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DAMAGE_STORED, 0f);
+                } else if (entity.getPersistentData().getBooleanOr(NBT_WANDERER_IS_SEALED_DEFENSE, false)) {
+                    entity.getPersistentData().putBoolean(NBT_WANDERER_IS_SEALED_DEFENSE, false);
+                    float storedDamage = entity.getPersistentData().getFloatOr(NBT_WANDERER_IS_SEALED_DEFENSE_DAMAGE_STORED, 0f);
                     entity.hurt(entity.level().damageSources().magic(), (float) Math.floor(storedDamage*1.5));
                 }
             }
@@ -265,10 +265,10 @@ public class KeyOfStars {
         public static boolean onMobTakeDamage(LivingDamageEvent event) {
             LivingEntity victim = event.getEntity();
             if (victim.level().isClientSide()) return false;
-            if (victim.getPersistentData().getBooleanOr(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE, false)) {
+            if (victim.getPersistentData().getBooleanOr(NBT_WANDERER_IS_SEALED_OFFENSE, false)) {
                 float currentDamage = event.getAmount();
                 event.setAmount(0);
-                victim.getPersistentData().putFloat(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DAMAGE_STORED,victim.getPersistentData().getFloatOr(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DAMAGE_STORED, 0f)+currentDamage);
+                victim.getPersistentData().putFloat(NBT_WANDERER_IS_SEALED_OFFENSE_DAMAGE_STORED,victim.getPersistentData().getFloatOr(NBT_WANDERER_IS_SEALED_OFFENSE_DAMAGE_STORED, 0f)+currentDamage);
                 return true;
             }
             return false;
@@ -283,12 +283,12 @@ public class KeyOfStars {
                 if (attacker.level().isClientSide()) return false;
 
                 // 2. Check if the attacker is currently under the "Sealed Offense" effect
-                if (attacker.getPersistentData().getBooleanOr(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE, false)) {
+                if (attacker.getPersistentData().getBooleanOr(NBT_WANDERER_IS_SEALED_DEFENSE, false)) {
                     float dealtDamage = event.getAmount();
 
                     // 3. Read how much damage we've already stored, and add this new damage to it
-                    float currentlyStored = attacker.getPersistentData().getFloatOr(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DAMAGE_STORED, 0f);
-                    attacker.getPersistentData().putFloat(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DAMAGE_STORED, currentlyStored + dealtDamage);
+                    float currentlyStored = attacker.getPersistentData().getFloatOr(NBT_WANDERER_IS_SEALED_DEFENSE_DAMAGE_STORED, 0f);
+                    attacker.getPersistentData().putFloat(NBT_WANDERER_IS_SEALED_DEFENSE_DAMAGE_STORED, currentlyStored + dealtDamage);
 
                     // 4. NULLIFY THE DAMAGE: Stop the mob from actually hurting its target!
                     event.setAmount(0.0f);
@@ -311,27 +311,27 @@ public class KeyOfStars {
     }
 
     // Ability 1
-    public static void keyOfStarsStarBurst(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
+    public static void wandererStarBurst(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseClassWanderer(player, bypassClassCheck)) return;
         if (SoulCore.getSpirituality(player) < 250) return;
         if (!Beyonder.hasSequence(player, 9)) return;
 
         SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
 
         if (player.isShiftKeyDown()){
-            if (player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0)>=1){
-                int starCount = player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0);
+            if (player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0)>=1){
+                int starCount = player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0);
 
 
 
-                for (int i = 1; i <= player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0); i++){
+                for (int i = 1; i <= player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0); i++){
 //                    player.sendSystemMessage(Component.literal("ran: " + i));
-                    String star_id = "key_of_stars_star_id_" + i;
+                    String star_id = "wanderer_star_id_" + i;
                     ScreenImages.hide(player, star_id);
                 }
 
 //                player.sendSystemMessage(Component.literal("Star Used. Stars left [0/7]"));
-                player.getPersistentData().putInt(NBT_KEY_OF_STARS_STAR_COUNT,0);
+                player.getPersistentData().putInt(NBT_WANDERER_STAR_COUNT,0);
                 playNotifySound(player, SoundEvents.BEACON_POWER_SELECT,SoundSource.MASTER,2,1);
 
                 Vec3 start = player.getEyePosition();
@@ -353,13 +353,13 @@ public class KeyOfStars {
                 }
             }
         }else{
-            if (player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0)>=1){
-                player.getPersistentData().putInt(NBT_KEY_OF_STARS_STAR_COUNT,player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0)-1);
+            if (player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0)>=1){
+                player.getPersistentData().putInt(NBT_WANDERER_STAR_COUNT,player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0)-1);
 
-                String star_id = "key_of_stars_star_id_" + player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0);
+                String star_id = "wanderer_star_id_" + player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0);
                 ScreenImages.hide(player, star_id);
 
-//                player.sendSystemMessage(Component.literal("Star Used. Stars left [" + (player.getPersistentData().getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0) +"/7]")));
+//                player.sendSystemMessage(Component.literal("Star Used. Stars left [" + (player.getPersistentData().getIntOr(NBT_WANDERER_STAR_COUNT, 0) +"/7]")));
                 playNotifySound(player, SoundEvents.BEACON_ACTIVATE,SoundSource.MASTER,1,1);
 
                 Vec3 start = player.getEyePosition();
@@ -386,8 +386,8 @@ public class KeyOfStars {
     }
 
     // Ability 2
-    public static void keyOfStarsDash(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
+    public static void wandererDash(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseClassWanderer(player, bypassClassCheck)) return;
         if (SoulCore.getSpirituality(player) < 250) return;
         if (!Beyonder.hasSequence(player, 8)) return;
 
@@ -405,13 +405,13 @@ public class KeyOfStars {
             player.setDeltaMovement(dashVelocity);
             player.hurtMarked = true;
 
-            player.getPersistentData().putBoolean(NBT_KEY_OF_STARS_IS_DASHING,true);
+            player.getPersistentData().putBoolean(NBT_WANDERER_IS_DASHING,true);
         }
     }
 
     // Ability 3
-    public static void keyOfStarsBuff(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
+    public static void wandererBuff(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseClassWanderer(player, bypassClassCheck)) return;
         if (SoulCore.getSpirituality(player) < 250) return;
         if (!Beyonder.hasSequence(player, 7)) return;
 
@@ -435,8 +435,8 @@ public class KeyOfStars {
     }
 
     // Ability 4
-    public static void keyOfStarsSeal(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
+    public static void wandererSeal(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseClassWanderer(player, bypassClassCheck)) return;
         if (SoulCore.getSpirituality(player) < 250) return;
         if (!Beyonder.hasSequence(player, 7)) return;
 
@@ -446,19 +446,19 @@ public class KeyOfStars {
         if (player.isShiftKeyDown()) {
             LivingEntity target = getTarget(player, sl, level, 16);
             if (target == null) return; // nothing in line of sight: the old code threw a NullPointerException here
-            target.getPersistentData().putBoolean(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE,true);
-            target.getPersistentData().putFloat(NBT_KEY_OF_STARS_IS_SEALED_DEFENSE_DURATION,100);
+            target.getPersistentData().putBoolean(NBT_WANDERER_IS_SEALED_DEFENSE,true);
+            target.getPersistentData().putFloat(NBT_WANDERER_IS_SEALED_DEFENSE_DURATION,100);
         } else {
             LivingEntity target = getTarget(player, sl, level, 16);
             if (target == null) return; // nothing in line of sight: the old code threw a NullPointerException here
-            target.getPersistentData().putBoolean(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE,true);
-            target.getPersistentData().putFloat(NBT_KEY_OF_STARS_IS_SEALED_OFFENSE_DURATION,100);
+            target.getPersistentData().putBoolean(NBT_WANDERER_IS_SEALED_OFFENSE,true);
+            target.getPersistentData().putFloat(NBT_WANDERER_IS_SEALED_OFFENSE_DURATION,100);
         }
     }
 
     // Ability 5
-    public static void keyOfStarsTransport(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
+    public static void wandererTransport(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseClassWanderer(player, bypassClassCheck)) return;
         if (SoulCore.getSpirituality(player) < 250) return;
         if (!Beyonder.hasSequence(player, 7)) return;
 
@@ -477,8 +477,8 @@ public class KeyOfStars {
     }
 
     // Ability 6 — Orbital Stars: throw stars that orbit target, shift to collapse and explode
-    public static void keyOfStarsOrbital(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
+    public static void wandererOrbital(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseClassWanderer(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 5)) return;
         if (SoulCore.getSpirituality(player) < 500) return;
 
@@ -506,7 +506,7 @@ public class KeyOfStars {
             return;
         }
 
-        int currentStars = data.getIntOr(NBT_KEY_OF_STARS_STAR_COUNT, 0);
+        int currentStars = data.getIntOr(NBT_WANDERER_STAR_COUNT, 0);
         if (currentStars <= 0) {
             player.sendSystemMessage(Component.literal("§8No stars to throw."));
             return;
@@ -539,7 +539,7 @@ public class KeyOfStars {
                 data.putBoolean(NBT_ORBITAL_ACTIVE, true);
                 data.putInt(NBT_ORBITAL_STAR_COUNT, currentStars);
                 data.putInt(NBT_ORBITAL_TICK, 0);
-                data.putInt(NBT_KEY_OF_STARS_STAR_COUNT, 0); // consume all stars
+                data.putInt(NBT_WANDERER_STAR_COUNT, 0); // consume all stars
 
                 player.sendSystemMessage(Component.literal("§bStars orbiting: §e" + currentStars + " §bstars locked on §7" + hitTarget.getName().getString()));
                 playNotifySound(player, SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0f, 1.5f);
@@ -557,7 +557,7 @@ public class KeyOfStars {
                 data.putBoolean(NBT_ORBITAL_ACTIVE, true);
                 data.putInt(NBT_ORBITAL_STAR_COUNT, currentStars);
                 data.putInt(NBT_ORBITAL_TICK, 0);
-                data.putInt(NBT_KEY_OF_STARS_STAR_COUNT, 0);
+                data.putInt(NBT_WANDERER_STAR_COUNT, 0);
 
                 player.sendSystemMessage(Component.literal("§bStars orbiting block — §e" + currentStars + " §bstars locked."));
                 playNotifySound(player, SoundEvents.BEACON_ACTIVATE, SoundSource.PLAYERS, 1.0f, 1.5f);
@@ -714,8 +714,8 @@ public class KeyOfStars {
     }
 
     // ability 7
-    public static void keyOfStarsCosmicPlague(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseClassKeyOfStars(player, bypassClassCheck)) return;
+    public static void wandererCosmicPlague(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (!canUseClassWanderer(player, bypassClassCheck)) return;
         if (SoulCore.getSpirituality(player) < 250) return;
         if (!Beyonder.hasSequence(player, 3)) return;
 
@@ -795,9 +795,9 @@ public class KeyOfStars {
         }
     }
 
-    private static boolean canUseClassKeyOfStars(Player player, boolean dontCheck) {
+    private static boolean canUseClassWanderer(Player player, boolean dontCheck) {
         if (dontCheck) return true;
-        return SoulCore.getPathway(player).equals("Key Of Stars");
+        return SoulCore.getPathway(player).equals("Wanderer");
     }
 
     // Player.playNotifySound is gone in 26.2; this sends what 1.21's ServerPlayer.playNotifySound sent (a sound only this player hears)

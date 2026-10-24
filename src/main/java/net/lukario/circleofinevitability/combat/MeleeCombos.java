@@ -29,7 +29,7 @@ public final class MeleeCombos {
     static {
         register(HandOfOrder.MELEE_COMBO);
         register(AttendantOfMysteries.MELEE_COMBO);
-        register(KeyOfStars.MELEE_COMBO);
+        register(Wanderer.MELEE_COMBO);
         register(FrenziedMage.MELEE_COMBO);
         register(PaleEmperor.MELEE_COMBO);
         register(WormOfTime.MELEE_COMBO);

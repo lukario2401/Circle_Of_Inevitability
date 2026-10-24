@@ -8,7 +8,8 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Wanderer;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime;
@@ -59,7 +60,7 @@ public final class SlashFxCommand {
 
     /** The classes whose SlashFx constants the command knows. A new Pathway class goes here. */
     private static final List<Class<?>> SOURCES = List.of(
-            AttendantOfMysteries.class, HandOfOrderFx.class, KeyOfStars.class,
+            AttendantOfMysteries.class, HandOfOrderFx.class, Wanderer.class, KeyOfStarsFx.class,
             PaleEmperor.class, FrenziedMage.class, WormOfTime.class, Conqueror.class);
 
     // =========================

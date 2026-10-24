@@ -823,6 +823,36 @@ Everything it uses is generated, from `tools/model_gen/hand_of_order/` (run each
 
 Statuses: `HandOfOrderFx.status(player, Status.CONVICT, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away. `courtClauses(player, written, ticks)` shows the Court's clauses in the row beside the hotbar and the tablet in the top right.
 
+### Key Of Stars: ready-made displays
+
+`KeyOfStarsFx` (in `beyonder_characteristics/key_of_stars/`) holds the Key Of Stars (Door pathway) looks for all seven keys, both casts, the four wheels (Tricks on key 2, Travel on key 5, Secrets and Space on key 6, Starlight on key 7), the Starlit mark, the Recorded Powers' pages, the statuses, the passives that show and what grows at higher Sequences (people coming through Door Opening, the Spatial Cage, Symbolization and Conceptualization, Dimension Sight, Blink's lingering afterimages). No ability uses them yet; they only show things, and the damage, holding, hiding and moving are the ability's, at the ticks the constants name (`DOOR_OPENED`, `SCREEN_DOWN`, `DIVINED`, `TRAVEL_ENTERED`, `HAND_GRABS`, `CONCEALED`, `EXILE_SWALLOWED`, `TEAR_LANDS`, `TOY_SHRUNK`, `SEALED_AT`, `LABYRINTH_RISEN`, `WORLD_UNFOLDED`, `DOORS_SHUT`). The class comment lists every call by key; [KEY_OF_STARS.md](KEY_OF_STARS.md) says which call goes with which ability.
+
+Everything it uses is generated, from `tools/model_gen/key_of_stars/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
+
+| Script | Makes |
+|---|---|
+| `models.py` (+ `textures.py`) | The models and pictures and their textures in `models/model_fx/key_of_stars/` and `textures/model_fx/key_of_stars/` (`../hanged_man/render.py` draws any of them without the game) |
+| `icons.py` | The wheel pictures (`textures/gui/ability_menus/key_of_stars/`), the status pictures, the Recorded Powers' pages and Transfiguration's layers left (`textures/gui/key_of_stars/`) and the Pathway icon |
+| `particles.py` | The particle pictures `fx/star_door`, `star_worm`, `star_key`, `wind_key`, `sound_wave`, `planet`, `rift_crack`, `maze` in `textures/particle/fx/` (white: any Pathway can tint them) |
+| `sounds.py` | The sounds in `sounds/key_of_stars/`, their events in `sounds.json` and their subtitles; the events are registered in `sounds/ModSounds` (`STARS_...`). It borrows the building blocks of `../beauty_goddess/sounds.py` and `../knowledge_emperor/sounds.py` |
+
+**See them in game** (cheats on): `/starsfx all` or `/starsfx alternate_world` (TAB lists the names). Displays that need a target use the nearest mob within 12 blocks, or you.
+
+| Model | What it is | Pivot | Notes |
+|---|---|---|---|
+| `key_of_stars/door_frame`, `door_leaf` | An illusory Door: silver-blue posts set with gold stars, a lintel with a star keystone, 1 x 2 blocks; the door itself, deep indigo dusted with stars, gold hinges and keyhole | default; the leaf's hinge `(2, 0, 8)` | Play both at one spot; yaw the leaf to swing it. One model for every Door: Door Opening, Traveler's Door, Exile, Space Concealment, Pocket Space, the Alternate World |
+| `key_of_stars/crystal_ball` | A ball of starlit glass with the night and one star inside, on a gold stand, 0.8 blocks | default | Star Divination, in the hand |
+| `key_of_stars/worm_of_star` | A crescent worm of gold and white beads, 0.7 blocks | its curl `(8, 6, 8)` | Orbit them with a far pivot and `spin` (see `wormAura`) |
+| `key_of_stars/star_key`, `wind_up_key` | The Key of Stars: a gold key with a star in its bow, 1.7 blocks; a toy's butterfly key, 0.6 blocks, shaft north | the shaft `(8, 15, 8)`; the shaft's tip `(8, 8, 8)` | `roll` turns them |
+| `key_of_stars/star_hand` | The Invisible Hand: an open hand of see-through starlight, palm north, 1.4 blocks | default (the wrist) | Pitch 90 points it forward |
+| `key_of_stars/record_book`, `quill` | The Scribe's open book, 1 block; the quill, 1.1 blocks, nib down | default | Record |
+| `key_of_stars/star_gate`, `constellation`, `star_anchor`, `tumble_circle`, `labyrinth`, `toy_veil`, `seal_ring`, `door_kingdom`, `planet_ring` | Eight doors round a keyhole; a sky map; a compass rose with a door; a slick swirl; a round maze; a music-box carousel; twelve chained keyholes round a padlock; a kingdom of Doors; a planet's ring | default | Flat, white: tint them |
+| `key_of_stars/door_sigil`, `starlit_mark`, `interference`, `storm_vortex` | Three doors one inside the other; the Starlit star; a turning veil of broken arcs (animated); a four-armed spiral (animated) | their middle `(8, 8, 8)` | Standing, white: tint them |
+| `key_of_stars/space_tear`, `record_page` | A jagged rift with stars inside; a written page with a gold seal | their middle | Standing, their own colors |
+| `key_of_stars/black_screen`, `space_shell`, `closed_door`, `afterimage` | A dark curtain (animated, its own colors); a panel of hexagons with drifting stars (animated); a barred door with a lock; a person's silhouette, 1 x 2 | default | Standing; set `space_shell` in rings for walls and domes |
+
+Statuses: `KeyOfStarsFx.status(player, Status.STARLIT, ticks)` shows the picture above the hotbar and a `HudTimer`; `statusEnd(...)` takes both away. `layersLeft(player, layers, ticks)` shows Transfiguration's layers, `recordedPages(player, angel[])` the Recorded Powers in the row right of the hotbar.
+
 ## Tricks worth copying
 
 All of these are in `PrinceOfAbolition.java`, with the helper named in brackets.

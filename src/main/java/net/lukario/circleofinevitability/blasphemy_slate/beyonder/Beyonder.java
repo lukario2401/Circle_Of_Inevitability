@@ -18,7 +18,7 @@ public final class Beyonder {
 
     /**
      * The numbers of one Sequence.
-     * powerLevel: 1..8, for scaling only (Key Of Stars caps its stars at it). Never use it for gates; use hasSequence.
+     * powerLevel: 1..8, for scaling only (Wanderer caps its stars at it). Never use it for gates; use hasSequence.
      * powerScale: 1..7, the power level capped at 7.
      * maxSpirituality: the size of the spirituality bar.
      * regenPerTick: spirituality regained each tick (20 ticks = 1 second).
