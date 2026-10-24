@@ -29,6 +29,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes.princeOfAbolitionBribe;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor.knowledgeEmperorSpells;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator.illuminatorAppraise;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon.starDragonNavigator;
 
 public class SKeyPressAbilityThreeUsed {
 
@@ -76,6 +77,7 @@ public class SKeyPressAbilityThreeUsed {
         princeOfAbolitionBribe(player,level,serverLevel,false);
         knowledgeEmperorSpells(player,level,serverLevel,false);
         illuminatorAppraise(player,level,serverLevel,false);
+        starDragonNavigator(player,level,serverLevel,false);
 
 
     }
