@@ -260,6 +260,8 @@ public class HandOfOrder {
             Decree.addImmunity((owner, entity, rule) -> entity instanceof Player player
                     && (HandOfOrderOrder.isProxy(player) || (isHandOfOrder(player, SENSE_OF_ORDER_SEQUENCE)
                     && SoulCore.getSequence(owner) > SoulCore.getSequence(player))));
+            // Balance's end listener lives with the rest of the Order wheel
+            HandOfOrderOrder.registerListeners();
         }
 
         @SubscribeEvent
