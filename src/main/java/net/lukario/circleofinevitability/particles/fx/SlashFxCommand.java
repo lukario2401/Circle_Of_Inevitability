@@ -8,11 +8,11 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteries;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.HandOfOrder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.KeyOfStars;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderFx;
 import net.lukario.circleofinevitability.combat.Later;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -59,7 +59,7 @@ public final class SlashFxCommand {
 
     /** The classes whose SlashFx constants the command knows. A new Pathway class goes here. */
     private static final List<Class<?>> SOURCES = List.of(
-            AttendantOfMysteries.class, HandOfOrder.class, KeyOfStars.class,
+            AttendantOfMysteries.class, HandOfOrderFx.class, KeyOfStars.class,
             PaleEmperor.class, FrenziedMage.class, WormOfTime.class, Conqueror.class);
 
     // =========================

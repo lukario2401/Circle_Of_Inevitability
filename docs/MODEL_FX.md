@@ -209,10 +209,10 @@ Which spin to animate:
 
 If a `.during` and a key change the *same* thing during the same ticks, the one that started later takes over.
 
-Example: a sword that tips forward, turns flat, then flies forward while it spins flat like a thrown disc. The Hand Of Order sword (`HAND_OF_ORDER_SWORD` in `HandOfOrder.java`) is built this way, with ticks of its own.
+Example: a sword that tips forward, turns flat, then flies forward while it spins flat like a thrown disc (the first Hand Of Order class had one like this; `HandOfOrderFx.JUDGMENT_SWORD` would do as the model).
 
 ```java
-ModelFx sword = HAND_OF_ORDER_SWORD
+ModelFx sword = HandOfOrderFx.JUDGMENT_SWORD
         .key(20, ModelFx.pose().pitch(90), ModelFx.Ease.IN)       // ticks 0-20: tips forward (on its edge)
         .key(30, ModelFx.pose().spin(90), ModelFx.Ease.IN)        // 20-30: quarter turn around its own length -> flat
         .key(40, ModelFx.pose().forward(5), ModelFx.Ease.IN)      // 30-40: lunges forward (still flat)
@@ -245,7 +245,7 @@ A `.during` carries on from wherever that value already is. If an earlier key ha
 
 > **Effects written before keys stuck:** a key used to be a complete pose, so anything it didn't name snapped back to rest. If an old effect now stays small, invisible or rotated, add the value it should return to in the next key.
 
-Example: the Hand Of Order hammer swing (`ORDER_HAMMER` in `HandOfOrder.java`, where the ticks of the slam are constants). It starts small and invisible, so the next key says what size and alpha to go to.
+Example: a hammer swing on the `order_hammer` model (the first Hand Of Order class had it, with the ticks of the slam as constants). It starts small and invisible, so the next key says what size and alpha to go to.
 
 ```java
 ORDER_HAMMER
@@ -794,7 +794,7 @@ Everything it uses is generated, from `tools/model_gen/star_dragon/` (run each f
 
 ### Hand Of Order: ready-made displays
 
-`HandOfOrderFx` (in `beyonder_characteristics/hand_of_order/`) holds the Hand Of Order (Justiciar pathway) looks for all seven keys, both casts, the four wheels (Interrogation on key 3, Verdict on key 4, Decree on key 5, Order on key 7), the spoken words of the Verdicts and Decrees, the Convict, the Decree zones and their Violations, the Court of Judgment and its clauses, the statuses, the passives that show, the melee combo and what grows at higher Sequences (Intimidation, Confinement, the void Exile and its hurricane, Death on the latest wound, Prohibition layers, the Brass Pillar). The abilities of the new design are not written yet (the first `HandOfOrder` class is untouched); the displays are ready for them. They only show things; the damage, holding, hiding, healing and moving are the ability's, at the ticks the constants name (`HALT_LANDS`, `JURISDICTION_CLAIMED`, `WHIP_LANDS`, `IMPRISON_LANDS`, `EXILE_LANDS`, `DEATH_LANDS`, `DEPRIVED`, `EXECUTION_LANDS`, `DECREE_RISEN`, `CONTRACT_SIGNED`, `SWORD_LANDS`, `BALANCE_SETTLED`, `DIVIDE_RISEN`, `COURT_RISEN`). The class comment lists every call by key; [HAND_OF_ORDER.md](HAND_OF_ORDER.md) says which call goes with which ability.
+`HandOfOrderFx` (in `beyonder_characteristics/hand_of_order/`) holds the Hand Of Order (Justiciar pathway) looks for all seven keys, both casts, the four wheels (Interrogation on key 3, Verdict on key 4, Decree on key 5, Order on key 7), the spoken words of the Verdicts and Decrees, the Convict, the Decree zones and their Violations, the Court of Judgment and its clauses, the statuses, the passives that show, the melee combo and what grows at higher Sequences (Intimidation, Confinement, the void Exile and its hurricane, Death on the latest wound, Prohibition layers, the Brass Pillar). Keys 1 to 4 and 6 use them (`HandOfOrder`, `HandOfOrderInterrogation`, `HandOfOrderVerdicts`); the Decrees and Order displays are ready for the keys still to be written. They only show things; the damage, holding, hiding, healing and moving are the ability's, at the ticks the constants name (`HALT_LANDS`, `JURISDICTION_CLAIMED`, `WHIP_LANDS`, `IMPRISON_LANDS`, `EXILE_LANDS`, `DEATH_LANDS`, `DEPRIVED`, `EXECUTION_LANDS`, `DECREE_RISEN`, `CONTRACT_SIGNED`, `SWORD_LANDS`, `BALANCE_SETTLED`, `DIVIDE_RISEN`, `COURT_RISEN`). The class comment lists every call by key; [HAND_OF_ORDER.md](HAND_OF_ORDER.md) says which call goes with which ability.
 
 Everything it uses is generated, from `tools/model_gen/hand_of_order/` (run each from the repository root with `src/main/resources/assets/circle_of_inevitability` as the argument, then F3+T):
 
