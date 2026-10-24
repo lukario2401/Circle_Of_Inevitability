@@ -21,7 +21,7 @@ import java.util.List;
  * component (BeyonderCharacteristic); what consuming it does, and every chance, is in
  * blasphemy_slate/beyonder/CharacteristicConsumption.
  *
- * Make stacks with of(pathway, sequence): it sets the component, the name ("Key Of Stars Characteristic,
+ * Make stacks with of(pathway, sequence): it sets the component, the name ("Wanderer Characteristic,
  * Sequence 5") and the description lines (Pathway, Sequence, "Right-click to consume").
  */
 public class BeyonderCharacteristicItem extends Item {

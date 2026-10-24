@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  *   effect(6, MobEffects.NIGHT_VISION, 1);                      // the last number is the level: 0 = I, 1 = II
  *   effect("Pale Emperor", 5, MobEffects.FIRE_RESISTANCE, 0);   // one Pathway only (the exact Pathway name)
  *   custom(3, player -> player.clearFire());                    // anything that is not a potion effect
- *   custom("Key Of Stars", 2, player -> { ... });               // the same for one Pathway
+ *   custom("Wanderer", 2, player -> { ... });               // the same for one Pathway
  *
  * Every passive is checked once a second (CHECK_EVERY_TICKS), on the server, for every living player.
  * An effect is put back by the next check after milk, death or an ability removes it, and it runs out

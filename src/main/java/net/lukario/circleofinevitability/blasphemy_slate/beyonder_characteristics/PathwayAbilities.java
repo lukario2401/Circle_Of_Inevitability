@@ -41,7 +41,7 @@ import java.util.List;
  * (Worm Of Time steals them). The ability keys themselves do not use this list: they still call the methods
  * directly from network/SKeyPressAbility...Used.
  *
- *   for (PathwayAbilities.Ability ability : PathwayAbilities.of("Key Of Stars")) { ... }
+ *   for (PathwayAbilities.Ability ability : PathwayAbilities.of("Wanderer")) { ... }
  *   ability.cast().run(player, level, sl);        // casts it for this player, whatever their Pathway is
  *
  * cast() skips the "is this your Pathway" check and nothing else: the ability still needs its Sequence and
@@ -71,21 +71,21 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
-            // ---- Key Of Stars ----
-            new Ability("Key Of Stars", 1, "Star Burst", 9, SNEAK, OWN_PATHWAY_ONLY,      // spends the Pathway's stars
-                    (player, level, sl) -> KeyOfStars.keyOfStarsStarBurst(player, level, sl, true)),
-            new Ability("Key Of Stars", 2, "Dash", 8, SNEAK, STEALABLE,
-                    (player, level, sl) -> KeyOfStars.keyOfStarsDash(player, level, sl, true)),
-            new Ability("Key Of Stars", 3, "Buff", 7, SNEAK, STEALABLE,
-                    (player, level, sl) -> KeyOfStars.keyOfStarsBuff(player, level, sl, true)),
-            new Ability("Key Of Stars", 4, "Seal", 7, SNEAK, STEALABLE,
-                    (player, level, sl) -> KeyOfStars.keyOfStarsSeal(player, level, sl, true)),
-            new Ability("Key Of Stars", 5, "Transport", 7, SNEAK, STEALABLE,
-                    (player, level, sl) -> KeyOfStars.keyOfStarsTransport(player, level, sl, true)),
-            new Ability("Key Of Stars", 6, "Orbital", 5, SNEAK, OWN_PATHWAY_ONLY,         // throws the Pathway's stars
-                    (player, level, sl) -> KeyOfStars.keyOfStarsOrbital(player, level, sl, true)),
-            new Ability("Key Of Stars", 7, "Cosmic Plague", 3, SNEAK, STEALABLE,
-                    (player, level, sl) -> KeyOfStars.keyOfStarsCosmicPlague(player, level, sl, true)),
+            // ---- Wanderer ----
+            new Ability("Wanderer", 1, "Star Burst", 9, SNEAK, OWN_PATHWAY_ONLY,      // spends the Pathway's stars
+                    (player, level, sl) -> Wanderer.wandererStarBurst(player, level, sl, true)),
+            new Ability("Wanderer", 2, "Dash", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> Wanderer.wandererDash(player, level, sl, true)),
+            new Ability("Wanderer", 3, "Buff", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> Wanderer.wandererBuff(player, level, sl, true)),
+            new Ability("Wanderer", 4, "Seal", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> Wanderer.wandererSeal(player, level, sl, true)),
+            new Ability("Wanderer", 5, "Transport", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> Wanderer.wandererTransport(player, level, sl, true)),
+            new Ability("Wanderer", 6, "Orbital", 5, SNEAK, OWN_PATHWAY_ONLY,         // throws the Pathway's stars
+                    (player, level, sl) -> Wanderer.wandererOrbital(player, level, sl, true)),
+            new Ability("Wanderer", 7, "Cosmic Plague", 3, SNEAK, STEALABLE,
+                    (player, level, sl) -> Wanderer.wandererCosmicPlague(player, level, sl, true)),
 
             // ---- Attendant Of Mysteries ----
             new Ability("Attendant Of Mysteries", 1, "Paper Dagger", 9, SNEAK, STEALABLE,

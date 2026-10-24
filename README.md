@@ -1,7 +1,7 @@
 # Circle Of Inevitability
 
 A Minecraft Forge mod by Luka (Lukario2401): a soul system (stage, tier, shards, Soul Essence, corruption)
-and beyonder characteristics to take on: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries,
+and beyonder characteristics to take on: Wanderer, Worm Of Time, Hand Of Order, Attendant Of Mysteries,
 Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse (the Demoness), Dark Angel (the Hanged Man), Beauty Goddess (the Moon),
 Hand Of God (the Twilight Giant), Knight Of Misfortune, Abomination (the Chained), Knowledge Emperor (the Hermit), Illuminator (the Paragon) and Star Dragon (the Condenser).
 They come
@@ -28,7 +28,7 @@ Forge 65 client or server.
 Ops set a player up with the `/soul` command, for example:
 
 ```
-/soul setAspect @s "Key Of Stars"
+/soul setAspect @s "Wanderer"
 /soul setstage @s 7
 /soul settier @s 7
 /soul setshards @s 100000

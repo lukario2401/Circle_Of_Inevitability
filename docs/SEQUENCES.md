@@ -6,11 +6,11 @@ The progression system, Lord of the Mysteries style. Acting, potions, ingredient
 
 | Word | Meaning | Where |
 | --- | --- | --- |
-| Pathway | The class a player follows, by its exact name: Key Of Stars, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Frenzied Mage, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God, Knight Of Misfortune, Abomination, Prince Of Abolition, Knowledge Emperor, Illuminator, Star Dragon (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
+| Pathway | The class a player follows, by its exact name: Wanderer, Worm Of Time, Hand Of Order, Attendant Of Mysteries, Frenzied Mage, Pale Emperor, Conqueror, Apocalypse, Dark Angel, Beauty Goddess, Hand Of God, Knight Of Misfortune, Abomination, Prince Of Abolition, Knowledge Emperor, Illuminator, Star Dragon, Key Of Stars (`"none"` until one is set). | `SoulCore.getPathway / setPathway` |
 | Sequence | 9 (weakest) down to 0 (strongest), stored directly. Everyone starts at 9. | `SoulCore.getSequence / setSequence` |
 | Digestion | 0 to 100 percent of the current Sequence. At 100 the player may run `/sequence advance`. | `SoulCore.getDigestion / setDigestion`, `Digestion` |
 | Spirituality | The resource abilities spend (was "soul essence"; same numbers, same costs). | `SoulCore.getSpirituality / setSpirituality`, `Spells.paySpirituality` |
-| power level | 1 at Sequence 9 up to 8 at Sequence 2 (see the table below). Used only for scaling (Key Of Stars star cap), never for gates. | `Beyonder.powerLevel` |
+| power level | 1 at Sequence 9 up to 8 at Sequence 2 (see the table below). Used only for scaling (Wanderer star cap), never for gates. | `Beyonder.powerLevel` |
 | power scale | The power level capped at 7. | `Beyonder.powerScale` |
 
 All of it is saved in the player's persistent data under the tag `circle_of_inevitability` (keys `pathway`, `sequence`, `digestion`, `spirituality`), which is copied on death (`SoulCore.onPlayerClone`) and saved with the player, so it survives death, respawn and relog. The client gets Pathway, Sequence and digestion (whole percent) through `CSyncPathwayPacket`, sent by `PathwaySync` whenever one of them changes.
@@ -46,7 +46,8 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 
 | Pathway | G (1) | H (2) | J (3) | K (4) | L (5) | N (6) | M (7) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Key Of Stars | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
+| Wanderer | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
+| Key Of Stars | planned, no abilities yet (docs/KEY_OF_STARS.md): Door Opening 9 (sneak: Slip Free) | Tricks 8 (wheel) | Star Divination 7 (sneak: Interference) | Record 6 (sneak: Replay) | Travel 5 (wheel) | Secrets and Space 4 (wheel) | Starlight 2 (wheel) |
 | Worm Of Time | Life Theft 9 | Theft 8 | Parasite 4 | - | - | - | - |
 | Hand Of Order | Halt 9 (sneak: Presence) | Jurisdiction 8 (sneak: Recognition) | Interrogation 7 (wheel: Psychic Lashing, Psychic Piercing, Whip of Pain, all at 7) | Verdict 6 (wheel: Imprison, Exile, Death, Maintain Secrecy at 6, Deprivation, Execution at 4) | Decree 6 (wheel: Prohibition: Passage, Prohibition: Concealment at 6, Imperative: Reality, Contract at 4) | Punishment 5 (sneak: Sword of Judgment at 3) | Order 2 (wheel: Balance, Divide the Battlefield, Law: No Return at 2, Order Proxy, Quell Disorder at 1, Court of Judgment at 0) |
 | Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |
@@ -183,7 +184,7 @@ effect(4, MobEffects.SATURATION);                           // every Pathway, fr
 effect(6, MobEffects.NIGHT_VISION, 1);                      // the last number is the level: 0 = I, 1 = II
 effect("Pale Emperor", 5, MobEffects.FIRE_RESISTANCE, 0);   // one Pathway only (the exact Pathway name)
 custom(3, player -> player.clearFire());                    // anything that is not a potion effect
-custom("Key Of Stars", 2, player -> { ... });               // the same for one Pathway
+custom("Wanderer", 2, player -> { ... });               // the same for one Pathway
 ```
 
 How they behave:
@@ -216,7 +217,7 @@ Target: a full bar in about 45 minutes of normal active play, roughly 40% from t
 One item, `circle_of_inevitability:beyonder_characteristic`, is every Pathway and every Sequence: which one it is lives in its data component `circle_of_inevitability:characteristic` (`item/BeyonderCharacteristic`: `pathway`, `sequence`). Right-click consumes it. The creative tab "Beyonder Characteristics" has one of every Pathway, Sequence 9 to 0. In code, `BeyonderCharacteristicItem.of(pathway, sequence)` makes a named stack. By command (the name and description are added within a second once it is in a player's inventory, `item/CharacteristicLooks`):
 
 ```
-/give @s circle_of_inevitability:beyonder_characteristic[circle_of_inevitability:characteristic={pathway:"Key Of Stars",sequence:5}]
+/give @s circle_of_inevitability:beyonder_characteristic[circle_of_inevitability:characteristic={pathway:"Wanderer",sequence:5}]
 ```
 
 What consuming one does (`blasphemy_slate/beyonder/CharacteristicConsumption`):

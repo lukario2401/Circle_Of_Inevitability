@@ -3255,5 +3255,398 @@
         "name": "circle_of_inevitability:hand_of_order/gavel_slam"
       }
     ]
+  },
+  "key_of_stars.door_open": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.door_open",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/door_open"
+      }
+    ]
+  },
+  "key_of_stars.door_step": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.door_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/door_step"
+      }
+    ]
+  },
+  "key_of_stars.slip_free": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.slip_free",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/slip_free"
+      }
+    ]
+  },
+  "key_of_stars.flash": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.flash",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/flash"
+      }
+    ]
+  },
+  "key_of_stars.black_screen": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.black_screen",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/black_screen"
+      }
+    ]
+  },
+  "key_of_stars.loud_noise": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.loud_noise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/loud_noise"
+      }
+    ]
+  },
+  "key_of_stars.frost_ray": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.frost_ray",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/frost_ray"
+      }
+    ]
+  },
+  "key_of_stars.gale": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.gale",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/gale"
+      }
+    ]
+  },
+  "key_of_stars.tumble": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.tumble",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/tumble"
+      }
+    ]
+  },
+  "key_of_stars.escape_trick": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.escape_trick",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/escape_trick"
+      }
+    ]
+  },
+  "key_of_stars.divination": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.divination",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/divination"
+      }
+    ]
+  },
+  "key_of_stars.starlit": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.starlit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/starlit"
+      }
+    ]
+  },
+  "key_of_stars.interference": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.interference",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/interference"
+      }
+    ]
+  },
+  "key_of_stars.interference_reflect": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.interference_reflect",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/interference_reflect"
+      }
+    ]
+  },
+  "key_of_stars.record": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.record",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/record"
+      }
+    ]
+  },
+  "key_of_stars.recorded": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.recorded",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/recorded"
+      }
+    ]
+  },
+  "key_of_stars.replay": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.replay",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/replay"
+      }
+    ]
+  },
+  "key_of_stars.replication": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.replication",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/replication"
+      }
+    ]
+  },
+  "key_of_stars.travelers_door": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.travelers_door",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/travelers_door"
+      }
+    ]
+  },
+  "key_of_stars.travelers_arrive": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.travelers_arrive",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/travelers_arrive"
+      }
+    ]
+  },
+  "key_of_stars.blink": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.blink",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/blink_1"
+      },
+      {
+        "name": "circle_of_inevitability:key_of_stars/blink_2"
+      },
+      {
+        "name": "circle_of_inevitability:key_of_stars/blink_3"
+      }
+    ]
+  },
+  "key_of_stars.invisible_hand": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.invisible_hand",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/invisible_hand"
+      }
+    ]
+  },
+  "key_of_stars.star_anchor": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.star_anchor",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/star_anchor"
+      }
+    ]
+  },
+  "key_of_stars.anchor_lift": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.anchor_lift",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/anchor_lift"
+      }
+    ]
+  },
+  "key_of_stars.wandering": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.wandering",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/wandering"
+      }
+    ]
+  },
+  "key_of_stars.wandering_end": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.wandering_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/wandering_end"
+      }
+    ]
+  },
+  "key_of_stars.space_concealment": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.space_concealment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/space_concealment"
+      }
+    ]
+  },
+  "key_of_stars.concealment_shut": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.concealment_shut",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/concealment_shut"
+      }
+    ]
+  },
+  "key_of_stars.transfiguration": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.transfiguration",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/transfiguration"
+      }
+    ]
+  },
+  "key_of_stars.layer_tear": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.layer_tear",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/layer_tear_1"
+      },
+      {
+        "name": "circle_of_inevitability:key_of_stars/layer_tear_2"
+      }
+    ]
+  },
+  "key_of_stars.exile": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.exile",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/exile"
+      }
+    ]
+  },
+  "key_of_stars.exile_return": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.exile_return",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/exile_return"
+      }
+    ]
+  },
+  "key_of_stars.pocket_space": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.pocket_space",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/pocket_space"
+      }
+    ]
+  },
+  "key_of_stars.tearing_warn": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.tearing_warn",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/tearing_warn"
+      }
+    ]
+  },
+  "key_of_stars.space_tearing": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.space_tearing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/space_tearing"
+      }
+    ]
+  },
+  "key_of_stars.toy_box": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.toy_box",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/toy_box"
+      }
+    ]
+  },
+  "key_of_stars.toy_wind": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.toy_wind",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/toy_wind"
+      }
+    ]
+  },
+  "key_of_stars.fragmentation": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.fragmentation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/fragmentation"
+      }
+    ]
+  },
+  "key_of_stars.fragmentation_collapse": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.fragmentation_collapse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/fragmentation_collapse"
+      }
+    ]
+  },
+  "key_of_stars.starlight_seal": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.starlight_seal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/starlight_seal"
+      }
+    ]
+  },
+  "key_of_stars.labyrinth": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.labyrinth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/labyrinth"
+      }
+    ]
+  },
+  "key_of_stars.labyrinth_loop": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.labyrinth_loop",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/labyrinth_loop"
+      }
+    ]
+  },
+  "key_of_stars.alternate_world": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.alternate_world",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/alternate_world"
+      }
+    ]
+  },
+  "key_of_stars.omnipresence": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.omnipresence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/omnipresence"
+      }
+    ]
+  },
+  "key_of_stars.close_the_door": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.close_the_door",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/close_the_door"
+      }
+    ]
+  },
+  "key_of_stars.intuition": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.intuition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/intuition"
+      }
+    ]
+  },
+  "key_of_stars.quick_study": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.quick_study",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/quick_study"
+      }
+    ]
+  },
+  "key_of_stars.key_turn": {
+    "subtitle": "subtitles.circle_of_inevitability.key_of_stars.key_turn",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:key_of_stars/key_turn"
+      }
+    ]
   }
 }
