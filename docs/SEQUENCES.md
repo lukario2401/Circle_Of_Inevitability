@@ -47,7 +47,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Pathway | G (1) | H (2) | J (3) | K (4) | L (5) | N (6) | M (7) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Wanderer | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
-| Key Of Stars | planned, no abilities yet (docs/KEY_OF_STARS.md): Door Opening 9 (sneak: Slip Free) | Tricks 8 (wheel) | Star Divination 7 (sneak: Interference) | Record 6 (sneak: Replay) | Travel 5 (wheel) | Secrets and Space 4 (wheel) | Starlight 2 (wheel) |
+| Key Of Stars | Door Opening 9 (sneak: Slip Free) | Tricks 8 (wheel: Flash, Black Screen, Loud Noise, Frost Ray, Gale, Tumble, Escape Trick, all at 8) | Star Divination 7 (sneak: Interference) | Record 6 (not written yet) | Travel 5 (wheel: Traveler's Door, Blink, Invisible Hand, Star Anchor at 5, Wandering 3) | Secrets and Space 4 (not written yet) | Starlight 2 (not written yet) |
 | Worm Of Time | Life Theft 9 | Theft 8 | Parasite 4 | - | - | - | - |
 | Hand Of Order | Halt 9 (sneak: Presence) | Jurisdiction 8 (sneak: Recognition) | Interrogation 7 (wheel: Psychic Lashing, Psychic Piercing, Whip of Pain, all at 7) | Verdict 6 (wheel: Imprison, Exile, Death, Maintain Secrecy at 6, Deprivation, Execution at 4) | Decree 6 (wheel: Prohibition: Passage, Prohibition: Concealment at 6, Imperative: Reality, Contract at 4) | Punishment 5 (sneak: Sword of Judgment at 3) | Order 2 (wheel: Balance, Divide the Battlefield, Law: No Return at 2, Order Proxy, Quell Disorder at 1, Court of Judgment at 0) |
 | Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |

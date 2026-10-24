@@ -2,7 +2,7 @@
 
 The Key Of Stars Pathway is the Door Pathway of Lord of the Mysteries, the Magician tarot card: Apprentice (9), Trickmaster (8), Astrologer (7), Scribe (6), Traveler (5), Secrets Sorcerer (4), Wanderer (3), Planeswalker (2), Key of Stars (1), Door (0). Source: the Door Pathway and Door Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-No ability is written as code yet. This file is the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see BEAUTY_GODDESS.md). Every look, sound and picture is already made ("Looks, sounds and pictures" at the end).
+Keys 1, 2, 3 and 5 are written, with what grows on them and the passives ("What is built"); keys 4, 6 and 7 are still the plan below and answer "not written yet". This file is the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. Every look, sound and picture is already made ("Looks, sounds and pictures" at the end).
 
 Pathway name in code: `"Key Of Stars"`. The first `KeyOfStars` class (Star Burst, Dash, Buff, Seal, Transport, Orbital, Cosmic Plague) is now the `Wanderer` Pathway (`Wanderer.java`, `"Wanderer"`); it is not part of this design.
 
@@ -241,6 +241,27 @@ Gas Transfer, Fog, Ignition, Object Manipulation and Electric Shock (the weaker 
 4. Door Opening ignores Teleport roots here, as in the book. Keep that, or make it respect them?
 5. Costs from Sequence 2 up are guesses. What is the Spirituality pool at those Sequences?
 6. Should Pocket Space be the vanilla Ender Chest storage, or its own?
+
+## What is built
+
+The code is in `beyonder_characteristics/key_of_stars/`: `KeyOfStars` (keys 1 and 3, the Starlit mark, the passives, every cost and cooldown rule, and keys 4, 6 and 7 as empty methods already wired to their keys), `KeyOfStarsTricks` (key 2) and `KeyOfStarsTravel` (key 5). Every number is a constant at the top of its class, with the line of this plan it comes from. `PathwayAbilities` lists all seven keys (4, 6 and 7 as not stealable until they do something; Travel never, since Wandering needs its own key).
+
+| Part | State |
+| --- | --- |
+| 1 Door Opening / Slip Free | Built, with Astrologer (allies come along), Secrets Sorcerer (Teleport roots on you open) and Wanderer (walls up to 16). A real door, trapdoor or gate within 8 swings open or shut, free. |
+| 2 Tricks (all seven) | Built. Escape Trick's longer shift from the Secrets Sorcerer too. Free with Door of Doors. |
+| 3 Star Divination / Interference | Built, with Dimension Sight (Planeswalker). The reading tells health, Pathway and Sequence (players) and effects; "the last ability it used" is not kept anywhere in the mod yet, so it is left out. |
+| 4 Record / Replay | Not yet (Record will use `PathwayAbilities`, not a new registry: replayed powers at full strength) |
+| 5 Travel (all five) | Built, with every growth of Traveler's Door, Blink's quick powers (Secrets Sorcerer), Symbolization and Conceptualization. Not yet: Anchors across dimensions (no cross-dimension teleport in the kit yet), Blink's echoing afterimages (Planeswalker: needs the Echo part). |
+| 6 Secrets and Space, 7 Starlight | Not yet |
+| Starlit | Built (`status/Starlit`); you and allied players within 64 see your marks through walls, Planeswalker anywhere |
+| Passives | All but Quick Study (6, it goes with Record). Footprints of Freedom: roots 25% shorter, berry bushes and powder snow do not hurt; the slowing in cobwebs, bushes and powder snow is the client's own movement and is left out. Starlit Eyes: blindness and nausea do not take (there are no illusions in the mod to break yet). |
+
+New reusable parts (see SPELL_KIT.md): `combat/Teleport` (with `throughWall` for Door Opening and `standNear`), `status/Unbound` (`free`, `breakControl`, `addBreaker`), `status/Starlit`, `status/Anchors`, `Root.addDurationScale`, `Unreadable.addTurnedAwayListener`.
+
+What the next half needs, already in place: `Starlit.has`/`consume` (Exile, Starlight Seal), `status/Exile` (Exile's space-time storm), `Unbound` (the Seal's "cleansing does not end it": give it an immunity), `KeyOfStars.starlit` and `rootTicks` (Door of Doors' longer roots), the empty `keyOfStarsRecord`, `keyOfStarsSecrets` and `keyOfStarsStarlight`, and every look in `KeyOfStarsFx`.
+
+To try it: `/sequence pathway @s "Key Of Stars"`, `/sequence set @s 0`, `/sequence spirituality @s 100000`.
 
 ## Looks, sounds and pictures
 

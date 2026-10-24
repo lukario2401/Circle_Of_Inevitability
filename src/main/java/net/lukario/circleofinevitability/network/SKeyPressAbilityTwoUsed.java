@@ -23,6 +23,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortunePoems.knightOfMisfortuneMidnightPoem;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder.handOfOrderJurisdiction;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Wanderer.wandererDash;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTricks.keyOfStarsTricks;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorDoor;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageFlame;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility2;
@@ -62,6 +63,8 @@ public class SKeyPressAbilityTwoUsed {
         KeySeal.pressed(player, 2);
 
         wandererDash(player,level,serverLevel, false);
+
+        keyOfStarsTricks(player, level, serverLevel, false);
         attendantOfMysteriesFlamingJump(player,level,serverLevel, false);
         handOfOrderJurisdiction(player,level,serverLevel, false);
         frenziedMageFlame(player,level,serverLevel,false);

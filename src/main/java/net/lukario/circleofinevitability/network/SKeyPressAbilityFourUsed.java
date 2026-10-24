@@ -21,6 +21,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess.beautyGoddessPotions;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderVerdicts.handOfOrderVerdict;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Wanderer.wandererSeal;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars.keyOfStarsRecord;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpearSkull;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageHammer;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn.handOfGodDawn;
@@ -61,6 +62,8 @@ public class SKeyPressAbilityFourUsed {
         KeySeal.pressed(player, 4);
 
         wandererSeal(player,level,serverLevel,false);
+
+        keyOfStarsRecord(player, level, serverLevel, false);
         attendantOfMysteriesAirCannon(player,level,serverLevel,false);
         frenziedMageHammer(player,level,serverLevel,false);
         handOfOrderVerdict(player,level,serverLevel,false);

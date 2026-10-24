@@ -8,11 +8,15 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Unreadable: an entity cannot be picked out from further than a few blocks for a while. A false sky full of wrong
@@ -20,6 +24,7 @@ import net.minecraftforge.fml.common.Mod;
  *
  *   Unreadable.apply(ally, 40, 6.0);     // 2 seconds: nobody further than 6 blocks can pick it out
  *   Unreadable.isUnreadable(entity)    Unreadable.range(entity)    Unreadable.ticksLeft(entity)    Unreadable.end(ally)
+ *   Unreadable.addTurnedAwayListener((chooser, target) -> ...)    // an ability's aiming was turned away from it
  *
  * While it lasts:
  *   - mobs further than 'range' cannot pick it as a target, and those hunting it from further away lose it
@@ -45,9 +50,31 @@ public final class Unreadable {
     private static final String TICKS = "Ticks";
     private static final String RANGE = "Range";
 
+    /** Someone tried to pick an Unreadable entity out from too far and was turned away (see addTurnedAwayListener). */
+    @FunctionalInterface
+    public interface TurnedAway {
+        void turnedAway(Player chooser, LivingEntity target);
+    }
+
+    private static final List<TurnedAway> TURNED_AWAY = new ArrayList<>();
+
     static {
-        Spells.addUnchoosableCheck((chooser, target) -> isUnreadable(target)
-                && (chooser == null || chooser.distanceTo(target) > range(target)));
+        Spells.addUnchoosableCheck((chooser, target) -> {
+            boolean refused = isUnreadable(target) && (chooser == null || chooser.distanceTo(target) > range(target));
+            if (refused && chooser != null && chooser != target) {
+                for (TurnedAway listener : List.copyOf(TURNED_AWAY)) listener.turnedAway(chooser, target);
+            }
+            return refused;
+        });
+    }
+
+    /**
+     * Once, in a static block: told every time an ability's aiming (Spells.canBeChosen with a known chooser) passes
+     * over an Unreadable entity because the chooser is too far. Aiming asks often, so a listener that acts should act
+     * once (Key Of Stars' Interference turns the first search back and is done).
+     */
+    public static void addTurnedAwayListener(TurnedAway listener) {
+        TURNED_AWAY.add(listener);
     }
 
     private Unreadable() {}

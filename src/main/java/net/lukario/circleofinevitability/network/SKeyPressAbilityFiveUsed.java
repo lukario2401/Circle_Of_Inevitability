@@ -23,6 +23,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneSpirits.knightOfMisfortuneSpiritCommanding;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderDecrees.handOfOrderDecree;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Wanderer.wandererTransport;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTravel.keyOfStarsTravel;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSpikes;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageMeteor;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition.princeOfAbolitionDisorder;
@@ -61,6 +62,8 @@ public class SKeyPressAbilityFiveUsed {
         KeySeal.pressed(player, 5);
 
         wandererTransport(player,level,serverLevel, false);
+
+        keyOfStarsTravel(player, level, serverLevel, false);
         attendantOfMysteriesCountdown(player,level,serverLevel, false);
         handOfOrderDecree(player,level,serverLevel, false);
         frenziedMageMeteor(player,level,serverLevel,false);

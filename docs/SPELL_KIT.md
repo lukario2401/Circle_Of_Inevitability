@@ -127,6 +127,12 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Hold an entity as a root would, without a root's timer or ring, while something says so (every `Root.has` check obeys) | [`Root.addHold`](#root-and-freeze) | `root/` |
 | Tell an ability's hit (`Spells.strike...`) from a plain swing in a hurt event | [`Spells.isSpellHit`](#1-spells-aiming-and-enemies) | `combat/` |
 | Make a zone last longer, or end every enemy zone near a spot (a Quell) | [`Zone.extend`, `Zone.closeNear`](#zone-ground-that-keeps-doing-something) | `combat/` |
+| Move someone from here to there at once, asking whether they may (Teleport roots, Decrees), with the fall taken off; the wall in front and the far side of it | [`Teleport`](#teleport-from-here-to-there) | `combat/` |
+| Every lock on someone springs open: roots, harmful effects, fire, control, and nothing of that kind takes for a moment (a lock picked, a mind shaken free) | [`Unbound`](#unbound) | `status/` |
+| A few creatures "caught" by one player at once (at most 3), seen by them and their allies, needed by what comes next | [`Starlit`](#starlit) | `status/` |
+| Places a player saved, to go back to (waypoints, recall points), kept through death | [`Anchors`](#anchors) | `status/` |
+| Roots on someone last longer or shorter while something is true (feet no hold keeps for long) | [`Root.addDurationScale`](#root-and-freeze-immunities) | `root/` |
+| Know when an ability's aiming was turned away from an Unreadable entity (turn the search back) | [`Unreadable.addTurnedAwayListener`](#unreadable) | `status/` |
 
 All of it runs on the server. `sl` is the `ServerLevel` your ability method gets.
 
@@ -995,6 +1001,24 @@ Used in `webSwing` and `drawInFate` in `Apocalypse.java`.
 
 ---
 
+## Teleport: from here to there
+
+The one place to move someone at once. It asks whether they may go (a Teleport root, or a hold such as a Decree against
+passage), puts them there, takes the fall off and, if asked, ends the control on them. Every Key Of Stars door, hop and blink.
+
+```java
+Teleport.of(player).go(sl, there);                          // false (nothing happens) when rooted
+Teleport.of(player).fallGuard(40).unbinding().go(sl, there);   // no fall damage for 2 s; mind control lets go (Unbound)
+Teleport.of(player).ignoringTeleportRoots().go(sl, there);  // an Apprentice's Door Opening
+Teleport.canGo(entity)                                      // ask first, so a refusal costs nothing
+Teleport.fits(entity, sl, feet)                             // its body fits there (any entity, not only players)
+Teleport.standNear(entity, sl, wanted, 3)                   // the nearest spot within 3 blocks where it fits, or null
+Teleport.WallPass pass = Teleport.throughWall(player, sl, 6);   // the wall right ahead (no thicker than 6): face() and exit()
+Teleport.addListener((entity, from, to) -> ...)             // once: told after every teleport made through here
+```
+
+`Spells.blinkSpot` (toward the crosshair) and `Spells.freeSpotNear` (to the side) find where to go.
+
 ## Transit: travel inside a shot
 
 The caster becomes part of a `Shot` they throw, travels with it and steps out where it lands. A flame they merge with, a bolt they ride, a card they fold into.
@@ -1580,7 +1604,59 @@ Unreadable.apply(ally, 20, 6.0);       // 1 s, 6 blocks: put it on again every h
 Unreadable.isUnreadable(entity)   Unreadable.range(entity)   Unreadable.ticksLeft(entity)   Unreadable.end(entity)
 ```
 
-Saved with the entity. The Illuminator's False Constellations.
+Saved with the entity. The Illuminator's False Constellations, the Key Of Stars' Interference.
+
+Something that should know when an ability's aiming passed over an Unreadable entity because the chooser was too far
+(the Key Of Stars turns the first search back on its caster):
+
+```java
+Unreadable.addTurnedAwayListener((chooser, target) -> { ... });   // once, in a static block; aiming asks often, so act once
+```
+
+### Unbound
+
+Every lock on an entity springs open at once, and for a moment nothing of that kind takes on it again. The Key Of Stars' Slip Free.
+
+```java
+Unbound.free(target, 30, false);     // roots (not a Teleport one), harmful effects, fire, Cleansing statuses and control end;
+                                     // for 1.5 s no root and no harmful effect takes on it
+Unbound.free(target, 30, true);      // Teleport roots too
+Unbound.breakControl(target);        // only the control (mind control, strings): see addBreaker
+Unbound.isUnbound(entity)   Unbound.ticksLeft(entity)
+Unbound.addBreaker(entity -> MyCharm.isCharmed(entity) && MyCharm.end(entity));   // once: a kind of control it ends
+```
+
+A hold that is not a root (a Decree's Rule) is not its to open. Nobody registers a breaker yet: give one to every control a
+Pathway adds (a charm, a puppet's string on a player), and `free` and `breakControl` end it.
+
+### Starlit
+
+One player's mark on a few creatures (at most `Starlit.MAX_PER_CASTER`, 3; a new one past that replaces the oldest). It says
+"caught": what comes next can need it (the Key Of Stars' Exile and Starlight Seal), and the Pathway draws it for the caster and
+their allies.
+
+```java
+Starlit.mark(target, player, 240);           Starlit.has(target, player)     Starlit.hasAny(target)
+Starlit.ticksLeft(target, player)            Starlit.consume(target, player)  // used up: true if it was there
+Starlit.marked(player)                       Starlit.markers(target)
+Starlit.addListener((caster, target) -> ...) // once: a mark ended (time up, replaced, consumed, died, logged out)
+```
+
+Nothing shows by itself (`KeyOfStars.starlit` marks and shows it). Not saved.
+
+### Anchors
+
+Places a player saved, each name its own list (start it with your class). Kept through death.
+
+```java
+Anchors.Anchor dropped = Anchors.add(player, "my_class_marks", sl, spot, 12000, 3);   // 10 minutes, at most 3 (the oldest goes)
+Anchors.list(player, "my_class_marks")                         // the live ones, oldest first
+Anchors.removeNear(player, "my_class_marks", sl, spot, 1.5)    // picked up (or null)
+Anchors.aimed(player, "my_class_marks", 10)                    // the one in this dimension nearest the crosshair, 10 degrees at most
+anchor.at()   anchor.isIn(level)   anchor.until()
+```
+
+Going to one in another dimension is not in the kit yet. The Key Of Stars' Star Anchors.
 
 ### Construct
 
@@ -1679,6 +1755,14 @@ Some bodies cannot be held. A rule, once in a static block, for as long as it sa
 Root.addImmunity((entity, restriction) -> restriction == RootRestriction.MOVE && isAnchored(entity));   // per restriction
 Freeze.addImmunity(entity -> isAnchored(entity));                                                     // no ice takes
 Root.isImmune(entity, restriction)   Freeze.isImmune(entity)
+```
+
+Roots that last longer or shorter on some bodies (the Key Of Stars' Footprints of Freedom, a quarter shorter, and Astral
+Footing, Teleport roots half as long):
+
+```java
+Root.addDurationScale((entity, restriction) -> isSlippery(entity) ? 0.75f : 1f);   // once; every rule that applies is multiplied in
+Root.scaledTicks(entity, restriction, ticks)                                       // what a root of 'ticks' really lasts on it
 ```
 
 A restriction it is immune to is left out when a root is applied, and one it already had ends at its next tick; ice it already had breaks. A frozen player is rooted through `Root` too, so give both rules. A hold you put on yourself must get past your own rule (the Star Dragon's Singularity holds a Condenser while it gathers: its rule says false while `StarDragonGravity.isGathering`). The Star Dragon's Weight and Density and Neutron Star (MOVE, JUMP and TELEPORT, and no freezing), in `StarDragon`'s events.

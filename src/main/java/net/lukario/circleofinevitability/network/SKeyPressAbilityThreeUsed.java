@@ -23,6 +23,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortune.knightOfMisfortuneNightmare;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderInterrogation.handOfOrderInterrogation;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Wanderer.wandererBuff;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars.keyOfStarsAstrology;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorSerpent;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage.frenziedMageFrost;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime.wormOfTimeAbility3;
@@ -62,6 +63,8 @@ public class SKeyPressAbilityThreeUsed {
         KeySeal.pressed(player, 3);
 
         wandererBuff(player,level,serverLevel,false);
+
+        keyOfStarsAstrology(player, level, serverLevel, false);
         attendantOfMysteriesDamageTransfer(player,level,serverLevel,false);
         handOfOrderInterrogation(player,level,serverLevel,false);
         frenziedMageFrost(player,level,serverLevel,false);

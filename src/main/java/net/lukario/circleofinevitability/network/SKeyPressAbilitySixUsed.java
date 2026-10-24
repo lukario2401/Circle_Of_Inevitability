@@ -15,6 +15,7 @@ import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse.apocalypseUnaging;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Wanderer.wandererOrbital;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars.keyOfStarsSecrets;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Conqueror.conquerorGalvanization;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor.paleEmperorWings;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel.hangedManCull;
@@ -61,6 +62,8 @@ public class SKeyPressAbilitySixUsed {
         KeySeal.pressed(player, 6);
 
         wandererOrbital(player,level,serverLevel,false);
+
+        keyOfStarsSecrets(player, level, serverLevel, false);
         handOfOrderJudgment(player,level,serverLevel,false);
         frenziedMageEntropy(player,level,serverLevel,false);
         attendantOfMysteriesHistoricalVoid(player,level,serverLevel,false);

@@ -59,6 +59,12 @@ import java.util.function.BiPredicate;
  *
  * A body too dense to hold (Star Dragon's Neutron Star and Weight and Density: MOVE, JUMP and TELEPORT), a mind that
  * no word binds (ABILITIES). Freeze has its own Freeze.addImmunity; a frozen player is rooted through here too.
+ *
+ *   Root.addDurationScale((entity, restriction) -> ...)   // once, in a static block: a root put on that entity lasts
+ *                                                         // this many times as long (0.75 = a quarter shorter)
+ *
+ * Feet that no hold keeps for long (Key Of Stars' Footprints of Freedom, Astral Footing). Every rule that applies is
+ * multiplied in; a root never lasts less than one tick.
  */
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class Root {
@@ -104,10 +110,31 @@ public final class Root {
         CompoundTag tag = rootTag(target, true);
         for (RootRestriction restriction : taking) {
             String key = restriction.name();
-            tag.putInt(key, Math.max(tag.getIntOr(key, 0), ticks));
+            tag.putInt(key, Math.max(tag.getIntOr(key, 0), scaledTicks(target, restriction, ticks)));
         }
         updateModifiers(target);
         if (taking.contains(RootRestriction.MOVE)) holdInPlace(target);
+    }
+
+    /** How much longer (or shorter) a root lasts on an entity: 1 = as given. */
+    @FunctionalInterface
+    public interface DurationScale {
+        float scale(LivingEntity target, RootRestriction restriction);
+    }
+
+    private static final List<DurationScale> DURATION_SCALES = new ArrayList<>();
+
+    /** Once, in a static block: roots put on some entities last longer or shorter (see the class comment). */
+    public static void addDurationScale(DurationScale rule) {
+        DURATION_SCALES.add(rule);
+    }
+
+    /** How long a root of 'ticks' really lasts on this entity, after every addDurationScale rule. */
+    public static int scaledTicks(LivingEntity target, RootRestriction restriction, int ticks) {
+        if (DURATION_SCALES.isEmpty()) return ticks;
+        float scale = 1f;
+        for (DurationScale rule : DURATION_SCALES) scale *= Math.max(0f, rule.scale(target, restriction));
+        return Math.max(1, Math.round(ticks * scale));
     }
 
     private static final List<BiPredicate<LivingEntity, RootRestriction>> IMMUNE = new ArrayList<>();

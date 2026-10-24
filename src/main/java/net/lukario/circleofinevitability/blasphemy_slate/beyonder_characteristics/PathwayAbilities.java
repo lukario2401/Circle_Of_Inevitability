@@ -7,6 +7,9 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationZombie;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTravel;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTricks;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderDecrees;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderInterrogation;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderOrder;
@@ -102,6 +105,22 @@ public final class PathwayAbilities {
                     (player, level, sl) -> AttendantOfMysteries.attendantOfMysteriesHistoricalVoid(player, level, sl, true)),
             new Ability("Attendant Of Mysteries", 7, "Grafting", 3, SNEAK, STEALABLE,
                     (player, level, sl) -> AttendantOfMysteries.attendantOfMysteriesGrafting(player, level, sl, true)),
+
+            // ---- Key Of Stars (docs/KEY_OF_STARS.md); keys 4, 6 and 7 are not written yet: make them STEALABLE once they are ----
+            new Ability("Key Of Stars", 1, "Door Opening", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> KeyOfStars.keyOfStarsDoorOpening(player, level, sl, true)),
+            new Ability("Key Of Stars", 2, "Tricks", 8, SNEAK, STEALABLE,                       // stolen: no wheel, its last (or a random) entry
+                    (player, level, sl) -> KeyOfStarsTricks.keyOfStarsTricks(player, level, sl, true)),
+            new Ability("Key Of Stars", 3, "Star Divination", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> KeyOfStars.keyOfStarsAstrology(player, level, sl, true)),
+            new Ability("Key Of Stars", 4, "Record", 6, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> KeyOfStars.keyOfStarsRecord(player, level, sl, true)),
+            new Ability("Key Of Stars", 5, "Travel", 5, SNEAK, OWN_PATHWAY_ONLY,                // Wandering needs its own Pathway's tick and key
+                    (player, level, sl) -> KeyOfStarsTravel.keyOfStarsTravel(player, level, sl, true)),
+            new Ability("Key Of Stars", 6, "Secrets and Space", 4, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> KeyOfStars.keyOfStarsSecrets(player, level, sl, true)),
+            new Ability("Key Of Stars", 7, "Starlight", 2, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> KeyOfStars.keyOfStarsStarlight(player, level, sl, true)),
 
             // ---- Hand Of Order (docs/HAND_OF_ORDER.md) ----
             new Ability("Hand Of Order", 1, "Halt", 9, SNEAK, STEALABLE,
