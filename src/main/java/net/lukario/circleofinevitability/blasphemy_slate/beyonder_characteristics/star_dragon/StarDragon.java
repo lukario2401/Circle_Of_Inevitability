@@ -87,13 +87,13 @@ public class StarDragon {
     // Ability 1 - Star Chart (Sequence 9)
     private static final int CHART_SEQUENCE = 9;
     private static final int CHART_COST = 250;
-    private static final int CHART_COOLDOWN = 60;
+    private static final int CHART_COOLDOWN = 1;
     private static final double CHART_RANGE = 24.0;
     private static final int CHART_TICKS = 200;                     // Charted for 10 seconds
     // sneak: Fate Glimpse (Sequence 8)
     private static final int GLIMPSE_SEQUENCE = 8;
     private static final int GLIMPSE_COST = 350;                    // the plan's 600: Sequence 8 holds only 400
-    private static final int GLIMPSE_COOLDOWN = 400;
+    private static final int GLIMPSE_COOLDOWN = 1;
     private static final int GLIMPSE_TICKS = 200;
     private static final int GLIMPSE_DODGES = 2;                    // the first two attacks aimed at you go wide
     private static final double GLIMPSE_STEP = 1.2;                 // and you slip this far aside

@@ -100,7 +100,7 @@ public class HandOfOrder {
     // Ability 1 - Halt (Sequence 9)
     private static final int HALT_SEQUENCE = 9;
     private static final int HALT_COST = 250;
-    private static final int HALT_COOLDOWN = 160;
+    private static final int HALT_COOLDOWN = 1;
     private static final double HALT_RANGE = 16.0;
     private static final int HALT_TICKS = 40;                    // held this long (a player: HALT_PLAYER_TICKS)
     private static final int HALT_PLAYER_TICKS = 20;
@@ -110,7 +110,7 @@ public class HandOfOrder {
     private static final int HALT_FORGET_TICKS = 100;            // ...cannot pick you again for this long
     // sneak: Presence
     private static final int PRESENCE_COST = 400;
-    private static final int PRESENCE_COOLDOWN = 280;
+    private static final int PRESENCE_COOLDOWN = 1;
     private static final double PRESENCE_RADIUS = 8.0;
     private static final double PRESENCE_JUDGE_RADIUS = 12.0;    // from Judge (6)
     private static final int PRESENCE_TICKS = 120;               // Slowness II and Weakness I this long
@@ -123,7 +123,7 @@ public class HandOfOrder {
     static final int JUDGE_SEQUENCE = 6;                         // many things grow at Judge
     private static final int JURISDICTION_SEQUENCE = 8;
     private static final int JURISDICTION_COST = 1250;
-    private static final int JURISDICTION_COOLDOWN = 400;
+    private static final int JURISDICTION_COOLDOWN = 1;
     private static final int JURISDICTION_TICKS = 2400;
     private static final double JURISDICTION_RADIUS = 24.0;
     private static final double JURISDICTION_JUDGE_RADIUS = 48.0;        // from Judge (6)
@@ -134,7 +134,7 @@ public class HandOfOrder {
     private static final float JURISDICTION_DECREES_LONGER = 1.25f;      // ...and your Decrees last 25% longer
     // sneak: Recognition
     private static final int RECOGNITION_COST = 600;
-    private static final int RECOGNITION_COOLDOWN = 120;
+    private static final int RECOGNITION_COOLDOWN = 1;
     private static final double RECOGNITION_RANGE = 48.0;
     private static final int RECOGNITION_TICKS = 1200;
     private static final double RECOGNITION_SHOWN = 64.0;                // its distance and its trail are shown within this
@@ -145,7 +145,7 @@ public class HandOfOrder {
     // Ability 6 - Punishment (Sequence 5)
     private static final int PUNISHMENT_SEQUENCE = 5;
     private static final int PUNISHMENT_COST = 3000;
-    private static final int PUNISHMENT_COOLDOWN = 300;
+    private static final int PUNISHMENT_COOLDOWN = 1;
     private static final double PUNISHMENT_RANGE = 24.0;
     private static final int PUNISHMENT_TICKS = 500;
     private static final float CONVICT_MORE_DAMAGE = 1.3f;               // you deal 30% more to the Convict...
@@ -154,7 +154,7 @@ public class HandOfOrder {
     // sneak: Sword of Judgment
     private static final int SWORD_SEQUENCE = 3;
     private static final int SWORD_COST = 12000;
-    private static final int SWORD_COOLDOWN = 600;
+    private static final int SWORD_COOLDOWN = 1;
     private static final double SWORD_RANGE = 32.0;                      // doubled from Balancer (2); doubled again inside
     private static final int SWORD_RANGE_SEQUENCE = 2;                   // your Jurisdiction (from Chaos Hunter)
     private static final float SWORD_DAMAGE = 80f;

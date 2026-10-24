@@ -108,7 +108,7 @@ public class Illuminator {
     // Ability 1 - Compound Flask (Sequence 9)
     private static final int FLASK_SEQUENCE = 9;
     private static final int FLASK_COST = 250;
-    private static final int FLASK_COOLDOWN = 40;
+    private static final int FLASK_COOLDOWN = 1;
     private static final double FLASK_RANGE = 24.0;
     private static final double FLASK_SPEED = 1.4;              // blocks a tick: a lob you can see coming
     private static final float FLASK_DAMAGE = 36f;              // to the one it hits...
@@ -125,7 +125,7 @@ public class Illuminator {
     private static final float ACID_PER_SECOND = 4f;            // ...that bites whoever stands in it and Corrodes them
     // sneak: Recall
     private static final int RECALL_COST = 300;                 // Sequence 8 holds 400
-    private static final int RECALL_COOLDOWN = 500;
+    private static final int RECALL_COOLDOWN = 1;
     private static final int RECALL_TICKS = 60;                 // back 3 seconds...
     private static final int RECALL_FAR_SEQUENCE = 5;           // ...5 from Astronomer...
     private static final int RECALL_FAR_TICKS = 100;
@@ -138,7 +138,7 @@ public class Illuminator {
     // Ability 2 - Survey (Sequence 8)
     private static final int SURVEY_SEQUENCE = 8;
     private static final int SURVEY_COST = 350;                 // Sequence 8 holds 400 (the plan's 600 could not be paid)
-    private static final int SURVEY_COOLDOWN = 300;
+    private static final int SURVEY_COOLDOWN = 1;
     private static final double SURVEY_REACH = 40.0;
     private static final int SURVEY_FAR_SEQUENCE = 5;           // Astronomer: further
     private static final double SURVEY_FAR_REACH = 64.0;
@@ -149,7 +149,7 @@ public class Illuminator {
     private static final int RESIDUE_AGE = 1200;                // ...were cast in the last minute show (combat/Residue)...
     // sneak: Ritual Circle
     private static final int RITUAL_COST = 400;
-    private static final int RITUAL_COOLDOWN = 500;
+    private static final int RITUAL_COOLDOWN = 1;
     private static final double RITUAL_RADIUS = 6.0;
     private static final int RITUAL_WIDE_SEQUENCE = 3;          // Arcane Scholar: a wider circle
     private static final double RITUAL_WIDE_RADIUS = 10.0;
@@ -162,7 +162,7 @@ public class Illuminator {
     // Ability 3 - Appraise (Sequence 7)
     private static final int APPRAISE_SEQUENCE = 7;
     private static final int APPRAISE_COST = 1250;
-    private static final int APPRAISE_COOLDOWN = 60;
+    private static final int APPRAISE_COOLDOWN = 1;
     private static final double APPRAISE_RANGE = 24.0;
     private static final int APPRAISED_TICKS = 240;             // the mark lasts 12 seconds...
     private static final float APPRAISED_BONUS = 0.15f;         // ...and your ability hits on it do this much more
@@ -172,7 +172,7 @@ public class Illuminator {
     private static final double PARAGON_EXPLOIT_RANGE = 64.0;   // ...and can be Exploited from anywhere you see it
     // sneak: Exploit Flaw
     private static final int EXPLOIT_COST = 1500;
-    private static final int EXPLOIT_COOLDOWN = 200;
+    private static final int EXPLOIT_COOLDOWN = 1;
     private static final double EXPLOIT_RANGE = 24.0;
     private static final float EXPLOIT_DAMAGE = 90f;            // through armor (Spells.strikeTrue)
     private static final int EXPLOIT_STAGGER = 20;
