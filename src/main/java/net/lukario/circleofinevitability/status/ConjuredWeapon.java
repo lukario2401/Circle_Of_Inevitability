@@ -1,6 +1,9 @@
 package net.lukario.circleofinevitability.status;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.minecraftforge.event.entity.living.LivingEvent;
+import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpirituality;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.minecraft.network.chat.Component;
@@ -27,7 +30,7 @@ import java.util.UUID;
 /**
  * A conjured weapon: a weapon that is not an item. A sword of light, a blade of shadow, claws of flame. Nothing is put
  * in the hand, so nothing can be dropped, stolen or duplicated: while it is drawn, the player's normal hits (fist or
- * whatever they hold) ARE the weapon's hits. Works from any class/ability:
+ * whatever they hold) ARE the weapon's hits (a Beyonder mob's own blows too, when its ability draws one). Works from any class/ability:
  *
  *   ConjuredWeapon.of("my_class_flame_blade")
  *           .lasts(800)                        // ticks; 0 = until put away                    (default 0)
@@ -56,12 +59,12 @@ public final class ConjuredWeapon {
 
     @FunctionalInterface
     public interface Hit {
-        float run(Player attacker, LivingEntity target, float amount, float charge, ServerLevel level);
+        float run(LivingEntity attacker, LivingEntity target, float amount, float charge, ServerLevel level);
     }
 
     @FunctionalInterface
     public interface End {
-        void run(Player wielder, Ending why);
+        void run(LivingEntity wielder, Ending why);
     }
 
     private final String name;
@@ -97,7 +100,7 @@ public final class ConjuredWeapon {
     public ConjuredWeapon onEnd(End action) { this.onEnd = action; return this; }
 
     /** Draws it now. */
-    public void draw(Player player) {
+    public void draw(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl) || !player.isAlive()) return;
         if (isDrawn(player, name)) finish(player, name, Ending.REPLACED);
         DRAWN.computeIfAbsent(player.getUUID(), id -> new HashMap<>()).put(name, new Drawn(this, sl.getGameTime()));
@@ -123,7 +126,7 @@ public final class ConjuredWeapon {
     }
 
     /** Puts it away now (its onEnd runs with PUT_AWAY). */
-    public static void putAway(Player player, String name) {
+    public static void putAway(LivingEntity player, String name) {
         if (isDrawn(player, name)) finish(player, name, Ending.PUT_AWAY);
     }
 
@@ -135,7 +138,7 @@ public final class ConjuredWeapon {
         return Physique.id("conjured_weapon_reach_" + name.toLowerCase().replaceAll("[^a-z0-9_]", "_"));
     }
 
-    private static void reachOf(Player player) {
+    private static void reachOf(LivingEntity player) {
         Map<String, Drawn> mine = DRAWN.get(player.getUUID());
         if (mine == null) return;
         for (Drawn drawn : mine.values()) {
@@ -144,7 +147,7 @@ public final class ConjuredWeapon {
         }
     }
 
-    private static void finish(Player player, String name, Ending why) {
+    private static void finish(LivingEntity player, String name, Ending why) {
         Map<String, Drawn> mine = DRAWN.get(player.getUUID());
         Drawn drawn = mine == null ? null : mine.remove(name);
         if (mine != null && mine.isEmpty()) DRAWN.remove(player.getUUID());
@@ -158,7 +161,7 @@ public final class ConjuredWeapon {
         }
     }
 
-    private static void finishAll(Player player, Ending why) {
+    private static void finishAll(LivingEntity player, Ending why) {
         Map<String, Drawn> mine = DRAWN.get(player.getUUID());
         if (mine == null) return;
         for (String name : mine.keySet().toArray(new String[0])) finish(player, name, why);
@@ -171,7 +174,17 @@ public final class ConjuredWeapon {
 
     @SubscribeEvent
     public static void onConjuredWeaponTick(TickEvent.PlayerTickEvent.Post event) {
-        Player player = event.player();
+        tick(event.player());
+    }
+
+    /** A Beyonder mob's conjured weapon (a mob's ability) wears off and is paid for the same way. */
+    @SubscribeEvent
+    public static void onConjuredWeaponMobTick(LivingEvent.LivingTickEvent event) {
+        if (DRAWN.isEmpty() || event.getEntity() instanceof Player) return;
+        tick(event.getEntity());
+    }
+
+    private static void tick(LivingEntity player) {
         if (DRAWN.isEmpty() || !(player.level() instanceof ServerLevel sl)) return;
         Map<String, Drawn> mine = DRAWN.get(player.getUUID());
         if (mine == null) return;
@@ -184,12 +197,16 @@ public final class ConjuredWeapon {
                 continue;
             }
             if (weapon.upkeepEvery > 0 && weapon.upkeepCost > 0f && age > 0 && age % weapon.upkeepEvery == 0) {
-                if (SoulCore.getSpirituality(player) < weapon.upkeepCost) {
+                if (!(player instanceof Player payer)) {                              // a mob pays from its own bar
+                    if (!MobSpirituality.spend(player, weapon.upkeepCost)) finish(player, weapon.name, Ending.NO_SPIRITUALITY);
+                    continue;
+                }
+                if (SoulCore.getSpirituality(payer) < weapon.upkeepCost) {
                     player.sendSystemMessage(Component.literal("Your spirituality runs dry and the weapon fades."));
                     finish(player, weapon.name, Ending.NO_SPIRITUALITY);
                     continue;
                 }
-                SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - weapon.upkeepCost);
+                SoulCore.setSpirituality(payer, SoulCore.getSpirituality(payer) - weapon.upkeepCost);
             }
         }
         if (now % 20 == 0) reachOf(player);                                         // the modifiers are not saved
@@ -207,9 +224,15 @@ public final class ConjuredWeapon {
     public static void onConjuredWeaponHurt(LivingHurtEvent event) {
         LivingEntity target = event.getEntity();
         if (!(target.level() instanceof ServerLevel sl)) return;
-        if (!(event.getSource().getEntity() instanceof Player player) || event.getSource().getDirectEntity() != player) return;
-        Swing swing = SWINGING.remove(player.getUUID());
-        if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
+        if (!(event.getSource().getEntity() instanceof LivingEntity player) || event.getSource().getDirectEntity() != player) return;
+        Swing swing;
+        if (player instanceof Player) {
+            swing = SWINGING.remove(player.getUUID());
+            if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
+        } else {                                                     // a mob's own blow (not its ability's strike)
+            if (Spells.isSpellHit(target) || !DRAWN.containsKey(player.getUUID())) return;
+            swing = new Swing(target.getUUID(), sl.getGameTime(), 1f);
+        }
         Map<String, Drawn> mine = DRAWN.get(player.getUUID());
         if (mine == null) return;
         float amount = event.getAmount();
@@ -228,7 +251,7 @@ public final class ConjuredWeapon {
 
     @SubscribeEvent
     public static void onConjuredWeaponDeath(LivingDeathEvent event) {
-        if (event.getEntity() instanceof Player player && !player.level().isClientSide()) finishAll(player, Ending.DIED);
+        if (!event.getEntity().level().isClientSide() && DRAWN.containsKey(event.getEntity().getUUID())) finishAll(event.getEntity(), Ending.DIED);
     }
 
     @SubscribeEvent

@@ -246,7 +246,7 @@ public final class KnightOfMisfortuneDarkness {
         KnightOfMisfortuneFx.status(player, Status.DARK_SWORD, SWORD_TICKS);
         float extra = SWORD_DAMAGE * Beyonder.powerLevel(player);
         ConjuredWeapon.of(SWORD).lasts(SWORD_TICKS).damage(extra).reach(SWORD_REACH)
-                .onHit((attacker, target, amount, charge, level) -> swordHit(attacker, target, amount, charge, level))
+                .onHit((attacker, target, amount, charge, level) -> attacker instanceof Player wielder ? swordHit(wielder, target, amount, charge, level) : amount)
                 .onEnd((wielder, why) -> {
                     String old = wielder.getPersistentData().getStringOr(SWORD_TAG, tag);
                     wielder.getPersistentData().remove(SWORD_TAG);
@@ -523,7 +523,7 @@ public final class KnightOfMisfortuneDarkness {
         ConjuredWeapon.of(MANTLE).lasts(MANTLE_TICKS).damage(MANTLE_DAMAGE * Beyonder.powerLevel(player)).reach(MANTLE_REACH)
                 .onHit((attacker, target, amount, charge, level) -> {
                     float share = amount * MANTLE_ARMS_SHARE;
-                    Later.run(level, 1, () -> shadowArms(attacker, level, target, share));
+                    if (attacker instanceof Player wielder) Later.run(level, 1, () -> shadowArms(wielder, level, target, share));
                     return amount;
                 })
                 .onEnd((wielder, why) -> {

@@ -66,102 +66,102 @@ public final class HandOfGodTwilight {
     // =========================
 
     static final int TWILIGHT_SEQUENCE = 3;                      // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
     // Mercury Liquefaction
-    private static final int MERCURY_SEQUENCE = 3;
-    private static final int MERCURY_COST = 10000;
-    private static final int MERCURY_COOLDOWN = 400;
-    private static final int MERCURY_TICKS = 120;                // liquid at most this long (cast again to re-form early)
-    private static final double MERCURY_RANGE = 20.0;
-    private static final double MERCURY_SPEED = 0.6;             // blocks per tick along the ground
-    private static final double MERCURY_WRAP_REACH = 1.5;        // enemies this close as you slide past...
-    private static final int MERCURY_WRAP_TICKS = 40;            // ...are wrapped and held this long
-    private static final float MERCURY_ARMOR_CUT = 0.4f;         // as an ally's Silver Armor: this much less damage...
-    private static final float MERCURY_ARMOR_ABSORPTION = 8f;    // ...and this layer of absorption
-    private static final float MERCURY_CHOKE = 5f;               // as an enemy's coat: it is held and takes this each second
+    static final int MERCURY_SEQUENCE = 3;
+    static final int MERCURY_COST = 10000;
+    static final int MERCURY_COOLDOWN = 400;
+    static final int MERCURY_TICKS = 120;                // liquid at most this long (cast again to re-form early)
+    static final double MERCURY_RANGE = 20.0;
+    static final double MERCURY_SPEED = 0.6;             // blocks per tick along the ground
+    static final double MERCURY_WRAP_REACH = 1.5;        // enemies this close as you slide past...
+    static final int MERCURY_WRAP_TICKS = 40;            // ...are wrapped and held this long
+    static final float MERCURY_ARMOR_CUT = 0.4f;         // as an ally's Silver Armor: this much less damage...
+    static final float MERCURY_ARMOR_ABSORPTION = 8f;    // ...and this layer of absorption
+    static final float MERCURY_CHOKE = 5f;               // as an enemy's coat: it is held and takes this each second
 
     // Silver Rapier
-    private static final int RAPIER_SEQUENCE = 3;
-    private static final int RAPIER_COST = 8000;
-    private static final int RAPIER_COOLDOWN = 200;
-    private static final double RAPIER_RANGE = 32.0;
-    private static final int RAPIER_COUNT = 3;
-    private static final float RAPIER_DAMAGE = 20f;              // each
+    static final int RAPIER_SEQUENCE = 3;
+    static final int RAPIER_COST = 8000;
+    static final int RAPIER_COOLDOWN = 200;
+    static final double RAPIER_RANGE = 32.0;
+    static final int RAPIER_COUNT = 3;
+    static final float RAPIER_DAMAGE = 20f;              // each
 
     // Light Concealment
-    private static final int LIGHT_SEQUENCE = 3;
-    private static final int LIGHT_COST = 6000;
-    private static final int LIGHT_COOLDOWN = 300;
-    private static final double LIGHT_RANGE = 32.0;              // the light you come out of: this far...
-    private static final double LIGHT_AROUND = 4.0;              // ...and within this of the crosshair
-    private static final double LIGHT_ENTRY_REACH = 6.0;         // the light you step into: this close to you
-    private static final int LIGHT_MIN = 10;                     // a light source this bright counts (torch 14, lantern 15)
-    private static final int LIGHT_TRAVEL = 20;                  // hidden on the way this long
-    private static final int LIGHT_HIDDEN_AFTER = 120;           // and this long after it with Mind Concealment up
-    private static final int WITHERING_SEQUENCE = 2;            // Glory: no light needed, you wither away instead
+    static final int LIGHT_SEQUENCE = 3;
+    static final int LIGHT_COST = 6000;
+    static final int LIGHT_COOLDOWN = 300;
+    static final double LIGHT_RANGE = 32.0;              // the light you come out of: this far...
+    static final double LIGHT_AROUND = 4.0;              // ...and within this of the crosshair
+    static final double LIGHT_ENTRY_REACH = 6.0;         // the light you step into: this close to you
+    static final int LIGHT_MIN = 10;                     // a light source this bright counts (torch 14, lantern 15)
+    static final int LIGHT_TRAVEL = 20;                  // hidden on the way this long
+    static final int LIGHT_HIDDEN_AFTER = 120;           // and this long after it with Mind Concealment up
+    static final int WITHERING_SEQUENCE = 2;            // Glory: no light needed, you wither away instead
 
     // Twilight Sword
-    private static final int SWORD_SEQUENCE = 2;
-    private static final int SWORD_COST = 20000;
-    private static final int SWORD_COOLDOWN = 600;
-    private static final double SWORD_RANGE = 48.0;
-    private static final double SWORD_RADIUS = 5.0;
-    private static final float SWORD_DAMAGE = 90f;               // through shields, substitutes and death wards
-    private static final int SWORD_DECAY_TICKS = 200;
-    private static final float SWORD_DECAY_DEPTH = 0.3f;
+    static final int SWORD_SEQUENCE = 2;
+    static final int SWORD_COST = 20000;
+    static final int SWORD_COOLDOWN = 600;
+    static final double SWORD_RANGE = 48.0;
+    static final double SWORD_RADIUS = 5.0;
+    static final float SWORD_DAMAGE = 90f;               // through shields, substitutes and death wards
+    static final int SWORD_DECAY_TICKS = 200;
+    static final float SWORD_DECAY_DEPTH = 0.3f;
 
     // Divine Right Hand
-    private static final int HAND_SEQUENCE = 1;
-    private static final int HAND_COST = 30000;
-    private static final int HAND_COOLDOWN = 1200;
-    private static final double HAND_RANGE = 32.0;
-    private static final int HAND_HOLD = 60;                     // seized and squeezed this long...
-    private static final float HAND_SQUEEZE = 15f;               // ...this much each second...
-    private static final float HAND_FLING = 35f;                 // ...then flung with this much (80 in all)
-    private static final double HAND_FLING_STRENGTH = 2.6;
-    private static final double HAND_FLING_LIFT = 0.9;
-    private static final float BOSS_HEALTH = 150f;               // more than this, or a boss: the hand slams instead
-    private static final double HAND_SLAM_RADIUS = 6.0;
-    private static final float HAND_SLAM_DAMAGE = 80f;
-    private static final int HAND_SLAM_HOLD = 40;                // pressed into the ground this long
-    private static final int HAND_DECAY_TICKS = 120;
-    private static final float HAND_DECAY_DEPTH = 0.2f;
+    static final int HAND_SEQUENCE = 1;
+    static final int HAND_COST = 30000;
+    static final int HAND_COOLDOWN = 1200;
+    static final double HAND_RANGE = 32.0;
+    static final int HAND_HOLD = 60;                     // seized and squeezed this long...
+    static final float HAND_SQUEEZE = 15f;               // ...this much each second...
+    static final float HAND_FLING = 35f;                 // ...then flung with this much (80 in all)
+    static final double HAND_FLING_STRENGTH = 2.6;
+    static final double HAND_FLING_LIFT = 0.9;
+    static final float BOSS_HEALTH = 150f;               // more than this, or a boss: the hand slams instead
+    static final double HAND_SLAM_RADIUS = 6.0;
+    static final float HAND_SLAM_DAMAGE = 80f;
+    static final int HAND_SLAM_HOLD = 40;                // pressed into the ground this long
+    static final int HAND_DECAY_TICKS = 120;
+    static final float HAND_DECAY_DEPTH = 0.2f;
 
     // Passage of Time
-    private static final int TIME_SEQUENCE = 0;
-    private static final int TIME_COST = 40000;
-    private static final int TIME_COOLDOWN = 2400;
-    private static final double TIME_RADIUS = 24.0;
-    private static final int TIME_TICKS = 160;
-    private static final float TIME_DUE = 2f;                    // what they took while frozen lands again this many times
+    static final int TIME_SEQUENCE = 0;
+    static final int TIME_COST = 40000;
+    static final int TIME_COOLDOWN = 2400;
+    static final double TIME_RADIUS = 24.0;
+    static final int TIME_TICKS = 160;
+    static final float TIME_DUE = 2f;                    // what they took while frozen lands again this many times
 
     // Decay
-    private static final int DECAY_SEQUENCE = 0;
-    private static final int DECAY_COST = 35000;
-    private static final int DECAY_COOLDOWN = 1800;
-    private static final double DECAY_RANGE = 32.0;
-    private static final double DECAY_RADIUS = 12.0;
-    private static final int DECAY_TICKS = 240;
-    private static final float DECAY_DEPTH = 0.1f;               // health lost to it at first...
-    private static final float DECAY_DEEPER = 0.05f;             // ...and this much more for every second they stay
-    private static final float DECAY_DEEPEST = 0.5f;
+    static final int DECAY_SEQUENCE = 0;
+    static final int DECAY_COST = 35000;
+    static final int DECAY_COOLDOWN = 1800;
+    static final double DECAY_RANGE = 32.0;
+    static final double DECAY_RADIUS = 12.0;
+    static final int DECAY_TICKS = 240;
+    static final float DECAY_DEPTH = 0.1f;               // health lost to it at first...
+    static final float DECAY_DEEPER = 0.05f;             // ...and this much more for every second they stay
+    static final float DECAY_DEEPEST = 0.5f;
 
     // Divine Kingdom
-    private static final int KINGDOM_SEQUENCE = 0;
-    private static final int KINGDOM_COST = 50000;
-    private static final int KINGDOM_COOLDOWN = 3600;
-    private static final double KINGDOM_RADIUS = 40.0;
-    private static final double KINGDOM_HEIGHT = 24.0;
-    private static final int KINGDOM_TICKS = 1200;
-    private static final float KINGDOM_ENEMY_DAMAGE = 0.7f;      // what enemies inside deal (their blows and abilities)
+    static final int KINGDOM_SEQUENCE = 0;
+    static final int KINGDOM_COST = 50000;
+    static final int KINGDOM_COOLDOWN = 3600;
+    static final double KINGDOM_RADIUS = 40.0;
+    static final double KINGDOM_HEIGHT = 24.0;
+    static final int KINGDOM_TICKS = 1200;
+    static final float KINGDOM_ENEMY_DAMAGE = 0.7f;      // what enemies inside deal (their blows and abilities)
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String MERCURY_ARMOR = "hand_of_god_mercury_armor";
-    private static final String DECAY_ZONE = "hand_of_god_decay";
-    private static final String KINGDOM_ZONE = "hand_of_god_divine_kingdom";
+    static final String MERCURY_ARMOR = "hand_of_god_mercury_armor";
+    static final String DECAY_ZONE = "hand_of_god_decay";
+    static final String KINGDOM_ZONE = "hand_of_god_divine_kingdom";
 
     /** One knight melted into silver. Not saved. */
     private enum MercuryMode { SLIDE, ARMOR, COAT }
@@ -183,8 +183,13 @@ public final class HandOfGodTwilight {
     }
     private static final Map<UUID, Mercury> MERCURY = new HashMap<>();
 
+    /** True while it is melted into silver (Mercury Liquefaction). */
+    static boolean isLiquid(LivingEntity one) {
+        return MERCURY.containsKey(one.getUUID());
+    }
+
     /** Every Divine Kingdom that stands: owner -> where. Not saved (the zone is not either). */
-    private record Kingdom(Player owner, Level level, Vec3 center) {}
+    private record Kingdom(LivingEntity owner, Level level, Vec3 center) {}
     private static final Map<UUID, Kingdom> KINGDOMS = new HashMap<>();
 
     // =========================
@@ -231,7 +236,7 @@ public final class HandOfGodTwilight {
     //                       pass is wrapped and held MERCURY_WRAP_TICKS; you re-form when you get there
     // Cast again while liquid: you re-form at once (free).
     // =========================
-    private static AbilityWheel.Result mercuryLiquefaction(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result mercuryLiquefaction(LivingEntity player, ServerLevel sl) {
         Mercury running = MERCURY.get(player.getUUID());
         if (running != null) {
             reform(player, sl, running);
@@ -279,7 +284,7 @@ public final class HandOfGodTwilight {
     }
 
     /** Every tick while liquid: the drops, the wrapping, going along with the host, the end. */
-    private static void mercuryStep(Player player, ServerLevel sl, Mercury mercury, int step) {
+    private static void mercuryStep(LivingEntity player, ServerLevel sl, Mercury mercury, int step) {
         if (mercury.ended) return;
         if (!Spells.casterStillHere(player, sl) || sl.getGameTime() >= mercury.until) {
             reform(player, sl, mercury);
@@ -308,7 +313,7 @@ public final class HandOfGodTwilight {
     }
 
     /** The silver draws together into the knight again (beside the host, if it coated one). */
-    private static void reform(Player player, ServerLevel sl, Mercury mercury) {
+    private static void reform(LivingEntity player, ServerLevel sl, Mercury mercury) {
         if (mercury.ended) return;
         mercury.ended = true;
         MERCURY.remove(player.getUUID(), mercury);
@@ -327,7 +332,7 @@ public final class HandOfGodTwilight {
     }
 
     /** The ally under the crosshair (not the caster), or null. */
-    private static LivingEntity aimAlly(Player player, ServerLevel sl, double range) {
+    private static LivingEntity aimAlly(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         Vec3 point = Spells.aimPoint(player, sl, range);
         return sl.getEntitiesOfClass(LivingEntity.class, new AABB(eye, point).inflate(1.0),
@@ -340,7 +345,7 @@ public final class HandOfGodTwilight {
     // Silver Rapier: RAPIER_COUNT rapiers form round the enemy you look at (RAPIER_RANGE) and stab it at
     // HandOfGodFx.RAPIER_STRIKES, RAPIER_DAMAGE each: nowhere to dodge to.
     // =========================
-    private static AbilityWheel.Result silverRapier(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result silverRapier(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, RAPIER_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("There is no enemy before your eyes."));
@@ -360,7 +365,7 @@ public final class HandOfGodTwilight {
     // light. With Mind Concealment up you stay hidden LIGHT_HIDDEN_AFTER after it.
     // Glory (2): with no light to go in or out by, you wither away instead and re-form wherever you aim.
     // =========================
-    private static AbilityWheel.Result lightConcealment(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result lightConcealment(LivingEntity player, ServerLevel sl) {
         boolean glory = Beyonder.hasSequence(player, WITHERING_SEQUENCE);
         List<BlockPos> near = Spells.lightNear(sl, player.getEyePosition(), LIGHT_ENTRY_REACH, LIGHT_MIN);
         Vec3 entry = !near.isEmpty()
@@ -416,7 +421,7 @@ public final class HandOfGodTwilight {
     }
 
     /** Where to stand to step out of a light: beside it, on the ground, with room for the body. Null if nowhere. */
-    private static Vec3 standBeside(Player player, ServerLevel sl, BlockPos light) {
+    private static Vec3 standBeside(LivingEntity player, ServerLevel sl, BlockPos light) {
         Vec3 middle = new Vec3(
                 light.getX() + 0.5,
                 light.getY() + 0.5,
@@ -437,7 +442,7 @@ public final class HandOfGodTwilight {
     // SWORD_RANGE): at HandOfGodFx.TWILIGHT_SWORD_HITS every enemy within SWORD_RADIUS takes SWORD_DAMAGE, through
     // Protection, Substitutes and death wards (Spells.strikeThrough), and decays.
     // =========================
-    private static AbilityWheel.Result twilightSword(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result twilightSword(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, SWORD_RANGE);
         Vec3 ground = target != null ? Spells.groundUnder(player, sl, target) : Spells.aimGround(player, sl, SWORD_RANGE);
         HandOfGodFx.twilightSword(sl, ground, SWORD_RADIUS);
@@ -459,20 +464,20 @@ public final class HandOfGodTwilight {
     // decays it. Aimed at the ground or a boss: it slams down there at HandOfGodFx.HAND_SLAMS, and everything within
     // HAND_SLAM_RADIUS takes HAND_SLAM_DAMAGE, is pressed into the ground (status/Burial) and decays.
     // =========================
-    private static AbilityWheel.Result divineRightHand(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result divineRightHand(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, HAND_RANGE);
         if (target != null && !isBoss(target)) seize(player, sl, target);
         else slam(player, sl, target != null ? Spells.groundUnder(player, sl, target) : Spells.aimGround(player, sl, HAND_RANGE));
         return AbilityWheel.Result.DONE;
     }
 
-    private static boolean isBoss(LivingEntity one) {
+    static boolean isBoss(LivingEntity one) {
         return one.getType() == EntityTypes.ENDER_DRAGON || one.getType() == EntityTypes.WITHER
                 || one.getType() == EntityTypes.WARDEN || one.getType() == EntityTypes.ELDER_GUARDIAN
                 || one.getMaxHealth() > BOSS_HEALTH;
     }
 
-    private static void seize(Player player, ServerLevel sl, LivingEntity target) {
+    private static void seize(LivingEntity player, ServerLevel sl, LivingEntity target) {
         int grips = HandOfGodFx.HAND_GRIPS;
         String tag = "hog_hand_" + player.getId() + "_" + sl.getGameTime();
         HandOfGodFx.divineHand(sl, player, target, grips + HAND_HOLD + 6, tag);
@@ -501,7 +506,7 @@ public final class HandOfGodTwilight {
         }
     }
 
-    private static void slam(Player player, ServerLevel sl, Vec3 ground) {
+    private static void slam(LivingEntity player, ServerLevel sl, Vec3 ground) {
         HandOfGodFx.divineHandSlam(sl, player, ground, HAND_SLAM_RADIUS);
         Later.run(sl, HandOfGodFx.HAND_SLAMS, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
@@ -520,7 +525,7 @@ public final class HandOfGodTwilight {
     // still for TIME_TICKS (nothing they do, nothing they think). What they take meanwhile is written down
     // (status/StoredDamage) and lands again, TIME_DUE times over, when time resumes.
     // =========================
-    private static AbilityWheel.Result passageOfTime(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result passageOfTime(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.groundUnder(player, sl, player);
         String tag = "hog_time_" + player.getId() + "_" + sl.getGameTime();
         int frozen = HandOfGodFx.TIME_FROZEN;
@@ -546,7 +551,7 @@ public final class HandOfGodTwilight {
     // in it rots (status/Decay: no healing, wither, weakness, its gear wears out), its health lower by DECAY_DEPTH and
     // DECAY_DEEPER more for every second it stays, DECAY_DEEPEST at most.
     // =========================
-    private static AbilityWheel.Result decay(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result decay(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, DECAY_RANGE);
         String tag = "hog_decay_" + player.getId() + "_" + sl.getGameTime();
         HandOfGodFx.decay(sl, center, DECAY_RADIUS, DECAY_TICKS, tag);
@@ -567,7 +572,7 @@ public final class HandOfGodTwilight {
     // second, enemies in it are slowed, weakened and cannot heal, and all they deal is KINGDOM_ENEMY_DAMAGE as much;
     // you and your allies are acknowledged: Strength, Resistance and Regeneration. Cast again: it ends (free).
     // =========================
-    private static AbilityWheel.Result divineKingdom(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result divineKingdom(LivingEntity player, ServerLevel sl) {
         if (Zone.isOpen(player, KINGDOM_ZONE)) {
             Zone.close(player, KINGDOM_ZONE);
             return AbilityWheel.Result.FREE;
@@ -596,7 +601,7 @@ public final class HandOfGodTwilight {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void kingdomTouches(Player player, LivingEntity one) {
+    private static void kingdomTouches(LivingEntity player, LivingEntity one) {
         if (Spells.isFriend(player, one)) {
             Spells.keepEffect(one, MobEffects.STRENGTH, 0, 40);
             Spells.keepEffect(one, MobEffects.RESISTANCE, 0, 40);
@@ -625,7 +630,7 @@ public final class HandOfGodTwilight {
     }
 
     /** Logging out or dying while liquid: the silver lets go of its host. */
-    static void clearState(Player player) {
+    static void clearState(LivingEntity player) {
         Mercury mercury = MERCURY.remove(player.getUUID());
         if (mercury == null) return;
         mercury.ended = true;
@@ -634,7 +639,7 @@ public final class HandOfGodTwilight {
     }
 
     /** Logging out: a kingdom with no king falls (its zone closes by itself; this forgets where it stood). */
-    static void forget(Player player) {
+    static void forget(LivingEntity player) {
         clearState(player);
         KINGDOMS.remove(player.getUUID());
     }

@@ -54,75 +54,75 @@ public final class HandOfGodDawn {
     // =========================
 
     static final int DAWN_SEQUENCE = 6;                          // the key
-    private static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
+    static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
 
     // Light of Dawn
-    private static final int LIGHT_SEQUENCE = 6;
-    private static final int LIGHT_COST = 1500;
-    private static final int LIGHT_COOLDOWN = 200;
-    private static final int LIGHT_TICKS = 160;                 // from the moment it is bright (HandOfGodFx.LIGHT_RISEN)
-    private static final double LIGHT_RADIUS = 12.0;
-    private static final double LIGHT_HEIGHT = 6.0;
-    private static final float LIGHT_EVIL_DAMAGE = 6f;          // each second, to evil and undead in it...
-    private static final int LIGHT_WEAKNESS_TICKS = 60;         // ...which are weakened while they stay
-    private static final float LIGHT_HEAL = 1f;                 // each second, to you and your allies in it
+    static final int LIGHT_SEQUENCE = 6;
+    static final int LIGHT_COST = 1500;
+    static final int LIGHT_COOLDOWN = 200;
+    static final int LIGHT_TICKS = 160;                 // from the moment it is bright (HandOfGodFx.LIGHT_RISEN)
+    static final double LIGHT_RADIUS = 12.0;
+    static final double LIGHT_HEIGHT = 6.0;
+    static final float LIGHT_EVIL_DAMAGE = 6f;          // each second, to evil and undead in it...
+    static final int LIGHT_WEAKNESS_TICKS = 60;         // ...which are weakened while they stay
+    static final float LIGHT_HEAL = 1f;                 // each second, to you and your allies in it
 
     // Dawn Armor (Silver Armor from Silver Knight)
-    private static final int ARMOR_SEQUENCE = 6;
-    private static final int ARMOR_COST = 1500;
-    private static final int ARMOR_COOLDOWN = 300;
-    private static final int ARMOR_TICKS = 900;
-    private static final float ARMOR_CUT = 0.4f;                // 40% less damage
-    private static final float ARMOR_ABSORPTION = 8f;           // four hearts of absorption
-    private static final int SILVER_SEQUENCE = 3;               // no timer: until cast again...
-    private static final float SILVER_ABSORPTION = 16f;         // ...twice the layer...
-    private static final int SILVER_REGROW = 40;                // ...and it regrows a point every 2 s without a hit
+    static final int ARMOR_SEQUENCE = 6;
+    static final int ARMOR_COST = 1500;
+    static final int ARMOR_COOLDOWN = 300;
+    static final int ARMOR_TICKS = 900;
+    static final float ARMOR_CUT = 0.4f;                // 40% less damage
+    static final float ARMOR_ABSORPTION = 8f;           // four hearts of absorption
+    static final int SILVER_SEQUENCE = 3;               // no timer: until cast again...
+    static final float SILVER_ABSORPTION = 16f;         // ...twice the layer...
+    static final int SILVER_REGROW = 40;                // ...and it regrows a point every 2 s without a hit
 
     // Sword of Dawn
-    private static final int SWORD_SEQUENCE = 6;
-    private static final int SWORD_COST = 2000;
-    private static final int SWORD_COOLDOWN = 200;
-    private static final int SWORD_TICKS = 800;
-    private static final float SWORD_UPKEEP = 20f;              // spirituality each second it is out (none from Silver Knight)
-    private static final float SWORD_DAMAGE = 6f;               // more on every full hit
-    private static final double SWORD_REACH = 1.0;
-    private static final float SWORD_PURIFY = 0.05f;            // each hit: the target takes 5% more damage...
-    private static final float SWORD_PURIFY_MOST = 0.3f;        // ...stacking up to 30%...
-    private static final int SWORD_PURIFY_TICKS = 200;          // ...for 10 seconds after the last hit
-    private static final float SWORD_EVIL_DAMAGE = 8f;          // evil and undead burn this much more
-    private static final float CRESCENT_CHARGE = 0.9f;          // a swing with this much of the attack bar...
-    private static final double CRESCENT_RANGE = 6.0;           // ...throws a crescent this far...
-    private static final float CRESCENT_SHARE = 0.6f;           // ...that cuts for this much of the hit
-    private static final int LASTING_SEQUENCE = 3;              // Silver Knight: no timer, no upkeep
+    static final int SWORD_SEQUENCE = 6;
+    static final int SWORD_COST = 2000;
+    static final int SWORD_COOLDOWN = 200;
+    static final int SWORD_TICKS = 800;
+    static final float SWORD_UPKEEP = 20f;              // spirituality each second it is out (none from Silver Knight)
+    static final float SWORD_DAMAGE = 6f;               // more on every full hit
+    static final double SWORD_REACH = 1.0;
+    static final float SWORD_PURIFY = 0.05f;            // each hit: the target takes 5% more damage...
+    static final float SWORD_PURIFY_MOST = 0.3f;        // ...stacking up to 30%...
+    static final int SWORD_PURIFY_TICKS = 200;          // ...for 10 seconds after the last hit
+    static final float SWORD_EVIL_DAMAGE = 8f;          // evil and undead burn this much more
+    static final float CRESCENT_CHARGE = 0.9f;          // a swing with this much of the attack bar...
+    static final double CRESCENT_RANGE = 6.0;           // ...throws a crescent this far...
+    static final float CRESCENT_SHARE = 0.6f;           // ...that cuts for this much of the hit
+    static final int LASTING_SEQUENCE = 3;              // Silver Knight: no timer, no upkeep
 
     // Hurricane of Light
-    private static final int HURRICANE_SEQUENCE = 6;
-    private static final int HURRICANE_COST = 4500;
-    private static final int HURRICANE_COOLDOWN = 2400;         // two minutes
-    private static final double HURRICANE_LENGTH = 20.0;
-    private static final double HURRICANE_WIDTH = 4.0;
-    private static final double HURRICANE_HEIGHT = 4.0;
-    private static final int HURRICANE_TICKS = 24;              // to roll its whole length
-    private static final float HURRICANE_DAMAGE = 60f;
-    private static final float HURRICANE_EVIL_DAMAGE = 90f;     // evil and undead
-    private static final float HURRICANE_ALLY_SHARE = 0.25f;    // it is hard to control: allies in its way take this (0 = none)
-    private static final double HURRICANE_THROW = 0.9;
-    private static final int HURRICANE_GLORY_SEQUENCE = 2;      // Glory: twice as long and wide, and it decays
-    private static final int HURRICANE_DECAY_TICKS = 200;
-    private static final float HURRICANE_DECAY_DEPTH = 0.2f;
+    static final int HURRICANE_SEQUENCE = 6;
+    static final int HURRICANE_COST = 4500;
+    static final int HURRICANE_COOLDOWN = 2400;         // two minutes
+    static final double HURRICANE_LENGTH = 20.0;
+    static final double HURRICANE_WIDTH = 4.0;
+    static final double HURRICANE_HEIGHT = 4.0;
+    static final int HURRICANE_TICKS = 24;              // to roll its whole length
+    static final float HURRICANE_DAMAGE = 60f;
+    static final float HURRICANE_EVIL_DAMAGE = 90f;     // evil and undead
+    static final float HURRICANE_ALLY_SHARE = 0.25f;    // it is hard to control: allies in its way take this (0 = none)
+    static final double HURRICANE_THROW = 0.9;
+    static final int HURRICANE_GLORY_SEQUENCE = 2;      // Glory: twice as long and wide, and it decays
+    static final int HURRICANE_DECAY_TICKS = 200;
+    static final float HURRICANE_DECAY_DEPTH = 0.2f;
 
     // =========================
     // Names and what is saved on the player
     // =========================
-    private static final String LIGHT_ZONE = "hand_of_god_light_of_dawn";
-    private static final String ARMOR = "hand_of_god_dawn_armor";
+    static final String LIGHT_ZONE = "hand_of_god_light_of_dawn";
+    static final String ARMOR = "hand_of_god_dawn_armor";
     static final String SWORD = "hand_of_god_sword_of_dawn";
-    private static final String LIGHT_TAG = "hand_of_god_light_tag";         // the newest Light of Dawn
-    private static final String ARMOR_TAG = "hand_of_god_armor_tag";
-    private static final String ARMOR_SHOWN = "hand_of_god_armor_shown";       // a lasting armor is shown again after this
-    private static final String ARMOR_LAST_HIT = "hand_of_god_armor_last_hit";
-    private static final String SWORD_TAG = "hand_of_god_sword_tag";
-    private static final String SWORD_SHOWN = "hand_of_god_sword_shown";
+    static final String LIGHT_TAG = "hand_of_god_light_tag";         // the newest Light of Dawn
+    static final String ARMOR_TAG = "hand_of_god_armor_tag";
+    static final String ARMOR_SHOWN = "hand_of_god_armor_shown";       // a lasting armor is shown again after this
+    static final String ARMOR_LAST_HIT = "hand_of_god_armor_last_hit";
+    static final String SWORD_TAG = "hand_of_god_sword_tag";
+    static final String SWORD_SHOWN = "hand_of_god_sword_shown";
 
     // =========================
     // The key
@@ -157,7 +157,7 @@ public final class HandOfGodDawn {
     // are hidden (Concealment) or unnoticed are forced out, evil and undead take LIGHT_EVIL_DAMAGE and are weakened;
     // you and your allies lose blindness and taunts, are cleansed and healed LIGHT_HEAL.
     // =========================
-    private static AbilityWheel.Result lightOfDawn(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result lightOfDawn(LivingEntity player, ServerLevel sl) {
         Vec3 ground = Spells.groundUnder(player, sl, player);
         String tag = "hog_dawn_" + player.getId() + "_" + sl.getGameTime();
         player.getPersistentData().putString(LIGHT_TAG, tag);
@@ -187,7 +187,7 @@ public final class HandOfGodDawn {
     }
 
     /** Once a second for each one in the light (the caster included). */
-    private static void dawnTouches(Player player, ServerLevel sl, LivingEntity one) {
+    private static void dawnTouches(LivingEntity player, ServerLevel sl, LivingEntity one) {
         if (!Spells.isFriend(player, one)) {
             if (Concealment.isHidden(one)) {                                    // illusions and hiding break
                 Concealment.reveal(one);
@@ -217,11 +217,11 @@ public final class HandOfGodDawn {
     // slowness, ARMOR_ABSORPTION of absorption. Cast again: fresh plates. Silver Knight (3): the Silver Armor stays
     // until cast again (which takes it off, free), with SILVER_ABSORPTION that regrows.
     // =========================
-    private static boolean lastingArmor(Player player) {
+    private static boolean lastingArmor(LivingEntity player) {
         return Beyonder.hasSequence(player, SILVER_SEQUENCE);
     }
 
-    private static AbilityWheel.Result dawnArmor(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result dawnArmor(LivingEntity player, ServerLevel sl) {
         boolean silver = lastingArmor(player);
         if (ConjuredArmor.isWorn(player, ARMOR)) {
             ConjuredArmor.takeOff(player, ARMOR);                               // its onEnd clears the look
@@ -236,7 +236,7 @@ public final class HandOfGodDawn {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void showArmor(Player player, ServerLevel sl, boolean silver) {
+    private static void showArmor(LivingEntity player, ServerLevel sl, boolean silver) {
         String tag = "hog_armor_" + player.getId() + "_" + sl.getGameTime();
         CompoundTag data = player.getPersistentData();
         data.putString(ARMOR_TAG, tag);
@@ -271,11 +271,11 @@ public final class HandOfGodDawn {
     // SWORD_EVIL_DAMAGE more; a full swing also throws a crescent CRESCENT_RANGE ahead. Cast again: drawn afresh.
     // Silver Knight (3): no timer, no upkeep; cast again to put it away (free).
     // =========================
-    private static boolean lastingSword(Player player) {
+    private static boolean lastingSword(LivingEntity player) {
         return Beyonder.hasSequence(player, LASTING_SEQUENCE);
     }
 
-    private static AbilityWheel.Result swordOfDawn(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result swordOfDawn(LivingEntity player, ServerLevel sl) {
         if (lastingSword(player) && ConjuredWeapon.isDrawn(player, SWORD)) {
             ConjuredWeapon.putAway(player, SWORD);
             return AbilityWheel.Result.FREE;
@@ -285,7 +285,7 @@ public final class HandOfGodDawn {
     }
 
     /** The sword forms in the hand (drawn afresh if it is out). Also used by the Hurricane, which needs it. */
-    static void drawSword(Player player, ServerLevel sl) {
+    static void drawSword(LivingEntity player, ServerLevel sl) {
         boolean lasting = lastingSword(player);
         ConjuredWeapon sword = ConjuredWeapon.of(SWORD).lasts(lasting ? 0 : SWORD_TICKS)
                 .damage(SWORD_DAMAGE).reach(SWORD_REACH)
@@ -296,7 +296,7 @@ public final class HandOfGodDawn {
         showSword(player, sl, lasting);
     }
 
-    private static void showSword(Player player, ServerLevel sl, boolean lasting) {
+    private static void showSword(LivingEntity player, ServerLevel sl, boolean lasting) {
         String tag = "hog_sword_" + player.getId() + "_" + sl.getGameTime();
         CompoundTag data = player.getPersistentData();
         data.putString(SWORD_TAG, tag);
@@ -307,7 +307,7 @@ public final class HandOfGodDawn {
         else HandOfGodFx.status(player, Status.SWORD_OF_DAWN, SWORD_TICKS);
     }
 
-    private static float purifyingHit(Player attacker, LivingEntity target, float amount, float charge, ServerLevel sl) {
+    private static float purifyingHit(LivingEntity attacker, LivingEntity target, float amount, float charge, ServerLevel sl) {
         Vulnerable.add(target, SWORD_PURIFY, SWORD_PURIFY_MOST, SWORD_PURIFY_TICKS);
         if (Spells.isEvil(target)) amount += SWORD_EVIL_DAMAGE;
         HandOfGodFx.purify(sl, target);
@@ -330,7 +330,7 @@ public final class HandOfGodDawn {
         return amount;
     }
 
-    private static void swordGone(Player wielder) {
+    private static void swordGone(LivingEntity wielder) {
         CompoundTag data = wielder.getPersistentData();
         if (wielder.level() instanceof ServerLevel sl) HandOfGodFx.swordOfDawnEnd(sl, wielder, data.getStringOr(SWORD_TAG, ""));
         HandOfGodFx.statusEnd(wielder, Status.SWORD_OF_DAWN);
@@ -344,7 +344,7 @@ public final class HandOfGodDawn {
     // reaches takes HURRICANE_DAMAGE (HURRICANE_EVIL_DAMAGE if evil) and is thrown along; each ally takes
     // HURRICANE_ALLY_SHARE of it. Glory (2): twice as long and wide, and everything hit is decayed.
     // =========================
-    private static AbilityWheel.Result hurricaneOfLight(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result hurricaneOfLight(LivingEntity player, ServerLevel sl) {
         if (!ConjuredWeapon.isDrawn(player, SWORD)) drawSword(player, sl);     // it forms first, for nothing more
         boolean glory = Beyonder.hasSequence(player, HURRICANE_GLORY_SEQUENCE);
         HandOfGodFx.hurricaneGather(sl, player);
@@ -354,7 +354,7 @@ public final class HandOfGodDawn {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void releaseHurricane(Player player, ServerLevel sl, boolean glory) {
+    private static void releaseHurricane(LivingEntity player, ServerLevel sl, boolean glory) {
         double length = glory ? HURRICANE_LENGTH * 2 : HURRICANE_LENGTH;
         double half = (glory ? HURRICANE_WIDTH * 2 : HURRICANE_WIDTH) / 2.0;
         int ticks = glory ? HURRICANE_TICKS * 2 : HURRICANE_TICKS;           // the same speed, twice as far
@@ -379,7 +379,7 @@ public final class HandOfGodDawn {
         }
     }
 
-    private static void hurricaneReaches(Player player, ServerLevel sl, LivingEntity one, Vec3 behind, boolean glory) {
+    private static void hurricaneReaches(LivingEntity player, ServerLevel sl, LivingEntity one, Vec3 behind, boolean glory) {
         if (Spells.isEnemy(player, one)) {
             Spells.strike(player, one, Spells.isEvil(one) ? HURRICANE_EVIL_DAMAGE : HURRICANE_DAMAGE);
             if (one.isAlive()) Spells.push(one, behind, HURRICANE_THROW, 0.4);
@@ -398,7 +398,7 @@ public final class HandOfGodDawn {
     // =========================
 
     /** Once a second: a lasting armor or sword is shown again before its look runs out (after an hour). */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         long now = sl.getGameTime();
         if (data.contains(ARMOR_SHOWN) && now >= data.getLongOr(ARMOR_SHOWN, 0L) - 20 && ConjuredArmor.isWorn(player, ARMOR)

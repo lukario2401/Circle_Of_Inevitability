@@ -65,83 +65,83 @@ public final class HandOfGodDemonHunting {
     // =========================
 
     static final int HUNTING_SEQUENCE = 4;                       // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
     // Eye of Demon Hunting
-    private static final int EYE_SEQUENCE = 4;
-    private static final int EYE_COST = 3000;
-    private static final int EYE_COOLDOWN = 200;
-    private static final int EYE_TICKS = 240;
-    private static final double EYE_RANGE = 40.0;
-    private static final int EYE_KNIGHT_SEQUENCE = 3;            // Silver Knight: further, and it reads Beyonders
-    private static final double EYE_KNIGHT_RANGE = 80.0;
-    private static final float EYE_WEAKNESS = 0.2f;              // the one whose weakness is found takes 20% more damage
-    private static final int EYE_GLOW_TICKS = 30;                // renewed every second while the eye is open
+    static final int EYE_SEQUENCE = 4;
+    static final int EYE_COST = 3000;
+    static final int EYE_COOLDOWN = 200;
+    static final int EYE_TICKS = 240;
+    static final double EYE_RANGE = 40.0;
+    static final int EYE_KNIGHT_SEQUENCE = 3;            // Silver Knight: further, and it reads Beyonders
+    static final double EYE_KNIGHT_RANGE = 80.0;
+    static final float EYE_WEAKNESS = 0.2f;              // the one whose weakness is found takes 20% more damage
+    static final int EYE_GLOW_TICKS = 30;                // renewed every second while the eye is open
 
     // Alchemy
-    private static final int ALCHEMY_SEQUENCE = 4;
-    private static final int ALCHEMY_COST = 3500;
-    private static final int ALCHEMY_COOLDOWN = 300;
-    private static final double ALCHEMY_RANGE = 24.0;            // what you look at this far decides the coating
-    private static final int ALCHEMY_TICKS = 400;
-    private static final int ALCHEMY_HITS = 10;
-    private static final float DECAY_COAT_HEALTH = 40f;          // a living thing with this much health or more: Decay
-    private static final float PURIFY_EVIL = 12f;                // Purification: this much more to evil and undead...
-    private static final float PURIFY_OTHER = 4f;                // ...and this much to anything else
-    private static final int FREEZE_TICKS = 40;                  // Freeze: frozen this long...
-    private static final float FREEZE_DAMAGE = 4f;               // ...and this much more
-    private static final float LIGHTNING_DAMAGE = 8f;            // Lightning Strike: this much more...
-    private static final float LIGHTNING_CONDUCTED = 6f;         // ...and this much on top through water or metal
-    private static final int BURN_TICKS = 100;                   // Burning: set alight this long (it, never the ground)...
-    private static final float BURN_DAMAGE = 4f;
-    private static final float BURN_WEAK = 6f;                   // ...and this much more to plants, spiders, ice creatures
-    private static final int DECAY_COAT_TICKS = 100;             // Decay: rots this long...
-    private static final float DECAY_COAT_DEPTH = 0.15f;         // ...this much of its health gone meanwhile
-    private static final float DECAY_COAT_DAMAGE = 4f;
-    private static final float EXORCISM_SPIRIT = 20f;            // Exorcism: spirits take this much more; marionettes are freed
-    private static final float EXORCISM_OTHER = 6f;
+    static final int ALCHEMY_SEQUENCE = 4;
+    static final int ALCHEMY_COST = 3500;
+    static final int ALCHEMY_COOLDOWN = 300;
+    static final double ALCHEMY_RANGE = 24.0;            // what you look at this far decides the coating
+    static final int ALCHEMY_TICKS = 400;
+    static final int ALCHEMY_HITS = 10;
+    static final float DECAY_COAT_HEALTH = 40f;          // a living thing with this much health or more: Decay
+    static final float PURIFY_EVIL = 12f;                // Purification: this much more to evil and undead...
+    static final float PURIFY_OTHER = 4f;                // ...and this much to anything else
+    static final int FREEZE_TICKS = 40;                  // Freeze: frozen this long...
+    static final float FREEZE_DAMAGE = 4f;               // ...and this much more
+    static final float LIGHTNING_DAMAGE = 8f;            // Lightning Strike: this much more...
+    static final float LIGHTNING_CONDUCTED = 6f;         // ...and this much on top through water or metal
+    static final int BURN_TICKS = 100;                   // Burning: set alight this long (it, never the ground)...
+    static final float BURN_DAMAGE = 4f;
+    static final float BURN_WEAK = 6f;                   // ...and this much more to plants, spiders, ice creatures
+    static final int DECAY_COAT_TICKS = 100;             // Decay: rots this long...
+    static final float DECAY_COAT_DEPTH = 0.15f;         // ...this much of its health gone meanwhile
+    static final float DECAY_COAT_DAMAGE = 4f;
+    static final float EXORCISM_SPIRIT = 20f;            // Exorcism: spirits take this much more; marionettes are freed
+    static final float EXORCISM_OTHER = 6f;
 
     // Mind Concealment
-    private static final int MIND_SEQUENCE = 4;
-    private static final int MIND_COST = 4000;
-    private static final int MIND_COOLDOWN = 600;
-    private static final int MIND_TICKS = 300;
+    static final int MIND_SEQUENCE = 4;
+    static final int MIND_COST = 4000;
+    static final int MIND_COOLDOWN = 600;
+    static final int MIND_TICKS = 300;
 
     // Giant Form (the sizes are times the body it has)
-    private static final int GIANT_SEQUENCE = 4;
-    private static final int GIANT_COST = 8000;
-    private static final int GIANT_COOLDOWN = 1200;
-    private static final int GIANT_TICKS = 800;
-    private static final int GIANT_KNIGHT_SEQUENCE = 3;
-    private static final int GIANT_GLORY_SEQUENCE = 2;
-    private static final double GIANT_SCALE = 1.2;               // Demon Hunter (4)
-    private static final double GIANT_KNIGHT_SCALE = 1.5;        // Silver Knight (3)
-    private static final double GIANT_GLORY_SCALE = 1.75;        // Glory (2) and up
-    private static final double GIANT_REACH = 1.0;               // more reach: 4 / 3 / 2 and up
-    private static final double GIANT_KNIGHT_REACH = 1.5;
-    private static final double GIANT_GLORY_REACH = 2.0;
-    private static final double GIANT_STEP_UP = 0.5;             // steps up this much more (a full block from Silver Knight)
-    private static final float GIANT_MADNESS = 1f / 30f;         // madness each second: full after 30 s at Demon Hunter...
-    private static final float GIANT_KNIGHT_MADNESS = 1f / 50f;  // ...slower at Silver Knight, none from Glory
-    private static final int GIANT_STRENGTH = 2;                 // Strength III
-    private static final int GIANT_RESISTANCE = 1;               // Resistance II
-    private static final double GIANT_STRIDE = 2.2;              // a step every this many blocks walked (times the size)...
-    private static final double GIANT_STOMP_RADIUS = 4.0;        // ...slows enemies on the ground this close (times the size)
-    private static final int GIANT_STOMP_SLOW = 40;
-    private static final double GIANT_TERROR_RANGE = 16.0;       // weaker ones that see the Giant...
-    private static final int GIANT_TERROR_TICKS = 60;            // ...get nausea and weakness this long...
-    private static final int GIANT_TERROR_REST = 200;            // ...at most once in this long
-    private static final int GIANT_BROKEN_TICKS = 200;           // full madness: the form breaks and you are weakened this long
+    static final int GIANT_SEQUENCE = 4;
+    static final int GIANT_COST = 8000;
+    static final int GIANT_COOLDOWN = 1200;
+    static final int GIANT_TICKS = 800;
+    static final int GIANT_KNIGHT_SEQUENCE = 3;
+    static final int GIANT_GLORY_SEQUENCE = 2;
+    static final double GIANT_SCALE = 1.2;               // Demon Hunter (4)
+    static final double GIANT_KNIGHT_SCALE = 1.5;        // Silver Knight (3)
+    static final double GIANT_GLORY_SCALE = 1.75;        // Glory (2) and up
+    static final double GIANT_REACH = 1.0;               // more reach: 4 / 3 / 2 and up
+    static final double GIANT_KNIGHT_REACH = 1.5;
+    static final double GIANT_GLORY_REACH = 2.0;
+    static final double GIANT_STEP_UP = 0.5;             // steps up this much more (a full block from Silver Knight)
+    static final float GIANT_MADNESS = 1f / 30f;         // madness each second: full after 30 s at Demon Hunter...
+    static final float GIANT_KNIGHT_MADNESS = 1f / 50f;  // ...slower at Silver Knight, none from Glory
+    static final int GIANT_STRENGTH = 2;                 // Strength III
+    static final int GIANT_RESISTANCE = 1;               // Resistance II
+    static final double GIANT_STRIDE = 2.2;              // a step every this many blocks walked (times the size)...
+    static final double GIANT_STOMP_RADIUS = 4.0;        // ...slows enemies on the ground this close (times the size)
+    static final int GIANT_STOMP_SLOW = 40;
+    static final double GIANT_TERROR_RANGE = 16.0;       // weaker ones that see the Giant...
+    static final int GIANT_TERROR_TICKS = 60;            // ...get nausea and weakness this long...
+    static final int GIANT_TERROR_REST = 200;            // ...at most once in this long
+    static final int GIANT_BROKEN_TICKS = 200;           // full madness: the form breaks and you are weakened this long
 
     // =========================
     // Names and what is saved on the player
     // =========================
-    private static final String COAT = "hand_of_god_alchemy";
-    private static final String COAT_KIND = "hand_of_god_coat_kind";
-    private static final String MIND_TAG = "hand_of_god_mind_tag";
-    private static final String GIANT_TAG = "hand_of_god_giant_tag";
-    private static final String GIANT_HEIGHT = "hand_of_god_giant_height";
-    private static final String GIANT_MAD_SHOWN = "hand_of_god_giant_mad_shown";
+    static final String COAT = "hand_of_god_alchemy";
+    static final String COAT_KIND = "hand_of_god_coat_kind";
+    static final String MIND_TAG = "hand_of_god_mind_tag";
+    static final String GIANT_TAG = "hand_of_god_giant_tag";
+    static final String GIANT_HEIGHT = "hand_of_god_giant_height";
+    static final String GIANT_MAD_SHOWN = "hand_of_god_giant_mad_shown";
 
     /** The open Eye of Demon Hunting of each player. Not saved. */
     private static final class Eye {
@@ -160,6 +160,11 @@ public final class HandOfGodDemonHunting {
         }
     }
     private static final Map<UUID, Eye> EYES = new HashMap<>();
+
+    /** True while its Eye of Demon Hunting is open. */
+    static boolean eyeOpen(LivingEntity one) {
+        return EYES.containsKey(one.getUUID());
+    }
 
     /** Where each Giant last stepped, and when each onlooker was last struck with terror. Not saved. */
     private static final Map<UUID, Vec3> STRIDES = new HashMap<>();
@@ -204,7 +209,7 @@ public final class HandOfGodDemonHunting {
     // Silver Knight (3): EYE_KNIGHT_RANGE, and a player's Pathway and Sequence are read too. Cannot choose someone
     // whose mind is concealed (status/Unnoticed).
     // =========================
-    private static AbilityWheel.Result eyeOfDemonHunting(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result eyeOfDemonHunting(LivingEntity player, ServerLevel sl) {
         closeEye(player, sl);                                                   // an older one first
         boolean knight = Beyonder.hasSequence(player, EYE_KNIGHT_SEQUENCE);
         String tag = "hog_eye_" + player.getId() + "_" + sl.getGameTime();
@@ -214,7 +219,7 @@ public final class HandOfGodDemonHunting {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void eyeTick(Player player, ServerLevel sl) {
+    private static void eyeTick(LivingEntity player, ServerLevel sl) {
         Eye eye = EYES.get(player.getUUID());
         if (eye == null) return;
         long now = sl.getGameTime();
@@ -256,7 +261,7 @@ public final class HandOfGodDemonHunting {
         return Component.literal(text.toString());
     }
 
-    private static void closeEye(Player player, ServerLevel sl) {
+    private static void closeEye(LivingEntity player, ServerLevel sl) {
         Eye eye = EYES.remove(player.getUUID());
         if (eye == null) return;
         HandOfGodFx.eyeEnd(sl, player, eye.tag);
@@ -276,13 +281,13 @@ public final class HandOfGodDemonHunting {
     //   Purification  evil and undead
     //   Decay         living things with DECAY_COAT_HEALTH or more
     // =========================
-    private static AbilityWheel.Result alchemy(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result alchemy(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, ALCHEMY_RANGE);
         Coat coat = target == null ? Coat.LIGHTNING : coatFor(target);
         HandOfGodFx.alchemy(sl, player, coat);
         Later.run(sl, HandOfGodFx.VIAL_POURED, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
-            WeaponCoat.arm(player, COAT, ALCHEMY_HITS, ALCHEMY_TICKS, (attacker, hit, amount, level) -> coatHit(hit, amount, level, coat));
+            WeaponCoat.armAny(player, COAT, ALCHEMY_HITS, ALCHEMY_TICKS, (attacker, hit, amount, level) -> coatHit(hit, amount, level, coat));
             player.getPersistentData().putString(COAT_KIND, coat.name());
             HandOfGodFx.status(player, Status.ALCHEMY, ALCHEMY_TICKS);
             player.sendSystemMessage(Component.literal("Your weapon is coated: " + coatName(coat) + "."));
@@ -351,7 +356,7 @@ public final class HandOfGodDemonHunting {
     // Mind Concealment: for MIND_TICKS your intentions cannot be read (status/Unnoticed): mobs forget you and abilities
     // cannot choose you. You are still seen and can be hurt; hurting something ends it.
     // =========================
-    private static AbilityWheel.Result mindConcealment(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result mindConcealment(LivingEntity player, ServerLevel sl) {
         String old = player.getPersistentData().getStringOr(MIND_TAG, "");
         if (!old.isEmpty()) HandOfGodFx.mindConcealmentEnd(sl, player, old);
         String tag = "hog_mind_" + player.getId() + "_" + sl.getGameTime();
@@ -364,11 +369,11 @@ public final class HandOfGodDemonHunting {
     }
 
     /** True while Mind Concealment hides the player (Light Concealment keeps them hidden longer then). */
-    static boolean mindConcealed(Player player) {
+    static boolean mindConcealed(LivingEntity player) {
         return player.getPersistentData().contains(MIND_TAG) && Unnoticed.isUnnoticed(player);
     }
 
-    private static void mindTick(Player player, ServerLevel sl) {
+    private static void mindTick(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         if (!data.contains(MIND_TAG) || Unnoticed.isUnnoticed(player)) return;
         HandOfGodFx.mindConcealmentEnd(sl, player, data.getStringOr(MIND_TAG, ""));      // it ran out, or a blow ended it
@@ -383,12 +388,12 @@ public final class HandOfGodDemonHunting {
     // grows each second (GIANT_MADNESS; slower at Silver Knight, none from Glory): when it is full the form breaks
     // and you are left weakened. Cast again: the form ends (free). Only for the Demon Hunter's own body.
     // =========================
-    private static AbilityWheel.Result giantForm(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result giantForm(LivingEntity player, ServerLevel sl) {
         if (GiantForm.isGiant(player)) {
             GiantForm.end(player);
             return AbilityWheel.Result.FREE;
         }
-        if (!SoulCore.getPathway(player).equals(HandOfGod.PATHWAY)) {
+        if (!Beyonders.pathwayOf(player).equals(HandOfGod.PATHWAY)) {
             player.sendSystemMessage(Component.literal("Only a Demon Hunter's own body can become the Giant."));
             return AbilityWheel.Result.REFUSED;
         }
@@ -419,7 +424,7 @@ public final class HandOfGodDemonHunting {
     }
 
     /** Once a second while giant: its strength, the terror of the weak, the madness shown. */
-    private static void giantSecond(Player player, float madness) {
+    private static void giantSecond(LivingEntity player, float madness) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         Spells.keepEffect(player, MobEffects.STRENGTH, GIANT_STRENGTH, 40);
         Spells.keepEffect(player, MobEffects.RESISTANCE, GIANT_RESISTANCE, 40);
@@ -445,7 +450,7 @@ public final class HandOfGodDemonHunting {
     }
 
     /** Every tick while giant: a stride every so far shakes the ground. */
-    private static void strideTick(Player player, ServerLevel sl) {
+    private static void strideTick(LivingEntity player, ServerLevel sl) {
         if (!GiantForm.isGiant(player) || !player.onGround()) return;
         Vec3 last = STRIDES.get(player.getUUID());
         double scale = GiantForm.scale(player);
@@ -458,14 +463,14 @@ public final class HandOfGodDemonHunting {
         }
     }
 
-    private static void maddened(Player player) {
+    private static void maddened(LivingEntity player) {
         player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, GIANT_BROKEN_TICKS, 1));
         player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, GIANT_BROKEN_TICKS, 0));
         player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, GIANT_BROKEN_TICKS / 2, 0));
         player.sendSystemMessage(Component.literal("The madness breaks the Giant's form."));
     }
 
-    private static void giantGone(Player player) {
+    private static void giantGone(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         if (player.level() instanceof ServerLevel sl) {
             HandOfGodFx.giantFormEnd(sl, player, data.getDoubleOr(GIANT_HEIGHT, player.getBbHeight()), data.getStringOr(GIANT_TAG, ""));
@@ -486,7 +491,7 @@ public final class HandOfGodDemonHunting {
     // =========================
 
     /** Every tick. */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         if (!EYES.isEmpty() && player.tickCount % 5 == 0) eyeTick(player, sl);
         strideTick(player, sl);
         if (player.tickCount % 5 == 0) {
@@ -521,7 +526,7 @@ public final class HandOfGodDemonHunting {
     }
 
     /** Logging out: what is kept here only is forgotten. */
-    static void forget(Player player) {
+    static void forget(LivingEntity player) {
         EYES.remove(player.getUUID());
         STRIDES.remove(player.getUUID());
         TERRIFIED.remove(player.getUUID());

@@ -1,5 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god;
 
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
@@ -98,127 +100,127 @@ public class HandOfGod {
     // =========================
 
     // Ability 1 - Warrior's Charge (Sequence 9)
-    private static final int CHARGE_SEQUENCE = 9;
-    private static final int CHARGE_COST = 250;
-    private static final double CHARGE_RANGE = 8.0;
-    private static final double CHARGE_SPEED = 1.4;              // blocks per tick at most
-    private static final int CHARGE_TICKS = 12;                  // the rush lets go after this long anyway
-    private static final double CHARGE_REACH = 0.8;              // how close (beyond your body) an enemy counts as hit
-    private static final float CHARGE_DAMAGE = 30f;              // the first one in your way...
-    private static final double CHARGE_THROW = 1.4;              // ...is thrown back this hard...
-    private static final double CHARGE_LIFT = 0.45;
-    private static final double CHARGE_SHOVE = 0.7;              // ...and those you brush past are shoved aside
+    static final int CHARGE_SEQUENCE = 9;
+    static final int CHARGE_COST = 250;
+    static final double CHARGE_RANGE = 8.0;
+    static final double CHARGE_SPEED = 1.4;              // blocks per tick at most
+    static final int CHARGE_TICKS = 12;                  // the rush lets go after this long anyway
+    static final double CHARGE_REACH = 0.8;              // how close (beyond your body) an enemy counts as hit
+    static final float CHARGE_DAMAGE = 30f;              // the first one in your way...
+    static final double CHARGE_THROW = 1.4;              // ...is thrown back this hard...
+    static final double CHARGE_LIFT = 0.45;
+    static final double CHARGE_SHOVE = 0.7;              // ...and those you brush past are shoved aside
     // sneak: Divine Blood
-    private static final int BLOOD_COST = 250;
-    private static final float BLOOD_HEAL = 0.4f;                // of your maximum health, at once
-    private static final int BLOOD_TICKS = 200;                  // Strength II and Speed II this long
-    private static final int BLOOD_LEVEL = 1;
+    static final int BLOOD_COST = 250;
+    static final float BLOOD_HEAL = 0.4f;                // of your maximum health, at once
+    static final int BLOOD_TICKS = 200;                  // Strength II and Speed II this long
+    static final int BLOOD_LEVEL = 1;
 
     // Ability 2 - Gladiator's Flurry (Sequence 8)
-    private static final int FLURRY_SEQUENCE = 8;
-    private static final int FLURRY_COST = 300;
-    private static final double FLURRY_RANGE = 4.0;
-    private static final int FLURRY_BLOWS = 5;
-    private static final int FLURRY_EVERY = 3;                   // ticks between two blows
-    private static final float FLURRY_DAMAGE = 8f;               // each blow
-    private static final int FLURRY_STAGGER = 6;                 // each blow holds it this long...
-    private static final double FLURRY_THROW = 1.1;              // ...and the last one throws it
-    private static final double FLURRY_LIFT = 0.35;
+    static final int FLURRY_SEQUENCE = 8;
+    static final int FLURRY_COST = 300;
+    static final double FLURRY_RANGE = 4.0;
+    static final int FLURRY_BLOWS = 5;
+    static final int FLURRY_EVERY = 3;                   // ticks between two blows
+    static final float FLURRY_DAMAGE = 8f;               // each blow
+    static final int FLURRY_STAGGER = 6;                 // each blow holds it this long...
+    static final double FLURRY_THROW = 1.1;              // ...and the last one throws it
+    static final double FLURRY_LIFT = 0.35;
     // sneak: Supernatural Resistance
-    private static final int RESIST_COST = 300;
-    private static final int RESIST_TICKS = 160;
-    private static final float RESIST_CUT = 0.4f;                // supernatural damage 40% less (status/SupernaturalResistance)
+    static final int RESIST_COST = 300;
+    static final int RESIST_TICKS = 160;
+    static final float RESIST_CUT = 0.4f;                // supernatural damage 40% less (status/SupernaturalResistance)
 
     // Ability 3 - Grandmaster's Edge (Sequence 7)
-    private static final int EDGE_SEQUENCE = 7;
-    private static final int EDGE_COST = 700;
-    private static final int EDGE_TICKS = 300;
-    private static final double EDGE_ATTACK_SPEED = 0.5;         // swings 50% faster...
-    private static final double EDGE_REACH = 1.5;                // ...and reach this much further
-    private static final double EDGE_ARC_RANGE = 4.0;            // each swing that lands also cuts everyone in front...
-    private static final double EDGE_ARC_ANGLE = 60.0;           // ...this many degrees to each side...
-    private static final float EDGE_ARC_SHARE = 0.6f;            // ...for this much of the swing's damage
-    private static final float EDGE_MIN_CHARGE = 0.7f;           // a swing with less of the attack bar does not count
-    private static final int EDGE_COMBO_GAP = 30;                // the third swing in a row within this...
-    private static final float EDGE_FINISHER = 24f;              // ...is a finishing cut with this much more
+    static final int EDGE_SEQUENCE = 7;
+    static final int EDGE_COST = 700;
+    static final int EDGE_TICKS = 300;
+    static final double EDGE_ATTACK_SPEED = 0.5;         // swings 50% faster...
+    static final double EDGE_REACH = 1.5;                // ...and reach this much further
+    static final double EDGE_ARC_RANGE = 4.0;            // each swing that lands also cuts everyone in front...
+    static final double EDGE_ARC_ANGLE = 60.0;           // ...this many degrees to each side...
+    static final float EDGE_ARC_SHARE = 0.6f;            // ...for this much of the swing's damage
+    static final float EDGE_MIN_CHARGE = 0.7f;           // a swing with less of the attack bar does not count
+    static final int EDGE_COMBO_GAP = 30;                // the third swing in a row within this...
+    static final float EDGE_FINISHER = 24f;              // ...is a finishing cut with this much more
     // sneak: Riposte
-    private static final int RIPOSTE_COST = 700;
-    private static final int RIPOSTE_TICKS = 30;                 // the stance (status/Substitute: the next hit is turned aside)
-    private static final int RIPOSTE_STAGGER = 30;               // the attacker cannot move or strike this long
-    private static final int RIPOSTE_WINDOW = 40;                // your next hit within this long is the counter...
-    private static final float RIPOSTE_COUNTER = 30f;            // ...with this much more
+    static final int RIPOSTE_COST = 700;
+    static final int RIPOSTE_TICKS = 30;                 // the stance (status/Substitute: the next hit is turned aside)
+    static final int RIPOSTE_STAGGER = 30;               // the attacker cannot move or strike this long
+    static final int RIPOSTE_WINDOW = 40;                // your next hit within this long is the counter...
+    static final float RIPOSTE_COUNTER = 30f;            // ...with this much more
 
     // Ability 5 - Protection (Sequence 5)
-    private static final int PROTECTION_SEQUENCE = 5;
-    private static final int PROTECTION_COST = 3000;             // Sequence 5 holds 15500
-    private static final int PROTECTION_COOLDOWN = 600;
-    private static final double PROTECTION_RADIUS = 6.0;
-    private static final int PROTECTION_TICKS = 300;
-    private static final float PROTECTION_SHIELD = 0.6f;         // allies inside take 60% less damage
-    private static final int PROTECTION_WEAKEN = 60;             // each of your attacks weakens it this long
+    static final int PROTECTION_SEQUENCE = 5;
+    static final int PROTECTION_COST = 3000;             // Sequence 5 holds 15500
+    static final int PROTECTION_COOLDOWN = 600;
+    static final double PROTECTION_RADIUS = 6.0;
+    static final int PROTECTION_TICKS = 300;
+    static final float PROTECTION_SHIELD = 0.6f;         // allies inside take 60% less damage
+    static final int PROTECTION_WEAKEN = 60;             // each of your attacks weakens it this long
     // Glory (2): it closes into a Cage
-    private static final int CAGE_SEQUENCE = 2;
-    private static final double CAGE_RADIUS = 7.0;
-    private static final int CAGE_TICKS = 600;                   // at most; it falls once you are further than...
-    private static final double CAGE_LEASH = 10.0;               // ...this from its shell
+    static final int CAGE_SEQUENCE = 2;
+    static final double CAGE_RADIUS = 7.0;
+    static final int CAGE_TICKS = 600;                   // at most; it falls once you are further than...
+    static final double CAGE_LEASH = 10.0;               // ...this from its shell
     // Hand of God (1): teleports, concealment and gliding cannot cross it; sneak inside it mends it
-    private static final int WARD_SEQUENCE = 1;
-    private static final int MEND_COST = 1500;
+    static final int WARD_SEQUENCE = 1;
+    static final int MEND_COST = 1500;
     // sneak: Damage Transference
-    private static final int TRANSFER_COST = 2500;
-    private static final int TRANSFER_COOLDOWN = 600;
-    private static final int TRANSFER_TICKS = 400;
-    private static final double TRANSFER_RADIUS = 16.0;
-    private static final float TRANSFER_SHARE = 0.5f;            // half of what each ally takes lands on you instead
-    private static final double TRANSFER_LEASH = 24.0;           // an ally further than this is let go
-    private static final int TRANSFER_MOST_RESISTANCE = 2;       // Resistance I for one ally ... III for three or more
+    static final int TRANSFER_COST = 2500;
+    static final int TRANSFER_COOLDOWN = 600;
+    static final int TRANSFER_TICKS = 400;
+    static final double TRANSFER_RADIUS = 16.0;
+    static final float TRANSFER_SHARE = 0.5f;            // half of what each ally takes lands on you instead
+    static final double TRANSFER_LEASH = 24.0;           // an ally further than this is let go
+    static final int TRANSFER_MOST_RESISTANCE = 2;       // Resistance I for one ally ... III for three or more
 
     // Passives that need more than SequencePassives' check once a second
-    private static final int MASTERY_SEQUENCE = 7;               // Weapon Mastery: faster attacks, a little more reach
-    private static final double MASTERY_ATTACK_SPEED = 0.1;
-    private static final double MASTERY_REACH = 0.5;
-    private static final int PHYSIQUE_SEQUENCE = 6;              // Giant's Physique: taller, two more hearts
-    private static final double PHYSIQUE_SCALE = 0.15;
-    private static final double PHYSIQUE_HEALTH = 4.0;
-    private static final int FOOTING_SEQUENCE = 5;               // Guardian: half knockback (Resistance I is in SequencePassives)
-    private static final double FOOTING = 0.5;
-    private static final int TRACKING_SEQUENCE = 4;              // Tracking: enemies you hit leave footprints only you see
-    private static final int TRACKING_TICKS = 400;
-    private static final double TRACKING_STEP = 0.9;
-    private static final int INTUITION_SEQUENCE = 4;             // Spiritual Intuition: a chime when something starts hunting you unseen
-    private static final int INTUITION_REST = 60;
-    private static final int TWILIGHT_RESISTANCE_SEQUENCE = 2;   // wither does not take (no healing stopped: SequencePassives)
-    private static final int DIVINE_TOUCH_SEQUENCE = 1;          // Divine Touch: bare-handed blows decay
-    private static final float DIVINE_TOUCH_DAMAGE = 6f;
-    private static final int DIVINE_TOUCH_NO_HEAL = 60;
+    static final int MASTERY_SEQUENCE = 7;               // Weapon Mastery: faster attacks, a little more reach
+    static final double MASTERY_ATTACK_SPEED = 0.1;
+    static final double MASTERY_REACH = 0.5;
+    static final int PHYSIQUE_SEQUENCE = 6;              // Giant's Physique: taller, two more hearts
+    static final double PHYSIQUE_SCALE = 0.15;
+    static final double PHYSIQUE_HEALTH = 4.0;
+    static final int FOOTING_SEQUENCE = 5;               // Guardian: half knockback (Resistance I is in SequencePassives)
+    static final double FOOTING = 0.5;
+    static final int TRACKING_SEQUENCE = 4;              // Tracking: enemies you hit leave footprints only you see
+    static final int TRACKING_TICKS = 400;
+    static final double TRACKING_STEP = 0.9;
+    static final int INTUITION_SEQUENCE = 4;             // Spiritual Intuition: a chime when something starts hunting you unseen
+    static final int INTUITION_REST = 60;
+    static final int TWILIGHT_RESISTANCE_SEQUENCE = 2;   // wither does not take (no healing stopped: SequencePassives)
+    static final int DIVINE_TOUCH_SEQUENCE = 1;          // Divine Touch: bare-handed blows decay
+    static final float DIVINE_TOUCH_DAMAGE = 6f;
+    static final int DIVINE_TOUCH_NO_HEAL = 60;
     // used from SequencePassives
     public static final float INNATE_RESIST_CUT = 0.25f;          // Pugilist: supernatural damage 25% less
-    private static final double DAWN_AURA_RADIUS = 6.0;          // Silver Knight: evil this close slowly burns
-    private static final float DAWN_AURA_DAMAGE = 1.5f;
-    private static final double TWILIGHT_AURA_RADIUS = 16.0;     // Twilight Giant: enemies this close are slowed,
+    static final double DAWN_AURA_RADIUS = 6.0;          // Silver Knight: evil this close slowly burns
+    static final float DAWN_AURA_DAMAGE = 1.5f;
+    static final double TWILIGHT_AURA_RADIUS = 16.0;     // Twilight Giant: enemies this close are slowed,
                                                                  // weakened and cannot heal
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String CHARGING_UNTIL = "hand_of_god_charging_until";
-    private static final String BLOOD_UNTIL = "hand_of_god_blood_until";
-    private static final String FLURRY_UNTIL = "hand_of_god_flurry_until";
-    private static final String RESIST_UNTIL = "hand_of_god_resist_until";
-    private static final String EDGE_UNTIL = "hand_of_god_edge_until";
-    private static final String EDGE_COMBO = "hand_of_god_edge_combo";
-    private static final String EDGE_LAST = "hand_of_god_edge_last";
-    private static final String RIPOSTE_UNTIL = "hand_of_god_riposte_until";
-    private static final String PROTECTION_READY = "hand_of_god_protection_ready";
-    private static final String DOME_TAG = "hand_of_god_dome_tag";
-    private static final String TRANSFER_READY = "hand_of_god_transfer_ready";
-    private static final String INTUITION_READY = "hand_of_god_intuition_ready";
+    static final String CHARGING_UNTIL = "hand_of_god_charging_until";
+    static final String BLOOD_UNTIL = "hand_of_god_blood_until";
+    static final String FLURRY_UNTIL = "hand_of_god_flurry_until";
+    static final String RESIST_UNTIL = "hand_of_god_resist_until";
+    static final String EDGE_UNTIL = "hand_of_god_edge_until";
+    static final String EDGE_COMBO = "hand_of_god_edge_combo";
+    static final String EDGE_LAST = "hand_of_god_edge_last";
+    static final String RIPOSTE_UNTIL = "hand_of_god_riposte_until";
+    static final String PROTECTION_READY = "hand_of_god_protection_ready";
+    static final String DOME_TAG = "hand_of_god_dome_tag";
+    static final String TRANSFER_READY = "hand_of_god_transfer_ready";
+    static final String INTUITION_READY = "hand_of_god_intuition_ready";
 
     // Names of the parts that a player has one of
-    private static final String DOME = "hand_of_god_protection";
-    private static final String RESIST_GRANT = "hand_of_god_resistance";
-    private static final String INNATE_GRANT = "hand_of_god_innate";
-    private static final String RIPOSTE_COUNTER_HIT = "hand_of_god_riposte";
+    static final String DOME = "hand_of_god_protection";
+    static final String RESIST_GRANT = "hand_of_god_resistance";
+    static final String INNATE_GRANT = "hand_of_god_innate";
+    static final String RIPOSTE_COUNTER_HIT = "hand_of_god_riposte";
 
     // Attribute modifiers (beyonder/Physique)
     private static final Identifier MASTERY_SPEED_ID = Physique.id("hand_of_god_mastery_speed");
@@ -275,6 +277,31 @@ public class HandOfGod {
             }
         }
 
+        /** A Hand Of God Beyonder mob (blasphemy_slate/beyonder_mobs): what a player's tick above does for its casts. */
+        @SubscribeEvent
+        public static void onHandOfGodMobTick(LivingEvent.LivingTickEvent event) {
+            LivingEntity mob = event.getEntity();
+            if (mob instanceof Player || !(mob.level() instanceof ServerLevel sl)) return;
+            if (mob.tickCount % 5 != 0 || !PATHWAY.equals(Beyonders.pathwayOf(mob))) return;
+            if (isActive(mob, EDGE_UNTIL)) HandOfGodFx.edgeTick(sl, mob);
+            HandOfGodDemonHunting.tick(mob, sl);                                 // its own every-5 and every-20 parts
+            if (mob.tickCount % 20 == 0) {
+                edgeBody(mob, isActive(mob, EDGE_UNTIL));
+                coverTick(mob, sl);
+                HandOfGodDawn.tick(mob, sl);
+            }
+        }
+
+        @SubscribeEvent
+        public static void onHandOfGodMobDeath(LivingDeathEvent event) {
+            LivingEntity mob = event.getEntity();
+            if (mob instanceof Player || mob.level().isClientSide()) return;
+            if (!PATHWAY.equals(Beyonders.pathwayOf(mob))) return;
+            endCover(mob, null);
+            HandOfGodDemonHunting.forget(mob);
+            HandOfGodTwilight.forget(mob);
+        }
+
         // LOWEST: whatever cancels the swing (a root, a concealed target) has had its say. A cancelled swing never gets here.
         @SubscribeEvent(priority = Priority.LOWEST)
         public static void onHandOfGodSwing(AttackEntityEvent event) {
@@ -290,6 +317,13 @@ public class HandOfGod {
             LivingEntity target = event.getEntity();
             if (!(target.level() instanceof ServerLevel sl)) return;
             HandOfGodTwilight.kingdomCut(event);                                 // an enemy in a Divine Kingdom deals less
+            if (event.getSource().getEntity() instanceof LivingEntity mob && !(mob instanceof Player)
+                    && event.getSource().getDirectEntity() == mob && !Spells.isSpellHit(target)) {
+                // a mob's own blow (not its ability's strike): its Grandmaster's Edge, and its Protection dims
+                if (isActive(mob, EDGE_UNTIL)) event.setAmount(edgeSwing(mob, sl, target, event.getAmount(), 1f));
+                if (Dome.isRaised(mob, DOME)) weakenDome(mob, sl);
+                return;
+            }
             if (!(event.getSource().getEntity() instanceof Player player) || event.getSource().getDirectEntity() != player) return;
             Swing swing = SWINGS.remove(player.getUUID());
             if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
@@ -381,7 +415,7 @@ public class HandOfGod {
         charge(player, sl);
     }
 
-    private static void charge(Player player, ServerLevel sl) {
+    static void charge(LivingEntity player, ServerLevel sl) {
         LivingEntity aimed = Spells.aimEnemy(player, sl, CHARGE_RANGE + 1);
         Vec3 look = Spells.flatLook(player);
         Vec3 end = player.position().add(look.scale(CHARGE_RANGE));
@@ -405,7 +439,7 @@ public class HandOfGod {
     }
 
     /** Every tick of the rush: who is in the way (the first one is hit and the rush ends) and who is brushed past. */
-    private static void chargeStep(Player player, ServerLevel sl, long until, boolean[] struck, Set<UUID> shoved, int step) {
+    private static void chargeStep(LivingEntity player, ServerLevel sl, long until, boolean[] struck, Set<UUID> shoved, int step) {
         if (struck[0] || step > CHARGE_TICKS || !Spells.casterStillHere(player, sl)) return;
         if (player.getPersistentData().getLongOr(CHARGING_UNTIL, 0L) != until) return;      // the rush is over
         HandOfGodFx.chargeTrail(sl, player);
@@ -437,7 +471,7 @@ public class HandOfGod {
         Later.run(sl, 1, () -> chargeStep(player, sl, until, struck, shoved, step + 1));
     }
 
-    private static void divineBlood(Player player, ServerLevel sl) {
+    static void divineBlood(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + BLOOD_TICKS;
         player.getPersistentData().putLong(BLOOD_UNTIL, until);
         player.heal(player.getMaxHealth() * BLOOD_HEAL);
@@ -475,7 +509,7 @@ public class HandOfGod {
         flurry(player, sl, target);
     }
 
-    private static void flurry(Player player, ServerLevel sl, LivingEntity target) {
+    static void flurry(LivingEntity player, ServerLevel sl, LivingEntity target) {
         player.getPersistentData().putLong(FLURRY_UNTIL, sl.getGameTime() + (long) FLURRY_BLOWS * FLURRY_EVERY);
         for (int i = 0; i < FLURRY_BLOWS; i++) {
             int blow = i;
@@ -494,7 +528,7 @@ public class HandOfGod {
         }
     }
 
-    private static void supernaturalResistance(Player player, ServerLevel sl) {
+    static void supernaturalResistance(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + RESIST_TICKS;
         player.getPersistentData().putLong(RESIST_UNTIL, until);
         String tag = "hog_resist_" + player.getId();
@@ -529,7 +563,7 @@ public class HandOfGod {
         grandmastersEdge(player, sl);
     }
 
-    private static void grandmastersEdge(Player player, ServerLevel sl) {
+    static void grandmastersEdge(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         data.putLong(EDGE_UNTIL, sl.getGameTime() + EDGE_TICKS);
         data.putInt(EDGE_COMBO, 0);
@@ -538,13 +572,13 @@ public class HandOfGod {
         HandOfGodFx.status(player, Status.GRANDMASTER, EDGE_TICKS);
     }
 
-    private static void edgeBody(Player player, boolean on) {
+    static void edgeBody(LivingEntity player, boolean on) {
         Physique.keep(player, Attributes.ATTACK_SPEED, EDGE_SPEED_ID, EDGE_ATTACK_SPEED, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, on);
         Physique.keep(player, Attributes.ENTITY_INTERACTION_RANGE, EDGE_REACH_ID, EDGE_REACH, AttributeModifier.Operation.ADD_VALUE, on);
     }
 
     /** A swing of the Grandmaster's Edge landed: the combo, the arc in front, the finisher. Returns the damage. */
-    private static float edgeSwing(Player player, ServerLevel sl, LivingEntity target, float amount, float charge) {
+    static float edgeSwing(LivingEntity player, ServerLevel sl, LivingEntity target, float amount, float charge) {
         if (charge < EDGE_MIN_CHARGE) return amount;                    // a spam click is no grandmaster's cut
         CompoundTag data = player.getPersistentData();
         long now = sl.getGameTime();
@@ -569,7 +603,7 @@ public class HandOfGod {
         return finisher ? amount + EDGE_FINISHER : amount;
     }
 
-    private static void riposte(Player player, ServerLevel sl) {
+    static void riposte(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + RIPOSTE_TICKS;
         player.getPersistentData().putLong(RIPOSTE_UNTIL, until);
         HandOfGodFx.riposte(sl, player);
@@ -578,7 +612,7 @@ public class HandOfGod {
     }
 
     /** The blow was turned aside: its source reels, and the next hit is the counter. */
-    private static void parry(Player player, ServerLevel sl, Entity attacker, Entity direct) {
+    private static void parry(LivingEntity player, ServerLevel sl, Entity attacker, Entity direct) {
         player.getPersistentData().remove(RIPOSTE_UNTIL);
         HandOfGodFx.riposteParry(sl, player, direct != null ? direct : attacker);
         if (direct instanceof Projectile projectile) projectile.discard();
@@ -587,7 +621,7 @@ public class HandOfGod {
             if (living.distanceTo(player) < 6) Spells.push(living, player.position(), 0.6, 0.2);
         }
         HandOfGodFx.statusEnd(player, Status.RIPOSTE);
-        EmpoweredHit.arm(player, RIPOSTE_COUNTER_HIT, RIPOSTE_WINDOW, (striker, target, amount, level) -> {
+        EmpoweredHit.armAny(player, RIPOSTE_COUNTER_HIT, RIPOSTE_WINDOW, (striker, target, amount, level) -> {
             HandOfGodFx.riposteCounter(level, striker, target);
             return amount + RIPOSTE_COUNTER;
         });
@@ -637,7 +671,7 @@ public class HandOfGod {
         else protection(player, sl);
     }
 
-    private static void protection(Player player, ServerLevel sl) {
+    static void protection(LivingEntity player, ServerLevel sl) {
         Vec3 ground = Spells.groundUnder(player, sl, player);
         boolean ward = Beyonder.hasSequence(player, WARD_SEQUENCE);
         Dome dome = Dome.at(ground, PROTECTION_RADIUS).lasts(PROTECTION_TICKS)
@@ -653,7 +687,7 @@ public class HandOfGod {
         showProtection(player, sl, ground, PROTECTION_TICKS, false);
     }
 
-    private static void cage(Player player, ServerLevel sl) {
+    static void cage(LivingEntity player, ServerLevel sl) {
         Vec3 middle = Spells.groundUnder(player, sl, player).add(0, CAGE_RADIUS * 0.35, 0);
         boolean ward = Beyonder.hasSequence(player, WARD_SEQUENCE);
         Dome dome = Dome.sphere(middle, CAGE_RADIUS).lasts(CAGE_TICKS)
@@ -671,7 +705,7 @@ public class HandOfGod {
     }
 
     /** The look of the dome (or cage) for 'ticks', under a new tag kept on the player (the mend replaces it). */
-    private static void showProtection(Player player, ServerLevel sl, Vec3 center, int ticks, boolean cage) {
+    private static void showProtection(LivingEntity player, ServerLevel sl, Vec3 center, int ticks, boolean cage) {
         String tag = "hog_dome_" + player.getId() + "_" + sl.getGameTime();
         player.getPersistentData().putString(DOME_TAG, tag);
         boolean ward = Beyonder.hasSequence(player, WARD_SEQUENCE);
@@ -687,7 +721,7 @@ public class HandOfGod {
     }
 
     /** Hand of God: sneak inside your own Protection or Cage, and it stands whole and new. */
-    private static void mendDome(Player player, ServerLevel sl) {
+    static void mendDome(LivingEntity player, ServerLevel sl) {
         Vec3 center = Dome.center(player, DOME);
         if (center == null) return;
         boolean cage = Beyonder.hasSequence(player, CAGE_SEQUENCE);
@@ -698,7 +732,7 @@ public class HandOfGod {
     }
 
     /** One of the guardian's attacks: the dome dims for a few seconds. */
-    private static void weakenDome(Player player, ServerLevel sl) {
+    static void weakenDome(LivingEntity player, ServerLevel sl) {
         Vec3 center = Dome.center(player, DOME);
         if (center == null) return;
         if (!Dome.isWeakened(player, DOME)) {
@@ -707,7 +741,7 @@ public class HandOfGod {
         Dome.weaken(player, DOME, PROTECTION_WEAKEN);
     }
 
-    private static void transference(Player player, ServerLevel sl, List<LivingEntity> allies) {
+    static void transference(LivingEntity player, ServerLevel sl, List<LivingEntity> allies) {
         endCover(player, sl);                                            // an older one first
         long until = sl.getGameTime() + TRANSFER_TICKS;
         String tag = "hog_aegis_" + player.getId() + "_" + sl.getGameTime();
@@ -724,7 +758,7 @@ public class HandOfGod {
     }
 
     /** Once a second: the covered allies who went too far are let go, and it ends when its time is up. */
-    private static void coverTick(Player player, ServerLevel sl) {
+    static void coverTick(LivingEntity player, ServerLevel sl) {
         Cover cover = COVERS.get(player.getUUID());
         if (cover == null) return;
         if (sl.getGameTime() >= cover.until()) {
@@ -749,7 +783,7 @@ public class HandOfGod {
      * Damage Transference ends: every ally still covered is let go. sl == null: the guardian is leaving (logout,
      * death): only the links are cut, nothing is shown.
      */
-    private static void endCover(Player player, ServerLevel sl) {
+    private static void endCover(LivingEntity player, ServerLevel sl) {
         Cover cover = COVERS.remove(player.getUUID());
         if (cover == null) return;
         List<LivingEntity> allies = new ArrayList<>();
@@ -791,7 +825,7 @@ public class HandOfGod {
     }
 
     /** Every few ticks for a Demon Hunter: a footprint (only they see) where each hunted enemy stepped. */
-    private static void trackingTick(Player player, ServerLevel sl) {
+    private static void trackingTick(LivingEntity player, ServerLevel sl) {
         if (TRACKS.isEmpty() || !(player instanceof ServerPlayer hunter)) return;
         long now = sl.getGameTime();
         Iterator<Map.Entry<UUID, Track>> iterator = TRACKS.entrySet().iterator();
@@ -831,12 +865,12 @@ public class HandOfGod {
     }
 
     /** Pugilist (8): supernatural damage 25% less, blindness and nausea do not take. Run once a second. */
-    public static void innateResistance(Player player) {
+    public static void innateResistance(LivingEntity player) {
         SupernaturalResistance.grant(player, INNATE_GRANT, 40, INNATE_RESIST_CUT, false, null);
     }
 
     /** Silver Knight (3): evil and undead within DAWN_AURA_RADIUS slowly burn. Run once a second. */
-    public static void dawnAura(Player player) {
+    public static void dawnAura(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         HandOfGodFx.dawnAura(sl, player, DAWN_AURA_RADIUS);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), DAWN_AURA_RADIUS)) {
@@ -847,14 +881,14 @@ public class HandOfGod {
     }
 
     /** Glory (2): nothing stops your healing, wither ends at once and nothing rots you (it cannot be put on either). */
-    public static void twilightResistance(Player player) {
+    public static void twilightResistance(LivingEntity player) {
         player.removeEffect(MobEffects.WITHER);
         if (NoHeal.isApplied(player)) NoHeal.remove(player);
         Decay.cure(player);
     }
 
     /** Twilight Giant (0): enemies within TWILIGHT_AURA_RADIUS are slowed and weakened and cannot heal. Run once a second. */
-    public static void twilightAura(Player player) {
+    public static void twilightAura(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), TWILIGHT_AURA_RADIUS)) {
             Spells.keepEffect(enemy, MobEffects.SLOWNESS, 0, 60);
@@ -890,7 +924,7 @@ public class HandOfGod {
     }
 
     /** True (and says so) while the cooldown saved under 'key' runs. */
-    private static boolean coolingDown(Player player, ServerLevel sl, String key, String name) {
+    private static boolean coolingDown(LivingEntity player, ServerLevel sl, String key, String name) {
         long left = player.getPersistentData().getLongOr(key, 0L) - sl.getGameTime();
         if (left <= 0) return false;
         player.sendSystemMessage(Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));

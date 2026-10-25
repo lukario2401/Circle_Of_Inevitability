@@ -82,7 +82,7 @@ public final class StoredDamage {
     // =========================
 
     /** Writes down everything 'victim' takes for 'ticks' ticks; 'onDue' gets the sum when the time is up. */
-    public static void start(LivingEntity victim, Player owner, int ticks, Stored onStored, Due onDue) {
+    public static void start(LivingEntity victim, LivingEntity owner, int ticks, Stored onStored, Due onDue) {
         if (!(victim.level() instanceof ServerLevel sl) || ticks <= 0) return;
         long now = sl.getGameTime();
         DEBTS.values().removeIf(old -> old.expires < now);
