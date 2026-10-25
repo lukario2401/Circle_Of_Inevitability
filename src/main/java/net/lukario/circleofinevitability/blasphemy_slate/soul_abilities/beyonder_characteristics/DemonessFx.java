@@ -17,6 +17,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -581,7 +582,7 @@ public final class DemonessFx {
      * Silk shoots from the player's hand to 'anchor' (a block they looked at) and stays taut between them for
      * 'ticks' ticks while they are pulled along it. A little web is stuck where it hit.
      */
-    public static void webSwing(ServerLevel sl, Player player, Vec3 anchor, int ticks) {
+    public static void webSwing(ServerLevel sl, LivingEntity player, Vec3 anchor, int ticks) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) return;
         ParticleShapes.slashBetween(sl, SILK_SHOT.lifetime(SWING_SHOT + 3).sweep(SWING_SHOT), hand, anchor);
@@ -597,7 +598,7 @@ public final class DemonessFx {
     }
 
     /** Silk shoots out and catches a mob, then stays between them for 'ticks' ticks while it is pulled in. */
-    public static void webPull(ServerLevel sl, Player player, Entity mob, int ticks) {
+    public static void webPull(ServerLevel sl, LivingEntity player, Entity mob, int ticks) {
         Vec3 hand = SpellFx.handOf(player, sl);
         Vec3 body = SpellFx.middleOf(mob, sl);
         if (hand == null || body == null) return;

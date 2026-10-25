@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
@@ -91,251 +92,251 @@ import java.util.function.Supplier;
  */
 public class Apocalypse {
 
-    private static final String PATHWAY = "Apocalypse";
+    static final String PATHWAY = "Apocalypse";
 
     // =========================
     // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
     // =========================
 
     // Stacks: every ability used adds one picture next to the hotbar, the 5th one calls down a catastrophe
-    private static final int MAX_STACKS = 20;
-    private static final float STACK_CATASTROPHE_POWER = 1.35f;  // how strong the 5th stack's catastrophe is (1 = as cast)
-    private static final float STACK_BURST_DAMAGE = 40f;         // no catastrophe unlocked yet: a black flame burst
-    private static final double STACK_BURST_RADIUS = 8.0;
-    private static final int STACK_BURN_TICKS = 80;
+    static final int MAX_STACKS = 20;
+    static final float STACK_CATASTROPHE_POWER = 1.35f;  // how strong the 5th stack's catastrophe is (1 = as cast)
+    static final float STACK_BURST_DAMAGE = 40f;         // no catastrophe unlocked yet: a black flame burst
+    static final double STACK_BURST_RADIUS = 8.0;
+    static final int STACK_BURN_TICKS = 80;
     // Pictures for the stacks, from assets/circle_of_inevitability/textures/gui/ (without .png). One is picked at random.
     // (The Attendant's orb until the Demoness has a picture of her own.)
-    private static final List<String> STACK_IMAGES = List.of(
+    static final List<String> STACK_IMAGES = List.of(
             "attendant_stack_orb"
     );
 
     // Ability 1 - Fatal Step (Sequence 9)
-    private static final int STEP_COST = 250;
-    private static final double STEP_RANGE = 20.0;
-    private static final double STEP_BEHIND = 1.1;               // how far behind the target's back you come out
-    private static final int BACKSTAB_WINDOW = 40;               // ticks your next hit stays a backstab
-    private static final float BACKSTAB_CRIT = 1.5f;             // the backstab always crits...
-    private static final float BACKSTAB_BONUS = 16f;             // ...and does this much more on top
+    static final int STEP_COST = 250;
+    static final double STEP_RANGE = 20.0;
+    static final double STEP_BEHIND = 1.1;               // how far behind the target's back you come out
+    static final int BACKSTAB_WINDOW = 40;               // ticks your next hit stays a backstab
+    static final float BACKSTAB_CRIT = 1.5f;             // the backstab always crits...
+    static final float BACKSTAB_BONUS = 16f;             // ...and does this much more on top
     // sneak: a mirror shard
-    private static final int SHARD_COST = 250;
-    private static final int SHARD_TICKS = 1200;                 // how long a shard stands
-    private static final int SHARD_MAX = 3;                      // shards one player can have; a 4th takes the oldest away
-    private static final double SHARD_REACH = 7.0;               // how far in front of it an enemy charges it
-    private static final double SHARD_FRONT = 55.0;              // degrees to either side of its front that still count
-    private static final float SHARD_CHARGE_PER_SECOND = 0.08f;  // for each enemy standing in front of it (full = 1)
-    private static final float SHARD_WEAK_AT = 0.34f;            // from this charge, those in front are also weakened
-    private static final float SHARD_DREAD_AT = 0.67f;           // from this charge, they are blinded and bleed
-    private static final float SHARD_DREAD_DAMAGE = 3f;          // each second, once it is that charged
+    static final int SHARD_COST = 250;
+    static final int SHARD_TICKS = 1200;                 // how long a shard stands
+    static final int SHARD_MAX = 3;                      // shards one player can have; a 4th takes the oldest away
+    static final double SHARD_REACH = 7.0;               // how far in front of it an enemy charges it
+    static final double SHARD_FRONT = 55.0;              // degrees to either side of its front that still count
+    static final float SHARD_CHARGE_PER_SECOND = 0.08f;  // for each enemy standing in front of it (full = 1)
+    static final float SHARD_WEAK_AT = 0.34f;            // from this charge, those in front are also weakened
+    static final float SHARD_DREAD_AT = 0.67f;           // from this charge, they are blinded and bleed
+    static final float SHARD_DREAD_DAMAGE = 3f;          // each second, once it is that charged
     // what the shard does when key 6 (sneak) sets it off: from an uncharged one to a full one
-    private static final float SHARD_MIN_DAMAGE = 12f;
-    private static final float SHARD_MAX_DAMAGE = 70f;
-    private static final int SHARD_FULL_ROOT_TICKS = 50;         // a full shard holds what it hit in place
+    static final float SHARD_MIN_DAMAGE = 12f;
+    static final float SHARD_MAX_DAMAGE = 70f;
+    static final int SHARD_FULL_ROOT_TICKS = 50;         // a full shard holds what it hit in place
 
     // Ability 2 - Black Flame (Sequence 8)
-    private static final int FLAME_COST = 1250;
-    private static final double FLAME_RANGE = 28.0;
-    private static final float FLAME_DAMAGE = 22f;               // the bolt
-    private static final int FLAME_BURN_TICKS = 100;             // how long the black flames burn on what it hit
-    private static final float FLAME_BURN_DAMAGE = 3f;           // each second while it burns
-    private static final int FLAME_SLOW_LEVEL = 1;               // 0 = Slowness I, 1 = Slowness II while it burns
-    private static final int FLAME_FROST_TICKS = 12;             // the cold of it: frozen solid for a moment (0 = never)
-    private static final double FLAME_SPLASH = 1.6;              // no enemy under the crosshair: hits the first one this close to where it lands
-    private static final double CREEP_RADIUS = 5.0;              // it creeps to enemies this close to the one it hit...
-    private static final int CREEP_COUNT = 3;                    // ...this many at most...
-    private static final float CREEP_POWER = 0.5f;               // ...and burns them this much less hard
+    static final int FLAME_COST = 1250;
+    static final double FLAME_RANGE = 28.0;
+    static final float FLAME_DAMAGE = 22f;               // the bolt
+    static final int FLAME_BURN_TICKS = 100;             // how long the black flames burn on what it hit
+    static final float FLAME_BURN_DAMAGE = 3f;           // each second while it burns
+    static final int FLAME_SLOW_LEVEL = 1;               // 0 = Slowness I, 1 = Slowness II while it burns
+    static final int FLAME_FROST_TICKS = 12;             // the cold of it: frozen solid for a moment (0 = never)
+    static final double FLAME_SPLASH = 1.6;              // no enemy under the crosshair: hits the first one this close to where it lands
+    static final double CREEP_RADIUS = 5.0;              // it creeps to enemies this close to the one it hit...
+    static final int CREEP_COUNT = 3;                    // ...this many at most...
+    static final float CREEP_POWER = 0.5f;               // ...and burns them this much less hard
     // sneak: Mirror Substitute
-    private static final int SUBSTITUTE_COST = 1250;
-    private static final int SUBSTITUTE_TICKS = 200;             // how long the mirror copy waits for a hit
-    private static final double SUBSTITUTE_ESCAPE = 5.0;         // how far you slip away
-    private static final int SUBSTITUTE_HIDE_TICKS = 20;         // and you are unseen for this long after
-    private static final float SUBSTITUTE_GLASS_DAMAGE = 14f;    // the broken glass flying back at the attacker
+    static final int SUBSTITUTE_COST = 1250;
+    static final int SUBSTITUTE_TICKS = 200;             // how long the mirror copy waits for a hit
+    static final double SUBSTITUTE_ESCAPE = 5.0;         // how far you slip away
+    static final int SUBSTITUTE_HIDE_TICKS = 20;         // and you are unseen for this long after
+    static final float SUBSTITUTE_GLASS_DAMAGE = 14f;    // the broken glass flying back at the attacker
 
     // Ability 3 - Mirror World (Sequence 7)
-    private static final int MIRROR_COST = 1250;
-    private static final int MIRROR_TICKS = 100;                 // how long you can stay inside
-    private static final int MIRROR_SPEED_LEVEL = 2;             // 0 = Speed I ... while inside
-    private static final double MIRROR_EXIT_RANGE = 28.0;        // how far away you can come out where you aim
-    private static final double RETURN_BURST_RADIUS = 3.5;       // sneak: coming back out where you went in
-    private static final float RETURN_BURST_DAMAGE = 14f;
+    static final int MIRROR_COST = 1250;
+    static final int MIRROR_TICKS = 100;                 // how long you can stay inside
+    static final int MIRROR_SPEED_LEVEL = 2;             // 0 = Speed I ... while inside
+    static final double MIRROR_EXIT_RANGE = 28.0;        // how far away you can come out where you aim
+    static final double RETURN_BURST_RADIUS = 3.5;       // sneak: coming back out where you went in
+    static final float RETURN_BURST_DAMAGE = 14f;
 
     // Ability 4 - Silk Weaver (Sequence 6): a wheel of six silks, each with its own cost and cooldown (the wheel
     // shows both). Sneak: the last silk again, without the wheel. The tiers are the design doc's.
-    private static final int SILK_LOW_COST = 1250;
-    private static final int SILK_MEDIUM_COST = 2500;
-    private static final int SILK_HIGH_COST = 5000;
-    private static final int SILK_VERY_HIGH_COST = 10000;
-    private static final int SILK_LOW_COOLDOWN = 40;             // ticks before that silk can be cast again
-    private static final int SILK_MEDIUM_COOLDOWN = 120;
-    private static final int SILK_HIGH_COOLDOWN = 240;
-    private static final int SILK_VERY_HIGH_COOLDOWN = 400;
+    static final int SILK_LOW_COST = 1250;
+    static final int SILK_MEDIUM_COST = 2500;
+    static final int SILK_HIGH_COST = 5000;
+    static final int SILK_VERY_HIGH_COST = 10000;
+    static final int SILK_LOW_COOLDOWN = 40;             // ticks before that silk can be cast again
+    static final int SILK_MEDIUM_COOLDOWN = 120;
+    static final int SILK_HIGH_COOLDOWN = 240;
+    static final int SILK_VERY_HIGH_COOLDOWN = 400;
     // Silk Snare (Sequence 6, low)
-    private static final double SNARE_RANGE = 24.0;
-    private static final double SNARE_RADIUS = 2.5;              // a web 5 blocks across
-    private static final int SNARE_TICKS = 400;                  // it lies there 20 s
-    private static final int SNARE_ROOT_TICKS = 40;              // whoever walks in is held 2 s...
-    private static final int SNARE_SLOW_LEVEL = 3;               // ...then slowed hard while in it (3 = Slowness IV)
-    private static final int SNARE_MAX = 3;                      // snares one player can have; a 4th takes the oldest away
+    static final double SNARE_RANGE = 24.0;
+    static final double SNARE_RADIUS = 2.5;              // a web 5 blocks across
+    static final int SNARE_TICKS = 400;                  // it lies there 20 s
+    static final int SNARE_ROOT_TICKS = 40;              // whoever walks in is held 2 s...
+    static final int SNARE_SLOW_LEVEL = 3;               // ...then slowed hard while in it (3 = Slowness IV)
+    static final int SNARE_MAX = 3;                      // snares one player can have; a 4th takes the oldest away
     // Web Swing (Sequence 6, low)
-    private static final double SWING_RANGE = 28.0;
-    private static final double SWING_SPEED = 1.6;               // blocks per tick you are drawn along the silk
-    private static final float SWING_LIGHT_HEALTH = 40f;         // a mob with at most this much max health is pulled to you;
+    static final double SWING_RANGE = 28.0;
+    static final double SWING_SPEED = 1.6;               // blocks per tick you are drawn along the silk
+    static final float SWING_LIGHT_HEALTH = 40f;         // a mob with at most this much max health is pulled to you;
                                                                  // a heavier one pulls you to it
-    private static final double SWING_PULL_SPEED = 1.2;
-    private static final int SWING_FALL_GUARD = 200;             // no fall damage on landing, for at most 10 s
+    static final double SWING_PULL_SPEED = 1.2;
+    static final int SWING_FALL_GUARD = 200;             // no fall damage on landing, for at most 10 s
     // Trip-web (Sequence 5, medium): cast once to tie one end where you aim, again to tie the other end (free)
-    private static final double TRIP_RANGE = 20.0;
-    private static final double TRIP_LENGTH = 16.0;              // the most there can be between the two ends
-    private static final int TRIP_TIE_TICKS = 200;               // time to tie the second end before the first comes loose
-    private static final int TRIP_TICKS = 1200;                  // the line waits a minute
-    private static final float TRIP_DAMAGE = 24f;                // the first enemy through it falls...
-    private static final int TRIP_DOWN_TICKS = 40;               // ...and lies there 2 s
-    private static final int TRIP_MAX = 2;                       // lines one player can have; a 3rd snaps the oldest
+    static final double TRIP_RANGE = 20.0;
+    static final double TRIP_LENGTH = 16.0;              // the most there can be between the two ends
+    static final int TRIP_TIE_TICKS = 200;               // time to tie the second end before the first comes loose
+    static final int TRIP_TICKS = 1200;                  // the line waits a minute
+    static final float TRIP_DAMAGE = 24f;                // the first enemy through it falls...
+    static final int TRIP_DOWN_TICKS = 40;               // ...and lies there 2 s
+    static final int TRIP_MAX = 2;                       // lines one player can have; a 3rd snaps the oldest
     // Cocoon (Sequence 5, medium)
-    private static final double COCOON_RANGE = 16.0;
-    private static final int COCOON_HOLD_TICKS = 80;             // the enemy you look at is held 4 s
-    private static final int COCOON_SELF_TICKS = 100;            // no enemy there: yourself, 5 s, rooted but tough...
-    private static final int COCOON_SELF_RESISTANCE = 2;         // ...Resistance III (60% less damage)...
-    private static final int COCOON_SELF_REGENERATION = 2;       // ...and Regeneration III
+    static final double COCOON_RANGE = 16.0;
+    static final int COCOON_HOLD_TICKS = 80;             // the enemy you look at is held 4 s
+    static final int COCOON_SELF_TICKS = 100;            // no enemy there: yourself, 5 s, rooted but tough...
+    static final int COCOON_SELF_RESISTANCE = 2;         // ...Resistance III (60% less damage)...
+    static final int COCOON_SELF_REGENERATION = 2;       // ...and Regeneration III
     // Threads of Life (Sequence 4, high)
-    private static final double THREADS_RANGE = 16.0;
-    private static final int THREADS_TICKS = 100;                // 5 s of draining
-    private static final int THREADS_EVERY = 10;
-    private static final float THREADS_DRAIN = 5f;               // taken every half second, and given to you
-    private static final int SERVANT_TICKS = 600;                // a mob the threads kill rises as your servant for 30 s
-    private static final float SERVANT_MAX_HEALTH = 150f;        // not bosses: they just die
-    private static final int SERVANT_RESISTANCE = 2;             // stone-skinned: Resistance III
+    static final double THREADS_RANGE = 16.0;
+    static final int THREADS_TICKS = 100;                // 5 s of draining
+    static final int THREADS_EVERY = 10;
+    static final float THREADS_DRAIN = 5f;               // taken every half second, and given to you
+    static final int SERVANT_TICKS = 600;                // a mob the threads kill rises as your servant for 30 s
+    static final float SERVANT_MAX_HEALTH = 150f;        // not bosses: they just die
+    static final int SERVANT_RESISTANCE = 2;             // stone-skinned: Resistance III
     // Web of Fate (Sequence 3, very high). Cast again while it hangs, standing under it: everything tangled is
     // drawn to the middle and the web snaps (free).
-    private static final double FATE_RANGE = 28.0;
-    private static final double FATE_RADIUS = 6.0;               // 12 blocks across
-    private static final double FATE_HEIGHT = 3.5;               // how high over the ground it hangs
-    private static final int FATE_TICKS = 160;                   // 8 s
-    private static final float FATE_SHARE = 0.5f;                // the tangled share half of the damage any one of them takes
-    private static final int FATE_SLOW_LEVEL = 1;                // while tangled
-    private static final float FATE_SNAP_DAMAGE = 40f;           // the recast: the snap...
-    private static final double FATE_SNAP_RADIUS = 3.5;          // ...hits these too, tangled or not...
-    private static final int FATE_STUN_TICKS = 30;               // ...and stuns for 1.5 s
+    static final double FATE_RANGE = 28.0;
+    static final double FATE_RADIUS = 6.0;               // 12 blocks across
+    static final double FATE_HEIGHT = 3.5;               // how high over the ground it hangs
+    static final int FATE_TICKS = 160;                   // 8 s
+    static final float FATE_SHARE = 0.5f;                // the tangled share half of the damage any one of them takes
+    static final int FATE_SLOW_LEVEL = 1;                // while tangled
+    static final float FATE_SNAP_DAMAGE = 40f;           // the recast: the snap...
+    static final double FATE_SNAP_RADIUS = 3.5;          // ...hits these too, tangled or not...
+    static final int FATE_STUN_TICKS = 30;               // ...and stuns for 1.5 s
 
     // Ability 5 - Plague (Sequence 5)
-    private static final int PLAGUE_COST = 3000;
-    private static final double PLAGUE_RANGE = 24.0;
-    private static final int PLAGUE_TICKS = 100;                 // how long one carries the mark before it jumps
-    private static final float PLAGUE_DAMAGE = 5f;               // each second, on the first one
-    private static final float PLAGUE_GROWTH = 1.5f;             // each jump makes it this much stronger
-    private static final int PLAGUE_JUMPS_MIN = 2;               // it jumps to 2 to 3 of the nearest enemies
-    private static final int PLAGUE_JUMPS_MAX = 3;
-    private static final double PLAGUE_REACH = 8.0;
-    private static final int PLAGUE_GENERATIONS = 4;             // the 4th one to carry it passes it on no more
-    private static final int PLAGUE_MAX_VICTIMS = 24;            // in all, for one cast
+    static final int PLAGUE_COST = 3000;
+    static final double PLAGUE_RANGE = 24.0;
+    static final int PLAGUE_TICKS = 100;                 // how long one carries the mark before it jumps
+    static final float PLAGUE_DAMAGE = 5f;               // each second, on the first one
+    static final float PLAGUE_GROWTH = 1.5f;             // each jump makes it this much stronger
+    static final int PLAGUE_JUMPS_MIN = 2;               // it jumps to 2 to 3 of the nearest enemies
+    static final int PLAGUE_JUMPS_MAX = 3;
+    static final double PLAGUE_REACH = 8.0;
+    static final int PLAGUE_GENERATIONS = 4;             // the 4th one to carry it passes it on no more
+    static final int PLAGUE_MAX_VICTIMS = 24;            // in all, for one cast
     // sneak: Curse
-    private static final int CURSE_COST = 3000;
-    private static final double CURSE_RANGE = 24.0;
-    private static final int CURSE_TICKS = 200;                  // everything it takes for 10 s is stored...
-    private static final float CURSE_REPLAY = 1.0f;              // ...and hits it again at once, this much of it
-    private static final float CURSE_FULL = 200f;                // stored damage at which the eye throbs its hardest (only the look)
+    static final int CURSE_COST = 3000;
+    static final double CURSE_RANGE = 24.0;
+    static final int CURSE_TICKS = 200;                  // everything it takes for 10 s is stored...
+    static final float CURSE_REPLAY = 1.0f;              // ...and hits it again at once, this much of it
+    static final float CURSE_FULL = 200f;                // stored damage at which the eye throbs its hardest (only the look)
 
     // Ability 6 - Unaging (Sequence 4)
-    private static final int UNAGING_COST = 6000;
-    private static final int UNAGING_TICKS = 1200;               // the next death within 60 s is cancelled
-    private static final float UNAGING_HEALTH = 0.5f;            // you come back with half your health
-    private static final int UNAGING_HIDE_TICKS = 40;            // and unseen for this long
+    static final int UNAGING_COST = 6000;
+    static final int UNAGING_TICKS = 1200;               // the next death within 60 s is cancelled
+    static final float UNAGING_HEALTH = 0.5f;            // you come back with half your health
+    static final int UNAGING_HIDE_TICKS = 40;            // and unseen for this long
     // sneak: every placed shard explodes
-    private static final int SHATTER_COST = 6000;
+    static final int SHATTER_COST = 6000;
 
     // Ability 7 - Catastrophe (Sequence 3): a wheel of seven disasters, each cast where you aim (sneak: the last one
     // again). The fifth stack calls the last one down around you, STACK_CATASTROPHE_POWER times as hard.
-    private static final int DISASTER_MEDIUM_COST = 12000;
-    private static final int DISASTER_HIGH_COST = 20000;
-    private static final int DISASTER_VERY_HIGH_COST = 30000;
-    private static final int DISASTER_MEDIUM_COOLDOWN = 300;     // 15 s
-    private static final int DISASTER_HIGH_COOLDOWN = 400;
-    private static final int DISASTER_VERY_HIGH_COOLDOWN = 600;
-    private static final double DISASTER_RANGE = 40.0;
+    static final int DISASTER_MEDIUM_COST = 12000;
+    static final int DISASTER_HIGH_COST = 20000;
+    static final int DISASTER_VERY_HIGH_COST = 30000;
+    static final int DISASTER_MEDIUM_COOLDOWN = 300;     // 15 s
+    static final int DISASTER_HIGH_COOLDOWN = 400;
+    static final int DISASTER_VERY_HIGH_COOLDOWN = 600;
+    static final double DISASTER_RANGE = 40.0;
     // Earthquake (Sequence 3)
-    private static final double QUAKE_RADIUS = 8.0;
-    private static final float QUAKE_DAMAGE = 30f;
-    private static final double QUAKE_LIFT = 0.9;                // thrown up this hard...
-    private static final int QUAKE_STAGGER_TICKS = 30;           // ...and staggered (held, slowed) when they come down
+    static final double QUAKE_RADIUS = 8.0;
+    static final float QUAKE_DAMAGE = 30f;
+    static final double QUAKE_LIFT = 0.9;                // thrown up this hard...
+    static final int QUAKE_STAGGER_TICKS = 30;           // ...and staggered (held, slowed) when they come down
     // Hailstorm (Sequence 3)
-    private static final double HAIL_RADIUS = 7.0;
-    private static final int HAIL_TICKS = 120;                   // 6 s
-    private static final int HAIL_PER_SECOND = 10;               // hailstones (the look)
-    private static final float HAIL_DAMAGE = 3f;                 // every half second on whoever is under it
-    private static final int HAIL_SLOW_LEVEL = 1;
+    static final double HAIL_RADIUS = 7.0;
+    static final int HAIL_TICKS = 120;                   // 6 s
+    static final int HAIL_PER_SECOND = 10;               // hailstones (the look)
+    static final float HAIL_DAMAGE = 3f;                 // every half second on whoever is under it
+    static final int HAIL_SLOW_LEVEL = 1;
     // Tornado (Sequence 2)
-    private static final int TORNADO_TICKS = 160;                // 8 s
-    private static final double TORNADO_SPEED = 0.12;            // blocks per tick it travels the way you look
-    private static final double TORNADO_PULL_RADIUS = 7.0;       // enemies this close are drawn in...
-    private static final double TORNADO_PULL_SPEED = 0.35;
-    private static final double TORNADO_CORE = 2.0;              // ...this close they are lifted and whirled round...
-    private static final double TORNADO_TOP = 6.0;               // ...up to this high...
-    private static final int TORNADO_HOLD = 30;                  // ...and after this long thrown out
-    private static final float TORNADO_SPIN_DAMAGE = 2f;         // every half second while whirled
-    private static final float TORNADO_THROW_DAMAGE = 22f;
-    private static final double TORNADO_THROW = 1.6;
+    static final int TORNADO_TICKS = 160;                // 8 s
+    static final double TORNADO_SPEED = 0.12;            // blocks per tick it travels the way you look
+    static final double TORNADO_PULL_RADIUS = 7.0;       // enemies this close are drawn in...
+    static final double TORNADO_PULL_SPEED = 0.35;
+    static final double TORNADO_CORE = 2.0;              // ...this close they are lifted and whirled round...
+    static final double TORNADO_TOP = 6.0;               // ...up to this high...
+    static final int TORNADO_HOLD = 30;                  // ...and after this long thrown out
+    static final float TORNADO_SPIN_DAMAGE = 2f;         // every half second while whirled
+    static final float TORNADO_THROW_DAMAGE = 22f;
+    static final double TORNADO_THROW = 1.6;
     // Hopeless Ice Age (Sequence 2)
-    private static final double ICE_RADIUS = 9.0;
-    private static final int ICE_TICKS = 200;                    // 10 s
-    private static final int ICE_FROZEN_AFTER = 100;             // slower every second inside, frozen solid after 5 s
-    private static final int ICE_FREEZE_TICKS = 60;
-    private static final float ICE_DAMAGE = 2f;                  // every second; and no healing, and weakness
+    static final double ICE_RADIUS = 9.0;
+    static final int ICE_TICKS = 200;                    // 10 s
+    static final int ICE_FROZEN_AFTER = 100;             // slower every second inside, frozen solid after 5 s
+    static final int ICE_FREEZE_TICKS = 60;
+    static final float ICE_DAMAGE = 2f;                  // every second; and no healing, and weakness
     // Black Death (Sequence 2)
-    private static final double DEATH_RADIUS = 3.0;              // the cloud starts this wide...
-    private static final double DEATH_GROWTH = 0.8;              // ...and grows this much with everyone it infects (no limit)
-    private static final int DEATH_TICKS = 240;                  // 12 s
-    private static final float DEATH_DAMAGE = 5f;               // every second inside
+    static final double DEATH_RADIUS = 3.0;              // the cloud starts this wide...
+    static final double DEATH_GROWTH = 0.8;              // ...and grows this much with everyone it infects (no limit)
+    static final int DEATH_TICKS = 240;                  // 12 s
+    static final float DEATH_DAMAGE = 5f;               // every second inside
     // Black Flame Rain (Sequence 1)
-    private static final double RAIN_RADIUS = 8.0;
-    private static final int RAIN_TICKS = 160;                   // 8 s
-    private static final int RAIN_EVERY = 2;                     // a drop every 2 ticks
-    private static final float RAIN_AIMED = 0.5f;                // part of the drops that fall on an enemy (the rest at random)
-    private static final double RAIN_HIT_RADIUS = 1.6;
-    private static final float RAIN_DAMAGE = 10f;                // each drop; it also burns and puts the Curse on (key 5 sneak)
-    private static final int RAIN_BURN_TICKS = 60;
+    static final double RAIN_RADIUS = 8.0;
+    static final int RAIN_TICKS = 160;                   // 8 s
+    static final int RAIN_EVERY = 2;                     // a drop every 2 ticks
+    static final float RAIN_AIMED = 0.5f;                // part of the drops that fall on an enemy (the rest at random)
+    static final double RAIN_HIT_RADIUS = 1.6;
+    static final float RAIN_DAMAGE = 10f;                // each drop; it also burns and puts the Curse on (key 5 sneak)
+    static final int RAIN_BURN_TICKS = 60;
     // Doomsday Sky (Sequence 1)
-    private static final double DOOM_RADIUS = 14.0;
-    private static final int DOOM_TICKS = 300;                   // 15 s
-    private static final int DOOM_EVERY = 6;                     // something falls every 6 ticks...
-    private static final double DOOM_SPREAD = 2.0;               // ...this close to an enemy picked at random
-    private static final float METEOR_DAMAGE = 30f;
-    private static final float DOOM_FLAME_DAMAGE = 12f;
-    private static final float LIGHTNING_DAMAGE = 18f;
+    static final double DOOM_RADIUS = 14.0;
+    static final int DOOM_TICKS = 300;                   // 15 s
+    static final int DOOM_EVERY = 6;                     // something falls every 6 ticks...
+    static final double DOOM_SPREAD = 2.0;               // ...this close to an enemy picked at random
+    static final float METEOR_DAMAGE = 30f;
+    static final float DOOM_FLAME_DAMAGE = 12f;
+    static final float LIGHTNING_DAMAGE = 18f;
 
     // =========================
     // Saved on the player
     // =========================
-    private static final String STACKS = "apocalypse_stacks";
-    private static final String STACK_IMAGE_KEY = "apocalypse_stack_image_";      // + slot number
-    private static final String STACK_IMAGE_ID = "apo_stack_";                    // screen image ids
-    private static final String MIRROR_LEFT = "apocalypse_mirror_ticks";          // > 0 while inside the mirror world
-    private static final String MIRROR_X = "apocalypse_mirror_x";                 // where you went in
-    private static final String MIRROR_Y = "apocalypse_mirror_y";
-    private static final String MIRROR_Z = "apocalypse_mirror_z";
-    private static final String SNARE_NEXT = "apocalypse_snare_next";             // which of the SNARE_MAX snares is next
+    static final String STACKS = "apocalypse_stacks";
+    static final String STACK_IMAGE_KEY = "apocalypse_stack_image_";      // + slot number
+    static final String STACK_IMAGE_ID = "apo_stack_";                    // screen image ids
+    static final String MIRROR_LEFT = "apocalypse_mirror_ticks";          // > 0 while inside the mirror world
+    static final String MIRROR_X = "apocalypse_mirror_x";                 // where you went in
+    static final String MIRROR_Y = "apocalypse_mirror_y";
+    static final String MIRROR_Z = "apocalypse_mirror_z";
+    static final String SNARE_NEXT = "apocalypse_snare_next";             // which of the SNARE_MAX snares is next
 
     // Names of things on other entities (models, empowered hits)
-    private static final String BACKSTAB = "apocalypse_backstab";
-    private static final String BURN_TAG = "apocalypse_black_flame";
-    private static final String SUBSTITUTE_TAG = "apocalypse_substitute_";        // + player
-    private static final String PLAGUE_TAG = "apocalypse_plague";
-    private static final String CURSE_TAG = "apocalypse_curse";
-    private static final String WARD_TAG = "apocalypse_unaging";
-    private static final String SHARD_TAG = "apocalypse_shard_";                  // + a number for each shard
-    private static final String SNARE_TAG = "apocalypse_snare_";                  // + a number; also the snares' zone names
-    private static final String SNARE_HOLD_TAG = "apocalypse_snared";
-    private static final String TRIP_TAG = "apocalypse_trip_";                    // + a number for each line
-    private static final String TRIP_TIMER = "apocalypse_trip";
-    private static final String COCOON_TAG = "apocalypse_cocoon";
-    private static final String FATE_ZONE = "apocalypse_web_of_fate";
-    private static final String FATE_TAG = "apocalypse_fate_";                    // + player
-    private static final String FATE_MARK_TAG = "apocalypse_fate_tangle";
-    private static final String DISASTER_TAG = "apocalypse_disaster_";            // + a number: zones and clouds
-    private static final String DEATH_MARK_TAG = "apocalypse_black_death";
+    static final String BACKSTAB = "apocalypse_backstab";
+    static final String BURN_TAG = "apocalypse_black_flame";
+    static final String SUBSTITUTE_TAG = "apocalypse_substitute_";        // + player
+    static final String PLAGUE_TAG = "apocalypse_plague";
+    static final String CURSE_TAG = "apocalypse_curse";
+    static final String WARD_TAG = "apocalypse_unaging";
+    static final String SHARD_TAG = "apocalypse_shard_";                  // + a number for each shard
+    static final String SNARE_TAG = "apocalypse_snare_";                  // + a number; also the snares' zone names
+    static final String SNARE_HOLD_TAG = "apocalypse_snared";
+    static final String TRIP_TAG = "apocalypse_trip_";                    // + a number for each line
+    static final String TRIP_TIMER = "apocalypse_trip";
+    static final String COCOON_TAG = "apocalypse_cocoon";
+    static final String FATE_ZONE = "apocalypse_web_of_fate";
+    static final String FATE_TAG = "apocalypse_fate_";                    // + player
+    static final String FATE_MARK_TAG = "apocalypse_fate_tangle";
+    static final String DISASTER_TAG = "apocalypse_disaster_";            // + a number: zones and clouds
+    static final String DEATH_MARK_TAG = "apocalypse_black_death";
 
     // =========================
     // Mirror shards lying around (not saved: a world that closes takes its shards with it)
     // =========================
-    private static final class Shard {
+    static final class Shard {
         final ServerLevel level;
         final UUID owner;
         final Vec3 ground;
@@ -354,7 +355,7 @@ public class Apocalypse {
         }
     }
 
-    private static final List<Shard> SHARDS = new ArrayList<>();
+    static final List<Shard> SHARDS = new ArrayList<>();
     private static long shardNumber = 0;
 
     // =========================
@@ -364,11 +365,11 @@ public class Apocalypse {
     /** The first end of a Trip-web, waiting for its second. */
     private record Knot(ServerLevel level, Vec3 at, long expires, String tag) {}
 
-    private static final Map<UUID, Knot> TRIP_KNOTS = new HashMap<>();
+    static final Map<UUID, Knot> TRIP_KNOTS = new HashMap<>();
 
     /** A Trip-web stretched between two points, waiting for someone to walk through it. */
-    private static final class TripLine {
-        final Player owner;
+    static final class TripLine {
+        final LivingEntity owner;
         final ServerLevel level;
         final Vec3 a;
         final Vec3 b;
@@ -376,7 +377,7 @@ public class Apocalypse {
         final String tag;
         boolean snapped;
 
-        TripLine(Player owner, ServerLevel level, Vec3 a, Vec3 b, long expires, String tag) {
+        TripLine(LivingEntity owner, ServerLevel level, Vec3 a, Vec3 b, long expires, String tag) {
             this.owner = owner;
             this.level = level;
             this.a = a;
@@ -386,10 +387,10 @@ public class Apocalypse {
         }
     }
 
-    private static final List<TripLine> TRIP_LINES = new ArrayList<>();
+    static final List<TripLine> TRIP_LINES = new ArrayList<>();
 
     /** A Web of Fate hanging over the ground, and who it has tangled. */
-    private static final class Fate {
+    static final class Fate {
         final ServerLevel level;
         final Vec3 ground;
         final Vec3 center;
@@ -407,7 +408,7 @@ public class Apocalypse {
         }
     }
 
-    private static final Map<UUID, Fate> FATES = new HashMap<>();
+    static final Map<UUID, Fate> FATES = new HashMap<>();
     private static long silkNumber = 0;                          // makes the tags of webs and lines unique
     private static long disasterNumber = 0;
 
@@ -457,7 +458,7 @@ public class Apocalypse {
     // =========================
     // Ability 1 - Fatal Step
     // =========================
-    public static void apocalypseFatalStep(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void apocalypseFatalStep(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 9)) return;
 
         if (player.isShiftKeyDown()) {
@@ -466,17 +467,17 @@ public class Apocalypse {
             placeShard(player, sl);
         } else {
             if (Root.has(player, RootRestriction.TELEPORT)) {
-                player.sendSystemMessage(Component.literal("You cannot leave this place."));
+                Spells.tell(player, Component.literal("You cannot leave this place."));
                 return;
             }
             LivingEntity target = Spells.aimEnemy(player, sl, STEP_RANGE);
             if (target == null) {
-                player.sendSystemMessage(Component.literal("No one stands before you."));
+                Spells.tell(player, Component.literal("No one stands before you."));
                 return; // nothing spent
             }
             Vec3 behind = spotBehind(player, sl, target);
             if (behind == null) {
-                player.sendSystemMessage(Component.literal("There is no room behind them."));
+                Spells.tell(player, Component.literal("There is no room behind them."));
                 return; // nothing spent
             }
             if (!Spells.paySpirituality(player, STEP_COST)) return;
@@ -488,7 +489,7 @@ public class Apocalypse {
     }
 
     /** Where to stand right behind the target's back, or null if there is no room there or near it. */
-    private static Vec3 spotBehind(Player player, ServerLevel sl, LivingEntity target) {
+    private static Vec3 spotBehind(LivingEntity player, ServerLevel sl, LivingEntity target) {
         Vec3 facing = target.getLookAngle();
         facing = new Vec3(facing.x, 0, facing.z);
         if (facing.lengthSqr() < 1.0E-4) facing = target.position().subtract(player.position()).multiply(-1, 0, -1);
@@ -502,7 +503,7 @@ public class Apocalypse {
 
     // Normal: gone in shadow, out of it behind the target, facing its back. For BACKSTAB_WINDOW ticks
     // your next hit is a backstab: it always crits and does BACKSTAB_BONUS more.
-    private static void fatalStep(Player player, ServerLevel sl, LivingEntity target, Vec3 behind) {
+    private static void fatalStep(LivingEntity player, ServerLevel sl, LivingEntity target, Vec3 behind) {
         Vec3 from = player.position();
         DemonessFx.vanish(sl, player);
         player.teleportTo(behind.x, behind.y, behind.z);
@@ -514,14 +515,14 @@ public class Apocalypse {
         Spells.sound(sl, from, SoundEvents.ENDERMAN_TELEPORT, 0.5f, 1.4f);
         Spells.sound(sl, behind, SoundEvents.ILLUSIONER_CAST_SPELL, 0.6f, 1.6f);
 
-        EmpoweredHit.arm(player, BACKSTAB, BACKSTAB_WINDOW, (attacker, victim, amount, level) -> {
+        EmpoweredHit.armAny(player, BACKSTAB, BACKSTAB_WINDOW, (attacker, victim, amount, level) -> {
             backstabLook(level, attacker, victim);
             return amount * BACKSTAB_CRIT + BACKSTAB_BONUS;
         });
     }
 
     /** The backstab lands: the dagger's thrust, violet and red sparks out of the wound. */
-    private static void backstabLook(ServerLevel sl, Player attacker, LivingEntity target) {
+    private static void backstabLook(ServerLevel sl, LivingEntity attacker, LivingEntity target) {
         Vec3 into = target.position().add(0, target.getBbHeight() * 0.55, 0);
         Vec3 hand = attacker.position().add(0, attacker.getBbHeight() * 0.6, 0);
         Vec3 along = into.subtract(hand);
@@ -535,7 +536,7 @@ public class Apocalypse {
     // Sneak: a shard of dark mirror breaks out of the ground where you stand, its front the way you look.
     // It stands for SHARD_TICKS and charges while enemies stand in front of it (see chargeShards);
     // key 6 (sneak) sets every shard off (see shatterShards).
-    private static void placeShard(Player player, ServerLevel sl) {
+    private static void placeShard(LivingEntity player, ServerLevel sl) {
         long now = sl.getGameTime();
         SHARDS.removeIf(shard -> shard.expires < shard.level.getGameTime());
         List<Shard> mine = shardsOf(player, sl);
@@ -556,7 +557,7 @@ public class Apocalypse {
     }
 
     /** The player's shards in this level that are still standing, oldest first. */
-    private static List<Shard> shardsOf(Player player, ServerLevel sl) {
+    private static List<Shard> shardsOf(LivingEntity player, ServerLevel sl) {
         List<Shard> mine = new ArrayList<>();
         long now = sl.getGameTime();
         for (Shard shard : SHARDS) {
@@ -569,7 +570,7 @@ public class Apocalypse {
      * Once a second: every shard of this player charges for each enemy standing in front of it, and does to them
      * what its charge allows: slowed at once, also weakened from SHARD_WEAK_AT, blinded and bleeding from SHARD_DREAD_AT.
      */
-    private static void chargeShards(Player player, ServerLevel sl) {
+    static void chargeShards(LivingEntity player, ServerLevel sl) {
         if (SHARDS.isEmpty()) return;
         SHARDS.removeIf(shard -> shard.expires < shard.level.getGameTime());
         for (Shard shard : shardsOf(player, sl)) {
@@ -591,7 +592,7 @@ public class Apocalypse {
     }
 
     /** The enemies standing in front of a shard: close enough, and within SHARD_FRONT degrees of the way it faces. */
-    private static List<LivingEntity> inFrontOf(Player player, ServerLevel sl, Shard shard) {
+    private static List<LivingEntity> inFrontOf(LivingEntity player, ServerLevel sl, Shard shard) {
         double angle = Math.toRadians(shard.yaw);
         Vec3 front = new Vec3(-Math.sin(angle), 0, Math.cos(angle));
         double cosLimit = Math.cos(Math.toRadians(SHARD_FRONT));
@@ -607,7 +608,7 @@ public class Apocalypse {
     // =========================
     // Ability 2 - Black Flame
     // =========================
-    public static void apocalypseBlackFlame(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void apocalypseBlackFlame(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 8)) return;
 
         if (player.isShiftKeyDown()) {
@@ -626,7 +627,7 @@ public class Apocalypse {
     // Normal: a bolt of black flame at the enemy you look at (or where you aim). What it hits burns cold:
     // it is hurt, slowed and frozen for a moment, keeps burning for FLAME_BURN_TICKS, and the flame creeps
     // on to the enemies around it.
-    private static void blackFlame(Player player, ServerLevel sl) {
+    private static void blackFlame(LivingEntity player, ServerLevel sl) {
         Vec3 hand = Spells.clearStart(player, sl, SpellFx.handOf(player, sl));
         LivingEntity target = Spells.aimEnemy(player, sl, FLAME_RANGE);
         Vec3 to = target != null ? target.getBoundingBox().getCenter() : Spells.aimPoint(player, sl, FLAME_RANGE);
@@ -657,7 +658,7 @@ public class Apocalypse {
      * Black flames on an entity for 'ticks' ticks: FLAME_BURN_DAMAGE * power every second and slowness while they
      * burn. Cold fire: nothing is really lit. Burning it again starts the time over.
      */
-    private static void burnBlack(Player player, ServerLevel sl, LivingEntity target, int ticks, float power) {
+    private static void burnBlack(LivingEntity player, ServerLevel sl, LivingEntity target, int ticks, float power) {
         if (!target.isAlive()) return;
         DemonessFx.burn(sl, target, ticks, BURN_TAG);
         long until = sl.getGameTime() + ticks;
@@ -665,7 +666,7 @@ public class Apocalypse {
         burnTick(player, sl, target, until, power);
     }
 
-    private static void burnTick(Player player, ServerLevel sl, LivingEntity target, long until, float power) {
+    private static void burnTick(LivingEntity player, ServerLevel sl, LivingEntity target, long until, float power) {
         Spells.keepEffect(target, MobEffects.SLOWNESS, FLAME_SLOW_LEVEL, 30);
         if (sl.getGameTime() + 20 > until) return;
         Later.run(sl, 20, () -> {
@@ -678,7 +679,7 @@ public class Apocalypse {
     }
 
     /** The flame creeps from the one it hit to up to CREEP_COUNT enemies near it, which burn less hard. */
-    private static void creepFrom(Player player, ServerLevel sl, LivingEntity source) {
+    private static void creepFrom(LivingEntity player, ServerLevel sl, LivingEntity source) {
         Vec3 center = source.getBoundingBox().getCenter();
         List<LivingEntity> near = new ArrayList<>(Spells.enemiesAround(player, sl, center, CREEP_RADIUS));
         near.remove(source);
@@ -695,7 +696,7 @@ public class Apocalypse {
     }
 
     // Sneak - Mirror Substitute: for SUBSTITUTE_TICKS the next hit lands on a mirror copy instead of you (see mirrorEscape).
-    private static void readyMirrorSubstitute(Player player, ServerLevel sl) {
+    private static void readyMirrorSubstitute(LivingEntity player, ServerLevel sl) {
         Substitute.arm(player, SUBSTITUTE_TICKS, 1, Apocalypse::mirrorEscape);
         Vec3 middle = player.getBoundingBox().getCenter();
         ParticleShapes.burst(sl, DemonessFx.GLASS_GLINT, middle, 14, 0.04, 0.16);
@@ -743,7 +744,7 @@ public class Apocalypse {
     // =========================
     // Ability 3 - Mirror World
     // =========================
-    public static void apocalypseMirrorWorld(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void apocalypseMirrorWorld(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 7)) return;
 
         // inside: the key is the way out, and costs nothing
@@ -760,7 +761,7 @@ public class Apocalypse {
 
     // You step into a mirror: hidden and fast for MIRROR_TICKS. Press the key again to come out where you aim,
     // sneak-press it to come back out where you went in. Time up: you come out where you are.
-    private static void enterMirrorWorld(Player player, ServerLevel sl) {
+    private static void enterMirrorWorld(LivingEntity player, ServerLevel sl) {
         Vec3 entry = player.position();
         CompoundTag data = player.getPersistentData();
         data.putInt(MIRROR_LEFT, MIRROR_TICKS);
@@ -775,12 +776,12 @@ public class Apocalypse {
         Spells.sound(sl, entry, SoundEvents.ENDERMAN_TELEPORT, 0.5f, 0.5f);
     }
 
-    public static boolean inMirrorWorld(Player player) {
+    public static boolean inMirrorWorld(LivingEntity player) {
         return player.getPersistentData().getIntOr(MIRROR_LEFT, 0) > 0;
     }
 
     /** Normal press inside: out of a mirror where the crosshair is (or where you are, if you may not go there). */
-    private static void exitWhereYouAim(Player player, ServerLevel sl) {
+    static void exitWhereYouAim(LivingEntity player, ServerLevel sl) {
         Vec3 there = Root.has(player, RootRestriction.TELEPORT) ? null : Spells.blinkSpot(player, sl, MIRROR_EXIT_RANGE);
         if (there != null) {
             player.teleportTo(there.x, there.y, there.z);
@@ -791,7 +792,7 @@ public class Apocalypse {
     }
 
     /** Sneak press inside: back out where you went in, the mirror bursting into glass that cuts whoever is near. */
-    private static void returnFromMirror(Player player, ServerLevel sl) {
+    static void returnFromMirror(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         Vec3 entry = new Vec3(data.getDoubleOr(MIRROR_X, player.getX()), data.getDoubleOr(MIRROR_Y, player.getY()),
                 data.getDoubleOr(MIRROR_Z, player.getZ()));
@@ -813,21 +814,21 @@ public class Apocalypse {
     }
 
     /** Out of a mirror right where you are. */
-    private static void exitHere(Player player, ServerLevel sl) {
+    private static void exitHere(LivingEntity player, ServerLevel sl) {
         endMirrorWorld(player);
         DemonessFx.mirrorExit(sl, player.position(), player.getYRot());
         Spells.sound(sl, player.position(), SoundEvents.AMETHYST_BLOCK_RESONATE, 1f, 1.2f);
     }
 
     /** The mirror world is over: seen again, normal speed. */
-    private static void endMirrorWorld(Player player) {
+    private static void endMirrorWorld(LivingEntity player) {
         player.getPersistentData().remove(MIRROR_LEFT);
         if (Concealment.isHidden(player)) Concealment.reveal(player);
         removeMirrorSpeed(player);
     }
 
     /** Takes away the speed the mirror world gave, and only that (not a speed potion they drank). */
-    private static void removeMirrorSpeed(Player player) {
+    private static void removeMirrorSpeed(LivingEntity player) {
         MobEffectInstance speed = player.getEffect(MobEffects.SPEED);
         if (speed != null && speed.getAmplifier() == MIRROR_SPEED_LEVEL && speed.getDuration() <= MIRROR_TICKS) {
             player.removeEffect(MobEffects.SPEED);
@@ -835,12 +836,12 @@ public class Apocalypse {
     }
 
     /** Casting anything else pulls you out of the mirror world, where you are. */
-    private static void leaveMirrorWorld(Player player, ServerLevel sl) {
+    static void leaveMirrorWorld(LivingEntity player, ServerLevel sl) {
         if (inMirrorWorld(player)) exitHere(player, sl);
     }
 
     /** Every tick: counts the mirror world down, and lets you out when it runs out. */
-    private static void mirrorWorldTick(Player player, ServerLevel sl) {
+    static void mirrorWorldTick(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         int left = data.getIntOr(MIRROR_LEFT, 0);
         if (left <= 0) return;
@@ -858,7 +859,7 @@ public class Apocalypse {
     // =========================
 
     // Icons are in assets/circle_of_inevitability/textures/gui/ability_menus/apocalypse/
-    private static final AbilityWheel SILKS = AbilityWheel.create("apocalypse_silk", "Silk Weaver")
+    static final AbilityWheel SILKS = AbilityWheel.create("apocalypse_silk", "Silk Weaver")
             .radius(76)                                          // GUI pixels from the middle of the screen
             .quickCastCooldown(false)                            // sneak recast: no cooldown
             .entry("snare", "ability_menus/apocalypse/silk_snare", "Silk Snare", 6,
@@ -892,7 +893,7 @@ public class Apocalypse {
 
     // A wad of silk thrown where you aim opens into a flat web, almost unseen. Whoever walks in is held for
     // SNARE_ROOT_TICKS, then slowed hard for as long as they stay on it.
-    private static AbilityWheel.Result silkSnare(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result silkSnare(LivingEntity player, ServerLevel sl) {
         Vec3 hand = Spells.clearStart(player, sl, SpellFx.handOf(player, sl));
         Vec3 ground = Spells.aimGround(player, sl, SNARE_RANGE);
         String tag = SNARE_TAG + (silkNumber++);
@@ -908,7 +909,7 @@ public class Apocalypse {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void laySnare(Player player, ServerLevel sl, Vec3 ground, String tag) {
+    private static void laySnare(LivingEntity player, ServerLevel sl, Vec3 ground, String tag) {
         // one of SNARE_MAX zone names in turn: opening a zone with a name already open closes the old one
         int next = player.getPersistentData().getIntOr(SNARE_NEXT, 0);
         player.getPersistentData().putInt(SNARE_NEXT, (next + 1) % SNARE_MAX);
@@ -933,9 +934,9 @@ public class Apocalypse {
 
     // Silk to what you look at. A block: you are drawn to it. A light mob: it is yanked to you. A heavy one:
     // you are drawn to it. No fall damage when you land.
-    private static AbilityWheel.Result webSwing(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result webSwing(LivingEntity player, ServerLevel sl) {
         if (Root.has(player, RootRestriction.MOVE)) {
-            player.sendSystemMessage(Component.literal("You cannot move."));
+            Spells.tell(player, Component.literal("You cannot move."));
             return AbilityWheel.Result.REFUSED;
         }
         LivingEntity mob = Spells.aimEnemy(player, sl, SWING_RANGE);
@@ -962,7 +963,7 @@ public class Apocalypse {
         Vec3 eye = player.getEyePosition();
         Vec3 anchor = Spells.aimPoint(player, sl, SWING_RANGE);
         if (eye.distanceTo(anchor) > SWING_RANGE - 0.05) {
-            player.sendSystemMessage(Component.literal("There is nothing for the silk to catch on."));
+            Spells.tell(player, Component.literal("There is nothing for the silk to catch on."));
             return AbilityWheel.Result.REFUSED;
         }
         int ticks = swingTicks(eye.distanceTo(anchor), SWING_SPEED);
@@ -980,7 +981,7 @@ public class Apocalypse {
     }
 
     /** The player is drawn along the silk once it has caught; no fall damage until they land. */
-    private static void swingTo(Player player, ServerLevel sl, Supplier<Vec3> to, double stopAt, int ticks) {
+    private static void swingTo(LivingEntity player, ServerLevel sl, Supplier<Vec3> to, double stopAt, int ticks) {
         FallGuard.protect(player, SWING_FALL_GUARD);
         Later.run(sl, DemonessFx.SWING_SHOT, () -> {
             if (!Spells.casterStillHere(player, sl) || Root.has(player, RootRestriction.MOVE)) return;
@@ -992,7 +993,7 @@ public class Apocalypse {
 
     // Two casts: the first ties one end where you aim (this one costs), the second, within TRIP_TIE_TICKS, ties
     // the other end where you aim then (free). The first enemy to cross the line falls, is hurt, and it snaps.
-    private static AbilityWheel.Result tripWeb(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result tripWeb(LivingEntity player, ServerLevel sl) {
         Vec3 at = tripEnd(player, sl);
         Knot knot = liveKnot(player);
         if (knot == null) {
@@ -1002,32 +1003,32 @@ public class Apocalypse {
             ModelFx tie = DemonessFx.WEB.color(0xA0FFFFFF).scale(0.5f).lifetime(TRIP_TIE_TICKS).fade(4, 10).tag(tag);
             ParticleShapes.modelAlong(sl, tie, at, player.getEyePosition().subtract(at));
             ParticleShapes.burst(sl, DemonessFx.SILK_WISP, at, 8, 0.03, 0.1);
-            HudTimer.show(player, TRIP_TIMER, "Trip-web", TRIP_TIE_TICKS, 0xF0ECFF);
-            player.sendSystemMessage(Component.literal("Aim at the other end and cast Trip-web again."));
+            if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, TRIP_TIMER, "Trip-web", TRIP_TIE_TICKS, 0xF0ECFF);
+            Spells.tell(player, Component.literal("Aim at the other end and cast Trip-web again."));
             Spells.sound(sl, at, SoundEvents.SPIDER_STEP, 0.6f, 1.6f);
             return AbilityWheel.Result.DONE;
         }
 
         double length = at.distanceTo(knot.at());
         if (length > TRIP_LENGTH || length < 1.0) {
-            player.sendSystemMessage(Component.literal(length < 1.0
+            Spells.tell(player, Component.literal(length < 1.0
                     ? "That is where the first end is."
                     : "Too far from the first end (" + (int) TRIP_LENGTH + " blocks at most)."));
             return AbilityWheel.Result.REFUSED;
         }
         TRIP_KNOTS.remove(player.getUUID());
-        HudTimer.hide(player, TRIP_TIMER);
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, TRIP_TIMER);
         ParticleShapes.clearModels(sl, knot.at(), knot.tag());
         stretchTripLine(player, sl, knot.at(), at, knot.tag());
         return AbilityWheel.Result.FREE;
     }
 
     /** True while the player has tied one end of a Trip-web and may tie the other (the wheel lets it be free). */
-    private static boolean tyingTripWeb(ServerPlayer player) {
+    static boolean tyingTripWeb(LivingEntity player) {
         return liveKnot(player) != null;
     }
 
-    private static Knot liveKnot(Player player) {
+    private static Knot liveKnot(LivingEntity player) {
         Knot knot = TRIP_KNOTS.get(player.getUUID());
         if (knot == null) return null;
         if (knot.level() != player.level() || knot.expires() < player.level().getGameTime()) {
@@ -1038,12 +1039,12 @@ public class Apocalypse {
     }
 
     /** Where an end goes: on what the crosshair is on, a little out from it and a little above the ground. */
-    private static Vec3 tripEnd(Player player, ServerLevel sl) {
+    private static Vec3 tripEnd(LivingEntity player, ServerLevel sl) {
         Vec3 point = Spells.aimPoint(player, sl, TRIP_RANGE);
         return point.subtract(player.getLookAngle().scale(0.15)).add(0, 0.35, 0);
     }
 
-    private static void stretchTripLine(Player player, ServerLevel sl, Vec3 a, Vec3 b, String tag) {
+    private static void stretchTripLine(LivingEntity player, ServerLevel sl, Vec3 a, Vec3 b, String tag) {
         long now = sl.getGameTime();
         TRIP_LINES.removeIf(line -> line.snapped || line.expires < line.level.getGameTime());
         List<TripLine> mine = new ArrayList<>();
@@ -1098,7 +1099,7 @@ public class Apocalypse {
 
     // The enemy you look at is wrapped in silk and held. No enemy there: you wrap yourself, rooted but taking
     // much less damage, and mending.
-    private static AbilityWheel.Result cocoon(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result cocoon(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, COCOON_RANGE);
         if (target != null) {
             DemonessFx.cocoon(sl, target, COCOON_HOLD_TICKS, false, COCOON_TAG);
@@ -1118,10 +1119,10 @@ public class Apocalypse {
 
     // Red threads drain the enemy you look at into you: THREADS_DRAIN every THREADS_EVERY ticks, healing you
     // by what it lost. A mob the threads would kill rises instead, stone-skinned, as your servant for SERVANT_TICKS.
-    private static AbilityWheel.Result threadsOfLife(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result threadsOfLife(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, THREADS_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("No one stands before you."));
+            Spells.tell(player, Component.literal("No one stands before you."));
             return AbilityWheel.Result.REFUSED;
         }
         DemonessFx.threadsOfLife(sl, player, target, THREADS_TICKS);
@@ -1130,7 +1131,7 @@ public class Apocalypse {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void drain(Player player, ServerLevel sl, LivingEntity target, int drained) {
+    private static void drain(LivingEntity player, ServerLevel sl, LivingEntity target, int drained) {
         Later.run(sl, THREADS_EVERY, () -> {
             if (!Spells.casterStillHere(player, sl) || !target.isAlive() || target.level() != sl) return;
             if (target instanceof Mob mob && canServe(mob) && mob.getHealth() <= THREADS_DRAIN) {
@@ -1155,7 +1156,7 @@ public class Apocalypse {
      * The drained mob does not die: it rises again, stone-skinned, and serves for SERVANT_TICKS (a Marionette:
      * it fights for you), then drops dead.
      */
-    private static void riseAsServant(Player player, ServerLevel sl, Mob mob) {
+    private static void riseAsServant(LivingEntity player, ServerLevel sl, Mob mob) {
         if (!Marionette.control(mob, player, SERVANT_TICKS)) {
             Spells.strike(player, mob, THREADS_DRAIN);
             return;
@@ -1173,13 +1174,13 @@ public class Apocalypse {
     // A great web hangs over where you aim for FATE_TICKS. Every enemy under it is tangled: slowed, seen through
     // walls, and the tangled share FATE_SHARE of every hit any one of them takes. Cast it again while it hangs,
     // standing under it: they are all drawn to the middle and the web snaps on them.
-    private static AbilityWheel.Result webOfFate(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result webOfFate(LivingEntity player, ServerLevel sl) {
         Fate open = liveFate(player);
         if (open != null) {
             double dx = player.getX() - open.ground.x;
             double dz = player.getZ() - open.ground.z;
             if (Math.sqrt(dx * dx + dz * dz) > FATE_RADIUS + 1.0) {
-                player.sendSystemMessage(Component.literal("Stand under your Web of Fate to draw it in."));
+                Spells.tell(player, Component.literal("Stand under your Web of Fate to draw it in."));
                 return AbilityWheel.Result.REFUSED;
             }
             drawInFate(player, sl, open);
@@ -1209,11 +1210,11 @@ public class Apocalypse {
     }
 
     /** True while the player's Web of Fate hangs: casting it again draws it in (free). */
-    private static boolean fateHangs(ServerPlayer player) {
+    static boolean fateHangs(LivingEntity player) {
         return liveFate(player) != null;
     }
 
-    private static Fate liveFate(Player player) {
+    private static Fate liveFate(LivingEntity player) {
         Fate fate = FATES.get(player.getUUID());
         if (fate == null || fate.snapped) return null;            // a snapped one is on its way out (drawInFate)
         if (fate.level != player.level() || !Zone.isOpen(player, FATE_ZONE)) {
@@ -1224,7 +1225,7 @@ public class Apocalypse {
     }
 
     /** Someone walked under the web: tangled until it is gone, and bound to everyone else it caught. */
-    private static void tangle(Player player, ServerLevel sl, Fate fate, LivingEntity victim) {
+    private static void tangle(LivingEntity player, ServerLevel sl, Fate fate, LivingEntity victim) {
         if (fate.snapped || fate.tangled.contains(victim)) return;
         fate.tangled.removeIf(other -> !other.isAlive() || other.level() != sl);
         int left = (int) Math.max(1, fate.expires - sl.getGameTime());
@@ -1240,7 +1241,7 @@ public class Apocalypse {
     }
 
     /** The recast: everyone tangled is drawn to the middle, then the web snaps on them (and on whoever is there). */
-    private static void drawInFate(Player player, ServerLevel sl, Fate fate) {
+    private static void drawInFate(LivingEntity player, ServerLevel sl, Fate fate) {
         fate.snapped = true;
         List<LivingEntity> pulled = new ArrayList<>();
         for (LivingEntity victim : fate.tangled) {
@@ -1274,13 +1275,13 @@ public class Apocalypse {
     // =========================
     // Ability 5 - Plague
     // =========================
-    public static void apocalypsePlague(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void apocalypsePlague(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 5)) return;
 
         boolean sneak = player.isShiftKeyDown();
         LivingEntity target = Spells.aimEnemy(player, sl, sneak ? CURSE_RANGE : PLAGUE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("No one stands before you."));
+            Spells.tell(player, Component.literal("No one stands before you."));
             return; // nothing spent
         }
         if (!Spells.paySpirituality(player, sneak ? CURSE_COST : PLAGUE_COST)) return;
@@ -1294,7 +1295,7 @@ public class Apocalypse {
 
     // Normal: the target carries the plague for PLAGUE_TICKS, sickening every second. Then (or when it dies)
     // the disease jumps to the 2 to 3 enemies nearest to it, stronger each jump.
-    private static void plague(Player player, ServerLevel sl, LivingEntity target) {
+    private static void plague(LivingEntity player, ServerLevel sl, LivingEntity target) {
         Contagion.spread()
                 .lasts(PLAGUE_TICKS)
                 .every(20, (victim, stage) -> Spells.strike(player, victim, plagueDamage(stage)))
@@ -1321,7 +1322,7 @@ public class Apocalypse {
     }
 
     // Sneak - Curse: for CURSE_TICKS everything the target takes is stored; then it all hits it again at once.
-    private static void curse(Player player, ServerLevel sl, LivingEntity target) {
+    private static void curse(LivingEntity player, ServerLevel sl, LivingEntity target) {
         DemonessFx.curseMark(sl, target, CURSE_TICKS, CURSE_TAG);
         StoredDamage.start(target, player, CURSE_TICKS,
                 (victim, amount, total, level) -> DemonessFx.curseCharge(level, victim, total / CURSE_FULL),
@@ -1339,12 +1340,12 @@ public class Apocalypse {
     // =========================
     // Ability 6 - Unaging
     // =========================
-    public static void apocalypseUnaging(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void apocalypseUnaging(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 4)) return;
 
         if (player.isShiftKeyDown()) {
             if (shardsOf(player, sl).isEmpty()) {
-                player.sendSystemMessage(Component.literal("You have placed no mirror shards."));
+                Spells.tell(player, Component.literal("You have placed no mirror shards."));
                 return; // nothing spent
             }
             if (!Spells.paySpirituality(player, SHATTER_COST)) return;
@@ -1360,7 +1361,7 @@ public class Apocalypse {
     }
 
     // Normal: for UNAGING_TICKS your next death is cancelled. You come back with half your health, unseen for a moment.
-    private static void unaging(Player player, ServerLevel sl) {
+    private static void unaging(LivingEntity player, ServerLevel sl) {
         DeathWard.arm(player, UNAGING_TICKS, UNAGING_HEALTH, Apocalypse::unagingReturn);
         DemonessFx.unagingWard(sl, player, UNAGING_TICKS, WARD_TAG);
         Spells.sound(sl, player.position(), SoundEvents.BEACON_ACTIVATE, 0.8f, 0.6f);
@@ -1376,7 +1377,7 @@ public class Apocalypse {
 
     // Sneak: every mirror shard you placed bursts. The more it was charged, the harder it hits and the wider:
     // from SHARD_WEAK_AT it also weakens and slows, a full one also holds what it hit in place.
-    private static void shatterShards(Player player, ServerLevel sl) {
+    private static void shatterShards(LivingEntity player, ServerLevel sl) {
         for (Shard shard : shardsOf(player, sl)) {
             SHARDS.remove(shard);
             float charge = shard.charge;
@@ -1406,13 +1407,13 @@ public class Apocalypse {
      */
     @FunctionalInterface
     public interface StackCatastrophe {
-        void cast(Player player, ServerLevel sl, Vec3 ground, float power);
+        void cast(LivingEntity player, ServerLevel sl, Vec3 ground, float power);
     }
 
     /** One entry of the catastrophe wheel. A new disaster is one more line here and a method. */
-    private record Disaster(String key, String name, int sequence, int cost, int cooldown, StackCatastrophe cast) {}
+    record Disaster(String key, String name, int sequence, int cost, int cooldown, StackCatastrophe cast) {}
 
-    private static final List<Disaster> DISASTERS = List.of(
+    static final List<Disaster> DISASTERS = List.of(
             new Disaster("earthquake", "Earthquake", 3, DISASTER_MEDIUM_COST, DISASTER_MEDIUM_COOLDOWN, Apocalypse::earthquake),
             new Disaster("hailstorm", "Hailstorm", 3, DISASTER_MEDIUM_COST, DISASTER_MEDIUM_COOLDOWN, Apocalypse::hailstorm),
             new Disaster("tornado", "Tornado", 2, DISASTER_HIGH_COST, DISASTER_HIGH_COOLDOWN, Apocalypse::tornado),
@@ -1422,7 +1423,7 @@ public class Apocalypse {
             new Disaster("doomsday_sky", "Doomsday Sky", 1, DISASTER_VERY_HIGH_COST, DISASTER_VERY_HIGH_COOLDOWN, Apocalypse::doomsdaySky));
 
     // Icons are in assets/circle_of_inevitability/textures/gui/ability_menus/apocalypse/ (named as the keys)
-    private static final AbilityWheel CATASTROPHES = catastropheWheel();
+    static final AbilityWheel CATASTROPHES = catastropheWheel();
 
     private static AbilityWheel catastropheWheel() {
         AbilityWheel wheel = AbilityWheel.create("apocalypse_catastrophe", "Catastrophe")
@@ -1452,7 +1453,12 @@ public class Apocalypse {
      * The catastrophe the fifth stack calls down: the player's last Catastrophe pick, else a random one they have
      * unlocked, else null (below Sequence 3: see unleashStacks).
      */
-    private static StackCatastrophe lastCatastrophe(Player player) {
+    private static StackCatastrophe lastCatastrophe(LivingEntity caster) {
+        if (!(caster instanceof Player player)) {                      // a Beyonder mob: one its Sequence reaches, at random
+            List<Disaster> open = new ArrayList<>();
+            for (Disaster disaster : DISASTERS) if (Beyonder.hasSequence(caster, disaster.sequence())) open.add(disaster);
+            return open.isEmpty() ? null : open.get(caster.getRandom().nextInt(open.size())).cast();
+        }
         AbilityWheel.Entry entry = CATASTROPHES.lastPick(player);
         if (entry == null || !CATASTROPHES.unlocked(player, entry)) {
             List<AbilityWheel.Entry> open = CATASTROPHES.unlocked(player);
@@ -1468,7 +1474,7 @@ public class Apocalypse {
     // ---------- Earthquake ----------
 
     // The ground splits in a wide circle: everyone on it is hurt and thrown up, and staggered when they come down.
-    private static void earthquake(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void earthquake(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         DemonessFx.earthquake(sl, ground, QUAKE_RADIUS);
         Spells.sound(sl, ground, SoundEvents.WARDEN_SONIC_BOOM, 1f, 0.4f);
         Later.run(sl, DemonessFx.QUAKE_SPLITS, () -> {
@@ -1493,7 +1499,7 @@ public class Apocalypse {
     // ---------- Hailstorm ----------
 
     // Ice falls over the circle for HAIL_TICKS: steady damage and slowness for whoever stays under it.
-    private static void hailstorm(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void hailstorm(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         DemonessFx.hailstorm(sl, ground, HAIL_RADIUS, HAIL_TICKS, HAIL_PER_SECOND);
         Spells.sound(sl, ground, SoundEvents.LIGHTNING_BOLT_THUNDER, 0.6f, 1.4f);
         String name = DISASTER_TAG + (disasterNumber++);
@@ -1516,7 +1522,7 @@ public class Apocalypse {
 
     // A tornado forms where you aim and travels the way you look for TORNADO_TICKS. It draws enemies in; those it
     // reaches are lifted and whirled round, then thrown out.
-    private static void tornado(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void tornado(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         float yaw = player.getYRot();
         DemonessFx.tornado(sl, ground, yaw, TORNADO_SPEED, TORNADO_TICKS);
         Spells.sound(sl, ground, SoundEvents.BREEZE_JUMP, 1.4f, 0.4f);
@@ -1528,7 +1534,7 @@ public class Apocalypse {
         }
     }
 
-    private static void tornadoTick(Player player, ServerLevel sl, Vec3 ground, float yaw, int tick, float power,
+    private static void tornadoTick(LivingEntity player, ServerLevel sl, Vec3 ground, float yaw, int tick, float power,
                                     Map<UUID, Integer> carried, Map<UUID, Long> thrown) {
         if (!Spells.casterStillHere(player, sl)) return;
         Vec3 foot = DemonessFx.tornadoAt(ground, yaw, TORNADO_SPEED, tick);
@@ -1567,7 +1573,7 @@ public class Apocalypse {
 
     // The ground freezes over for ICE_TICKS: whoever is on it gets slower every second, cannot heal, is weakened,
     // and after ICE_FROZEN_AFTER inside is frozen solid.
-    private static void iceAge(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void iceAge(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         DemonessFx.iceAge(sl, ground, ICE_RADIUS, ICE_TICKS);
         Spells.sound(sl, ground, SoundEvents.AMETHYST_BLOCK_RESONATE, 1.4f, 0.4f);
         Spells.sound(sl, ground, SoundEvents.GLASS_BREAK, 1f, 0.5f);
@@ -1595,7 +1601,7 @@ public class Apocalypse {
 
     // A plague cloud settles where you aim for DEATH_TICKS and sickens whoever is in it; every new victim it
     // infects makes it wider, with no limit but its time.
-    private static void blackDeath(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void blackDeath(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         String tag = DISASTER_TAG + (disasterNumber++);
         Vec3 center = ground.add(0, 0.8, 0);
         DemonessFx.blackDeath(sl, center, DEATH_RADIUS, DEATH_TICKS, tag);
@@ -1603,7 +1609,7 @@ public class Apocalypse {
         blackDeathTick(player, sl, center, tag, new double[]{DEATH_RADIUS}, new HashSet<>(), 10, power);
     }
 
-    private static void blackDeathTick(Player player, ServerLevel sl, Vec3 center, String tag, double[] radius,
+    private static void blackDeathTick(LivingEntity player, ServerLevel sl, Vec3 center, String tag, double[] radius,
                                        Set<UUID> infected, int tick, float power) {
         Later.run(sl, 10, () -> {
             if (!Spells.casterStillHere(player, sl)) {
@@ -1631,7 +1637,7 @@ public class Apocalypse {
 
     // Black fire falls over the circle for RAIN_TICKS, half of it on the enemies there: what it hits is burnt by
     // the black flame and gets the Curse (key 5 sneak), which hits it again later with everything it took.
-    private static void blackFlameRain(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void blackFlameRain(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         DemonessFx.rainCloud(sl, ground, RAIN_RADIUS, RAIN_TICKS + DemonessFx.FLAME_FALLS);
         Spells.sound(sl, ground, SoundEvents.LIGHTNING_BOLT_THUNDER, 0.8f, 0.6f);
         float yaw = sl.getRandom().nextFloat() * 360f;
@@ -1657,7 +1663,7 @@ public class Apocalypse {
 
     // The sky turns dark red over the circle for DOOM_TICKS: meteors, black flame and red lightning fall near
     // enemies picked at random.
-    private static void doomsdaySky(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void doomsdaySky(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         DemonessFx.bloodSky(sl, ground, DOOM_RADIUS, DOOM_TICKS);
         Spells.sound(sl, ground, SoundEvents.WITHER_SPAWN, 0.8f, 0.5f);
         for (int t = 20; t < DOOM_TICKS - 20; t += DOOM_EVERY) {
@@ -1668,7 +1674,7 @@ public class Apocalypse {
         }
     }
 
-    private static void doomFalls(Player player, ServerLevel sl, Vec3 spot, float power) {
+    private static void doomFalls(LivingEntity player, ServerLevel sl, Vec3 spot, float power) {
         RandomSource random = sl.getRandom();
         switch (random.nextInt(3)) {
             case 0 -> {
@@ -1710,7 +1716,7 @@ public class Apocalypse {
      * Where the next thing falls in a circle: with chance 'aimed', next to an enemy in it picked at random
      * (within 'spread'), otherwise anywhere in the circle. On the ground.
      */
-    private static Vec3 fallingSpot(Player player, ServerLevel sl, Vec3 ground, double radius, float aimed, double spread) {
+    private static Vec3 fallingSpot(LivingEntity player, ServerLevel sl, Vec3 ground, double radius, float aimed, double spread) {
         RandomSource random = sl.getRandom();
         Vec3 spot = null;
         if (random.nextFloat() < aimed) {
@@ -1735,7 +1741,7 @@ public class Apocalypse {
     // Stacks
     // =========================
 
-    private static void addStack(Player player, ServerLevel sl) {
+    static void addStack(LivingEntity player, ServerLevel sl) {
         int slot = player.getPersistentData().getIntOr(STACKS, 0); // 0..4
         String image = STACK_IMAGES.get(player.getRandom().nextInt(STACK_IMAGES.size()));
         player.getPersistentData().putString(STACK_IMAGE_KEY + slot, image);
@@ -1744,7 +1750,7 @@ public class Apocalypse {
         int stacks = slot + 1;
         if (stacks >= MAX_STACKS) {
             unleashStacks(player, sl);
-            ScreenImages.hide(player, STACK_IMAGE_ID + "*", 10); // let the 5th show for a moment, then all fade
+            if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, STACK_IMAGE_ID + "*", 10); // let the 5th show for a moment, then all fade
             stacks = 0;
         }
         player.getPersistentData().putInt(STACKS, stacks);
@@ -1752,7 +1758,7 @@ public class Apocalypse {
 
     // Runs when the 5th stack is added: the last catastrophe (or a random unlocked one), around you, at
     // STACK_CATASTROPHE_POWER. Below Sequence 3 there is none: black flame bursts out of you and burns every enemy around.
-    private static void unleashStacks(Player player, ServerLevel sl) {
+    private static void unleashStacks(LivingEntity player, ServerLevel sl) {
         Vec3 feet = player.position();
         StackCatastrophe catastrophe = lastCatastrophe(player);
         if (catastrophe != null) {
@@ -1775,8 +1781,8 @@ public class Apocalypse {
     }
 
     // Stacks sit to the right of the hotbar, 18px apart like hotbar slots
-    private static void showStackImage(Player player, int slot, String image) {
-        ScreenImages.show(player, STACK_IMAGE_ID + slot, image,
+    private static void showStackImage(LivingEntity player, int slot, String image) {
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, STACK_IMAGE_ID + slot, image,
                 ScreenAnchor.BOTTOM, 103 + slot * 18, -3, 16, ScreenImages.FOREVER);
     }
 
@@ -1798,8 +1804,8 @@ public class Apocalypse {
     // =========================
 
     /** Has this pathway (or the check is skipped) and has reached the Sequence the ability needs. */
-    private static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
-        if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return false;
+    private static boolean ready(LivingEntity player, boolean bypassClassCheck, int sequence) {
+        if (!bypassClassCheck && !Beyonders.pathwayOf(player).equals(PATHWAY)) return false;   // a player, or a Beyonder mob
         return Beyonder.hasSequence(player, sequence);
     }
 }
