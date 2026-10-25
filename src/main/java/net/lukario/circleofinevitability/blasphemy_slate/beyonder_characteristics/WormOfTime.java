@@ -40,7 +40,7 @@ public class WormOfTime {
 
     private static final String PATHWAY = "Worm Of Time";
 
-    private static final String LIFE_THEFT_VULNERABILITY = "word_of_time_life_theft_vulnerability";
+    static final String LIFE_THEFT_VULNERABILITY = "word_of_time_life_theft_vulnerability";
 
     private static final int COMBO_HEAD = 0xF2F8FFFF;
     private static final int COMBO_MID  = 0xEE1BB8E8;
