@@ -61,61 +61,61 @@ public final class HandOfOrderDecrees {
     // =========================
 
     static final int DECREE_SEQUENCE = 6;                        // the key
-    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
+    static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
 
     // Prohibition: Passage / Concealment
-    private static final int PROHIBITION_SEQUENCE = 6;
-    private static final int PROHIBITION_COST = 2450;
-    private static final int PROHIBITION_COOLDOWN = 500;
-    private static final double PROHIBITION_RADIUS = 14.0;
-    private static final int PROHIBITION_TICKS = 240;
-    private static final double DECREE_HEIGHT = 8.0;            // how far up a Decree still holds
-    private static final int LAYER_SEQUENCE = 5;                // Disciplinary Paladin: the same one again...
-    private static final int LAYER_WINDOW = 200;                // ...within this...
-    private static final int LAYERS_MAX = 3;                    // ...adds a layer, up to this many...
-    private static final int LAYER_TICKS = 120;                 // ...each this much longer
-    private static final float STRONG_OBEY = 0.67f;             // stronger enemies bound by a 2nd layer are punished this hard
-    private static final int STAND_INS_SEQUENCE = 4;            // Imperative Mage: Concealment forbids stand-ins too
-    private static final int MARIONETTES_SEQUENCE = 3;          // Chaos Hunter: both freeze marionettes too
+    static final int PROHIBITION_SEQUENCE = 6;
+    static final int PROHIBITION_COST = 2450;
+    static final int PROHIBITION_COOLDOWN = 500;
+    static final double PROHIBITION_RADIUS = 14.0;
+    static final int PROHIBITION_TICKS = 240;
+    static final double DECREE_HEIGHT = 8.0;            // how far up a Decree still holds
+    static final int LAYER_SEQUENCE = 5;                // Disciplinary Paladin: the same one again...
+    static final int LAYER_WINDOW = 200;                // ...within this...
+    static final int LAYERS_MAX = 3;                    // ...adds a layer, up to this many...
+    static final int LAYER_TICKS = 120;                 // ...each this much longer
+    static final float STRONG_OBEY = 0.67f;             // stronger enemies bound by a 2nd layer are punished this hard
+    static final int STAND_INS_SEQUENCE = 4;            // Imperative Mage: Concealment forbids stand-ins too
+    static final int MARIONETTES_SEQUENCE = 3;          // Chaos Hunter: both freeze marionettes too
 
     // Imperative: Reality
-    private static final int REALITY_SEQUENCE = 4;
-    private static final int REALITY_COST = 6000;
-    private static final int REALITY_COOLDOWN = 900;
-    private static final double REALITY_RADIUS = 18.0;
-    private static final int REALITY_TICKS = 600;
+    static final int REALITY_SEQUENCE = 4;
+    static final int REALITY_COST = 6000;
+    static final int REALITY_COOLDOWN = 900;
+    static final double REALITY_RADIUS = 18.0;
+    static final int REALITY_TICKS = 600;
 
     // Contract
-    private static final int CONTRACT_SEQUENCE = 4;
-    private static final int CONTRACT_COST = 6000;
-    private static final int CONTRACT_COOLDOWN = 800;
-    private static final double CONTRACT_RANGE = 16.0;
-    private static final int CONTRACT_TICKS = 600;
-    private static final int CONTRACT_STAGGER = 20;             // its 1st Violation: staggered this long
-    private static final float CONTRACT_DAMAGE = 40f;           // its 2nd: this much, through everything
-    private static final int CONTRACT_HOLD = 60;                // its 3rd and on: held this long
-    private static final int CONTRACT_GAP = 10;                 // tries closer together than this are one
+    static final int CONTRACT_SEQUENCE = 4;
+    static final int CONTRACT_COST = 6000;
+    static final int CONTRACT_COOLDOWN = 800;
+    static final double CONTRACT_RANGE = 16.0;
+    static final int CONTRACT_TICKS = 600;
+    static final int CONTRACT_STAGGER = 20;             // its 1st Violation: staggered this long
+    static final float CONTRACT_DAMAGE = 40f;           // its 2nd: this much, through everything
+    static final int CONTRACT_HOLD = 60;                // its 3rd and on: held this long
+    static final int CONTRACT_GAP = 10;                 // tries closer together than this are one
 
     // How many at once, and where
-    private static final int LAWS_SEQUENCE = 2;                 // Balancer: two Decrees at once
-    private static final int MANY_SEQUENCE = 1;                 // Hand of Order: three, anywhere in view...
-    private static final double MANY_RANGE = 64.0;              // ...this far
+    static final int LAWS_SEQUENCE = 2;                 // Balancer: two Decrees at once
+    static final int MANY_SEQUENCE = 1;                 // Hand of Order: three, anywhere in view...
+    static final double MANY_RANGE = 64.0;              // ...this far
 
     // The Violation ladder of a Decree (by count: 1st, 2nd, 3rd, 4th and on)
-    private static final int LADDER_STAGGER = 20;               // 1st: staggered (cannot move or attack) this long
-    private static final float LADDER_DAMAGE_2 = 30f;           // 2nd: this much, through everything
-    private static final float LADDER_DAMAGE_3 = 60f;           // 3rd: this much...
-    private static final int LADDER_HOLD_3 = 40;                // ...and held this long
-    private static final float LADDER_DAMAGE_4 = 100f;          // 4th and on: this much...
-    private static final int LADDER_HOLD_4 = 60;                // ...and held this long
-    private static final float RECOIL = 0.2f;                   // punishing a stronger enemy recoils on you: this part
-    private static final int RECOIL_HALVED_SEQUENCE = 4;        // Beyonder Sense (4): half the recoil
+    static final int LADDER_STAGGER = 20;               // 1st: staggered (cannot move or attack) this long
+    static final float LADDER_DAMAGE_2 = 30f;           // 2nd: this much, through everything
+    static final float LADDER_DAMAGE_3 = 60f;           // 3rd: this much...
+    static final int LADDER_HOLD_3 = 40;                // ...and held this long
+    static final float LADDER_DAMAGE_4 = 100f;          // 4th and on: this much...
+    static final int LADDER_HOLD_4 = 60;                // ...and held this long
+    static final float RECOIL = 0.2f;                   // punishing a stronger enemy recoils on you: this part
+    static final int RECOIL_HALVED_SEQUENCE = 4;        // Beyonder Sense (4): half the recoil
 
     // =========================
     // Names and what is kept (not saved: a restart lifts every Decree)
     // =========================
     static final String CONTRACT = "hand_of_order_contract";                 // status/Chosen
-    private static final String[] SLOTS = {"hand_of_order_decree_1", "hand_of_order_decree_2", "hand_of_order_decree_3"};
+    static final String[] SLOTS = {"hand_of_order_decree_1", "hand_of_order_decree_2", "hand_of_order_decree_3"};
 
     /** What each written Decree of a player is: the wheel entry it came from, when it was (re)cast, its layers. */
     private static final class Written {

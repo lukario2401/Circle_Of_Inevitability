@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs;
 
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.combat.Teleport;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -152,6 +153,43 @@ public final class MobSpells {
     /** The spot on the ground under its target (or under the target's feet in the air): where ground abilities land. */
     public static Vec3 groundUnder(Mob caster, ServerLevel sl, LivingEntity target) {
         return Spells.groundUnder(caster, sl, target);
+    }
+
+    /** Where to stand to strike its target: just before it, on its own side. Null: no room. */
+    public static Vec3 spotBefore(Mob caster, ServerLevel sl, LivingEntity target) {
+        Vec3 back = caster.position().subtract(target.position());
+        Vec3 flat = new Vec3(back.x, 0, back.z);
+        if (flat.lengthSqr() < 1.0E-4) return caster.position();
+        return Spells.freeSpotNear(caster, sl, target.position(), flat.normalize(), target.getBbWidth() * 0.5 + 1.2);
+    }
+
+    /** It steps to 'feet' at once (a stride, a blink), safe from the fall after it. False: a root kept it there. */
+    public static boolean stepTo(Mob caster, ServerLevel sl, Vec3 feet) {
+        return Teleport.of(caster).fallGuard(40).go(sl, feet);
+    }
+
+    /** It is within melee reach of its target (its blows can land). */
+    public static boolean inMelee(Mob caster, LivingEntity target) {
+        return target != null && caster.distanceTo(target) <= caster.getBbWidth() * 0.5 + target.getBbWidth() * 0.5 + 2.5;
+    }
+
+    /** The weakest of its friends nearby (itself included) that is hurt: under 'share' of its health. Null: none. */
+    public static LivingEntity hurtFriend(Mob caster, ServerLevel sl, double radius, float share) {
+        LivingEntity worst = null;
+        float lowest = share;
+        for (LivingEntity friend : friendsAround(caster, sl, caster.position(), radius)) {
+            float part = friend.getHealth() / Math.max(1f, friend.getMaxHealth());
+            if (part < lowest) {
+                lowest = part;
+                worst = friend;
+            }
+        }
+        return worst;
+    }
+
+    /** Its health is under this share of its max. */
+    public static boolean hurt(LivingEntity caster, float share) {
+        return caster.getHealth() < caster.getMaxHealth() * share;
     }
 
     /** False once it died or went elsewhere: a delayed part of its ability (Later.run) stops then. */

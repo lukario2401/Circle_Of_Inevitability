@@ -290,10 +290,10 @@ public final class Zone {
      * Ends every zone in 'level' whose middle lies within 'radius' of 'point' and whose owner 'whose' says true for
      * (a Quell: Order restores itself, the enemies' fields end). Returns how many ended.
      */
-    public static int closeNear(ServerLevel level, Vec3 point, double radius, Predicate<Player> whose) {
+    public static int closeNear(ServerLevel level, Vec3 point, double radius, Predicate<LivingEntity> whose) {
         int ended = 0;
         for (Zone zone : new ArrayList<>(OPEN)) {
-            if (zone.closed || zone.level != level || !(zone.owner instanceof Player player) || !whose.test(player)) continue;
+            if (zone.closed || zone.level != level || !whose.test(zone.owner)) continue;
             if (zone.center().distanceToSqr(point) > radius * radius) continue;
             zone.end();
             ended++;

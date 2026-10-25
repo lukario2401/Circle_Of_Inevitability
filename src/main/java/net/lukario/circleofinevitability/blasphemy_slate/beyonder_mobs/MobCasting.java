@@ -4,6 +4,7 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
+import net.lukario.circleofinevitability.status.AbilityLock;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -25,8 +26,8 @@ import java.util.List;
  *   - its Sequence is the ability's or stronger,
  *   - it has the ability's spirituality,
  *   - the ability's cooldown for this mob is over, and it has not just cast something (CAST_PAUSE),
- *   - nothing blocks it (it is not bound by Order: a root on ABILITIES, which a hold on everything also is; and
- *     every addBlocker rule),
+ *   - nothing blocks it (it is not bound by Order: a root on ABILITIES, which a hold on everything also is; its
+ *     special attacks are not locked: status/AbilityLock; and every addBlocker rule),
  *   - its target is in range (and in sight if the ability needs that), and the ability's when() agrees.
  *
  * Then the ability's cast() runs. If it went off, the spirituality is paid, its cooldown starts, and the cast is
@@ -73,6 +74,8 @@ public final class MobCasting {
     static {
         // bound by Order (status/Silence) or held (a root on everything): no abilities, as for a player
         addBlocker((mob, ability) -> Root.has(mob, RootRestriction.ABILITIES));
+        // its special attacks taken (a Verdict of Deprivation or Maintain Secrecy: status/AbilityLock)
+        addBlocker((mob, ability) -> AbilityLock.isLocked(mob));
     }
 
     private MobCasting() {}

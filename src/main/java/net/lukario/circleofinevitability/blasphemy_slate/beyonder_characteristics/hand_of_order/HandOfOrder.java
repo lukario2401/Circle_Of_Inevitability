@@ -101,17 +101,17 @@ public class HandOfOrder {
     // Ability 1 - Halt (Sequence 9)
     static final int HALT_SEQUENCE = 9;
     static final int HALT_COST = 250;
-    private static final int HALT_COOLDOWN = 1;
+    static final int HALT_COOLDOWN = 1;
     static final double HALT_RANGE = 16.0;
     static final int HALT_TICKS = 40;                    // held this long (a player: HALT_PLAYER_TICKS)
     static final int HALT_PLAYER_TICKS = 20;
     static final int HALT_JUDGE_TICKS = 60;              // from Judge (6)
     static final int HALT_JUDGE_PLAYER_TICKS = 30;
-    private static final double HALT_FORGET_RADIUS = 32.0;       // mobs this close that hunt you...
-    private static final int HALT_FORGET_TICKS = 100;            // ...cannot pick you again for this long
+    static final double HALT_FORGET_RADIUS = 32.0;       // mobs this close that hunt you...
+    static final int HALT_FORGET_TICKS = 100;            // ...cannot pick you again for this long
     // sneak: Presence
     static final int PRESENCE_COST = 400;
-    private static final int PRESENCE_COOLDOWN = 1;
+    static final int PRESENCE_COOLDOWN = 1;
     static final double PRESENCE_RADIUS = 8.0;
     static final double PRESENCE_JUDGE_RADIUS = 12.0;    // from Judge (6)
     static final int PRESENCE_TICKS = 120;               // Slowness II and Weakness I this long
@@ -122,79 +122,79 @@ public class HandOfOrder {
 
     // Ability 2 - Jurisdiction (Sequence 8)
     static final int JUDGE_SEQUENCE = 6;                         // many things grow at Judge
-    private static final int JURISDICTION_SEQUENCE = 8;
-    private static final int JURISDICTION_COST = 1250;
-    private static final int JURISDICTION_COOLDOWN = 1;
-    private static final int JURISDICTION_TICKS = 2400;
-    private static final double JURISDICTION_RADIUS = 24.0;
-    private static final double JURISDICTION_JUDGE_RADIUS = 48.0;        // from Judge (6)
-    private static final int JURISDICTION_CITY_SEQUENCE = 3;             // Chaos Hunter: a whole city
-    private static final double JURISDICTION_CITY_RADIUS = 96.0;
-    private static final int TWO_JURISDICTIONS_SEQUENCE = 1;             // Hand of Order: two at once
-    private static final float JURISDICTION_DISCOUNT = 0.8f;             // inside: your Order costs 20% less...
-    private static final float JURISDICTION_DECREES_LONGER = 1.25f;      // ...and your Decrees last 25% longer
+    static final int JURISDICTION_SEQUENCE = 8;
+    static final int JURISDICTION_COST = 1250;
+    static final int JURISDICTION_COOLDOWN = 1;
+    static final int JURISDICTION_TICKS = 2400;
+    static final double JURISDICTION_RADIUS = 24.0;
+    static final double JURISDICTION_JUDGE_RADIUS = 48.0;        // from Judge (6)
+    static final int JURISDICTION_CITY_SEQUENCE = 3;             // Chaos Hunter: a whole city
+    static final double JURISDICTION_CITY_RADIUS = 96.0;
+    static final int TWO_JURISDICTIONS_SEQUENCE = 1;             // Hand of Order: two at once
+    static final float JURISDICTION_DISCOUNT = 0.8f;             // inside: your Order costs 20% less...
+    static final float JURISDICTION_DECREES_LONGER = 1.25f;      // ...and your Decrees last 25% longer
     // sneak: Recognition
-    private static final int RECOGNITION_COST = 600;
-    private static final int RECOGNITION_COOLDOWN = 1;
-    private static final double RECOGNITION_RANGE = 48.0;
-    private static final int RECOGNITION_TICKS = 1200;
-    private static final double RECOGNITION_SHOWN = 64.0;                // its distance and its trail are shown within this
-    private static final int RECOGNITION_DETAILS_SEQUENCE = 4;           // Imperative Mage: its Pathway, Sequence, effects;
-    private static final double RECOGNITION_CONCEALED = 6.0;             // a concealed one still seen this close
-    private static final int RECOGNITION_DISORDER_SEQUENCE = 3;          // Chaos Hunter: its Disorder
+    static final int RECOGNITION_COST = 600;
+    static final int RECOGNITION_COOLDOWN = 1;
+    static final double RECOGNITION_RANGE = 48.0;
+    static final int RECOGNITION_TICKS = 1200;
+    static final double RECOGNITION_SHOWN = 64.0;                // its distance and its trail are shown within this
+    static final int RECOGNITION_DETAILS_SEQUENCE = 4;           // Imperative Mage: its Pathway, Sequence, effects;
+    static final double RECOGNITION_CONCEALED = 6.0;             // a concealed one still seen this close
+    static final int RECOGNITION_DISORDER_SEQUENCE = 3;          // Chaos Hunter: its Disorder
 
     // Ability 6 - Punishment (Sequence 5)
-    private static final int PUNISHMENT_SEQUENCE = 5;
-    private static final int PUNISHMENT_COST = 3000;
-    private static final int PUNISHMENT_COOLDOWN = 1;
-    private static final double PUNISHMENT_RANGE = 24.0;
-    private static final int PUNISHMENT_TICKS = 500;
-    private static final float CONVICT_MORE_DAMAGE = 1.3f;               // you deal 30% more to the Convict...
-    private static final double CONVICT_SLOW = -0.15;                    // ...it is 15% slower and glows through walls
-    private static final int PUNISHMENT_WAIT = 160;                      // cast at nothing: the next enemy to hit you within this
+    static final int PUNISHMENT_SEQUENCE = 5;
+    static final int PUNISHMENT_COST = 3000;
+    static final int PUNISHMENT_COOLDOWN = 1;
+    static final double PUNISHMENT_RANGE = 24.0;
+    static final int PUNISHMENT_TICKS = 500;
+    static final float CONVICT_MORE_DAMAGE = 1.3f;               // you deal 30% more to the Convict...
+    static final double CONVICT_SLOW = -0.15;                    // ...it is 15% slower and glows through walls
+    static final int PUNISHMENT_WAIT = 160;                      // cast at nothing: the next enemy to hit you within this
     // sneak: Sword of Judgment
-    private static final int SWORD_SEQUENCE = 3;
-    private static final int SWORD_COST = 12000;
-    private static final int SWORD_COOLDOWN = 1;
-    private static final double SWORD_RANGE = 32.0;                      // doubled from Balancer (2); doubled again inside
-    private static final int SWORD_RANGE_SEQUENCE = 2;                   // your Jurisdiction (from Chaos Hunter)
-    private static final float SWORD_DAMAGE = 80f;
-    private static final float SWORD_PER_DISORDER = 0.15f;               // +15% for each point of Disorder...
-    private static final float SWORD_MAX = 2.5f;                         // ...up to this many times
+    static final int SWORD_SEQUENCE = 3;
+    static final int SWORD_COST = 12000;
+    static final int SWORD_COOLDOWN = 1;
+    static final double SWORD_RANGE = 32.0;                      // doubled from Balancer (2); doubled again inside
+    static final int SWORD_RANGE_SEQUENCE = 2;                   // your Jurisdiction (from Chaos Hunter)
+    static final float SWORD_DAMAGE = 80f;
+    static final float SWORD_PER_DISORDER = 0.15f;               // +15% for each point of Disorder...
+    static final float SWORD_MAX = 2.5f;                         // ...up to this many times
 
     // Passives (docs/HAND_OF_ORDER.md, "Passives"); the once-a-second ones run from SequencePassives
-    private static final double ORDER_RADIUS = 5.0;                      // Arbiter: weak mobs this close keep their distance
-    private static final float ORDER_WEAK_HEALTH = 30f;
-    private static final int PROFICIENCY_SEQUENCE = 8;                   // Weapon Proficiency: faster attacks, more reach
-    private static final double PROFICIENCY_ATTACK_SPEED = 0.1;
-    private static final double PROFICIENCY_REACH = 0.5;
-    private static final int INTUITION_SEQUENCE = 8;                     // Sheriff's Intuition: a chime when hunted unseen
-    private static final int INTUITION_REST = 60;
-    private static final int DEMOLITION_SEQUENCE = 7;                    // Demolition Proficiency: explosions hurt this much less
-    private static final float DEMOLITION_CUT = 0.5f;
-    private static final double AURA_RADIUS = 6.0;                       // Judge's Aura: enemies this close deal 10% less
-    private static final float AURA_CUT = 0.1f;
-    private static final int RESTRAINT_SEQUENCE = 5;                     // Self-Restraint: mind effects last half as long
-    private static final float RESTRAINT_SHORTER = 0.5f;
-    private static final int BEYONDER_SENSE_EVERY = 40;                  // Beyonder Sense (4): Beyonders this close are marked
-    private static final double BEYONDER_SENSE_RADIUS = 24.0;
-    private static final double DISORDER_SENSE_RADIUS = 32.0;            // Disorder Sense (3): enemies this disorderly glow
-    private static final int DISORDER_SENSE_MIN = 2;
-    private static final double IMBALANCE_RADIUS = 24.0;                 // Sense Imbalance (2): concealed enemies cannot hide
-    private static final int IMBALANCE_TICKS = 30;
-    private static final double SENSE_ORDER_RADIUS = 48.0;               // Sense of Order (1): casts this close chime
+    static final double ORDER_RADIUS = 5.0;                      // Arbiter: weak mobs this close keep their distance
+    static final float ORDER_WEAK_HEALTH = 30f;
+    static final int PROFICIENCY_SEQUENCE = 8;                   // Weapon Proficiency: faster attacks, more reach
+    static final double PROFICIENCY_ATTACK_SPEED = 0.1;
+    static final double PROFICIENCY_REACH = 0.5;
+    static final int INTUITION_SEQUENCE = 8;                     // Sheriff's Intuition: a chime when hunted unseen
+    static final int INTUITION_REST = 60;
+    static final int DEMOLITION_SEQUENCE = 7;                    // Demolition Proficiency: explosions hurt this much less
+    static final float DEMOLITION_CUT = 0.5f;
+    static final double AURA_RADIUS = 6.0;                       // Judge's Aura: enemies this close deal 10% less
+    static final float AURA_CUT = 0.1f;
+    static final int RESTRAINT_SEQUENCE = 5;                     // Self-Restraint: mind effects last half as long
+    static final float RESTRAINT_SHORTER = 0.5f;
+    static final int BEYONDER_SENSE_EVERY = 40;                  // Beyonder Sense (4): Beyonders this close are marked
+    static final double BEYONDER_SENSE_RADIUS = 24.0;
+    static final double DISORDER_SENSE_RADIUS = 32.0;            // Disorder Sense (3): enemies this disorderly glow
+    static final int DISORDER_SENSE_MIN = 2;
+    static final double IMBALANCE_RADIUS = 24.0;                 // Sense Imbalance (2): concealed enemies cannot hide
+    static final int IMBALANCE_TICKS = 30;
+    static final double SENSE_ORDER_RADIUS = 48.0;               // Sense of Order (1): casts this close chime
 
     // What grows on the Decrees and Punishment (keys 5 and 7 are HandOfOrderDecrees and HandOfOrderOrder)
-    private static final int SENSE_OF_ORDER_SEQUENCE = 1;                // Sense of Order (1): Rules written by an enemy of a
+    static final int SENSE_OF_ORDER_SEQUENCE = 1;                // Sense of Order (1): Rules written by an enemy of a
                                                                          // lower Sequence cannot bind you
-    private static final int SURE_HIT_SEQUENCE = 3;                      // Chaos Hunter: the Convict breaking your Rule...
-    private static final int SURE_HIT_TICKS = 200;                       // ...makes your next hit on it within this...
-    private static final float SURE_HIT_MORE = 1.5f;                     // ...sure (no shield) and this much harder
-    private static final int MANY_DECREES_SEQUENCE = 1;                  // Hand of Order: Decrees last twice as long
-    private static final float MANY_DECREES_LONGER = 2f;
-    private static final int LAW_OF_ORDER_SEQUENCE = 0;                  // Justiciar, Law of Order: Decrees cost 25% less...
-    private static final float LAW_OF_ORDER_CHEAPER = 0.75f;
-    private static final float LAW_OF_ORDER_LONGER = 1.25f;              // ...and last 25% longer
+    static final int SURE_HIT_SEQUENCE = 3;                      // Chaos Hunter: the Convict breaking your Rule...
+    static final int SURE_HIT_TICKS = 200;                       // ...makes your next hit on it within this...
+    static final float SURE_HIT_MORE = 1.5f;                     // ...sure (no shield) and this much harder
+    static final int MANY_DECREES_SEQUENCE = 1;                  // Hand of Order: Decrees last twice as long
+    static final float MANY_DECREES_LONGER = 2f;
+    static final int LAW_OF_ORDER_SEQUENCE = 0;                  // Justiciar, Law of Order: Decrees cost 25% less...
+    static final float LAW_OF_ORDER_CHEAPER = 0.75f;
+    static final float LAW_OF_ORDER_LONGER = 1.25f;              // ...and last 25% longer
 
     static final float BOSS_HEALTH = 150f;
 
@@ -203,11 +203,11 @@ public class HandOfOrder {
     // =========================
     static final String CONVICT = "hand_of_order_convict";               // status/Chosen
     static final String RECOGNIZED = "hand_of_order_recognized";         // status/Chosen
-    private static final String JURISDICTION = "hand_of_order_jurisdiction";       // combat/Zone (the second: + "_2")
-    private static final String JURISDICTION_2 = "hand_of_order_jurisdiction_2";
-    private static final String PUNISHMENT_PENDING = "hand_of_order_punishment_pending";
-    private static final String INTUITION_READY = "hand_of_order_intuition_ready";
-    private static final String RECOGNITION_COUNTER = "hand_of_order_recognition";  // combat/HudCounter
+    static final String JURISDICTION = "hand_of_order_jurisdiction";       // combat/Zone (the second: + "_2")
+    static final String JURISDICTION_2 = "hand_of_order_jurisdiction_2";
+    static final String PUNISHMENT_PENDING = "hand_of_order_punishment_pending";
+    static final String INTUITION_READY = "hand_of_order_intuition_ready";
+    static final String RECOGNITION_COUNTER = "hand_of_order_recognition";  // combat/HudCounter
     static final String SURE_HIT = "hand_of_order_sure_hit";                         // status/EmpoweredHit
 
     /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
@@ -215,12 +215,12 @@ public class HandOfOrder {
     /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
     public static final float QUICK_CAST_COST = 3f;
 
-    private static final String HALT_KEY = "hand_of_order_halt";          // combat/Cooldowns
-    private static final String PRESENCE_KEY = "hand_of_order_presence";
-    private static final String JURISDICTION_KEY = "hand_of_order_jurisdiction";
-    private static final String RECOGNITION_KEY = "hand_of_order_recognition";
-    private static final String PUNISHMENT_KEY = "hand_of_order_punishment";
-    private static final String SWORD_KEY = "hand_of_order_sword";
+    static final String HALT_KEY = "hand_of_order_halt";          // combat/Cooldowns
+    static final String PRESENCE_KEY = "hand_of_order_presence";
+    static final String JURISDICTION_KEY = "hand_of_order_jurisdiction";
+    static final String RECOGNITION_KEY = "hand_of_order_recognition";
+    static final String PUNISHMENT_KEY = "hand_of_order_punishment";
+    static final String SWORD_KEY = "hand_of_order_sword";
 
     private static final Identifier PROFICIENCY_SPEED_ID = Physique.id("hand_of_order_proficiency_speed");
     private static final Identifier PROFICIENCY_REACH_ID = Physique.id("hand_of_order_proficiency_reach");

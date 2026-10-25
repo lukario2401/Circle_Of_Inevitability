@@ -65,67 +65,67 @@ public final class HandOfOrderOrder {
     // =========================
 
     static final int ORDER_SEQUENCE = 2;                         // the key
-    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
+    static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
 
     // Balance
-    private static final int BALANCE_SEQUENCE = 2;
-    private static final int BALANCE_COST = 20000;
-    private static final int BALANCE_COOLDOWN = 800;
-    private static final double BALANCE_RANGE = 24.0;
-    private static final int BALANCE_TICKS = 400;               // x your max health / its max health...
-    private static final int BALANCE_MIN_TICKS = 60;            // ...never under this (a boss: this)
+    static final int BALANCE_SEQUENCE = 2;
+    static final int BALANCE_COST = 20000;
+    static final int BALANCE_COOLDOWN = 800;
+    static final double BALANCE_RANGE = 24.0;
+    static final int BALANCE_TICKS = 400;               // x your max health / its max health...
+    static final int BALANCE_MIN_TICKS = 60;            // ...never under this (a boss: this)
 
     // Divide the Battlefield
-    private static final int DIVIDE_SEQUENCE = 2;
-    private static final int DIVIDE_COST = 20000;
-    private static final int DIVIDE_COOLDOWN = 1200;
-    private static final double DIVIDE_RADIUS = 10.0;           // 20 blocks wide
-    private static final int DIVIDE_TICKS = 500;
-    private static final float DIVIDE_TOO_STRONG = 3f;          // enemies with this many times your max health are thrown out
-    private static final double DIVIDE_THROWN = 4.0;            // this far past the edge
+    static final int DIVIDE_SEQUENCE = 2;
+    static final int DIVIDE_COST = 20000;
+    static final int DIVIDE_COOLDOWN = 1200;
+    static final double DIVIDE_RADIUS = 10.0;           // 20 blocks wide
+    static final int DIVIDE_TICKS = 500;
+    static final float DIVIDE_TOO_STRONG = 3f;          // enemies with this many times your max health are thrown out
+    static final double DIVIDE_THROWN = 4.0;            // this far past the edge
 
     // Law: No Return
-    private static final int NO_RETURN_SEQUENCE = 2;
-    private static final int NO_RETURN_COST = 20000;
-    private static final int NO_RETURN_COOLDOWN = 1200;
-    private static final double NO_RETURN_RADIUS = 20.0;
-    private static final int NO_RETURN_TICKS = 900;
+    static final int NO_RETURN_SEQUENCE = 2;
+    static final int NO_RETURN_COST = 20000;
+    static final int NO_RETURN_COOLDOWN = 1200;
+    static final double NO_RETURN_RADIUS = 20.0;
+    static final int NO_RETURN_TICKS = 900;
 
     // Order Proxy
-    private static final int PROXY_SEQUENCE = 1;
-    private static final int PROXY_COST = 30000;
-    private static final int PROXY_COOLDOWN = 2400;
-    private static final int PROXY_TICKS = 120;
-    private static final int PROXY_JUSTICIAR_TICKS = 200;       // Justiciar (0): longer...
-    private static final int SPENT_TICKS = 600;                 // after it: Weakness III and Slowness II this long...
-    private static final int SPENT_JUSTICIAR_TICKS = 300;       // ...(Justiciar: half as long)
-    private static final float SPENT_SPIRITUALITY = 0.5f;       // ...and this part of your spirituality is gone
+    static final int PROXY_SEQUENCE = 1;
+    static final int PROXY_COST = 30000;
+    static final int PROXY_COOLDOWN = 2400;
+    static final int PROXY_TICKS = 120;
+    static final int PROXY_JUSTICIAR_TICKS = 200;       // Justiciar (0): longer...
+    static final int SPENT_TICKS = 600;                 // after it: Weakness III and Slowness II this long...
+    static final int SPENT_JUSTICIAR_TICKS = 300;       // ...(Justiciar: half as long)
+    static final float SPENT_SPIRITUALITY = 0.5f;       // ...and this part of your spirituality is gone
 
     // Quell Disorder
-    private static final int QUELL_SEQUENCE = 1;
-    private static final int QUELL_COST = 30000;
-    private static final int QUELL_COOLDOWN = 900;
-    private static final double QUELL_RADIUS = 24.0;
+    static final int QUELL_SEQUENCE = 1;
+    static final int QUELL_COST = 30000;
+    static final int QUELL_COOLDOWN = 900;
+    static final double QUELL_RADIUS = 24.0;
 
     // Court of Judgment
-    private static final int COURT_SEQUENCE = 0;
-    private static final int COURT_COST = 60000;
-    private static final int COURT_COOLDOWN = 3600;
-    private static final double COURT_RADIUS = 40.0;
-    private static final double COURT_HEIGHT = 16.0;
-    private static final int COURT_TICKS = 1200;
-    private static final int COURT_CLAUSE_EVERY = 200;          // one more clause this often (the first at once)
-    private static final int SENTENCE_STAGGER = 20;             // 1st breach: a warning, staggered...
-    private static final int SENTENCE_MARK = 100;               // ...and marked (glowing) this long
-    private static final float SENTENCE_DAMAGE_2 = 60f;         // 2nd: this much...
-    private static final int SENTENCE_HOLD_2 = 40;              // ...and held
-    private static final float SENTENCE_DAMAGE_3 = 150f;        // 3rd: this much, held, and the Sword of Judgment falls free
-    private static final int SENTENCE_HOLD_3 = 80;
-    private static final float SENTENCE_DEATH = 200f;           // 4th: Death, at once...
-    private static final int SENTENCE_NO_HEAL = 200;            // ...and no healing this long
+    static final int COURT_SEQUENCE = 0;
+    static final int COURT_COST = 60000;
+    static final int COURT_COOLDOWN = 3600;
+    static final double COURT_RADIUS = 40.0;
+    static final double COURT_HEIGHT = 16.0;
+    static final int COURT_TICKS = 1200;
+    static final int COURT_CLAUSE_EVERY = 200;          // one more clause this often (the first at once)
+    static final int SENTENCE_STAGGER = 20;             // 1st breach: a warning, staggered...
+    static final int SENTENCE_MARK = 100;               // ...and marked (glowing) this long
+    static final float SENTENCE_DAMAGE_2 = 60f;         // 2nd: this much...
+    static final int SENTENCE_HOLD_2 = 40;              // ...and held
+    static final float SENTENCE_DAMAGE_3 = 150f;        // 3rd: this much, held, and the Sword of Judgment falls free
+    static final int SENTENCE_HOLD_3 = 80;
+    static final float SENTENCE_DEATH = 200f;           // 4th: Death, at once...
+    static final int SENTENCE_NO_HEAL = 200;            // ...and no healing this long
 
     /** The Court's clauses, in the order they are written (docs/HAND_OF_ORDER.md). */
-    private static final Decree.Rule[] CLAUSES = {
+    static final Decree.Rule[] CLAUSES = {
             Decree.Rule.PASSAGE, Decree.Rule.CONCEALMENT, Decree.Rule.RESURRECTION, Decree.Rule.STAND_INS,
             Decree.Rule.HEALING, Decree.Rule.PROJECTILES, Decree.Rule.ABILITIES};
 
@@ -133,15 +133,15 @@ public final class HandOfOrderOrder {
     // Names and what is kept
     // =========================
     static final String BALANCED = "hand_of_order_balanced";                 // status/Chosen
-    private static final String DIVIDE = "hand_of_order_divide";             // combat/Dome
-    private static final String COURT = "hand_of_order_court";               // status/Decree
-    private static final String PROXY_UNTIL = "hand_of_order_proxy_until";   // on the player: game time it ends
-    private static final String PROXY_ON = "hand_of_order_proxy_on";         // ...and that its end is still to come
+    static final String DIVIDE = "hand_of_order_divide";             // combat/Dome
+    static final String COURT = "hand_of_order_court";               // status/Decree
+    static final String PROXY_UNTIL = "hand_of_order_proxy_until";   // on the player: game time it ends
+    static final String PROXY_ON = "hand_of_order_proxy_on";         // ...and that its end is still to come
 
     /** The four things Balance weighs, each with its own modifier. */
-    private static final List<Holder<Attribute>> WEIGHED = List.of(
+    static final List<Holder<Attribute>> WEIGHED = List.of(
             Attributes.ATTACK_DAMAGE, Attributes.ARMOR, Attributes.MOVEMENT_SPEED, Attributes.MAX_HEALTH);
-    private static final List<Identifier> WEIGHED_IDS = List.of(
+    static final List<Identifier> WEIGHED_IDS = List.of(
             Physique.id("hand_of_order_balance_attack"), Physique.id("hand_of_order_balance_armor"),
             Physique.id("hand_of_order_balance_speed"), Physique.id("hand_of_order_balance_health"));
 

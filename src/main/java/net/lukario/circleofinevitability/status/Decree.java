@@ -153,7 +153,7 @@ public final class Decree {
 
     // ---------- while it is written ----------
 
-    private Player owner;
+    private LivingEntity owner;
     private ServerLevel level;
     private String name;
     private boolean closed = true;
@@ -217,7 +217,7 @@ public final class Decree {
     }
 
     /** Puts it in force. If this player already has a Decree with this name, that one ends first. */
-    public void write(Player owner, ServerLevel level, String name) {
+    public void write(LivingEntity owner, ServerLevel level, String name) {
         close(owner, name);
         this.owner = owner;
         this.level = level;
@@ -241,32 +241,32 @@ public final class Decree {
 
     // ---------- asking / changing ----------
 
-    public static boolean isWritten(Player owner, String name) {
+    public static boolean isWritten(LivingEntity owner, String name) {
         return find(owner, name) != null;
     }
 
-    public static int ticksLeft(Player owner, String name) {
+    public static int ticksLeft(LivingEntity owner, String name) {
         return find(owner, name) == null ? 0 : Zone.ticksLeft(owner, ZONE_PREFIX + name);
     }
 
-    public static Vec3 centerOf(Player owner, String name) {
+    public static Vec3 centerOf(LivingEntity owner, String name) {
         Decree decree = find(owner, name);
         return decree == null ? null : decree.center;
     }
 
-    public static double radiusOf(Player owner, String name) {
+    public static double radiusOf(LivingEntity owner, String name) {
         Decree decree = find(owner, name);
         return decree == null ? 0.0 : decree.radius;
     }
 
     /** The Rules in force in it now (empty if there is no such Decree). */
-    public static Set<Rule> rules(Player owner, String name) {
+    public static Set<Rule> rules(LivingEntity owner, String name) {
         Decree decree = find(owner, name);
         return decree == null ? EnumSet.noneOf(Rule.class) : EnumSet.copyOf(decree.rulesOrNone());
     }
 
     /** One more Rule, in force from now. False if there is no such Decree. */
-    public static boolean forbid(Player owner, String name, Rule rule) {
+    public static boolean forbid(LivingEntity owner, String name, Rule rule) {
         Decree decree = find(owner, name);
         if (decree == null) return false;
         decree.rules.add(rule);
@@ -274,17 +274,17 @@ public final class Decree {
     }
 
     /** It lasts 'ticks' more. False if there is no such Decree. */
-    public static boolean extend(Player owner, String name, int ticks) {
+    public static boolean extend(LivingEntity owner, String name, int ticks) {
         return find(owner, name) != null && Zone.extend(owner, ZONE_PREFIX + name, ticks);
     }
 
     /** Ends it now (its onEnd runs). */
-    public static void close(Player owner, String name) {
+    public static void close(LivingEntity owner, String name) {
         if (find(owner, name) != null) Zone.close(owner, ZONE_PREFIX + name);
     }
 
     /** How many Violations 'entity' has made in this player's Decree (0 if none, or no such Decree). */
-    public static int violationsIn(Player owner, String name, Entity entity) {
+    public static int violationsIn(LivingEntity owner, String name, Entity entity) {
         Decree decree = find(owner, name);
         return decree == null || entity == null ? 0 : decree.counts.getOrDefault(entity.getUUID(), 0);
     }
@@ -347,7 +347,7 @@ public final class Decree {
 
     // ---------- internals ----------
 
-    private static Decree find(Player owner, String name) {
+    private static Decree find(LivingEntity owner, String name) {
         for (Decree decree : WRITTEN) {
             if (!decree.closed && decree.name.equals(name) && decree.owner.getUUID().equals(owner.getUUID())) return decree;
         }
@@ -379,7 +379,7 @@ public final class Decree {
         if (entity.getUUID().equals(owner.getUUID()) || Spells.isFriend(owner, entity)) return false;   // Immunity: allies
         if (binds != null && !binds.test(entity)) return false;
         for (Immunity immunity : IMMUNITIES) {
-            if (immunity.immune(owner, entity, rule)) return false;
+            if (owner instanceof Player writer && immunity.immune(writer, entity, rule)) return false;
         }
         return true;
     }

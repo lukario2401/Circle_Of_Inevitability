@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.status;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.Spells;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,15 +53,28 @@ public final class WeaponCoat {
         float run(Player attacker, LivingEntity target, float amount, ServerLevel level);
     }
 
+    /** What a coated hit does, for any attacker (armAny: a mob's own blows count too). */
+    @FunctionalInterface
+    public interface AnyStrike {
+        float run(LivingEntity attacker, LivingEntity target, float amount, ServerLevel level);
+    }
+
     private static final class Coat {
         final long expires;
-        final Strike strike;
+        final Strike strike;            // a player's (arm)
+        final AnyStrike any;            // anyone's (armAny)
         int charges;
 
-        Coat(long expires, int charges, Strike strike) {
+        Coat(long expires, int charges, Strike strike, AnyStrike any) {
             this.expires = expires;
             this.charges = charges;
             this.strike = strike;
+            this.any = any;
+        }
+
+        float run(LivingEntity attacker, LivingEntity target, float amount, ServerLevel level) {
+            if (strike != null && attacker instanceof Player player) return strike.run(player, target, amount, level);
+            return any != null ? any.run(attacker, target, amount, level) : amount;
         }
     }
 
@@ -80,7 +94,18 @@ public final class WeaponCoat {
         if (!(player.level() instanceof ServerLevel sl) || charges <= 0 || ticks <= 0 || strike == null) return;
         Map<String, Coat> mine = COATS.computeIfAbsent(player.getUUID(), id -> new LinkedHashMap<>());
         mine.remove(name);                                       // put on again: it goes to the back of the line
-        mine.put(name, new Coat(sl.getGameTime() + ticks, charges, strike));
+        mine.put(name, new Coat(sl.getGameTime() + ticks, charges, strike, null));
+    }
+
+    /**
+     * The same coat on anyone: a player's swings, or a mob's own melee blows (not its abilities' strikes). For a
+     * Beyonder mob's ability (blasphemy_slate/beyonder_mobs).
+     */
+    public static void armAny(LivingEntity who, String name, int charges, int ticks, AnyStrike strike) {
+        if (!(who.level() instanceof ServerLevel sl) || charges <= 0 || ticks <= 0 || strike == null) return;
+        Map<String, Coat> mine = COATS.computeIfAbsent(who.getUUID(), id -> new LinkedHashMap<>());
+        mine.remove(name);
+        mine.put(name, new Coat(sl.getGameTime() + ticks, charges, null, strike));
     }
 
     public static boolean isArmed(Entity player, String name) {
@@ -139,10 +164,14 @@ public final class WeaponCoat {
     public static void onWeaponCoatHurt(LivingHurtEvent event) {
         LivingEntity target = event.getEntity();
         if (!(target.level() instanceof ServerLevel sl)) return;
-        if (!(event.getSource().getEntity() instanceof Player player) || event.getSource().getDirectEntity() != player) return;
-        Swing swing = SWINGING.remove(player.getUUID());
-        if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
-        Map<String, Coat> mine = COATS.get(player.getUUID());
+        if (!(event.getSource().getEntity() instanceof LivingEntity attacker) || event.getSource().getDirectEntity() != attacker) return;
+        if (attacker instanceof Player player) {
+            Swing swing = SWINGING.remove(player.getUUID());
+            if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
+        } else if (Spells.isSpellHit(target) || !COATS.containsKey(attacker.getUUID())) {
+            return;                                                  // a mob's ability, not its blow
+        }
+        Map<String, Coat> mine = COATS.get(attacker.getUUID());
         if (mine == null) return;
 
         long now = sl.getGameTime();
@@ -152,7 +181,7 @@ public final class WeaponCoat {
             if (coat.expires <= now || coat.charges <= 0) continue;
             coat.charges--;
             try {
-                amount = coat.strike.run(player, target, amount, sl);
+                amount = coat.run(attacker, target, amount, sl);
             } catch (Exception e) {
                 CircleOfInevitability.LOGGER.error("A weapon coat failed", e);   // the hit still lands as it was
             }
@@ -162,7 +191,7 @@ public final class WeaponCoat {
             if (entry.getValue().charges <= 0 || entry.getValue().expires <= now) spent.add(entry.getKey());
         }
         spent.forEach(mine::remove);
-        if (mine.isEmpty()) COATS.remove(player.getUUID());
+        if (mine.isEmpty()) COATS.remove(attacker.getUUID());
         event.setAmount(Math.max(0f, amount));
     }
 

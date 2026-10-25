@@ -45,42 +45,42 @@ public final class HandOfOrderInterrogation {
     // =========================
 
     static final int INTERROGATION_SEQUENCE = 7;                 // the key
-    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
+    static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Psychic Lashing
-    private static final int LASHING_SEQUENCE = 7;
-    private static final int LASHING_COST = 1250;
-    private static final int LASHING_COOLDOWN = 400;
-    private static final int LASHING_TICKS = 400;               // 20 seconds...
-    private static final int LASHING_HITS = 12;                 // ...or this many hits, whichever ends first
-    private static final float LASHING_DAMAGE = 6f;             // added to each hit, through armor
-    private static final int LASHING_STAGGER = 10;
+    static final int LASHING_SEQUENCE = 7;
+    static final int LASHING_COST = 1250;
+    static final int LASHING_COOLDOWN = 400;
+    static final int LASHING_TICKS = 400;               // 20 seconds...
+    static final int LASHING_HITS = 12;                 // ...or this many hits, whichever ends first
+    static final float LASHING_DAMAGE = 6f;             // added to each hit, through armor
+    static final int LASHING_STAGGER = 10;
 
     // Psychic Piercing
-    private static final int PIERCING_SEQUENCE = 7;
-    private static final int PIERCING_COST = 1250;
-    private static final int PIERCING_COOLDOWN = 200;
-    private static final double PIERCING_RANGE = 12.0;
-    private static final int PIERCING_MAX = 3;                  // enemies on the line it strikes
-    private static final float PIERCING_DAMAGE = 30f;           // through armor...
-    private static final float PIERCING_SPIRIT = 2f;            // ...and this many times that on spirits and marionettes
-    private static final double PIERCING_WIDTH = 0.3;
+    static final int PIERCING_SEQUENCE = 7;
+    static final int PIERCING_COST = 1250;
+    static final int PIERCING_COOLDOWN = 200;
+    static final double PIERCING_RANGE = 12.0;
+    static final int PIERCING_MAX = 3;                  // enemies on the line it strikes
+    static final float PIERCING_DAMAGE = 30f;           // through armor...
+    static final float PIERCING_SPIRIT = 2f;            // ...and this many times that on spirits and marionettes
+    static final double PIERCING_WIDTH = 0.3;
 
     // Whip of Pain
-    private static final int WHIP_SEQUENCE = 7;
-    private static final int WHIP_COST = 1500;
-    private static final int WHIP_COOLDOWN = 500;
-    private static final double WHIP_RANGE = 16.0;
-    private static final float WHIP_DAMAGE = 20f;               // through armor
-    private static final int WHIP_TICKS = 80;                   // it trembles this long: Slowness III, Weakness...
-    private static final int WHIP_SHAKE_TICKS = 60;             // ...and a player's screen shakes (nausea) this long
-    private static final int WHIP_EXPOSED = 40;                 // and it cannot hide again for this long
+    static final int WHIP_SEQUENCE = 7;
+    static final int WHIP_COST = 1500;
+    static final int WHIP_COOLDOWN = 500;
+    static final double WHIP_RANGE = 16.0;
+    static final float WHIP_DAMAGE = 20f;               // through armor
+    static final int WHIP_TICKS = 80;                   // it trembles this long: Slowness III, Weakness...
+    static final int WHIP_SHAKE_TICKS = 60;             // ...and a player's screen shakes (nausea) this long
+    static final int WHIP_EXPOSED = 40;                 // and it cannot hide again for this long
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String LASHING = "hand_of_order_lashing";                 // status/WeaponCoat
-    private static final String LASHING_SHOWN = "hand_of_order_lashing_shown";     // on the player: the iron is shown
+    static final String LASHING = "hand_of_order_lashing";                 // status/WeaponCoat
+    static final String LASHING_SHOWN = "hand_of_order_lashing_shown";     // on the player: the iron is shown
 
     // =========================
     // The key

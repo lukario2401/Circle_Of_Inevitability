@@ -42,6 +42,7 @@ public final class MobAbility {
     private final int key;
     private final boolean sneak;
     private final PathwayAbilities.Ability ability;     // the player version (null if that key is not listed)
+    private String entry = "";                          // a wheel's entry (a key with a wheel has one per entry)
     private String name;
     private int sequence;
     private float cost;
@@ -74,6 +75,12 @@ public final class MobAbility {
 
     public MobAbility named(String name) { this.name = name; return this; }
 
+    /**
+     * One entry of that key's wheel ("whip_of_pain", as the wheel names it). Mobs have no wheels: each entry is an
+     * ability of its own, with its own cooldown, and a key with a wheel registers one MobAbility per entry.
+     */
+    public MobAbility entry(String entry) { this.entry = entry == null ? "" : entry; return this; }
+
     /** The weakest Sequence that casts it (default: the player ability's). */
     public MobAbility sequence(int sequence) { this.sequence = sequence; return this; }
 
@@ -104,6 +111,8 @@ public final class MobAbility {
     public String pathway() { return pathway; }
     public int key() { return key; }
     public boolean sneak() { return sneak; }
+    /** The wheel entry it is ("" for a key without a wheel). */
+    public String entry() { return entry; }
     /** The player version in PathwayAbilities, or null. */
     public PathwayAbilities.Ability ability() { return ability; }
     public String name() { return name; }
@@ -116,9 +125,12 @@ public final class MobAbility {
     public When when() { return when; }
     public Cast cast() { return cast; }
 
-    /** One name per Pathway, key and form: "Hand Of Order/1", "Hand Of Order/1/sneak". Its cooldown is kept under it. */
+    /**
+     * One name per Pathway, key and form: "Hand Of Order/1", "Hand Of Order/1/sneak", and a wheel's entries
+     * "Hand Of Order/3/whip_of_pain". Its cooldown is kept under it.
+     */
     public String id() {
-        return pathway + "/" + key + (sneak ? "/sneak" : "");
+        return pathway + "/" + key + (entry.isEmpty() ? (sneak ? "/sneak" : "") : "/" + entry);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.status;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.Spells;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -49,7 +50,18 @@ public final class EmpoweredHit {
         float run(Player attacker, LivingEntity target, float amount, ServerLevel level);
     }
 
-    private record Armed(long expires, Strike strike) {}
+    /** What an empowered hit does, for any attacker (armAny: a mob's own blow counts too). */
+    @FunctionalInterface
+    public interface AnyStrike {
+        float run(LivingEntity attacker, LivingEntity target, float amount, ServerLevel level);
+    }
+
+    private record Armed(long expires, Strike strike, AnyStrike any) {
+        float run(LivingEntity attacker, LivingEntity target, float amount, ServerLevel level) {
+            if (strike != null && attacker instanceof Player player) return strike.run(player, target, amount, level);
+            return any != null ? any.run(attacker, target, amount, level) : amount;
+        }
+    }
 
     /** player -> (name -> what is armed). LinkedHashMap keeps the order they were armed in. */
     private static final Map<UUID, Map<String, Armed>> ARMED = new HashMap<>();
@@ -71,7 +83,20 @@ public final class EmpoweredHit {
         Map<String, Armed> mine = ARMED.computeIfAbsent(player.getUUID(), id -> new LinkedHashMap<>());
         mine.values().removeIf(old -> old.expires() < now);
         mine.remove(name);                                       // armed again: it goes to the back of the line
-        mine.put(name, new Armed(now + ticks, strike));
+        mine.put(name, new Armed(now + ticks, strike, null));
+    }
+
+    /**
+     * The same for anyone: a player's next swing, or a mob's next melee blow (not its abilities' strikes). For a
+     * Beyonder mob's ability (blasphemy_slate/beyonder_mobs).
+     */
+    public static void armAny(LivingEntity who, String name, int ticks, AnyStrike strike) {
+        if (!(who.level() instanceof ServerLevel sl) || ticks <= 0 || strike == null) return;
+        long now = sl.getGameTime();
+        Map<String, Armed> mine = ARMED.computeIfAbsent(who.getUUID(), id -> new LinkedHashMap<>());
+        mine.values().removeIf(old -> old.expires() < now);
+        mine.remove(name);
+        mine.put(name, new Armed(now + ticks, null, strike));
     }
 
     public static boolean isArmed(Entity player, String name) {
@@ -120,20 +145,24 @@ public final class EmpoweredHit {
     public static void onEmpoweredHitHurt(LivingHurtEvent event) {
         LivingEntity target = event.getEntity();
         if (!(target.level() instanceof ServerLevel sl)) return;
-        if (!(event.getSource().getEntity() instanceof Player player)) return;
-        if (event.getSource().getDirectEntity() != player) return;          // an arrow, a summon: not their swing
+        if (!(event.getSource().getEntity() instanceof LivingEntity attacker)) return;
+        if (event.getSource().getDirectEntity() != attacker) return;        // an arrow, a summon: not their swing
 
-        Swing swing = SWINGING.remove(player.getUUID());
-        if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
+        if (attacker instanceof Player player) {
+            Swing swing = SWINGING.remove(player.getUUID());
+            if (swing == null || !swing.target().equals(target.getUUID()) || swing.tick() != sl.getGameTime()) return;
+        } else if (Spells.isSpellHit(target) || !ARMED.containsKey(attacker.getUUID())) {
+            return;                                                          // a mob's ability, not its blow
+        }
 
-        Map<String, Armed> mine = ARMED.remove(player.getUUID());         // one swing uses everything that is armed
+        Map<String, Armed> mine = ARMED.remove(attacker.getUUID());       // one swing uses everything that is armed
         if (mine == null) return;
         long now = sl.getGameTime();
         float amount = event.getAmount();
         for (Armed armed : mine.values()) {
             if (armed.expires() < now) continue;
             try {
-                amount = armed.strike().run(player, target, amount, sl);
+                amount = armed.run(attacker, target, amount, sl);
             } catch (Exception e) {
                 CircleOfInevitability.LOGGER.error("An empowered hit failed", e);   // the hit still lands as it was
             }

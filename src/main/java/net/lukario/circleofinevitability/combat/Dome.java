@@ -86,7 +86,7 @@ public final class Dome {
     private static final List<Dome> RAISED = new ArrayList<>();
 
     /** A dome standing somewhere, as Dome.raisedAt and Dome.crossedBy hand it out: whose it is and where. */
-    public record Raised(Player owner, String name, Vec3 center, double radius, boolean whole) {}
+    public record Raised(LivingEntity owner, String name, Vec3 center, double radius, boolean whole) {}
 
     // ---------- what it is ----------
 
@@ -108,7 +108,7 @@ public final class Dome {
 
     // ---------- while it stands ----------
 
-    private Player owner;
+    private LivingEntity owner;
     private ServerLevel level;
     private String name;
     private int age;
@@ -201,7 +201,7 @@ public final class Dome {
     }
 
     /** Raises it. If this player already has one with this name, that one falls first. */
-    public void raise(Player owner, ServerLevel level, String name) {
+    public void raise(LivingEntity owner, ServerLevel level, String name) {
         close(owner, name);
         this.owner = owner;
         this.level = level;
@@ -216,45 +216,45 @@ public final class Dome {
 
     // ---------- asking / changing ----------
 
-    public static boolean isRaised(Player owner, String name) {
+    public static boolean isRaised(LivingEntity owner, String name) {
         return find(owner, name) != null;
     }
 
-    public static int ticksLeft(Player owner, String name) {
+    public static int ticksLeft(LivingEntity owner, String name) {
         Dome dome = find(owner, name);
         return dome == null ? 0 : Math.max(1, dome.lasts - dome.age);
     }
 
     /** The ground under it (a half sphere) or its middle (a whole one), or null. */
-    public static Vec3 center(Player owner, String name) {
+    public static Vec3 center(LivingEntity owner, String name) {
         Dome dome = find(owner, name);
         return dome == null ? null : dome.center;
     }
 
-    public static boolean isInside(Player owner, String name, Entity entity) {
+    public static boolean isInside(LivingEntity owner, String name, Entity entity) {
         Dome dome = find(owner, name);
         return dome != null && dome.contains(entity);
     }
 
     /** It falls now (its onEnd runs). */
-    public static void close(Player owner, String name) {
+    public static void close(LivingEntity owner, String name) {
         Dome dome = find(owner, name);
         if (dome != null) dome.end();
     }
 
     /** For 'ticks': projectiles are not stopped and the shield is halved. */
-    public static void weaken(Player owner, String name, int ticks) {
+    public static void weaken(LivingEntity owner, String name, int ticks) {
         Dome dome = find(owner, name);
         if (dome != null) dome.weakUntil = Math.max(dome.weakUntil, dome.age + ticks);
     }
 
-    public static boolean isWeakened(Player owner, String name) {
+    public static boolean isWeakened(LivingEntity owner, String name) {
         Dome dome = find(owner, name);
         return dome != null && dome.weak();
     }
 
     /** Its whole time again, from now. */
-    public static void renew(Player owner, String name) {
+    public static void renew(LivingEntity owner, String name) {
         Dome dome = find(owner, name);
         if (dome != null) {
             dome.age = 0;
@@ -302,7 +302,7 @@ public final class Dome {
      * and everyone else crosses it freely. It keeps its time and its look. False if there is no such dome or it was
      * flipped already. For an ability that turns a rule against the one who made it.
      */
-    public static boolean flip(Player owner, String name) {
+    public static boolean flip(LivingEntity owner, String name) {
         Dome dome = find(owner, name);
         if (dome == null || dome.flipped) return false;
         dome.flipped = true;
@@ -312,14 +312,14 @@ public final class Dome {
         dome.stopsProjectiles = true;
         dome.shield = 0f;
         dome.wardsEffects = false;
-        Player caged = dome.owner;
+        LivingEntity caged = dome.owner;
         dome.outsiders = entity -> Spells.isFriend(caged, entity);             // the owner's side, hidden or not
         dome.wasInside.clear();
         dome.wasInside.put(caged.getUUID(), dome.contains(caged));
         return true;
     }
 
-    public static boolean isFlipped(Player owner, String name) {
+    public static boolean isFlipped(LivingEntity owner, String name) {
         Dome dome = find(owner, name);
         return dome != null && dome.flipped;
     }
@@ -328,7 +328,7 @@ public final class Dome {
         return new Raised(owner, name, center, radius, whole);
     }
 
-    private static Dome find(Player owner, String name) {
+    private static Dome find(LivingEntity owner, String name) {
         for (Dome dome : RAISED) {
             if (!dome.closed && dome.name.equals(name) && dome.owner.getUUID().equals(owner.getUUID())) return dome;
         }

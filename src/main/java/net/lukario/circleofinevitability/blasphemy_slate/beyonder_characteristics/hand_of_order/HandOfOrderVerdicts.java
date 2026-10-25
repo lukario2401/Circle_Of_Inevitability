@@ -60,69 +60,69 @@ public final class HandOfOrderVerdicts {
     // =========================
 
     static final int VERDICT_SEQUENCE = 6;                       // the key
-    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
+    static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
 
     // Imprison / Confinement
-    private static final int IMPRISON_SEQUENCE = 6;
-    private static final int IMPRISON_COST = 2450;
-    private static final int IMPRISON_COOLDOWN = 400;
-    private static final double IMPRISON_RANGE = 20.0;
-    private static final int IMPRISON_TICKS = 100;
-    private static final int CONFINEMENT_SEQUENCE = 4;
-    private static final int CONFINEMENT_TICKS = 160;
+    static final int IMPRISON_SEQUENCE = 6;
+    static final int IMPRISON_COST = 2450;
+    static final int IMPRISON_COOLDOWN = 400;
+    static final double IMPRISON_RANGE = 20.0;
+    static final int IMPRISON_TICKS = 100;
+    static final int CONFINEMENT_SEQUENCE = 4;
+    static final int CONFINEMENT_TICKS = 160;
 
     // Exile
-    private static final int EXILE_SEQUENCE = 6;
-    private static final int EXILE_COST = 2450;
-    private static final int EXILE_COOLDOWN = 400;
-    private static final double EXILE_RANGE = 20.0;
-    private static final double EXILE_PUSH = 2.4;               // blocks a tick: about 20 blocks away...
-    private static final double EXILE_LIFT = 0.5;
-    private static final double EXILE_SHOWN = 20.0;             // (where the streak is drawn to)
-    private static final int EXILE_SLOW_TICKS = 40;             // ...then Slowness II this long
-    private static final int VOID_SEQUENCE = 4;                 // Imperative Mage: into a void instead...
-    private static final int VOID_TICKS = 80;                   // ...for this long
-    private static final int HURRICANE_SEQUENCE = 3;            // Chaos Hunter: everything this close to it...
-    private static final double HURRICANE_RADIUS = 5.0;
-    private static final double HURRICANE_PUSH = 1.6;           // ...is thrown away too
+    static final int EXILE_SEQUENCE = 6;
+    static final int EXILE_COST = 2450;
+    static final int EXILE_COOLDOWN = 400;
+    static final double EXILE_RANGE = 20.0;
+    static final double EXILE_PUSH = 2.4;               // blocks a tick: about 20 blocks away...
+    static final double EXILE_LIFT = 0.5;
+    static final double EXILE_SHOWN = 20.0;             // (where the streak is drawn to)
+    static final int EXILE_SLOW_TICKS = 40;             // ...then Slowness II this long
+    static final int VOID_SEQUENCE = 4;                 // Imperative Mage: into a void instead...
+    static final int VOID_TICKS = 80;                   // ...for this long
+    static final int HURRICANE_SEQUENCE = 3;            // Chaos Hunter: everything this close to it...
+    static final double HURRICANE_RADIUS = 5.0;
+    static final double HURRICANE_PUSH = 1.6;           // ...is thrown away too
 
     // Death
-    private static final int DEATH_SEQUENCE = 6;
-    private static final int DEATH_COST = 2450;
-    private static final int DEATH_COOLDOWN = 500;
-    private static final double DEATH_RANGE = 14.0;             // the rush reaches this far
-    private static final float DEATH_DAMAGE = 60f;              // through everything (Spells.strikeTrue)
-    private static final int DEATH_STUN = 30;
-    private static final int WOUND_SEQUENCE = 5;                // Disciplinary Paladin: at its latest wound...
-    private static final float WOUND_MORE = 1.5f;               // ...this much harder...
-    private static final int WOUND_TICKS = 100;                 // ...and the wound opens (Wither) this long
+    static final int DEATH_SEQUENCE = 6;
+    static final int DEATH_COST = 2450;
+    static final int DEATH_COOLDOWN = 500;
+    static final double DEATH_RANGE = 14.0;             // the rush reaches this far
+    static final float DEATH_DAMAGE = 60f;              // through everything (Spells.strikeTrue)
+    static final int DEATH_STUN = 30;
+    static final int WOUND_SEQUENCE = 5;                // Disciplinary Paladin: at its latest wound...
+    static final float WOUND_MORE = 1.5f;               // ...this much harder...
+    static final int WOUND_TICKS = 100;                 // ...and the wound opens (Wither) this long
 
     // Maintain Secrecy
-    private static final int SECRECY_SEQUENCE = 6;
-    private static final int SECRECY_COST = 1800;
-    private static final int SECRECY_COOLDOWN = 600;
-    private static final double SECRECY_RANGE = 12.0;
-    private static final int SECRECY_TICKS = 160;
-    private static final int SECRECY_FORGET_TICKS = 80;         // a mob also forgets you this long
+    static final int SECRECY_SEQUENCE = 6;
+    static final int SECRECY_COST = 1800;
+    static final int SECRECY_COOLDOWN = 600;
+    static final double SECRECY_RANGE = 12.0;
+    static final int SECRECY_TICKS = 160;
+    static final int SECRECY_FORGET_TICKS = 80;         // a mob also forgets you this long
 
     // Deprivation
-    private static final int DEPRIVATION_SEQUENCE = 4;
-    private static final int DEPRIVATION_COST = 6000;
-    private static final int DEPRIVATION_COOLDOWN = 800;
-    private static final double DEPRIVATION_RANGE = 24.0;
-    private static final int DEPRIVATION_TICKS = 600;
-    private static final int DEPRIVATION_BOSS_TICKS = 300;
-    private static final int DEPRIVE_MORE_SEQUENCE = 3;         // Chaos Hunter: up to this many powers
-    private static final int DEPRIVE_MORE = 3;
+    static final int DEPRIVATION_SEQUENCE = 4;
+    static final int DEPRIVATION_COST = 6000;
+    static final int DEPRIVATION_COOLDOWN = 800;
+    static final double DEPRIVATION_RANGE = 24.0;
+    static final int DEPRIVATION_TICKS = 600;
+    static final int DEPRIVATION_BOSS_TICKS = 300;
+    static final int DEPRIVE_MORE_SEQUENCE = 3;         // Chaos Hunter: up to this many powers
+    static final int DEPRIVE_MORE = 3;
 
     // Execution
-    private static final int EXECUTION_SEQUENCE = 4;
-    private static final int EXECUTION_COST = 6000;
-    private static final int EXECUTION_COOLDOWN = 1200;
-    private static final double EXECUTION_RANGE = 32.0;
-    private static final float EXECUTION_DAMAGE = 120f;         // through everything
-    private static final float EXECUTION_THRESHOLD = 0.3f;      // under this much health it is simply killed...
-    private static final float EXECUTION_STRONG = 2f;           // ...a player or a boss takes this many times the damage instead
+    static final int EXECUTION_SEQUENCE = 4;
+    static final int EXECUTION_COST = 6000;
+    static final int EXECUTION_COOLDOWN = 1200;
+    static final double EXECUTION_RANGE = 32.0;
+    static final float EXECUTION_DAMAGE = 120f;         // through everything
+    static final float EXECUTION_THRESHOLD = 0.3f;      // under this much health it is simply killed...
+    static final float EXECUTION_STRONG = 2f;           // ...a player or a boss takes this many times the damage instead
 
     // =========================
     // What is kept (not saved: a restart ends every hold)
