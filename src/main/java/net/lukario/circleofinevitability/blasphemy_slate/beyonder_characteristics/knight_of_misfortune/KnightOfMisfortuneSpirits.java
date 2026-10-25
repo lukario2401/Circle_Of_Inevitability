@@ -65,56 +65,56 @@ public final class KnightOfMisfortuneSpirits {
     // =========================
 
     static final int SPIRIT_SEQUENCE = 5;                        // the key
-    private static final float QUICK_CAST_COST = 2f;
-    private static final int TEETH = 4;
-    private static final int TEETH_NIGHTWATCHER = 8;             // Nightwatcher (4): each tooth holds one more
+    static final float QUICK_CAST_COST = 2f;
+    static final int TEETH = 4;
+    static final int TEETH_NIGHTWATCHER = 8;             // Nightwatcher (4): each tooth holds one more
 
-    private static final int BANSHEE_SEQUENCE = 5;
-    private static final int BANSHEE_COST = 3000;
-    private static final int BANSHEE_COOLDOWN = 600;
-    private static final int BANSHEE_TICKS = 600;
-    private static final int BANSHEE_WAIL_EVERY = 60;
-    private static final double BANSHEE_RADIUS = 10.0;
-    private static final int BANSHEE_FEAR = 60;
-    private static final int BANSHEE_BLIND = 40;
+    static final int BANSHEE_SEQUENCE = 5;
+    static final int BANSHEE_COST = 3000;
+    static final int BANSHEE_COOLDOWN = 600;
+    static final int BANSHEE_TICKS = 600;
+    static final int BANSHEE_WAIL_EVERY = 60;
+    static final double BANSHEE_RADIUS = 10.0;
+    static final int BANSHEE_FEAR = 60;
+    static final int BANSHEE_BLIND = 40;
 
-    private static final int EARTH_SEQUENCE = 5;
-    private static final int EARTH_COST = 3000;
-    private static final int EARTH_COOLDOWN = 600;
-    private static final int EARTH_TICKS = 160;
-    private static final int EARTH_SPEED = 3;                    // Speed IV under the ground
-    private static final double EARTH_RISE_RANGE = 24.0;
+    static final int EARTH_SEQUENCE = 5;
+    static final int EARTH_COST = 3000;
+    static final int EARTH_COOLDOWN = 600;
+    static final int EARTH_TICKS = 160;
+    static final int EARTH_SPEED = 3;                    // Speed IV under the ground
+    static final double EARTH_RISE_RANGE = 24.0;
 
-    private static final int GALE_SEQUENCE = 5;
-    private static final int GALE_COST = 3000;
-    private static final int GALE_COOLDOWN = 900;
-    private static final int GALE_TICKS = 400;
+    static final int GALE_SEQUENCE = 5;
+    static final int GALE_COST = 3000;
+    static final int GALE_COOLDOWN = 900;
+    static final int GALE_TICKS = 400;
 
-    private static final int COMMAND_SEQUENCE = 1;
-    private static final int COMMAND_COST = 30000;
-    private static final int COMMAND_COOLDOWN = 2400;
-    private static final double COMMAND_RADIUS = 40.0;
-    private static final int COMMAND_SLEEP = 60;                 // they all sleep this long...
-    private static final int COMMAND_MOST = 8;                   // ...then the nearest this many wake as yours...
-    private static final float COMMAND_HEALTH = 80f;             // ...if their maximum health is at most this...
-    private static final int COMMAND_TICKS = 800;                // ...for this long
+    static final int COMMAND_SEQUENCE = 1;
+    static final int COMMAND_COST = 30000;
+    static final int COMMAND_COOLDOWN = 2400;
+    static final double COMMAND_RADIUS = 40.0;
+    static final int COMMAND_SLEEP = 60;                 // they all sleep this long...
+    static final int COMMAND_MOST = 8;                   // ...then the nearest this many wake as yours...
+    static final float COMMAND_HEALTH = 80f;             // ...if their maximum health is at most this...
+    static final int COMMAND_TICKS = 800;                // ...for this long
 
     // =========================
     // Saved on the player
     // =========================
-    private static final String EARTH_UNTIL = "knight_of_misfortune_earth_until";
-    private static final String EARTH_TAG = "knight_of_misfortune_earth_tag";
-    private static final String GALE_UNTIL = "knight_of_misfortune_gale_until";
-    private static final String GALE_TAG = "knight_of_misfortune_gale_tag";
+    static final String EARTH_UNTIL = "knight_of_misfortune_earth_until";
+    static final String EARTH_TAG = "knight_of_misfortune_earth_tag";
+    static final String GALE_UNTIL = "knight_of_misfortune_gale_until";
+    static final String GALE_TAG = "knight_of_misfortune_gale_tag";
 
     /** The spirits each player has out (when each one ends), for the teeth. Not saved. */
-    private static final Map<UUID, List<Long>> OUT = new HashMap<>();
+    static final Map<UUID, List<Long>> OUT = new HashMap<>();
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("knight_of_misfortune_spirits", "Spirit Commanding")
+    static final AbilityWheel WHEEL = AbilityWheel.create("knight_of_misfortune_spirits", "Spirit Commanding")
             .radius(64)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("terror_banshee", KnightOfMisfortuneFx.WHEEL_TERROR_BANSHEE, "Terror Banshee", BANSHEE_SEQUENCE,
@@ -142,7 +142,7 @@ public final class KnightOfMisfortuneSpirits {
     // Terror Banshee
     // =========================
 
-    private static AbilityWheel.Result terrorBanshee(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result terrorBanshee(LivingEntity player, ServerLevel sl) {
         if (!freeTooth(player, sl)) return AbilityWheel.Result.REFUSED;
         long now = sl.getGameTime();
         String tag = "km_banshee_" + player.getId() + "_" + now;
@@ -162,7 +162,7 @@ public final class KnightOfMisfortuneSpirits {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void wail(Player player, ServerLevel sl) {
+    private static void wail(LivingEntity player, ServerLevel sl) {
         KnightOfMisfortuneFx.bansheeWail(sl, player, BANSHEE_RADIUS);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), BANSHEE_RADIUS)) {
             if (Fear.apply(enemy, player, BANSHEE_FEAR)) KnightOfMisfortune.showFear(sl, enemy, BANSHEE_FEAR);
@@ -175,7 +175,7 @@ public final class KnightOfMisfortuneSpirits {
     // Earthen Spirit
     // =========================
 
-    private static AbilityWheel.Result earthenSpirit(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result earthenSpirit(LivingEntity player, ServerLevel sl) {
         if (KnightOfMisfortune.isActive(player, EARTH_UNTIL)) {           // the second pick: rise where you aim
             rise(player, sl, true);
             return AbilityWheel.Result.FREE;
@@ -200,7 +200,7 @@ public final class KnightOfMisfortuneSpirits {
     }
 
     /** Out of the earth: where you aim (aimed, onto earth within EARTH_RISE_RANGE) or where you are. */
-    private static void rise(Player player, ServerLevel sl, boolean aimed) {
+    private static void rise(LivingEntity player, ServerLevel sl, boolean aimed) {
         CompoundTag data = player.getPersistentData();
         String tag = data.getStringOr(EARTH_TAG, "");
         data.remove(EARTH_UNTIL);
@@ -248,7 +248,7 @@ public final class KnightOfMisfortuneSpirits {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void galeEnd(Player player, ServerLevel sl) {
+    private static void galeEnd(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         String tag = data.getStringOr(GALE_TAG, "");
         data.remove(GALE_UNTIL);
@@ -258,7 +258,7 @@ public final class KnightOfMisfortuneSpirits {
     }
 
     /** True while a gale spirit carries the player: they cannot strike with a weapon. */
-    static boolean gliding(Player player) {
+    static boolean gliding(LivingEntity player) {
         return KnightOfMisfortune.isActive(player, GALE_UNTIL);
     }
 
@@ -266,7 +266,7 @@ public final class KnightOfMisfortuneSpirits {
     // Command Spirits
     // =========================
 
-    private static AbilityWheel.Result commandSpirits(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result commandSpirits(LivingEntity player, ServerLevel sl) {
         List<Mob> answer = sl.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(COMMAND_RADIUS),
                 mob -> commandable(player, mob));
         if (answer.isEmpty()) {
@@ -293,7 +293,7 @@ public final class KnightOfMisfortuneSpirits {
     }
 
     /** The undead and the animals, not yet anyone's, not a boss, not on the caster's side. */
-    private static boolean commandable(Player player, Mob mob) {
+    private static boolean commandable(LivingEntity player, Mob mob) {
         if (!mob.isAlive() || Marionette.isMarionette(mob) || Spells.isFriend(player, mob) || KnightOfMisfortune.isBoss(mob)) return false;
         return mob.is(EntityTypeTags.UNDEAD) || mob.getType().getCategory() == MobCategory.CREATURE;
     }
@@ -303,7 +303,7 @@ public final class KnightOfMisfortuneSpirits {
     // =========================
 
     /** True when a tooth is free (and says so when none is). */
-    private static boolean freeTooth(Player player, ServerLevel sl) {
+    private static boolean freeTooth(LivingEntity player, ServerLevel sl) {
         int teeth = Beyonder.hasSequence(player, 4) ? TEETH_NIGHTWATCHER : TEETH;
         List<Long> mine = OUT.get(player.getUUID());
         long now = sl.getGameTime();
@@ -314,7 +314,7 @@ public final class KnightOfMisfortuneSpirits {
         return false;
     }
 
-    private static void out(Player player, long until) {
+    private static void out(LivingEntity player, long until) {
         OUT.computeIfAbsent(player.getUUID(), id -> new ArrayList<>()).add(until);
     }
 
@@ -323,7 +323,7 @@ public final class KnightOfMisfortuneSpirits {
     // =========================
 
     /** Every tick for every player: the earth and the gale, while they last, and their end. */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         if (data.contains(EARTH_TAG)) {
             if (!KnightOfMisfortune.isActive(player, EARTH_UNTIL)) {
@@ -352,7 +352,7 @@ public final class KnightOfMisfortuneSpirits {
         OUT.remove(player.getUUID());
     }
 
-    static void forget(Player player) {
+    static void forget(LivingEntity player) {
         OUT.remove(player.getUUID());
     }
 }

@@ -136,6 +136,13 @@ public final class Beyonder {
         return powerLevel(SoulCore.getSequence(player));
     }
 
+    /** The same for anyone: a player as above, a Beyonder mob by its own Sequence (anything else as Sequence 9). */
+    public static int powerLevel(LivingEntity entity) {
+        if (entity instanceof Player player) return powerLevel(player);
+        int own = BeyonderMobs.sequence(entity);
+        return powerLevel(own >= 0 ? own : 9);
+    }
+
     public static int powerLevel(int sequence) {
         return stats(sequence).powerLevel();
     }

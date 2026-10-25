@@ -105,132 +105,132 @@ public class KnightOfMisfortune {
     // =========================
 
     // Ability 1 - Night Sight (Sequence 9): Spirit Vision
-    private static final int SIGHT_SEQUENCE = 9;
-    private static final int VISION_COST = 250;
-    private static final int VISION_COOLDOWN = 300;
-    private static final int VISION_TICKS = 240;
-    private static final double VISION_RANGE = 32.0;
-    private static final double VISION_DARK_RANGE = 48.0;       // in the dark (Nocturnality)
+    static final int SIGHT_SEQUENCE = 9;
+    static final int VISION_COST = 250;
+    static final int VISION_COOLDOWN = 300;
+    static final int VISION_TICKS = 240;
+    static final double VISION_RANGE = 32.0;
+    static final double VISION_DARK_RANGE = 48.0;       // in the dark (Nocturnality)
     // sneak: Dowsing
-    private static final int DOWSE_COST = 250;
-    private static final int DOWSE_COOLDOWN = 600;
-    private static final int DOWSE_TICKS = 100;
-    private static final double DOWSE_HUNTER_RANGE = 48.0;      // a mob hunting you, this close...
-    private static final double DOWSE_RANGE = 128.0;            // ...else who last hurt you, else the nearest Beyonder
-    private static final int DOWSE_MEMORY = 1200;               // "last hurt you" means within this long
+    static final int DOWSE_COST = 250;
+    static final int DOWSE_COOLDOWN = 600;
+    static final int DOWSE_TICKS = 100;
+    static final double DOWSE_HUNTER_RANGE = 48.0;      // a mob hunting you, this close...
+    static final double DOWSE_RANGE = 128.0;            // ...else who last hurt you, else the nearest Beyonder
+    static final int DOWSE_MEMORY = 1200;               // "last hurt you" means within this long
 
     // Ability 3 - Nightmare (Sequence 7): Nightmare Limbs
-    private static final int NIGHTMARE_SEQUENCE = 7;
-    private static final int LIMBS_COST = 700;
-    private static final int LIMBS_COOLDOWN = 300;
-    private static final int LIMBS_TICKS = 240;
-    private static final int LIMBS_COUNT = 4;
-    private static final double LIMBS_REACH = 6.0;
-    private static final float LIMBS_DAMAGE = 3f;               // per lash, times the power level
-    private static final float LIMBS_LAYER = 6f;                // the limbs' own flesh: absorption...
-    private static final float LIMBS_LAYER_PER_LEVEL = 1f;      // ...plus this per power level
-    private static final float LIMBS_BACKLASH = 0.2f;           // torn off: this much of your maximum health
+    static final int NIGHTMARE_SEQUENCE = 7;
+    static final int LIMBS_COST = 700;
+    static final int LIMBS_COOLDOWN = 300;
+    static final int LIMBS_TICKS = 240;
+    static final int LIMBS_COUNT = 4;
+    static final double LIMBS_REACH = 6.0;
+    static final float LIMBS_DAMAGE = 3f;               // per lash, times the power level
+    static final float LIMBS_LAYER = 6f;                // the limbs' own flesh: absorption...
+    static final float LIMBS_LAYER_PER_LEVEL = 1f;      // ...plus this per power level
+    static final float LIMBS_BACKLASH = 0.2f;           // torn off: this much of your maximum health
     // sneak: Nightmare State
-    private static final int STATE_COST = 700;
-    private static final float STATE_UPKEEP = 35f;              // each second
-    private static final int STATE_TICKS = 600;                 // 30 s at most
-    private static final int BODY_THREAT_SECONDS = 3;           // enemies beside the body this long wreck it...
-    private static final double BODY_THREAT_RANGE = 1.8;
-    private static final float BODY_WRECK = 0.3f;               // ...and you take this much of your maximum health
-    private static final int LULL_TICKS = 100;                  // watched unseen this long, a mob drifts off...
-    private static final int LULL_SLEEP = 200;                  // ...to sleep for this long
+    static final int STATE_COST = 700;
+    static final float STATE_UPKEEP = 35f;              // each second
+    static final int STATE_TICKS = 600;                 // 30 s at most
+    static final int BODY_THREAT_SECONDS = 3;           // enemies beside the body this long wreck it...
+    static final double BODY_THREAT_RANGE = 1.8;
+    static final float BODY_WRECK = 0.3f;               // ...and you take this much of your maximum health
+    static final int LULL_TICKS = 100;                  // watched unseen this long, a mob drifts off...
+    static final int LULL_SLEEP = 200;                  // ...to sleep for this long
     // inside the state: Dream Invasion and Dream Shaping
-    private static final int DREAM_COST = 400;
-    private static final int DREAM_COOLDOWN = 200;
-    private static final int DREAM_TICKS = 120;                 // the dreamer is held this long
-    private static final int DREAM_PICK_TICKS = 100;            // no pick within this long: Secrets
-    private static final float TERROR_SHARE = 0.25f;            // Terror: this much of its current health
-    private static final int TERROR_FEAR = 120;
-    private static final int OBEDIENCE_TICKS = 300;             // a mob wakes as your marionette this long...
-    private static final float OBEDIENCE_HEALTH = 60f;          // ...if its maximum health is at most this...
-    private static final float OBEDIENCE_HEALTH_PER_SEQUENCE = 30f;     // ...plus this for every Sequence past 7
-    private static final int OBEDIENCE_LIMP = 160;              // a player wakes limp (pacified) this long
+    static final int DREAM_COST = 400;
+    static final int DREAM_COOLDOWN = 200;
+    static final int DREAM_TICKS = 120;                 // the dreamer is held this long
+    static final int DREAM_PICK_TICKS = 100;            // no pick within this long: Secrets
+    static final float TERROR_SHARE = 0.25f;            // Terror: this much of its current health
+    static final int TERROR_FEAR = 120;
+    static final int OBEDIENCE_TICKS = 300;             // a mob wakes as your marionette this long...
+    static final float OBEDIENCE_HEALTH = 60f;          // ...if its maximum health is at most this...
+    static final float OBEDIENCE_HEALTH_PER_SEQUENCE = 30f;     // ...plus this for every Sequence past 7
+    static final int OBEDIENCE_LIMP = 160;              // a player wakes limp (pacified) this long
 
     // Ability 4 - Requiem (Sequence 6)
-    private static final int REQUIEM_SEQUENCE = 6;
-    private static final int REQUIEM_COST = 2500;
-    private static final int REQUIEM_COOLDOWN = 600;
-    private static final int REQUIEM_TICKS = 200;               // from the moment it is sung
-    private static final double REQUIEM_RADIUS = 10.0;
-    private static final int REQUIEM_FREEZE = 120;              // this long inside: frozen still
-    private static final int REQUIEM_SLEEP_SEQUENCE = 4;        // Nightwatcher: whoever stays...
-    private static final int REQUIEM_SLEEP_AFTER = 100;         // ...this long falls asleep
+    static final int REQUIEM_SEQUENCE = 6;
+    static final int REQUIEM_COST = 2500;
+    static final int REQUIEM_COOLDOWN = 600;
+    static final int REQUIEM_TICKS = 200;               // from the moment it is sung
+    static final double REQUIEM_RADIUS = 10.0;
+    static final int REQUIEM_FREEZE = 120;              // this long inside: frozen still
+    static final int REQUIEM_SLEEP_SEQUENCE = 4;        // Nightwatcher: whoever stays...
+    static final int REQUIEM_SLEEP_AFTER = 100;         // ...this long falls asleep
     // sneak: Soothing Requiem
-    private static final int SOOTHE_COST = 2000;
-    private static final int SOOTHE_COOLDOWN = 600;
-    private static final double SOOTHE_RADIUS = 12.0;
-    private static final int SOOTHE_TICKS = 200;                // fear and sleep cannot take this long; Regeneration I
+    static final int SOOTHE_COST = 2000;
+    static final int SOOTHE_COOLDOWN = 600;
+    static final double SOOTHE_RADIUS = 12.0;
+    static final int SOOTHE_TICKS = 200;                // fear and sleep cannot take this long; Regeneration I
 
     // Passives
-    private static final float DARK = 0.75f;                    // this dark (0..1) is "full dark" for Nocturnality
-    private static final int DANGER_SEQUENCE = 9;               // Sleepless: a chime when something hunts you unseen
-    private static final int DANGER_REST = 60;
-    private static final int STEADY_SEQUENCE = 8;               // Midnight Poet: falls shorter than this do not hurt
-    private static final double STEADY_FALL = 6.0;
-    private static final int RESONANCE_SEQUENCE = 7;            // Nightmare: poems cost less, spirituality comes back faster
+    static final float DARK = 0.75f;                    // this dark (0..1) is "full dark" for Nocturnality
+    static final int DANGER_SEQUENCE = 9;               // Sleepless: a chime when something hunts you unseen
+    static final int DANGER_REST = 60;
+    static final int STEADY_SEQUENCE = 8;               // Midnight Poet: falls shorter than this do not hurt
+    static final double STEADY_FALL = 6.0;
+    static final int RESONANCE_SEQUENCE = 7;            // Nightmare: poems cost less, spirituality comes back faster
     static final float RESONANCE_REFUND = 0.25f;
-    private static final float RESONANCE_REGEN = 0.25f;
-    private static final double SPIRIT_SIGHT_RANGE = 16.0;      // Soul Assurer: spirits round you are seen
-    private static final int VISION_HEALTH_SEQUENCE = 6;        // Soul Assurer: Spirit Vision shows health, and costs
+    static final float RESONANCE_REGEN = 0.25f;
+    static final double SPIRIT_SIGHT_RANGE = 16.0;      // Soul Assurer: spirits round you are seen
+    static final int VISION_HEALTH_SEQUENCE = 6;        // Soul Assurer: Spirit Vision shows health, and costs
                                                                 // no cooldown in the dark
-    private static final int STEADY_DRAW_EVERY = 4;             // Midnight Poet: every 4th tick of drawing counts twice
-    private static final int DEEP_NIGHT_SEQUENCE = 4;           // Nightwatcher: Strength II and Regeneration in full dark,
+    static final int STEADY_DRAW_EVERY = 4;             // Midnight Poet: every 4th tick of drawing counts twice
+    static final int DEEP_NIGHT_SEQUENCE = 4;           // Nightwatcher: Strength II and Regeneration in full dark,
                                                                 // Weakness I in bright day sun
-    private static final int VEIL_STILL = 3;                    // standing still in the dark this many seconds: Unnoticed
-    private static final int HORROR_SEQUENCE = 3;               // Horror Bishop: the aura
-    private static final double HORROR_RADIUS = 8.0;            // (halved while sneaking)
-    private static final float HORROR_FLEE_HEALTH = 40f;        // mobs with at most this much maximum health flee it
-    private static final int PRESENCE_SEQUENCE = 2;             // Servant of Concealment: not picked in the dark or sneaking;
-    private static final double PRESENCE_RADIUS = 10.0;         // enemies this close are always slowed
-    private static final int ARCHANGEL_SEQUENCE = 1;            // Knight of Misfortune: six more hearts...
-    private static final double ARCHANGEL_HEALTH = 12.0;
-    private static final float ILL_OMEN_CHANCE = 0.25f;         // ...and whoever hurts you may carry Misfortune
-    private static final int ILL_OMEN_TICKS = 400;
-    private static final int SLUMBER_SEQUENCE = 0;              // Darkness: sleep, fear and taunts do not take...
-    private static final float SLUMBER_RESIST = 0.5f;           // ...supernatural damage is halved...
-    private static final int HORROR_EVERY = 6;                  // ...and every 6 s whoever looks at you flinches
-    private static final double HORROR_GAZE_RANGE = 24.0;
+    static final int VEIL_STILL = 3;                    // standing still in the dark this many seconds: Unnoticed
+    static final int HORROR_SEQUENCE = 3;               // Horror Bishop: the aura
+    static final double HORROR_RADIUS = 8.0;            // (halved while sneaking)
+    static final float HORROR_FLEE_HEALTH = 40f;        // mobs with at most this much maximum health flee it
+    static final int PRESENCE_SEQUENCE = 2;             // Servant of Concealment: not picked in the dark or sneaking;
+    static final double PRESENCE_RADIUS = 10.0;         // enemies this close are always slowed
+    static final int ARCHANGEL_SEQUENCE = 1;            // Knight of Misfortune: six more hearts...
+    static final double ARCHANGEL_HEALTH = 12.0;
+    static final float ILL_OMEN_CHANCE = 0.25f;         // ...and whoever hurts you may carry Misfortune
+    static final int ILL_OMEN_TICKS = 400;
+    static final int SLUMBER_SEQUENCE = 0;              // Darkness: sleep, fear and taunts do not take...
+    static final float SLUMBER_RESIST = 0.5f;           // ...supernatural damage is halved...
+    static final int HORROR_EVERY = 6;                  // ...and every 6 s whoever looks at you flinches
+    static final double HORROR_GAZE_RANGE = 24.0;
     static final float BOSS_HEALTH = 150f;                      // at least this much maximum health: a boss
-    private static final Identifier ARCHANGEL_HEALTH_ID = Physique.id("knight_of_misfortune_archangel_health");
+    static final Identifier ARCHANGEL_HEALTH_ID = Physique.id("knight_of_misfortune_archangel_health");
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String VISION_READY = "knight_of_misfortune_vision_ready";
-    private static final String VISION_UNTIL = "knight_of_misfortune_vision_until";
-    private static final String DOWSE_READY = "knight_of_misfortune_dowse_ready";
-    private static final String DOWSE_TAG = "knight_of_misfortune_dowse_tag";
-    private static final String LIMBS_READY = "knight_of_misfortune_limbs_ready";
-    private static final String LIMBS_UNTIL = "knight_of_misfortune_limbs_until";
-    private static final String LIMBS_TAG = "knight_of_misfortune_limbs_tag";
-    private static final String STATE_UNTIL = "knight_of_misfortune_state_until";
-    private static final String STATE_TAG = "knight_of_misfortune_state_tag";
-    private static final String BODY_X = "knight_of_misfortune_body_x";
-    private static final String BODY_Y = "knight_of_misfortune_body_y";
-    private static final String BODY_Z = "knight_of_misfortune_body_z";
-    private static final String BODY_THREAT = "knight_of_misfortune_body_threat";
-    private static final String LULL_TARGET = "knight_of_misfortune_lull_target";
-    private static final String LULL_COUNT = "knight_of_misfortune_lull_count";
-    private static final String DREAM_READY = "knight_of_misfortune_dream_ready";
-    private static final String REQUIEM_READY = "knight_of_misfortune_requiem_ready";
-    private static final String SOOTHE_READY = "knight_of_misfortune_soothe_ready";
-    private static final String DANGER_READY = "knight_of_misfortune_danger_ready";
-    private static final String STILL_AT = "knight_of_misfortune_still_at";       // where they stood last second...
-    private static final String STILL_FOR = "knight_of_misfortune_still_for";     // ...and how many seconds they have
+    static final String VISION_READY = "knight_of_misfortune_vision_ready";
+    static final String VISION_UNTIL = "knight_of_misfortune_vision_until";
+    static final String DOWSE_READY = "knight_of_misfortune_dowse_ready";
+    static final String DOWSE_TAG = "knight_of_misfortune_dowse_tag";
+    static final String LIMBS_READY = "knight_of_misfortune_limbs_ready";
+    static final String LIMBS_UNTIL = "knight_of_misfortune_limbs_until";
+    static final String LIMBS_TAG = "knight_of_misfortune_limbs_tag";
+    static final String STATE_UNTIL = "knight_of_misfortune_state_until";
+    static final String STATE_TAG = "knight_of_misfortune_state_tag";
+    static final String BODY_X = "knight_of_misfortune_body_x";
+    static final String BODY_Y = "knight_of_misfortune_body_y";
+    static final String BODY_Z = "knight_of_misfortune_body_z";
+    static final String BODY_THREAT = "knight_of_misfortune_body_threat";
+    static final String LULL_TARGET = "knight_of_misfortune_lull_target";
+    static final String LULL_COUNT = "knight_of_misfortune_lull_count";
+    static final String DREAM_READY = "knight_of_misfortune_dream_ready";
+    static final String REQUIEM_READY = "knight_of_misfortune_requiem_ready";
+    static final String SOOTHE_READY = "knight_of_misfortune_soothe_ready";
+    static final String DANGER_READY = "knight_of_misfortune_danger_ready";
+    static final String STILL_AT = "knight_of_misfortune_still_at";       // where they stood last second...
+    static final String STILL_FOR = "knight_of_misfortune_still_for";     // ...and how many seconds they have
 
     // Saved on whoever it touches
-    private static final String SOOTHED_UNTIL = "knight_of_misfortune_soothed_until";
-    private static final String SLUMBER_SHOWN = "knight_of_misfortune_slumber_shown";
+    static final String SOOTHED_UNTIL = "knight_of_misfortune_soothed_until";
+    static final String SLUMBER_SHOWN = "knight_of_misfortune_slumber_shown";
 
     // Names of the parts that a player has one of
-    private static final String LIMBS_ARMOR = "knight_of_misfortune_limbs";
-    private static final String REQUIEM_ZONE = "knight_of_misfortune_requiem";
-    private static final String DREAM_MENU = "knight_of_misfortune_dream";
+    static final String LIMBS_ARMOR = "knight_of_misfortune_limbs";
+    static final String REQUIEM_ZONE = "knight_of_misfortune_requiem";
+    static final String DREAM_MENU = "knight_of_misfortune_dream";
 
     @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class KnightOfMisfortuneEvents {
@@ -498,7 +498,7 @@ public class KnightOfMisfortune {
 
     // ---------- Nightmare Limbs
 
-    private static void nightmareLimbs(Player player, ServerLevel sl) {
+    static void nightmareLimbs(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         String tag = "km_limbs_" + player.getId() + "_" + sl.getGameTime();
         data.putLong(LIMBS_UNTIL, sl.getGameTime() + LIMBS_TICKS);
@@ -511,7 +511,7 @@ public class KnightOfMisfortune {
     }
 
     /** Every tick: the lashes once a second, the limbs torn off when their layer is gone, the end of them. */
-    private static void limbsTick(Player player, ServerLevel sl) {
+    static void limbsTick(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         if (!data.contains(LIMBS_TAG)) return;
         if (!isActive(player, LIMBS_UNTIL)) {                             // their time is up
@@ -539,7 +539,7 @@ public class KnightOfMisfortune {
         }
     }
 
-    private static void retractLimbs(Player player, ServerLevel sl) {
+    private static void retractLimbs(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         String tag = data.getStringOr(LIMBS_TAG, "");
         data.remove(LIMBS_UNTIL);
@@ -549,7 +549,7 @@ public class KnightOfMisfortune {
         KnightOfMisfortuneFx.statusEnd(player, Status.LIMBS);
     }
 
-    private static void tearLimbs(Player player, ServerLevel sl) {
+    private static void tearLimbs(LivingEntity player, ServerLevel sl) {
         String tag = player.getPersistentData().getStringOr(LIMBS_TAG, "");
         retractLimbs(player, sl);
         KnightOfMisfortuneFx.limbsTear(sl, player, tag);
@@ -559,7 +559,7 @@ public class KnightOfMisfortune {
 
     // ---------- Nightmare State
 
-    static boolean inNightmare(Player player) {
+    static boolean inNightmare(LivingEntity player) {
         return isActive(player, STATE_UNTIL) && player.getPersistentData().contains(BODY_X);
     }
 
@@ -625,7 +625,7 @@ public class KnightOfMisfortune {
     }
 
     /** A mob the soul watches unseen, long enough, drifts off to sleep. */
-    private static void lull(Player player, ServerLevel sl) {
+    private static void lull(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         LivingEntity watched = Spells.aimEnemy(player, sl, dreamReach(player));
         if (watched == null || isBoss(watched) || Slumber.kind(watched) != null) {
@@ -665,21 +665,21 @@ public class KnightOfMisfortune {
         }
     }
 
-    private static void clearNightmareKeys(Player player) {
+    private static void clearNightmareKeys(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         for (String key : List.of(STATE_UNTIL, STATE_TAG, BODY_X, BODY_Y, BODY_Z, BODY_THREAT, LULL_TARGET, LULL_COUNT)) {
             data.remove(key);
         }
     }
 
-    private static Vec3 bodyOf(Player player) {
+    private static Vec3 bodyOf(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         return new Vec3(data.getDoubleOr(BODY_X, player.getX()), data.getDoubleOr(BODY_Y, player.getY()),
                 data.getDoubleOr(BODY_Z, player.getZ()));
     }
 
     /** How far the soul may wander from its body: 48 / 72 / 96 / 250 blocks at Sequence 7 / 6 / 5 / 4. */
-    private static double stateReach(Player player) {
+    private static double stateReach(LivingEntity player) {
         if (Beyonder.hasSequence(player, 4)) return 250;
         if (Beyonder.hasSequence(player, 5)) return 96;
         if (Beyonder.hasSequence(player, 6)) return 72;
@@ -687,7 +687,7 @@ public class KnightOfMisfortune {
     }
 
     /** How far a dream can be entered: 24 / 36 / 48 / 96 blocks at Sequence 7 / 6 / 5 / 4. */
-    private static double dreamReach(Player player) {
+    private static double dreamReach(LivingEntity player) {
         if (Beyonder.hasSequence(player, 4)) return 96;
         if (Beyonder.hasSequence(player, 5)) return 48;
         if (Beyonder.hasSequence(player, 6)) return 36;
@@ -772,7 +772,7 @@ public class KnightOfMisfortune {
     }
 
     /** Secrets: what the dream gives away, in chat. */
-    private static void tellSecrets(Player player, LivingEntity dreamer) {
+    private static void tellSecrets(LivingEntity player, LivingEntity dreamer) {
         String name = dreamer.getName().getString();
         player.sendSystemMessage(Component.literal("In the dream of " + name + ":"));
         if (dreamer instanceof Player other) {
@@ -821,7 +821,7 @@ public class KnightOfMisfortune {
         requiem(player, sl);
     }
 
-    private static void requiem(Player player, ServerLevel sl) {
+    static void requiem(LivingEntity player, ServerLevel sl) {
         Vec3 ground = Spells.groundUnder(player, sl, player);
         String tag = "km_requiem_" + player.getId() + "_" + sl.getGameTime();
         int risen = KnightOfMisfortuneFx.REQUIEM_RISEN;
@@ -841,7 +841,7 @@ public class KnightOfMisfortune {
     }
 
     /** Once a second for each enemy in the requiem, 'inside' = how long it has been in it. */
-    private static void requiemTouches(Player player, ServerLevel sl, LivingEntity enemy, int inside) {
+    private static void requiemTouches(LivingEntity player, ServerLevel sl, LivingEntity enemy, int inside) {
         float depth = Math.min(1f, inside / (float) REQUIEM_FREEZE);
         Spells.keepEffect(enemy, MobEffects.SLOWNESS, Math.min(3, (int) (depth * 4)), 40);
         Silence.apply(enemy, 30);
@@ -857,7 +857,7 @@ public class KnightOfMisfortune {
         KnightOfMisfortuneFx.requiemOn(sl, enemy, depth);
     }
 
-    private static void soothingRequiem(Player player, ServerLevel sl) {
+    static void soothingRequiem(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + SOOTHE_TICKS;
         KnightOfMisfortuneFx.soothingRequiem(sl, player, SOOTHE_RADIUS);
         List<LivingEntity> soothed = new ArrayList<>(Spells.alliesAround(player, sl, player.position(), SOOTHE_RADIUS));
@@ -887,7 +887,7 @@ public class KnightOfMisfortune {
      * Sleepless (9): Nocturnality. In full dark: Strength I, Speed I and wounds close a little. Nightwatcher (4), Deep
      * Night: Strength II and Regeneration I in full dark.
      */
-    public static void nocturnality(Player player) {
+    public static void nocturnality(LivingEntity player) {
         if (darkness(player) < DARK) return;
         boolean deep = isKnight(player, DEEP_NIGHT_SEQUENCE);
         Spells.keepEffect(player, MobEffects.STRENGTH, deep ? 1 : 0, 60);
@@ -907,7 +907,7 @@ public class KnightOfMisfortune {
     }
 
     /** Soul Assurer (6): Spirit Sight. Spirits, summons, the undead and sleepers round you are marked for you alone. */
-    public static void spiritSight(Player player) {
+    public static void spiritSight(LivingEntity player) {
         if (!(player instanceof ServerPlayer viewer) || !(player.level() instanceof ServerLevel sl)) return;
         if (isActive(player, VISION_UNTIL)) return;                        // Spirit Vision shows them already
         for (LivingEntity seen : Spells.livingAround(player, sl, player.position(), SPIRIT_SIGHT_RANGE)) {
@@ -919,7 +919,7 @@ public class KnightOfMisfortune {
      * Nightwatcher (4), Deep Night: bright day sun under the open sky weakens you (Weakness I; a Night Domain lifts it).
      * Veil: standing still in the dark for VEIL_STILL seconds hides your mind (status/Unnoticed) until you move.
      */
-    public static void deepNight(Player player) {
+    public static void deepNight(LivingEntity player) {
         if (Nocturnality.inDaySun(player)) Spells.keepEffect(player, MobEffects.WEAKNESS, 0, 40);
         CompoundTag data = player.getPersistentData();
         long here = player.blockPosition().asLong();
@@ -954,7 +954,7 @@ public class KnightOfMisfortune {
     }
 
     /** Servant of Concealment (2), the Requiem's presence: enemies within PRESENCE_RADIUS are always slowed, cannot sprint. */
-    public static void requiemPresence(Player player) {
+    public static void requiemPresence(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), PRESENCE_RADIUS)) {
             if (isEternalSlumber(enemy)) continue;
@@ -969,7 +969,7 @@ public class KnightOfMisfortune {
      * HORROR_EVERY seconds, every enemy within HORROR_GAZE_RANGE that looks at you flinches: its next second of acting
      * is cancelled.
      */
-    public static void eternalSlumber(Player player) {
+    public static void eternalSlumber(LivingEntity player) {
         SupernaturalResistance.grant(player, "knight_of_misfortune_eternal_slumber", 40, SLUMBER_RESIST, false, null);
         Taunt.remove(player);
         if (player.tickCount % (HORROR_EVERY * 20) >= 20 || !(player.level() instanceof ServerLevel sl)) return;
@@ -1006,7 +1006,7 @@ public class KnightOfMisfortune {
      * Misfortune from this Pathway: 'levels' more (up to 'max') for 'ticks', its mark over the head and its picture,
      * if it is a player. Never on the caster's side. Returns its level (0 = it took none).
      */
-    static int curse(Player player, ServerLevel sl, LivingEntity target, int levels, int max, int ticks, boolean catastrophe) {
+    static int curse(LivingEntity player, ServerLevel sl, LivingEntity target, int levels, int max, int ticks, boolean catastrophe) {
         if (Spells.isFriend(player, target)) return 0;
         int level = Misfortune.add(target, player, levels, max, ticks, catastrophe);
         if (level <= 0) return 0;
@@ -1064,7 +1064,7 @@ public class KnightOfMisfortune {
     }
 
     /** True (and says so) while the cooldown saved under 'key' runs. */
-    static boolean coolingDown(Player player, ServerLevel sl, String key, String name) {
+    static boolean coolingDown(LivingEntity player, ServerLevel sl, String key, String name) {
         long left = player.getPersistentData().getLongOr(key, 0L) - sl.getGameTime();
         if (left <= 0) return false;
         player.sendSystemMessage(Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));

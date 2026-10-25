@@ -62,76 +62,76 @@ public final class KnightOfMisfortuneNightwatcher {
     // =========================
 
     static final int NIGHTWATCHER_SEQUENCE = 4;                  // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
-    private static final int DOMAIN_SEQUENCE = 4;
-    private static final int DOMAIN_COST = 8000;
-    private static final int DOMAIN_COOLDOWN = 1800;
-    private static final double DOMAIN_RADIUS = 20.0;
-    private static final int DOMAIN_TICKS = 800;
-    private static final float DOMAIN_ROT = 0.05f;               // enemies lose this much maximum health at once...
-    private static final float DOMAIN_ROT_PER_SECOND = 0.01f;    // ...and this much more each second they stay
-    private static final int DOMAIN_CURSE_EVERY = 60;
-    private static final int DOMAIN_CURSE_MOST = 3;
-    private static final int DOMAIN_CURSE_TICKS = 400;
+    static final int DOMAIN_SEQUENCE = 4;
+    static final int DOMAIN_COST = 8000;
+    static final int DOMAIN_COOLDOWN = 1800;
+    static final double DOMAIN_RADIUS = 20.0;
+    static final int DOMAIN_TICKS = 800;
+    static final float DOMAIN_ROT = 0.05f;               // enemies lose this much maximum health at once...
+    static final float DOMAIN_ROT_PER_SECOND = 0.01f;    // ...and this much more each second they stay
+    static final int DOMAIN_CURSE_EVERY = 60;
+    static final int DOMAIN_CURSE_MOST = 3;
+    static final int DOMAIN_CURSE_TICKS = 400;
 
-    private static final int HAIR_SEQUENCE = 4;
-    private static final int HAIR_COST = 4500;
-    private static final int HAIR_COOLDOWN = 400;
-    private static final double HAIR_RANGE = 8.0;
-    private static final double HAIR_ANGLE = 35.0;
-    private static final int HAIR_BIND = 80;
-    private static final int HAIR_SLEEP = 80;
+    static final int HAIR_SEQUENCE = 4;
+    static final int HAIR_COST = 4500;
+    static final int HAIR_COOLDOWN = 400;
+    static final double HAIR_RANGE = 8.0;
+    static final double HAIR_ANGLE = 35.0;
+    static final int HAIR_BIND = 80;
+    static final int HAIR_SLEEP = 80;
 
-    private static final int CURSE_SEQUENCE = 4;
-    private static final int CURSE_COST = 4000;
-    private static final int CURSE_COOLDOWN = 400;
-    private static final double CURSE_RANGE = 32.0;
-    private static final int CURSE_LEVEL = 3;
-    private static final int CURSE_TICKS = 400;
+    static final int CURSE_SEQUENCE = 4;
+    static final int CURSE_COST = 4000;
+    static final int CURSE_COOLDOWN = 400;
+    static final double CURSE_RANGE = 32.0;
+    static final int CURSE_LEVEL = 3;
+    static final int CURSE_TICKS = 400;
     // Knight of Misfortune (1): Misfortune; Darkness (0): Catastrophe
-    private static final int MISFORTUNE_COST = 25000;            // in all (the wheel's CURSE_COST is a part of it)
-    private static final int MISFORTUNE_COOLDOWN = 1200;
-    private static final int CATASTROPHE_COST = 35000;
-    private static final int CATASTROPHE_COOLDOWN = 1800;
-    private static final double MISFORTUNE_RANGE = 48.0;
-    private static final double MISFORTUNE_RADIUS = 12.0;
-    private static final int MISFORTUNE_TICKS = 400;
-    private static final int MISFORTUNE_START = 2;
-    private static final int MISFORTUNE_EVERY = 100;
-    private static final int MISFORTUNE_MOST = 5;
+    static final int MISFORTUNE_COST = 25000;            // in all (the wheel's CURSE_COST is a part of it)
+    static final int MISFORTUNE_COOLDOWN = 1200;
+    static final int CATASTROPHE_COST = 35000;
+    static final int CATASTROPHE_COOLDOWN = 1800;
+    static final double MISFORTUNE_RANGE = 48.0;
+    static final double MISFORTUNE_RADIUS = 12.0;
+    static final int MISFORTUNE_TICKS = 400;
+    static final int MISFORTUNE_START = 2;
+    static final int MISFORTUNE_EVERY = 100;
+    static final int MISFORTUNE_MOST = 5;
 
-    private static final int WOLF_SEQUENCE = 4;
-    private static final int WOLF_COST = 8000;
-    private static final int WOLF_COOLDOWN = 3600;
-    private static final int WOLF_TICKS = 600;
-    private static final float WOLF_UPKEEP = 400f;               // each second
-    private static final double WOLF_HEIGHT = 3.0;               // blocks: Nightwatcher...
-    private static final double WOLF_HEIGHT_BISHOP = 4.5;        // ...Horror Bishop (3)...
-    private static final double WOLF_HEIGHT_COMPLETE = 7.0;      // ...the complete wolf, Servant of Concealment (2)
-    private static final float WOLF_MADNESS = 1f / 25f;          // each second: mad before its time is up...
-    private static final float WOLF_MADNESS_BISHOP = 1f / 40f;   // ...not quite, at Horror Bishop; none for the complete wolf
-    private static final int WOLF_SPENT = 200;                   // gone mad: weakened this long after
-    private static final float WOLF_BITE = 1.5f;                 // more damage on every bite, times the power level
-    private static final int WOLF_TEAR = 60;                     // a bitten wound does not heal this long
-    private static final double WOLF_PRAYERS = 8.0;              // Horror Bishop: allies who sneak this close are healed
-    private static final float WOLF_PRAYER_HEAL = 1f;            // each second
+    static final int WOLF_SEQUENCE = 4;
+    static final int WOLF_COST = 8000;
+    static final int WOLF_COOLDOWN = 3600;
+    static final int WOLF_TICKS = 600;
+    static final float WOLF_UPKEEP = 400f;               // each second
+    static final double WOLF_HEIGHT = 3.0;               // blocks: Nightwatcher...
+    static final double WOLF_HEIGHT_BISHOP = 4.5;        // ...Horror Bishop (3)...
+    static final double WOLF_HEIGHT_COMPLETE = 7.0;      // ...the complete wolf, Servant of Concealment (2)
+    static final float WOLF_MADNESS = 1f / 25f;          // each second: mad before its time is up...
+    static final float WOLF_MADNESS_BISHOP = 1f / 40f;   // ...not quite, at Horror Bishop; none for the complete wolf
+    static final int WOLF_SPENT = 200;                   // gone mad: weakened this long after
+    static final float WOLF_BITE = 1.5f;                 // more damage on every bite, times the power level
+    static final int WOLF_TEAR = 60;                     // a bitten wound does not heal this long
+    static final double WOLF_PRAYERS = 8.0;              // Horror Bishop: allies who sneak this close are healed
+    static final float WOLF_PRAYER_HEAL = 1f;            // each second
 
     // =========================
     // Saved on the player, and names
     // =========================
-    private static final String DOMAIN_TAG = "knight_of_misfortune_domain_tag";
-    private static final String MISFORTUNE_READY = "knight_of_misfortune_misfortune_ready";
-    private static final String WOLF_TAG = "knight_of_misfortune_wolf_tag";
-    private static final String DOMAIN_ZONE = "knight_of_misfortune_night_domain";
-    private static final String MISFORTUNE_ZONE = "knight_of_misfortune_misfortune";
-    private static final String WOLF_BITE_WEAPON = "knight_of_misfortune_wolf_bite";
+    static final String DOMAIN_TAG = "knight_of_misfortune_domain_tag";
+    static final String MISFORTUNE_READY = "knight_of_misfortune_misfortune_ready";
+    static final String WOLF_TAG = "knight_of_misfortune_wolf_tag";
+    static final String DOMAIN_ZONE = "knight_of_misfortune_night_domain";
+    static final String MISFORTUNE_ZONE = "knight_of_misfortune_misfortune";
+    static final String WOLF_BITE_WEAPON = "knight_of_misfortune_wolf_bite";
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("knight_of_misfortune_nightwatcher", "Nightwatcher")
+    static final AbilityWheel WHEEL = AbilityWheel.create("knight_of_misfortune_nightwatcher", "Nightwatcher")
             .radius(64)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("night_domain", KnightOfMisfortuneFx.WHEEL_NIGHT_DOMAIN, "Night Domain", DOMAIN_SEQUENCE,
@@ -159,7 +159,7 @@ public final class KnightOfMisfortuneNightwatcher {
     // Night Domain
     // =========================
 
-    private static AbilityWheel.Result nightDomain(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result nightDomain(LivingEntity player, ServerLevel sl) {
         if (Zone.isOpen(player, DOMAIN_ZONE)) {                           // the second pick: lift it
             Zone.close(player, DOMAIN_ZONE);
             return AbilityWheel.Result.FREE;
@@ -190,7 +190,7 @@ public final class KnightOfMisfortuneNightwatcher {
     }
 
     /** Once a second for each enemy in the domain: it rots, and its luck runs out. */
-    private static void domainTouches(Player player, ServerLevel sl, LivingEntity enemy, int inside) {
+    private static void domainTouches(LivingEntity player, ServerLevel sl, LivingEntity enemy, int inside) {
         Decay.apply(enemy, 40, DOMAIN_ROT + DOMAIN_ROT_PER_SECOND * inside / 20f);
         KnightOfMisfortuneFx.domainCorrode(sl, enemy);
         if ((inside + 20) % DOMAIN_CURSE_EVERY == 0) {
@@ -199,7 +199,7 @@ public final class KnightOfMisfortuneNightwatcher {
     }
 
     /** Once a second: the night shows, and you, your allies and your spirits are strengthened in it. */
-    private static void domainPulse(Player player, ServerLevel sl, Vec3 ground) {
+    private static void domainPulse(LivingEntity player, ServerLevel sl, Vec3 ground) {
         KnightOfMisfortuneFx.domainPulse(sl, ground, DOMAIN_RADIUS);
         List<LivingEntity> allies = new ArrayList<>(Spells.alliesAround(player, sl, ground, DOMAIN_RADIUS));
         if (player.position().distanceTo(ground) <= DOMAIN_RADIUS + 1) allies.add(player);
@@ -215,7 +215,7 @@ public final class KnightOfMisfortuneNightwatcher {
     // Hair Entanglement
     // =========================
 
-    private static AbilityWheel.Result hairEntanglement(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result hairEntanglement(LivingEntity player, ServerLevel sl) {
         List<LivingEntity> caught = Spells.enemiesInCone(player, sl, player.getEyePosition(), player.getLookAngle(),
                 HAIR_RANGE, HAIR_ANGLE);
         if (caught.isEmpty()) {
@@ -246,7 +246,7 @@ public final class KnightOfMisfortuneNightwatcher {
     // Curse of Misfortune / Misfortune / Catastrophe
     // =========================
 
-    private static AbilityWheel.Result curseOfMisfortune(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result curseOfMisfortune(LivingEntity player, ServerLevel sl) {
         if (Beyonder.hasSequence(player, 1)) return misfortuneArea(player, sl, Beyonder.hasSequence(player, 0));
         LivingEntity target = Spells.aimEnemy(player, sl, CURSE_RANGE);
         if (target == null) {
@@ -264,11 +264,11 @@ public final class KnightOfMisfortuneNightwatcher {
     }
 
     /** Knight of Misfortune (1) and Darkness (0): the curse falls on an area. */
-    private static AbilityWheel.Result misfortuneArea(ServerPlayer player, ServerLevel sl, boolean catastrophe) {
+    private static AbilityWheel.Result misfortuneArea(LivingEntity player, ServerLevel sl, boolean catastrophe) {
         int cost = catastrophe ? CATASTROPHE_COST : MISFORTUNE_COST;
         String name = catastrophe ? "Catastrophe" : "Misfortune";
         if (KnightOfMisfortune.coolingDown(player, sl, MISFORTUNE_READY, name)) return AbilityWheel.Result.REFUSED;
-        if (SoulCore.getSpirituality(player) < cost) {
+        if (Spells.spiritualityOf(player) < cost) {
             Spells.paySpirituality(player, cost);                       // takes nothing, only says so
             return AbilityWheel.Result.REFUSED;
         }
@@ -293,7 +293,7 @@ public final class KnightOfMisfortuneNightwatcher {
     // Demonic Wolf Form
     // =========================
 
-    private static AbilityWheel.Result demonicWolf(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result demonicWolf(LivingEntity player, ServerLevel sl) {
         if (isWolf(player)) {                                             // the second pick: leave the form
             GiantForm.end(player);
             return AbilityWheel.Result.FREE;
@@ -344,14 +344,14 @@ public final class KnightOfMisfortuneNightwatcher {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void wolfBody(Player player, int strength) {
+    private static void wolfBody(LivingEntity player, int strength) {
         Spells.keepEffect(player, MobEffects.STRENGTH, strength, 60);
         Spells.keepEffect(player, MobEffects.SPEED, 1, 60);
         Spells.keepEffect(player, MobEffects.RESISTANCE, 0, 60);
     }
 
     /** Once a second in the form: its price, its strength, its madness; at Horror Bishop the prayers of allies. */
-    private static void wolfSecond(Player player, ServerLevel sl, double height, float madness, int strength, boolean bishop) {
+    private static void wolfSecond(LivingEntity player, ServerLevel sl, double height, float madness, int strength, boolean bishop) {
         if (!Spells.paySpirituality(player, WOLF_UPKEEP)) {
             GiantForm.end(player);
             return;
@@ -359,7 +359,7 @@ public final class KnightOfMisfortuneNightwatcher {
         wolfBody(player, strength);
         if (madness > 0f) {
             KnightOfMisfortuneFx.wolfMadness(sl, player, madness, height);
-            player.sendOverlayMessage(Component.literal("Madness " + Math.round(madness * 100) + "%"));
+            if (player instanceof Player maddened) maddened.sendOverlayMessage(Component.literal("Madness " + Math.round(madness * 100) + "%"));
         }
         if (!bishop) return;
         for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), WOLF_PRAYERS)) {
@@ -371,12 +371,12 @@ public final class KnightOfMisfortuneNightwatcher {
     }
 
     /** True while the player is the Demonic Wolf. */
-    static boolean isWolf(Player player) {
+    static boolean isWolf(LivingEntity player) {
         return GiantForm.isGiant(player) && player.getPersistentData().contains(WOLF_TAG);
     }
 
     /** Every tick for every player: the wolf's steps. */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         if (player.tickCount % 10 != 0 || !isWolf(player) || !player.onGround()) return;
         if (player.getDeltaMovement().horizontalDistanceSqr() < 0.004) return;
         KnightOfMisfortuneFx.wolfStep(sl, player, GiantForm.scale(player) * 1.8);

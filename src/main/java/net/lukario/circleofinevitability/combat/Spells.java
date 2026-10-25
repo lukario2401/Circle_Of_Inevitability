@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.combat;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpirituality;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
@@ -1007,6 +1008,20 @@ public final class Spells {
         }
         SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - due);
         return true;
+    }
+
+    /**
+     * The same for any caster: a player as above; a Beyonder mob from its own bar (blasphemy_slate/beyonder_mobs), for
+     * what an ability keeps costing while it lasts (an upkeep). False when it cannot pay.
+     */
+    public static boolean paySpirituality(LivingEntity caster, float cost) {
+        if (caster instanceof Player player) return paySpirituality(player, cost);
+        return MobSpirituality.spend(caster, cost);
+    }
+
+    /** What a caster has left: a player's spirituality, a Beyonder mob's own bar. */
+    public static float spiritualityOf(LivingEntity caster) {
+        return caster instanceof Player player ? SoulCore.getSpirituality(player) : MobSpirituality.get(caster);
     }
 
     /** False once the caster died, logged out or went to another dimension: spells that stay around them stop then. */

@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SequenceComman
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorMobs;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonMobs;
@@ -39,6 +40,7 @@ public final class MobAbilities {
         AbominationMobs.register();
         HandOfGodMobs.register();
         IlluminatorMobs.register();
+        KnightOfMisfortuneMobs.register();
     }
 
     private MobAbilities() {}

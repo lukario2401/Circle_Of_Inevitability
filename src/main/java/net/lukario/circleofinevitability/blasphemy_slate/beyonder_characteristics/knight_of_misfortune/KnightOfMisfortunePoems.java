@@ -60,57 +60,57 @@ public final class KnightOfMisfortunePoems {
     // =========================
 
     static final int POEM_SEQUENCE = 8;                          // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
-    private static final int TRANQUILIZE_SEQUENCE = 8;
-    private static final int TRANQUILIZE_COST = 300;
-    private static final int TRANQUILIZE_COOLDOWN = 200;
-    private static final double TRANQUILIZE_RADIUS = 10.0;
-    private static final double TRANQUILIZE_LOOK = 16.0;
+    static final int TRANQUILIZE_SEQUENCE = 8;
+    static final int TRANQUILIZE_COST = 300;
+    static final int TRANQUILIZE_COOLDOWN = 200;
+    static final double TRANQUILIZE_RADIUS = 10.0;
+    static final double TRANQUILIZE_LOOK = 16.0;
 
-    private static final int LULLABY_SEQUENCE = 8;
-    private static final int LULLABY_COST = 300;
-    private static final int LULLABY_COOLDOWN = 600;
-    private static final double LULLABY_RANGE = 8.0;
-    private static final double LULLABY_ANGLE = 30.0;
-    private static final int LULLABY_TICKS = 160;
-    private static final int LULLABY_RESISTED = 60;              // a player who shakes it off: blank this long
+    static final int LULLABY_SEQUENCE = 8;
+    static final int LULLABY_COST = 300;
+    static final int LULLABY_COOLDOWN = 600;
+    static final double LULLABY_RANGE = 8.0;
+    static final double LULLABY_ANGLE = 30.0;
+    static final int LULLABY_TICKS = 160;
+    static final int LULLABY_RESISTED = 60;              // a player who shakes it off: blank this long
 
-    private static final int PACIFY_SEQUENCE = 8;
-    private static final int PACIFY_COST = 300;
-    private static final int PACIFY_COOLDOWN = 600;
-    private static final double PACIFY_RANGE = 16.0;
-    private static final int PACIFY_TICKS = 160;
+    static final int PACIFY_SEQUENCE = 8;
+    static final int PACIFY_COST = 300;
+    static final int PACIFY_COOLDOWN = 600;
+    static final double PACIFY_RANGE = 16.0;
+    static final int PACIFY_TICKS = 160;
 
-    private static final int FEAR_SEQUENCE = 8;
-    private static final int FEAR_COST = 300;
-    private static final int FEAR_COOLDOWN = 400;
-    private static final double FEAR_RANGE = 12.0;
-    private static final double FEAR_ANGLE = 35.0;
-    private static final int FEAR_TICKS = 120;
+    static final int FEAR_SEQUENCE = 8;
+    static final int FEAR_COST = 300;
+    static final int FEAR_COOLDOWN = 400;
+    static final double FEAR_RANGE = 12.0;
+    static final double FEAR_ANGLE = 35.0;
+    static final int FEAR_TICKS = 120;
 
-    private static final int AGITATE_SEQUENCE = 6;
-    private static final int AGITATE_COST = 1500;
-    private static final int AGITATE_COOLDOWN = 600;
-    private static final double AGITATE_RANGE = 16.0;
-    private static final int AGITATE_TICKS = 200;
-    private static final float AGITATE_VULNERABLE = 0.15f;       // it takes 15% more from everything
-    private static final double AGITATE_NEAREST = 12.0;          // a mob goes after the nearest thing this close
+    static final int AGITATE_SEQUENCE = 6;
+    static final int AGITATE_COST = 1500;
+    static final int AGITATE_COOLDOWN = 600;
+    static final double AGITATE_RANGE = 16.0;
+    static final int AGITATE_TICKS = 200;
+    static final float AGITATE_VULNERABLE = 0.15f;       // it takes 15% more from everything
+    static final double AGITATE_NEAREST = 12.0;          // a mob goes after the nearest thing this close
 
-    private static final int RESONANCE_SEQUENCE = 7;             // Nightmare: poems need no voice (cast while silenced)
-    private static final int CITY_SEQUENCE = 3;                  // Horror Bishop: Lullaby and Pacify reach a whole city...
-    private static final double CITY_RANGE = 40.0;               // ...all round you
+    static final int RESONANCE_SEQUENCE = 7;             // Nightmare: poems need no voice (cast while silenced)
+    static final int CITY_SEQUENCE = 3;                  // Horror Bishop: Lullaby and Pacify reach a whole city...
+    static final double CITY_RANGE = 40.0;               // ...all round you
 
-    private static final int HEARD_TICKS = 600;                  // a poem heard within this long...
-    private static final float POEM_REPEAT = 0.25f;              // ...makes the next one hold this much longer...
-    private static final int HEARD_MOST = 4;                     // ...up to this many times over
-    private static final String HEARD = "knight_of_misfortune_poem_heard";
+    static final int HEARD_TICKS = 600;                  // a poem heard within this long...
+    static final float POEM_REPEAT = 0.25f;              // ...makes the next one hold this much longer...
+    static final int HEARD_MOST = 4;                     // ...up to this many times over
+    static final String HEARD = "knight_of_misfortune_poem_heard";
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("knight_of_misfortune_poems", "Midnight Poem")
+    static final AbilityWheel WHEEL = AbilityWheel.create("knight_of_misfortune_poems", "Midnight Poem")
             .radius(72)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("tranquilize", KnightOfMisfortuneFx.WHEEL_TRANQUILIZE, "Tranquilize", TRANQUILIZE_SEQUENCE,
@@ -148,7 +148,7 @@ public final class KnightOfMisfortunePoems {
     // The poems
     // =========================
 
-    private static AbilityWheel.Result tranquilize(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result tranquilize(LivingEntity player, ServerLevel sl) {
         KnightOfMisfortuneFx.recite(sl, player, Poem.TRANQUILIZE, null);
         LivingEntity looked = Spells.aimEnemy(player, sl, TRANQUILIZE_LOOK);
         Later.run(sl, KnightOfMisfortuneFx.POEM_LANDS, () -> {
@@ -173,7 +173,7 @@ public final class KnightOfMisfortunePoems {
         return AbilityWheel.Result.DONE;
     }
 
-    private static AbilityWheel.Result lullaby(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result lullaby(LivingEntity player, ServerLevel sl) {
         KnightOfMisfortuneFx.recite(sl, player, Poem.LULLABY, null);
         KnightOfMisfortuneFx.lullaby(sl, player, LULLABY_RANGE);
         Vec3 eyes = player.getEyePosition();
@@ -198,7 +198,7 @@ public final class KnightOfMisfortunePoems {
         return AbilityWheel.Result.DONE;
     }
 
-    private static AbilityWheel.Result pacify(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result pacify(LivingEntity player, ServerLevel sl) {
         if (Beyonder.hasSequence(player, CITY_SEQUENCE)) return pacifyCity(player, sl);
         LivingEntity target = Spells.aimEnemy(player, sl, PACIFY_RANGE);
         if (target == null) {
@@ -221,7 +221,7 @@ public final class KnightOfMisfortunePoems {
     }
 
     /** Horror Bishop (3): every enemy within CITY_RANGE (not bosses) is pacified. */
-    private static AbilityWheel.Result pacifyCity(ServerPlayer player, ServerLevel sl) {
+    private static AbilityWheel.Result pacifyCity(LivingEntity player, ServerLevel sl) {
         List<LivingEntity> hearers = Spells.enemiesAround(player, sl, player.position(), CITY_RANGE);
         hearers.removeIf(KnightOfMisfortune::isBoss);
         if (hearers.isEmpty()) {
@@ -241,7 +241,7 @@ public final class KnightOfMisfortunePoems {
         return AbilityWheel.Result.DONE;
     }
 
-    private static AbilityWheel.Result fear(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result fear(LivingEntity player, ServerLevel sl) {
         KnightOfMisfortuneFx.recite(sl, player, Poem.FEAR, null);
         KnightOfMisfortuneFx.fear(sl, player, FEAR_RANGE);
         Vec3 eyes = player.getEyePosition();
@@ -258,7 +258,7 @@ public final class KnightOfMisfortunePoems {
         return AbilityWheel.Result.DONE;
     }
 
-    private static AbilityWheel.Result agitating(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result agitating(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, AGITATE_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("No one hears you."));
@@ -305,7 +305,7 @@ public final class KnightOfMisfortunePoems {
     }
 
     /** What is wrong with it, in chat: its health, every effect on it, a Giant's madness. */
-    private static void reveal(Player player, LivingEntity target) {
+    private static void reveal(LivingEntity player, LivingEntity target) {
         StringBuilder line = new StringBuilder(target.getName().getString())
                 .append(": health ").append(Math.round(target.getHealth())).append(" of ").append(Math.round(target.getMaxHealth()));
         for (MobEffectInstance effect : target.getActiveEffects()) {
