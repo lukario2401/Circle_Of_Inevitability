@@ -43,27 +43,27 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class Wanderer {
 
-    private static final String NBT_WANDERER_STAR_COUNT = "wanderer_star_count";
-    private static final String NBT_WANDERER_NEW_STAR_CD = "wanderer_new_star_cooldown";
-    private static final String NBT_WANDERER_IS_DASHING = "wanderer_is_dashing";
-    private static final String NBT_WANDERER_IS_SEALED_OFFENSE = "wanderer_is_sealed_offense";
-    private static final String NBT_WANDERER_IS_SEALED_OFFENSE_DURATION = "wanderer_is_sealed_offense_duration";
-    private static final String NBT_WANDERER_IS_SEALED_OFFENSE_DAMAGE_STORED = "wanderer_is_sealed_offense_damage_stored";
-    private static final String NBT_WANDERER_IS_SEALED_DEFENSE = "wanderer_is_sealed_defense";
-    private static final String NBT_WANDERER_IS_SEALED_DEFENSE_DURATION = "wanderer_is_sealed_defense_duration";
-    private static final String NBT_WANDERER_IS_SEALED_DEFENSE_DAMAGE_STORED = "wanderer_is_sealed_defense_damage_stored";
+    static final String NBT_WANDERER_STAR_COUNT = "wanderer_star_count";
+    static final String NBT_WANDERER_NEW_STAR_CD = "wanderer_new_star_cooldown";
+    static final String NBT_WANDERER_IS_DASHING = "wanderer_is_dashing";
+    static final String NBT_WANDERER_IS_SEALED_OFFENSE = "wanderer_is_sealed_offense";
+    static final String NBT_WANDERER_IS_SEALED_OFFENSE_DURATION = "wanderer_is_sealed_offense_duration";
+    static final String NBT_WANDERER_IS_SEALED_OFFENSE_DAMAGE_STORED = "wanderer_is_sealed_offense_damage_stored";
+    static final String NBT_WANDERER_IS_SEALED_DEFENSE = "wanderer_is_sealed_defense";
+    static final String NBT_WANDERER_IS_SEALED_DEFENSE_DURATION = "wanderer_is_sealed_defense_duration";
+    static final String NBT_WANDERER_IS_SEALED_DEFENSE_DAMAGE_STORED = "wanderer_is_sealed_defense_damage_stored";
 
-    private static final String NBT_ORBITAL_TARGET = "wanderer_orbital_target_uuid";
-    private static final String NBT_ORBITAL_STAR_COUNT = "wanderer_orbital_star_count";
-    private static final String NBT_ORBITAL_TICK = "wanderer_orbital_tick";
-    private static final String NBT_ORBITAL_ACTIVE = "wanderer_orbital_active";
-    private static final String NBT_ORBITAL_COLLAPSE_CD = "wanderer_orbital_collapse_cd";
-    private static final String NBT_ORBITAL_BLOCK_X = "wanderer_orbital_block_x";
-    private static final String NBT_ORBITAL_BLOCK_Y = "wanderer_orbital_block_y";
-    private static final String NBT_ORBITAL_BLOCK_Z = "wanderer_orbital_block_z";
-    private static final String NBT_ORBITAL_IS_BLOCK = "wanderer_orbital_is_block";
+    static final String NBT_ORBITAL_TARGET = "wanderer_orbital_target_uuid";
+    static final String NBT_ORBITAL_STAR_COUNT = "wanderer_orbital_star_count";
+    static final String NBT_ORBITAL_TICK = "wanderer_orbital_tick";
+    static final String NBT_ORBITAL_ACTIVE = "wanderer_orbital_active";
+    static final String NBT_ORBITAL_COLLAPSE_CD = "wanderer_orbital_collapse_cd";
+    static final String NBT_ORBITAL_BLOCK_X = "wanderer_orbital_block_x";
+    static final String NBT_ORBITAL_BLOCK_Y = "wanderer_orbital_block_y";
+    static final String NBT_ORBITAL_BLOCK_Z = "wanderer_orbital_block_z";
+    static final String NBT_ORBITAL_IS_BLOCK = "wanderer_orbital_is_block";
 
-    private static final String NBT_COSMIC_PLAGUE_DURATION = "wanderer_cosmic_plague_duration";
+    static final String NBT_COSMIC_PLAGUE_DURATION = "wanderer_cosmic_plague_duration";
 
     //Particle instructions
     private static final int STAR_GOLD   = 0xF0FFD36B;   // ARGB: alpha, red, green, blue
