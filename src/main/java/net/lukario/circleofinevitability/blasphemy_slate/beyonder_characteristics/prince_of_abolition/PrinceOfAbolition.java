@@ -105,112 +105,112 @@ public class PrinceOfAbolition {
     // =========================
 
     // Ability 1 - Verdict (Sequence 9)
-    private static final int VERDICT_SEQUENCE = 9;
-    private static final int VERDICT_COST = 250;
-    private static final double VERDICT_RANGE = 20.0;
-    private static final float VERDICT_DAMAGE = 40f;
-    private static final int VERDICT_STAGGER = 12;
-    private static final int COMPROMISED_TICKS = 200;
+    static final int VERDICT_SEQUENCE = 9;
+    static final int VERDICT_COST = 250;
+    static final double VERDICT_RANGE = 20.0;
+    static final float VERDICT_DAMAGE = 40f;
+    static final int VERDICT_STAGGER = 12;
+    static final int COMPROMISED_TICKS = 200;
     static final float COMPROMISED_EXTRA = 0.25f;       // a Compromised enemy takes 25% more from the one who judged it
     // sneak: Brainwash
-    private static final int BRAINWASH_COST = 250;
-    private static final double BRAINWASH_RANGE = 16.0;
-    private static final int BRAINWASH_MOB_TICKS = 160;
-    private static final int BRAINWASH_PLAYER_TICKS = 100;
+    static final int BRAINWASH_COST = 250;
+    static final double BRAINWASH_RANGE = 16.0;
+    static final int BRAINWASH_MOB_TICKS = 160;
+    static final int BRAINWASH_PLAYER_TICKS = 100;
     static final float BRAINWASH_CUT = 0.3f;            // a brainwashed player's blows on you are 30% weaker
     static final float BOSS_HEALTH = 150f;              // more than this: shrugs off Brainwash and Charm
 
     // Ability 2 - Brute Force (Sequence 8)
-    private static final int BRUTE_SEQUENCE = 8;
-    private static final int BRUTE_COST = 600;
-    private static final double BRUTE_REACH = 4.0;
-    private static final float BRUTE_DAMAGE = 60f;
-    private static final double BRUTE_THROW = 1.6;      // about 5 blocks
-    private static final int BRUTE_GUARD_BREAK = 100;   // no shield, no item use for 5 seconds
-    private static final double BRUTE_SPLASH = 2.0;     // those this close to it...
-    private static final float BRUTE_SPLASH_SHARE = 0.5f;   // ...take half and are knocked aside
+    static final int BRUTE_SEQUENCE = 8;
+    static final int BRUTE_COST = 600;
+    static final double BRUTE_REACH = 4.0;
+    static final float BRUTE_DAMAGE = 60f;
+    static final double BRUTE_THROW = 1.6;      // about 5 blocks
+    static final int BRUTE_GUARD_BREAK = 100;   // no shield, no item use for 5 seconds
+    static final double BRUTE_SPLASH = 2.0;     // those this close to it...
+    static final float BRUTE_SPLASH_SHARE = 0.5f;   // ...take half and are knocked aside
     // sneak: Iron Will
-    private static final int IRON_COST = 600;
-    private static final int IRON_TICKS = 160;
+    static final int IRON_COST = 600;
+    static final int IRON_TICKS = 160;
 
     // Ability 4 - Distort (Sequence 6)
-    private static final int DISTORT_SEQUENCE = 6;
-    private static final int DISTORT_COST = 2450;
-    private static final double DISTORT_RANGE = 24.0;
-    private static final double DISTORT_SHOT_AIM = 1.5; // a projectile this close to the line of sight is picked
-    private static final int DISTORT_TICKS = 100;
-    private static final int DISTORT_CHARGES = 3;       // its next 3 attacks land on its nearest ally...
-    private static final double DISTORT_ALLY_REACH = 8.0;   // ...this close, or miss
+    static final int DISTORT_SEQUENCE = 6;
+    static final int DISTORT_COST = 2450;
+    static final double DISTORT_RANGE = 24.0;
+    static final double DISTORT_SHOT_AIM = 1.5; // a projectile this close to the line of sight is picked
+    static final int DISTORT_TICKS = 100;
+    static final int DISTORT_CHARGES = 3;       // its next 3 attacks land on its nearest ally...
+    static final double DISTORT_ALLY_REACH = 8.0;   // ...this close, or miss
     // sneak: Seal
-    private static final int SEAL_COST = 2450;
-    private static final double SEAL_RADIUS = 6.0;
-    private static final int SEAL_TICKS = 160;
+    static final int SEAL_COST = 2450;
+    static final double SEAL_RADIUS = 6.0;
+    static final int SEAL_TICKS = 160;
     static final String SEAL_DOME = "poa_seal";
     // Earl of the Fallen: the door anywhere you look, and a wall instead of a room (combat/Wall)
-    private static final int GATE_SEQUENCE = 4;
-    private static final double GATE_RANGE = 24.0;
-    private static final double GATE_WIDTH = 10.0;
-    private static final double GATE_HEIGHT = 5.0;
-    private static final int GATE_TICKS = 200;
+    static final int GATE_SEQUENCE = 4;
+    static final double GATE_RANGE = 24.0;
+    static final double GATE_WIDTH = 10.0;
+    static final double GATE_HEIGHT = 5.0;
+    static final int GATE_TICKS = 200;
     static final String GATE_WALL = "poa_gate";
     // Duke of Entropy: Distort aimed at an enemy's shell flips it (combat/Dome.flip)
-    private static final int FLIP_SEQUENCE = 2;
+    static final int FLIP_SEQUENCE = 2;
 
     // Ability 5 - Disorder (Sequence 5)
-    private static final int DISORDER_SEQUENCE = 5;
-    private static final int DISORDER_COST = 3000;
-    private static final double DISORDER_RANGE = 20.0;
-    private static final int DISORDER_TICKS = 120;
+    static final int DISORDER_SEQUENCE = 5;
+    static final int DISORDER_COST = 3000;
+    static final double DISORDER_RANGE = 20.0;
+    static final int DISORDER_TICKS = 120;
     static final float DISORDER_MISS = 0.4f;            // 40% of its attacks miss
-    private static final int UNBOUND_TICKS = 60;        // freed: no hold takes for 3 seconds
+    static final int UNBOUND_TICKS = 60;        // freed: no hold takes for 3 seconds
     // sneak: Paces
-    private static final int PACES_COST = 3000;
-    private static final double PACES_RANGE = 24.0;
-    private static final double PACES_EARL_RANGE = 48.0;    // Earl of the Fallen: the standard of measure itself
-    private static final int PACES_EARL_SEQUENCE = 4;
-    private static final int DECOY_TICKS = 80;
-    private static final double DECOY_REACH = 1.6;      // an enemy this close to the fake self bursts it...
-    private static final double DECOY_BURST = 3.0;      // ...and everything this close is Disordered...
-    private static final int DECOY_DISORDER = 40;       // ...this long
-    private static final double DECOY_LURE = 24.0;      // mobs hunting you this close go for the fake self
-    private static final int UNTOUCHABLE_SEQUENCE = 4;  // Earl of the Fallen: after Disorder or Paces...
-    private static final int UNTOUCHABLE_TICKS = 40;    // ...everything aimed at you misses this long
+    static final int PACES_COST = 3000;
+    static final double PACES_RANGE = 24.0;
+    static final double PACES_EARL_RANGE = 48.0;    // Earl of the Fallen: the standard of measure itself
+    static final int PACES_EARL_SEQUENCE = 4;
+    static final int DECOY_TICKS = 80;
+    static final double DECOY_REACH = 1.6;      // an enemy this close to the fake self bursts it...
+    static final double DECOY_BURST = 3.0;      // ...and everything this close is Disordered...
+    static final int DECOY_DISORDER = 40;       // ...this long
+    static final double DECOY_LURE = 24.0;      // mobs hunting you this close go for the fake self
+    static final int UNTOUCHABLE_SEQUENCE = 4;  // Earl of the Fallen: after Disorder or Paces...
+    static final int UNTOUCHABLE_TICKS = 40;    // ...everything aimed at you misses this long
 
     // Passives (the plain potion effects are in SequencePassives)
     static final int ANY_SEQUENCE = 9;
     static final int MENTAL_RESISTANCE_SEQUENCE = 8;    // Barbarian: mind marks half as long on you (PrinceOfAbolitionMarks)
-    private static final int PHYSICAL_SEQUENCE = 8;     // Physical Enhancement: two extra hearts (Strength I in SequencePassives)
-    private static final int PRICE_SEQUENCE = 7;        // Everyone Has A Price: piglins never turn on you
-    private static final int WEAKNESS_SEQUENCE = 6;     // Weakness Detection: what you look at is marked for you...
-    private static final double WEAKNESS_SIGHT = 24.0;
-    private static final float WEAKNESS_CRIT = 1.5f;    // ...and the first hit on one that has not noticed you is a crit
-    private static final int PRESENCE_SEQUENCE = 5;     // Presence: weak hostile mobs near you hesitate...
-    private static final double PRESENCE_RADIUS = 6.0;
-    private static final float PRESENCE_MAX_HEALTH = 30f;
-    private static final float PRESENCE_IGNORE = 0.5f;  // ...and are half as likely to pick you
-    private static final int FAVORABLE_SEQUENCE = 4;    // Favorable Ground: hidden or invisible enemies this close...
-    private static final double FAVORABLE_RADIUS = 16.0;    // ...glow for you and cannot stay hidden
-    private static final int LOOSE_SEQUENCE = 2;        // Loose Order: projectiles coming at you...
-    private static final double LOOSE_RADIUS = 10.0;    // ...this close...
-    private static final double LOOSE_DEGREES = 10.0;   // ...drift up to this many degrees off
-    private static final int BEYOND_SEQUENCE = 1;       // Beyond the World: damage with no attacker...
-    private static final float BEYOND_CUT = 0.5f;       // ...is half lost
+    static final int PHYSICAL_SEQUENCE = 8;     // Physical Enhancement: two extra hearts (Strength I in SequencePassives)
+    static final int PRICE_SEQUENCE = 7;        // Everyone Has A Price: piglins never turn on you
+    static final int WEAKNESS_SEQUENCE = 6;     // Weakness Detection: what you look at is marked for you...
+    static final double WEAKNESS_SIGHT = 24.0;
+    static final float WEAKNESS_CRIT = 1.5f;    // ...and the first hit on one that has not noticed you is a crit
+    static final int PRESENCE_SEQUENCE = 5;     // Presence: weak hostile mobs near you hesitate...
+    static final double PRESENCE_RADIUS = 6.0;
+    static final float PRESENCE_MAX_HEALTH = 30f;
+    static final float PRESENCE_IGNORE = 0.5f;  // ...and are half as likely to pick you
+    static final int FAVORABLE_SEQUENCE = 4;    // Favorable Ground: hidden or invisible enemies this close...
+    static final double FAVORABLE_RADIUS = 16.0;    // ...glow for you and cannot stay hidden
+    static final int LOOSE_SEQUENCE = 2;        // Loose Order: projectiles coming at you...
+    static final double LOOSE_RADIUS = 10.0;    // ...this close...
+    static final double LOOSE_DEGREES = 10.0;   // ...drift up to this many degrees off
+    static final int BEYOND_SEQUENCE = 1;       // Beyond the World: damage with no attacker...
+    static final float BEYOND_CUT = 0.5f;       // ...is half lost
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String IRON_UNTIL = "poa_iron_until";
-    private static final String IRON_TAG = "poa_iron_tag";
-    private static final String UNBOUND_UNTIL = "poa_unbound_until";
-    private static final String UNTOUCHABLE_UNTIL = "poa_untouchable_until";
-    private static final String WAS_PRINCE = "poa_was_prince";
+    static final String IRON_UNTIL = "poa_iron_until";
+    static final String IRON_TAG = "poa_iron_tag";
+    static final String UNBOUND_UNTIL = "poa_unbound_until";
+    static final String UNTOUCHABLE_UNTIL = "poa_untouchable_until";
+    static final String WAS_PRINCE = "poa_was_prince";
     // on an enemy
-    private static final String DISTORT_LEFT = "poa_distort_left";
-    private static final String NOTICED_BY = "poa_noticed_by";
+    static final String DISTORT_LEFT = "poa_distort_left";
+    static final String NOTICED_BY = "poa_noticed_by";
 
-    private static final Identifier HEARTS_ID = Physique.id("poa_physical_enhancement");
-    private static final Identifier IRON_FOOTING_ID = Physique.id("poa_iron_will_footing");
-    private static final String DRIFTED = "poa_drifted";      // on a projectile Loose Order has bent already
+    static final Identifier HEARTS_ID = Physique.id("poa_physical_enhancement");
+    static final Identifier IRON_FOOTING_ID = Physique.id("poa_iron_will_footing");
+    static final String DRIFTED = "poa_drifted";      // on a projectile Loose Order has bent already
 
     /** True while a Distorted blow is being passed on (so the passed-on blow is not Distorted again). */
     private static boolean redirecting;
@@ -247,14 +247,14 @@ public class PrinceOfAbolition {
             // the look of the rot of Corrosion and Ruin (status/Corrosion does the rotting)
             Corrosion.addListener(new Corrosion.Listener() {
                 @Override
-                public void started(LivingEntity victim, Player source) {
+                public void started(LivingEntity victim, LivingEntity source) {
                     if (source == null || !isPrince(source, ANY_SEQUENCE) || !(victim.level() instanceof ServerLevel sl)) return;
                     PrinceOfAbolitionFx.corroded(sl, victim, PrinceOfAbolitionFx.FOREVER, rotTag(victim));
                     if (victim instanceof Player bearer) PrinceOfAbolitionFx.statusForever(bearer, Status.CORRODED);
                 }
 
                 @Override
-                public void bit(LivingEntity victim, float amount, Player source) {
+                public void bit(LivingEntity victim, float amount, LivingEntity source) {
                     if (source != null && isPrince(source, ANY_SEQUENCE) && victim.level() instanceof ServerLevel sl) {
                         PrinceOfAbolitionFx.corrosionBite(sl, victim, amount);
                     }
@@ -308,7 +308,8 @@ public class PrinceOfAbolition {
                 if (victim.level() instanceof ServerLevel sl) amount *= PrinceOfAbolitionSovereign.entropySwing(sl, attacker);
             }
             // the Prince Of Abolition strikes: Sequence Might, the mausoleums, and what it has put on the victim
-            if (attacker instanceof Player prince && isPrince(prince, ANY_SEQUENCE)) {
+            if (attacker != null && isPrince(attacker, ANY_SEQUENCE)) {                 // a player, or a Beyonder mob of it
+                LivingEntity prince = attacker;
                 amount *= attack(prince);
                 if (PrinceOfAbolitionMarks.from(victim, Kind.COMPROMISED, prince)) amount *= 1f + COMPROMISED_EXTRA;
                 if (PrinceOfAbolitionMarks.from(victim, Kind.WEAKENED, prince)) amount *= 1f + PrinceOfAbolitionBribes.WEAKEN_EXTRA;
@@ -321,7 +322,8 @@ public class PrinceOfAbolition {
                 amount = PrinceOfAbolitionFallen.magnifyHit(prince, victim, amount);
             }
             // the Prince Of Abolition is struck: Sequence Might, the mausoleums, Law & Order
-            if (victim instanceof Player prince && isPrince(prince, ANY_SEQUENCE) && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+            if (isPrince(victim, ANY_SEQUENCE) && !source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+                LivingEntity prince = victim;
                 amount /= defense(prince);
                 amount *= 1f - LAW_AND_ORDER_CUT * PrinceOfAbolitionOrders.count(prince);
                 if (attacker == null && source.getEntity() == null && isPrince(prince, BEYOND_SEQUENCE)) {
@@ -460,7 +462,7 @@ public class PrinceOfAbolition {
         verdict(player, sl, target);
     }
 
-    private static void verdict(Player player, ServerLevel sl, LivingEntity target) {
+    static void verdict(LivingEntity player, ServerLevel sl, LivingEntity target) {
         PrinceOfAbolitionFx.verdict(sl, player, target);
         Later.run(sl, PrinceOfAbolitionFx.VERDICT_LANDS, () -> {
             if (!Spells.casterStillHere(player, sl) || !target.isAlive() || target.level() != sl) return;
@@ -472,7 +474,7 @@ public class PrinceOfAbolition {
         });
     }
 
-    private static void brainwash(Player player, ServerLevel sl, LivingEntity target) {
+    static void brainwash(LivingEntity player, ServerLevel sl, LivingEntity target) {
         int wanted = duration(player, target instanceof Player ? BRAINWASH_PLAYER_TICKS : BRAINWASH_MOB_TICKS);
         String tag = PrinceOfAbolitionMarks.tag(target, Kind.BRAINWASHED);
         PrinceOfAbolitionFx.brainwash(sl, player, target, wanted, tag);
@@ -517,7 +519,7 @@ public class PrinceOfAbolition {
         bruteForce(player, sl, target, reach);
     }
 
-    private static void bruteForce(Player player, ServerLevel sl, LivingEntity target, double reach) {
+    static void bruteForce(LivingEntity player, ServerLevel sl, LivingEntity target, double reach) {
         PrinceOfAbolitionFx.bruteForce(sl, player, target);
         Later.run(sl, PrinceOfAbolitionFx.BRUTE_LANDS, () -> {
             if (!Spells.casterStillHere(player, sl) || !target.isAlive() || target.level() != sl) return;
@@ -536,7 +538,7 @@ public class PrinceOfAbolition {
         });
     }
 
-    private static void ironWill(Player player, ServerLevel sl) {
+    static void ironWill(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         PrinceOfAbolitionFx.ironWillEnd(sl, player, data.getStringOr(IRON_TAG, ""));     // cast again: one halo, not two
         long until = sl.getGameTime() + IRON_TICKS;
@@ -555,7 +557,7 @@ public class PrinceOfAbolition {
     }
 
     /** Every mind effect on the player ends. True if there was one. */
-    private static boolean shakeOffMind(Player player) {
+    private static boolean shakeOffMind(LivingEntity player) {
         boolean any = PrinceOfAbolitionMarks.endMind(player);
         if (Fear.isAfraid(player)) {
             Fear.end(player);
@@ -573,7 +575,7 @@ public class PrinceOfAbolition {
     }
 
     /** True while Iron Will holds: no mind effect takes on them. */
-    static boolean shrugsMind(Player player) {
+    static boolean shrugsMind(LivingEntity player) {
         return isActive(player, IRON_UNTIL);
     }
 
@@ -621,7 +623,7 @@ public class PrinceOfAbolition {
                 if (!Spells.paySpirituality(player, DISTORT_COST)) return;
                 Dome.flip(shell.owner(), shell.name());
                 PrinceOfAbolitionFx.shellFlip(sl, shell.center(), shell.radius());
-                shell.owner().sendSystemMessage(Component.literal("Your shell turns inside out: it holds you in now."));
+                Spells.tell(shell.owner(), Component.literal("Your shell turns inside out: it holds you in now."));
                 return;
             }
         }
@@ -635,7 +637,7 @@ public class PrinceOfAbolition {
     }
 
     /** The projectile nearest to the line of sight, within 'range' and DISTORT_SHOT_AIM of it, not the caster's own. */
-    private static Projectile aimedProjectile(Player player, ServerLevel sl, double range) {
+    static Projectile aimedProjectile(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         Vec3 end = eye.add(look.scale(range));
@@ -656,7 +658,7 @@ public class PrinceOfAbolition {
         return best;
     }
 
-    private static void distortShot(Player player, ServerLevel sl, Projectile shot) {
+    static void distortShot(LivingEntity player, ServerLevel sl, Projectile shot) {
         Entity sender = shot.getOwner();
         Vec3 at = shot.position();
         Vec3 velocity = shot.getDeltaMovement();
@@ -672,7 +674,7 @@ public class PrinceOfAbolition {
         PrinceOfAbolitionFx.distortShot(sl, player, at, sender == null ? null : sender.position());
     }
 
-    private static void distortIntent(Player player, ServerLevel sl, LivingEntity target) {
+    static void distortIntent(LivingEntity player, ServerLevel sl, LivingEntity target) {
         int ticks = PrinceOfAbolitionMarks.put(player, target, Kind.DISTORTED, duration(player, DISTORT_TICKS));
         if (ticks <= 0) return;
         target.getPersistentData().putInt(DISTORT_LEFT, DISTORT_CHARGES);
@@ -709,7 +711,7 @@ public class PrinceOfAbolition {
      * who is also that Prince's enemy; otherwise the nearest other living thing that is not the victim.
      */
     private static LivingEntity nearestAllyOf(ServerLevel sl, LivingEntity attacker, LivingEntity victim) {
-        Player distorter = PrinceOfAbolitionMarks.owner(attacker, Kind.DISTORTED);
+        LivingEntity distorter = PrinceOfAbolitionMarks.owner(attacker, Kind.DISTORTED);
         LivingEntity best = null;
         double bestDistance = Double.MAX_VALUE;
         AABB box = attacker.getBoundingBox().inflate(DISTORT_ALLY_REACH);
@@ -726,7 +728,7 @@ public class PrinceOfAbolition {
     }
 
     /** The nearest shell (a dome) of an enemy that the line of sight passes through within 'range', or null. */
-    private static Dome.Raised aimedShell(Player player, ServerLevel sl, double range) {
+    static Dome.Raised aimedShell(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         for (Dome.Raised shell : Dome.crossedBy(sl, eye, Spells.aimPoint(player, sl, range))) {
             if (shell.owner() != player && shell.owner().isAlive() && Spells.isEnemy(player, shell.owner())
@@ -736,7 +738,7 @@ public class PrinceOfAbolition {
     }
 
     /** Where the gate stands: on the ground where you look (GATE_RANGE), or the spot in the air you look at. */
-    private static Vec3 gateSpot(Player player, ServerLevel sl) {
+    static Vec3 gateSpot(LivingEntity player, ServerLevel sl) {
         double range = range(player, GATE_RANGE);
         Vec3 aimed = Spells.aimPoint(player, sl, range);
         Vec3 ground = Spells.groundNear(player, sl, aimed, 3.0);
@@ -748,7 +750,7 @@ public class PrinceOfAbolition {
      * (PrinceOfAbolitionFx.GATE_SLAMS): a wall GATE_WIDTH wide and GATE_HEIGHT tall (the size its lattice is drawn
      * at, so Sequence Might does not widen it) stands across your view for GATE_TICKS. Enemies cannot cross it either way and their projectiles stop at it (combat/Wall).
      */
-    private static void gate(Player player, ServerLevel sl, Vec3 middle) {
+    static void gate(LivingEntity player, ServerLevel sl, Vec3 middle) {
         float yaw = player.getYRot();
         int ticks = duration(player, GATE_TICKS);
         double width = GATE_WIDTH;                                  // the size its lattice is drawn at
@@ -776,7 +778,7 @@ public class PrinceOfAbolition {
         });
     }
 
-    private static void seal(Player player, ServerLevel sl) {
+    static void seal(LivingEntity player, ServerLevel sl) {
         double radius = area(player, SEAL_RADIUS);
         int ticks = duration(player, SEAL_TICKS);
         Vec3 center = player.position();
@@ -850,7 +852,7 @@ public class PrinceOfAbolition {
     }
 
     /** Disorders one enemy for 'ticks' (Disorder, and the fake self's burst). */
-    static void disorder(Player player, ServerLevel sl, LivingEntity target, int ticks) {
+    static void disorder(LivingEntity player, ServerLevel sl, LivingEntity target, int ticks) {
         int lasts = PrinceOfAbolitionMarks.put(player, target, Kind.DISORDERED, ticks);
         if (lasts <= 0) return;
         PrinceOfAbolitionFx.disorder(sl, player, target, lasts, PrinceOfAbolitionMarks.tag(target, Kind.DISORDERED));
@@ -858,11 +860,11 @@ public class PrinceOfAbolition {
         if (target instanceof Player victim) Spells.keepEffect(victim, MobEffects.NAUSEA, 0, lasts);
     }
 
-    private static boolean isHeld(Player player) {
+    static boolean isHeld(LivingEntity player) {
         return Root.isRooted(player) || Freeze.isFrozen(player) || Slumber.isAsleep(player) || Fear.isAfraid(player);
     }
 
-    private static void unbind(Player player, ServerLevel sl) {
+    static void unbind(LivingEntity player, ServerLevel sl) {
         player.getPersistentData().putLong(UNBOUND_UNTIL, sl.getGameTime() + UNBOUND_TICKS);
         shakeHolds(player);
         PrinceOfAbolitionFx.unbound(sl, player);
@@ -870,14 +872,14 @@ public class PrinceOfAbolition {
     }
 
     /** Every hold on the player ends (Disorder freeing them, and for UNBOUND_TICKS after). */
-    private static void shakeHolds(Player player) {
+    static void shakeHolds(LivingEntity player) {
         if (Root.isRooted(player)) Root.remove(player);
         if (Freeze.isFrozen(player)) Freeze.thaw(player);
         if (Slumber.isAsleep(player)) Slumber.wake(player);
         if (Fear.isAfraid(player)) Fear.end(player);
     }
 
-    private static void paces(Player player, ServerLevel sl, Vec3 to) {
+    static void paces(LivingEntity player, ServerLevel sl, Vec3 to) {
         Vec3 from = player.position();
         int ticks = duration(player, DECOY_TICKS);
         String tag = "poa_paces_" + player.getId() + "_" + sl.getGameTime();
@@ -899,7 +901,7 @@ public class PrinceOfAbolition {
     }
 
     /** Four times a second: an enemy that reaches the fake self bursts it. */
-    private static void decoyWatch(Player player, ServerLevel sl, Vec3 at, long until, String tag) {
+    private static void decoyWatch(LivingEntity player, ServerLevel sl, Vec3 at, long until, String tag) {
         if (!Spells.casterStillHere(player, sl) || sl.getGameTime() >= until) {
             if (Spells.casterStillHere(player, sl)) PrinceOfAbolitionFx.statusEnd(player, Status.PACES);
             return;
@@ -916,7 +918,7 @@ public class PrinceOfAbolition {
     }
 
     /** Earl of the Fallen: for UNTOUCHABLE_TICKS everything aimed at the player misses. */
-    private static void untouchable(Player player, ServerLevel sl) {
+    static void untouchable(LivingEntity player, ServerLevel sl) {
         if (!Beyonder.hasSequence(player, UNTOUCHABLE_SEQUENCE) || !isPrince(player, ANY_SEQUENCE)) return;
         player.getPersistentData().putLong(UNTOUCHABLE_UNTIL, sl.getGameTime() + UNTOUCHABLE_TICKS);
         PrinceOfAbolitionFx.untouchable(sl, player);
@@ -927,7 +929,7 @@ public class PrinceOfAbolition {
     // =========================
 
     /** Once a second: two more hearts from Barbarian on, a footing nothing moves while Iron Will or Coronation lasts. */
-    private static void bodyTick(Player player) {
+    private static void bodyTick(LivingEntity player) {
         Physique.keep(player, Attributes.MAX_HEALTH, HEARTS_ID, 4.0, AttributeModifier.Operation.ADD_VALUE,
                 isPrince(player, PHYSICAL_SEQUENCE));
         Physique.keep(player, Attributes.KNOCKBACK_RESISTANCE, IRON_FOOTING_ID, 1.0, AttributeModifier.Operation.ADD_VALUE,
@@ -935,14 +937,14 @@ public class PrinceOfAbolition {
     }
 
     /** Weakness Detection, twice a second: a gold keyhole over the enemy you look at, for your eyes only. */
-    private static void weaknessDetection(Player player, ServerLevel sl) {
+    private static void weaknessDetection(LivingEntity player, ServerLevel sl) {
         if (!(player instanceof ServerPlayer viewer)) return;
         LivingEntity target = Spells.aimEnemy(player, sl, WEAKNESS_SIGHT);
         if (target != null) PrinceOfAbolitionFx.weaknessDetection(viewer, target);
     }
 
     /** Presence, once a second (SequencePassives): weak hostile mobs near you hesitate. */
-    public static void presence(Player player) {
+    public static void presence(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         boolean any = false;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), PRESENCE_RADIUS)) {
@@ -962,7 +964,7 @@ public class PrinceOfAbolition {
      * you (Concealment and Unnoticed end; the Exiled and those rising from a mausoleum are left alone), and the
      * invisible ones glow.
      */
-    private static void favorableGround(Player player, ServerLevel sl) {
+    private static void favorableGround(LivingEntity player, ServerLevel sl) {
         Vec3 at = player.position();
         AABB box = player.getBoundingBox().inflate(FAVORABLE_RADIUS);
         for (LivingEntity enemy : sl.getEntitiesOfClass(LivingEntity.class, box, e -> e != player && e.isAlive())) {
@@ -989,7 +991,7 @@ public class PrinceOfAbolition {
      * Loose Order (Duke of Entropy), every other tick: a projectile of an enemy (or of nobody) within LOOSE_RADIUS that
      * is coming at you drifts up to LOOSE_DEGREES off, once.
      */
-    private static void looseOrder(Player player, ServerLevel sl) {
+    private static void looseOrder(LivingEntity player, ServerLevel sl) {
         Vec3 body = player.position().add(0, player.getBbHeight() * 0.5, 0);
         for (Projectile shot : sl.getEntitiesOfClass(Projectile.class, player.getBoundingBox().inflate(LOOSE_RADIUS), Entity::isAlive)) {
             if (shot.getPersistentData().getBooleanOr(DRIFTED, false)) continue;
@@ -1012,38 +1014,38 @@ public class PrinceOfAbolition {
     // =========================
 
     /** How many Sequences of Might the player has: 1 at Lawyer (9) ... 10 at Black Emperor (0); 0 off this Pathway. */
-    static int mightSteps(Player player) {
-        if (!SoulCore.getPathway(player).equals(PATHWAY)) return 0;
-        return Math.max(0, Math.min(10, 10 - SoulCore.getSequence(player)));
+    static int mightSteps(LivingEntity player) {
+        if (!Beyonders.pathwayOf(player).equals(PATHWAY)) return 0;                // a player, or a Beyonder mob of it
+        return Math.max(0, Math.min(10, 10 - Beyonders.sequenceOf(player)));
     }
 
     /** Damage dealt times this: Sequence Might and the standing mausoleums. */
-    public static float attack(Player player) {
+    public static float attack(LivingEntity player) {
         return 1f + MIGHT_PER_SEQUENCE * mightSteps(player) + PrinceOfAbolitionMausoleums.might(player);
     }
 
     /** Damage taken divided by this: Sequence Might and the standing mausoleums. */
-    public static float defense(Player player) {
+    public static float defense(LivingEntity player) {
         return 1f + MIGHT_PER_SEQUENCE * mightSteps(player) + PrinceOfAbolitionMausoleums.might(player);
     }
 
     /** A distance this Beyonder aims or reaches, with Sequence Might. */
-    public static double range(Player player, double blocks) {
+    public static double range(LivingEntity player, double blocks) {
         return blocks * (1.0 + MIGHT_PER_SEQUENCE * mightSteps(player)) * magnified(player);
     }
 
     /** A radius, width or height of something this Beyonder makes, with Sequence Might. */
-    public static double area(Player player, double blocks) {
+    public static double area(LivingEntity player, double blocks) {
         return blocks * (1.0 + MIGHT_PER_SEQUENCE * mightSteps(player)) * magnified(player);
     }
 
     /** Magnify waiting for its blow: everything reaches PrinceOfAbolitionFallen.MAGNIFY_REACH times as far and wide. */
-    private static double magnified(Player player) {
+    private static double magnified(LivingEntity player) {
         return PrinceOfAbolitionFallen.isMagnified(player) ? PrinceOfAbolitionFallen.MAGNIFY_REACH : 1.0;
     }
 
     /** How long something this Beyonder puts on others or leaves standing lasts: Sequence Might and Their Order. */
-    public static int duration(Player player, int ticks) {
+    public static int duration(LivingEntity player, int ticks) {
         double longer = 1.0 + MIGHT_PER_SEQUENCE * mightSteps(player);
         if (isPrince(player, THEIR_ORDER_SEQUENCE)) longer *= THEIR_ORDER_LONGER;
         return (int) Math.round(ticks * longer);
@@ -1053,7 +1055,7 @@ public class PrinceOfAbolition {
      * The enemy under the crosshair within range(baseRange); failing that, one this player has Connected (a Bribe)
      * up to CONNECT_REACH times as far.
      */
-    static LivingEntity aim(Player player, ServerLevel sl, double baseRange) {
+    static LivingEntity aim(LivingEntity player, ServerLevel sl, double baseRange) {
         double range = range(player, baseRange);
         LivingEntity target = Spells.aimEnemy(player, sl, range);
         if (target != null) return target;
@@ -1069,13 +1071,13 @@ public class PrinceOfAbolition {
     static final int NO_COOLDOWN_SEQUENCE = 4;          // Earl of the Fallen: no cooldowns at all
 
     /** What a normal press (the last pick again, no cooldown) costs, times the entry's own cost. */
-    static double recastCost(Player player) {
+    static double recastCost(LivingEntity player) {
         if (Beyonder.hasSequence(player, RECAST_ONCE_SEQUENCE)) return 1.0;
         return Beyonder.hasSequence(player, RECAST_TWICE_SEQUENCE) ? 2.0 : 3.0;
     }
 
     /** From Earl of the Fallen no wheel entry has a cooldown. */
-    static boolean noCooldowns(Player player) {
+    static boolean noCooldowns(LivingEntity player) {
         return Beyonder.hasSequence(player, NO_COOLDOWN_SEQUENCE);
     }
 

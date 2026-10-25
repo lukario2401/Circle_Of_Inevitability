@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFx.Status;
@@ -86,11 +87,11 @@ public final class PrinceOfAbolitionMausoleums {
     static final float LAST_REBIRTH_HEALTH = 0.25f;     // ...back where they fell at a quarter of their health...
     static final int LAST_REBIRTH_COOLDOWN = 12000;     // ...once every 10 minutes
 
-    private static final String WARD = "poa_rebirth_ward";
-    private static final String LAST_WARD = "poa_last_rebirth_ward";
-    private static final String LAST_READY = "poa_last_rebirth_ready";       // game time it can save them again
-    private static final String REBORN_UNTIL = "poa_reborn_until";
-    private static final String IN_SANCTUARY = "poa_in_sanctuary";
+    static final String WARD = "poa_rebirth_ward";
+    static final String LAST_WARD = "poa_last_rebirth_ward";
+    static final String LAST_READY = "poa_last_rebirth_ready";       // game time it can save them again
+    static final String REBORN_UNTIL = "poa_reborn_until";
+    static final String IN_SANCTUARY = "poa_in_sanctuary";
 
     /** One mausoleum. 'risen': the game time it stands complete (it counts from then). */
     static final class Mausoleum {
@@ -138,14 +139,14 @@ public final class PrinceOfAbolitionMausoleums {
         }
     }
 
-    private static final Map<UUID, List<Mausoleum>> BY_OWNER = new HashMap<>();
+    static final Map<UUID, List<Mausoleum>> BY_OWNER = new HashMap<>();
 
     // =========================
     // Raising and losing them
     // =========================
 
     /** Raises one at 'ground', its door toward the owner. The tenth lets the oldest crumble first. */
-    static Mausoleum raise(Player player, ServerLevel sl, Vec3 ground) {
+    static Mausoleum raise(LivingEntity player, ServerLevel sl, Vec3 ground) {
         List<Mausoleum> owned = BY_OWNER.computeIfAbsent(player.getUUID(), id -> new ArrayList<>());
         while (owned.size() >= MAX) crumble(owned.get(0), "The oldest of your mausoleums crumbles to make room.");
         float yaw = Spells.yawOf(player.position().subtract(ground));
@@ -195,7 +196,7 @@ public final class PrinceOfAbolitionMausoleums {
      * Every standing one's remaining time is doubled, by at most 'most' ticks each (Exploit). Their pictures are
      * drawn again for the new time and their orders moved. Returns how many were stretched.
      */
-    static int stretchAll(Player player, int most) {
+    static int stretchAll(LivingEntity player, int most) {
         int stretched = 0;
         long now = player.level().getGameTime();
         for (Mausoleum mausoleum : standing(player)) {
@@ -211,7 +212,7 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** All of the player's mausoleums crumble (logout, a lost Pathway). */
-    static void crumbleAll(Player player, ServerLevel sl) {
+    static void crumbleAll(LivingEntity player, ServerLevel sl) {
         List<Mausoleum> owned = BY_OWNER.get(player.getUUID());
         if (owned == null) return;
         for (Mausoleum mausoleum : new ArrayList<>(owned)) crumble(mausoleum, null);
@@ -228,7 +229,7 @@ public final class PrinceOfAbolitionMausoleums {
     // =========================
 
     /** The ones standing complete in the player's world, oldest first. */
-    static List<Mausoleum> standing(Player player) {
+    static List<Mausoleum> standing(LivingEntity player) {
         List<Mausoleum> found = new ArrayList<>();
         List<Mausoleum> owned = BY_OWNER.get(player.getUUID());
         if (owned == null) return found;
@@ -239,25 +240,25 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** How many stand complete in the player's world. */
-    public static int count(Player player) {
+    public static int count(LivingEntity player) {
         return standing(player).size();
     }
 
     /** How many the player has at all, rising ones too (what the next one costs more for). */
-    static int owned(Player player) {
+    static int owned(LivingEntity player) {
         List<Mausoleum> owned = BY_OWNER.get(player.getUUID());
         return owned == null ? 0 : owned.size();
     }
 
     /** The extra attack and defense they give (0.05 for each, twice that while crowned). Only for a Prince Of Abolition. */
-    static float might(Player player) {
-        if (!SoulCore.getPathway(player).equals(PrinceOfAbolition.PATHWAY)) return 0f;
+    static float might(LivingEntity player) {
+        if (!Beyonders.pathwayOf(player).equals(PrinceOfAbolition.PATHWAY)) return 0f;
         float each = PrinceOfAbolition.MIGHT_PER_MAUSOLEUM * (PrinceOfAbolitionSovereign.isCrowned(player) ? PrinceOfAbolitionSovereign.CORONATION_MIGHT : 1f);
         return each * count(player);
     }
 
     /** The standing one nearest to a point, or null. */
-    static Mausoleum nearest(Player player, Vec3 to) {
+    static Mausoleum nearest(LivingEntity player, Vec3 to) {
         Mausoleum best = null;
         double bestDistance = Double.MAX_VALUE;
         for (Mausoleum mausoleum : standing(player)) {
@@ -271,7 +272,7 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** The standing one nearest to the crosshair, at most 'degrees' off it and 'range' away, or null. */
-    static Mausoleum aimed(Player player, double range, double degrees) {
+    static Mausoleum aimed(LivingEntity player, double range, double degrees) {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         double narrowest = Math.cos(Math.toRadians(degrees));
@@ -291,7 +292,7 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** True while the player is out of the world, waiting to rise from a mausoleum. */
-    static boolean isReborn(Player player) {
+    static boolean isReborn(LivingEntity player) {
         return PrinceOfAbolition.isActive(player, REBORN_UNTIL);
     }
 
@@ -299,7 +300,7 @@ public final class PrinceOfAbolitionMausoleums {
     // Every second, for the owner
     // =========================
 
-    static void ownerTick(Player player, ServerLevel sl) {
+    static void ownerTick(LivingEntity player, ServerLevel sl) {
         List<Mausoleum> owned = BY_OWNER.get(player.getUUID());
         long now = sl.getGameTime();
         boolean inSanctuary = false;
@@ -328,7 +329,7 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** Hostile mobs hunting the owner (or their side) that stand next to it strike it. */
-    private static void mobsStrike(Player player, ServerLevel sl, Mausoleum mausoleum) {
+    private static void mobsStrike(LivingEntity player, ServerLevel sl, Mausoleum mausoleum) {
         AABB reach = mausoleum.body().inflate(MOB_REACH);
         for (Mob mob : sl.getEntitiesOfClass(Mob.class, reach, LivingEntity::isAlive)) {
             LivingEntity hunted = mob.getTarget();
@@ -350,7 +351,7 @@ public final class PrinceOfAbolitionMausoleums {
             for (Mausoleum mausoleum : new ArrayList<>(owned)) {
                 if (mausoleum.level != sl || !mausoleum.standing() || mausoleum.owner.equals(player.getUUID())) continue;
                 if (mausoleum.ground.distanceToSqr(eye) > (PLAYER_REACH + HEIGHT) * (PLAYER_REACH + HEIGHT)) continue;
-                Player owner = sl.getPlayerByUUID(mausoleum.owner);
+                LivingEntity owner = sl.getEntity(mausoleum.owner) instanceof LivingEntity found ? found : null;   // a player or a Beyonder mob
                 if (owner != null && !Spells.isEnemy(owner, player)) continue;           // a friend does not
                 if (!looksAt(eye, look, mausoleum.body())) continue;
                 float blow = 1f;
@@ -377,7 +378,7 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** Sanctuary round one mausoleum, once a second. True if the owner stands in it. */
-    private static boolean sanctuary(Player player, ServerLevel sl, Mausoleum mausoleum) {
+    private static boolean sanctuary(LivingEntity player, ServerLevel sl, Mausoleum mausoleum) {
         double radius = PrinceOfAbolition.area(player, SANCTUARY_RADIUS);
         Vec3 middle = mausoleum.ground.add(0, 1, 0);
         boolean ownerIn = player.position().distanceTo(mausoleum.ground) <= radius;
@@ -387,8 +388,7 @@ public final class PrinceOfAbolitionMausoleums {
                 player.heal(SANCTUARY_HEAL);
                 PrinceOfAbolitionFx.sanctuaryMend(sl, player);
             }
-            float back = Beyonder.spiritualityRegenPerTick(player) * 20f * SANCTUARY_SPIRIT;
-            if (back > 0f) SoulCore.setSpiritualityQuietly(player, SoulCore.getSpirituality(player) + back);
+            Spells.giveSpirituality(player, Spells.spiritualityRegenOf(player) * 20f * SANCTUARY_SPIRIT);
         }
         for (LivingEntity ally : Spells.alliesAround(player, sl, middle, radius)) {
             anyone = true;
@@ -414,7 +414,7 @@ public final class PrinceOfAbolitionMausoleums {
      * Once a second: the death ward is armed while a mausoleum stands (Rebirth), or, for a Black Emperor with none
      * left, while at least LAST_REBIRTH_ORDERS orders stand and Last Rebirth is ready; it is taken off otherwise.
      */
-    private static void rebirthWard(Player player, ServerLevel sl) {
+    private static void rebirthWard(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         boolean ours = data.getBooleanOr(WARD, false);
         boolean last = data.getBooleanOr(LAST_WARD, false);
@@ -451,13 +451,13 @@ public final class PrinceOfAbolitionMausoleums {
      * Last Rebirth: the killing blow did not take though no mausoleum stands; the orders hold the Black Emperor up.
      * Out of the world for LAST_REBIRTH_TICKS (status/Exile), then back where they fell.
      */
-    private static void lastFall(Player player, ServerLevel sl) {
+    private static void lastFall(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         data.remove(LAST_WARD);
         data.putLong(LAST_READY, sl.getGameTime() + LAST_REBIRTH_COOLDOWN);
         PrinceOfAbolitionFx.rebirthFall(sl, player);
         PrinceOfAbolitionFx.status(player, Status.REBIRTH, LAST_REBIRTH_TICKS);
-        player.sendSystemMessage(Component.literal("Your orders still stand, and they will not let you fall. You slip out of the world..."));
+        Spells.tell(player, Component.literal("Your orders still stand, and they will not let you fall. You slip out of the world..."));
         Exile.banish(player, LAST_REBIRTH_TICKS, player.position(), (who, level) -> {
             if (!(who instanceof Player back)) return;
             PrinceOfAbolitionFx.statusEnd(back, Status.REBIRTH);
@@ -467,7 +467,7 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** The killing blow did not take: the owner slips out of the world, and rises later from a mausoleum. */
-    private static void fall(Player player, ServerLevel sl) {
+    private static void fall(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         data.remove(WARD);
         long until = sl.getGameTime() + REBIRTH_TICKS;
@@ -476,7 +476,7 @@ public final class PrinceOfAbolitionMausoleums {
         Root.apply(player, REBIRTH_TICKS, RootRestriction.EVERYTHING);
         PrinceOfAbolitionFx.rebirthFall(sl, player);
         PrinceOfAbolitionFx.status(player, Status.REBIRTH, REBIRTH_TICKS);
-        player.sendSystemMessage(Component.literal("Your mausoleums will not let you go. You slip out of the world..."));
+        Spells.tell(player, Component.literal("Your mausoleums will not let you go. You slip out of the world..."));
         Later.run(sl, REBIRTH_TICKS, () -> {
             if (player.getPersistentData().getLongOr(REBORN_UNTIL, 0L) != until || !Spells.casterStillHere(player, sl)) return;
             rise(player, sl);
@@ -484,7 +484,7 @@ public final class PrinceOfAbolitionMausoleums {
     }
 
     /** Ten seconds later: up again from the nearest mausoleum (where they fell, if none is left), which crumbles. */
-    private static void rise(Player player, ServerLevel sl) {
+    private static void rise(LivingEntity player, ServerLevel sl) {
         player.getPersistentData().remove(REBORN_UNTIL);
         Root.remove(player);
         Concealment.reveal(player);
@@ -508,11 +508,11 @@ public final class PrinceOfAbolitionMausoleums {
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, ground, PrinceOfAbolition.area(player, REBIRTH_MAJESTY))) {
             PrinceOfAbolitionFallen.kneel(player, sl, enemy, kneel);
         }
-        player.sendSystemMessage(Component.literal(from != null ? "You rise again from your mausoleum." : "You rise again where you fell."));
+        Spells.tell(player, Component.literal(from != null ? "You rise again from your mausoleum." : "You rise again where you fell."));
     }
 
     /** After a relog: a rising that never finished is over (its hold and its hiding were saved, its timer was not). */
-    static boolean clearRebirth(Player player) {
+    static boolean clearRebirth(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         boolean was = data.contains(REBORN_UNTIL);
         data.remove(REBORN_UNTIL);

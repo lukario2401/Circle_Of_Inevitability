@@ -68,97 +68,97 @@ public final class PrinceOfAbolitionSovereign {
     static final int SOVEREIGN_SEQUENCE = 6;                    // the key
 
     // Ruin
-    private static final int RUIN_SEQUENCE = 6;
-    private static final int RUIN_COST = 2800;
-    private static final int RUIN_COOLDOWN = 200;
-    private static final double RUIN_RANGE = 24.0;
-    private static final double RUIN_WIDTH = 0.6;               // how far from the line a body is still struck
-    private static final float RUIN_DAMAGE = 70f;
-    private static final float RUIN_ROT = 5f;                   // the rot: 5 a second at first...
-    private static final float RUIN_ROT_GROWTH = 1.5f;          // ...1.5 more every second, until cleansed (no healing after 5 s)
+    static final int RUIN_SEQUENCE = 6;
+    static final int RUIN_COST = 2800;
+    static final int RUIN_COOLDOWN = 200;
+    static final double RUIN_RANGE = 24.0;
+    static final double RUIN_WIDTH = 0.6;               // how far from the line a body is still struck
+    static final float RUIN_DAMAGE = 70f;
+    static final float RUIN_ROT = 5f;                   // the rot: 5 a second at first...
+    static final float RUIN_ROT_GROWTH = 1.5f;          // ...1.5 more every second, until cleansed (no healing after 5 s)
 
     // Frenzy
-    private static final int FRENZY_SEQUENCE = 3;
-    private static final int FRENZY_COST = 12000;
-    private static final int FRENZY_COOLDOWN = 200;
-    private static final double FRENZY_RANGE = 24.0;
-    private static final int FRENZY_BOLTS = 12;
-    private static final float FRENZY_DAMAGE = 25f;
-    private static final int FRENZY_DISORDER = 40;
+    static final int FRENZY_SEQUENCE = 3;
+    static final int FRENZY_COST = 12000;
+    static final int FRENZY_COOLDOWN = 200;
+    static final double FRENZY_RANGE = 24.0;
+    static final int FRENZY_BOLTS = 12;
+    static final float FRENZY_DAMAGE = 25f;
+    static final int FRENZY_DISORDER = 40;
 
     // Entropy
-    private static final int ENTROPY_SEQUENCE = 2;
-    private static final int ENTROPY_COST = 20000;
-    private static final int ENTROPY_COOLDOWN = 400;
-    private static final double ENTROPY_RANGE = 24.0;
-    private static final double ENTROPY_RADIUS = 16.0;
-    private static final int ENTROPY_TICKS = 400;
-    private static final int ENTROPY_FULL_AFTER = 160;          // it grows to full strength over 8 seconds
-    private static final float ENTROPY_SHOVE_CHANCE = 0.3f;     // twice a second at full strength: the chance of a shove...
-    private static final double ENTROPY_SHOVE = 0.6;            // ...this hard
-    private static final double ENTROPY_SCATTER = 30.0;         // projectiles in it turn up to this many degrees off
-    private static final float ENTROPY_SWING = 0.5f;            // enemies' damage swings between 0.5 and 1.5 times
+    static final int ENTROPY_SEQUENCE = 2;
+    static final int ENTROPY_COST = 20000;
+    static final int ENTROPY_COOLDOWN = 400;
+    static final double ENTROPY_RANGE = 24.0;
+    static final double ENTROPY_RADIUS = 16.0;
+    static final int ENTROPY_TICKS = 400;
+    static final int ENTROPY_FULL_AFTER = 160;          // it grows to full strength over 8 seconds
+    static final float ENTROPY_SHOVE_CHANCE = 0.3f;     // twice a second at full strength: the chance of a shove...
+    static final double ENTROPY_SHOVE = 0.6;            // ...this hard
+    static final double ENTROPY_SCATTER = 30.0;         // projectiles in it turn up to this many degrees off
+    static final float ENTROPY_SWING = 0.5f;            // enemies' damage swings between 0.5 and 1.5 times
     static final String ENTROPY_ZONE = "poa_entropy";
 
     // Abolition
-    private static final int ABOLITION_SEQUENCE = 1;
-    private static final int ABOLITION_COST = 30000;
-    private static final int ABOLITION_COOLDOWN = 600;
-    private static final double ABOLITION_RADIUS = 12.0;
-    private static final int ABOLITION_TICKS = 300;
-    private static final int ABOLITION_FIELDS_SEQUENCE = 0;     // Black Emperor: no one else's field reaches inside
+    static final int ABOLITION_SEQUENCE = 1;
+    static final int ABOLITION_COST = 30000;
+    static final int ABOLITION_COOLDOWN = 600;
+    static final double ABOLITION_RADIUS = 12.0;
+    static final int ABOLITION_TICKS = 300;
+    static final int ABOLITION_FIELDS_SEQUENCE = 0;     // Black Emperor: no one else's field reaches inside
     static final String ABOLITION_DOME = "poa_abolition";
 
     // Exile
-    private static final int EXILE_SEQUENCE = 1;
-    private static final int EXILE_COST = 15000;
-    private static final int EXILE_COOLDOWN = 400;
-    private static final double EXILE_RANGE = 24.0;
-    private static final int EXILE_TICKS = 120;                 // an enemy...
-    private static final int EXILE_BOSS_TICKS = 40;             // ...a boss...
-    private static final int EXILE_ALLY_TICKS = 60;             // ...an ally, out of harm's way...
-    private static final int EXILE_SELF_TICKS = 80;             // ...yourself, back...
-    private static final double EXILE_SELF_RANGE = 20.0;        // ...where you aim, this far
+    static final int EXILE_SEQUENCE = 1;
+    static final int EXILE_COST = 15000;
+    static final int EXILE_COOLDOWN = 400;
+    static final double EXILE_RANGE = 24.0;
+    static final int EXILE_TICKS = 120;                 // an enemy...
+    static final int EXILE_BOSS_TICKS = 40;             // ...a boss...
+    static final int EXILE_ALLY_TICKS = 60;             // ...an ally, out of harm's way...
+    static final int EXILE_SELF_TICKS = 80;             // ...yourself, back...
+    static final double EXILE_SELF_RANGE = 20.0;        // ...where you aim, this far
 
     // Inversion
-    private static final int INVERSION_SEQUENCE = 0;
-    private static final int INVERSION_COST = 45000;
-    private static final int INVERSION_COOLDOWN = 600;
-    private static final double INVERSION_RADIUS = 20.0;
-    private static final int INVERSION_TICKS = 200;
-    private static final int INVERTED_MOST = 200;               // a good effect turned lasts this long at most
+    static final int INVERSION_SEQUENCE = 0;
+    static final int INVERSION_COST = 45000;
+    static final int INVERSION_COOLDOWN = 600;
+    static final double INVERSION_RADIUS = 20.0;
+    static final int INVERSION_TICKS = 200;
+    static final int INVERTED_MOST = 200;               // a good effect turned lasts this long at most
     static final String INVERSION_ZONE = "poa_inversion";
 
     // Coronation
-    private static final int CORONATION_SEQUENCE = 0;
-    private static final int CORONATION_COST = 30000;
-    private static final int CORONATION_COOLDOWN = 600;
-    private static final int CORONATION_TICKS = 400;
+    static final int CORONATION_SEQUENCE = 0;
+    static final int CORONATION_COST = 30000;
+    static final int CORONATION_COOLDOWN = 600;
+    static final int CORONATION_TICKS = 400;
     static final float CORONATION_MIGHT = 2f;                   // the mausoleum bonus, twice over
-    private static final int CORONATION_PULSE_EVERY = 100;      // a Majesty pulse every 5 seconds...
-    private static final double CORONATION_PULSE_RADIUS = 10.0; // ...this wide
+    static final int CORONATION_PULSE_EVERY = 100;      // a Majesty pulse every 5 seconds...
+    static final double CORONATION_PULSE_RADIUS = 10.0; // ...this wide
 
     // Decree
-    private static final int DECREE_SEQUENCE = 0;
-    private static final int DECREE_COST = 25000;
-    private static final int DECREE_COOLDOWN = 600;
-    private static final double DECREE_RANGE = 40.0;
-    private static final float DECREE_DAMAGE = 300f;
-    private static final float DECREE_PER_MAUSOLEUM = 0.1f;     // 10% more for every standing mausoleum
-    private static final float DECREE_EXECUTE = 0.4f;           // a non-boss left under 40% dies
+    static final int DECREE_SEQUENCE = 0;
+    static final int DECREE_COST = 25000;
+    static final int DECREE_COOLDOWN = 600;
+    static final double DECREE_RANGE = 40.0;
+    static final float DECREE_DAMAGE = 300f;
+    static final float DECREE_PER_MAUSOLEUM = 0.1f;     // 10% more for every standing mausoleum
+    static final float DECREE_EXECUTE = 0.4f;           // a non-boss left under 40% dies
 
     // Saved on the player
-    private static final String CROWNED_UNTIL = "poa_crowned_until";
-    private static final String CROWN_TAG = "poa_crown_tag";
+    static final String CROWNED_UNTIL = "poa_crowned_until";
+    static final String CROWN_TAG = "poa_crown_tag";
 
     /** Who has which field or pocket open right now (the zones and domes themselves are in Zone and Dome). */
-    private static final Set<UUID> ENTROPY_OWNERS = new HashSet<>();
-    private static final Map<UUID, Long> ENTROPY_START = new HashMap<>();
-    private static final Set<UUID> ABOLITION_OWNERS = new HashSet<>();
-    private static final Set<UUID> INVERTERS = new HashSet<>();
+    static final Set<UUID> ENTROPY_OWNERS = new HashSet<>();
+    static final Map<UUID, Long> ENTROPY_START = new HashMap<>();
+    static final Set<UUID> ABOLITION_OWNERS = new HashSet<>();
+    static final Set<UUID> INVERTERS = new HashSet<>();
 
     /** Inversion: what each good effect turns into (missing here: it is simply taken off). */
-    private static final Map<Holder<MobEffect>, Holder<MobEffect>> OPPOSITE = new HashMap<>();
+    static final Map<Holder<MobEffect>, Holder<MobEffect>> OPPOSITE = new HashMap<>();
 
     static {
         OPPOSITE.put(MobEffects.STRENGTH, MobEffects.WEAKNESS);
@@ -175,7 +175,7 @@ public final class PrinceOfAbolitionSovereign {
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("poa_sovereign", "Sovereign")
+    static final AbilityWheel WHEEL = AbilityWheel.create("poa_sovereign", "Sovereign")
             .radius(80)
             .quickCastCooldown(false).quickCastCostBy(PrinceOfAbolition::recastCost)
             .noCooldownsWhen(PrinceOfAbolition::noCooldowns)
@@ -213,7 +213,7 @@ public final class PrinceOfAbolitionSovereign {
     // starts to rot (status/Corrosion): RUIN_ROT a second, RUIN_ROT_GROWTH more every second, until it is cleansed or
     // dies, and after 5 seconds of it no healing at all. A second Ruin on a rotting enemy deepens it.
     // =========================
-    private static AbilityWheel.Result ruin(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result ruin(LivingEntity player, ServerLevel sl) {
         double range = PrinceOfAbolition.range(player, RUIN_RANGE);
         Vec3 end = Spells.aimPoint(player, sl, range);
         double width = PrinceOfAbolition.area(player, RUIN_WIDTH);
@@ -237,7 +237,7 @@ public final class PrinceOfAbolitionSovereign {
     // different enemy within FRENZY_RANGE (the nearest first; round again if there are fewer). Each does
     // FRENZY_DAMAGE and Disorders what it hits for FRENZY_DISORDER. With no enemies they fly out in a ring and fade.
     // =========================
-    private static AbilityWheel.Result frenzy(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result frenzy(LivingEntity player, ServerLevel sl) {
         List<LivingEntity> near = Spells.enemiesAround(player, sl, player.position(), PrinceOfAbolition.range(player, FRENZY_RANGE));
         near.sort(Comparator.comparingDouble(enemy -> enemy.distanceToSqr(player)));
         List<LivingEntity> targets = near.size() > FRENZY_BOLTS ? new ArrayList<>(near.subList(0, FRENZY_BOLTS)) : near;
@@ -263,12 +263,12 @@ public final class PrinceOfAbolitionSovereign {
     // 1 - ENTROPY_SWING and 1 + ENTROPY_SWING of what it should be (all of it scaled by the field's strength). You and
     // your allies are untouched, and Exploit and Magnify cost you nothing inside it. One standing order.
     // =========================
-    private static AbilityWheel.Result entropy(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result entropy(LivingEntity player, ServerLevel sl) {
         double range = PrinceOfAbolition.range(player, ENTROPY_RANGE);
         Vec3 aimed = Spells.aimGround(player, sl, range);
         Vec3 ground = aimed == null ? null : Spells.groundNear(player, sl, aimed, 2.0);
         if (ground == null) {
-            player.sendSystemMessage(Component.literal("There is no ground there for order to come undone on."));
+            Spells.tell(player, Component.literal("There is no ground there for order to come undone on."));
             return AbilityWheel.Result.REFUSED;
         }
         double radius = PrinceOfAbolition.area(player, ENTROPY_RADIUS);
@@ -314,7 +314,7 @@ public final class PrinceOfAbolitionSovereign {
     }
 
     /** Projectiles of enemies (or of nobody) in the field turn off course, once each. */
-    private static void scatter(Player player, ServerLevel sl, Vec3 ground, double radius, float strength) {
+    private static void scatter(LivingEntity player, ServerLevel sl, Vec3 ground, double radius, float strength) {
         AABB box = new AABB(ground, ground).inflate(radius, 8, radius).move(0, 4, 0);
         for (Projectile shot : sl.getEntitiesOfClass(Projectile.class, box, Entity::isAlive)) {
             if (shot.getPersistentData().getBooleanOr("poa_scattered", false)) continue;
@@ -332,7 +332,7 @@ public final class PrinceOfAbolitionSovereign {
     }
 
     /** True while the player stands in their own Entropy field. */
-    static boolean inOwnEntropy(Player player) {
+    static boolean inOwnEntropy(LivingEntity player) {
         return ENTROPY_OWNERS.contains(player.getUUID()) && Zone.covers(player, ENTROPY_ZONE, player.position());
     }
 
@@ -357,7 +357,7 @@ public final class PrinceOfAbolitionSovereign {
     // (0): no one else's field or zone reaches inside either (shelteredFromZone). Cast it again to close it early
     // (free). One standing order.
     // =========================
-    private static AbilityWheel.Result abolition(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result abolition(LivingEntity player, ServerLevel sl) {
         if (Dome.isRaised(player, ABOLITION_DOME)) {
             Dome.close(player, ABOLITION_DOME);
             return AbilityWheel.Result.FREE;
@@ -407,7 +407,7 @@ public final class PrinceOfAbolitionSovereign {
     }
 
     /** Black Emperor's Abolition: no zone from outside the pocket acts on anyone inside it. */
-    static boolean shelteredFromZone(Player zoneOwner, LivingEntity entity) {
+    static boolean shelteredFromZone(LivingEntity zoneOwner, LivingEntity entity) {
         if (ABOLITION_OWNERS.isEmpty() || !(entity.level() instanceof ServerLevel sl)) return false;
         for (UUID id : ABOLITION_OWNERS) {
             Player owner = sl.getPlayerByUUID(id);
@@ -423,7 +423,7 @@ public final class PrinceOfAbolitionSovereign {
     // left. Aimed at an ally it is saved from whatever was coming, for EXILE_ALLY_TICKS. Aimed at nothing you abolish
     // yourself for EXILE_SELF_TICKS and come back where you aim, up to EXILE_SELF_RANGE away.
     // =========================
-    private static AbilityWheel.Result exile(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result exile(LivingEntity player, ServerLevel sl) {
         double range = PrinceOfAbolition.range(player, EXILE_RANGE);
         LivingEntity target = PrinceOfAbolition.aim(player, sl, EXILE_RANGE);
         boolean ally = false;
@@ -436,14 +436,14 @@ public final class PrinceOfAbolitionSovereign {
             int ticks = PrinceOfAbolition.duration(player, base);
             PrinceOfAbolitionFx.exile(sl, target);
             if (!Exile.banish(target, ticks, null, PrinceOfAbolitionSovereign::exileBack)) {
-                player.sendSystemMessage(Component.literal("It will not leave the world."));
+                Spells.tell(player, Component.literal("It will not leave the world."));
                 return AbilityWheel.Result.REFUSED;
             }
             if (target instanceof Player victim) PrinceOfAbolitionFx.status(victim, Status.EXILE, ticks);
             return AbilityWheel.Result.DONE;
         }
         if (Root.has(player, RootRestriction.TELEPORT)) {
-            player.sendSystemMessage(Component.literal("You are held fast; the world will not let you go."));
+            Spells.tell(player, Component.literal("You are held fast; the world will not let you go."));
             return AbilityWheel.Result.REFUSED;
         }
         Vec3 to = Spells.blinkSpot(player, sl, PrinceOfAbolition.range(player, EXILE_SELF_RANGE));
@@ -459,7 +459,7 @@ public final class PrinceOfAbolitionSovereign {
     }
 
     /** The ally nearest the crosshair, within 'range', 1.2 blocks off the line of sight at most, in plain view. */
-    private static LivingEntity aimedAlly(Player player, ServerLevel sl, double range) {
+    private static LivingEntity aimedAlly(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         LivingEntity best = null;
@@ -484,7 +484,7 @@ public final class PrinceOfAbolitionSovereign {
     // receive hurts them (inverterOver); every second their good effects turn into their opposites (OPPOSITE; the
     // rest are taken off), and the light goes out for them (Darkness).
     // =========================
-    private static AbilityWheel.Result inversion(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result inversion(LivingEntity player, ServerLevel sl) {
         double radius = PrinceOfAbolition.area(player, INVERSION_RADIUS);
         int ticks = PrinceOfAbolition.duration(player, INVERSION_TICKS);
         String tag = "poa_inversion_" + player.getId() + "_" + sl.getGameTime();
@@ -554,9 +554,9 @@ public final class PrinceOfAbolitionSovereign {
     // is CORONATION_MIGHT times as big while it lasts (PrinceOfAbolitionMausoleums.might), a Majesty pulse rolls out
     // of you every CORONATION_PULSE_EVERY (PrinceOfAbolitionFallen.majestyPulse), and you cannot be knocked back.
     // =========================
-    private static AbilityWheel.Result coronation(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result coronation(LivingEntity player, ServerLevel sl) {
         if (PrinceOfAbolitionMausoleums.count(player) < 1) {
-            player.sendSystemMessage(Component.literal("No mausoleum stands to crown you."));
+            Spells.tell(player, Component.literal("No mausoleum stands to crown you."));
             return AbilityWheel.Result.REFUSED;
         }
         CompoundTag data = player.getPersistentData();
@@ -572,7 +572,7 @@ public final class PrinceOfAbolitionSovereign {
     }
 
     /** Once a second while crowned: the pulse when it is due, the end when the time is up. */
-    private static void crownBeat(Player player, ServerLevel sl, String tag, int beat) {
+    private static void crownBeat(LivingEntity player, ServerLevel sl, String tag, int beat) {
         CompoundTag data = player.getPersistentData();
         if (!tag.equals(data.getStringOr(CROWN_TAG, ""))) return;                     // crowned again since
         if (!Spells.casterStillHere(player, sl) || !isCrowned(player)) {
@@ -591,12 +591,12 @@ public final class PrinceOfAbolitionSovereign {
     }
 
     /** True while the mausoleums crown the player. */
-    static boolean isCrowned(Player player) {
+    static boolean isCrowned(LivingEntity player) {
         return PrinceOfAbolition.isActive(player, CROWNED_UNTIL);
     }
 
     /** Exploit on oneself: a Coronation running is doubled, by 'most' ticks at most. */
-    static void stretchCoronation(Player player, int most) {
+    static void stretchCoronation(LivingEntity player, int most) {
         if (!isCrowned(player) || !(player.level() instanceof ServerLevel sl)) return;
         CompoundTag data = player.getPersistentData();
         long now = sl.getGameTime();
@@ -615,10 +615,10 @@ public final class PrinceOfAbolitionSovereign {
     // (Spells.strikeTrue): a raised shield, armor, Protection, Resistance and death wards do not hold. A non-boss left
     // under DECREE_EXECUTE of its health dies.
     // =========================
-    private static AbilityWheel.Result decree(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result decree(LivingEntity player, ServerLevel sl) {
         LivingEntity target = PrinceOfAbolition.aim(player, sl, DECREE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one in sight to hear your word."));
+            Spells.tell(player, Component.literal("There is no one in sight to hear your word."));
             return AbilityWheel.Result.REFUSED;
         }
         int mausoleums = PrinceOfAbolitionMausoleums.count(player);
@@ -639,7 +639,7 @@ public final class PrinceOfAbolitionSovereign {
     // =========================
 
     /** The Pathway was lost: every field, pocket and crown of this player ends. */
-    static void endAll(Player player) {
+    static void endAll(LivingEntity player) {
         Zone.close(player, ENTROPY_ZONE);
         Zone.close(player, INVERSION_ZONE);
         if (Dome.isRaised(player, ABOLITION_DOME)) Dome.close(player, ABOLITION_DOME);

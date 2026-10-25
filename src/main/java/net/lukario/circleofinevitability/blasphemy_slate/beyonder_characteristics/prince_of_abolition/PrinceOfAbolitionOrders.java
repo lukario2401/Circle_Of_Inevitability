@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.HashMap;
@@ -29,12 +30,12 @@ public final class PrinceOfAbolitionOrders {
     /** One standing order: until this game time, and on this entity (null: not on anyone). */
     private record Order(long until, UUID on) {}
 
-    private static final Map<UUID, Map<String, Order>> ORDERS = new HashMap<>();
+    static final Map<UUID, Map<String, Order>> ORDERS = new HashMap<>();
     /** The count last shown on each player's screen (-1 / missing: show it again). */
-    private static final Map<UUID, Integer> SHOWN = new HashMap<>();
+    static final Map<UUID, Integer> SHOWN = new HashMap<>();
 
     /** One more standing order (the same key again only moves its end). */
-    public static void add(Player player, String key, long until, Entity on) {
+    public static void add(LivingEntity player, String key, long until, Entity on) {
         if (player == null || player.level().isClientSide()) return;
         ORDERS.computeIfAbsent(player.getUUID(), id -> new LinkedHashMap<>())
                 .put(key, new Order(until, on == null ? null : on.getUUID()));
@@ -42,7 +43,7 @@ public final class PrinceOfAbolitionOrders {
     }
 
     /** It ended early. */
-    public static void remove(Player player, String key) {
+    public static void remove(LivingEntity player, String key) {
         if (player == null) return;
         Map<String, Order> orders = ORDERS.get(player.getUUID());
         if (orders != null && orders.remove(key) != null) refresh(player, false);
@@ -61,7 +62,7 @@ public final class PrinceOfAbolitionOrders {
     }
 
     /** How many orders the player has standing now, at most ORDER_CAP. */
-    public static int count(Player player) {
+    public static int count(LivingEntity player) {
         Map<String, Order> orders = ORDERS.get(player.getUUID());
         if (orders == null || orders.isEmpty()) return 0;
         long now = player.level().getGameTime();
@@ -71,7 +72,7 @@ public final class PrinceOfAbolitionOrders {
     }
 
     /** Once a second for a Prince Of Abolition: the ones that ran out go, and the counter shows the count. */
-    static void tick(Player player) {
+    static void tick(LivingEntity player) {
         Map<String, Order> orders = ORDERS.get(player.getUUID());
         if (orders != null) {
             long now = player.level().getGameTime();
@@ -92,19 +93,19 @@ public final class PrinceOfAbolitionOrders {
     }
 
     /** Logout, a lost Pathway: nothing stands any more and the counter goes. */
-    static void clear(Player player) {
+    static void clear(LivingEntity player) {
         ORDERS.remove(player.getUUID());
         SHOWN.remove(player.getUUID());
         PrinceOfAbolitionFx.orderEnd(player);
     }
 
     /** After a relog or a respawn the counter is drawn again at the next tick. */
-    static void showAgain(Player player) {
+    static void showAgain(LivingEntity player) {
         SHOWN.remove(player.getUUID());
     }
 
     /** Sends the count when it changed; 'raised' shows the small crown when it went up. */
-    private static void refresh(Player player, boolean raised) {
+    private static void refresh(LivingEntity player, boolean raised) {
         int count = count(player);
         Integer shown = SHOWN.get(player.getUUID());
         if (shown != null && shown == count) return;

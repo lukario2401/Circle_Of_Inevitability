@@ -84,7 +84,7 @@ public final class PrinceOfAbolitionMarks {
      * Puts the mark on 'target' from 'owner' for 'ticks' (or longer, see above). Returns how long it really lasts:
      * 0 if it did not take (Iron Will, dead, the owner itself). Putting it again starts it over.
      */
-    public static int put(Player owner, LivingEntity target, Kind kind, int ticks) {
+    public static int put(LivingEntity owner, LivingEntity target, Kind kind, int ticks) {
         if (owner == null || target == null || target == owner || !target.isAlive() || ticks <= 0) return 0;
         if (!(target.level() instanceof ServerLevel sl)) return 0;
         if (kind.mind && target instanceof Player victim && PrinceOfAbolition.shrugsMind(victim)) {
@@ -129,13 +129,13 @@ public final class PrinceOfAbolitionMarks {
         return has(entity, kind) ? entity.getPersistentData().getStringOr(kind.key() + "_by", "") : "";
     }
 
-    /** The player who put it there, if they are in this level; else null. */
-    public static Player owner(Entity entity, Kind kind) {
+    /** Who put it there (a player or a Beyonder mob), if they are in this level; else null. */
+    public static LivingEntity owner(Entity entity, Kind kind) {
         if (!(entity.level() instanceof ServerLevel sl)) return null;
         String id = byId(entity, kind);
         if (id.isEmpty()) return null;
         try {
-            return sl.getPlayerByUUID(UUID.fromString(id));
+            return sl.getEntity(UUID.fromString(id)) instanceof LivingEntity found ? found : null;
         } catch (IllegalArgumentException e) {
             return null;
         }

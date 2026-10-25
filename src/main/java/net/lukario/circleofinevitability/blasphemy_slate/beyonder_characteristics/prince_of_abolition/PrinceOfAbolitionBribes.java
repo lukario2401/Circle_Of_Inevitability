@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFx.Bribe;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFx.Status;
@@ -54,55 +55,55 @@ public final class PrinceOfAbolitionBribes {
     // =========================
 
     static final int BRIBE_SEQUENCE = 7;                        // the key
-    private static final double BRIBE_RANGE = 16.0;
-    private static final double BRIBE_SPREAD = 3.0;             // an actual Bribe reaches the enemies this close to the target
-    private static final float ACTUAL_LONGER = 1.5f;
-    private static final int SPREAD_SEQUENCE = 4;               // Earl of the Fallen: every Bribe spreads
+    static final double BRIBE_RANGE = 16.0;
+    static final double BRIBE_SPREAD = 3.0;             // an actual Bribe reaches the enemies this close to the target
+    static final float ACTUAL_LONGER = 1.5f;
+    static final int SPREAD_SEQUENCE = 4;               // Earl of the Fallen: every Bribe spreads
 
     // Weaken
-    private static final int WEAKEN_COST = 1250;
-    private static final int WEAKEN_COOLDOWN = 160;
-    private static final int WEAKEN_TICKS = 240;
+    static final int WEAKEN_COST = 1250;
+    static final int WEAKEN_COOLDOWN = 160;
+    static final int WEAKEN_TICKS = 240;
     static final float WEAKEN_CUT = 0.35f;                      // its attacks 35% weaker...
     static final float WEAKEN_EXTRA = 0.25f;                    // ...and it takes 25% more from you
 
     // Charm
-    private static final int CHARM_COST = 1500;
-    private static final int CHARM_COOLDOWN = 280;
-    private static final int CHARM_TICKS = 200;
+    static final int CHARM_COST = 1500;
+    static final int CHARM_COOLDOWN = 280;
+    static final int CHARM_TICKS = 200;
     static final float CHARM_CUT = 0.5f;                        // a charmed player deals 50% less to you
-    private static final float CHARM_TURN = 0.05f;              // every second: the chance a mob turns on its own side...
-    private static final int CHARM_TURN_TICKS = 100;            // ...for this long
-    private static final double CHARM_TURN_REACH = 10.0;
+    static final float CHARM_TURN = 0.05f;              // every second: the chance a mob turns on its own side...
+    static final int CHARM_TURN_TICKS = 100;            // ...for this long
+    static final double CHARM_TURN_REACH = 10.0;
 
     // Arrogance
-    private static final int ARROGANCE_COST = 1250;
-    private static final int ARROGANCE_COOLDOWN = 240;
-    private static final int ARROGANCE_TICKS = 240;
+    static final int ARROGANCE_COST = 1250;
+    static final int ARROGANCE_COOLDOWN = 240;
+    static final int ARROGANCE_TICKS = 240;
     static final float ARROGANCE_MISS = 0.3f;                   // 30% of its attacks miss
 
     // Connect
-    private static final int CONNECT_COST = 800;
-    private static final int CONNECT_COOLDOWN = 120;
-    private static final double CONNECT_RANGE = 32.0;
-    private static final int CONNECT_TICKS = 600;
-    private static final float CONNECTED_COST = 0.5f;           // other Bribes on a Connected enemy cost half
+    static final int CONNECT_COST = 800;
+    static final int CONNECT_COOLDOWN = 120;
+    static final double CONNECT_RANGE = 32.0;
+    static final int CONNECT_TICKS = 600;
+    static final float CONNECTED_COST = 0.5f;           // other Bribes on a Connected enemy cost half
 
     // Coin Shot
-    private static final int COIN_COST = 1000;
-    private static final int COIN_COOLDOWN = 60;
-    private static final double COIN_RANGE = 24.0;
-    private static final float COIN_DAMAGE = 30f;
-    private static final float COIN_ACTUAL = 1.5f;              // an actual coin: 50% more...
-    private static final int COIN_WEAKEN_TICKS = 120;           // ...and the first enemy is Weakened this long
-    private static final double RICOCHET_REACH = 6.0;
-    private static final float RICOCHET_SHARE = 0.5f;
+    static final int COIN_COST = 1000;
+    static final int COIN_COOLDOWN = 60;
+    static final double COIN_RANGE = 24.0;
+    static final float COIN_DAMAGE = 30f;
+    static final float COIN_ACTUAL = 1.5f;              // an actual coin: 50% more...
+    static final int COIN_WEAKEN_TICKS = 120;           // ...and the first enemy is Weakened this long
+    static final double RICOCHET_REACH = 6.0;
+    static final float RICOCHET_SHARE = 0.5f;
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("poa_bribe", "Bribe")
+    static final AbilityWheel WHEEL = AbilityWheel.create("poa_bribe", "Bribe")
             .radius(72)
             .quickCastCooldown(false).quickCastCostBy(PrinceOfAbolition::recastCost)
             .noCooldownsWhen(PrinceOfAbolition::noCooldowns)
@@ -128,7 +129,7 @@ public final class PrinceOfAbolitionBribes {
     }
 
     /** A Bribe aimed at someone this player has Connected costs half. */
-    private static int connectedCost(ServerPlayer player, int cost) {
+    private static int connectedCost(LivingEntity player, int cost) {
         if (!(player.level() instanceof ServerLevel sl)) return cost;
         LivingEntity target = PrinceOfAbolition.aim(player, sl, BRIBE_RANGE);
         return target != null && PrinceOfAbolitionMarks.from(target, Kind.CONNECTED, player) ? Math.round(cost * CONNECTED_COST) : cost;
@@ -139,14 +140,14 @@ public final class PrinceOfAbolitionBribes {
     // (PrinceOfAbolitionFx.BRIBE_LANDS) the Bribe takes. Actual (a gold ingot or emerald spent): ACTUAL_LONGER as long,
     // and every enemy within BRIBE_SPREAD of the target is bribed too (from Earl of the Fallen, always).
     // =========================
-    private static AbilityWheel.Result bribe(ServerPlayer player, ServerLevel sl, Bribe bribe) {
+    static AbilityWheel.Result bribe(LivingEntity player, ServerLevel sl, Bribe bribe) {
         LivingEntity target = PrinceOfAbolition.aim(player, sl, BRIBE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one before you to bribe."));
+            Spells.tell(player, Component.literal("There is no one before you to bribe."));
             return AbilityWheel.Result.REFUSED;
         }
         if (bribe == Bribe.CHARM && target.getMaxHealth() > PrinceOfAbolition.BOSS_HEALTH) {
-            player.sendSystemMessage(Component.literal("Nothing you could offer would sway it."));
+            Spells.tell(player, Component.literal("Nothing you could offer would sway it."));
             return AbilityWheel.Result.REFUSED;
         }
         boolean actual = payTribute(player);
@@ -182,7 +183,7 @@ public final class PrinceOfAbolitionBribes {
      * Magnify (Earl of the Fallen): the Bribe travels as a thrown flower to where the target stands and lands as a
      * quake: every enemy within PrinceOfAbolitionFallen.MAGNIFIED_BRIBE_RADIUS of it is shaken and gets the Bribe.
      */
-    private static void magnifiedBribe(Player player, ServerLevel sl, LivingEntity target, Bribe bribe, int ticks) {
+    private static void magnifiedBribe(LivingEntity player, ServerLevel sl, LivingEntity target, Bribe bribe, int ticks) {
         Vec3 at = target.position();
         int flight = PrinceOfAbolitionFx.magnifiedFlower(sl, player, at);
         Later.run(sl, flight, () -> {
@@ -198,7 +199,7 @@ public final class PrinceOfAbolitionBribes {
     }
 
     /** One Bribe takes on one enemy. */
-    private static void takes(Player player, ServerLevel sl, LivingEntity target, Bribe bribe, int ticks) {
+    private static void takes(LivingEntity player, ServerLevel sl, LivingEntity target, Bribe bribe, int ticks) {
         Kind kind = switch (bribe) {
             case WEAKEN -> Kind.WEAKENED;
             case CHARM -> Kind.CHARMED;
@@ -216,7 +217,7 @@ public final class PrinceOfAbolitionBribes {
     }
 
     /** Once a second while Charmed: a mob may turn on its own side for a while. */
-    private static void charmBeat(Player player, ServerLevel sl, LivingEntity target, long until) {
+    private static void charmBeat(LivingEntity player, ServerLevel sl, LivingEntity target, long until) {
         if (!target.isAlive() || target.level() != sl || sl.getGameTime() >= until || !PrinceOfAbolitionMarks.from(target, Kind.CHARMED, player)) return;
         float chance = Beyonder.hasSequence(player, SPREAD_SEQUENCE) ? CHARM_TURN * 2f : CHARM_TURN;
         if (target instanceof Mob mob && mob.getRandom().nextFloat() < chance) {
@@ -227,7 +228,7 @@ public final class PrinceOfAbolitionBribes {
     }
 
     /** The nearest of the caster's other enemies to 'mob' (its own side), within CHARM_TURN_REACH, or null. */
-    private static LivingEntity nearestOtherEnemy(Player player, ServerLevel sl, Mob mob) {
+    private static LivingEntity nearestOtherEnemy(LivingEntity player, ServerLevel sl, Mob mob) {
         LivingEntity best = null;
         double bestDistance = Double.MAX_VALUE;
         for (LivingEntity other : Spells.enemiesAround(player, sl, mob.position(), CHARM_TURN_REACH)) {
@@ -246,10 +247,10 @@ public final class PrinceOfAbolitionBribes {
     // the whole time, your aimed abilities reach it at PrinceOfAbolition.CONNECT_REACH times their range, and your
     // other Bribes on it cost CONNECTED_COST. It also becomes your connection (status/Connection).
     // =========================
-    private static AbilityWheel.Result connect(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result connect(LivingEntity player, ServerLevel sl) {
         LivingEntity target = PrinceOfAbolition.aim(player, sl, CONNECT_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one in sight to tie a thread to."));
+            Spells.tell(player, Component.literal("There is no one in sight to tie a thread to."));
             return AbilityWheel.Result.REFUSED;
         }
         boolean actual = payTribute(player);
@@ -259,7 +260,7 @@ public final class PrinceOfAbolitionBribes {
             if (!Spells.casterStillHere(player, sl) || !target.isAlive() || target.level() != sl) return;
             int lasts = PrinceOfAbolitionMarks.put(player, target, Kind.CONNECTED, ticks);
             if (lasts <= 0) return;
-            Connection.touch(player, target);
+            if (player instanceof Player owner) Connection.touch(owner, target);      // a Connection is a player's
             target.addEffect(new MobEffectInstance(MobEffects.GLOWING, lasts, 0, false, false));
             PrinceOfAbolitionFx.connect(sl, player, target, lasts, PrinceOfAbolitionMarks.tag(target, Kind.CONNECTED));
             PrinceOfAbolitionFx.status(player, Status.CONNECT, lasts);
@@ -272,7 +273,7 @@ public final class PrinceOfAbolitionBribes {
     // first enemy on it (hitscan: strafing does not dodge it), then it ricochets once to the nearest other enemy within
     // RICOCHET_REACH for RICOCHET_SHARE. Actual: COIN_ACTUAL times the damage, and the first enemy is Weakened.
     // =========================
-    private static AbilityWheel.Result coinShot(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result coinShot(LivingEntity player, ServerLevel sl) {
         double range = PrinceOfAbolition.range(player, COIN_RANGE);
         Vec3 eye = player.getEyePosition();
         Vec3 end = Spells.aimPoint(player, sl, range);
@@ -302,10 +303,10 @@ public final class PrinceOfAbolitionBribes {
     }
 
     /** An actual Bribe: a gold ingot or an emerald in the off hand is spent. False (nothing spent) when there is none. */
-    static boolean payTribute(Player player) {
+    static boolean payTribute(LivingEntity player) {
         ItemStack held = player.getOffhandItem();
         if (held.isEmpty() || !(held.is(Items.GOLD_INGOT) || held.is(Items.EMERALD))) return false;
-        if (!player.isCreative()) held.shrink(1);
+        if (!(player instanceof Player payer && payer.isCreative())) held.shrink(1);
         return true;
     }
 }

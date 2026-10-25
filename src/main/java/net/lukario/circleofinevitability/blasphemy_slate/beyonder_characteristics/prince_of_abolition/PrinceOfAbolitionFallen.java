@@ -78,114 +78,114 @@ public final class PrinceOfAbolitionFallen {
     static final int FALLEN_SEQUENCE = 8;                       // the key
 
     // Raise Mausoleum
-    private static final int RAISE_SEQUENCE = 8;
-    private static final int RAISE_COST = 700;
-    private static final int RAISE_MORE = 100;                  // more for every mausoleum already standing
-    private static final int RAISE_COOLDOWN = 100;
-    private static final double RAISE_RANGE = 12.0;
+    static final int RAISE_SEQUENCE = 8;
+    static final int RAISE_COST = 700;
+    static final int RAISE_MORE = 100;                  // more for every mausoleum already standing
+    static final int RAISE_COOLDOWN = 100;
+    static final double RAISE_RANGE = 12.0;
 
     // Corrosion
-    private static final int CORROSION_SEQUENCE = 6;
-    private static final int CORROSION_COST = 2450;
-    private static final int CORROSION_COOLDOWN = 400;
-    private static final double CORROSION_RADIUS = 10.0;
-    private static final int CORROSION_TICKS = 200;             // the greed (a mind effect) lasts this long...
-    private static final float CORROSION_TURN = 0.4f;           // ...every second: the chance a mob picks a random target nearby
-    private static final double CORROSION_TURN_REACH = 8.0;
+    static final int CORROSION_SEQUENCE = 6;
+    static final int CORROSION_COST = 2450;
+    static final int CORROSION_COOLDOWN = 400;
+    static final double CORROSION_RADIUS = 10.0;
+    static final int CORROSION_TICKS = 200;             // the greed (a mind effect) lasts this long...
+    static final float CORROSION_TURN = 0.4f;           // ...every second: the chance a mob picks a random target nearby
+    static final double CORROSION_TURN_REACH = 8.0;
     static final float CORROSION_MISS = 0.2f;                   // ...and 20% of their attacks go wide
     static final float CORROSION_ROT = 2f;                      // the rot: 2 a second at first...
     static final float CORROSION_ROT_GROWTH = 1f;               // ...1 more every second, until cleansed (no healing after 5 s)
 
     // Step
-    private static final int STEP_SEQUENCE = 6;
-    private static final int STEP_COST = 800;
-    private static final int STEP_COOLDOWN = 80;
-    private static final double STEP_RANGE = 40.0;
-    private static final double STEP_AIM = 15.0;                // degrees off the crosshair a mausoleum may be to be picked
-    private static final int STEP_ALLIES_SEQUENCE = 4;          // Earl of the Fallen: allies this close come along
-    private static final double STEP_ALLIES_REACH = 3.0;
+    static final int STEP_SEQUENCE = 6;
+    static final int STEP_COST = 800;
+    static final int STEP_COOLDOWN = 80;
+    static final double STEP_RANGE = 40.0;
+    static final double STEP_AIM = 15.0;                // degrees off the crosshair a mausoleum may be to be picked
+    static final int STEP_ALLIES_SEQUENCE = 4;          // Earl of the Fallen: allies this close come along
+    static final double STEP_ALLIES_REACH = 3.0;
 
     // Majesty
-    private static final int MAJESTY_SEQUENCE = 5;
-    private static final int MAJESTY_COST = 3000;
-    private static final int MAJESTY_COOLDOWN = 360;
-    private static final double MAJESTY_RADIUS = 10.0;
+    static final int MAJESTY_SEQUENCE = 5;
+    static final int MAJESTY_COST = 3000;
+    static final int MAJESTY_COOLDOWN = 360;
+    static final double MAJESTY_RADIUS = 10.0;
     static final int MAJESTY_TICKS = 30;                        // 1.5 seconds...
     static final int MAJESTY_PER_ORDERS = 20;                   // ...a second more for every two standing orders
-    private static final float MAJESTY_WEAK_HEALTH = 60f;       // mobs this weak stay down...
-    private static final int MAJESTY_WEAK_TICKS = 120;          // ...6 seconds
-    private static final int KNEEL_SLOW = 3;                    // Slowness IV while kneeling
+    static final float MAJESTY_WEAK_HEALTH = 60f;       // mobs this weak stay down...
+    static final int MAJESTY_WEAK_TICKS = 120;          // ...6 seconds
+    static final int KNEEL_SLOW = 3;                    // Slowness IV while kneeling
 
     // Bestowment
-    private static final int BESTOW_SEQUENCE = 4;
-    private static final int BESTOW_COST = 6000;
-    private static final int BESTOW_COOLDOWN = 240;
-    private static final double BESTOW_RANGE = 16.0;
-    private static final int BESTOW_TICKS = 200;
-    private static final float DEFEATED_HEALTH = 0.4f;          // under 40% of its health: Defeated...
+    static final int BESTOW_SEQUENCE = 4;
+    static final int BESTOW_COST = 6000;
+    static final int BESTOW_COOLDOWN = 240;
+    static final double BESTOW_RANGE = 16.0;
+    static final int BESTOW_TICKS = 200;
+    static final float DEFEATED_HEALTH = 0.4f;          // under 40% of its health: Defeated...
     static final float DEFEATED_CUT = 0.6f;                     // ...its damage cut by 60%, a mob drops its target
     static final float ANXIOUS_MISS = 0.4f;                     // archers and casters: Anxious, 40% of their attacks go wide
-    private static final double FAST_SPEED = 0.3;               // a mob this fast (movement speed): Sluggish
-    private static final float BRUTE_HEALTH = 40f;              // this much health...
-    private static final double SLOW_SPEED = 0.26;              // ...and slower than this: a brute, Rash
-    private static final float RASH_EXTRA = 0.4f;               // Rash: takes 40% more...
-    private static final int RASH_HASTE = 1;                    // ...attacks faster (Haste II)...
-    private static final double RASH_SHOVE = 0.35;              // ...and cannot stop moving forward
+    static final double FAST_SPEED = 0.3;               // a mob this fast (movement speed): Sluggish
+    static final float BRUTE_HEALTH = 40f;              // this much health...
+    static final double SLOW_SPEED = 0.26;              // ...and slower than this: a brute, Rash
+    static final float RASH_EXTRA = 0.4f;               // Rash: takes 40% more...
+    static final int RASH_HASTE = 1;                    // ...attacks faster (Haste II)...
+    static final double RASH_SHOVE = 0.35;              // ...and cannot stop moving forward
     static final float AVARICE_CUT = 0.3f;                      // an Avaricious player deals 30% less
-    private static final double AVARICE_REACH = 16.0;           // an Avaricious mob runs after valuables this close
+    static final double AVARICE_REACH = 16.0;           // an Avaricious mob runs after valuables this close
 
     // Exploit
-    private static final int EXPLOIT_SEQUENCE = 4;
-    private static final int EXPLOIT_COST = 4000;
-    private static final int EXPLOIT_COOLDOWN = 300;
-    private static final int GLIDE_TICKS = 160;                 // in the air: flight for 8 seconds
-    private static final double STRIP_RANGE = 24.0;             // at an enemy: its states end
-    private static final int STRETCH_MOST = 600;                // on yourself: what runs is doubled, by 30 s at most...
-    private static final int STRETCH_MAUSOLEUMS_MOST = 2400;    // ...and every mausoleum by 2 minutes at most
-    private static final int MOON_SEQUENCE = 2;                 // Duke of Entropy, in the air in your own Entropy field:
-    private static final double MOON_UP = 2.6;                  // a leap to the Moon
-    private static final double MOON_FORWARD = 2.2;
+    static final int EXPLOIT_SEQUENCE = 4;
+    static final int EXPLOIT_COST = 4000;
+    static final int EXPLOIT_COOLDOWN = 300;
+    static final int GLIDE_TICKS = 160;                 // in the air: flight for 8 seconds
+    static final double STRIP_RANGE = 24.0;             // at an enemy: its states end
+    static final int STRETCH_MOST = 600;                // on yourself: what runs is doubled, by 30 s at most...
+    static final int STRETCH_MAUSOLEUMS_MOST = 2400;    // ...and every mausoleum by 2 minutes at most
+    static final int MOON_SEQUENCE = 2;                 // Duke of Entropy, in the air in your own Entropy field:
+    static final double MOON_UP = 2.6;                  // a leap to the Moon
+    static final double MOON_FORWARD = 2.2;
 
     // Magnify
-    private static final int MAGNIFY_SEQUENCE = 4;
-    private static final int MAGNIFY_COST = 5000;
-    private static final int MAGNIFY_COOLDOWN = 400;
-    private static final int MAGNIFY_TICKS = 200;               // the next blow or ability within 10 seconds...
-    private static final float MAGNIFY_DAMAGE = 2.5f;           // ...does 2.5 times the damage...
+    static final int MAGNIFY_SEQUENCE = 4;
+    static final int MAGNIFY_COST = 5000;
+    static final int MAGNIFY_COOLDOWN = 400;
+    static final int MAGNIFY_TICKS = 200;               // the next blow or ability within 10 seconds...
+    static final float MAGNIFY_DAMAGE = 2.5f;           // ...does 2.5 times the damage...
     static final double MAGNIFY_REACH = 1.5;                    // ...reaches 1.5 times as far and wide...
-    private static final float MAGNIFY_EXECUTE = 0.25f;         // ...and a non-boss left under 25% dies
+    static final float MAGNIFY_EXECUTE = 0.25f;         // ...and a non-boss left under 25% dies
     static final double MAGNIFIED_BRIBE_RADIUS = 6.0;           // a magnified Bribe lands as a quake this wide
-    private static final double SEIZE_RANGE = 100.0;            // a Connected enemy in view this far...
-    private static final double SEIZE_PULL = 10.0;              // ...is pulled this far toward you...
-    private static final int SEIZE_HOLD = 40;                   // ...and held 2 seconds
+    static final double SEIZE_RANGE = 100.0;            // a Connected enemy in view this far...
+    static final double SEIZE_PULL = 10.0;              // ...is pulled this far toward you...
+    static final int SEIZE_HOLD = 40;                   // ...and held 2 seconds
 
     // Mausoleum Salvo
-    private static final int SALVO_SEQUENCE = 4;
-    private static final int SALVO_COST = 4000;
-    private static final int SALVO_COOLDOWN = 160;
-    private static final double SALVO_RANGE = 40.0;
-    private static final float SALVO_DAMAGE = 35f;
-    private static final double SALVO_SHARE = 8.0;              // enemies this close to the target share the beams
+    static final int SALVO_SEQUENCE = 4;
+    static final int SALVO_COST = 4000;
+    static final int SALVO_COOLDOWN = 160;
+    static final double SALVO_RANGE = 40.0;
+    static final float SALVO_DAMAGE = 35f;
+    static final double SALVO_SHARE = 8.0;              // enemies this close to the target share the beams
 
     // Mausoleum Blast
-    private static final int BLAST_SEQUENCE = 4;
-    private static final int BLAST_COST = 5000;
-    private static final int BLAST_COOLDOWN = 200;
-    private static final double BLAST_REACH = 24.0;             // every mausoleum this close to you goes off...
-    private static final double BLAST_RADIUS = 5.0;             // ...hitting every enemy this close to it...
-    private static final float BLAST_DAMAGE = 90f;              // ...this hard (between two of them: both)
-    private static final double BLAST_THROW = 1.2;
+    static final int BLAST_SEQUENCE = 4;
+    static final int BLAST_COST = 5000;
+    static final int BLAST_COOLDOWN = 200;
+    static final double BLAST_REACH = 24.0;             // every mausoleum this close to you goes off...
+    static final double BLAST_RADIUS = 5.0;             // ...hitting every enemy this close to it...
+    static final float BLAST_DAMAGE = 90f;              // ...this hard (between two of them: both)
+    static final double BLAST_THROW = 1.2;
 
     // Saved on the player
-    private static final String MAGNIFY_UNTIL = "poa_magnify_until";
-    private static final String MAGNIFY_TAG = "poa_magnify_tag";
-    private static final String MAGNIFY_SPENT = "poa_magnify_spent";     // the game tick it was spent (hits that tick all count)
+    static final String MAGNIFY_UNTIL = "poa_magnify_until";
+    static final String MAGNIFY_TAG = "poa_magnify_tag";
+    static final String MAGNIFY_SPENT = "poa_magnify_spent";     // the game tick it was spent (hits that tick all count)
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("poa_fallen", "The Fallen")
+    static final AbilityWheel WHEEL = AbilityWheel.create("poa_fallen", "The Fallen")
             .radius(88)
             .quickCastCooldown(false).quickCastCostBy(PrinceOfAbolition::recastCost)
             .noCooldownsWhen(PrinceOfAbolition::noCooldowns)
@@ -225,12 +225,12 @@ public final class PrinceOfAbolitionFallen {
     // Raise Mausoleum: a mausoleum rises on the ground where you look (RAISE_RANGE). RAISE_COST, and RAISE_MORE more
     // for every one you already have. See PrinceOfAbolitionMausoleums for what it does.
     // =========================
-    private static AbilityWheel.Result raiseMausoleum(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result raiseMausoleum(LivingEntity player, ServerLevel sl) {
         double range = PrinceOfAbolition.range(player, RAISE_RANGE);
         Vec3 aimed = Spells.aimGround(player, sl, range);
         Vec3 ground = aimed == null ? null : Spells.groundNear(player, sl, aimed, 2.0);
         if (ground == null || ground.distanceTo(player.position()) > range + 2.0) {
-            player.sendSystemMessage(Component.literal("There is no ground there to raise a mausoleum on."));
+            Spells.tell(player, Component.literal("There is no ground there to raise a mausoleum on."));
             return AbilityWheel.Result.REFUSED;
         }
         PrinceOfAbolitionMausoleums.raise(player, sl, ground);
@@ -246,7 +246,7 @@ public final class PrinceOfAbolitionFallen {
     //     they cannot heal at all.
     // Your allies are not touched.
     // =========================
-    private static AbilityWheel.Result corrosion(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result corrosion(LivingEntity player, ServerLevel sl) {
         double radius = PrinceOfAbolition.area(player, CORROSION_RADIUS);
         int ticks = PrinceOfAbolition.duration(player, CORROSION_TICKS);
         PrinceOfAbolitionFx.corrosion(sl, player, radius);
@@ -263,7 +263,7 @@ public final class PrinceOfAbolitionFallen {
     }
 
     /** Once a second while Corrupted: a mob may lash out at a random one nearby, for a second. */
-    private static void greed(Player player, ServerLevel sl, Mob mob, long until) {
+    private static void greed(LivingEntity player, ServerLevel sl, Mob mob, long until) {
         if (!mob.isAlive() || mob.level() != sl || sl.getGameTime() >= until || !PrinceOfAbolitionMarks.has(mob, Kind.CORRUPTED)) return;
         if (mob.getRandom().nextFloat() < CORROSION_TURN) {
             List<LivingEntity> near = new ArrayList<>();
@@ -282,21 +282,21 @@ public final class PrinceOfAbolitionFallen {
     // one) and you vanish into a gold door and come out of that mausoleum (PrinceOfAbolitionFx.STEP_OUT). Earl of the
     // Fallen (4): allies within STEP_ALLIES_REACH come with you. Being held from teleporting stops it.
     // =========================
-    private static AbilityWheel.Result step(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result step(LivingEntity player, ServerLevel sl) {
         if (Root.has(player, RootRestriction.TELEPORT)) {
-            player.sendSystemMessage(Component.literal("You are held fast; no door opens for you."));
+            Spells.tell(player, Component.literal("You are held fast; no door opens for you."));
             return AbilityWheel.Result.REFUSED;
         }
         Mausoleum to = PrinceOfAbolitionMausoleums.aimed(player, PrinceOfAbolition.range(player, STEP_RANGE), STEP_AIM);
         if (to == null) to = PrinceOfAbolitionMausoleums.nearest(player, player.position());
         if (to == null) {
-            player.sendSystemMessage(Component.literal("You have no mausoleum standing to step to."));
+            Spells.tell(player, Component.literal("You have no mausoleum standing to step to."));
             return AbilityWheel.Result.REFUSED;
         }
         Vec3 door = to.door();
         Vec3 out = Spells.fits(player, sl, door) ? door : Spells.freeSpotNear(player, sl, to.ground, door.subtract(to.ground), 1.6);
         if (out == null) {
-            player.sendSystemMessage(Component.literal("There is no room before that mausoleum's door."));
+            Spells.tell(player, Component.literal("There is no room before that mausoleum's door."));
             return AbilityWheel.Result.REFUSED;
         }
         Vec3 from = player.position();
@@ -328,7 +328,7 @@ public final class PrinceOfAbolitionFallen {
     // attacking, Slowness IV) for MAJESTY_TICKS, plus MAJESTY_PER_ORDERS for every two standing orders; mobs of up to
     // MAJESTY_WEAK_HEALTH stay down MAJESTY_WEAK_TICKS. A mind effect: Iron Will stands up to it.
     // =========================
-    private static AbilityWheel.Result majesty(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result majesty(LivingEntity player, ServerLevel sl) {
         double radius = PrinceOfAbolition.area(player, MAJESTY_RADIUS);
         PrinceOfAbolitionFx.majesty(sl, player, radius);
         majestyPulse(player, sl, radius);
@@ -336,7 +336,7 @@ public final class PrinceOfAbolitionFallen {
     }
 
     /** Every enemy within 'radius' kneels as Majesty makes them (Majesty, Coronation's pulses). */
-    static void majestyPulse(Player player, ServerLevel sl, double radius) {
+    static void majestyPulse(LivingEntity player, ServerLevel sl, double radius) {
         int ticks = MAJESTY_TICKS + MAJESTY_PER_ORDERS * (PrinceOfAbolitionOrders.count(player) / 2);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), radius)) {
             boolean weak = !(enemy instanceof Player) && enemy.getMaxHealth() <= MAJESTY_WEAK_HEALTH;
@@ -345,7 +345,7 @@ public final class PrinceOfAbolitionFallen {
     }
 
     /** One enemy kneels for 'ticks' (Majesty, and the Majesty pulse of a Rebirth). */
-    static void kneel(Player player, ServerLevel sl, LivingEntity enemy, int ticks) {
+    static void kneel(LivingEntity player, ServerLevel sl, LivingEntity enemy, int ticks) {
         int lasts = PrinceOfAbolitionMarks.put(player, enemy, Kind.KNEELING, ticks);
         if (lasts <= 0) return;
         Root.apply(enemy, lasts, RootRestriction.JUMP, RootRestriction.ATTACK);
@@ -368,10 +368,10 @@ public final class PrinceOfAbolitionFallen {
     //   Avaricious  everything else: a mob drops its target, will not pick another and runs after the nearest gold,
     //               emerald or diamond lying within AVARICE_REACH; a player deals AVARICE_CUT less
     // =========================
-    private static AbilityWheel.Result bestowment(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result bestowment(LivingEntity player, ServerLevel sl) {
         LivingEntity target = PrinceOfAbolition.aim(player, sl, BESTOW_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one before you to give a feeling to."));
+            Spells.tell(player, Component.literal("There is no one before you to give a feeling to."));
             return AbilityWheel.Result.REFUSED;
         }
         Feeling feeling = feelingFor(target);
@@ -413,7 +413,7 @@ public final class PrinceOfAbolitionFallen {
     }
 
     /** The feeling takes (when Iron Will does not stop it). */
-    private static void bestow(Player player, ServerLevel sl, LivingEntity target, Feeling feeling, int ticks) {
+    private static void bestow(LivingEntity player, ServerLevel sl, LivingEntity target, Feeling feeling, int ticks) {
         int lasts = PrinceOfAbolitionMarks.put(player, target, kindOf(feeling), ticks);
         if (lasts <= 0) return;
         switch (feeling) {
@@ -506,7 +506,7 @@ public final class PrinceOfAbolitionFallen {
         Later.run(sl, GLIDE_TICKS, () -> PrinceOfAbolitionFx.exploitGlideEnd(sl, player, tag));
     }
 
-    private static void moonLeap(ServerPlayer player, ServerLevel sl) {
+    private static void moonLeap(LivingEntity player, ServerLevel sl) {
         Vec3 ahead = Spells.flatLook(player);
         player.setDeltaMovement(ahead.x * MOON_FORWARD, MOON_UP, ahead.z * MOON_FORWARD);
         player.hurtMarked = true;
@@ -515,7 +515,7 @@ public final class PrinceOfAbolitionFallen {
         PrinceOfAbolitionFx.moonLeap(sl, player);
     }
 
-    private static void strip(ServerPlayer player, ServerLevel sl, LivingEntity target) {
+    static void strip(LivingEntity player, ServerLevel sl, LivingEntity target) {
         for (MobEffectInstance effect : new ArrayList<>(target.getActiveEffects())) {
             if (effect.getEffect().value().isBeneficial()) target.removeEffect(effect.getEffect());
         }
@@ -559,7 +559,7 @@ public final class PrinceOfAbolitionFallen {
     // flower and lands as a quake (PrinceOfAbolitionBribes). Cast with a Connected enemy in view (SEIZE_RANGE), it is
     // seized at once: pulled SEIZE_PULL toward you and held SEIZE_HOLD. Free inside your own Entropy field.
     // =========================
-    private static AbilityWheel.Result magnify(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result magnify(LivingEntity player, ServerLevel sl) {
         LivingEntity far = Spells.aimEnemy(player, sl, PrinceOfAbolition.range(player, SEIZE_RANGE));
         if (far != null && PrinceOfAbolitionMarks.from(far, Kind.CONNECTED, player)) seize(player, sl, far);
 
@@ -578,7 +578,7 @@ public final class PrinceOfAbolitionFallen {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void seize(ServerPlayer player, ServerLevel sl, LivingEntity target) {
+    private static void seize(LivingEntity player, ServerLevel sl, LivingEntity target) {
         PrinceOfAbolitionFx.seize(sl, player, target);
         Vec3 toward = player.position().subtract(target.position());
         double pull = Math.min(PrinceOfAbolition.range(player, SEIZE_PULL), toward.length() - 2.0);
@@ -595,19 +595,19 @@ public final class PrinceOfAbolitionFallen {
     }
 
     /** True while Magnify waits for its blow. */
-    static boolean isMagnified(Player player) {
+    static boolean isMagnified(LivingEntity player) {
         return PrinceOfAbolition.isActive(player, MAGNIFY_UNTIL);
     }
 
     /** Magnify is spent now (by a hit, or by a Bribe). False if it was not waiting. */
-    static boolean spendMagnify(Player player, ServerLevel sl) {
+    static boolean spendMagnify(LivingEntity player, ServerLevel sl) {
         if (!isMagnified(player)) return false;
         endMagnify(player, sl);
         player.getPersistentData().putLong(MAGNIFY_SPENT, sl.getGameTime());
         return true;
     }
 
-    private static void endMagnify(Player player, ServerLevel sl) {
+    private static void endMagnify(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         PrinceOfAbolitionFx.magnifyEnd(sl, player, data.getStringOr(MAGNIFY_TAG, ""));
         data.remove(MAGNIFY_UNTIL);
@@ -619,7 +619,7 @@ public final class PrinceOfAbolitionFallen {
      * Called by the hurt event for every hit the player deals: a magnified one (the first while it waits, and every
      * other hit of that same tick) does MAGNIFY_DAMAGE times as much, and leaves no non-boss under MAGNIFY_EXECUTE.
      */
-    static float magnifyHit(Player player, LivingEntity victim, float amount) {
+    static float magnifyHit(LivingEntity player, LivingEntity victim, float amount) {
         if (!(player.level() instanceof ServerLevel sl)) return amount;
         boolean sameTick = player.getPersistentData().getLongOr(MAGNIFY_SPENT, -1L) == sl.getGameTime();
         if (!sameTick && !spendMagnify(player, sl)) return amount;
@@ -644,15 +644,15 @@ public final class PrinceOfAbolitionFallen {
     // SALVO_DAMAGE each, PrinceOfAbolitionFx.SALVO_STEP apart. Enemies within SALVO_SHARE of the target share the beams
     // with it, one each in turn. With no mausoleum standing it does nothing and costs nothing.
     // =========================
-    private static AbilityWheel.Result salvo(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result salvo(LivingEntity player, ServerLevel sl) {
         List<Mausoleum> standing = PrinceOfAbolitionMausoleums.standing(player);
         if (standing.isEmpty()) {
-            player.sendSystemMessage(Component.literal("You have no mausoleum standing to fire."));
+            Spells.tell(player, Component.literal("You have no mausoleum standing to fire."));
             return AbilityWheel.Result.REFUSED;
         }
         LivingEntity target = PrinceOfAbolition.aim(player, sl, SALVO_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one in sight for your mausoleums to strike."));
+            Spells.tell(player, Component.literal("There is no one in sight for your mausoleums to strike."));
             return AbilityWheel.Result.REFUSED;
         }
         List<LivingEntity> targets = new ArrayList<>();
@@ -679,14 +679,14 @@ public final class PrinceOfAbolitionFallen {
     // from it (an enemy caught between two takes both). The mausoleums are gone, orders and all, so Rebirth has less
     // to rise from. With none near it does nothing and costs nothing.
     // =========================
-    private static AbilityWheel.Result blast(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result blast(LivingEntity player, ServerLevel sl) {
         double reach = PrinceOfAbolition.range(player, BLAST_REACH);
         List<Mausoleum> near = new ArrayList<>();
         for (Mausoleum mausoleum : PrinceOfAbolitionMausoleums.standing(player)) {
             if (mausoleum.ground.distanceTo(player.position()) <= reach) near.add(mausoleum);
         }
         if (near.isEmpty()) {
-            player.sendSystemMessage(Component.literal("You have no mausoleum near enough to set off."));
+            Spells.tell(player, Component.literal("You have no mausoleum near enough to set off."));
             return AbilityWheel.Result.REFUSED;
         }
         double radius = PrinceOfAbolition.area(player, BLAST_RADIUS);
