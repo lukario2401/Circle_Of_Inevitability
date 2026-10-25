@@ -86,145 +86,145 @@ import java.util.UUID;
  */
 public class DarkAngel {
 
-    private static final String PATHWAY = "Dark Angel";
+    static final String PATHWAY = "Dark Angel";
 
     // =========================
     // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
     // =========================
 
     // Ability 1 - Divination (Sequence 9)
-    private static final int DIVINATION_SEQUENCE = 9;
-    private static final int DIVINATION_COST = 250;
-    private static final double DIVINATION_RADIUS = 24.0;        // the pulse finds every enemy this close
-    private static final int REVEAL_TICKS = 200;                 // they glow (seen through walls) this long
-    private static final int MARK_TICKS = 200;                   // the strongest of them is marked this long...
-    private static final float MARK_EXTRA = 0.25f;                // ...and takes this much more damage meanwhile (0.2 = 20%)
+    static final int DIVINATION_SEQUENCE = 9;
+    static final int DIVINATION_COST = 250;
+    static final double DIVINATION_RADIUS = 24.0;        // the pulse finds every enemy this close
+    static final int REVEAL_TICKS = 200;                 // they glow (seen through walls) this long
+    static final int MARK_TICKS = 200;                   // the strongest of them is marked this long...
+    static final float MARK_EXTRA = 0.25f;                // ...and takes this much more damage meanwhile (0.2 = 20%)
     // sneak: Ritual Circle. It costs blood, not spirituality.
-    private static final float RITUAL_PRICE = 4f;                // health it takes (2 hearts); refused when you have too little
-    private static final double RITUAL_RADIUS = 8.0;
-    private static final int RITUAL_TICKS = 200;                 // how long the circle stands
-    private static final int RITUAL_PULSE = 40;                  // every 2 s, while you stand in it...
-    private static final float RITUAL_SPIRITUALITY = 0.08f;      // ...this share of your maximum spirituality comes back...
-    private static final int RITUAL_STRENGTH_LEVEL = 1;          // ...and you have Strength I and Resistance I
-    private static final int RITUAL_RESISTANCE_LEVEL = 1;
+    static final float RITUAL_PRICE = 4f;                // health it takes (2 hearts); refused when you have too little
+    static final double RITUAL_RADIUS = 8.0;
+    static final int RITUAL_TICKS = 200;                 // how long the circle stands
+    static final int RITUAL_PULSE = 40;                  // every 2 s, while you stand in it...
+    static final float RITUAL_SPIRITUALITY = 0.08f;      // ...this share of your maximum spirituality comes back...
+    static final int RITUAL_STRENGTH_LEVEL = 1;          // ...and you have Strength I and Resistance I
+    static final int RITUAL_RESISTANCE_LEVEL = 1;
 
     // Ability 2 - Whispers (Sequence 8)
-    private static final int WHISPERS_SEQUENCE = 8;
-    private static final int WHISPERS_COST = 300;                // Sequence 8 holds 400
-    private static final double WHISPERS_RANGE = 24.0;
-    private static final int WHISPERS_TICKS = 160;               // how long the mouths whisper to it
-    private static final float WHISPERS_DAMAGE = 4f;             // each second
-    private static final int WHISPERS_WEAKNESS_LEVEL = 0;        // Weakness I and Slowness I meanwhile
-    private static final int WHISPERS_SLOW_LEVEL = 0;
+    static final int WHISPERS_SEQUENCE = 8;
+    static final int WHISPERS_COST = 300;                // Sequence 8 holds 400
+    static final double WHISPERS_RANGE = 24.0;
+    static final int WHISPERS_TICKS = 160;               // how long the mouths whisper to it
+    static final float WHISPERS_DAMAGE = 4f;             // each second
+    static final int WHISPERS_WEAKNESS_LEVEL = 0;        // Weakness I and Slowness I meanwhile
+    static final int WHISPERS_SLOW_LEVEL = 0;
     // sneak: Listen
-    private static final int LISTEN_COST = 300;
-    private static final int LISTEN_TICKS = 300;                 // 15 s of listening
-    private static final double LISTEN_RADIUS = 16.0;
-    private static final int LISTEN_PULSE = 40;                  // ticks between two listens
-    private static final int LISTEN_GLOW_TICKS = 50;             // every enemy heard glows this long (a little longer than a pulse)
+    static final int LISTEN_COST = 300;
+    static final int LISTEN_TICKS = 300;                 // 15 s of listening
+    static final double LISTEN_RADIUS = 16.0;
+    static final int LISTEN_PULSE = 40;                  // ticks between two listens
+    static final int LISTEN_GLOW_TICKS = 50;             // every enemy heard glows this long (a little longer than a pulse)
 
     // Ability 3 - Shadow Binding (Sequence 7)
-    private static final int BINDING_SEQUENCE = 7;
-    private static final int BINDING_COST = 700;                 // Sequence 7 holds 1980
-    private static final double BINDING_RANGE = 20.0;
-    private static final double BINDING_RADIUS = 2.5;
-    private static final int BINDING_WARNING = 10;               // ticks between the warning circle and the shadows rising
-    private static final int BINDING_TICKS = 70;                 // the shadows stay this long (the hold starts at HangedManFx.BIND_GRIPS)
-    private static final float BINDING_DAMAGE = 14f;             // when they close
+    static final int BINDING_SEQUENCE = 7;
+    static final int BINDING_COST = 700;                 // Sequence 7 holds 1980
+    static final double BINDING_RANGE = 20.0;
+    static final double BINDING_RADIUS = 2.5;
+    static final int BINDING_WARNING = 10;               // ticks between the warning circle and the shadows rising
+    static final int BINDING_TICKS = 70;                 // the shadows stay this long (the hold starts at HangedManFx.BIND_GRIPS)
+    static final float BINDING_DAMAGE = 14f;             // when they close
     // sneak: Shadow Lurking (the key again, or attacking, brings you out)
-    private static final int LURK_COST = 700;
-    private static final int LURK_TICKS = 160;
-    private static final int LURK_SPEED_LEVEL = 1;               // 0 = Speed I, 1 = Speed II while sunk
-    private static final int AMBUSH_WINDOW = 40;                 // your first hit from the shadow, or this long after rising...
-    private static final float AMBUSH_BONUS = 25f;               // ...does this much more...
-    private static final int AMBUSH_HOLD_TICKS = 20;             // ...and holds what it hit in place for a moment
+    static final int LURK_COST = 700;
+    static final int LURK_TICKS = 160;
+    static final int LURK_SPEED_LEVEL = 1;               // 0 = Speed I, 1 = Speed II while sunk
+    static final int AMBUSH_WINDOW = 40;                 // your first hit from the shadow, or this long after rising...
+    static final float AMBUSH_BONUS = 25f;               // ...does this much more...
+    static final int AMBUSH_HOLD_TICKS = 20;             // ...and holds what it hit in place for a moment
 
     // Ability 4 - Flesh Bomb (Sequence 6)
-    private static final int BOMB_SEQUENCE = 6;
-    private static final int BOMB_COST = 1500;
-    private static final double BOMB_RANGE = 24.0;
-    private static final int BOMB_FUSE = 40;                     // ticks it swells on the one it stuck to
-    private static final double BOMB_RADIUS = 4.0;
-    private static final float BOMB_DAMAGE = 36f;                // in the middle (and on the one it stuck to)...
-    private static final float BOMB_EDGE = 0.5f;                 // ...this part of it at the rim
-    private static final int BOMB_ROT_TICKS = 80;                // the blood rain rots: Wither I this long
+    static final int BOMB_SEQUENCE = 6;
+    static final int BOMB_COST = 1500;
+    static final double BOMB_RANGE = 24.0;
+    static final int BOMB_FUSE = 40;                     // ticks it swells on the one it stuck to
+    static final double BOMB_RADIUS = 4.0;
+    static final float BOMB_DAMAGE = 36f;                // in the middle (and on the one it stuck to)...
+    static final float BOMB_EDGE = 0.5f;                 // ...this part of it at the rim
+    static final int BOMB_ROT_TICKS = 80;                // the blood rain rots: Wither I this long
     // sneak: Flesh Cloak (cast again to take it off, which costs nothing)
-    private static final int CLOAK_COST = 1500;
-    private static final int CLOAK_TICKS = 300;
-    private static final float CLOAK_GUARD = 0.4f;               // share of every blow the soft flesh swallows
-    private static final float CLOAK_HEAL = 1f;                  // health every half second while worn
+    static final int CLOAK_COST = 1500;
+    static final int CLOAK_TICKS = 300;
+    static final float CLOAK_GUARD = 0.4f;               // share of every blow the soft flesh swallows
+    static final float CLOAK_HEAL = 1f;                  // health every half second while worn
 
     // Ability 5 - Grazing (Sequence 5): the souls of what you kill, kept for good in GRAZE_SLOTS slots
-    private static final int GRAZING_SEQUENCE = 5;
-    private static final int GRAZE_SLOTS = 7;
-    private static final float GRAZE_COST_MULTIPLIER = 3f;       // a stored ability costs 3x its own cost (no Sequence gate, no cooldown)
-    private static final int SOUL_RISE_TICKS = 10;               // a slot is free: the soul rises off the corpse this long, then flies to you
-    private static final int SOUL_WAIT_TICKS = 150;              // every slot is full: the soul waits on the corpse 30 s...
-    private static final double SOUL_REACH = 4.0;                // ...for you to stand this close and take it (sneak + key)
-    private static final int WHEEL_RADIUS = 76;                  // GUI pixels from the middle of the screen to the slots
+    static final int GRAZING_SEQUENCE = 5;
+    static final int GRAZE_SLOTS = 7;
+    static final float GRAZE_COST_MULTIPLIER = 3f;       // a stored ability costs 3x its own cost (no Sequence gate, no cooldown)
+    static final int SOUL_RISE_TICKS = 10;               // a slot is free: the soul rises off the corpse this long, then flies to you
+    static final int SOUL_WAIT_TICKS = 150;              // every slot is full: the soul waits on the corpse 30 s...
+    static final double SOUL_REACH = 4.0;                // ...for you to stand this close and take it (sneak + key)
+    static final int WHEEL_RADIUS = 76;                  // GUI pixels from the middle of the screen to the slots
 
     // Ability 6 - Cull of Spiritual Flesh (Sequence 4)
-    private static final int CULL_SEQUENCE = 4;
-    private static final int CULL_COST = 6000;                   // Sequence 4 holds 32400
-    private static final double CULL_REACH = 4.5;                // how far in front of you the cut reaches...
-    private static final double CULL_HALF_ANGLE = 75.0;          // ...and how wide (degrees to either side; the arc shows 150)
-    private static final float CULL_DAMAGE = 50f;
-    private static final float CULL_STRIP = 0.3f;                // their spiritual flesh is cut: 30% more damage taken...
-    private static final int CULL_STRIP_TICKS = 160;             // ...and Weakness I, this long
+    static final int CULL_SEQUENCE = 4;
+    static final int CULL_COST = 6000;                   // Sequence 4 holds 32400
+    static final double CULL_REACH = 4.5;                // how far in front of you the cut reaches...
+    static final double CULL_HALF_ANGLE = 75.0;          // ...and how wide (degrees to either side; the arc shows 150)
+    static final float CULL_DAMAGE = 50f;
+    static final float CULL_STRIP = 0.3f;                // their spiritual flesh is cut: 30% more damage taken...
+    static final int CULL_STRIP_TICKS = 160;             // ...and Weakness I, this long
     // sneak: Black Armor (cast again to take it off, which costs nothing)
-    private static final int ARMOR_COST = 6000;
-    private static final int ARMOR_TICKS = 400;
-    private static final float ARMOR_GUARD = 0.65f;              // share of every blow the plates take
-    private static final float ARMOR_GROWTH = 0.25f;             // you grow this much bigger in it (0.25 = a quarter)
-    private static final double ARMOR_KNOCKBACK_RESISTANCE = 0.6;
-    private static final int ARMOR_STRENGTH_LEVEL = 1;           // Strength I while worn
+    static final int ARMOR_COST = 6000;
+    static final int ARMOR_TICKS = 400;
+    static final float ARMOR_GUARD = 0.65f;              // share of every blow the plates take
+    static final float ARMOR_GROWTH = 0.25f;             // you grow this much bigger in it (0.25 = a quarter)
+    static final double ARMOR_KNOCKBACK_RESISTANCE = 0.6;
+    static final int ARMOR_STRENGTH_LEVEL = 1;           // Strength I while worn
 
     // Ability 7 - Degeneration (Sequence 3)
-    private static final int DEGENERATION_SEQUENCE = 3;
-    private static final int DEGENERATION_COST = 12000;          // Sequence 3 holds 59780
-    private static final double DEGENERATION_RANGE = 28.0;
-    private static final float DEGENERATION_HIT = 20f;           // when it lands; it also eats every buff on the target
-    private static final int DEGENERATION_TICKS = 160;           // then it rots this long: no healing, Wither I...
-    private static final float DEGENERATION_DAMAGE = 6f;         // ...and this much each second
-    private static final double BETRAY_REACH = 12.0;             // a mob turns on the nearest other mob this close to it
-    private static final int DEGENERATION_PLAYER_WEAKNESS = 1;   // a player cannot betray: Weakness II instead
+    static final int DEGENERATION_SEQUENCE = 3;
+    static final int DEGENERATION_COST = 12000;          // Sequence 3 holds 59780
+    static final double DEGENERATION_RANGE = 28.0;
+    static final float DEGENERATION_HIT = 20f;           // when it lands; it also eats every buff on the target
+    static final int DEGENERATION_TICKS = 160;           // then it rots this long: no healing, Wither I...
+    static final float DEGENERATION_DAMAGE = 6f;         // ...and this much each second
+    static final double BETRAY_REACH = 12.0;             // a mob turns on the nearest other mob this close to it
+    static final int DEGENERATION_PLAYER_WEAKNESS = 1;   // a player cannot betray: Weakness II instead
     // sneak: Trinity Body
-    private static final int TRINITY_COST = 12000;
-    private static final int TRINITY_TICKS = 400;
-    private static final float TRINITY_BONUS = 0.65f;            // the other two strike with you: 35% more damage dealt
-    private static final int TRINITY_BODIES = 2;                 // each lethal blow kills one of them instead of you...
-    private static final float TRINITY_REVIVE_HEALTH = 0.5f;     // ...and you stand with this share of your health
-    private static final int TRINITY_ECHO_EVERY = 10;            // ticks between two flashes of the copies striking (only the look)
+    static final int TRINITY_COST = 12000;
+    static final int TRINITY_TICKS = 400;
+    static final float TRINITY_BONUS = 0.65f;            // the other two strike with you: 35% more damage dealt
+    static final int TRINITY_BODIES = 2;                 // each lethal blow kills one of them instead of you...
+    static final float TRINITY_REVIVE_HEALTH = 0.5f;     // ...and you stand with this share of your health
+    static final int TRINITY_ECHO_EVERY = 10;            // ticks between two flashes of the copies striking (only the look)
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String RITUAL_UNTIL = "dark_angel_ritual_until";
-    private static final String LISTEN_UNTIL = "dark_angel_listen_until";
-    private static final String LURK_UNTIL = "dark_angel_lurk_until";
-    private static final String CLOAK_UNTIL = "dark_angel_cloak_until";
-    private static final String ARMOR_UNTIL = "dark_angel_armor_until";
-    private static final String TRINITY_UNTIL = "dark_angel_trinity_until";
-    private static final String TRINITY_LEFT = "dark_angel_trinity_bodies";
-    private static final String TRINITY_ECHO = "dark_angel_trinity_echo";        // when the copies last flashed
+    static final String RITUAL_UNTIL = "dark_angel_ritual_until";
+    static final String LISTEN_UNTIL = "dark_angel_listen_until";
+    static final String LURK_UNTIL = "dark_angel_lurk_until";
+    static final String CLOAK_UNTIL = "dark_angel_cloak_until";
+    static final String ARMOR_UNTIL = "dark_angel_armor_until";
+    static final String TRINITY_UNTIL = "dark_angel_trinity_until";
+    static final String TRINITY_LEFT = "dark_angel_trinity_bodies";
+    static final String TRINITY_ECHO = "dark_angel_trinity_echo";        // when the copies last flashed
 
     // Grazing's slots: a compound with slot0..slot6 ("Pathway|key|sneak" or missing) and "selected".
     // Kept through death (copied over in onHangedManClone).
-    private static final String GRAZING = "dark_angel_grazing";
-    private static final String GRAZING_SELECTED = "selected";
-    private static final String GRAZING_WHEEL = "dark_angel_grazing";            // the menu's id
+    static final String GRAZING = "dark_angel_grazing";
+    static final String GRAZING_SELECTED = "selected";
+    static final String GRAZING_WHEEL = "dark_angel_grazing";            // the menu's id
 
     // Saved on whoever it is put on
-    private static final String WHISPERED_UNTIL = "dark_angel_whispered_until";
-    private static final String DEGENERATING_UNTIL = "dark_angel_degenerating_until";
+    static final String WHISPERED_UNTIL = "dark_angel_whispered_until";
+    static final String DEGENERATING_UNTIL = "dark_angel_degenerating_until";
 
     // Other names
-    private static final String AMBUSH = "dark_angel_ambush";
-    private static final Identifier ARMOR_SCALE = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "dark_angel_black_armor_scale");
-    private static final Identifier ARMOR_FOOTING = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "dark_angel_black_armor_footing");
+    static final String AMBUSH = "dark_angel_ambush";
+    static final Identifier ARMOR_SCALE = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "dark_angel_black_armor_scale");
+    static final Identifier ARMOR_FOOTING = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "dark_angel_black_armor_footing");
 
     /** Who each caster's whispers are on right now (a new target ends the old whispers). Not saved. */
-    private static final Map<UUID, LivingEntity> WHISPERED = new HashMap<>();
+    static final Map<UUID, LivingEntity> WHISPERED = new HashMap<>();
 
     @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class HangedManEvents {
@@ -247,7 +247,8 @@ public class DarkAngel {
             LivingEntity victim = event.getEntity();
             if (!(victim.level() instanceof ServerLevel sl) || event.getAmount() <= 0f) return;
 
-            if (victim instanceof Player player) {
+            {                                                            // a player's, or a Beyonder mob's
+                LivingEntity player = victim;
                 if (isActive(player, CLOAK_UNTIL)) {
                     event.setAmount(event.getAmount() * (1f - CLOAK_GUARD));
                     HangedManFx.fleshCloakAbsorb(sl, player);
@@ -258,7 +259,7 @@ public class DarkAngel {
                 }
             }
 
-            if (event.getSource().getEntity() instanceof Player attacker && attacker != victim
+            if (event.getSource().getEntity() instanceof LivingEntity attacker && attacker != victim
                     && isActive(attacker, TRINITY_UNTIL)) {
                 event.setAmount(event.getAmount() * (1f + TRINITY_BONUS));
                 CompoundTag data = attacker.getPersistentData();
@@ -334,13 +335,13 @@ public class DarkAngel {
         divination(player, sl);
     }
 
-    private static void divination(Player player, ServerLevel sl) {
+    static void divination(LivingEntity player, ServerLevel sl) {
         HangedManFx.divination(sl, player);
         Later.run(sl, HangedManFx.DIVINATION_PULSE, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
             List<LivingEntity> found = Spells.enemiesAround(player, sl, player.position(), DIVINATION_RADIUS);
             if (found.isEmpty()) {
-                player.sendSystemMessage(Component.literal("The pendulum finds nothing."));
+                Spells.tell(player, Component.literal("The pendulum finds nothing."));
                 return;
             }
             LivingEntity strongest = found.get(0);
@@ -352,19 +353,19 @@ public class DarkAngel {
             HangedManFx.divinationMark(sl, strongest, MARK_TICKS);
             HangedManFx.status(player, Status.DIVINATION, MARK_TICKS);
             int distance = (int) Math.round(player.distanceTo(strongest));
-            player.sendSystemMessage(Component.literal("The pendulum stops on " + strongest.getDisplayName().getString()
+            Spells.tell(player, Component.literal("The pendulum stops on " + strongest.getDisplayName().getString()
                     + ", " + distance + " blocks away (" + Math.round(strongest.getHealth()) + " of "
                     + Math.round(strongest.getMaxHealth()) + " health). " + found.size() + " found."));
         });
     }
 
-    private static void ritualCircle(Player player, ServerLevel sl) {
+    static void ritualCircle(LivingEntity player, ServerLevel sl) {
         if (isActive(player, RITUAL_UNTIL)) {
-            player.sendSystemMessage(Component.literal("Your circle still stands."));
+            Spells.tell(player, Component.literal("Your circle still stands."));
             return;
         }
         if (player.getHealth() <= RITUAL_PRICE + 1f) {
-            player.sendSystemMessage(Component.literal("You have too little blood left to pay for a ritual."));
+            Spells.tell(player, Component.literal("You have too little blood left to pay for a ritual."));
             return;
         }
         riseFromShadow(player, sl);
@@ -380,13 +381,12 @@ public class DarkAngel {
         Later.run(sl, RITUAL_PULSE, () -> ritualPulse(player, sl, ground, until));
     }
 
-    private static void ritualPulse(Player player, ServerLevel sl, Vec3 ground, long until) {
+    private static void ritualPulse(LivingEntity player, ServerLevel sl, Vec3 ground, long until) {
         if (!Spells.casterStillHere(player, sl)) return;
         if (player.getPersistentData().getLongOr(RITUAL_UNTIL, 0L) != until || sl.getGameTime() > until) return;
         HangedManFx.ritualPulse(sl, ground, RITUAL_RADIUS);
         if (inCircle(player, ground, RITUAL_RADIUS)) {
-            float max = Beyonder.maxSpirituality(player);
-            SoulCore.setSpirituality(player, Math.min(max, SoulCore.getSpirituality(player) + max * RITUAL_SPIRITUALITY));
+            Spells.giveSpirituality(player, Spells.maxSpiritualityOf(player) * RITUAL_SPIRITUALITY);
             Spells.keepEffect(player, MobEffects.STRENGTH, RITUAL_STRENGTH_LEVEL, RITUAL_PULSE + 20);
             Spells.keepEffect(player, MobEffects.RESISTANCE, RITUAL_RESISTANCE_LEVEL, RITUAL_PULSE + 20);
         }
@@ -424,7 +424,7 @@ public class DarkAngel {
         whispers(player, sl, target);
     }
 
-    private static void whispers(Player player, ServerLevel sl, LivingEntity target) {
+    static void whispers(LivingEntity player, ServerLevel sl, LivingEntity target) {
         LivingEntity before = WHISPERED.put(player.getUUID(), target);
         if (before != null && before != target && before.isAlive()) {
             before.getPersistentData().remove(WHISPERED_UNTIL);
@@ -439,7 +439,7 @@ public class DarkAngel {
     }
 
     /** Once a second while the whispers last (until a new whisper replaces them). */
-    private static void whisperTick(Player player, ServerLevel sl, LivingEntity target, long until) {
+    private static void whisperTick(LivingEntity player, ServerLevel sl, LivingEntity target, long until) {
         Later.run(sl, 20, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
             if (!target.isAlive() || target.level() != sl) {
@@ -461,14 +461,14 @@ public class DarkAngel {
         });
     }
 
-    private static void listen(Player player, ServerLevel sl) {
+    static void listen(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + LISTEN_TICKS;
         player.getPersistentData().putLong(LISTEN_UNTIL, until);
         HangedManFx.status(player, Status.LISTEN, LISTEN_TICKS);
         listenPulse(player, sl, until);
     }
 
-    private static void listenPulse(Player player, ServerLevel sl, long until) {
+    private static void listenPulse(LivingEntity player, ServerLevel sl, long until) {
         if (!Spells.casterStillHere(player, sl)) return;
         if (player.getPersistentData().getLongOr(LISTEN_UNTIL, 0L) != until || sl.getGameTime() > until) return;
         HangedManFx.listenPulse(sl, player, LISTEN_RADIUS);
@@ -504,7 +504,7 @@ public class DarkAngel {
         shadowBinding(player, sl);
     }
 
-    private static void shadowBinding(Player player, ServerLevel sl) {
+    static void shadowBinding(LivingEntity player, ServerLevel sl) {
         Vec3 ground = Spells.aimGround(player, sl, BINDING_RANGE);
         HangedManFx.bindingWarning(sl, ground, BINDING_RADIUS);
         Later.run(sl, BINDING_WARNING, () -> {
@@ -520,28 +520,28 @@ public class DarkAngel {
         });
     }
 
-    private static void lurk(Player player, ServerLevel sl) {
+    static void lurk(LivingEntity player, ServerLevel sl) {
         player.getPersistentData().putLong(LURK_UNTIL, sl.getGameTime() + LURK_TICKS);
         HangedManFx.lurkEnter(sl, player, LURK_TICKS);
         HangedManFx.status(player, Status.LURKING, LURK_TICKS);
         Concealment.hide(player, LURK_TICKS + 5);                 // a little longer: lurkTick ends it
         player.addEffect(new MobEffectInstance(MobEffects.SPEED, LURK_TICKS, LURK_SPEED_LEVEL, false, false));
         // a hit straight out of the shadow (it brings you out too) counts as the ambush
-        EmpoweredHit.arm(player, AMBUSH, LURK_TICKS + AMBUSH_WINDOW, DarkAngel::ambush);
+        EmpoweredHit.armAny(player, AMBUSH, LURK_TICKS + AMBUSH_WINDOW, DarkAngel::ambush);
     }
 
-    private static float ambush(Player attacker, LivingEntity target, float amount, ServerLevel sl) {
+    private static float ambush(LivingEntity attacker, LivingEntity target, float amount, ServerLevel sl) {
         Root.apply(target, AMBUSH_HOLD_TICKS, RootRestriction.MOVEMENT);
         HangedManFx.bind(sl, target, HangedManFx.BIND_GRIPS + 10);
         return amount + AMBUSH_BONUS;
     }
 
-    public static boolean isLurking(Player player) {
+    public static boolean isLurking(LivingEntity player) {
         return isActive(player, LURK_UNTIL);
     }
 
     /** Every tick: lets the caster out when the time is up, or when something already pulled them out (an attack). */
-    private static void lurkTick(Player player, ServerLevel sl) {
+    static void lurkTick(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         if (!data.contains(LURK_UNTIL)) return;
         if (!isActive(player, LURK_UNTIL) || !Concealment.isHidden(player)) {
@@ -552,7 +552,7 @@ public class DarkAngel {
     }
 
     /** Out of the shadow, where you are. The ambush stays ready a moment longer. */
-    private static void endLurk(Player player, ServerLevel sl) {
+    static void endLurk(LivingEntity player, ServerLevel sl) {
         player.getPersistentData().remove(LURK_UNTIL);
         if (Concealment.isHidden(player)) Concealment.reveal(player);
         MobEffectInstance speed = player.getEffect(MobEffects.SPEED);   // only the speed the shadow gave
@@ -561,11 +561,11 @@ public class DarkAngel {
         }
         HangedManFx.lurkExit(sl, player);
         HangedManFx.statusEnd(player, Status.LURKING);
-        if (EmpoweredHit.isArmed(player, AMBUSH)) EmpoweredHit.arm(player, AMBUSH, AMBUSH_WINDOW, DarkAngel::ambush);
+        if (EmpoweredHit.isArmed(player, AMBUSH)) EmpoweredHit.armAny(player, AMBUSH, AMBUSH_WINDOW, DarkAngel::ambush);
     }
 
     /** Casting anything else brings you out of the shadow first. */
-    private static void riseFromShadow(Player player, ServerLevel sl) {
+    static void riseFromShadow(LivingEntity player, ServerLevel sl) {
         if (isActive(player, LURK_UNTIL)) endLurk(player, sl);
     }
 
@@ -589,7 +589,7 @@ public class DarkAngel {
         fleshBomb(player, sl);
     }
 
-    private static void fleshBomb(Player player, ServerLevel sl) {
+    static void fleshBomb(LivingEntity player, ServerLevel sl) {
         Vec3 hand = HangedManFx.fleshBombHand(player, sl);
         Vec3 direction = Spells.aimFrom(player, sl, hand, BOMB_RANGE);
         boolean[] stuck = {false};
@@ -604,7 +604,7 @@ public class DarkAngel {
                 .fire(player, sl, hand, direction);
     }
 
-    private static void stickBomb(Player player, ServerLevel sl, LivingEntity target) {
+    private static void stickBomb(LivingEntity player, ServerLevel sl, LivingEntity target) {
         HangedManFx.fleshBombStick(sl, target, BOMB_FUSE);
         Later.run(sl, BOMB_FUSE, () -> {
             if (!Spells.casterStillHere(player, sl) || target.level() != sl) return;
@@ -612,7 +612,7 @@ public class DarkAngel {
         });
     }
 
-    private static void burstBomb(Player player, ServerLevel sl, Vec3 center, LivingEntity stuckOn) {
+    private static void burstBomb(LivingEntity player, ServerLevel sl, Vec3 center, LivingEntity stuckOn) {
         HangedManFx.fleshBombBurst(sl, center, BOMB_RADIUS, stuckOn);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, center, BOMB_RADIUS)) {
             double near = 1.0 - Math.min(1.0, Spells.distanceToBody(enemy, center) / BOMB_RADIUS);
@@ -622,7 +622,7 @@ public class DarkAngel {
         }
     }
 
-    private static void fleshCloak(Player player, ServerLevel sl) {
+    static void fleshCloak(LivingEntity player, ServerLevel sl) {
         if (isActive(player, CLOAK_UNTIL)) {                       // cast again: it comes off
             endCloak(player, sl);
             return;
@@ -634,7 +634,7 @@ public class DarkAngel {
         HangedManFx.status(player, Status.FLESH_CLOAK, CLOAK_TICKS);
     }
 
-    private static void cloakTick(Player player, ServerLevel sl) {
+    static void cloakTick(LivingEntity player, ServerLevel sl) {
         if (!player.getPersistentData().contains(CLOAK_UNTIL)) return;
         if (!isActive(player, CLOAK_UNTIL)) {
             endCloak(player, sl);
@@ -646,7 +646,7 @@ public class DarkAngel {
         }
     }
 
-    private static void endCloak(Player player, ServerLevel sl) {
+    private static void endCloak(LivingEntity player, ServerLevel sl) {
         player.getPersistentData().remove(CLOAK_UNTIL);
         HangedManFx.fleshCloakEnd(sl, player);
         HangedManFx.statusEnd(player, Status.FLESH_CLOAK);
@@ -701,7 +701,7 @@ public class DarkAngel {
     }
 
     /** A soul that waits on its corpse for its killer, whose slots were all full. Not saved. */
-    private static final class WaitingSoul {
+    static final class WaitingSoul {
         final UUID owner;
         final ServerLevel level;
         final Vec3 corpse;
@@ -721,34 +721,34 @@ public class DarkAngel {
         }
     }
 
-    private static final List<WaitingSoul> SOULS = new ArrayList<>();
+    static final List<WaitingSoul> SOULS = new ArrayList<>();
 
     // ---------- the slots
 
-    private static CompoundTag slots(Player player) {
+    private static CompoundTag slots(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         if (!data.contains(GRAZING)) data.put(GRAZING, new CompoundTag());
         return data.getCompoundOrEmpty(GRAZING);
     }
 
-    private static Grazed slot(Player player, int index) {
+    private static Grazed slot(LivingEntity player, int index) {
         return Grazed.load(slots(player).getStringOr("slot" + index, ""));
     }
 
-    private static void setSlot(Player player, int index, Grazed grazed) {
+    private static void setSlot(LivingEntity player, int index, Grazed grazed) {
         slots(player).putString("slot" + index, grazed.save());
     }
 
-    private static int selected(Player player) {
+    private static int selected(LivingEntity player) {
         return Math.floorMod(slots(player).getIntOr(GRAZING_SELECTED, 0), GRAZE_SLOTS);
     }
 
-    private static void select(Player player, int index) {
+    private static void select(LivingEntity player, int index) {
         slots(player).putInt(GRAZING_SELECTED, index);
     }
 
     /** The first empty slot, or -1 when all are full. */
-    private static int firstEmpty(Player player) {
+    private static int firstEmpty(LivingEntity player) {
         for (int i = 0; i < GRAZE_SLOTS; i++) {
             if (slot(player, i) == null) return i;
         }
@@ -795,7 +795,7 @@ public class DarkAngel {
      * From a player with a Pathway or a Beyonder mob (blasphemy_slate/beyonder_mobs): one of the abilities their
      * Pathway gives them at their Sequence. Anything else: nothing.
      */
-    private static PathwayAbilities.Ability pickSoul(Player killer, LivingEntity victim) {
+    private static PathwayAbilities.Ability pickSoul(LivingEntity killer, LivingEntity victim) {
         return Beyonders.randomTakeable(victim, killer.getRandom(), null);
     }
 
@@ -826,7 +826,7 @@ public class DarkAngel {
     // ---------- the souls that wait on their corpses
 
     /** Twice a second for the owner: their waiting souls drift, and fade when their time is up. */
-    private static void waitingSoulsTick(Player player, ServerLevel sl) {
+    private static void waitingSoulsTick(LivingEntity player, ServerLevel sl) {
         if (SOULS.isEmpty()) return;
         long now = sl.getGameTime();
         for (WaitingSoul soul : new ArrayList<>(SOULS)) {
@@ -841,7 +841,7 @@ public class DarkAngel {
     }
 
     /** The nearest of the player's waiting souls within SOUL_REACH, or null. */
-    private static WaitingSoul soulNear(Player player, ServerLevel sl) {
+    private static WaitingSoul soulNear(LivingEntity player, ServerLevel sl) {
         WaitingSoul best = null;
         double bestDistance = SOUL_REACH * SOUL_REACH;
         long now = sl.getGameTime();
@@ -857,7 +857,7 @@ public class DarkAngel {
     }
 
     /** The player left: their waiting souls fade. */
-    private static void dropWaitingSouls(Player player) {
+    private static void dropWaitingSouls(LivingEntity player) {
         for (WaitingSoul soul : new ArrayList<>(SOULS)) {
             if (!soul.owner.equals(player.getUUID())) continue;
             SOULS.remove(soul);
@@ -908,10 +908,10 @@ public class DarkAngel {
     }
 
     /** The waiting soul goes into that slot (what was there is gone) and is selected. */
-    private static void takeSoul(ServerPlayer player, ServerLevel sl, WaitingSoul soul, int index) {
+    private static void takeSoul(LivingEntity player, ServerLevel sl, WaitingSoul soul, int index) {
         if (!SOULS.contains(soul) || soul.level != sl
                 || player.position().distanceToSqr(soul.corpse) > (SOUL_REACH + 2) * (SOUL_REACH + 2)) {
-            player.sendSystemMessage(Component.literal("That soul is gone."));
+            Spells.tell(player, Component.literal("That soul is gone."));
             return;
         }
         SOULS.remove(soul);
@@ -919,7 +919,7 @@ public class DarkAngel {
         setSlot(player, index, soul.grazed);
         select(player, index);
         HangedManFx.soulStolen(sl, soul.corpse, soul.tag, player, soul.color);
-        player.sendSystemMessage(Component.literal("Grazed " + soul.grazed.label() + " into slot " + (index + 1)
+        Spells.tell(player, Component.literal("Grazed " + soul.grazed.label() + " into slot " + (index + 1)
                 + (before == null ? "." : ", in place of " + before.label() + ".")));
     }
 
@@ -969,7 +969,7 @@ public class DarkAngel {
         cull(player, sl);
     }
 
-    private static void cull(Player player, ServerLevel sl) {
+    static void cull(LivingEntity player, ServerLevel sl) {
         HangedManFx.cull(sl, player);
         Later.run(sl, 2, () -> {                                     // when the arc has swept through
             if (!Spells.casterStillHere(player, sl)) return;
@@ -984,7 +984,7 @@ public class DarkAngel {
         });
     }
 
-    private static void blackArmor(Player player, ServerLevel sl) {
+    static void blackArmor(LivingEntity player, ServerLevel sl) {
         if (isActive(player, ARMOR_UNTIL)) {                       // cast again: it comes off
             endArmor(player, sl, true);
             return;
@@ -998,7 +998,7 @@ public class DarkAngel {
         HangedManFx.status(player, Status.BLACK_ARMOR, ARMOR_TICKS);
     }
 
-    private static void armorTick(Player player, ServerLevel sl) {
+    static void armorTick(LivingEntity player, ServerLevel sl) {
         if (!player.getPersistentData().contains(ARMOR_UNTIL)) return;
         if (!isActive(player, ARMOR_UNTIL)) {
             endArmor(player, sl, false);                           // time up: the plates fade by themselves
@@ -1008,7 +1008,7 @@ public class DarkAngel {
     }
 
     /** 'early' = taken off before its time, so its look is taken away at once instead of fading. */
-    private static void endArmor(Player player, ServerLevel sl, boolean early) {
+    private static void endArmor(LivingEntity player, ServerLevel sl, boolean early) {
         player.getPersistentData().remove(ARMOR_UNTIL);
         removeModifier(player, Attributes.SCALE, ARMOR_SCALE);
         removeModifier(player, Attributes.KNOCKBACK_RESISTANCE, ARMOR_FOOTING);
@@ -1041,7 +1041,7 @@ public class DarkAngel {
         degeneration(player, sl, target);
     }
 
-    private static void degeneration(Player player, ServerLevel sl, LivingEntity target) {
+    static void degeneration(LivingEntity player, ServerLevel sl, LivingEntity target) {
         HangedManFx.degeneration(sl, player, target);
         Later.run(sl, HangedManFx.DEGENERATION_ARRIVES, () -> {
             if (!target.isAlive() || target.level() != sl || !Spells.casterStillHere(player, sl)) return;
@@ -1073,7 +1073,7 @@ public class DarkAngel {
     }
 
     /** Every half second while it rots: ash falls; every second it hurts. A new Degeneration takes over. */
-    private static void degenerationTick(Player player, ServerLevel sl, LivingEntity target, long until, int count) {
+    private static void degenerationTick(LivingEntity player, ServerLevel sl, LivingEntity target, long until, int count) {
         Later.run(sl, 10, () -> {
             if (!target.isAlive() || target.level() != sl || !Spells.casterStillHere(player, sl)) return;
             if (target.getPersistentData().getLongOr(DEGENERATING_UNTIL, 0L) != until) return;
@@ -1103,9 +1103,9 @@ public class DarkAngel {
         return best;
     }
 
-    private static void trinityBody(Player player, ServerLevel sl) {
+    static void trinityBody(LivingEntity player, ServerLevel sl) {
         if (isActive(player, TRINITY_UNTIL)) {
-            player.sendSystemMessage(Component.literal("Your other bodies already stand beside you."));
+            Spells.tell(player, Component.literal("Your other bodies already stand beside you."));
             return;
         }
         if (!Spells.paySpirituality(player, TRINITY_COST)) return;
@@ -1135,12 +1135,12 @@ public class DarkAngel {
         }
     }
 
-    private static void trinityTick(Player player, ServerLevel sl) {
+    static void trinityTick(LivingEntity player, ServerLevel sl) {
         if (!player.getPersistentData().contains(TRINITY_UNTIL)) return;
         if (!isActive(player, TRINITY_UNTIL)) endTrinity(player, sl);
     }
 
-    private static void endTrinity(Player player, ServerLevel sl) {
+    private static void endTrinity(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         data.remove(TRINITY_UNTIL);
         data.remove(TRINITY_LEFT);
@@ -1161,7 +1161,7 @@ public class DarkAngel {
     }
 
     /** True while the game time saved under 'key' is still ahead. */
-    private static boolean isActive(Entity entity, String key) {
+    static boolean isActive(Entity entity, String key) {
         return entity.getPersistentData().getLongOr(key, 0L) > entity.level().getGameTime();
     }
 

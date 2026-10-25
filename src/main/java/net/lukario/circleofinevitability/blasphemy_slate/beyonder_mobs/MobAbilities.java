@@ -11,6 +11,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WandererMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTimeMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.ConquerorMobs;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngelMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonMobs;
@@ -51,6 +52,7 @@ public final class MobAbilities {
         WandererMobs.register();
         WormOfTimeMobs.register();
         ConquerorMobs.register();
+        DarkAngelMobs.register();
     }
 
     private MobAbilities() {}
