@@ -1310,7 +1310,7 @@ public final class StarDragonFx {
     /** The tick a grazed asteroid strikes the ground (1.2 seconds after the warning circle opens). */
     public static final int GRAZE_LANDS = 24;
     /** How high the asteroid starts. */
-    private static final float GRAZE_HEIGHT = 30f;
+    static final float GRAZE_HEIGHT = 30f;
 
     /**
      * Star Grazing: a warning circle 'radius' wide opens on 'ground', and a small asteroid wrapped in fire falls onto
@@ -1640,7 +1640,7 @@ public final class StarDragonFx {
 
     /** The tick Planetfall strikes (4 seconds of descent). */
     public static final int PLANET_LANDS = 80;
-    private static final float PLANET_HEIGHT = 60f;
+    static final float PLANET_HEIGHT = 60f;
 
     /**
      * Planetfall: a circle 'radius' wide (24) opens on 'ground' and a huge asteroid lowers through the sky, its warning

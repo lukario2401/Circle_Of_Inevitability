@@ -60,6 +60,11 @@ public final class Bleeding {
     // =========================
 
     /** Bleeds 'perSecond' a second for 'ticks'. False if it cannot bleed (immune, dead, creative). */
+    /** The same from anyone: a Beyonder mob's bleeding has no player to credit (its source is left empty). */
+    public static boolean apply(LivingEntity target, LivingEntity source, int ticks, float perSecond) {
+        return apply(target, source instanceof Player player ? player : null, ticks, perSecond);
+    }
+
     public static boolean apply(LivingEntity target, Player source, int ticks, float perSecond) {
         if (target.level().isClientSide() || ticks <= 0 || perSecond <= 0f || !target.isAlive()) return false;
         if (target instanceof Player player && (player.isCreative() || player.isSpectator())) return false;

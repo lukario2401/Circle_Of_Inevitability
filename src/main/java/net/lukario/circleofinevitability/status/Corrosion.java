@@ -82,6 +82,15 @@ public final class Corrosion {
     // =========================
 
     /** Corrodes 'perSecond' a second, 'growth' more each second, until cleansed. False if it cannot. */
+    /** The same from anyone: a Beyonder mob's corrosion has no player to credit (its source is left empty). */
+    public static boolean apply(LivingEntity target, LivingEntity source, float perSecond, float growth) {
+        return apply(target, source instanceof Player player ? player : null, perSecond, growth);
+    }
+
+    public static boolean apply(LivingEntity target, LivingEntity source, float perSecond, float growth, int ticks) {
+        return apply(target, source instanceof Player player ? player : null, perSecond, growth, ticks);
+    }
+
     public static boolean apply(LivingEntity target, Player source, float perSecond, float growth) {
         return apply(target, source, perSecond, growth, 0);
     }

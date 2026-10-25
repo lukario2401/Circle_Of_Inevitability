@@ -40,26 +40,26 @@ public final class StarDragonRays {
     static final int WEAKENING_SEQUENCE = 7;
     static final int WEAKENING_COST = 1250;
     static final int WEAKENING_COOLDOWN = 120;
-    private static final double WEAKENING_RANGE = 30.0;
-    private static final double WEAKENING_WIDTH = 0.3;
-    private static final float WEAKENING_DAMAGE = 40f;
-    private static final int WEAKENED_TICKS = 120;
-    private static final int MELT_SEQUENCE = 5;                 // Tidal Scholar: it melts flesh (StarDragonMarks.MELTING)
+    static final double WEAKENING_RANGE = 30.0;
+    static final double WEAKENING_WIDTH = 0.3;
+    static final float WEAKENING_DAMAGE = 40f;
+    static final int WEAKENED_TICKS = 120;
+    static final int MELT_SEQUENCE = 5;                 // Tidal Scholar: it melts flesh (StarDragonMarks.MELTING)
 
     // Sunlight Ray (Tidal Scholar)
     static final int SUNLIGHT_SEQUENCE = 5;
     static final int SUNLIGHT_COST = 3000;
     static final int SUNLIGHT_COOLDOWN = 200;
-    private static final double SUNLIGHT_RANGE = 24.0;
-    private static final double SUNLIGHT_WIDTH = 1.0;           // 2 blocks wide
-    private static final float SUNLIGHT_DAMAGE = 80f;
-    private static final float SUNLIGHT_UNDEAD = 2f;            // undead and creatures of darkness take this many times
-    private static final int SUNLIGHT_BLIND = 40;
-    private static final float SUNLIGHT_DAY_COST = 0.5f;        // in real daylight under open sky
+    static final double SUNLIGHT_RANGE = 24.0;
+    static final double SUNLIGHT_WIDTH = 1.0;           // 2 blocks wide
+    static final float SUNLIGHT_DAMAGE = 80f;
+    static final float SUNLIGHT_UNDEAD = 2f;            // undead and creatures of darkness take this many times
+    static final int SUNLIGHT_BLIND = 40;
+    static final float SUNLIGHT_DAY_COST = 0.5f;        // in real daylight under open sky
 
     // Piercing Ray (Navigator, key 3 sneak)
     static final int PIERCING_COST = 2450;
-    private static final int PIERCING_COOLDOWN = 160;
+    static final int PIERCING_COOLDOWN = 160;
     static final double PIERCING_RANGE = 28.0;
     static final double PIERCING_WIDTH = 0.5;
     static final float PIERCING_DAMAGE = 40f;
@@ -69,26 +69,26 @@ public final class StarDragonRays {
     static final int SERIES_SEQUENCE = 4;
     static final int SERIES_COST = 6000;
     static final int SERIES_COOLDOWN = 300;
-    private static final double SERIES_RANGE = 30.0;
-    private static final int SERIES_COUNT = 6;
-    private static final double SERIES_FAN = 4.0;               // degrees between rays
-    private static final float SERIES_DAMAGE = 20f;
-    private static final int SERIES_WEAKENED = 100;
-    private static final int MELT_TICKS = 100;                  // three stacks: it melts, and takes...
-    private static final float MELT_PER_SECOND = 30f;           // ...this much a second for 5 seconds (very heavy)
+    static final double SERIES_RANGE = 30.0;
+    static final int SERIES_COUNT = 6;
+    static final double SERIES_FAN = 4.0;               // degrees between rays
+    static final float SERIES_DAMAGE = 20f;
+    static final int SERIES_WEAKENED = 100;
+    static final int MELT_TICKS = 100;                  // three stacks: it melts, and takes...
+    static final float MELT_PER_SECOND = 30f;           // ...this much a second for 5 seconds (very heavy)
 
     // In the Star Dragon Form (StarDragonForms)
-    private static final double DRAGON_WIDER = 2.0;             // every ray this many times as wide
+    static final double DRAGON_WIDER = 2.0;             // every ray this many times as wide
 
-    private static final String CD_PIERCING = "star_dragon_piercing_ray";
+    static final String CD_PIERCING = "star_dragon_piercing_ray";
 
     /** How a ray shows: the Dragon's while in the Star Dragon Form, else its own kind. */
-    static RayKind rayKind(Player player, RayKind own) {
+    static RayKind rayKind(LivingEntity player, RayKind own) {
         return StarDragonForms.isDragon(player) ? RayKind.DRAGON : own;
     }
 
     /** How wide a ray is: DRAGON_WIDER as wide in the Star Dragon Form. The same for what it hits and how it shows. */
-    static double rayWidth(Player player, double width) {
+    static double rayWidth(LivingEntity player, double width) {
         return StarDragonForms.isDragon(player) ? width * DRAGON_WIDER : width;
     }
 
@@ -97,7 +97,7 @@ public final class StarDragonRays {
     // The first enemy on it takes WEAKENING_DAMAGE and is Weakened for WEAKENED_TICKS (it bleeds and cannot heal until a
     // cleanse; StarDragonMarks.WEAKENED). Tidal Scholar: it melts too (half its armor, 20% more damage taken).
     // =========================
-    static AbilityWheel.Result weakeningRay(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result weakeningRay(LivingEntity player, ServerLevel sl) {
         Vec3 eye = player.getEyePosition().add(0, -0.2, 0);
         RayKind kind = rayKind(player, RayKind.WEAKENING);
         float look = (float) rayWidth(player, 0.25);
@@ -111,7 +111,7 @@ public final class StarDragonRays {
     }
 
     /** One weakening hit: the damage, a Weakened stack, and (Tidal Scholar) the melting. */
-    private static void weaken(Player player, LivingEntity target, float damage, int ticks) {
+    private static void weaken(LivingEntity player, LivingEntity target, float damage, int ticks) {
         StarDragon.rayHit(player, target, damage);
         if (!target.isAlive()) return;
         StarDragonMarks.put(target, Mark.WEAKENED, player, ticks);
@@ -123,7 +123,7 @@ public final class StarDragonRays {
     // 2 wide: every enemy on it takes SUNLIGHT_DAMAGE (twice for the undead) and is blinded SUNLIGHT_BLIND. It costs half
     // in real daylight under the open sky (sunlightCost, the wheel's costBy).
     // =========================
-    static AbilityWheel.Result sunlightRay(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result sunlightRay(LivingEntity player, ServerLevel sl) {
         StarDragonFx.sunlightCharge(sl, player);
         Later.run(sl, StarDragonFx.SUNLIGHT_FIRES, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
@@ -146,7 +146,7 @@ public final class StarDragonRays {
     }
 
     /** The Sunlight Ray's cost: half in real daylight under the open sky. */
-    static int sunlightCost(Player player, int cost) {
+    static int sunlightCost(LivingEntity player, int cost) {
         if (!(player.level() instanceof ServerLevel sl)) return cost;
         return Spells.inDaylight(sl, player.blockPosition().above()) ? Math.round(cost * SUNLIGHT_DAY_COST) : cost;
     }
@@ -159,6 +159,11 @@ public final class StarDragonRays {
         if (!Cooldowns.ready(player, CD_PIERCING, "Piercing Ray")) return;
         if (!StarDragon.pay(player, PIERCING_COST, CD_PIERCING)) return;
         Cooldowns.start(player, CD_PIERCING, PIERCING_COOLDOWN);
+        firePiercingRay(player, sl);
+    }
+
+    /** What piercingRay does once it is paid for (a Beyonder mob casts it this way too). */
+    static void firePiercingRay(LivingEntity player, ServerLevel sl) {
         Vec3 eye = player.getEyePosition();
         Ray.from(eye, player.getLookAngle())
                 .range(PIERCING_RANGE).width(rayWidth(player, PIERCING_WIDTH)).pierces()
@@ -175,7 +180,7 @@ public final class StarDragonRays {
     // Weakening Rays in a narrow fan on it, one every StarDragonFx.SERIES_STEP: each SERIES_DAMAGE and a Weakened stack.
     // At StarDragonMarks.MELT_AT stacks its skin melts: MELT_PER_SECOND for MELT_TICKS (once a cast).
     // =========================
-    static AbilityWheel.Result seriesOfRays(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result seriesOfRays(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, SERIES_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("The light in your hands has no one to descend on."));

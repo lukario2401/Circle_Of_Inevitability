@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobForm;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonFx.Status;
 import net.lukario.circleofinevitability.combat.Orbit;
 import net.lukario.circleofinevitability.combat.Shot;
@@ -36,34 +37,34 @@ public final class StarDragonForms {
     static final int ANGEL_SEQUENCE = 2;
     static final int ANGEL_COST = 25000;
     static final int ANGEL_COOLDOWN = 1800;
-    private static final int ANGEL_TICKS = 900;                 // 45 seconds...
-    private static final int ANGEL_AFTERMATH = 200;             // ...then 10 seconds of weakness
-    private static final double ANGEL_GLOW = 12.0;              // enemies this close are burned...
-    private static final float ANGEL_BURN = 20f;                // ...this much every half second...
-    private static final float ANGEL_UNDEAD = 2f;               // ...twice for the undead
+    static final int ANGEL_TICKS = 900;                 // 45 seconds...
+    static final int ANGEL_AFTERMATH = 200;             // ...then 10 seconds of weakness
+    static final double ANGEL_GLOW = 12.0;              // enemies this close are burned...
+    static final float ANGEL_BURN = 20f;                // ...this much every half second...
+    static final float ANGEL_UNDEAD = 2f;               // ...twice for the undead
 
     // Star Dragon Form (Star Dragon)
     static final int DRAGON_SEQUENCE = 1;
     static final int DRAGON_COST = 40000;
     static final int DRAGON_COOLDOWN = 2400;
-    private static final int DRAGON_TICKS = 1200;               // 60 seconds...
-    private static final int DRAGON_AFTERMATH = 300;            // ...then 15 seconds of weakness
-    private static final float DRAGON_TOUGH = 0.4f;             // 40% less damage taken (a ConjuredArmor, through Form)
-    private static final double DRAGON_SIZE = 1.2;              // 1.8 blocks tall to 4 (Attributes.SCALE, of the base)
-    private static final int DRAGON_BEAT_EVERY = 40;            // a wingbeat every 2 seconds while flying
-    private static final float DRAGON_GLOW = 0.5f;              // the Radiant Angel's glow at half strength
-    private static final double ASTEROID_RANGE = 24.0;
-    private static final float ASTEROID_DAMAGE = 80f;
-    private static final int ASTEROID_RECHARGE = 60;            // back 3 seconds after it was launched
-    private static final double ASTEROID_SPEED = 1.5;
+    static final int DRAGON_TICKS = 1200;               // 60 seconds...
+    static final int DRAGON_AFTERMATH = 300;            // ...then 15 seconds of weakness
+    static final float DRAGON_TOUGH = 0.4f;             // 40% less damage taken (a ConjuredArmor, through Form)
+    static final double DRAGON_SIZE = 1.2;              // 1.8 blocks tall to 4 (Attributes.SCALE, of the base)
+    static final int DRAGON_BEAT_EVERY = 40;            // a wingbeat every 2 seconds while flying
+    static final float DRAGON_GLOW = 0.5f;              // the Radiant Angel's glow at half strength
+    static final double ASTEROID_RANGE = 24.0;
+    static final float ASTEROID_DAMAGE = 80f;
+    static final int ASTEROID_RECHARGE = 60;            // back 3 seconds after it was launched
+    static final double ASTEROID_SPEED = 1.5;
 
     // =========================
     // Names
     // =========================
-    private static final String ANGEL = "star_dragon_radiant_angel";              // its Form
-    private static final String DRAGON = "star_dragon_dragon";                    // its Form
-    private static final String ASTEROID = "star_dragon_dragon_asteroid";         // its Orbit
-    private static final String STOLEN = "star_dragon_mythical_stolen";          // a form taken through a stolen cast
+    static final String ANGEL = "star_dragon_radiant_angel";              // its Form
+    static final String DRAGON = "star_dragon_dragon";                    // its Form
+    static final String ASTEROID = "star_dragon_dragon_asteroid";         // its Orbit
+    static final String STOLEN = "star_dragon_mythical_stolen";          // a form taken through a stolen cast
 
     /** In the Radiant Angel Form now (Fusion Cluster and Star Grazing hit harder). */
     public static boolean isRadiantAngel(Player player) {
@@ -73,6 +74,15 @@ public final class StarDragonForms {
     /** In the Star Dragon Form now (thicker rays, the asteroid). */
     public static boolean isDragon(Player player) {
         return Form.isIn(player, DRAGON);
+    }
+
+    /** The same for anyone: a player's Form, or a Beyonder mob's (beyonder_mobs/MobForm, StarDragonMobs). */
+    public static boolean isRadiantAngel(LivingEntity entity) {
+        return entity instanceof Player player ? isRadiantAngel(player) : MobForm.isIn(entity, ANGEL);
+    }
+
+    public static boolean isDragon(LivingEntity entity) {
+        return entity instanceof Player player ? isDragon(player) : MobForm.isIn(entity, DRAGON);
     }
 
     // =========================
@@ -104,7 +114,7 @@ public final class StarDragonForms {
     }
 
     /** Every 10 ticks of a form that shines: the glow, and the enemies near it burned ('strength' of a full burn). */
-    private static void glow(Player player, float strength) {
+    static void glow(LivingEntity player, float strength) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         StarDragonFx.radiance(sl, player, ANGEL_GLOW);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), ANGEL_GLOW)) {
@@ -160,7 +170,7 @@ public final class StarDragonForms {
      * A swing of the Star Dragon at 'struck' (AttackEntityEvent: a real blow, not an ability's hit): the asteroid, if
      * it is there, is launched.
      */
-    static void swing(Player dragon, LivingEntity struck) {
+    static void swing(LivingEntity dragon, LivingEntity struck) {
         if (!isDragon(dragon) || struck == dragon || !(dragon.level() instanceof ServerLevel sl)) return;
         int age = Orbit.age(dragon, ASTEROID);
         Vec3 from = Orbit.release(dragon, ASTEROID, 0, ASTEROID_RECHARGE);
@@ -181,7 +191,7 @@ public final class StarDragonForms {
     // =========================
 
     /** A form ends: its look, its picture, the weakness after it (when it ran out or was ended), the asteroid. */
-    private static void ended(Player player, Form.Ending why, String tag, Status status, int aftermath, boolean dragon) {
+    private static void ended(LivingEntity player, Form.Ending why, String tag, Status status, int aftermath, boolean dragon) {
         player.getPersistentData().remove(STOLEN);
         StarDragonFx.statusEnd(player, status);
         if (dragon) Orbit.close(player, ASTEROID);
@@ -202,16 +212,16 @@ public final class StarDragonForms {
         player.getPersistentData().putBoolean(STOLEN, !SoulCore.getPathway(player).equals(StarDragon.PATHWAY));
     }
 
-    private static String angelTag(Player player) {
+    private static String angelTag(LivingEntity player) {
         return "sd_radiant_angel_" + player.getId();
     }
 
-    private static String dragonTag(Player player) {
+    private static String dragonTag(LivingEntity player) {
         return "sd_star_dragon_" + player.getId();
     }
 
     /** After a relog or a death (the Form itself ends by itself then). */
-    static void clearState(Player player) {
+    static void clearState(LivingEntity player) {
         Orbit.close(player, ASTEROID);
         player.getPersistentData().remove(STOLEN);
     }

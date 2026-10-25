@@ -40,78 +40,78 @@ public final class StarDragonSky {
 
     // Star Grazing (Star Shepherd, key 6)
     static final int GRAZE_SEQUENCE = 3;
-    private static final int GRAZE_COST = 12000;
-    private static final int GRAZE_COOLDOWN = 300;
-    private static final double GRAZE_RANGE = 28.0;
-    private static final double GRAZE_RADIUS = 4.0;             // an 8 block circle...
-    private static final double GRAZE_WIDE = 6.0;               // ...12 from the Radiant Angel
-    private static final float GRAZE_DAMAGE = 80f;
-    private static final float GRAZE_RADIANT = 1.6f;            // Radiant Angel: 60% more
-    private static final double GRAZE_SHOVE = 0.9;
-    private static final int GRAZE_DRAGON_COUNT = 3;            // Star Dragon: three asteroids...
-    private static final int GRAZE_DRAGON_STEP = 10;            // ...this far apart (and each 40% further out)
-    private static final double STAR_HANGS = 6.0;               // the grazed star hangs this high...
-    private static final double STAR_RADIUS = 10.0;             // ...feeds allies this close...
-    private static final int STAR_TICKS = 600;                  // ...for 30 seconds (60 from the Radiant Angel)...
-    private static final int STAR_LONGER = 1200;
-    private static final int STAR_EVERY = 40;                   // ...every 2 seconds...
-    private static final float STAR_FEEDS = 0.03f;              // ...this share of a player's spirituality bar
+    static final int GRAZE_COST = 12000;
+    static final int GRAZE_COOLDOWN = 300;
+    static final double GRAZE_RANGE = 28.0;
+    static final double GRAZE_RADIUS = 4.0;             // an 8 block circle...
+    static final double GRAZE_WIDE = 6.0;               // ...12 from the Radiant Angel
+    static final float GRAZE_DAMAGE = 80f;
+    static final float GRAZE_RADIANT = 1.6f;            // Radiant Angel: 60% more
+    static final double GRAZE_SHOVE = 0.9;
+    static final int GRAZE_DRAGON_COUNT = 3;            // Star Dragon: three asteroids...
+    static final int GRAZE_DRAGON_STEP = 10;            // ...this far apart (and each 40% further out)
+    static final double STAR_HANGS = 6.0;               // the grazed star hangs this high...
+    static final double STAR_RADIUS = 10.0;             // ...feeds allies this close...
+    static final int STAR_TICKS = 600;                  // ...for 30 seconds (60 from the Radiant Angel)...
+    static final int STAR_LONGER = 1200;
+    static final int STAR_EVERY = 40;                   // ...every 2 seconds...
+    static final float STAR_FEEDS = 0.03f;              // ...this share of a player's spirituality bar
 
     // Fission Pulse (Star Shepherd, key 6 sneak)
-    private static final int FISSION_COST = 9000;
-    private static final int FISSION_COOLDOWN = 240;
-    private static final double FISSION_RANGE = 24.0;
-    private static final double FISSION_RADIUS = 3.0;           // a burst 6 across
-    private static final float FISSION_DAMAGE = 80f;
-    private static final int IRRADIATED_TICKS = 160;
-    private static final int RADIATION_TICKS = 160;             // the zone it leaves
-    private static final int STORM_SEQUENCE = 1;               // Star Dragon: an electromagnetic storm instead...
-    private static final int STORM_TICKS = 200;
-    private static final double STORM_RADIUS = 5.0;
-    private static final float STORM_ARC = 10f;                 // ...an arc every half second...
-    private static final float STORM_METAL = 2f;                // ...twice on metal armor
+    static final int FISSION_COST = 9000;
+    static final int FISSION_COOLDOWN = 240;
+    static final double FISSION_RANGE = 24.0;
+    static final double FISSION_RADIUS = 3.0;           // a burst 6 across
+    static final float FISSION_DAMAGE = 80f;
+    static final int IRRADIATED_TICKS = 160;
+    static final int RADIATION_TICKS = 160;             // the zone it leaves
+    static final int STORM_SEQUENCE = 1;               // Star Dragon: an electromagnetic storm instead...
+    static final int STORM_TICKS = 200;
+    static final double STORM_RADIUS = 5.0;
+    static final float STORM_ARC = 10f;                 // ...an arc every half second...
+    static final float STORM_METAL = 2f;                // ...twice on metal armor
 
     // Fusion Cluster (Radiant Angel, the Cosmos wheel)
     static final int FUSION_SEQUENCE = 2;
     static final int FUSION_COST = 25000;
     static final int FUSION_COOLDOWN = 280;
-    private static final int FUSION_COUNT = 3;
-    private static final int FUSION_MORE = 5;                   // Condenser: five, no windup, half the cost
-    private static final int FUSION_MORE_SEQUENCE = 0;
+    static final int FUSION_COUNT = 3;
+    static final int FUSION_MORE = 5;                   // Condenser: five, no windup, half the cost
+    static final int FUSION_MORE_SEQUENCE = 0;
     static final float FUSION_CONDENSER_COST = 0.5f;
-    private static final double FUSION_RANGE = 30.0;
-    private static final double FUSION_FAN = 9.0;               // degrees between clusters
-    private static final double FUSION_SPEED = 1.4;
-    private static final double FUSION_BURST = 5.0;
-    private static final float FUSION_DAMAGE = 80f;
-    private static final int CONFINEMENT_SEQUENCE = 1;          // Star Dragon: Inertial Confinement...
-    private static final double CONFINED_BURST = 8.0;
-    private static final float CONFINED_DAMAGE = 1.5f;          // ...50% more, and no circling first
+    static final double FUSION_RANGE = 30.0;
+    static final double FUSION_FAN = 9.0;               // degrees between clusters
+    static final double FUSION_SPEED = 1.4;
+    static final double FUSION_BURST = 5.0;
+    static final float FUSION_DAMAGE = 80f;
+    static final int CONFINEMENT_SEQUENCE = 1;          // Star Dragon: Inertial Confinement...
+    static final double CONFINED_BURST = 8.0;
+    static final float CONFINED_DAMAGE = 1.5f;          // ...50% more, and no circling first
     static final float RADIANT_BOOST = 1.25f;                   // Fusion Cluster and Star Grazing in the Radiant Angel Form
 
     // Planetfall (Star Dragon, the Cosmos wheel)
     static final int PLANET_SEQUENCE = 1;
     static final int PLANET_COST = 40000;
     static final int PLANET_COOLDOWN = 2400;
-    private static final double PLANET_RANGE = 40.0;
-    private static final double PLANET_RADIUS = 12.0;           // a 24 block circle
-    private static final float PLANET_PLAYER = 0.6f;            // players take this share of their maximum health...
-    private static final float PLANET_BOSS = 0.25f;             // ...bosses this share...
-    private static final float PLANET_HUGE = 300f;              // ...everything else this (it kills most mobs)
-    private static final float PLANET_ALLY = 0.25f;             // allies in the circle take a quarter
-    private static final int CRACKS_TICKS = 200;
-    private static final float CRACKS_DAMAGE = 10f;             // a second, on the cracks of light
+    static final double PLANET_RANGE = 40.0;
+    static final double PLANET_RADIUS = 12.0;           // a 24 block circle
+    static final float PLANET_PLAYER = 0.6f;            // players take this share of their maximum health...
+    static final float PLANET_BOSS = 0.25f;             // ...bosses this share...
+    static final float PLANET_HUGE = 300f;              // ...everything else this (it kills most mobs)
+    static final float PLANET_ALLY = 0.25f;             // allies in the circle take a quarter
+    static final int CRACKS_TICKS = 200;
+    static final float CRACKS_DAMAGE = 10f;             // a second, on the cracks of light
 
     // =========================
     // Names
     // =========================
-    private static final String CD_GRAZE = "star_dragon_star_grazing";
-    private static final String CD_FISSION = "star_dragon_fission_pulse";
-    private static final String GRAZED_STAR = "star_dragon_grazed_star";          // its Zone
-    private static final String RADIATION = "star_dragon_radiation";              // its Zone
-    private static final String STORM = "star_dragon_em_storm";                   // its Zone
-    private static final String FUSION = "star_dragon_fusion";                    // its Orbit
-    private static final String CRACKS = "star_dragon_light_cracks";              // its Zone
+    static final String CD_GRAZE = "star_dragon_star_grazing";
+    static final String CD_FISSION = "star_dragon_fission_pulse";
+    static final String GRAZED_STAR = "star_dragon_grazed_star";          // its Zone
+    static final String RADIATION = "star_dragon_radiation";              // its Zone
+    static final String STORM = "star_dragon_em_storm";                   // its Zone
+    static final String FUSION = "star_dragon_fusion";                    // its Orbit
+    static final String CRACKS = "star_dragon_light_cracks";              // its Zone
 
     // =========================
     // Star Grazing (key 6): you graze a small asteroid out of its orbit. A warning circle GRAZE_RADIUS wide opens where
@@ -125,6 +125,11 @@ public final class StarDragonSky {
         if (!Cooldowns.ready(player, CD_GRAZE, "Star Grazing")) return;
         if (!StarDragon.pay(player, GRAZE_COST, CD_GRAZE)) return;
         Cooldowns.start(player, CD_GRAZE, GRAZE_COOLDOWN);
+        grazeStar(player, sl);
+    }
+
+    /** What starGrazing does once it is paid for (a Beyonder mob casts it this way too). */
+    static void grazeStar(LivingEntity player, ServerLevel sl) {
         boolean radiant = StarDragon.grown(player, FUSION_SEQUENCE);
         boolean dragon = StarDragon.grown(player, STORM_SEQUENCE);
         double radius = radiant ? GRAZE_WIDE : GRAZE_RADIUS;
@@ -151,7 +156,7 @@ public final class StarDragonSky {
     }
 
     /** The grazed star over 'ground' for 'ticks', feeding the spirituality of the players on your side under it. */
-    private static void grazedStar(Player player, ServerLevel sl, Vec3 ground, int ticks) {
+    private static void grazedStar(LivingEntity player, ServerLevel sl, Vec3 ground, int ticks) {
         Vec3 above = ground.add(0, STAR_HANGS, 0);
         String tag = "sd_grazed_star_" + player.getId();
         Zone.close(player, GRAZED_STAR);                                         // one grazed star at a time
@@ -192,6 +197,11 @@ public final class StarDragonSky {
         if (!Cooldowns.ready(player, CD_FISSION, "Fission Pulse")) return;
         if (!StarDragon.pay(player, FISSION_COST, CD_FISSION)) return;
         Cooldowns.start(player, CD_FISSION, FISSION_COOLDOWN);
+        loosenNuclei(player, sl, target);
+    }
+
+    /** What fissionPulse does once it is paid for (a Beyonder mob casts it this way too). */
+    static void loosenNuclei(LivingEntity player, ServerLevel sl, LivingEntity target) {
         StarDragonFx.fissionPulse(sl, player, target);
         Vec3[] last = {target.position()};
         for (int t = 0; t < StarDragonFx.FISSION_SPLITS; t += 5) {
@@ -213,7 +223,7 @@ public final class StarDragonSky {
         });
     }
 
-    private static void radiationZone(Player player, ServerLevel sl, Vec3 ground) {
+    private static void radiationZone(LivingEntity player, ServerLevel sl, Vec3 ground) {
         String tag = "sd_radiation_" + player.getId();
         Zone.close(player, RADIATION);
         StarDragonFx.radiationZone(sl, ground, FISSION_RADIUS, RADIATION_TICKS, tag);
@@ -226,7 +236,7 @@ public final class StarDragonSky {
                 .open(player, sl, RADIATION);
     }
 
-    private static void emStorm(Player player, ServerLevel sl, Vec3 ground) {
+    private static void emStorm(LivingEntity player, ServerLevel sl, Vec3 ground) {
         String tag = "sd_storm_" + player.getId();
         Zone.close(player, STORM);
         StarDragonFx.emStorm(sl, ground, STORM_RADIUS, STORM_TICKS, tag);
@@ -269,7 +279,7 @@ public final class StarDragonSky {
     // (CONFINED_BURST, CONFINED_DAMAGE more). Condenser: FUSION_MORE of them at once, for half the cost
     // (StarDragon.costFor, a cost rule). In the Radiant Angel Form, RADIANT_BOOST harder.
     // =========================
-    static AbilityWheel.Result fusionCluster(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result fusionCluster(LivingEntity player, ServerLevel sl) {
         boolean confined = StarDragon.grown(player, CONFINEMENT_SEQUENCE);
         int count = StarDragon.grown(player, FUSION_MORE_SEQUENCE) ? FUSION_MORE : FUSION_COUNT;
         String tag = "sd_fusion_" + player.getId() + "_" + sl.getGameTime();
@@ -295,7 +305,7 @@ public final class StarDragonSky {
     }
 
     /** Cluster 'index' leaves its spot for the enemy looked at (or where you aim), in its place in the fan. */
-    private static void launch(ServerPlayer player, ServerLevel sl, int index, int count, String tag, int age, boolean confined) {
+    private static void launch(LivingEntity player, ServerLevel sl, int index, int count, String tag, int age, boolean confined) {
         Vec3 from = StarDragonFx.fusionLaunch(sl, player, index, count, tag, age);
         LivingEntity target = Spells.aimEnemy(player, sl, FUSION_RANGE);
         Vec3 aim = target != null ? target.getBoundingBox().getCenter().subtract(from).normalize()
@@ -323,7 +333,7 @@ public final class StarDragonSky {
     // quarter of that; everything is thrown outward. The cracks of light burn CRACKS_DAMAGE a second for CRACKS_TICKS.
     // The ground is never changed.
     // =========================
-    static AbilityWheel.Result planetfall(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result planetfall(LivingEntity player, ServerLevel sl) {
         Vec3 ground = Spells.aimGround(player, sl, PLANET_RANGE);
         StarDragonFx.planetfall(sl, ground, PLANET_RADIUS);
         Later.run(sl, StarDragonFx.PLANET_LANDS, () -> {
@@ -358,7 +368,7 @@ public final class StarDragonSky {
     }
 
     /** After a relog or a death. */
-    static void clearState(Player player) {
+    static void clearState(LivingEntity player) {
         Zone.close(player, GRAZED_STAR);
         Zone.close(player, RADIATION);
         Zone.close(player, STORM);

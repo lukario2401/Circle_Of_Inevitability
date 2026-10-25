@@ -1,5 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
 /**
@@ -50,6 +52,16 @@ public final class Beyonder {
     public static boolean hasSequence(Player player, int sequence) {
         if (isCastingUnbound(player)) return true;      // a stolen ability: see castUnbound below
         return SoulCore.getSequence(player) <= sequence;
+    }
+
+    /**
+     * The same for anyone: a player as above; a Beyonder mob by its own Sequence (blasphemy_slate/beyonder_mobs), so an
+     * ability written for both grows with the mob as it does with a player. Anything else: false.
+     */
+    public static boolean hasSequence(LivingEntity entity, int sequence) {
+        if (entity instanceof Player player) return hasSequence(player, sequence);
+        int own = BeyonderMobs.sequence(entity);
+        return own >= 0 && own <= sequence;
     }
 
     // =========================

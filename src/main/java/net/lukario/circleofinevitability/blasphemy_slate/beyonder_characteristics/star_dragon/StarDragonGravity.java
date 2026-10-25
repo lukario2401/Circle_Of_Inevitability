@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpirituality;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonFx.Status;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonMarks.Mark;
 import net.lukario.circleofinevitability.combat.Countdown;
@@ -53,109 +54,109 @@ public final class StarDragonGravity {
     static final int ABNORMALITY_SEQUENCE = 7;
     static final int ABNORMALITY_COST = 1250;
     static final int ABNORMALITY_COOLDOWN = 240;
-    private static final double ABNORMALITY_RANGE = 20.0;
-    private static final double ABNORMALITY_RADIUS = 4.0;       // an 8 block area...
-    private static final double ABNORMALITY_WIDE = 6.0;         // ...12 from the Tidal Scholar...
-    private static final double ABNORMALITY_WIDEST = 8.0;       // ...16 from the Heavybringer
-    private static final int ABNORMALITY_TICKS = 100;
-    private static final float LIFT_PITCH = -45f;               // aimed more than this far up: Lifted, not Pressed
-    private static final int PRESSED_WEIGHT = 2;                // Pressed: Heavy at this level (status/Weight)
-    private static final double LIFT_HEIGHT = 3.0;              // Lifted: held this high...
-    private static final double LIFT_HIGHER = 6.0;              // ...this high from the Heavybringer, and slammed down
-    private static final double SLAM_SPEED = 1.4;
-    private static final int SLAM_WEIGHT = 3;                   // a slammed one's fall hurts as if this Heavy (about double)
-    private static final float COLLAPSE_BELOW = 0.5f;           // Heavybringer: a Pressed enemy under half health...
-    private static final float COLLAPSE_DAMAGE = 80f;           // ...collapses inward, once a cast
-    private static final int LIGHTEN_SEQUENCE = 5;              // Tidal Scholar: aimed at your own feet...
-    private static final float LIGHTEN_PITCH = 75f;
-    private static final int LIGHTEN_TICKS = 120;               // ...you fly this long...
-    private static final double AIR_WAVE_RADIUS = 4.0;          // ...and shed a wave of air
-    private static final float AIR_WAVE_DAMAGE = 20f;
+    static final double ABNORMALITY_RANGE = 20.0;
+    static final double ABNORMALITY_RADIUS = 4.0;       // an 8 block area...
+    static final double ABNORMALITY_WIDE = 6.0;         // ...12 from the Tidal Scholar...
+    static final double ABNORMALITY_WIDEST = 8.0;       // ...16 from the Heavybringer
+    static final int ABNORMALITY_TICKS = 100;
+    static final float LIFT_PITCH = -45f;               // aimed more than this far up: Lifted, not Pressed
+    static final int PRESSED_WEIGHT = 2;                // Pressed: Heavy at this level (status/Weight)
+    static final double LIFT_HEIGHT = 3.0;              // Lifted: held this high...
+    static final double LIFT_HIGHER = 6.0;              // ...this high from the Heavybringer, and slammed down
+    static final double SLAM_SPEED = 1.4;
+    static final int SLAM_WEIGHT = 3;                   // a slammed one's fall hurts as if this Heavy (about double)
+    static final float COLLAPSE_BELOW = 0.5f;           // Heavybringer: a Pressed enemy under half health...
+    static final float COLLAPSE_DAMAGE = 80f;           // ...collapses inward, once a cast
+    static final int LIGHTEN_SEQUENCE = 5;              // Tidal Scholar: aimed at your own feet...
+    static final float LIGHTEN_PITCH = 75f;
+    static final int LIGHTEN_TICKS = 120;               // ...you fly this long...
+    static final double AIR_WAVE_RADIUS = 4.0;          // ...and shed a wave of air
+    static final float AIR_WAVE_DAMAGE = 20f;
 
     // Electromagnetic Attraction (Star Sacrificer)
     static final int MAGNET_SEQUENCE = 7;
     static final int MAGNET_COST = 1250;
     static final int MAGNET_COOLDOWN = 200;
-    private static final double MAGNET_RANGE = 24.0;
-    private static final double MAGNET_PARTNER = 12.0;          // a second enemy this close to the first...
-    private static final int MAGNET_TICKS = 14;                 // ...and they are drawn together over this long
-    private static final double MAGNET_SPEED = 0.9;
-    private static final float MAGNET_DAMAGE = 40f;
-    private static final int MAGNET_STAGGER = 20;
+    static final double MAGNET_RANGE = 24.0;
+    static final double MAGNET_PARTNER = 12.0;          // a second enemy this close to the first...
+    static final int MAGNET_TICKS = 14;                 // ...and they are drawn together over this long
+    static final double MAGNET_SPEED = 0.9;
+    static final float MAGNET_DAMAGE = 40f;
+    static final int MAGNET_STAGGER = 20;
 
     // Heavybringing (Heavybringer)
     static final int HEAVYBRINGING_SEQUENCE = 4;
     static final int HEAVYBRINGING_COST = 6000;
     static final int HEAVYBRINGING_COOLDOWN = 500;
-    private static final double HEAVYBRINGING_RADIUS = 16.0;
-    private static final double HEAVYBRINGING_WIDE = 24.0;      // Star Shepherd
-    private static final int HEAVYBRINGING_WIDE_SEQUENCE = 3;
-    private static final int HEAVYBRINGING_TICKS = 160;
-    private static final double HEAVYBRINGING_PULL = 0.12;      // blocks a tick at most
-    private static final double INVERSION_RADIUS = 4.0;         // within this: space inverts, Heavy, no teleports
-    private static final int INVERSION_WEIGHT = 2;
-    private static final double BEND = 0.08;                    // projectiles are bent toward you this much a tick
+    static final double HEAVYBRINGING_RADIUS = 16.0;
+    static final double HEAVYBRINGING_WIDE = 24.0;      // Star Shepherd
+    static final int HEAVYBRINGING_WIDE_SEQUENCE = 3;
+    static final int HEAVYBRINGING_TICKS = 160;
+    static final double HEAVYBRINGING_PULL = 0.12;      // blocks a tick at most
+    static final double INVERSION_RADIUS = 4.0;         // within this: space inverts, Heavy, no teleports
+    static final int INVERSION_WEIGHT = 2;
+    static final double BEND = 0.08;                    // projectiles are bent toward you this much a tick
 
     // Heavy Sphere (Heavybringer)
     static final int SPHERE_SEQUENCE = 4;
     static final int SPHERE_COST = 6000;
     static final int SPHERE_COOLDOWN = 600;
-    private static final double SPHERE_RANGE = 24.0;
-    private static final double SPHERE_RADIUS = 3.0;
-    private static final int SPHERE_TICKS = 120;
+    static final double SPHERE_RANGE = 24.0;
+    static final double SPHERE_RADIUS = 3.0;
+    static final int SPHERE_TICKS = 120;
 
     // Gravitational Time Dilation (Star Dragon, the Cosmos wheel)
     static final int DILATION_SEQUENCE = 1;
     static final int DILATION_COST = 40000;
     static final int DILATION_COOLDOWN = 900;
-    private static final double DILATION_RANGE = 30.0;
-    private static final double DILATION_RADIUS = 8.0;          // a 16 block field...
-    private static final int DILATION_TICKS = 160;              // ...for 8 seconds
-    private static final int DILATION_SLOW = 3;                 // Slowness IV: about a quarter of their speed...
-    private static final int DILATION_FATIGUE = 2;              // ...Mining Fatigue III: their blows come slowly...
-    private static final double DILATION_FALL = 0.25;           // ...and they fall at a quarter (status/Gravity)
-    private static final int DILATION_BOSS_SLOW = 2;            // bosses: Slowness III, about half
-    private static final double DILATION_SHOTS = 0.25;          // projectiles hang: a quarter of their speed, no gravity
+    static final double DILATION_RANGE = 30.0;
+    static final double DILATION_RADIUS = 8.0;          // a 16 block field...
+    static final int DILATION_TICKS = 160;              // ...for 8 seconds
+    static final int DILATION_SLOW = 3;                 // Slowness IV: about a quarter of their speed...
+    static final int DILATION_FATIGUE = 2;              // ...Mining Fatigue III: their blows come slowly...
+    static final double DILATION_FALL = 0.25;           // ...and they fall at a quarter (status/Gravity)
+    static final int DILATION_BOSS_SLOW = 2;            // bosses: Slowness III, about half
+    static final double DILATION_SHOTS = 0.25;          // projectiles hang: a quarter of their speed, no gravity
 
     // Neutron Star (Condenser, the Cosmos wheel)
     static final int NEUTRON_SEQUENCE = 0;
     static final int NEUTRON_COST = 60000;
     static final int NEUTRON_COOLDOWN = 1200;
-    private static final int NEUTRON_TICKS = 240;               // 12 seconds
-    private static final float NEUTRON_TOUGH = 0.5f;            // half damage, and no knockback (a ConjuredArmor)
-    private static final double NEUTRON_RADIUS = 6.0;
-    private static final int NEUTRON_WEIGHT = 3;                // enemies in it are pressed down (status/Weight)...
-    private static final float NEUTRON_CRUSH = 10f;             // ...and crushed every half second...
-    private static final int NEUTRON_MISFORTUNE = 30;           // ...and under Misfortune while they stay
+    static final int NEUTRON_TICKS = 240;               // 12 seconds
+    static final float NEUTRON_TOUGH = 0.5f;            // half damage, and no knockback (a ConjuredArmor)
+    static final double NEUTRON_RADIUS = 6.0;
+    static final int NEUTRON_WEIGHT = 3;                // enemies in it are pressed down (status/Weight)...
+    static final float NEUTRON_CRUSH = 10f;             // ...and crushed every half second...
+    static final int NEUTRON_MISFORTUNE = 30;           // ...and under Misfortune while they stay
 
     // Singularity (Condenser, the Cosmos wheel)
     static final int SINGULARITY_SEQUENCE = 0;
     static final int SINGULARITY_COST = 40000;                  // and then all that is left (at least this much)
     static final int SINGULARITY_COOLDOWN = 3600;
-    private static final double SINGULARITY_RANGE = 30.0;
-    private static final double SINGULARITY_RADIUS = 24.0;
-    private static final double SINGULARITY_HANGS = 2.5;        // the black hole hangs this high over the ground
-    private static final int SINGULARITY_TICKS = 160;
-    private static final double SINGULARITY_PULL = 0.5;         // blocks a tick at most, at the edge of the core
-    private static final double SINGULARITY_CORE = 4.0;         // within this: crushed...
-    private static final float SINGULARITY_CRUSH = 0.15f;       // ...this share of the maximum health a second
-    private static final double SINGULARITY_BEND = 0.15;        // projectiles bend into it this much a tick
-    private static final float SINGULARITY_LEFT = 2f;           // the price: one heart left...
-    private static final int SINGULARITY_SPENT = 400;           // ...and no abilities and weakness for 20 seconds
+    static final double SINGULARITY_RANGE = 30.0;
+    static final double SINGULARITY_RADIUS = 24.0;
+    static final double SINGULARITY_HANGS = 2.5;        // the black hole hangs this high over the ground
+    static final int SINGULARITY_TICKS = 160;
+    static final double SINGULARITY_PULL = 0.5;         // blocks a tick at most, at the edge of the core
+    static final double SINGULARITY_CORE = 4.0;         // within this: crushed...
+    static final float SINGULARITY_CRUSH = 0.15f;       // ...this share of the maximum health a second
+    static final double SINGULARITY_BEND = 0.15;        // projectiles bend into it this much a tick
+    static final float SINGULARITY_LEFT = 2f;           // the price: one heart left...
+    static final int SINGULARITY_SPENT = 400;           // ...and no abilities and weakness for 20 seconds
 
     // =========================
     // Names
     // =========================
-    private static final String DILATION = "star_dragon_time_dilation";          // its GravityField
-    private static final String DILATED = "star_dragon_dilated";                 // its status/Gravity reason
-    private static final String NEUTRON = "star_dragon_neutron_star";            // its GravityField and its ConjuredArmor
-    private static final String NEUTRON_UNTIL = "star_dragon_neutron_until";
-    private static final String SINGULARITY = "star_dragon_singularity";         // its GravityField
-    private static final String GATHERING_UNTIL = "star_dragon_gathering_until"; // the Singularity's gathering
-    private static final String ABNORMALITY = "star_dragon_abnormality";          // its GravityField
-    private static final String HEAVYBRINGING = "star_dragon_heavybringing";      // its GravityField
-    private static final String SPHERE = "star_dragon_heavy_sphere";              // its Dome
-    private static final String SPHERE_SEAL = "star_dragon_heavy_sphere_seal";    // its Zone (no teleports, no hiding)
+    static final String DILATION = "star_dragon_time_dilation";          // its GravityField
+    static final String DILATED = "star_dragon_dilated";                 // its status/Gravity reason
+    static final String NEUTRON = "star_dragon_neutron_star";            // its GravityField and its ConjuredArmor
+    static final String NEUTRON_UNTIL = "star_dragon_neutron_until";
+    static final String SINGULARITY = "star_dragon_singularity";         // its GravityField
+    static final String GATHERING_UNTIL = "star_dragon_gathering_until"; // the Singularity's gathering
+    static final String ABNORMALITY = "star_dragon_abnormality";          // its GravityField
+    static final String HEAVYBRINGING = "star_dragon_heavybringing";      // its GravityField
+    static final String SPHERE = "star_dragon_heavy_sphere";              // its Dome
+    static final String SPHERE_SEAL = "star_dragon_heavy_sphere_seal";    // its Zone (no teleports, no hiding)
 
     // =========================
     // Gravity Abnormality: where you aim (ABNORMALITY_RANGE) the gravity of an area changes for ABNORMALITY_TICKS. Aimed
@@ -165,7 +166,7 @@ public final class StarDragonGravity {
     // feet you are lightened instead: you fly LIGHTEN_TICKS and shed a wave of air. Heavybringer: wider still, Lifted
     // ones rise LIFT_HIGHER and are slammed down, and a Pressed one under half health collapses inward (once a cast).
     // =========================
-    static AbilityWheel.Result gravityAbnormality(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result gravityAbnormality(LivingEntity player, ServerLevel sl) {
         boolean lifted = player.getXRot() < LIFT_PITCH;
         Vec3 center = Spells.aimGround(player, sl, ABNORMALITY_RANGE);
         if (StarDragon.grown(player, LIGHTEN_SEQUENCE) && player.getXRot() > LIGHTEN_PITCH
@@ -239,8 +240,8 @@ public final class StarDragonGravity {
     }
 
     /** Tidal Scholar: lightened. You fly for a while, and the air you shed hits everything near. */
-    private static void lighten(ServerPlayer player, ServerLevel sl) {
-        Flight.grant(player, LIGHTEN_TICKS);
+    private static void lighten(LivingEntity player, ServerLevel sl) {
+        if (player instanceof Player flier) Flight.grant(flier, LIGHTEN_TICKS);   // (a mob only sheds the air)
         String tag = "sd_lightened_" + player.getId();
         StarDragonFx.lightened(sl, player, LIGHTEN_TICKS, tag);
         StarDragonFx.airWave(sl, player, AIR_WAVE_RADIUS);
@@ -257,7 +258,7 @@ public final class StarDragonGravity {
     // of it, the two are drawn into each other over MAGNET_TICKS and collide: MAGNET_DAMAGE to both and a stagger.
     // Alone, you are drawn to it instead and a hammer-like blow lands on it as you meet.
     // =========================
-    static AbilityWheel.Result electromagneticAttraction(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result electromagneticAttraction(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, MAGNET_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("Nothing in sight to draw on."));
@@ -278,7 +279,7 @@ public final class StarDragonGravity {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void collide(ServerPlayer player, ServerLevel sl, LivingEntity a, LivingEntity b) {
+    private static void collide(LivingEntity player, ServerLevel sl, LivingEntity a, LivingEntity b) {
         StarDragonFx.magnetPull(sl, a, b, MAGNET_TICKS);
         boolean[] met = {false};
         for (int t = 0; t <= MAGNET_TICKS; t += 2) {
@@ -301,7 +302,7 @@ public final class StarDragonGravity {
         }
     }
 
-    private static void drawIn(ServerPlayer player, ServerLevel sl, LivingEntity target) {
+    private static void drawIn(LivingEntity player, ServerLevel sl, LivingEntity target) {
         StarDragonFx.magnetPull(sl, player, target, MAGNET_TICKS);
         boolean[] met = {false};
         for (int t = 0; t <= MAGNET_TICKS; t += 2) {
@@ -327,7 +328,7 @@ public final class StarDragonGravity {
     // bend toward you; within INVERSION_RADIUS space inverts (Nausea), they are Heavy and cannot teleport. Nothing moves
     // you while it holds (Spells.addMoveImmunity, in StarDragon). Bosses are only slowed. Allies are left alone.
     // =========================
-    static AbilityWheel.Result heavybringing(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result heavybringing(LivingEntity player, ServerLevel sl) {
         double radius = StarDragon.grown(player, HEAVYBRINGING_WIDE_SEQUENCE) ? HEAVYBRINGING_WIDE : HEAVYBRINGING_RADIUS;
         String tag = "sd_heavybringing_" + player.getId();
         GravityField.close(player, HEAVYBRINGING);
@@ -362,17 +363,17 @@ public final class StarDragonGravity {
     }
 
     /** True while a Heavybringer's own field holds (nothing moves them). */
-    static boolean isHeavybringing(Player player) {
+    static boolean isHeavybringing(LivingEntity player) {
         return GravityField.isRaised(player, HEAVYBRINGING);
     }
 
     /** Every beat: projectiles of those not on your side near you are bent a little toward you. */
-    private static void bendShots(ServerPlayer player, ServerLevel sl, double radius) {
+    private static void bendShots(LivingEntity player, ServerLevel sl, double radius) {
         bendShots(player, sl, player.position().add(0, player.getBbHeight() * 0.6, 0), radius, BEND, false);
     }
 
     /** Projectiles not of your side within 'radius' of 'heart' are bent toward it, 'strength' a tick. */
-    private static void bendShots(Player player, ServerLevel sl, Vec3 heart, double radius, double strength, boolean swallowed) {
+    private static void bendShots(LivingEntity player, ServerLevel sl, Vec3 heart, double radius, double strength, boolean swallowed) {
         for (Projectile shot : Spells.hostileShotsAround(player, sl, heart, radius)) {
             Vec3 toward = heart.subtract(shot.position());
             if (toward.lengthSqr() < 1.0) {
@@ -394,7 +395,7 @@ public final class StarDragonGravity {
     // SPHERE_TICKS (70% on a player, half on a boss) that nobody but your side crosses either way (a Dome), whose shell
     // stops projectiles, and inside which nothing teleports and nothing stays hidden.
     // =========================
-    static AbilityWheel.Result heavySphere(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result heavySphere(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, SPHERE_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("There is no one to close the air round."));
@@ -440,7 +441,7 @@ public final class StarDragonGravity {
     // slowed to about half. Projectiles of the other side hang in it (DILATION_SHOTS, no gravity) until it ends. You and
     // your allies move normally.
     // =========================
-    static AbilityWheel.Result timeDilation(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result timeDilation(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, DILATION_RANGE);
         String tag = "sd_dilation_" + player.getId();
         GravityField.close(player, DILATION);
@@ -491,7 +492,7 @@ public final class StarDragonGravity {
     }
 
     /** Every beat of Time Dilation: projectiles of the other side that came into it hang there. */
-    private static void hang(Player player, ServerLevel sl, Vec3 center, Set<Projectile> hung) {
+    private static void hang(LivingEntity player, ServerLevel sl, Vec3 center, Set<Projectile> hung) {
         for (Projectile shot : Spells.hostileShotsAround(player, sl, center.add(0, 2, 0), DILATION_RADIUS + 1)) {
             if (!hung.add(shot)) continue;
             shot.setDeltaMovement(shot.getDeltaMovement().scale(DILATION_SHOTS));
@@ -509,7 +510,7 @@ public final class StarDragonGravity {
     // crushes: enemies within NEUTRON_RADIUS are pressed down (Weight NEUTRON_WEIGHT; bosses only slowed), take
     // NEUTRON_CRUSH every half second, and are under Misfortune (StarDragonMarks) while they stay.
     // =========================
-    static AbilityWheel.Result neutronStar(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result neutronStar(LivingEntity player, ServerLevel sl) {
         String tag = "sd_neutron_" + player.getId();
         player.getPersistentData().putLong(NEUTRON_UNTIL, sl.getGameTime() + NEUTRON_TICKS);
         ConjuredArmor.of(NEUTRON).lasts(NEUTRON_TICKS).cut(NEUTRON_TOUGH).steady().wear(player);
@@ -546,7 +547,7 @@ public final class StarDragonGravity {
     }
 
     /** True while the Condenser's body has a neutron star's density (nothing moves, roots or freezes it). */
-    public static boolean isNeutronStar(Player player) {
+    public static boolean isNeutronStar(LivingEntity player) {
         return StarDragon.isActive(player, NEUTRON_UNTIL);
     }
 
@@ -560,7 +561,7 @@ public final class StarDragonGravity {
     // your health (it never kills you), and for SINGULARITY_SPENT no abilities (status/AbilityLock) and weakness. If you
     // die or leave while gathering, it never opens.
     // =========================
-    static AbilityWheel.Result singularity(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result singularity(LivingEntity player, ServerLevel sl) {
         Vec3 eye = player.getEyePosition();
         Vec3 aim = Spells.aimPoint(player, sl, SINGULARITY_RANGE);
         boolean nothing = aim.distanceToSqr(eye) > (SINGULARITY_RANGE - 0.5) * (SINGULARITY_RANGE - 0.5);
@@ -571,6 +572,13 @@ public final class StarDragonGravity {
         player.getPersistentData().putLong(GATHERING_UNTIL, sl.getGameTime() + gather + 2);
         Root.apply(player, gather, RootRestriction.MOVE, RootRestriction.JUMP);
         StarDragonFx.singularityGather(sl, player);
+        if (!(player instanceof Player gatherer)) {                              // a mob: no count on a screen
+            Later.run(sl, gather, () -> {
+                player.getPersistentData().remove(GATHERING_UNTIL);
+                if (Spells.casterStillHere(player, sl)) openSingularity(player, sl, ground, center);
+            });
+            return AbilityWheel.Result.DONE;
+        }
         Countdown.seconds(Math.max(1, gather / 20))
                 .colors(0xB8B0FF, 0x6A5CFF)
                 .keepWhile(() -> Spells.casterStillHere(player, sl))
@@ -582,18 +590,19 @@ public final class StarDragonGravity {
                     player.getPersistentData().remove(GATHERING_UNTIL);
                     Root.remove(player, RootRestriction.MOVE, RootRestriction.JUMP);
                 })
-                .start(player);
+                .start(gatherer);
         return AbilityWheel.Result.DONE;
     }
 
     /** True while a Condenser gathers for the Singularity (their own hold takes, even on a Condenser). */
-    public static boolean isGathering(Player player) {
+    public static boolean isGathering(LivingEntity player) {
         return StarDragon.isActive(player, GATHERING_UNTIL);
     }
 
-    private static void openSingularity(ServerPlayer player, ServerLevel sl, Vec3 ground, Vec3 center) {
+    private static void openSingularity(LivingEntity player, ServerLevel sl, Vec3 ground, Vec3 center) {
         String tag = "sd_singularity_" + player.getId();
-        SoulCore.setSpiritualityQuietly(player, 0f);                              // the price
+        if (player instanceof Player payer) SoulCore.setSpiritualityQuietly(payer, 0f);   // the price
+        else MobSpirituality.set(player, 0f);
         if (player.getHealth() > SINGULARITY_LEFT) player.setHealth(SINGULARITY_LEFT);
         AbilityLock.apply(player, SINGULARITY_SPENT);
         Spells.keepEffect(player, MobEffects.WEAKNESS, 0, SINGULARITY_SPENT);
@@ -625,7 +634,7 @@ public final class StarDragonGravity {
     }
 
     /** After a relog or a death. */
-    static void clearState(Player player) {
+    static void clearState(LivingEntity player) {
         GravityField.close(player, DILATION);
         GravityField.close(player, NEUTRON);
         GravityField.close(player, SINGULARITY);

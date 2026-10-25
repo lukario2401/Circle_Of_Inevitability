@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs;
 
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Teleport;
+import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -190,6 +191,42 @@ public final class MobSpells {
     /** Its health is under this share of its max. */
     public static boolean hurt(LivingEntity caster, float share) {
         return caster.getHealth() < caster.getMaxHealth() * share;
+    }
+
+    // =========================
+    // Player abilities written for any caster
+    // =========================
+
+    /** A wheel entry written for any caster (its aim is where the caster faces). */
+    @FunctionalInterface
+    public interface Entry {
+        AbilityWheel.Result run(LivingEntity caster, ServerLevel sl);
+    }
+
+    /** A paid-for ability written for any caster (its aim is where the caster faces). */
+    @FunctionalInterface
+    public interface Core {
+        void run(LivingEntity caster, ServerLevel sl);
+    }
+
+    /**
+     * The mob version of a wheel entry that is written for any caster: the mob turns to its target, then the entry runs
+     * as it does for a player (its aim is the mob's facing). Refused (REFUSED) = nothing spent.
+     */
+    public static MobAbility.Cast aimedEntry(Entry entry) {
+        return (caster, target, sl) -> {
+            if (target != null) face(caster, target);
+            return entry.run(caster, sl) != AbilityWheel.Result.REFUSED;
+        };
+    }
+
+    /** The same for an ability that cannot refuse once it is paid for. */
+    public static MobAbility.Cast aimedCore(Core core) {
+        return (caster, target, sl) -> {
+            if (target != null) face(caster, target);
+            core.run(caster, sl);
+            return true;
+        };
     }
 
     /** False once it died or went elsewhere: a delayed part of its ability (Later.run) stops then. */

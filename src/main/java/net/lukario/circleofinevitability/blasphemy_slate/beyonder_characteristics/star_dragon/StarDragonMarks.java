@@ -84,14 +84,14 @@ public final class StarDragonMarks {
     static final float NARROWED_EXTRA = 0.5f;               // ...it takes this much more
     static final float IRRADIATED_PER_SECOND = 4f;          // radiation
 
-    private static final String TAG = "star_dragon_marks";                // {MARK: {By, Until, Stacks}}
-    private static final String BY = "By";
-    private static final String UNTIL = "Until";
-    private static final String STACKS = "Stacks";
-    private static final String CHART_SPENT = "Spent";
+    static final String TAG = "star_dragon_marks";                // {MARK: {By, Until, Stacks}}
+    static final String BY = "By";
+    static final String UNTIL = "Until";
+    static final String STACKS = "Stacks";
+    static final String CHART_SPENT = "Spent";
     private static final Identifier MELT_ARMOR = Physique.id("sd_melting_armor");
-    private static final String FALTER = "sd_misfortune";
-    private static final String DIM = "sd_dimmed";
+    static final String FALTER = "sd_misfortune";
+    static final String DIM = "sd_dimmed";
 
     static {
         // a cleanse washes off everything but a chart and a void (status/Cleansing)
@@ -141,7 +141,7 @@ public final class StarDragonMarks {
     }
 
     /** True if 'caster' laid it. */
-    public static boolean fromCaster(Entity entity, Mark mark, Player caster) {
+    public static boolean fromCaster(Entity entity, Mark mark, LivingEntity caster) {
         return caster.getUUID().equals(from(entity, mark));
     }
 
@@ -170,7 +170,7 @@ public final class StarDragonMarks {
      * The calculated shot: true once per Star Chart, the first time an ability of the one who charted it lands on it
      * (StarDragon.hit asks it and adds CHARTED_BONUS).
      */
-    static boolean spendCharted(LivingEntity target, Player caster) {
+    static boolean spendCharted(LivingEntity target, LivingEntity caster) {
         if (!fromCaster(target, Mark.CHARTED, caster)) return false;
         CompoundTag all = target.getPersistentData().getCompoundOrEmpty(TAG);
         CompoundTag one = all.getCompoundOrEmpty(Mark.CHARTED.name());

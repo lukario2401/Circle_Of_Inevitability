@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonFx.Status;
@@ -85,18 +86,18 @@ public class StarDragon {
     // =========================
 
     // Ability 1 - Star Chart (Sequence 9)
-    private static final int CHART_SEQUENCE = 9;
-    private static final int CHART_COST = 250;
-    private static final int CHART_COOLDOWN = 1;
-    private static final double CHART_RANGE = 24.0;
-    private static final int CHART_TICKS = 200;                     // Charted for 10 seconds
+    static final int CHART_SEQUENCE = 9;
+    static final int CHART_COST = 250;
+    static final int CHART_COOLDOWN = 1;
+    static final double CHART_RANGE = 24.0;
+    static final int CHART_TICKS = 200;                     // Charted for 10 seconds
     // sneak: Fate Glimpse (Sequence 8)
-    private static final int GLIMPSE_SEQUENCE = 8;
-    private static final int GLIMPSE_COST = 350;                    // the plan's 600: Sequence 8 holds only 400
-    private static final int GLIMPSE_COOLDOWN = 1;
-    private static final int GLIMPSE_TICKS = 200;
-    private static final int GLIMPSE_DODGES = 2;                    // the first two attacks aimed at you go wide
-    private static final double GLIMPSE_STEP = 1.2;                 // and you slip this far aside
+    static final int GLIMPSE_SEQUENCE = 8;
+    static final int GLIMPSE_COST = 350;                    // the plan's 600: Sequence 8 holds only 400
+    static final int GLIMPSE_COOLDOWN = 1;
+    static final int GLIMPSE_TICKS = 200;
+    static final int GLIMPSE_DODGES = 2;                    // the first two attacks aimed at you go wide
+    static final double GLIMPSE_STEP = 1.2;                 // and you slip this far aside
 
     // Ability 2 - Star Sacrifice (the wheel, Sequence 7)
     static final int SACRIFICE_SEQUENCE = 7;
@@ -116,45 +117,45 @@ public class StarDragon {
     static final int COSMOS_SEQUENCE = 2;
 
     // Passives (docs/STAR_DRAGON.md, "Passives"); the once-a-second ones run from SequencePassives
-    private static final int STARGAZING_SEQUENCE = 9;               // Stargazing: still this long under open sky...
-    private static final int STARGAZING_STILL = 60;
-    private static final float STARGAZING_REGEN = 0.3f;             // ...and spirituality comes back this much faster...
-    private static final float STARGAZING_NIGHT = 2f;               // ...twice that at night
-    private static final int INTUITION_SEQUENCE = 8;                // Spiritual Intuition: hunted unseen, a chime...
-    private static final int INTUITION_REST = 60;                   // ...at most this often
-    private static final int EMBRACE_SEQUENCE = 7;                  // Star's Embrace: two more hearts...
-    private static final double EMBRACE_HEARTS = 4.0;
-    private static final float EMBRACE_FALL = 0.5f;                 // ...and half fall damage
-    private static final double PASSAGES_RADIUS = 12.0;             // Sense of Passages (6): the hidden this close
-    private static final int SCALES_SEQUENCE = 5;                   // Starlight Scales: half knockback, fast swimming
-    private static final double SCALES_FOOTING = 0.5;
-    private static final int DENSE_SEQUENCE = 4;                    // Dense Body: nothing moves you, no fall damage
-    private static final double DENSE_FOOTING = 1.0;
-    private static final int TOUCH_SEQUENCE = 3;                    // Fission Touch: a blow arcs on to the nearest enemy...
-    private static final double TOUCH_REACH = 4.0;                  // ...this close to the one struck...
-    private static final float TOUCH_SHARE = 0.25f;                 // ...for this share of it
-    private static final int RADIANCE_SEQUENCE = 2;                 // Radiance: enemies this close are burned...
-    private static final double RADIANCE_RADIUS = 8.0;
-    private static final float RADIANCE_BURN = 4f;                  // ...this much a second (twice on the undead)
-    private static final int AUTHORITY_SEQUENCE = 1;                // Gravity Authority: no Heaviness takes on you...
-    private static final double AUTHORITY_RADIUS = 6.0;             // ...and projectiles this close fly at...
-    private static final double AUTHORITY_SLOWS = 0.5;              // ...half speed
-    private static final int CONDENSER_SEQUENCE = 0;                // Weight and Density: nothing roots, freezes or moves you...
-    private static final double CONDENSER_STEP = 1.5;               // ...and every this many blocks walked the ground shakes
+    static final int STARGAZING_SEQUENCE = 9;               // Stargazing: still this long under open sky...
+    static final int STARGAZING_STILL = 60;
+    static final float STARGAZING_REGEN = 0.3f;             // ...and spirituality comes back this much faster...
+    static final float STARGAZING_NIGHT = 2f;               // ...twice that at night
+    static final int INTUITION_SEQUENCE = 8;                // Spiritual Intuition: hunted unseen, a chime...
+    static final int INTUITION_REST = 60;                   // ...at most this often
+    static final int EMBRACE_SEQUENCE = 7;                  // Star's Embrace: two more hearts...
+    static final double EMBRACE_HEARTS = 4.0;
+    static final float EMBRACE_FALL = 0.5f;                 // ...and half fall damage
+    static final double PASSAGES_RADIUS = 12.0;             // Sense of Passages (6): the hidden this close
+    static final int SCALES_SEQUENCE = 5;                   // Starlight Scales: half knockback, fast swimming
+    static final double SCALES_FOOTING = 0.5;
+    static final int DENSE_SEQUENCE = 4;                    // Dense Body: nothing moves you, no fall damage
+    static final double DENSE_FOOTING = 1.0;
+    static final int TOUCH_SEQUENCE = 3;                    // Fission Touch: a blow arcs on to the nearest enemy...
+    static final double TOUCH_REACH = 4.0;                  // ...this close to the one struck...
+    static final float TOUCH_SHARE = 0.25f;                 // ...for this share of it
+    static final int RADIANCE_SEQUENCE = 2;                 // Radiance: enemies this close are burned...
+    static final double RADIANCE_RADIUS = 8.0;
+    static final float RADIANCE_BURN = 4f;                  // ...this much a second (twice on the undead)
+    static final int AUTHORITY_SEQUENCE = 1;                // Gravity Authority: no Heaviness takes on you...
+    static final double AUTHORITY_RADIUS = 6.0;             // ...and projectiles this close fly at...
+    static final double AUTHORITY_SLOWS = 0.5;              // ...half speed
+    static final int CONDENSER_SEQUENCE = 0;                // Weight and Density: nothing roots, freezes or moves you...
+    static final double CONDENSER_STEP = 1.5;               // ...and every this many blocks walked the ground shakes
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String GLIMPSE_UNTIL = "star_dragon_glimpse_until";
-    private static final String GLIMPSE_LEFT = "star_dragon_glimpse_left";
-    private static final String STILL_SINCE = "star_dragon_still_since";
-    private static final String STILL_AT = "star_dragon_still_at";
-    private static final String INTUITION_READY = "star_dragon_intuition_ready";
-    private static final String LUCK_WARD = "star_dragon_luck_ward";            // status/Marks: Fate Convergence's halved hit
-    private static final String SWING_AT = "star_dragon_swing_at";              // the last real blow: its target...
-    private static final String SWING_TIME = "star_dragon_swing_time";          // ...and its game time (Fission Touch)
-    private static final String STEP_AT = "star_dragon_step_at";                // where the last shaking step was
-    private static final String AUTHORITY_SLOWED = "star_dragon_authority";     // on a projectile Gravity Authority slowed
+    static final String GLIMPSE_UNTIL = "star_dragon_glimpse_until";
+    static final String GLIMPSE_LEFT = "star_dragon_glimpse_left";
+    static final String STILL_SINCE = "star_dragon_still_since";
+    static final String STILL_AT = "star_dragon_still_at";
+    static final String INTUITION_READY = "star_dragon_intuition_ready";
+    static final String LUCK_WARD = "star_dragon_luck_ward";            // status/Marks: Fate Convergence's halved hit
+    static final String SWING_AT = "star_dragon_swing_at";              // the last real blow: its target...
+    static final String SWING_TIME = "star_dragon_swing_time";          // ...and its game time (Fission Touch)
+    static final String STEP_AT = "star_dragon_step_at";                // where the last shaking step was
+    static final String AUTHORITY_SLOWED = "star_dragon_authority";     // on a projectile Gravity Authority slowed
 
     private static final Identifier EMBRACE_ID = Physique.id("star_dragon_embrace_hearts");
     private static final Identifier SCALES_ID = Physique.id("star_dragon_scales_footing");
@@ -166,8 +167,8 @@ public class StarDragon {
     /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
     public static final float QUICK_CAST_COST = 3f;
 
-    private static final String CD_CHART = "star_dragon_chart";
-    private static final String CD_GLIMPSE = "star_dragon_glimpse";
+    static final String CD_CHART = "star_dragon_chart";
+    static final String CD_GLIMPSE = "star_dragon_glimpse";
 
     // =========================
     // Costs: every key and every wheel entry goes through costFor
@@ -445,6 +446,11 @@ public class StarDragon {
         if (!Cooldowns.ready(player, CD_CHART, "Star Chart")) return;
         if (!pay(player, CHART_COST, CD_CHART)) return;
         Cooldowns.start(player, CD_CHART, CHART_COOLDOWN);
+        starChart(player, sl, target);
+    }
+
+    /** Star Chart once it is paid for: 'target' is Charted at CHART_LANDS (a Beyonder mob casts it this way too). */
+    static void starChart(LivingEntity player, ServerLevel sl, LivingEntity target) {
         StarDragonFx.starChart(sl, player, target);
         Later.run(sl, StarDragonFx.CHART_LANDS, () -> {
             if (!Spells.casterStillHere(player, sl) || !target.isAlive()) return;
@@ -467,7 +473,7 @@ public class StarDragon {
     }
 
     /** One attack aimed at a Star Worshipper under Fate Glimpse: dodged while dodges are left. */
-    private static boolean glimpseDodges(Player player, ServerLevel sl, DamageSource source) {
+    private static boolean glimpseDodges(LivingEntity player, ServerLevel sl, DamageSource source) {
         if (!isActive(player, GLIMPSE_UNTIL)) return false;
         int left = player.getPersistentData().getIntOr(GLIMPSE_LEFT, 0);
         if (left <= 0) return false;
@@ -487,7 +493,7 @@ public class StarDragon {
         return true;
     }
 
-    private static String glimpseTag(Player player) {
+    private static String glimpseTag(LivingEntity player) {
         return "sd_glimpse_" + player.getId();
     }
 
@@ -575,7 +581,7 @@ public class StarDragon {
     }
 
     /** Navigator (6), once a second: Sense of Passages. The hidden near you show for you and cannot stay unnoticed. */
-    public static void senseOfPassages(Player player) {
+    public static void senseOfPassages(LivingEntity player) {
         if (!(player instanceof ServerPlayer viewer) || !(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), PASSAGES_RADIUS)) {
             if (Spells.isFriend(player, one)) continue;
@@ -587,7 +593,7 @@ public class StarDragon {
     }
 
     /** Tidal Scholar (5), once a second: Starlight Scales. Fast swimming in water (the half knockback is in bodyTick). */
-    public static void starlightScales(Player player) {
+    public static void starlightScales(LivingEntity player) {
         if (!player.isInWater()) return;
         Spells.keepEffect(player, MobEffects.DOLPHINS_GRACE, 0, 60);
         if (player.level() instanceof ServerLevel sl && player.tickCount % 60 == 0) StarDragonFx.starlightScales(sl, player);
@@ -621,7 +627,7 @@ public class StarDragon {
     }
 
     /** Radiant Angel (2), once a second: Radiance. Enemies near you are burned (only a glow is drawn, no light blocks). */
-    public static void radiance(Player player) {
+    public static void radiance(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         StarDragonFx.radianceAura(sl, player, RADIANCE_RADIUS);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), RADIANCE_RADIUS)) {
@@ -630,7 +636,7 @@ public class StarDragon {
     }
 
     /** Star Dragon (1), every other tick: Gravity Authority. Projectiles of the other side near you fly at half speed. */
-    private static void gravityAuthority(Player player, ServerLevel sl) {
+    private static void gravityAuthority(LivingEntity player, ServerLevel sl) {
         for (Projectile shot : Spells.hostileShotsAround(player, sl, player.getBoundingBox().getCenter(), AUTHORITY_RADIUS)) {
             if (shot.getPersistentData().getBooleanOr(AUTHORITY_SLOWED, false)) continue;   // once a projectile
             shot.getPersistentData().putBoolean(AUTHORITY_SLOWED, true);
@@ -641,7 +647,7 @@ public class StarDragon {
     }
 
     /** Condenser (0), every 4 ticks: Weight and Density's steps. Every CONDENSER_STEP blocks walked, the ground shakes. */
-    private static void condenserSteps(Player player, ServerLevel sl) {
+    private static void condenserSteps(LivingEntity player, ServerLevel sl) {
         if (!player.onGround() || player.isSpectator()) return;
         Vec3 at = player.position();
         String last = player.getPersistentData().getStringOr(STEP_AT, "");
@@ -665,7 +671,7 @@ public class StarDragon {
     }
 
     /** Once a second, for every player: the hearts and footing of Star's Embrace, Starlight Scales and Dense Body. */
-    private static void bodyTick(Player player) {
+    private static void bodyTick(LivingEntity player) {
         Physique.keep(player, Attributes.MAX_HEALTH, EMBRACE_ID, EMBRACE_HEARTS, AttributeModifier.Operation.ADD_VALUE,
                 isStarDragon(player, EMBRACE_SEQUENCE));
         Physique.keep(player, Attributes.KNOCKBACK_RESISTANCE, SCALES_ID, SCALES_FOOTING, AttributeModifier.Operation.ADD_VALUE,
@@ -682,7 +688,7 @@ public class StarDragon {
      * A Star Dragon ability hit: Spells.strike, with the Star Chart's calculated shot (the first hit on what you
      * Charted, 20% more) and, from the Heavybringer, the true pocket's fragility (in status/Vulnerable already).
      */
-    static void hit(Player player, LivingEntity target, float damage) {
+    static void hit(LivingEntity player, LivingEntity target, float damage) {
         float dealt = damage;
         if (StarDragonMarks.spendCharted(target, player)) dealt *= 1f + StarDragonMarks.CHARTED_BONUS;
         Spells.strike(player, target, dealt);
@@ -692,7 +698,7 @@ public class StarDragon {
      * A ray's hit: as hit(...), and on one in your Cosmic Void from the Tidal Scholar the ray manifests there, VOID_RAY
      * more, and nothing in the way softens or stops it (Spells.strikeThrough).
      */
-    static void rayHit(Player player, LivingEntity target, float damage) {
+    static void rayHit(LivingEntity player, LivingEntity target, float damage) {
         boolean manifests = isStarDragon(player, StarDragonVoid.MANIFEST_SEQUENCE)
                 && StarDragonMarks.fromCaster(target, Mark.VOIDED, player);
         if (!manifests) {
@@ -715,8 +721,14 @@ public class StarDragon {
         return SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, sequence);
     }
 
+    /** The same for anyone: a player as above, a Beyonder mob of this Pathway by its own Sequence. */
+    public static boolean isStarDragon(LivingEntity entity, int sequence) {
+        if (entity instanceof Player player) return isStarDragon(player, sequence);
+        return PATHWAY.equals(Beyonders.pathwayOf(entity)) && Beyonder.hasSequence(entity, sequence);
+    }
+
     /** True while casting as a Star Dragon at that Sequence: their own Pathway, or a stolen cast (no Pathway check). */
-    static boolean grown(Player player, int sequence) {
+    static boolean grown(LivingEntity player, int sequence) {
         return Beyonder.hasSequence(player, sequence);
     }
 

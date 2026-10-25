@@ -38,37 +38,37 @@ public final class StarDragonTides {
     // =========================
 
     // Tidal Surge
-    private static final int SURGE_COST = 3000;
-    private static final int SURGE_COOLDOWN = 200;
-    private static final double SURGE_HALF_WIDTH = 3.5;          // a crest 7 wide...
-    private static final double SURGE_HEIGHT = 5.0;              // ...and 5 tall
-    private static final float SURGE_DAMAGE = 80f;
-    private static final double SURGE_SHOVE = 1.0;
-    private static final int SURGE_WEIGHT = 1;                   // Heavy (status/Weight)...
-    private static final int SURGE_HEAVY_TICKS = 60;             // ...for 3 seconds
-    private static final int PARRY_TICKS = 10;                   // the crest beside you parries the first blow this long...
-    private static final int PARRY_STAGGER = 20;                 // ...and staggers its sender
+    static final int SURGE_COST = 3000;
+    static final int SURGE_COOLDOWN = 200;
+    static final double SURGE_HALF_WIDTH = 3.5;          // a crest 7 wide...
+    static final double SURGE_HEIGHT = 5.0;              // ...and 5 tall
+    static final float SURGE_DAMAGE = 80f;
+    static final double SURGE_SHOVE = 1.0;
+    static final int SURGE_WEIGHT = 1;                   // Heavy (status/Weight)...
+    static final int SURGE_HEAVY_TICKS = 60;             // ...for 3 seconds
+    static final int PARRY_TICKS = 10;                   // the crest beside you parries the first blow this long...
+    static final int PARRY_STAGGER = 20;                 // ...and staggers its sender
 
     // Scaled Form (and the Heavy Body from the Heavybringer)
-    private static final int SCALES_COST = 3000;
-    private static final int SCALES_COOLDOWN = 60;
-    private static final int SCALES_TICKS = 600;                 // 30 seconds...
-    private static final int HEAVY_BODY_SEQUENCE = 4;
-    private static final int HEAVY_BODY_TICKS = 900;             // ...45 for the Heavy Body
-    private static final double SCALES_REACH = 1.0;
-    private static final double HEAVY_BODY_REACH = 2.5;
-    private static final double HEAVY_BODY_SIZE = 1.78;          // 1.8 blocks to 5 (Attributes.SCALE, of the base)
-    private static final int SCALED_HEAVY = 40;                  // every blow makes the target Heavy this long
-    private static final double HEAVY_BODY_SLOWS = 6.0;          // the Heavy Body slows enemies this close
+    static final int SCALES_COST = 3000;
+    static final int SCALES_COOLDOWN = 60;
+    static final int SCALES_TICKS = 600;                 // 30 seconds...
+    static final int HEAVY_BODY_SEQUENCE = 4;
+    static final int HEAVY_BODY_TICKS = 900;             // ...45 for the Heavy Body
+    static final double SCALES_REACH = 1.0;
+    static final double HEAVY_BODY_REACH = 2.5;
+    static final double HEAVY_BODY_SIZE = 1.78;          // 1.8 blocks to 5 (Attributes.SCALE, of the base)
+    static final int SCALED_HEAVY = 40;                  // every blow makes the target Heavy this long
+    static final double HEAVY_BODY_SLOWS = 6.0;          // the Heavy Body slows enemies this close
 
     // =========================
     // Names
     // =========================
-    private static final String PARRY_UNTIL = "star_dragon_parry_until";
-    private static final String SCALED = "star_dragon_scaled_form";              // its Form
-    private static final String HEAVY_BODY = "star_dragon_heavy_body";           // its Form
-    private static final String CD_SURGE = "star_dragon_tidal_surge";
-    private static final String CD_SCALES = "star_dragon_scaled_form";
+    static final String PARRY_UNTIL = "star_dragon_parry_until";
+    static final String SCALED = "star_dragon_scaled_form";              // its Form
+    static final String HEAVY_BODY = "star_dragon_heavy_body";           // its Form
+    static final String CD_SURGE = "star_dragon_tidal_surge";
+    static final String CD_SCALES = "star_dragon_scaled_form";
 
     // =========================
     // Tidal Surge: gravity whips the air into a wave. A crest 7 wide and 5 tall rolls StarDragonFx.SURGE_REACH forward
@@ -80,6 +80,11 @@ public final class StarDragonTides {
         if (!Cooldowns.ready(player, CD_SURGE, "Tidal Surge")) return;
         if (!StarDragon.pay(player, SURGE_COST, CD_SURGE)) return;
         Cooldowns.start(player, CD_SURGE, SURGE_COOLDOWN);
+        surge(player, sl);
+    }
+
+    /** What tidalSurge does once it is paid for (a Beyonder mob casts it this way too). */
+    static void surge(LivingEntity player, ServerLevel sl) {
         float yaw = player.getYRot();
         Vec3 forward = Spells.flatLook(player);
         Vec3 side = Spells.rightOf(player);
@@ -110,7 +115,7 @@ public final class StarDragonTides {
     }
 
     /** Before a blow lands on a Tidal Scholar: the crest still beside them parries the first melee blow. */
-    static boolean parries(Player player, ServerLevel sl, DamageSource source) {
+    static boolean parries(LivingEntity player, ServerLevel sl, DamageSource source) {
         if (!StarDragon.isActive(player, PARRY_UNTIL)) return false;
         Entity attacker = source.getEntity();
         if (!(attacker instanceof LivingEntity striker) || source.getDirectEntity() != attacker) return false;   // melee only
@@ -160,10 +165,10 @@ public final class StarDragonTides {
     }
 
     /** Set while a form was taken through a stolen cast, so it is not ended for being another Pathway's. */
-    private static final String STOLEN = "star_dragon_form_stolen";
+    static final String STOLEN = "star_dragon_form_stolen";
 
     /** Every second of the Heavy Body: enemies near it are slowed, the ground looks pressed down. */
-    private static void heavyBodyTick(Player player) {
+    static void heavyBodyTick(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), HEAVY_BODY_SLOWS)) {
             Spells.keepEffect(enemy, MobEffects.SLOWNESS, 1, 40);
@@ -184,12 +189,12 @@ public final class StarDragonTides {
         if (target instanceof Player shown) StarDragonFx.status(shown, Status.HEAVY, SCALED_HEAVY);
     }
 
-    private static String scalesTag(Player player) {
+    private static String scalesTag(LivingEntity player) {
         return "sd_scales_" + player.getId();
     }
 
     /** After a relog or a death. */
-    static void clearState(Player player) {
+    static void clearState(LivingEntity player) {
         player.getPersistentData().remove(PARRY_UNTIL);
         player.getPersistentData().remove(STOLEN);
     }

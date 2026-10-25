@@ -57,68 +57,68 @@ public final class StarDragonVoid {
     static final int VOID_SEQUENCE = 7;
     static final int VOID_COST = 1800;                          // the plan's 2450: Sequence 7 holds only 1980
     static final int VOID_COOLDOWN = 360;
-    private static final double VOID_RANGE = 20.0;
-    private static final double VOID_RADIUS = 2.0;              // a sphere 4 across...
-    private static final int VOID_TICKS = 80;                   // ...for 4 seconds
-    private static final float VOID_BREAKS = 0.4f;              // it ends early once the target took this share of its health
+    static final double VOID_RANGE = 20.0;
+    static final double VOID_RADIUS = 2.0;              // a sphere 4 across...
+    static final int VOID_TICKS = 80;                   // ...for 4 seconds
+    static final float VOID_BREAKS = 0.4f;              // it ends early once the target took this share of its health
     static final int MANIFEST_SEQUENCE = 5;                     // Tidal Scholar: rays manifest inside...
     static final float VOID_RAY = 0.25f;                        // ...this much stronger, and nothing stops them
-    private static final int POCKET_SEQUENCE = 4;               // Heavybringer: a true pocket...
-    private static final double POCKET_RADIUS = 3.0;            // ...6 across...
-    private static final int POCKET_TICKS = 160;                // ...for 8 seconds...
-    private static final float POCKET_FRAGILE = 0.3f;           // ...abnormally fragile, teleports sealed
-    private static final int ZERO_SEQUENCE = 1;                 // Star Dragon: near absolute zero...
-    private static final double ZERO_RADIUS = 5.0;              // ...10 across...
-    private static final int ZERO_FREEZE_EVERY = 40;            // ...frozen 2 seconds every 2 seconds, and irradiated
-    private static final int ZERO_FREEZE = 40;
+    static final int POCKET_SEQUENCE = 4;               // Heavybringer: a true pocket...
+    static final double POCKET_RADIUS = 3.0;            // ...6 across...
+    static final int POCKET_TICKS = 160;                // ...for 8 seconds...
+    static final float POCKET_FRAGILE = 0.3f;           // ...abnormally fragile, teleports sealed
+    static final int ZERO_SEQUENCE = 1;                 // Star Dragon: near absolute zero...
+    static final double ZERO_RADIUS = 5.0;              // ...10 across...
+    static final int ZERO_FREEZE_EVERY = 40;            // ...frozen 2 seconds every 2 seconds, and irradiated
+    static final int ZERO_FREEZE = 40;
 
     // Void Passage (Navigator, key 3)
-    private static final int PASSAGE_COST = 2450;
-    private static final int PASSAGE_COOLDOWN = 100;
-    private static final double PASSAGE_RANGE = 24.0;
-    private static final double PASSAGE_FAR = 40.0;             // Heavybringer: further...
-    private static final int PASSAGE_FAR_SEQUENCE = 4;
-    private static final double PASSAGE_ALLY = 3.0;             // ...and an ally this close comes through with you
-    private static final int PASSAGE_UNNOTICED = 60;            // no mob can find you this long
-    private static final double PASSAGE_EXPOSES = 12.0;         // the hidden this close to either door are forced out
-    private static final int PASSAGE_EXPOSED = 60;
+    static final int PASSAGE_COST = 2450;
+    static final int PASSAGE_COOLDOWN = 100;
+    static final double PASSAGE_RANGE = 24.0;
+    static final double PASSAGE_FAR = 40.0;             // Heavybringer: further...
+    static final int PASSAGE_FAR_SEQUENCE = 4;
+    static final double PASSAGE_ALLY = 3.0;             // ...and an ally this close comes through with you
+    static final int PASSAGE_UNNOTICED = 60;            // no mob can find you this long
+    static final double PASSAGE_EXPOSES = 12.0;         // the hidden this close to either door are forced out
+    static final int PASSAGE_EXPOSED = 60;
 
     // Fate Convergence (Heavybringer)
     static final int FATE_SEQUENCE = 4;
     static final int FATE_COST = 6000;
     static final int FATE_COOLDOWN = 800;
-    private static final double FATE_RADIUS = 20.0;
-    private static final int FATE_TICKS = 200;
-    private static final int FATE_FOREVER_SEQUENCE = 0;         // Condenser: twice as long, and on bosses too
-    private static final float FATE_LONGER = 2f;
+    static final double FATE_RADIUS = 20.0;
+    static final int FATE_TICKS = 200;
+    static final int FATE_FOREVER_SEQUENCE = 0;         // Condenser: twice as long, and on bosses too
+    static final float FATE_LONGER = 2f;
 
     // Remote Sight (Heavybringer)
     static final int SIGHT_SEQUENCE = 4;
     static final int SIGHT_COST = 2450;
     static final int SIGHT_COOLDOWN = 400;
-    private static final int SIGHT_TICKS = 300;
-    private static final double SIGHT_RANGE = 64.0;
-    private static final int SIGHT_PASSAGES = 12;               // doors and portals this close show as passages
+    static final int SIGHT_TICKS = 300;
+    static final double SIGHT_RANGE = 64.0;
+    static final int SIGHT_PASSAGES = 12;               // doors and portals this close show as passages
 
     // Quantum Uncertainty (Condenser, the Cosmos wheel)
     static final int QUANTUM_SEQUENCE = 0;
     static final int QUANTUM_COST = 45000;
     static final int QUANTUM_COOLDOWN = 800;
-    private static final double QUANTUM_RADIUS = 20.0;
-    private static final int QUANTUM_TICKS = 300;
-    private static final float QUANTUM_MISS = 0.4f;             // enemies in it miss this share (status/Falter)...
-    private static final double QUANTUM_SLIP = 8.0;             // ...and a teleport into it lands up to this far off
+    static final double QUANTUM_RADIUS = 20.0;
+    static final int QUANTUM_TICKS = 300;
+    static final float QUANTUM_MISS = 0.4f;             // enemies in it miss this share (status/Falter)...
+    static final double QUANTUM_SLIP = 8.0;             // ...and a teleport into it lands up to this far off
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String QUANTUM = "star_dragon_quantum";                  // its Zone and its status/Falter reason
+    static final String QUANTUM = "star_dragon_quantum";                  // its Zone and its status/Falter reason
     private static final Set<UUID> QUANTUM_OWNERS = new HashSet<>();               // who has a field open (for teleports)
-    private static final String VOID = "star_dragon_cosmic_void";                 // its Dome
-    private static final String FATE = "star_dragon_fate_convergence";            // its Zone
-    private static final String VOID_TAKEN = "star_dragon_void_taken";            // on the target: health lost inside
-    private static final String CD_PASSAGE = "star_dragon_void_passage";
-    private static final String SIGHT_CAST = "star_dragon_sight_cast";
+    static final String VOID = "star_dragon_cosmic_void";                 // its Dome
+    static final String FATE = "star_dragon_fate_convergence";            // its Zone
+    static final String VOID_TAKEN = "star_dragon_void_taken";            // on the target: health lost inside
+    static final String CD_PASSAGE = "star_dragon_void_passage";
+    static final String SIGHT_CAST = "star_dragon_sight_cast";
 
     // =========================
     // Cosmic Void: the enemy you look at (VOID_RANGE) falls into a half-real void for VOID_TICKS (70% on a player, half
@@ -127,7 +127,7 @@ public final class StarDragonVoid {
     // manifest inside (StarDragon.rayHit). Heavybringer: a true pocket, POCKET_RADIUS, abnormally fragile, teleports
     // sealed, POCKET_TICKS. Star Dragon: near absolute zero, ZERO_RADIUS, frozen and irradiated every 2 seconds.
     // =========================
-    static AbilityWheel.Result cosmicVoid(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result cosmicVoid(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, VOID_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("There is no one to cast into the void."));
@@ -210,7 +210,11 @@ public final class StarDragonVoid {
         if (!Cooldowns.ready(player, CD_PASSAGE, "Void Passage")) return;
         if (!StarDragon.pay(player, PASSAGE_COST, CD_PASSAGE)) return;
         Cooldowns.start(player, CD_PASSAGE, PASSAGE_COOLDOWN);
+        passThroughVoid(player, sl, to);
+    }
 
+    /** What voidPassage does once it is paid for (a Beyonder mob casts it this way too). */
+    static void passThroughVoid(LivingEntity player, ServerLevel sl, Vec3 to) {
         Vec3 from = player.position();
         LivingEntity ally = null;
         if (StarDragon.grown(player, PASSAGE_FAR_SEQUENCE)) {
@@ -247,7 +251,7 @@ public final class StarDragonVoid {
     }
 
     /** The hidden near a door of the void are forced out of hiding. */
-    private static void exposeNear(Player player, ServerLevel sl, Vec3 at) {
+    private static void exposeNear(LivingEntity player, ServerLevel sl, Vec3 at) {
         for (LivingEntity one : Spells.livingAround(player, sl, at, PASSAGE_EXPOSES)) {
             if (Spells.isFriend(player, one)) continue;
             if (!Concealment.isHidden(one) && !Unnoticed.isUnnoticed(one) && !one.hasEffect(MobEffects.INVISIBILITY)) continue;
@@ -262,7 +266,7 @@ public final class StarDragonVoid {
     // its future narrows); bosses are spared until the Condenser. Allies in it get Luck, and the first hit on each of
     // them in this cast is halved. Condenser: twice as long.
     // =========================
-    static AbilityWheel.Result fateConvergence(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result fateConvergence(LivingEntity player, ServerLevel sl) {
         boolean condenser = StarDragon.grown(player, FATE_FOREVER_SEQUENCE);
         int ticks = condenser ? Math.round(FATE_TICKS * FATE_LONGER) : FATE_TICKS;
         String tag = "sd_fate_" + player.getId();
@@ -364,7 +368,7 @@ public final class StarDragonVoid {
     // random spot up to QUANTUM_SLIP from where it meant to (teleport, from StarDragon's events). You and your allies
     // are unaffected.
     // =========================
-    static AbilityWheel.Result quantumUncertainty(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result quantumUncertainty(LivingEntity player, ServerLevel sl) {
         String tag = "sd_quantum_" + player.getId();
         Zone.close(player, QUANTUM);
         StarDragonFx.quantumUncertainty(sl, player, QUANTUM_RADIUS, QUANTUM_TICKS, tag);
@@ -421,7 +425,7 @@ public final class StarDragonVoid {
     }
 
     /** After a relog or a death. */
-    static void clearState(Player player) {
+    static void clearState(LivingEntity player) {
         Zone.close(player, QUANTUM);
         QUANTUM_OWNERS.remove(player.getUUID());
         Dome.close(player, VOID);
