@@ -228,6 +228,11 @@ public class Illuminator {
     private static final Identifier FIELD_HEARTS_ID = Physique.id("illuminator_field_hearts");
 
     // Cooldown keys (combat/Cooldowns)
+    /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
+    public static final boolean KEY_COOLDOWNS = false;
+    /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
+    public static final float QUICK_CAST_COST = 3f;
+
     private static final String CD_FLASK = "illuminator_flask";
     private static final String CD_RECALL = "illuminator_recall";
     private static final String CD_SURVEY = "illuminator_survey";
@@ -397,6 +402,8 @@ public class Illuminator {
             Spells.addCostScale(Illuminator::auraCost);
             Spells.addCostScale(IlluminatorCivilization::heavenCost);
             Cooldowns.addScale(IlluminatorCivilization::heavenCooldown);
+            // the single keys have no cooldown (KEY_COOLDOWNS); the Fusion Beam, a wheel's, keeps its own
+            if (!KEY_COOLDOWNS) Cooldowns.addFree(Cooldowns.keysStartingWith("illuminator_", IlluminatorCivilization.CD_FUSION));
             // Masterwork stops when anything else is cast
             addAfterCast(IlluminatorCivilization::castSomething);
         }

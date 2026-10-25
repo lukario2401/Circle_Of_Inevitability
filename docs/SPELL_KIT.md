@@ -116,6 +116,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Where abilities were cast lately (who, Pathway, Sequence, where) | [`Residue`](#residue-where-abilities-were-cast) | `combat/` |
 | Every ability of every Pathway costs a player more or less while something lasts (an eroded mind, a blessing, a kingdom) | [`Spells.addCostScale`](#1-spells-aiming-and-enemies) | `combat/` |
 | Every cooldown a player starts is longer or shorter while something lasts | [`Cooldowns.addScale`](#cooldowns-for-single-keys) | `combat/` |
+| A Pathway's keys (or any keys) have no cooldown at all | [`Cooldowns.addFree`](#cooldowns-for-single-keys) | `combat/` |
 | Where a player stood, and how hurt they were, a few seconds ago (a step back in time) | [`History`](#history-where-a-player-was) | `combat/` |
 | A cooldown on a single ability key, with the "ready again in" message | [`Cooldowns`](#cooldowns-for-single-keys) | `combat/` |
 | The ally under the crosshair (a ward pinned on a friend) | [`Spells.aimAlly`](#1-spells-aiming-and-enemies) | `combat/` |
@@ -880,7 +881,17 @@ if (!Spells.paySpirituality(player, 250)) return;
 Cooldowns.start(player, "my_pathway_flask", 40);
 ```
 
-`left(player, key)` (ticks, 0 = ready), `reset(player, key)`, `seconds(ticks)` ("1.5s"). `Cooldowns.addScale(player -> 1.5f)` (once, in a static block) makes every cooldown a player starts longer or shorter while it says so, single keys and every wheel alike (`AbilityWheel.cooldownFor` asks `Cooldowns.scaled`): the enemies in a Mechanical Heaven. Check it with the other "can it be cast" checks and start it after the cast went off. Saved on the player in game time. The Illuminator's keys 1 to 3 use it.
+`left(player, key)` (ticks, 0 = ready), `reset(player, key)`, `seconds(ticks)` ("1.5s"). `Cooldowns.addScale(player -> 1.5f)` (once, in a static block) makes every cooldown a player starts longer or shorter while it says so, single keys and every wheel alike (`AbilityWheel.cooldownFor` asks `Cooldowns.scaled`): the enemies in a Mechanical Heaven. Check it with the other "can it be cast" checks and start it after the cast went off. Saved on the player in game time.
+
+A key with no cooldown at all (a Pathway that wants spirituality as the only limit on its keys):
+
+```java
+Cooldowns.addFree(Cooldowns.keysStartingWith("my_pathway_"));                    // once, in a static block
+Cooldowns.addFree(Cooldowns.keysStartingWith("my_pathway_", "my_pathway_beam"));  // every key but that one
+Cooldowns.addFree((player, key) -> ...);                                          // any rule
+```
+
+A free key is always `ready`, `start` does nothing for it and `left` is 0; the wheels keep their own cooldowns. Illuminator, Key Of Stars, Star Dragon and Hand Of Order do this behind a `KEY_COOLDOWNS` switch in their main class, and give every wheel `.quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)` with `QUICK_CAST_COST = 3f`: a pick from the wheel waits for its cooldown, a sneak recast does not and costs 3 times as much.
 
 ## Contagion: it passes from one enemy to the next
 

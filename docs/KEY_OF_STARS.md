@@ -38,6 +38,8 @@ Status pictures above the Recorded slots (same idea as Attendant's `showStatus`)
 
 It follows the Attendant Of Mysteries pattern: seven keys (G H J K L N M), every key has a normal cast and a sneak cast. Four keys (2, 5, 6, 7) are wheels like Apocalypse's and Hand Of God's, where every entry has its own Sequence, cost and cooldown; on a wheel key, sneak casts the last pick again (`AbilityWheel.quickCast`).
 
+**Cooldowns.** The single keys have no cooldown: spirituality is their only limit (`KeyOfStars.KEY_COOLDOWNS = false`, through `Cooldowns.addFree`; set it to true to bring back the numbers below). The wheels keep their cooldowns when you pick from the wheel; a sneak recast of the last pick has no cooldown and costs 3 times as much (`KeyOfStars.QUICK_CAST_COST`).
+
 The abilities do not each get a Sequence of their own. Sequence 8 has seven abilities (the tricks), Sequences 5 and 4 have four, Sequences 1 and 0 have three, and Sequences 9, 7, 6, 3 and 2 have two each. Sequences 3, 2, 1 and 0 are not left empty, and they also strengthen what is already there (see "Grows with the Sequence").
 
 | Sequence | Abilities |
@@ -118,11 +120,11 @@ Cost is Spirituality. Costs follow AttendantOfMysteries up to Sequence 3 (250 fo
 
 | Entry | Cost | Cooldown |
 |---|---|---|
-| Door Opening / Slip Free | 250 / 400 | 3 (doors: none) / 20 |
+| Door Opening / Slip Free | 250 / 400 | none (was 3 / 20) |
 | Flash / Black Screen / Loud Noise | 300 / 400 / 300 | 8 / 12 / 10 |
 | Frost Ray / Gale / Tumble / Escape Trick | 600 / 500 / 700 / 500 | 3 / 8 / 14 / 6 |
-| Star Divination / Interference | 1250 / 1250 | 12 / 30 |
-| Record / Replay | 2450 / 0 | 15 / 1 |
+| Star Divination / Interference | 1250 / 1250 | none (was 12 / 30) |
+| Record / Replay | 2450 / 0 | none (was 15 / 1) |
 | Traveler's Door / Blink | 3000 / 500 | 10 / 2 |
 | Invisible Hand / Star Anchor | 1500 / 1000 | 6 / 5 |
 | Wandering | 12000 | 40 |

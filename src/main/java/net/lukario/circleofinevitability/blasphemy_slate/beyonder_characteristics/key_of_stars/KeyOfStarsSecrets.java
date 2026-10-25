@@ -140,6 +140,7 @@ public final class KeyOfStarsSecrets {
 
     private static final AbilityWheel WHEEL = AbilityWheel.create("key_of_stars_secrets", "Secrets and Space")
             .radius(72)
+            .quickCastCooldown(false).quickCastCost(KeyOfStars.QUICK_CAST_COST)     // sneak: no cooldown, 3x the cost
             .cooldownBy(KeyOfStars::cooldownFor)
             .entry("space_concealment", KeyOfStarsFx.WHEEL_SPACE_CONCEALMENT, "Space Concealment", SECRETS_SEQUENCE,
                     CONCEAL_COST, CONCEAL_COOLDOWN, KeyOfStarsSecrets::spaceConcealment)

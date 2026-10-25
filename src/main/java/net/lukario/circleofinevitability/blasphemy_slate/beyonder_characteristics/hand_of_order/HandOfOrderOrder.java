@@ -65,7 +65,7 @@ public final class HandOfOrderOrder {
     // =========================
 
     static final int ORDER_SEQUENCE = 2;                         // the key
-    private static final float QUICK_CAST_COST = 2f;
+    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
 
     // Balance
     private static final int BALANCE_SEQUENCE = 2;

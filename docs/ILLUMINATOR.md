@@ -37,6 +37,8 @@ Many abilities read the mark: Appraise puts it on, Exploit Flaw spends it, the R
 
 It follows the Attendant Of Mysteries pattern: seven keys (G H J K L N M). Keys 1 to 3 are single abilities with a normal cast and a sneak cast. Keys 4 to 7 are wheels like Hand Of God's and Apocalypse's, where every entry has its own Sequence, cost and cooldown, and sneak casts the last pick again (AbilityWheel.quickCast). Wheel entries are cast where you aim.
 
+**Cooldowns.** The single keys have no cooldown: spirituality is their only limit (`Illuminator.KEY_COOLDOWNS = false`, through `Cooldowns.addFree`; set it to true to bring back the numbers below). The wheels keep their cooldowns when you pick from the wheel; a sneak recast of the last pick has no cooldown and costs 3 times as much (`Illuminator.QUICK_CAST_COST`). The Fusion Beam keeps its own 8 second cooldown.
+
 The abilities do not each get a Sequence of their own. Sequences 9, 8, 7, 3 and 2 have two abilities, Sequences 6, 4, 1 and 0 have three, and Sequence 5 has four (the four things the Astronomer does in the books). Sequences 2, 1 and 0 are not left thin: they also strengthen what is already there (see "Grows with the Sequence"). Key 6 holds Sequences 4 and 3 together, key 7 holds Sequences 2, 1 and 0.
 
 | Sequence | Abilities |
@@ -161,12 +163,12 @@ Recall, Survey and Ritual Circle cost 300, 350 and 400 rather than the planned 4
 
 | Ability | Sequence | Cost | Cooldown (s) |
 |---|---|---|---|
-| Compound Flask | 9 | 250 | 2 |
-| Recall | 9 | 300 | 25 |
-| Survey | 8 | 350 | 15 |
-| Ritual Circle | 8 | 400 | 25 |
-| Appraise | 7 | 1250 | 3 |
-| Exploit Flaw | 7 | 1500 | 10 |
+| Compound Flask | 9 | 250 | none (was 2) |
+| Recall | 9 | 300 | none (was 25) |
+| Survey | 8 | 350 | none (was 15) |
+| Ritual Circle | 8 | 400 | none (was 25) |
+| Appraise | 7 | 1250 | none (was 3) |
+| Exploit Flaw | 7 | 1500 | none (was 10) |
 | Clockwork Rifle | 6 | 1800 | 5 |
 | Spirit Cannon | 6 | 2450 | 30 |
 | Mystic Brooch | 6 | 1500 | 40 |
@@ -233,7 +235,7 @@ Written (each has a section in [SPELL_KIT.md](SPELL_KIT.md)):
 | `Unreadable` | `status/` | Cannot be picked out from further than N blocks: far mobs forget, far abilities cannot choose (`Spells.addUnchoosableCheck`). | False Constellations |
 | `Construct` | `status/` | What is made, not born: iron and snow golems, anything `mark`ed, `addCheck` rules. | Exploit Flaw; Dissociation (3); the dolls and golems (4) mark themselves |
 | `History` | `combat/` | Where every player stood and how hurt they were, for the last 10 seconds. `ago`, `asFarAs`, `healthLost`, `forget`. | Recall (and Recall on an ally from 1) |
-| `Cooldowns` | `combat/` | A cooldown on a single key with the wheels' "ready again in" message. | keys 1 to 3 |
+| `Cooldowns` | `combat/` | A cooldown on a single key with the wheels' "ready again in" message; `addFree` takes it away. | keys 1 to 3 (switched off), the Fusion Beam |
 | `Spells.aimAlly` | `combat/` | The ally under the crosshair. | Mystic Brooch, Recall on an ally (1); Enlightenment (1) |
 | `AbilityWheel.resetCooldown` | `menu/` | One entry ready again now. | the arm cannon (4) |
 
@@ -287,7 +289,7 @@ How it works where the tables above do not say:
 - **Every Illuminator hit** goes through `Illuminator.hit(player, target, damage, Weakness kind)`, which is `Appraisal.strike`: on an enemy you Appraised it is 15% stronger (25% from Magister), and 50% more again when `kind` is its weakness. The kinds: the Flask and its acid are corrosion, the Rifle and Cannon pierce (a Rifle round on an Appraised enemy carries its weakness instead, so it always matches), the Star of Curses and Meteor Shower starlight, Blessing of Stars gravity. Exploit Flaw and the Brooch's burst have no kind (the bonus, never the match).
 - **The weakness table** is `Illuminator.WEAKNESS`, read from the top: players are pierce; the undead, vexes, allays and every summon are starlight; constructs and anything with 8 armor or more are corrosion; whatever floats (no gravity), bats, bees, blazes, ghasts, parrots, breezes, slimes, magma cubes, rabbits, frogs, endermen and anything with a walking speed of 0.3 or more are gravity; the rest pierce.
 - **Costs** go through `Illuminator.costFor(player, cost, ability, group)`: Quick Study (the same ability again within 20 s, 10% less), the Rite (a Workshop cast from inside your Ritual Circle, 20% less; from Alchemist also Alchemy and Arcana), then every `Illuminator.addCostRule`. Keys pay through `pay`, wheel entries through `.costBy(...)`; both end in `afterCast`, which Quick Study reads and every `addAfterCast` hears.
-- **Cooldowns**: keys 1 to 3 use `combat/Cooldowns` (Flask 2 s, Recall 25, Survey 15, Ritual Circle 25, Appraise 3, Exploit Flaw 10), checked after the target and before the cost; a cast that finds nothing to do starts none.
+- **Cooldowns**: keys 1 to 3 use `combat/Cooldowns` (Flask 2 s, Recall 25, Survey 15, Ritual Circle 25, Appraise 3, Exploit Flaw 10), checked after the target and before the cost; a cast that finds nothing to do starts none. While `Illuminator.KEY_COOLDOWNS` is false (now) a `Cooldowns.addFree` rule makes every `illuminator_` key free of them except `illuminator_fusion_beam`. The wheels' sneak recast: no cooldown, `QUICK_CAST_COST` (3) times the cost.
 - **Compound Flask**: a `Shot` at 1.4 blocks a tick (so a flask can be seen coming), a drop of acid behind it every tick. The one it hits takes 36; the burst 18 to the rest within 3; everyone it caught is shoved and Corroded (`Vulnerable`, 15%, not stacking, 8 s; a green circle under them). Artisan: the second flask 4 ticks later, aimed anew. Arcane Scholar: a puddle of 3 for 5 s (a `Zone`), 4 a second and Corroded again while they stand in it; up to three puddles at once.
 - **Recall**: `combat/History.asFarAs(player, 60)` (100 from 5, 160 from 1): where you stood that long ago, or as far back as it goes. Refused (free) when held (`Root` MOVE or TELEPORT), when you have not moved, or when that spot is blocked now. Half of the health lost since then comes back; no fall damage for 2 s; the record starts afresh so it cannot chain. From Illuminator, the player ally under the crosshair (24) is sent back instead of you.
 - **Survey**: at `SURVEY_PULSE`, everything hostile within reach (a monster, a player not on your side, a mob hunting you) glows for 8 s and is `Exposed` for 3 (whatever hid is pulled out, with its look). Chat names how many and the one with the most maximum health, with its health and distance. Reach 40, 64 from Astronomer, half again while the Mechanical Body is worn (key 6 sets `MECH_UNTIL`).

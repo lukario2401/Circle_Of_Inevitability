@@ -22,6 +22,8 @@ Nothing here breaks blocks or lights real fire. Asteroids, fusion, black holes a
 
 It follows the Attendant Of Mysteries pattern: seven keys (G H J K L N M), every ability has a normal cast and a sneak cast. Three keys (2, 5, 7) are wheels like Hand Of God's: every entry has its own Sequence, cost and cooldown, and on a wheel key sneak casts the last pick again (`AbilityWheel.quickCast`). Plain keys cost spirituality only, as in Attendant Of Mysteries.
 
+**Cooldowns.** The single keys have no cooldown: spirituality is their only limit (`StarDragon.KEY_COOLDOWNS = false`, through `Cooldowns.addFree`; set it to true to bring back the numbers below). The wheels keep their cooldowns when you pick from the wheel; a sneak recast of the last pick has no cooldown and costs 3 times as much (`StarDragon.QUICK_CAST_COST`).
+
 The abilities do not each get a Sequence of their own. Sequence 7 has four abilities, 5 has three, 4 has five, 6, 3 and 2 have two each, 1 and 0 have three each, 9 and 8 have one each. Sequences 2, 1 and 0 are not left without abilities (eight entries between them), and they also strengthen what is already there (see "Grows with the Sequence").
 
 | Sequence | Abilities |
@@ -207,7 +209,7 @@ The reusable parts written for it (each in [SPELL_KIT.md](SPELL_KIT.md)): `statu
 How it works where the tables above do not say:
 - **Every Star Dragon hit** goes through `StarDragon.hit(player, target, damage)`: `Spells.strike`, 20% more for the first hit on what you Charted (`StarDragonMarks.spendCharted`). Every ray's hit goes through `StarDragon.rayHit`, which on someone in your own Cosmic Void from the Tidal Scholar is 25% more and lands through every shield (`Spells.strikeThrough`).
 - **Costs** go through `StarDragon.costFor(player, cost, ability)`; keys pay through `pay`, wheel entries through `.costBy(...)`; both end in `afterCast`. Nothing changes them yet; `addCostRule` and `addAfterCast` are the hooks for the second half (or the Starlight meter, if it is wanted).
-- **Cooldowns**: the single keys use `combat/Cooldowns` (Star Chart 3 s, Fate Glimpse 20, Void Passage 5, Piercing Ray 8, Tidal Surge 10, Scaled Form 3), checked after the target and before the cost. The wheels: a sneak recast of the last pick has no cooldown and costs twice.
+- **Cooldowns**: the single keys use `combat/Cooldowns` (Star Chart 3 s, Fate Glimpse 20, Void Passage 5, Piercing Ray 8, Tidal Surge 10, Scaled Form 3), checked after the target and before the cost. While `StarDragon.KEY_COOLDOWNS` is false (now) a `Cooldowns.addFree` rule takes every `star_dragon_` key's cooldown away. The wheels: a sneak recast of the last pick has no cooldown and costs 3 times as much (`QUICK_CAST_COST`).
 - **Costs the plan could not have**: Fate Glimpse costs 350, not 600 (Sequence 8 holds 400), and Cosmic Void 1800, not 2450 (Sequence 7 holds 1980).
 - **Star Chart**: `StarDragonMarks.CHARTED` lands at `StarDragonFx.CHART_LANDS`, 10 s: `status/Exposed` for as long (it cannot hide from anyone), its constellation drawn every 10 ticks for the one who charted it alone, and the calculated shot.
 - **Fate Glimpse**: for 10 s the first two attacks on you that have an attacker (melee, projectiles, abilities: everything `LivingAttackEvent` gives an attacker; falls, poison and the void have none) are cancelled, and you step 1.2 aside where you fit (not while held). Areas count when they name an attacker: the game cannot tell aimed from not.

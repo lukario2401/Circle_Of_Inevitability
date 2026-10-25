@@ -61,7 +61,7 @@ public final class HandOfOrderDecrees {
     // =========================
 
     static final int DECREE_SEQUENCE = 6;                        // the key
-    private static final float QUICK_CAST_COST = 2f;
+    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
 
     // Prohibition: Passage / Concealment
     private static final int PROHIBITION_SEQUENCE = 6;

@@ -60,7 +60,7 @@ public final class HandOfOrderVerdicts {
     // =========================
 
     static final int VERDICT_SEQUENCE = 6;                       // the key
-    private static final float QUICK_CAST_COST = 2f;
+    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;
 
     // Imprison / Confinement
     private static final int IMPRISON_SEQUENCE = 6;

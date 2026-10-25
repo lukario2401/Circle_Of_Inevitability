@@ -21,6 +21,15 @@ import java.util.List;
  * Cooldowns.addScale(player -> ...) changes every cooldown a player starts (the wheels' too): scaled(player, ticks).
  * The key may be anything; start it with your Pathway.
  * A copy of an ability (combat/Casts: Record's Replay, an echo) neither waits for these cooldowns nor starts them.
+ *
+ * Keys with no cooldown at all (a whole Pathway's keys, with the spirituality cost as their only limit):
+ *
+ *   Cooldowns.addFree(Cooldowns.keysStartingWith("my_pathway_"));                 // once, in a static block
+ *   Cooldowns.addFree(Cooldowns.keysStartingWith("my_pathway_", "my_pathway_beam")); // ...but this one keeps its own
+ *   Cooldowns.addFree((player, key) -> ...);                                       // any rule of your own
+ *
+ * A free key is always ready, start() does nothing for it, and left() is 0. The wheels (AbilityWheel) keep their own
+ * cooldowns either way. Illuminator, Key Of Stars, Star Dragon and Hand Of Order use this (their KEY_COOLDOWNS switch).
  */
 public final class Cooldowns {
 
@@ -34,6 +43,14 @@ public final class Cooldowns {
 
     private static final List<Scale> SCALES = new ArrayList<>();
 
+    /** A rule that says a key has no cooldown (for this player, now). */
+    @FunctionalInterface
+    public interface Free {
+        boolean free(Player player, String key);
+    }
+
+    private static final List<Free> FREE = new ArrayList<>();
+
     private Cooldowns() {}
 
     /**
@@ -42,6 +59,25 @@ public final class Cooldowns {
      */
     public static void addScale(Scale rule) {
         SCALES.add(rule);
+    }
+
+    /** One more rule for keys that have no cooldown. Once, in a static block. */
+    public static void addFree(Free rule) {
+        FREE.add(rule);
+    }
+
+    /** A Free rule for every key starting with 'prefix' (a Pathway's keys), except the keys named. */
+    public static Free keysStartingWith(String prefix, String... except) {
+        List<String> kept = List.of(except);
+        return (player, key) -> key.startsWith(prefix) && !kept.contains(key);
+    }
+
+    /** True when an addFree rule says this key has no cooldown for this player. */
+    public static boolean isFree(Player player, String key) {
+        for (Free rule : FREE) {
+            if (rule.free(player, key)) return true;
+        }
+        return false;
     }
 
     /** 'ticks' after every addScale rule: what a cooldown of 'ticks' really is for this player now. */
@@ -63,7 +99,7 @@ public final class Cooldowns {
     /** Starts its cooldown: ready again 'ticks' from now (0 or less: ready at once). */
     public static void start(Player player, String key, int ticks) {
         if (Casts.isCopying(player)) return;                    // a copy (combat/Casts) starts no cooldown...
-        if (ticks <= 0) {
+        if (ticks <= 0 || isFree(player, key)) {
             reset(player, key);
             return;
         }
@@ -73,6 +109,7 @@ public final class Cooldowns {
     /** Ticks until it is ready (0 = ready). */
     public static int left(Player player, String key) {
         if (Casts.isCopying(player)) return 0;                  // ...and waits for none
+        if (isFree(player, key)) return 0;
         long ready = player.getPersistentData().getLongOr(PREFIX + key, 0L);
         long left = ready - player.level().getGameTime();
         if (left > 72000L) {                                    // a save from another world's clock: forget it

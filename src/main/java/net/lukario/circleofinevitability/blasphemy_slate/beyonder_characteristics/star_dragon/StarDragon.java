@@ -100,7 +100,6 @@ public class StarDragon {
 
     // Ability 2 - Star Sacrifice (the wheel, Sequence 7)
     static final int SACRIFICE_SEQUENCE = 7;
-    private static final float QUICK_CAST_COST = 2f;                // a sneak recast: no cooldown, this many times the cost
 
     // Ability 3 - Void Passage / Piercing Ray (Sequence 6), Ability 4 - Tidal Surge / Scaled Form (Sequence 5):
     // their numbers are in StarDragonVoid, StarDragonRays and StarDragonTides
@@ -162,6 +161,11 @@ public class StarDragon {
     private static final Identifier DENSE_ID = Physique.id("star_dragon_dense_footing");
 
     // Cooldown keys (combat/Cooldowns)
+    /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
+    public static final boolean KEY_COOLDOWNS = false;
+    /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
+    public static final float QUICK_CAST_COST = 3f;
+
     private static final String CD_CHART = "star_dragon_chart";
     private static final String CD_GLIMPSE = "star_dragon_glimpse";
 
@@ -316,6 +320,8 @@ public class StarDragon {
     public static class StarDragonEvents {
 
         static {
+            // the single keys have no cooldown (KEY_COOLDOWNS)
+            if (!KEY_COOLDOWNS) Cooldowns.addFree(Cooldowns.keysStartingWith("star_dragon_"));
             // Dense Body (4): nothing pulls, pushes or lifts you; Heavybringing and the Neutron Star: nothing moves you
             Spells.addMoveImmunity(one -> one instanceof Player dense && (isStarDragon(dense, DENSE_SEQUENCE)
                     || StarDragonGravity.isHeavybringing(dense) || StarDragonGravity.isNeutronStar(dense)));

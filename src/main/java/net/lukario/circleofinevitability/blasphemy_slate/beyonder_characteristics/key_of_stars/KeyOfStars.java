@@ -158,6 +158,11 @@ public class KeyOfStars {
     private static final String INTUITION_READY = "key_of_stars_intuition_ready";
     private static final String WORMS_SHOWN = "key_of_stars_worms_shown";
 
+    /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
+    public static final boolean KEY_COOLDOWNS = false;
+    /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
+    public static final float QUICK_CAST_COST = 3f;
+
     private static final String DOOR_KEY = "key_of_stars_door";          // combat/Cooldowns
     private static final String SLIP_KEY = "key_of_stars_slip";
     private static final String DIVINATION_KEY = "key_of_stars_divination";
@@ -173,6 +178,8 @@ public class KeyOfStars {
 
         // (here, not in KeyOfStars: the event bus loads this class when the mod starts, so the rules are in from the start)
         static {
+            // the single keys have no cooldown (KEY_COOLDOWNS)
+            if (!KEY_COOLDOWNS) Cooldowns.addFree(Cooldowns.keysStartingWith("key_of_stars_"));
             // Footprints of Freedom (9): roots and holds on you last a quarter less; Astral Footing (3): Teleport roots half
             Root.addDurationScale((target, restriction) -> {
                 if (!(target instanceof Player player) || !isKeyOfStars(player, DOOR_SEQUENCE)) return 1f;

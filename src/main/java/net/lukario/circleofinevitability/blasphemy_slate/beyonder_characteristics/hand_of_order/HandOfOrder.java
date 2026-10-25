@@ -210,6 +210,11 @@ public class HandOfOrder {
     private static final String RECOGNITION_COUNTER = "hand_of_order_recognition";  // combat/HudCounter
     static final String SURE_HIT = "hand_of_order_sure_hit";                         // status/EmpoweredHit
 
+    /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
+    public static final boolean KEY_COOLDOWNS = false;
+    /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
+    public static final float QUICK_CAST_COST = 3f;
+
     private static final String HALT_KEY = "hand_of_order_halt";          // combat/Cooldowns
     private static final String PRESENCE_KEY = "hand_of_order_presence";
     private static final String JURISDICTION_KEY = "hand_of_order_jurisdiction";
@@ -257,6 +262,8 @@ public class HandOfOrder {
             // Order Proxy: every ability costs nothing and has no cooldown while it lasts (every key and wheel asks these)
             Spells.addCostScale(player -> HandOfOrderOrder.isProxy(player) ? 0f : 1f);
             Cooldowns.addScale(player -> HandOfOrderOrder.isProxy(player) ? 0f : 1f);
+            // the single keys have no cooldown (KEY_COOLDOWNS)
+            if (!KEY_COOLDOWNS) Cooldowns.addFree(Cooldowns.keysStartingWith("hand_of_order_"));
             // no Rule binds an Order Proxy; from Hand of Order (1) no Rule of a lower Sequence binds you (Sense of Order)
             Decree.addImmunity((owner, entity, rule) -> entity instanceof Player player
                     && (HandOfOrderOrder.isProxy(player) || (isHandOfOrder(player, SENSE_OF_ORDER_SEQUENCE)

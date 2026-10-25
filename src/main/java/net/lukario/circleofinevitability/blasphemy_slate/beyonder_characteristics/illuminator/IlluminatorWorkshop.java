@@ -45,7 +45,7 @@ public final class IlluminatorWorkshop {
     // =========================
 
     static final int WORKSHOP_SEQUENCE = 6;                     // the key
-    private static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
+    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Clockwork Rifle
     private static final int RIFLE_SEQUENCE = 6;

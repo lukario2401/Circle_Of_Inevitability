@@ -45,7 +45,7 @@ public final class HandOfOrderInterrogation {
     // =========================
 
     static final int INTERROGATION_SEQUENCE = 7;                 // the key
-    private static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
+    private static final float QUICK_CAST_COST = HandOfOrder.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Psychic Lashing
     private static final int LASHING_SEQUENCE = 7;

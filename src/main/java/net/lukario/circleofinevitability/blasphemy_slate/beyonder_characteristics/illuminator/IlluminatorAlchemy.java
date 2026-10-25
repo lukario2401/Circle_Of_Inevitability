@@ -81,7 +81,7 @@ public final class IlluminatorAlchemy {
     // =========================
 
     static final int ALCHEMY_SEQUENCE = 4;                      // the key
-    private static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
+    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Living Doll
     private static final int DOLL_SEQUENCE = 4;

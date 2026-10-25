@@ -52,7 +52,7 @@ public final class IlluminatorAstronomy {
     // =========================
 
     static final int ASTRONOMY_SEQUENCE = 5;                    // the key
-    private static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
+    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Star of Curses
     private static final int CURSE_SEQUENCE = 5;

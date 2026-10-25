@@ -149,6 +149,7 @@ public final class KeyOfStarsTravel {
 
     private static final AbilityWheel WHEEL = AbilityWheel.create("key_of_stars_travel", "Travel")
             .radius(72)
+            .quickCastCooldown(false).quickCastCost(KeyOfStars.QUICK_CAST_COST)     // sneak: no cooldown, 3x the cost
             .cooldownBy(KeyOfStars::cooldownFor)
             .entry("travelers_door", KeyOfStarsFx.WHEEL_TRAVELERS_DOOR, "Traveler's Door", TRAVEL_SEQUENCE, DOOR_COST,
                     DOOR_COOLDOWN, KeyOfStarsTravel::travelersDoor)

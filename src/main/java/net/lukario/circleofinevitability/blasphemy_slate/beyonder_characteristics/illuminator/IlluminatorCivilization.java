@@ -73,7 +73,7 @@ public final class IlluminatorCivilization {
     // =========================
 
     static final int CIVILIZATION_SEQUENCE = 2;                 // the key
-    private static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
+    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Rewrite Principles
     private static final int PRINCIPLES_SEQUENCE = 2;
@@ -169,7 +169,7 @@ public final class IlluminatorCivilization {
     private static final String COLOSSUS_UNTIL = "illuminator_colossus_until";
     private static final String SCROLLS_UNTIL = "illuminator_scrolls_until";
     static final String ENLIGHTENED_UNTIL = "illuminator_enlightened_until";
-    private static final String CD_FUSION = "illuminator_fusion_beam";
+    static final String CD_FUSION = "illuminator_fusion_beam";
 
     /** Who holds a Rewrite Principles or a Mechanical Heaven now (for the questions asked outside the zones). Not saved. */
     private static final Set<UUID> PRINCIPLE_OWNERS = new HashSet<>();
