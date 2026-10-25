@@ -123,7 +123,7 @@ public final class GravityField {
     public GravityField onEnd(Runnable action) { zone.onEnd(action); return this; }
 
     /** Raises it. One of the same player and name closes first. */
-    public void raise(Player owner, ServerLevel sl, String name) {
+    public void raise(LivingEntity owner, ServerLevel sl, String name) {
         int hold = beat + 2;
         zone.onInside((one, ticksInside) -> {
             boolean big = onlySlowed.test(one);
@@ -145,11 +145,11 @@ public final class GravityField {
         zone.open(owner, sl, name);
     }
 
-    public static boolean isRaised(Player owner, String name) {
+    public static boolean isRaised(LivingEntity owner, String name) {
         return Zone.isOpen(owner, name);
     }
 
-    public static void close(Player owner, String name) {
+    public static void close(LivingEntity owner, String name) {
         Zone.close(owner, name);
     }
 
@@ -157,14 +157,14 @@ public final class GravityField {
     // Internals
     // =========================
 
-    private Vec3 middle(Player owner, String name) {
+    private Vec3 middle(LivingEntity owner, String name) {
         if (aura) return follows.isAlive() ? follows.position() : null;
         Vec3 now = Zone.centerOf(owner, name);
         return now != null ? now : ground;
     }
 
     /** Up to liftHeight over the ground under it, then held there without gravity. */
-    private void holdUp(Player owner, ServerLevel sl, LivingEntity one, int hold) {
+    private void holdUp(LivingEntity owner, ServerLevel sl, LivingEntity one, int hold) {
         Vec3 floor = Spells.groundUnder(owner, sl, one);
         double wanted = floor.y + liftHeight;
         double gap = wanted - one.getY();

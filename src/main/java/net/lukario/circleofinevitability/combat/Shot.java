@@ -138,7 +138,7 @@ public final class Shot {
      * Fires it from 'from' along 'direction'. 'owner' is who it belongs to: it decides who counts as an enemy.
      * @return how many ticks from now its flight ends
      */
-    public int fire(Player owner, ServerLevel sl, Vec3 from, Vec3 direction) {
+    public int fire(LivingEntity owner, ServerLevel sl, Vec3 from, Vec3 direction) {
         Vec3 dir = direction.normalize();
         Vec3 far = from.add(dir.scale(range));
         BlockHitResult wall = sl.clip(new ClipContext(from, far, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));

@@ -109,6 +109,20 @@ public final class BeyonderMobRules {
     public static double FIGHT_RANGE = 32.0;
     /** What its abilities deal to a player is multiplied by this (mob abilities use the player numbers, made for mobs). */
     public static float DAMAGE_TO_PLAYERS = 0.5f;
+    /**
+     * Its bar is never smaller than this many casts of the cheapest ability it knows (so a Sequence 9 or 8 mob, whose
+     * share of a player's bar is tiny, can still cast now and then). 0 = no floor.
+     */
+    public static float SPIRITUALITY_FLOOR_CASTS = 2f;
+    /** And a bar raised by that floor fills from empty in no more than this many ticks (1200 = a minute). */
+    public static int FLOOR_REFILL_TICKS = 1200;
+    /**
+     * False: mobs' abilities never break, place or change blocks (the rest of each ability still happens). True: they
+     * do, but only while the mobGriefing game rule is on (MobSpells.mayChangeBlocks).
+     */
+    public static boolean MOBS_CHANGE_BLOCKS = true;
+    /** Mob abilities that call things up (summons, servants, beasts): how many of them one mob can have at once. */
+    public static int MAX_SUMMONS = 4;
 
     // =========================
     // Which Rule a mob follows

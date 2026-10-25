@@ -287,17 +287,17 @@ public final class BeautyGoddessFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, two rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "beauty_goddess/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "beauty_goddess/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -464,7 +464,7 @@ public final class BeautyGoddessFx {
     private static final String VISION_TAG = "bg_spirit_vision";
 
     /** The caster's eyes open to the spirit: a halo flares behind their head and a silver ring races out 'radius'. */
-    public static void spiritVision(ServerLevel sl, Player caster, double radius) {
+    public static void spiritVision(ServerLevel sl, LivingEntity caster, double radius) {
         ModelFx halo = MOON_HALO.color(0xC0DCE8FF).scale(0.9f).lifetime(30).fade(4, 12)
                 .key(0, pose().forward(-0.32f).scale(0.3f).alpha(0f))
                 .key(6, pose().scale(1.2f).alpha(1f), Ease.OUT_BACK)
@@ -518,7 +518,7 @@ public final class BeautyGoddessFx {
     }
 
     /** A crimson thread runs from the caster's hand to the beast; at TAME_LANDS the blood mark settles over its head for 'ticks'. */
-    public static void tame(ServerLevel sl, Player caster, LivingEntity beast, int ticks) {
+    public static void tame(ServerLevel sl, LivingEntity caster, LivingEntity beast, int ticks) {
         SpellFx.tether(sl, BLOOD_LINE, () -> SpellFx.handOf(caster, sl), () -> SpellFx.middleOf(beast, sl), TAME_LANDS + 4);
         ParticleShapes.line(sl, BLOOD_MOTE, SpellFx.handOf(caster, sl) == null ? caster.getEyePosition() : SpellFx.handOf(caster, sl),
                 chestOf(beast), 2);
@@ -554,7 +554,7 @@ public final class BeautyGoddessFx {
     private static final String SENSE_TAG = "bg_animal_sense";
 
     /** The call goes out: a golden ring races out 'radius' and the caster's eyes shine like a beast's. */
-    public static void animalSense(ServerLevel sl, Player caster, double radius) {
+    public static void animalSense(ServerLevel sl, LivingEntity caster, double radius) {
         SpellFx.steadyRing(sl, caster.position(), radius, 0xC0E0B070, 18, 0);
         SpellFx.shockRing(sl, caster.position(), radius * 0.4, 0xA0FFF0C0, 10, 2);
         ParticleShapes.burst(sl, GOLD_MOTE, caster.getEyePosition(), 10, 0.02, 0.06);
@@ -607,7 +607,7 @@ public final class BeautyGoddessFx {
      * Bat wings of darkness on the caster's back for 'ticks': they snap open, keep beating (with a beat of sound
      * each time) and fold away in the last second. 'tag' names them: wingsBurst(...) with it ends them early.
      */
-    public static void wings(ServerLevel sl, Player wearer, int ticks, String tag) {
+    public static void wings(ServerLevel sl, LivingEntity wearer, int ticks, String tag) {
         ParticleShapes.clearModels(sl, wearer, tag);
         if (ticks < WINGS_SHORTEST) return;
         Vec3 shoulders = new Vec3(0, wearer.getBbHeight() * 0.72, 0);
@@ -633,7 +633,7 @@ public final class BeautyGoddessFx {
             .trail(DARK_MOTE, 1).burst(BAT_FLIGHT, 4);
 
     /** The wings burst into a swarm of bats (the end of the glide): they fold away at once and bats scatter. */
-    public static void wingsBurst(ServerLevel sl, Player wearer, String tag) {
+    public static void wingsBurst(ServerLevel sl, LivingEntity wearer, String tag) {
         ParticleShapes.clearModels(sl, wearer, tag);
         batsScatter(sl, chestOf(wearer), 10, 4.0);
         ParticleShapes.burst(sl, DARK_WISP, chestOf(wearer), 14, 0.04, 0.12);
@@ -706,7 +706,7 @@ public final class BeautyGoddessFx {
     }
 
     /** Once a second while bound: blood is drawn out of it along a dark thread to the caster. */
-    public static void shacklesDrain(ServerLevel sl, LivingEntity target, Player caster) {
+    public static void shacklesDrain(ServerLevel sl, LivingEntity target, LivingEntity caster) {
         SpellFx.tether(sl, DARK_LINE, () -> SpellFx.middleOf(target, sl), () -> SpellFx.middleOf(caster, sl), 8);
         ParticleShapes.line(sl, BLOOD_MOTE, chestOf(target), chestOf(caster), 2);
         ParticleShapes.burst(sl, BLOOD_DROP, chestOf(target), 4, 0.02, 0.05);
@@ -734,7 +734,7 @@ public final class BeautyGoddessFx {
     public static final int DRINK_DONE = 18;
 
     /** A flask of this color comes up to the caster's lips and is drunk in three gulps. */
-    public static void drink(ServerLevel sl, Player drinker, int color) {
+    public static void drink(ServerLevel sl, LivingEntity drinker, int color) {
         float s = 0.55f;
         ModelFx.Pose low = pose().forward(0.42f).right(0.22f).up(0f).pitch(0f);
         for (ModelFx part : List.of(FLASK.scale(s), FLASK_LIQUID.color(color | 0xFF000000).scale(s))) {
@@ -754,27 +754,27 @@ public final class BeautyGoddessFx {
     }
 
     /** The Invisibility Potion takes hold: the drinker shimmers and fades. */
-    public static void invisibility(ServerLevel sl, Player drinker) {
+    public static void invisibility(ServerLevel sl, LivingEntity drinker) {
         ParticleShapes.sphere(sl, SPARKLE, chestOf(drinker), 0.8, 18);
         ParticleShapes.burst(sl, MIST.color(0x60C8E8FF), chestOf(drinker), 8, 0.02, 0.06);
         sound(sl, drinker.position(), ModSounds.BEAUTY_INVISIBILITY, 0.9f, 1.0f);
     }
 
     /** It wears off: a shimmer where they stand. */
-    public static void invisibilityEnd(ServerLevel sl, Player drinker) {
+    public static void invisibilityEnd(ServerLevel sl, LivingEntity drinker) {
         ParticleShapes.sphere(sl, SPARKLE, chestOf(drinker), 0.6, 12);
         sound(sl, drinker.position(), ModSounds.BEAUTY_MOON_BLINK, 0.5f, 1.5f);
     }
 
     /** The Fire Breathing Potion: the first breath. Then fireBreathTick every 2 ticks while it lasts. */
-    public static void fireBreath(ServerLevel sl, Player breather) {
+    public static void fireBreath(ServerLevel sl, LivingEntity breather) {
         sound(sl, breather.position(), ModSounds.BEAUTY_FIRE_BREATH, 1.0f, wobble(1.0f));
         play(sl, breather.position(), SoundEvents.FIRECHARGE_USE, 0.7f, 0.8f);
         fireBreathTick(sl, breather);
     }
 
     /** One puff of the breath: a cone of fire from the mouth, where they look. */
-    public static void fireBreathTick(ServerLevel sl, Player breather) {
+    public static void fireBreathTick(ServerLevel sl, LivingEntity breather) {
         Vec3 mouth = breather.getEyePosition().add(0, -0.15, 0).add(breather.getLookAngle().scale(0.4));
         ParticleShapes.cone(sl, SpellFx.FIRE_EMBER, mouth, breather.getLookAngle(), 26, 10, 0.35, 0.7);
         ParticleShapes.cone(sl, SpellFx.FIRE_SMOKE, mouth, breather.getLookAngle(), 20, 2, 0.15, 0.3);
@@ -801,7 +801,7 @@ public final class BeautyGoddessFx {
     }
 
     /** The Shadow Potion: the drinker melts into a shadow that slides along the ground for 'ticks'. */
-    public static void shadowForm(ServerLevel sl, Player drinker, int ticks, String tag) {
+    public static void shadowForm(ServerLevel sl, LivingEntity drinker, int ticks, String tag) {
         ParticleShapes.clearModels(sl, drinker, tag);
         ModelFx pool = ABYSS_POOL.color(0xF0A090C0).scale(1.6f).lifetime(ticks).fade(4, 8).spin(1f).tag(tag).shownWhileHidden()
                 .key(0, pose().scale(0.3f))
@@ -813,12 +813,12 @@ public final class BeautyGoddessFx {
     }
 
     /** Every few ticks as a shadow: it smokes a little. */
-    public static void shadowFormTick(ServerLevel sl, Player drinker) {
+    public static void shadowFormTick(ServerLevel sl, LivingEntity drinker) {
         ParticleShapes.burst(sl, DARK_WISP, drinker.position().add(0, 0.1, 0), 2, 0.005, 0.02);
     }
 
     /** They rise out of the shadow again. */
-    public static void shadowFormEnd(ServerLevel sl, Player drinker, String tag) {
+    public static void shadowFormEnd(ServerLevel sl, LivingEntity drinker, String tag) {
         ParticleShapes.clearModels(sl, drinker, tag);
         SpellFx.risingRings(sl, drinker.position(), 1.0, 2.0, 3, NIGHT);
         ParticleShapes.burst(sl, DARK_WISP, chestOf(drinker), 14, 0.04, 0.1);
@@ -887,7 +887,7 @@ public final class BeautyGoddessFx {
     }
 
     /** The Scarlet Scholar's passive: a pale copy of moonlight left where the runner was, fading. Call it every few ticks of a sprint. */
-    public static void afterimage(ServerLevel sl, Player runner) {
+    public static void afterimage(ServerLevel sl, LivingEntity runner) {
         ModelFx copy = MOONLIGHT_FIGURE.scale(runner.getBbHeight() / 2f).lifetime(12).fade(0, 10)
                 .key(0, pose().alpha(0.4f))
                 .key(12, pose().alpha(0f), Ease.OUT);
@@ -901,7 +901,7 @@ public final class BeautyGoddessFx {
     public static final int MOONLIGHT_REFORMS = 19;
 
     /** The caster turns to moonlight for 'ticks': a figure of moonlight in their shape, flickering. */
-    public static void moonlightForm(ServerLevel sl, Player caster, int ticks, String tag) {
+    public static void moonlightForm(ServerLevel sl, LivingEntity caster, int ticks, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         float scale = caster.getBbHeight() / 2f;
         int period = periodFor(ticks, 6, 50);
@@ -916,12 +916,12 @@ public final class BeautyGoddessFx {
     }
 
     /** Every few ticks as moonlight: motes drift off the body. */
-    public static void moonlightFormTick(ServerLevel sl, Player caster) {
+    public static void moonlightFormTick(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, MOON_MOTE, chestOf(caster), 2, 0.005, 0.02);
     }
 
     /** They are flesh again. */
-    public static void moonlightFormEnd(ServerLevel sl, Player caster, String tag) {
+    public static void moonlightFormEnd(ServerLevel sl, LivingEntity caster, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         ParticleShapes.burst(sl, SPARKLE, chestOf(caster), 12, 0.03, 0.08);
         sound(sl, caster.position(), ModSounds.BEAUTY_MOON_BLINK, 0.5f, 0.8f);
@@ -936,7 +936,7 @@ public final class BeautyGoddessFx {
     }
 
     /** The moonlight gathers into the caster again: motes are drawn in and it is whole at MOONLIGHT_REFORMS. */
-    public static void moonlightReform(ServerLevel sl, Player caster) {
+    public static void moonlightReform(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.ring(sl, MOON_MOTE, chestOf(caster), 3.0, 28, -0.15);
         SpellFx.closingRing(sl, caster.position(), 3.0, 0xC0DCE8FF, MOONLIGHT_REFORMS, 0);
         sound(sl, caster.position(), ModSounds.BEAUTY_MOONLIGHT_REFORM, 1.0f, 1.0f);
@@ -956,7 +956,7 @@ public final class BeautyGoddessFx {
     /** Ticks after gazeCrush that the crushing lands: hurt the target then. */
     public static final int GAZE_CRUSH_HITS = 3;
 
-    private static Vec3 eyeOf(Player caster) {
+    private static Vec3 eyeOf(LivingEntity caster) {
         return caster.getEyePosition().add(Spells.flatLook(caster).scale(0.9)).add(Spells.rightOf(caster).scale(0.35)).add(0, -0.2, 0);
     }
 
@@ -965,7 +965,7 @@ public final class BeautyGoddessFx {
      * it to the target, and solid darkness closes round the target at GAZE_GRIPS and holds until 'ticks'.
      * 'tag' names this gaze (the eye on the caster, the darkness on the target).
      */
-    public static void gaze(ServerLevel sl, Player caster, LivingEntity target, int ticks, String tag) {
+    public static void gaze(ServerLevel sl, LivingEntity caster, LivingEntity target, int ticks, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         ParticleShapes.clearModels(sl, target, tag);
         int period = periodFor(ticks, 10, 40);
@@ -1002,7 +1002,7 @@ public final class BeautyGoddessFx {
     }
 
     /** The caster crushes the eye: it bursts, the darkness shatters round the target (the hit lands at GAZE_CRUSH_HITS). */
-    public static void gazeCrush(ServerLevel sl, Player caster, LivingEntity target, String tag) {
+    public static void gazeCrush(ServerLevel sl, LivingEntity caster, LivingEntity target, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         ModelFx squeezed = GAZE_EYE.scale(0.7f).lifetime(GAZE_CRUSH_HITS + 2).fade(0, 2)
                 .key(0, pose().forward(0.9f).right(0.35f).up(-0.2f).frame(2))
@@ -1026,7 +1026,7 @@ public final class BeautyGoddessFx {
     }
 
     /** The gaze is let go without crushing: the eye closes and fades, the darkness crumbles away. */
-    public static void gazeEnd(ServerLevel sl, Player caster, LivingEntity target, String tag) {
+    public static void gazeEnd(ServerLevel sl, LivingEntity caster, LivingEntity target, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         ModelFx closing = GAZE_EYE.scale(0.7f).lifetime(10).fade(0, 6)
                 .key(0, pose().forward(0.9f).right(0.35f).up(-0.2f).frame(2))
@@ -1046,7 +1046,7 @@ public final class BeautyGoddessFx {
      * The caster splits into a swarm of bats for 'ticks': bats circle where they are, in rings at different heights
      * and speeds, flapping, while they are hidden (the bats are shown anyway). 'tag' names the swarm.
      */
-    public static void batSwarm(ServerLevel sl, Player caster, int ticks, String tag) {
+    public static void batSwarm(ServerLevel sl, LivingEntity caster, int ticks, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         ThreadLocalRandom random = ThreadLocalRandom.current();
         float scale = 0.42f;
@@ -1073,7 +1073,7 @@ public final class BeautyGoddessFx {
     }
 
     /** Every few ticks as a swarm: dark motes and the odd bat flying off. */
-    public static void batSwarmTick(ServerLevel sl, Player caster) {
+    public static void batSwarmTick(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, DARK_MOTE, chestOf(caster), 2, 0.01, 0.04);
         if (ThreadLocalRandom.current().nextInt(4) == 0) ParticleShapes.burst(sl, BAT_FLIGHT, chestOf(caster), 1, 0.1, 0.2);
     }
@@ -1086,7 +1086,7 @@ public final class BeautyGoddessFx {
     }
 
     /** The swarm draws together into the caster again. */
-    public static void batSwarmEnd(ServerLevel sl, Player caster, String tag) {
+    public static void batSwarmEnd(ServerLevel sl, LivingEntity caster, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         Vec3 middle = chestOf(caster);
         for (int i = 0; i < 8; i++) {
@@ -1273,7 +1273,7 @@ public final class BeautyGoddessFx {
      * on their head, a rose-silver seal 'radius' wide spreads under them and petals spiral in, for 'ticks'.
      * 'tag' names it (on the caster and on the ground).
      */
-    public static void beauty(ServerLevel sl, Player caster, double radius, int ticks, String tag) {
+    public static void beauty(ServerLevel sl, LivingEntity caster, double radius, int ticks, String tag) {
         int life = Math.max(ticks, BEAUTY_SHORTEST);
         ParticleShapes.clearModels(sl, caster, tag);
         float yaw = caster.getYRot();
@@ -1305,13 +1305,13 @@ public final class BeautyGoddessFx {
     }
 
     /** Drawn toward the caster: a faint rose thread and petals along it. */
-    public static void beautyPull(ServerLevel sl, LivingEntity enemy, Player caster) {
+    public static void beautyPull(ServerLevel sl, LivingEntity enemy, LivingEntity caster) {
         SpellFx.tether(sl, ROSE_LINE, enemy, caster, 6);
         ParticleShapes.line(sl, PETAL, chestOf(enemy), chestOf(caster), 0.6);
     }
 
     /** It ends early (on the caster: the crown, the goddess and the seal go). */
-    public static void beautyEnd(ServerLevel sl, Player caster, String tag) {
+    public static void beautyEnd(ServerLevel sl, LivingEntity caster, String tag) {
         ParticleShapes.clearModels(sl, caster, tag);
         ParticleShapes.clearModels(sl, caster.position(), tag);
         ParticleShapes.clearModels(sl, caster.position(), tag + "_ground");

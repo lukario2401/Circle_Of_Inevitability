@@ -175,7 +175,7 @@ public final class AnimatedShot {
      * or beside them. If 'from' may be inside a wall, wrap it in Spells.clearStart(...).
      * @return how many ticks from now its animation ends
      */
-    public int fire(Player owner, ServerLevel sl, Vec3 from) {
+    public int fire(LivingEntity owner, ServerLevel sl, Vec3 from) {
         return fire(owner, sl, from, Spells.aimFrom(owner, sl, from, Math.max(1.0, reach())));
     }
 
@@ -184,7 +184,7 @@ public final class AnimatedShot {
      * decides who counts as an enemy.
      * @return how many ticks from now its animation ends
      */
-    public int fire(Player owner, ServerLevel sl, Vec3 from, Vec3 direction) {
+    public int fire(LivingEntity owner, ServerLevel sl, Vec3 from, Vec3 direction) {
         Vec3 dir = direction.normalize();
         float yaw = Spells.yawOf(dir);
         float pitch = (float) -Math.toDegrees(Math.asin(Math.max(-1.0, Math.min(1.0, dir.y))));   // looking up = negative
@@ -222,7 +222,7 @@ public final class AnimatedShot {
     private static final class Flight {
 
         private final AnimatedShot shot;
-        private final Player owner;
+        private final LivingEntity owner;
         private final ServerLevel sl;
         private final Vec3 from;
         private final ModelFx placed;
@@ -236,7 +236,7 @@ public final class AnimatedShot {
         private final int last;
         private final Set<UUID> alreadyHit = new HashSet<>();
 
-        private Flight(AnimatedShot shot, Player owner, ServerLevel sl, Vec3 from, ModelFx placed, String tag) {
+        private Flight(AnimatedShot shot, LivingEntity owner, ServerLevel sl, Vec3 from, ModelFx placed, String tag) {
             this.shot = shot;
             this.owner = owner;
             this.sl = sl;

@@ -64,7 +64,7 @@ public final class Trap {
     private boolean sprung = false;
 
     /** Every trap that was set and may still lie there (cleaned up as hiddenNear finds them gone). */
-    private record Laid(Player owner, ServerLevel level, String slot, Vec3 ground) {}
+    private record Laid(LivingEntity owner, ServerLevel level, String slot, Vec3 ground) {}
 
     private static final List<Laid> LAID = new ArrayList<>();
 
@@ -133,7 +133,7 @@ public final class Trap {
      * this player may have at once: one more replaces the oldest. Always give the same 'max' for the same name.
      * Returns the name of the Zone it lies in (Zone.isOpen, Zone.ticksLeft and Zone.close work on it).
      */
-    public String set(Player owner, ServerLevel sl, String name, int max) {
+    public String set(LivingEntity owner, ServerLevel sl, String name, int max) {
         String slot = slotFor(owner, name, Math.max(1, max));
         sprung = false;
 
@@ -161,7 +161,7 @@ public final class Trap {
     // ---------- asking / stopping ----------
 
     /** How many traps of this kind the player has lying around right now (armed or still being armed). */
-    public static int count(Player owner, String name, int max) {
+    public static int count(LivingEntity owner, String name, int max) {
         int count = 0;
         for (int i = 0; i < max; i++) {
             if (Zone.isOpen(owner, slotName(name, i))) count++;
@@ -170,7 +170,7 @@ public final class Trap {
     }
 
     /** Takes all of the player's traps of this kind away (their onExpire runs). */
-    public static void clear(Player owner, String name, int max) {
+    public static void clear(LivingEntity owner, String name, int max) {
         for (int i = 0; i < max; i++) {
             Zone.close(owner, slotName(name, i));
         }
@@ -193,7 +193,7 @@ public final class Trap {
     }
 
     /** A free place for one more trap of this kind, or the place of the oldest one when all are taken. */
-    private static String slotFor(Player owner, String name, int max) {
+    private static String slotFor(LivingEntity owner, String name, int max) {
         String oldest = slotName(name, 0);
         int leastLeft = Integer.MAX_VALUE;
         for (int i = 0; i < max; i++) {

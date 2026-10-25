@@ -6,6 +6,7 @@ import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
@@ -245,7 +246,7 @@ public final class SpellFx {
     }
 
     /** Where a player's right hand is. */
-    public static Vec3 handOf(Player player, ServerLevel sl) {
+    public static Vec3 handOf(LivingEntity player, ServerLevel sl) {
         if (middleOf(player, sl) == null) return null;
         return player.getEyePosition().add(Spells.rightOf(player).scale(0.3)).add(0, -0.4, 0);
     }

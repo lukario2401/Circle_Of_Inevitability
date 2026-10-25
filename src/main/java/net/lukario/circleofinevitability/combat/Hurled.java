@@ -65,7 +65,7 @@ public final class Hurled {
     private static final Set<UUID> FLYING_IDS = new HashSet<>();
 
     private final Entity thing;
-    private final Player owner;
+    private final LivingEntity owner;
     private final LivingEntity target;
     private int rises;
     private double speed = 1.2;
@@ -79,14 +79,14 @@ public final class Hurled {
     private int age;
     private boolean hadNoGravity;
 
-    private Hurled(Entity thing, Player owner, LivingEntity target) {
+    private Hurled(Entity thing, LivingEntity owner, LivingEntity target) {
         this.thing = thing;
         this.owner = owner;
         this.target = target;
     }
 
     /** 'thing' is thrown by 'owner' at 'target'. Nothing happens until .launch(...). */
-    public static Hurled at(Entity thing, Player owner, LivingEntity target) {
+    public static Hurled at(Entity thing, LivingEntity owner, LivingEntity target) {
         return new Hurled(thing, owner, target);
     }
 

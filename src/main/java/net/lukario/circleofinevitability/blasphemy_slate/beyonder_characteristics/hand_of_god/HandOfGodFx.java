@@ -298,28 +298,28 @@ public final class HandOfGodFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "hand_of_god/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "hand_of_god/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** How long something "until ended" is shown at most (an hour): show it again after that. */
     public static final int FOREVER = 72000;
 
     /** Only the status's picture, no clock: for what lasts until it is ended (Silver Armor, the Silver Knight's sword). */
-    public static void statusForever(Player player, Status status) {
+    public static void statusForever(LivingEntity player, Status status) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "hand_of_god/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "hand_of_god/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
-        HudTimer.hide(player, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -482,7 +482,7 @@ public final class HandOfGodFx {
             .color(0xA0FFE0A0).core(0x80FFFFFF).width(0.25f).taper(SlashFx.Taper.COMET);
 
     /** The warrior lowers a shoulder: dust kicks up behind them and the ground cracks under the first step. */
-    public static void chargeStart(ServerLevel sl, Player player) {
+    public static void chargeStart(ServerLevel sl, LivingEntity player) {
         Vec3 back = player.position().subtract(Spells.flatLook(player).scale(0.6));
         ParticleShapes.cone(sl, DUST, back.add(0, 0.2, 0), Spells.flatLook(player).scale(-1).add(0, 0.3, 0), 60, 14, 0.05, 0.2);
         SpellFx.shockRing(sl, player.position(), 1.8, 0xA0C8B080, 8, 0);
@@ -490,7 +490,7 @@ public final class HandOfGodFx {
     }
 
     /** Every tick of the rush: streaks of air past the body and dust from the feet. */
-    public static void chargeTrail(ServerLevel sl, Player player) {
+    public static void chargeTrail(ServerLevel sl, LivingEntity player) {
         Vec3 look = Spells.flatLook(player);
         Vec3 chest = chestOf(player);
         ParticleShapes.slashBetween(sl, RUSH_LINE, chest.subtract(look.scale(1.8)), chest.add(look.scale(0.2)));
@@ -498,7 +498,7 @@ public final class HandOfGodFx {
     }
 
     /** The first one hit: a flash of the blow, a ring of dust and the sound of a body thrown back. */
-    public static void chargeImpact(ServerLevel sl, Player player, LivingEntity target) {
+    public static void chargeImpact(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 at = chestOf(target);
         flash(sl, at, player.getYRot() + 180f, 0xFFFFE8B0, 1.6f);
         ParticleShapes.burst(sl, STEEL_SPARK, at, 14, 0.1, 0.35);
@@ -510,7 +510,7 @@ public final class HandOfGodFx {
     // ---------- sneak: Divine Blood
 
     /** The blood surges: a red-gold glow rises round the body, a ring under the feet beats like a heart. */
-    public static void divineBlood(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void divineBlood(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 1.0, 0xC0D02828, ticks, tag);
         SpellFx.risingRings(sl, player.position(), 1.0, 2.2, 4, 0xC0FF5040);
         ParticleShapes.spiral(sl, BLOOD_MOTE, player.position().add(0, 0.1, 0), 3, 30, 0.3, 1.2, 1.0, 0.06);
@@ -525,7 +525,7 @@ public final class HandOfGodFx {
         sound(sl, player.position(), ModSounds.HAND_DIVINE_BLOOD, 1.0f, 1.0f);
     }
 
-    public static void divineBloodEnd(ServerLevel sl, Player player, String tag) {
+    public static void divineBloodEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -539,7 +539,7 @@ public final class HandOfGodFx {
             .lifetime(6).sweep(2);
 
     /** One of the five blows (index 0..4): a short arc and a flash on the target; the last is twice the size. */
-    public static void flurryBlow(ServerLevel sl, Player player, LivingEntity target, int index) {
+    public static void flurryBlow(ServerLevel sl, LivingEntity player, LivingEntity target, int index) {
         boolean last = index >= 4;
         Vec3 at = chestOf(target);
         float yaw = player.getYRot();
@@ -559,7 +559,7 @@ public final class HandOfGodFx {
     // ---------- sneak: Supernatural Resistance
 
     /** A steel-grey seal turns under the warrior's feet and runes circle the body while the resistance holds. */
-    public static void resistance(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void resistance(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 1.2, 0xC0B8C0D0, ticks, tag);
         SpellFx.risingRings(sl, player.position(), 1.1, 2.0, 3, 0xA0C8D0E0);
         ParticleShapes.ring(sl, SILVER_MOTE, player.position().add(0, 1.0, 0), 0.9, 16, 0);
@@ -567,13 +567,13 @@ public final class HandOfGodFx {
     }
 
     /** Something supernatural was shaken off (an effect cleansed, a root broken): a grey flash off the body. */
-    public static void resistanceShrug(ServerLevel sl, Player player) {
+    public static void resistanceShrug(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, SILVER_MOTE, chestOf(player), 10, 0.06, 0.18);
         SpellFx.shockRing(sl, player.position(), 1.4, 0xA0C8D0E0, 6, 0);
         sound(sl, player.position(), ModSounds.HAND_PARRY, 0.4f, wobble(1.5f));
     }
 
-    public static void resistanceEnd(ServerLevel sl, Player player, String tag) {
+    public static void resistanceEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -591,7 +591,7 @@ public final class HandOfGodFx {
             .lifetime(10).sweep(3);
 
     /** The weapon becomes a grandmaster's: a glint runs along the hand and a white ring flares. */
-    public static void grandmastersEdge(ServerLevel sl, Player player, int ticks) {
+    public static void grandmastersEdge(ServerLevel sl, LivingEntity player, int ticks) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) hand = chestOf(player);
         ParticleShapes.burst(sl, STEEL_SPARK, hand, 10, 0.04, 0.15);
@@ -600,13 +600,13 @@ public final class HandOfGodFx {
     }
 
     /** While it lasts, every few ticks: a glint on the hand. */
-    public static void edgeTick(ServerLevel sl, Player player) {
+    public static void edgeTick(ServerLevel sl, LivingEntity player) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand != null) ParticleShapes.spawn(sl, STEEL_SPARK, hand, new Vec3(0, 0.02, 0));
     }
 
     /** A swing (index 0, 1, ... alternate left and right): a wide arc that cuts everything in front. */
-    public static void edgeSwing(ServerLevel sl, Player player, int index) {
+    public static void edgeSwing(ServerLevel sl, LivingEntity player, int index) {
         Vec3 center = chestOf(player).add(Spells.flatLook(player).scale(0.4));
         float roll = index % 2 == 0 ? -12f : 168f;
         ParticleShapes.slash(sl, EDGE_ARC, center, player.getYRot(), 0f, roll);
@@ -614,7 +614,7 @@ public final class HandOfGodFx {
     }
 
     /** The third swing in a row: a broad golden arc, a flash on the one it lands on. */
-    public static void edgeFinisher(ServerLevel sl, Player player, LivingEntity target) {
+    public static void edgeFinisher(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 center = chestOf(player).add(Spells.flatLook(player).scale(0.4));
         ParticleShapes.slash(sl, FINISHER_ARC, center, player.getYRot(), 0f, -25f);
         if (target != null) {
@@ -627,7 +627,7 @@ public final class HandOfGodFx {
     // ---------- sneak: Riposte
 
     /** The parrying stance: a pale ring of steel stands in front of the warrior for a moment. */
-    public static void riposte(ServerLevel sl, Player player) {
+    public static void riposte(ServerLevel sl, LivingEntity player) {
         ModelFx ring = PARRY_FLASH.color(0x80E8F0FF).scale(1.6f).lifetime(30).fade(2, 8).spin(3f)
                 .key(0, pose().forward(0.8f).scale(0.4f).alpha(0f))
                 .key(4, pose().scale(1f).alpha(1f), Ease.OUT_BACK)
@@ -637,7 +637,7 @@ public final class HandOfGodFx {
     }
 
     /** A blow was turned aside: sparks fly at the point of contact and the attacker reels. */
-    public static void riposteParry(ServerLevel sl, Player player, Entity attacker) {
+    public static void riposteParry(ServerLevel sl, LivingEntity player, Entity attacker) {
         Vec3 between = attacker == null ? chestOf(player).add(Spells.flatLook(player).scale(0.8))
                 : chestOf(player).add(chestOf(attacker).subtract(chestOf(player)).normalize().scale(0.8));
         flash(sl, between, player.getYRot() + 180f, 0xFFFFFFFF, 1.4f);
@@ -646,7 +646,7 @@ public final class HandOfGodFx {
     }
 
     /** The counter: a short golden thrust-line into the target and a flash on it. */
-    public static void riposteCounter(ServerLevel sl, Player player, LivingEntity target) {
+    public static void riposteCounter(ServerLevel sl, LivingEntity player, LivingEntity target) {
         ParticleShapes.slashBetween(sl, RUSH_LINE.color(0xE0FFD86A).width(0.4f), chestOf(player), chestOf(target));
         flash(sl, chestOf(target), player.getYRot() + 180f, 0xFFFFD86A, 1.6f);
         ParticleShapes.burst(sl, DAWN_STAR, chestOf(target), 10, 0.06, 0.2);
@@ -718,7 +718,7 @@ public final class HandOfGodFx {
     // ---------- Dawn Armor (Silver Armor from Sequence 3)
 
     /** Plates of light (or of silver) lock onto the body and a helm closes over the head, for 'ticks'. */
-    public static void dawnArmor(ServerLevel sl, Player player, int ticks, String tag, boolean silver) {
+    public static void dawnArmor(ServerLevel sl, LivingEntity player, int ticks, String tag, boolean silver) {
         ModelFx body = (silver ? SILVER_ARMOR : DAWN_ARMOR).lifetime(ticks).fade(6, 10).tag(tag)
                 .key(0, pose().scale(1.4f).alpha(0f))
                 .key(8, pose().scale(1f).alpha(1f), Ease.OUT);
@@ -733,12 +733,12 @@ public final class HandOfGodFx {
     }
 
     /** A blow glances off the armor. */
-    public static void armorHit(ServerLevel sl, Player player, boolean silver) {
+    public static void armorHit(ServerLevel sl, LivingEntity player, boolean silver) {
         ParticleShapes.burst(sl, silver ? STEEL_SPARK : DAWN_STAR, chestOf(player), 8, 0.06, 0.2);
         play(sl, player.position(), SoundEvents.ANVIL_LAND, 0.25f, wobble(1.8f));
     }
 
-    public static void dawnArmorEnd(ServerLevel sl, Player player, String tag, boolean silver) {
+    public static void dawnArmorEnd(ServerLevel sl, LivingEntity player, String tag, boolean silver) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, silver ? SILVER_MOTE : DAWN_MOTE, chestOf(player), 20, 0.04, 0.15);
     }
@@ -749,7 +749,7 @@ public final class HandOfGodFx {
      * The greatsword forms in the right hand: it is drawn out of light point-first, then held at the ready beside the
      * body (it turns with the body, not with the arm), for 'ticks'. Show each swing with dawnSlash.
      */
-    public static void swordOfDawn(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void swordOfDawn(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx held = DAWN_SWORD.scale(0.85f).lifetime(ticks).fade(4, 10).tag(tag)
                 .key(0, pose().right(0.42f).forward(0.25f).pitch(25f).scale(0.1f).alpha(0f))
                 .key(12, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -769,7 +769,7 @@ public final class HandOfGodFx {
             .radius(1.4f).arc(120f).width(0.4f).lifetime(10).sweep(1);
 
     /** A swing of the Sword of Dawn: a golden arc; crescent = also a crescent of light flying 6 blocks ahead. */
-    public static void dawnSlash(ServerLevel sl, Player player, boolean crescent) {
+    public static void dawnSlash(ServerLevel sl, LivingEntity player, boolean crescent) {
         Vec3 center = chestOf(player).add(Spells.flatLook(player).scale(0.4));
         float yaw = player.getYRot();
         ParticleShapes.slash(sl, DAWN_ARC, center, yaw, 0f, -15f);
@@ -790,7 +790,7 @@ public final class HandOfGodFx {
         sound(sl, chestOf(target), ModSounds.HAND_COAT_HIT, 0.6f, wobble(1.3f));
     }
 
-    public static void swordOfDawnEnd(ServerLevel sl, Player player, String tag) {
+    public static void swordOfDawnEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         Vec3 hand = player.position().add(0, 0.9, 0).add(Spells.rightOf(player).scale(0.42));
         ParticleShapes.line(sl, DAWN_MOTE, hand, hand.add(0, 2.0, 0), 4);
@@ -802,7 +802,7 @@ public final class HandOfGodFx {
     public static final int HURRICANE_GATHERS = 20;
 
     /** Rays of light gather into the raised sword. */
-    public static void hurricaneGather(ServerLevel sl, Player player) {
+    public static void hurricaneGather(ServerLevel sl, LivingEntity player) {
         Vec3 tip = player.position().add(0, 3.2, 0).add(Spells.rightOf(player).scale(0.42));
         ModelFx raised = DAWN_SWORD.scale(0.9f).lifetime(HURRICANE_GATHERS + 4).fade(3, 4)
                 .key(0, pose().right(0.42f).alpha(0f))
@@ -872,7 +872,7 @@ public final class HandOfGodFx {
      * The sword is driven into the ground at 'center' and a dome of Dawn light blooms out of it, 'radius' wide,
      * for 'ticks'. Every model gets 'tag' (end it early with protectionEnd).
      */
-    public static void protection(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void protection(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         ModelFx planted = DAWN_SWORD.scale(0.9f).lifetime(ticks).fade(0, 10).tag(tag)
                 .key(0, pose().pitch(180f).up(-3.2f).alpha(0f))
                 .key(4, pose().up(-2.2f).alpha(1f), Ease.IN);
@@ -923,7 +923,7 @@ public final class HandOfGodFx {
             .color(0xA0FFD86A).core(0x80FFFFFF).width(0.06f).taper(SlashFx.Taper.UNIFORM);
 
     /** A golden thread runs from each ally to the guardian and a shield shows over their heads, for 'ticks'. */
-    public static void transference(ServerLevel sl, Player player, List<? extends LivingEntity> allies, int ticks, String tag) {
+    public static void transference(ServerLevel sl, LivingEntity player, List<? extends LivingEntity> allies, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 1.4, 0xC0FFC060, ticks, tag);
         for (LivingEntity ally : allies) {
             SpellFx.tether(sl, AEGIS_LINE, ally, player, ticks);
@@ -945,7 +945,7 @@ public final class HandOfGodFx {
         Later.run(sl, 6, () -> ParticleShapes.burst(sl, BLOOD_MOTE, to, 6, 0.03, 0.08));
     }
 
-    public static void transferenceEnd(ServerLevel sl, Player player, List<? extends LivingEntity> allies, String tag) {
+    public static void transferenceEnd(ServerLevel sl, LivingEntity player, List<? extends LivingEntity> allies, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (LivingEntity ally : allies) ParticleShapes.clearModels(sl, ally, tag);
     }
@@ -958,7 +958,7 @@ public final class HandOfGodFx {
     public static final int EYE_OPENS = 6;
 
     /** Dark green symbols fill the hunter's eyes (others see a sigil before their face) and a ring sweeps out. */
-    public static void eye(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void eye(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx sigil = EYE_SYMBOL.color(0xE03AD06A).scale(0.45f).lifetime(ticks).fade(0, 8).spin(1.5f).tag(tag)
                 .key(0, pose().forward(0.45f).scale(0.1f).alpha(0f))
                 .key(EYE_OPENS, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -984,7 +984,7 @@ public final class HandOfGodFx {
         SpellFx.circleUnder(sl, evil, Math.max(0.6, evil.getBbWidth() * 0.8), 0xA020A040, ticks, "hg_eye_evil");
     }
 
-    public static void eyeEnd(ServerLevel sl, Player player, String tag) {
+    public static void eyeEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -994,7 +994,7 @@ public final class HandOfGodFx {
     public static final int VIAL_POURED = 24;
 
     /** A vial appears, is shaken and poured along the weapon: the coating's color glows on the hand. */
-    public static void alchemy(ServerLevel sl, Player player, Coat coat) {
+    public static void alchemy(ServerLevel sl, LivingEntity player, Coat coat) {
         ModelFx glass = VIAL.scale(0.6f).lifetime(VIAL_POURED + 4).fade(3, 4)
                 .key(0, pose().forward(0.55f).right(0.3f).alpha(0f))
                 .key(4, pose().alpha(1f))
@@ -1018,7 +1018,7 @@ public final class HandOfGodFx {
     }
 
     /** Every few ticks while the weapon is coated: a glow of the coating's color on the hand. */
-    public static void coatTick(ServerLevel sl, Player player, Coat coat) {
+    public static void coatTick(ServerLevel sl, LivingEntity player, Coat coat) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) return;
         ParticleFx glow = ParticleFx.of("fx/glow").color(coat.color).endColor(withAlpha(coat.color, 0))
@@ -1049,14 +1049,14 @@ public final class HandOfGodFx {
     // ---------- Mind Concealment
 
     /** The hunter's mind closes: green mist curls in round the head and the eye-sigil shuts. */
-    public static void mindConcealment(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void mindConcealment(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ParticleShapes.ring(sl, MIND_MIST, player.getEyePosition(), 0.9, 12, -0.03);
         SpellFx.closingRing(sl, player.position(), 3.0, 0x804A8A5A, 12, 0);
         SpellFx.circleUnder(sl, player, 0.9, 0x60406A50, ticks, tag);
         sound(sl, player.position(), ModSounds.HAND_CONCEAL, 1.0f, 1.0f);
     }
 
-    public static void mindConcealmentEnd(ServerLevel sl, Player player, String tag) {
+    public static void mindConcealmentEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, MIND_MIST, player.getEyePosition(), 6, 0.02, 0.06);
     }
@@ -1071,7 +1071,7 @@ public final class HandOfGodFx {
      * the body, and the caster does not see it in first person. (The caster's real size is the ability's job: a
      * scale attribute. This is the skin of it.)
      */
-    public static void giantForm(ServerLevel sl, Player player, double height, int ticks, String tag) {
+    public static void giantForm(ServerLevel sl, LivingEntity player, double height, int ticks, String tag) {
         float full = (float) (height / 3.0);
         float start = (float) (player.getBbHeight() / 3.0);
         ModelFx body = GIANT.scale(full).lifetime(ticks).fade(4, 12).tag(tag)
@@ -1091,7 +1091,7 @@ public final class HandOfGodFx {
     }
 
     /** A step of the Giant: the ground shakes, dust rolls out. */
-    public static void giantStep(ServerLevel sl, Player player, double height) {
+    public static void giantStep(ServerLevel sl, LivingEntity player, double height) {
         SpellFx.shockRing(sl, player.position(), 1.5 + height * 0.6, 0x90A89070, 10, 0);
         ParticleShapes.ring(sl, DUST, player.position().add(0, 0.2, 0), 0.8 + height * 0.15, 10, 0.12);
         sound(sl, player.position(), ModSounds.HAND_GIANT_STEP, (float) Math.min(2.0, 0.6 + height * 0.2), wobble(1.0f));
@@ -1105,14 +1105,14 @@ public final class HandOfGodFx {
     }
 
     /** The madness rising in the Giant (0..1): red motes round its head, more the madder it is. */
-    public static void giantMadness(ServerLevel sl, Player player, float madness, double height) {
+    public static void giantMadness(ServerLevel sl, LivingEntity player, float madness, double height) {
         int count = Math.round(2 + madness * 10);
         ParticleShapes.burst(sl, BLOOD_MOTE, player.position().add(0, height * 0.9, 0), count, 0.03, 0.06 + madness * 0.1);
         if (madness > 0.75f) play(sl, player.position(), SoundEvents.WARDEN_HEARTBEAT, 0.6f, 0.8f);
     }
 
     /** The form ends: the body breaks into grey-blue dust. */
-    public static void giantFormEnd(ServerLevel sl, Player player, double height, String tag) {
+    public static void giantFormEnd(ServerLevel sl, LivingEntity player, double height, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (double y = 0; y < height; y += 0.6) {
             ParticleShapes.ring(sl, DUST.color(0xA07A8AA0), player.position().add(0, y, 0), height * 0.18, 8, 0.05);
@@ -1129,7 +1129,7 @@ public final class HandOfGodFx {
     public static final int MERCURY_MELTED = 8;
 
     /** The knight melts into liquid silver: the puddle under them is seen while they are hidden. */
-    public static void mercury(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void mercury(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx pool = MERCURY_POOL.scale(1.6f).lifetime(ticks).fade(2, 8).tag(tag).shownWhileHidden()
                 .key(0, pose().scale(0.2f))
                 .key(MERCURY_MELTED, pose().scale(1f), Ease.OUT);
@@ -1143,7 +1143,7 @@ public final class HandOfGodFx {
     }
 
     /** While liquid: silver drops scatter from the puddle. */
-    public static void mercuryTick(ServerLevel sl, Player player) {
+    public static void mercuryTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, SILVER_DROP, player.position().add(0, 0.1, 0), 3, 0.04, 0.1);
     }
 
@@ -1156,7 +1156,7 @@ public final class HandOfGodFx {
     }
 
     /** The knight re-forms: the puddle draws together and rises into a body. */
-    public static void mercuryReform(ServerLevel sl, Player player, String tag) {
+    public static void mercuryReform(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         SpellFx.risingRings(sl, player.position(), 0.6, 1.9, 4, 0xE0E8ECF4);
         ParticleShapes.burst(sl, SILVER_MOTE, chestOf(player), 14, 0.03, 0.12);
@@ -1208,14 +1208,14 @@ public final class HandOfGodFx {
     // ---------- Light Concealment
 
     /** The knight steps into a light: a gate of light opens there and swallows them. */
-    public static void lightEnter(ServerLevel sl, Player player, Vec3 light) {
+    public static void lightEnter(ServerLevel sl, LivingEntity player, Vec3 light) {
         gate(sl, light, player.getYRot() + 180f);
         ParticleShapes.line(sl, DAWN_STAR, chestOf(player), light, 3);
         sound(sl, light, ModSounds.HAND_LIGHT_STEP, 1.0f, 1.0f);
     }
 
     /** And steps out of another one. */
-    public static void lightExit(ServerLevel sl, Player player, Vec3 at) {
+    public static void lightExit(ServerLevel sl, LivingEntity player, Vec3 at) {
         gate(sl, at.add(0, 1.0, 0), player.getYRot());
         ParticleShapes.burst(sl, DAWN_STAR, at.add(0, 1.0, 0), 16, 0.04, 0.15);
         sound(sl, at, ModSounds.HAND_LIGHT_STEP, 1.0f, 1.2f);
@@ -1230,7 +1230,7 @@ public final class HandOfGodFx {
     }
 
     /** Glory's way out: the body ages in moments into rotten liquid that evaporates. */
-    public static void withering(ServerLevel sl, Player player) {
+    public static void withering(ServerLevel sl, LivingEntity player) {
         for (int t = 0; t < 16; t += 2) {
             int step = t;
             Later.run(sl, t, () -> {
@@ -1277,7 +1277,7 @@ public final class HandOfGodFx {
     public static final int HAND_SLAMS = 14;
 
     /** A hand of Twilight reaches past the target, palm toward it, closes round it at HAND_GRIPS and holds for 'ticks'. */
-    public static void divineHand(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void divineHand(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         float yaw = Spells.yawOf(target.position().subtract(player.position()));
         float scale = (float) Math.max(1.4, target.getBbHeight() * 1.1);
         ModelFx hand = GIANT_HAND.scale(scale).lifetime(ticks).fade(4, 8).tag(tag)
@@ -1302,7 +1302,7 @@ public final class HandOfGodFx {
     }
 
     /** The hand slams down, palm first, on 'ground': everything in 'radius' is pressed into the earth. */
-    public static void divineHandSlam(ServerLevel sl, Player player, Vec3 ground, double radius) {
+    public static void divineHandSlam(ServerLevel sl, LivingEntity player, Vec3 ground, double radius) {
         float scale = (float) Math.max(2.0, radius * 0.9);
         ModelFx hand = GIANT_HAND.scale(scale).lifetime(HAND_SLAMS + 16).fade(4, 10)
                 .key(0, pose().pitch(90f).up(12f).alpha(0f))
@@ -1417,7 +1417,7 @@ public final class HandOfGodFx {
      * The sky turns to dusk: a huge setting sun stands on the horizon where the caster looks, the kingdom's seal
      * covers 'radius', and its walls of dusk smoke rise at the edge, for 'ticks'.
      */
-    public static void divineKingdom(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void divineKingdom(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         Vec3 center = player.position();
         float yaw = player.getYRot();
         ModelFx sun = TWILIGHT_SUN.scale((float) Math.max(30, radius * 1.2)).lifetime(ticks).fade(0, 30).tag(tag)
@@ -1452,7 +1452,7 @@ public final class HandOfGodFx {
         ParticleShapes.ring(sl, DAWN_MOTE, ally.position().add(0, 0.2, 0), 0.6, 8, 0);
     }
 
-    public static void kingdomEnd(ServerLevel sl, Player player, Vec3 center, String tag) {
+    public static void kingdomEnd(ServerLevel sl, LivingEntity player, Vec3 center, String tag) {
         ParticleShapes.clearModels(sl, center, tag);
         ParticleShapes.burst(sl, GLORY_EMBER, center.add(0, 2, 0), 40, 0.1, 0.3);
     }
@@ -1462,7 +1462,7 @@ public final class HandOfGodFx {
     // =====================================================================================
 
     /** Silver Knight's Dawn Aura, once a second: a few motes of dawn drift round the knight. */
-    public static void dawnAura(ServerLevel sl, Player player, double radius) {
+    public static void dawnAura(ServerLevel sl, LivingEntity player, double radius) {
         ParticleShapes.ring(sl, DAWN_MOTE.color(0x90FFF0B0), player.position().add(0, 0.3, 0), radius * 0.4, 4, 0.01);
     }
 

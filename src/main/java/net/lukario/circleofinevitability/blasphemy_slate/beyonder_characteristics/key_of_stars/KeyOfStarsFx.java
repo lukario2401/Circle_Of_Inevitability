@@ -317,7 +317,7 @@ public final class KeyOfStarsFx {
         return sl.getRandom().nextFloat() * 360f;
     }
 
-    private static Vec3 handOf(Player player, ServerLevel sl) {
+    private static Vec3 handOf(LivingEntity player, ServerLevel sl) {
         Vec3 hand = SpellFx.handOf(player, sl);
         return hand == null ? chestOf(player) : hand;
     }
@@ -370,30 +370,30 @@ public final class KeyOfStarsFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
-        status(player, status, "key_of_stars/" + status.image, ticks);
+    public static void status(LivingEntity player, Status status, int ticks) {
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, status, "key_of_stars/" + status.image, ticks);
     }
 
-    private static void status(Player player, Status status, String image, int ticks) {
+    private static void status(LivingEntity player, Status status, String image, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** Transfiguration's picture shows how many layers are left (1 to 8). Call it again after every torn layer. */
-    public static void layersLeft(Player player, int layers, int ticks) {
+    public static void layersLeft(LivingEntity player, int layers, int ticks) {
         if (layers <= 0) {
-            statusEnd(player, Status.TRANSFIGURATION);
+            if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.TRANSFIGURATION);
             return;
         }
-        status(player, Status.TRANSFIGURATION, "key_of_stars/layers_" + Math.min(8, layers), ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.TRANSFIGURATION, "key_of_stars/layers_" + Math.min(8, layers), ticks);
     }
 
     // ---------- the Recorded Powers' pages, in the row right of the hotbar (where Attendant's stacks are)
@@ -406,13 +406,13 @@ public final class KeyOfStarsFx {
      * The Recorded Powers, oldest first: one page for each (angel[i] = an Angel-level power, recorded weakly, shown
      * on a gold page). Call it every time a slot fills or empties, and after a relog; it stays until changed.
      */
-    public static void recordedPages(Player player, boolean[] angel) {
+    public static void recordedPages(LivingEntity player, boolean[] angel) {
         for (int i = 0; i < 5; i++) {
             if (i < angel.length) {
-                ScreenImages.show(player, pageId(i), angel[i] ? "key_of_stars/recorded_angel" : "key_of_stars/recorded",
+                if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, pageId(i), angel[i] ? "key_of_stars/recorded_angel" : "key_of_stars/recorded",
                         ScreenAnchor.BOTTOM, 103 + i * 18, -3, 16, ScreenImages.FOREVER);
             } else {
-                ScreenImages.hide(player, pageId(i));
+                if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, pageId(i));
             }
         }
     }
@@ -630,7 +630,7 @@ public final class KeyOfStarsFx {
     }
 
     /** The Secrets Sorcerer opens the Door through a Teleport root on themselves: a door in a ring of breaking locks. */
-    public static void travelUnbarred(ServerLevel sl, Player player) {
+    public static void travelUnbarred(ServerLevel sl, LivingEntity player) {
         flash(sl, DOOR_SIGIL, chestOf(player).add(ahead(player.getYRot()).scale(0.6)), player.getYRot(), 0xFFFFD98A, 1.6f, 16);
         ParticleShapes.ring(sl, PADLOCK, chestOf(player), 1.0, 6, 0.12);
         sound(sl, player.position(), ModSounds.STARS_KEY_TURN, 1.0f, wobble(0.9f));
@@ -641,7 +641,7 @@ public final class KeyOfStarsFx {
     // =====================================================================================
 
     /** Flash: a blinding flash many times brighter than a camera, in a cone 'range' blocks ahead. */
-    public static void flash(ServerLevel sl, Player player, double range) {
+    public static void flash(ServerLevel sl, LivingEntity player, double range) {
         Vec3 hand = handOf(player, sl);
         Vec3 look = player.getLookAngle();
         ParticleShapes.spawn(sl, FLARE.size(1.4f), hand.add(look.scale(0.4)), Vec3.ZERO);
@@ -688,7 +688,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Loud Noise: a deafening bang at 'at', a fake explosion with nothing behind it. */
-    public static void loudNoise(ServerLevel sl, Player player, Vec3 at) {
+    public static void loudNoise(ServerLevel sl, LivingEntity player, Vec3 at) {
         SpellFx.blast(sl, at.add(0, 0.8, 0), 2.2, 0xFFFFE0A0, SPARKLE);
         SpellFx.shockRing(sl, at, 8.0, 0xC0FFF0D0, 10, 0);
         SpellFx.shockRing(sl, at, 5.0, 0x90FFA050, 8, 3);
@@ -703,7 +703,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Frost Ray: a ray of frost from the hand to 'to' (the end of the shot, or what it hit). */
-    public static void frostRay(ServerLevel sl, Player player, Vec3 from, Vec3 to) {
+    public static void frostRay(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to) {
         ParticleShapes.slashBetween(sl, FROST_BEAM, from, to);
         ParticleShapes.line(sl, FROST_FLAKE, from, to, 3.0);
         ParticleShapes.burst(sl, FROST_FLAKE, from, 6, 0.03, 0.08);
@@ -723,7 +723,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Gale: a level 7 to 8 gale in a cone 'range' blocks ahead. */
-    public static void gale(ServerLevel sl, Player player, double range) {
+    public static void gale(ServerLevel sl, LivingEntity player, double range) {
         Vec3 chest = chestOf(player);
         Vec3 look = Spells.flatLook(player);
         float yaw = player.getYRot();
@@ -743,7 +743,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Tumble: a greased circle 'radius' blocks wide lies on the ground at 'center' for 'ticks'. */
-    public static void tumble(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void tumble(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         floor(sl, TUMBLE_CIRCLE, center, radius, GREASE, ticks, 1.2f, tag, 0);
         ParticleShapes.burst(sl, GREASE_DROP, center.add(0, 0.5, 0), 16, 0.08, 0.18);
         sound(sl, center, ModSounds.STARS_TUMBLE, 1.0f, wobble(1.0f));
@@ -774,7 +774,7 @@ public final class KeyOfStarsFx {
      * Escape Trick: a crumbling door at 'from', a streak of starlight to 'to'. diversion = another trick was used in
      * the last 3 seconds (the long shift); without one it is a small hop.
      */
-    public static void escapeTrick(ServerLevel sl, Player player, Vec3 from, Vec3 to, boolean diversion) {
+    public static void escapeTrick(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to, boolean diversion) {
         float yaw = yawToward(from, to);
         ModelFx crumbling = DOOR_SIGIL.color(0xE0C8D4FF).scale(1.6f).lifetime(18).fade(0, 14)
                 .key(0, pose().up(0.9f).alpha(1f))
@@ -798,7 +798,7 @@ public final class KeyOfStarsFx {
      * Star Divination: a crystal ball of starlight forms in the hand. On a target, a thread of starlight reaches it at
      * DIVINED; with no target (null), a map of the sky sweeps out round the Astrologer.
      */
-    public static void starDivination(ServerLevel sl, Player player, LivingEntity target) {
+    public static void starDivination(ServerLevel sl, LivingEntity player, LivingEntity target) {
         ModelFx ball = CRYSTAL_BALL.scale(0.5f).lifetime(30).fade(4, 10)
                 .key(0, pose().forward(0.45f).right(0.32f).up(0.1f).scale(0.2f).alpha(0f))
                 .key(6, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -869,7 +869,7 @@ public final class KeyOfStarsFx {
     // ---------- sneak: Interference
 
     /** Interference: a turning veil of broken lines closes round the Astrologer; for 'ticks' they are Unreadable. */
-    public static void interference(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void interference(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx veil = INTERFERENCE_VEIL.color(0x90C8D4FF).scale(Math.max(2.2f, player.getBbHeight() * 1.1f))
                 .lifetime(ticks).fade(8, 12).tag(tag)
                 .key(0, pose().scale(2.5f).alpha(0f))
@@ -878,16 +878,16 @@ public final class KeyOfStarsFx {
         SpellFx.closingRing(sl, player.position(), 3.0, 0xC09DB4FF, 10, 0);
         ParticleShapes.burst(sl, SPARKLE, chestOf(player), 12, 0.05, 0.14);
         sound(sl, player.position(), ModSounds.STARS_INTERFERENCE, 1.0f, wobble(1.0f));
-        status(player, Status.INTERFERENCE, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.INTERFERENCE, ticks);
     }
 
     /** Now and then while Unreadable: a few sparks of static drift off the Astrologer. */
-    public static void interferenceTick(ServerLevel sl, Player player) {
+    public static void interferenceTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, SPARKLE, chestOf(player), 2, 0.02, 0.06);
     }
 
     /** A search or a lock-on failed and is turned back: a line of starlight from the Astrologer back to its caster. */
-    public static void interferenceTurned(ServerLevel sl, Player player, LivingEntity caster) {
+    public static void interferenceTurned(ServerLevel sl, LivingEntity player, LivingEntity caster) {
         flash(sl, INTERFERENCE_VEIL, chestOf(player), yawToward(player.position(), caster.position()), 0xFFFFFFFF, 2.0f, 12);
         ParticleShapes.slashBetween(sl, STAR_BEAM, chestOf(player), chestOf(caster));
         sound(sl, chestOf(player), ModSounds.STARS_INTERFERENCE_REFLECT, 1.0f, wobble(1.0f));
@@ -899,10 +899,10 @@ public final class KeyOfStarsFx {
         ParticleShapes.spawn(sl, EYE_MARK.color(0xFF7A80A0), headOf(mob).add(0, 0.5, 0), Vec3.ZERO);
     }
 
-    public static void interferenceEnd(ServerLevel sl, Player player, String tag) {
+    public static void interferenceEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, SPARKLE, chestOf(player), 6, 0.03, 0.08);
-        statusEnd(player, Status.INTERFERENCE);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.INTERFERENCE);
     }
 
     // =====================================================================================
@@ -910,7 +910,7 @@ public final class KeyOfStarsFx {
     // =====================================================================================
 
     /** Record: the Scribe's book opens before them and the quill waits over it, for 'ticks'. */
-    public static void record(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void record(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx book = RECORD_BOOK.scale(0.55f).lifetime(ticks).fade(6, 10).tag(tag)
                 .key(0, pose().forward(0.8f).up(-0.4f).pitch(-60f).scale(0.3f).alpha(0f))
                 .key(8, pose().pitch(-35f).scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -923,14 +923,14 @@ public final class KeyOfStarsFx {
         ParticleShapes.modelOnTurning(sl, quill, player, new Vec3(0, player.getEyeHeight() - 0.45, 0), 0f, 0f, 0f);
         ParticleShapes.burst(sl, PAGE, chestOf(player).add(Spells.flatLook(player).scale(0.8)), 4, 0.02, 0.06);
         sound(sl, player.position(), ModSounds.STARS_RECORD, 1.0f, wobble(1.0f));
-        status(player, Status.RECORD, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.RECORD, ticks);
     }
 
     /**
      * A power was copied: a written page flies from 'from' (where it was cast) into the book. angel = an Angel-level
      * power, recorded weakly (a gold page).
      */
-    public static void recorded(ServerLevel sl, Player player, Vec3 from, boolean angel) {
+    public static void recorded(ServerLevel sl, LivingEntity player, Vec3 from, boolean angel) {
         Vec3 to = chestOf(player).add(Spells.flatLook(player).scale(0.8));
         int ticks = Math.max(6, Math.min(16, (int) (from.distanceTo(to) / 2)));
         ModelFx page = RECORD_PAGE.color(angel ? 0xFFFFE7A8 : 0xFFFFFFFF).scale(0.45f).lifetime(ticks + 4).fade(0, 4)
@@ -947,19 +947,19 @@ public final class KeyOfStarsFx {
     }
 
     /** The roll failed: the page crumbles to motes before it is written. */
-    public static void recordFailed(ServerLevel sl, Player player) {
+    public static void recordFailed(ServerLevel sl, LivingEntity player) {
         Vec3 at = chestOf(player).add(Spells.flatLook(player).scale(0.8));
         ParticleShapes.burst(sl, PAGE.color(0xFF8A90B0), at, 4, 0.02, 0.08);
         ParticleShapes.burst(sl, NIGHT_SMOKE, at, 4, 0.01, 0.04);
     }
 
-    public static void recordEnd(ServerLevel sl, Player player, String tag) {
+    public static void recordEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
-        statusEnd(player, Status.RECORD);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.RECORD);
     }
 
     /** Replay: a page is torn out of the book and goes up in starlight, toward the crosshair (play the power after). */
-    public static void replay(ServerLevel sl, Player player) {
+    public static void replay(ServerLevel sl, LivingEntity player) {
         Vec3 hand = handOf(player, sl);
         Vec3 look = player.getLookAngle();
         ModelFx page = RECORD_PAGE.scale(0.45f).lifetime(10).fade(0, 6).spin(25f)
@@ -979,7 +979,7 @@ public final class KeyOfStarsFx {
     public static final int TRAVEL_ENTERED = 10;
 
     /** Traveler's Door, the way in: a Door to the Spirit World opens before the Traveler at 'from'. */
-    public static void travelersDoor(ServerLevel sl, Player player, Vec3 from) {
+    public static void travelersDoor(ServerLevel sl, LivingEntity player, Vec3 from) {
         float yaw = player.getYRot();
         Vec3 at = from.add(ahead(yaw).scale(0.8));
         door(sl, at, yaw, 1.25f, 0xFFC8D4FF, 6, TRAVEL_ENTERED + 4, TRAVEL_ENTERED + 14, null);
@@ -1002,7 +1002,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Blink: an afterimage at 'from', a streak, stars at 'to'. chain = 0, 1 or 2 for the hops in a row (higher each). */
-    public static void blink(ServerLevel sl, Player player, Vec3 from, Vec3 to, int chain) {
+    public static void blink(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to, int chain) {
         afterimage(sl, player, from, player.getYRot(), 0xB0C8D4FF, 12);
         ParticleShapes.slashBetween(sl, STAR_TRAIL, from.add(0, 1.0, 0), to.add(0, 1.0, 0));
         ParticleShapes.burst(sl, SPARKLE, from.add(0, 1.0, 0), 5, 0.02, 0.06);
@@ -1012,14 +1012,14 @@ public final class KeyOfStarsFx {
     }
 
     /** The Blink's dodge took a hit: a door flickers where the blow landed. */
-    public static void blinkDodge(ServerLevel sl, Player player) {
+    public static void blinkDodge(ServerLevel sl, LivingEntity player) {
         flash(sl, DOOR_SIGIL, chestOf(player), player.getYRot() + 180f, 0xFFC8D4FF, 1.4f, 10);
         ParticleShapes.burst(sl, CRACK, chestOf(player), 4, 0.04, 0.1);
         sound(sl, chestOf(player), ModSounds.STARS_LAYER_TEAR, 0.6f, wobble(1.3f));
     }
 
     /** Planeswalker: an afterimage that stays at 'at' for 'ticks' and echoes the powers cast (omnipresenceEcho-like). */
-    public static void blinkEcho(ServerLevel sl, Player player, Vec3 at, int ticks, String tag) {
+    public static void blinkEcho(ServerLevel sl, LivingEntity player, Vec3 at, int ticks, String tag) {
         float h = Math.max(0.5f, player.getBbHeight() / 2f);
         ModelFx ghost = AFTERIMAGE.color(0xA0C8D4FF).scale(h).lifetime(ticks).fade(4, 10).tag(tag);
         ParticleShapes.model(sl, ghost, at, player.getYRot(), 0f, 0f);
@@ -1027,15 +1027,15 @@ public final class KeyOfStarsFx {
     }
 
     /** The Secrets Sorcerer's quick powers after a Blink: a clock beside the hotbar. */
-    public static void quickened(Player player, int ticks) {
-        status(player, Status.QUICKENED, ticks);
+    public static void quickened(LivingEntity player, int ticks) {
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.QUICKENED, ticks);
     }
 
     /** The tick the Invisible Hand closes on what it reached for. */
     public static final int HAND_GRABS = 6;
 
     /** Invisible Hand on a creature: a faint hand of starlight reaches out, closes on it at HAND_GRABS and yanks. */
-    public static void invisibleHand(ServerLevel sl, Player player, LivingEntity target) {
+    public static void invisibleHand(ServerLevel sl, LivingEntity player, LivingEntity target) {
         reach(sl, player, chestOf(target));
         Later.run(sl, HAND_GRABS, () -> {
             if (!target.isAlive()) return;
@@ -1046,12 +1046,12 @@ public final class KeyOfStarsFx {
     }
 
     /** Invisible Hand on items, XP or arrows at 'at': the same hand, smaller. */
-    public static void invisibleHandItem(ServerLevel sl, Player player, Vec3 at) {
+    public static void invisibleHandItem(ServerLevel sl, LivingEntity player, Vec3 at) {
         reach(sl, player, at);
         sound(sl, player.position(), ModSounds.STARS_INVISIBLE_HAND, 0.7f, wobble(1.25f));
     }
 
-    private static void reach(ServerLevel sl, Player player, Vec3 at) {
+    private static void reach(ServerLevel sl, LivingEntity player, Vec3 at) {
         Vec3 hand = handOf(player, sl);
         float distance = (float) hand.distanceTo(at);
         ModelFx grab = STAR_HAND.scale(0.7f).lifetime(HAND_GRABS + 10).fade(2, 8)
@@ -1070,7 +1070,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Star Anchor: the spot is saved, a compass of starlight sinks into the ground and stays faintly for 'ticks'. */
-    public static void starAnchor(ServerLevel sl, Player player, Vec3 at, int ticks, String tag) {
+    public static void starAnchor(ServerLevel sl, LivingEntity player, Vec3 at, int ticks, String tag) {
         floor(sl, ANCHOR_SEAL, at, 0.9, 0xE0C8D4FF, ticks, 0.6f, tag, 0);
         ModelFx mark = DOOR_FRAME.color(0x809DB4FF).scale(0.45f).lifetime(ticks).fade(10, 20).tag(tag)
                 .key(0, pose().up(1.5f).alpha(0f))
@@ -1101,7 +1101,7 @@ public final class KeyOfStarsFx {
     public enum Form { WANDERING, SYMBOLIZATION, CONCEPTUALIZATION }
 
     /** Wandering: the Beyonder turns into a trail of starlight and enters the Astral World for 'ticks'. */
-    public static void wandering(ServerLevel sl, Player player, int ticks, Form form, String tag) {
+    public static void wandering(ServerLevel sl, LivingEntity player, int ticks, Form form, String tag) {
         int color = form == Form.CONCEPTUALIZATION ? 0xE0FFD98A : 0xE0C8D4FF;
         ModelFx vortex = STORM_VORTEX.color(color).scale(2.4f).lifetime(14).fade(0, 10).spin(20f)
                 .key(0, pose().scale(0.2f))
@@ -1112,11 +1112,11 @@ public final class KeyOfStarsFx {
         ParticleShapes.burst(sl, TWINKLE, chestOf(player), 16, 0.08, 0.2);
         if (form != Form.WANDERING) ParticleShapes.burst(sl, WORM, chestOf(player), 8, 0.06, 0.14);
         sound(sl, player.position(), ModSounds.STARS_WANDERING, 1.2f, form == Form.CONCEPTUALIZATION ? 0.85f : 1.0f);
-        status(player, Status.WANDERING, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.WANDERING, ticks);
     }
 
     /** Every 2 ticks while Wandering: the trail of starlight behind the Beyonder. */
-    public static void wanderingTick(ServerLevel sl, Player player, Form form) {
+    public static void wanderingTick(ServerLevel sl, LivingEntity player, Form form) {
         Vec3 chest = chestOf(player);
         Vec3 back = chest.subtract(player.getDeltaMovement().scale(3.0));
         ParticleShapes.slashBetween(sl, STAR_TRAIL.lifetime(6), back, chest);
@@ -1134,12 +1134,12 @@ public final class KeyOfStarsFx {
         ParticleShapes.burst(sl, WORM, chestOf(enemy), 10, 0.04, 0.12);
     }
 
-    public static void wanderingEnd(ServerLevel sl, Player player, String tag) {
+    public static void wanderingEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         SpellFx.shockRing(sl, player.position(), 2.0, 0xC09DB4FF, 8, 0);
         ParticleShapes.burst(sl, STAR_MOTE, chestOf(player), 14, 0.04, 0.12);
         sound(sl, player.position(), ModSounds.STARS_WANDERING_END, 1.0f, wobble(1.0f));
-        statusEnd(player, Status.WANDERING);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.WANDERING);
     }
 
     // =====================================================================================
@@ -1154,7 +1154,7 @@ public final class KeyOfStarsFx {
      * rises round it and one lit Door stands in it at 'doorYaw' (the side facing the caster). cage = the Wanderer's
      * Spatial Cage (instant: the shell is there at once).
      */
-    public static void spaceConcealment(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, float doorYaw,
+    public static void spaceConcealment(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, float doorYaw,
                                         boolean cage, String tag) {
         int risen = cage ? 2 : CONCEALED;
         floor(sl, STAR_GATE, center, Math.min(radius, 3.0), 0xA09DB4FF, ticks, 0.5f, tag, 0);
@@ -1166,7 +1166,7 @@ public final class KeyOfStarsFx {
         SpellFx.shockRing(sl, center, radius, 0xE0C8D4FF, risen, 0);
         ParticleShapes.burst(sl, STAR_MOTE, center.add(0, 1.0, 0), 20, 0.05, 0.16);
         sound(sl, center, ModSounds.STARS_SPACE_CONCEALMENT, 1.4f, cage ? 1.15f : 1.0f);
-        status(player, Status.SPACE_CONCEALMENT, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.SPACE_CONCEALMENT, ticks);
     }
 
     /** Cast again: the Door in the shell slams shut and is barred for the rest of the time. */
@@ -1195,7 +1195,7 @@ public final class KeyOfStarsFx {
      * Transfiguration: the Beyonder becomes layers upon layers of illusory Doors, 'layers' of them, for 'ticks'. Each
      * layer is a door standing round them; layerTorn takes one away.
      */
-    public static void transfiguration(ServerLevel sl, Player player, int layers, int ticks, String tag) {
+    public static void transfiguration(ServerLevel sl, LivingEntity player, int layers, int ticks, String tag) {
         for (int i = 0; i < layers; i++) {
             ModelFx layer = DOOR_SIGIL.color(0xA0C8D4FF).scale(1.6f + i * 0.12f).lifetime(ticks).fade(4, 8).tag(tag)
                     .key(0, pose().scale(0.2f).alpha(0f))
@@ -1213,7 +1213,7 @@ public final class KeyOfStarsFx {
      * A blow tore one layer: the door it hit shatters at 'from' and the Beyonder is 3 blocks aside at 'to'. Call
      * transfiguration again with the layers left (and the same tag after clearing it) if the doors should be redrawn.
      */
-    public static void layerTorn(ServerLevel sl, Player player, Vec3 from, Vec3 to, int layersLeft) {
+    public static void layerTorn(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to, int layersLeft) {
         flash(sl, DOOR_SIGIL, from.add(0, 1.0, 0), yawToward(from, to), 0xFFFFFFFF, 1.8f, 12);
         ParticleShapes.burst(sl, CRACK, from.add(0, 1.0, 0), 6, 0.06, 0.14);
         ParticleShapes.burst(sl, DOOR_SPARK, from.add(0, 1.0, 0), 6, 0.06, 0.16);
@@ -1223,17 +1223,17 @@ public final class KeyOfStarsFx {
         layersLeft(player, layersLeft, 200);
     }
 
-    public static void transfigurationEnd(ServerLevel sl, Player player, String tag) {
+    public static void transfigurationEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, DOOR_SPARK, chestOf(player), 10, 0.03, 0.1);
-        statusEnd(player, Status.TRANSFIGURATION);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.TRANSFIGURATION);
     }
 
     /** The tick the Doors have swallowed an Exile: hide it from there. */
     public static final int EXILE_SWALLOWED = 12;
 
     /** Exile: Doors open round 'target' and swallow it at EXILE_SWALLOWED. */
-    public static void exile(ServerLevel sl, Player player, LivingEntity target) {
+    public static void exile(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 at = target.position();
         float yaw = yawToward(at, player.position());
         float size = Math.max(1.1f, target.getBbHeight() * 0.6f);
@@ -1275,7 +1275,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Pocket Space: a small Door opens before the Beyonder onto their own Concealed space (open the menu after). */
-    public static void pocketSpace(ServerLevel sl, Player player) {
+    public static void pocketSpace(ServerLevel sl, LivingEntity player) {
         float yaw = player.getYRot();
         Vec3 at = player.position().add(ahead(yaw).scale(1.2));
         door(sl, at, yaw, 0.8f, 0xFFFFE7A8, 4, 16, 22, null);
@@ -1290,7 +1290,7 @@ public final class KeyOfStarsFx {
      * Space Tearing: a ring warns round 'target' for half a second, then space tears in jagged rifts 'radius' blocks
      * round it. (Planeswalker: call it with the Beyonder as the target too, for the tear round them.)
      */
-    public static void spaceTearing(ServerLevel sl, Player player, LivingEntity target, double radius) {
+    public static void spaceTearing(ServerLevel sl, LivingEntity player, LivingEntity target, double radius) {
         Vec3 at = target.position();
         SpellFx.warningCircle(sl, at, radius, 0xC0C8B4FF, TEAR_LANDS);
         SpellFx.closingRing(sl, at, radius + 1.5, 0xA07A5AD8, TEAR_LANDS, 0);
@@ -1335,7 +1335,7 @@ public final class KeyOfStarsFx {
     public static final int TOY_SHRUNK = 10;
 
     /** Toy Box: a circular veil, a music-box carousel, opens on the ground at 'center' for 'ticks'. */
-    public static void toyBox(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void toyBox(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         floor(sl, TOY_VEIL, center, radius, 0xC0FFE7A8, ticks, 0.8f, tag, 0);
         SpellFx.shockRing(sl, center, radius, 0xE0FFE7A8, 10, 0);
         ParticleShapes.ring(sl, WIND_KEY, center.add(0, 0.4, 0), radius * 0.8, 10, 0.02);
@@ -1383,7 +1383,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Replication: a power used by 'source' is copied in the moment: a line from it to the Planeswalker, two pages. */
-    public static void replication(ServerLevel sl, Player player, LivingEntity source) {
+    public static void replication(ServerLevel sl, LivingEntity player, LivingEntity source) {
         Vec3 from = chestOf(source);
         Vec3 to = chestOf(player);
         ParticleShapes.slashBetween(sl, STAR_LINE.lifetime(12).sweep(6), from, to);
@@ -1398,7 +1398,7 @@ public final class KeyOfStarsFx {
      * Space Fragmentation: nine colored planets of starlight circle 'center' at up to 'radius' for 'ticks', ringed by a
      * slow pull of starlight.
      */
-    public static void spaceFragmentation(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void spaceFragmentation(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         floor(sl, CONSTELLATION, center, radius, 0x809DB4FF, ticks, 0.6f, tag, 0);
         ThreadLocalRandom r = ThreadLocalRandom.current();
         for (int i = 0; i < 9; i++) {
@@ -1454,7 +1454,7 @@ public final class KeyOfStarsFx {
      * Starlight Seal: starlight falls on 'target' and every drop becomes a door that sinks into it; Sealed at SEALED_AT,
      * a ring of keyholes under it for 'ticks'.
      */
-    public static void starlightSeal(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void starlightSeal(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         Vec3 top = headOf(target).add(0, 3.0, 0);
         ThreadLocalRandom r = ThreadLocalRandom.current();
         for (int i = 0; i < 6; i++) {
@@ -1509,7 +1509,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Starlight Seal on an ally: their connections are sealed for 'ticks', a gold seal over their head. */
-    public static void sealAlly(ServerLevel sl, Player player, LivingEntity ally, int ticks, String tag) {
+    public static void sealAlly(ServerLevel sl, LivingEntity player, LivingEntity ally, int ticks, String tag) {
         ModelFx halo = SEAL_RING.color(0xC0FFE7A8).scale(1.1f).lifetime(ticks).fade(6, 10).spin(2f).tag(tag);
         ParticleShapes.modelOn(sl, halo, ally, new Vec3(0, ally.getBbHeight() + 0.3, 0), 0f, 0f, 0f);
         ParticleShapes.slashBetween(sl, SEAL_THREAD.lifetime(10).sweep(4), handOf(player, sl), chestOf(ally));
@@ -1522,7 +1522,7 @@ public final class KeyOfStarsFx {
     public static final int LABYRINTH_RISEN = 14;
 
     /** Space-Time Labyrinth: a maze of starlight fills 'radius' blocks round 'center' for 'ticks', walled at the edge. */
-    public static void labyrinth(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void labyrinth(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         floor(sl, LABYRINTH_FLOOR, center, radius, 0xC09DB4FF, ticks, 0.3f, tag, 0);
         wallRing(sl, SPACE_SHELL, center, radius, 3.0, 0x909DB4FF, ticks, LABYRINTH_RISEN, tag);
         wallRing(sl, SPACE_SHELL, center, radius * 0.6, 2.0, 0x609DB4FF, ticks, LABYRINTH_RISEN + 4, tag);
@@ -1534,7 +1534,7 @@ public final class KeyOfStarsFx {
             ParticleShapes.spawn(sl, MAZE, center.add(Math.cos(a) * d, 0.5 + r.nextDouble() * 2, Math.sin(a) * d), new Vec3(0, 0.02, 0));
         }
         sound(sl, center, ModSounds.STARS_LABYRINTH, 1.6f, wobble(1.0f));
-        status(player, Status.LABYRINTH, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.LABYRINTH, ticks);
     }
 
     /** An enemy inside is Lost (a player sees the clock; everyone sees maze squares round its head). */
@@ -1564,7 +1564,7 @@ public final class KeyOfStarsFx {
      * Alternate World: a kingdom of Doors covers 'radius' blocks round 'center' for 'ticks': its ground, doors standing
      * everywhere, a wall of space at the edge and a dome of stars overhead.
      */
-    public static void alternateWorld(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void alternateWorld(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         floor(sl, DOOR_KINGDOM, center, radius, 0xB09DB4FF, ticks, 0.05f, tag, 0);
         floor(sl, STAR_GATE, center, 3.5, 0xE0FFE7A8, ticks, -0.4f, tag, 8);
         wallRing(sl, SPACE_SHELL, center, radius, 8.0, 0x809DB4FF, ticks, WORLD_UNFOLDED, tag);
@@ -1589,7 +1589,7 @@ public final class KeyOfStarsFx {
         SpellFx.shockRing(sl, center, radius, 0xF0E8EEFF, WORLD_UNFOLDED, 0);
         SpellFx.risingRings(sl, center, 4.0, 8.0, 4, 0xC09DB4FF);
         sound(sl, center, ModSounds.STARS_ALTERNATE_WORLD, 3.0f, 1.0f);
-        status(player, Status.ALTERNATE_WORLD, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.ALTERNATE_WORLD, ticks);
     }
 
     /** Every second while it lasts: stars come out in the dome overhead and drift down like a dream. */
@@ -1613,7 +1613,7 @@ public final class KeyOfStarsFx {
     }
 
     /** Omnipresence: six afterimages stand round the Beyonder in a ring of 'radius' 6 for 'ticks', following them. */
-    public static void omnipresence(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void omnipresence(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         float h = Math.max(0.5f, player.getBbHeight() / 2f);
         for (int i = 0; i < 6; i++) {
             float yaw = player.getYRot() + i * 60f;
@@ -1627,23 +1627,23 @@ public final class KeyOfStarsFx {
         floor(sl, STAR_GATE, player.position(), 2.0, 0xC0FFE7A8, 20, 4f, null, 0);
         stars(sl, chestOf(player), 16, 0.1, 0.3);
         sound(sl, player.position(), ModSounds.STARS_OMNIPRESENCE, 1.4f, 1.0f);
-        status(player, Status.OMNIPRESENCE, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.OMNIPRESENCE, ticks);
     }
 
     /** Where afterimage 'index' (0 to 5) stands right now. */
-    public static Vec3 afterimageAt(Player player, int index) {
+    public static Vec3 afterimageAt(LivingEntity player, int index) {
         return player.position().add(ahead(player.getYRot() + index * 60f).scale(6.0));
     }
 
     /** Afterimage 'index' repeats the power just cast: a flash of starlight from it. */
-    public static void omnipresenceEcho(ServerLevel sl, Player player, int index) {
+    public static void omnipresenceEcho(ServerLevel sl, LivingEntity player, int index) {
         Vec3 at = afterimageAt(player, index).add(0, 1.2, 0);
         ParticleShapes.burst(sl, TWINKLE, at, 4, 0.03, 0.08);
         ParticleShapes.slashBetween(sl, STAR_LINE.lifetime(6).sweep(2), chestOf(player), at);
     }
 
     /** Afterimage 'index' took the blow meant for the Beyonder and fades. */
-    public static void afterimageStruck(ServerLevel sl, Player player, String tag, int index) {
+    public static void afterimageStruck(ServerLevel sl, LivingEntity player, String tag, int index) {
         Vec3 at = afterimageAt(player, index);
         ParticleShapes.clearModels(sl, player, tag + "_" + index);
         flash(sl, DOOR_SIGIL, at.add(0, 1.0, 0), player.getYRot(), 0xFFC8D4FF, 1.6f, 10);
@@ -1651,12 +1651,12 @@ public final class KeyOfStarsFx {
         sound(sl, at, ModSounds.STARS_LAYER_TEAR, 0.8f, wobble(1.1f));
     }
 
-    public static void omnipresenceEnd(ServerLevel sl, Player player, String tag) {
+    public static void omnipresenceEnd(ServerLevel sl, LivingEntity player, String tag) {
         for (int i = 0; i < 6; i++) {
             ParticleShapes.clearModels(sl, player, tag + "_" + i);
             ParticleShapes.burst(sl, STAR_MOTE, afterimageAt(player, i).add(0, 1.0, 0), 4, 0.02, 0.06);
         }
-        statusEnd(player, Status.OMNIPRESENCE);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.OMNIPRESENCE);
     }
 
     /** The tick every Door has closed. */
@@ -1666,7 +1666,7 @@ public final class KeyOfStarsFx {
      * Close the Door: a great barred door rises behind the Beyonder and slams; a wave of closing doors races out
      * 'radius' blocks. 'ticks' is how long travel stays closed.
      */
-    public static void closeTheDoor(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void closeTheDoor(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         float yaw = player.getYRot();
         ModelFx great = CLOSED_DOOR.color(0xE0FFE7A8).scale(4.5f).lifetime(DOORS_SHUT + 30).fade(4, 16)
                 .key(0, pose().up(-4.5f).alpha(0f))
@@ -1705,7 +1705,7 @@ public final class KeyOfStarsFx {
     // =====================================================================================
 
     /** Starlit Eyes (Secrets Sorcerer): a faint orbit of Worms of Star round the Beyonder for 'ticks' (renew it). */
-    public static void wormAura(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void wormAura(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         for (int i = 0; i < 3; i++) {
             float scale = 0.3f;
             ModelFx worm = WORM_OF_STAR.color(0xC0FFFFFF).scale(scale).pivot(8, 6, 8 + 16f * 0.75f / scale)
@@ -1739,24 +1739,24 @@ public final class KeyOfStarsFx {
     }
 
     /** Safe Landing after a teleport of this Pathway: stars puff at the feet. */
-    public static void safeLanding(ServerLevel sl, Player player) {
+    public static void safeLanding(ServerLevel sl, LivingEntity player) {
         ParticleShapes.ring(sl, STAR_MOTE, player.position().add(0, 0.1, 0), 0.6, 10, 0.06);
     }
 
     /** Starlit Eyes broke an illusion or shook off blindness: a crack of light before the eyes. */
-    public static void illusionBroken(ServerLevel sl, Player player) {
+    public static void illusionBroken(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, CRACK, player.getEyePosition().add(player.getLookAngle().scale(0.6)), 4, 0.03, 0.08);
         ParticleShapes.burst(sl, SPARKLE, player.getEyePosition(), 4, 0.03, 0.08);
     }
 
     /** Afterimages (Planeswalker): a hit passed through an illusory door and missed. */
-    public static void afterimageMiss(ServerLevel sl, Player player) {
+    public static void afterimageMiss(ServerLevel sl, LivingEntity player) {
         flash(sl, DOOR_SIGIL, chestOf(player), randomYaw(sl), 0xC0C8D4FF, 1.4f, 10);
         afterimage(sl, player, player.position(), player.getYRot(), 0x80C8D4FF, 8);
     }
 
     /** Door of Doors (Door): a Key of Stars turns over the Beyonder when one of their free travels is used. */
-    public static void doorOfDoors(ServerLevel sl, Player player) {
+    public static void doorOfDoors(ServerLevel sl, LivingEntity player) {
         ModelFx key = STAR_KEY.scale(0.35f).lifetime(16).fade(2, 8)
                 .key(0, pose().alpha(0f))
                 .key(4, pose().alpha(1f), Ease.OUT)

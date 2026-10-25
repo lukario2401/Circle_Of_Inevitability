@@ -385,17 +385,17 @@ public final class HandOfOrderFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "hand_of_order/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "hand_of_order/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // ---------- the Court's clauses on the screen
@@ -408,16 +408,16 @@ public final class HandOfOrderFx {
      * The clauses written so far (1 to 7) as pictures in the row beside the hotbar, where the Attendant's stacks
      * are, and the whole tablet in the top right corner for 'ticks'. Call it again each time a clause is written.
      */
-    public static void courtClauses(Player player, int written, int ticks) {
+    public static void courtClauses(LivingEntity player, int written, int ticks) {
         for (int i = 1; i <= 7; i++) {
             if (i <= written) {
-                ScreenImages.show(player, clauseId(i), "hand_of_order/clause_" + i,
+                if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, clauseId(i), "hand_of_order/clause_" + i,
                         ScreenAnchor.BOTTOM, 103 + (i - 1) * 18, -3, 16, ticks);
             } else {
-                ScreenImages.hide(player, clauseId(i));
+                if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, clauseId(i));
             }
         }
-        ScreenImages.show(player, "ho_court_tablet", "hand_of_order/court_clauses", ScreenAnchor.TOP_RIGHT, -8, 8, 64, ticks);
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, "ho_court_tablet", "hand_of_order/court_clauses", ScreenAnchor.TOP_RIGHT, -8, 8, 64, ticks);
     }
 
     public static void courtClausesHide(Player player) {
@@ -656,7 +656,7 @@ public final class HandOfOrderFx {
      * The Sheriff claims a circle of ground: a seal of Order opens underfoot, a brass ring races out to the edge and a
      * ring of law stays there for 'ticks' (cast again: end the old one with jurisdictionEnd first).
      */
-    public static void jurisdiction(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void jurisdiction(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         floor(sl, ORDER_SEAL, center, 3.0, 0xE0C9A24B, ticks, 0.4f, tag, 0);
         SpellFx.steadyRing(sl, center, radius, 0xC0F0D68C, JURISDICTION_CLAIMED, 0);
         ModelFx edge = SpellFx.RUNE_CIRCLE.color(0x60C9A24B).scale((float) (radius * 2.0)).lifetime(ticks)
@@ -746,7 +746,7 @@ public final class HandOfOrderFx {
     // =====================================================================================
 
     /** Psychic Lashing: an illusory branding iron flickers along the weapon in hand for 'ticks'. */
-    public static void psychicLashing(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void psychicLashing(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx iron = BRANDING_IRON.color(0xFFA8C8FF).scale(0.55f).lifetime(ticks).fade(4, 8).tag(tag)
                 .key(0, pose().forward(0.35f).right(0.38f).up(0.2f).pitch(-60f).alpha(0f))
                 .key(6, pose().alpha(0.85f), Ease.OUT);
@@ -754,18 +754,18 @@ public final class HandOfOrderFx {
         lightningBetween(sl, BOLT_LINE, SpellFx.handOf(player, sl), SpellFx.handOf(player, sl).add(Spells.flatLook(player)), 0.15);
         ParticleShapes.burst(sl, LIGHTNING_FORK, SpellFx.handOf(player, sl), 6, 0.04, 0.12);
         sound(sl, player.position(), ModSounds.ORDER_LASHING, 1.0f, 1.0f);
-        status(player, Status.LASHING, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.LASHING, ticks);
     }
 
     /** Every few ticks while the iron is coated: sparks crawl along the hand. */
-    public static void lashingTick(ServerLevel sl, Player player) {
+    public static void lashingTick(ServerLevel sl, LivingEntity player) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) return;
         ParticleShapes.spawn(sl, LIGHTNING_MOTE, hand.add(Spells.flatLook(player).scale(0.3)), new Vec3(0, 0.02, 0));
     }
 
     /** A hit with the coated weapon: a branding arc of lightning and the brand's mark on the target. */
-    public static void lashHit(ServerLevel sl, Player player, LivingEntity target) {
+    public static void lashHit(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 at = chestOf(target);
         ParticleShapes.slash(sl, BOLT_ARC.varied(sl.getRandom(), 0f, 0f, 40f), at, player.getYRot(), 0f, 0f);
         ParticleShapes.spawn(sl, BRAND, at, Vec3.ZERO);
@@ -773,16 +773,16 @@ public final class HandOfOrderFx {
         sound(sl, at, ModSounds.ORDER_LASH_HIT, 0.9f, wobble(1.0f));
     }
 
-    public static void lashingEnd(ServerLevel sl, Player player, String tag) {
+    public static void lashingEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
-        statusEnd(player, Status.LASHING);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.LASHING);
     }
 
     /**
      * Psychic Piercing: bolts of lightning leap from the eyes to 'end' (12 blocks, or what stopped them). 'hits' are
      * the enemies on the line; piercingHit each one at once.
      */
-    public static void psychicPiercing(ServerLevel sl, Player player, Vec3 end, List<LivingEntity> hits) {
+    public static void psychicPiercing(ServerLevel sl, LivingEntity player, Vec3 end, List<LivingEntity> hits) {
         Vec3 eyes = player.getEyePosition().add(Spells.flatLook(player).scale(0.3));
         ParticleShapes.slashBetween(sl, BEAM, eyes, end);
         for (int i = 0; i < 3; i++) lightningBetween(sl, BOLT_LINE, eyes, end, 0.25);
@@ -803,7 +803,7 @@ public final class HandOfOrderFx {
     public static final int WHIP_LANDS = 5;
 
     /** A barbed whip of lightning lashes out from the hand to the target. */
-    public static void whipOfPain(ServerLevel sl, Player player, LivingEntity target) {
+    public static void whipOfPain(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) return;
         sound(sl, player.position(), ModSounds.ORDER_WHIP, 1.0f, wobble(1.0f));
@@ -859,7 +859,7 @@ public final class HandOfOrderFx {
     public static final int IMPRISON_LANDS = 6;
 
     /** IMPRISON: four glass walls slide in round the target and stay for 'ticks'. */
-    public static void imprison(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void imprison(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         speak(sl, player, Word.IMPRISON);
         float w = Math.max(1.0f, target.getBbWidth() * 1.6f);
         float h = Math.max(1.0f, target.getBbHeight() * 0.65f);
@@ -896,7 +896,7 @@ public final class HandOfOrderFx {
     }
 
     /** Confinement (Imperative Mage): a transparent cell drops over the target and seals for 'ticks'. */
-    public static void confinement(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void confinement(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         speak(sl, player, Word.IMPRISON);
         float w = Math.max(1.0f, target.getBbWidth() * 1.6f);
         float h = Math.max(1.0f, (target.getBbHeight() + 0.4f) / 2f);
@@ -917,7 +917,7 @@ public final class HandOfOrderFx {
     public static final int EXILE_LANDS = 3;
 
     /** EXILE: an invisible force throws the target away; 'to' = about where it lands (for the streak). */
-    public static void exile(ServerLevel sl, Player player, LivingEntity target, Vec3 to) {
+    public static void exile(ServerLevel sl, LivingEntity player, LivingEntity target, Vec3 to) {
         speak(sl, player, Word.EXILE);
         sound(sl, target.position(), ModSounds.ORDER_EXILE, 1.0f, wobble(1.0f));
         Later.run(sl, EXILE_LANDS, () -> {
@@ -967,7 +967,7 @@ public final class HandOfOrderFx {
      * DEATH: the Judge blurs into a rush from 'from' (afterimages of brass) and a spectral fist strikes the head.
      * wound = the Disciplinary Paladin's form, aimed at its latest wound: the blow is red and the wound opens.
      */
-    public static void death(ServerLevel sl, Player player, Vec3 from, LivingEntity target, boolean wound) {
+    public static void death(ServerLevel sl, LivingEntity player, Vec3 from, LivingEntity target, boolean wound) {
         speak(sl, player, Word.DEATH);
         ParticleShapes.slashBetween(sl, RUSH, from.add(0, 1.0, 0), chestOf(player));
         for (int i = 0; i < 4; i++) {
@@ -992,7 +992,7 @@ public final class HandOfOrderFx {
     }
 
     /** Maintain Secrecy: a strange light flashes in the eyes and a seal falls over the target's mouth for 'ticks'. */
-    public static void maintainSecrecy(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void maintainSecrecy(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         speak(sl, player, Word.SILENCE, 0.5f, false);
         Vec3 eyes = player.getEyePosition().add(Spells.flatLook(player).scale(0.3));
         ParticleShapes.burst(sl, WHITE_MOTE, eyes, 8, 0.02, 0.06);
@@ -1012,7 +1012,7 @@ public final class HandOfOrderFx {
     public static final int DEPRIVED = 10;
 
     /** DEPRIVE: 'count' orbs of violet power are drawn out of the target into the Mage's hand and locked away. */
-    public static void deprivation(ServerLevel sl, Player player, LivingEntity target, int count) {
+    public static void deprivation(ServerLevel sl, LivingEntity player, LivingEntity target, int count) {
         speak(sl, player, Word.DEPRIVE);
         sound(sl, target.position(), ModSounds.ORDER_DEPRIVATION, 1.0f, 1.0f);
         for (int i = 0; i < Math.max(1, count); i++) {
@@ -1055,7 +1055,7 @@ public final class HandOfOrderFx {
      * EXECUTE: the right fist is raised high over the Mage and a ring closes on the target for EXECUTION_LANDS ticks.
      * Then executionStrike (or executionBroken if a blow breaks it, with the same tag).
      */
-    public static void execution(ServerLevel sl, Player player, LivingEntity target, String tag) {
+    public static void execution(ServerLevel sl, LivingEntity player, LivingEntity target, String tag) {
         speak(sl, player, Word.EXECUTE);
         ModelFx fist = SPECTRAL_FIST.color(0xE0FFF3D0).scale(1.4f).lifetime(EXECUTION_LANDS + 4).fade(4, 4).tag(tag)
                 .key(0, pose().up(0f).pitch(-90f).alpha(0f))
@@ -1076,7 +1076,7 @@ public final class HandOfOrderFx {
     }
 
     /** The fist falls on the target from any distance; slain = it was under the threshold and simply dies. */
-    public static void executionStrike(ServerLevel sl, Player player, LivingEntity target, boolean slain) {
+    public static void executionStrike(ServerLevel sl, LivingEntity player, LivingEntity target, boolean slain) {
         Vec3 head = headOf(target);
         float yaw = yawToward(player.position(), target.position());
         ModelFx fist = SPECTRAL_FIST.color(slain ? 0xF0FF8A80 : 0xF0FFF3D0).scale(Math.max(1.6f, target.getBbHeight()))
@@ -1095,7 +1095,7 @@ public final class HandOfOrderFx {
     }
 
     /** A blow broke the wind-up: the fist and the ring shatter. */
-    public static void executionBroken(ServerLevel sl, Player player, LivingEntity target, String tag) {
+    public static void executionBroken(ServerLevel sl, LivingEntity player, LivingEntity target, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, WHITE_MOTE, headOf(player).add(0, 1.2, 0), 14, 0.06, 0.18);
         if (target != null) {
@@ -1116,7 +1116,7 @@ public final class HandOfOrderFx {
      * A Decree is written round 'center': a ring bound with chain opens, the edge is drawn, the word is proclaimed
      * over the caster, and the circle stays for 'ticks'. The Rule picks the color (and the word).
      */
-    public static void decree(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, Rule rule, String tag) {
+    public static void decree(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, Rule rule, String tag) {
         speak(sl, player, rule.word, 0.6f, false);
         floor(sl, rule == Rule.REALITY ? REALITY_SEAL : rule == Rule.RESURRECTION ? NO_RETURN_SEAL : DECREE_CIRCLE,
                 center, radius, (rule.color & 0x00FFFFFF) | 0x90000000, ticks, 0.15f, tag, 0);
@@ -1197,7 +1197,7 @@ public final class HandOfOrderFx {
     }
 
     /** Imperative: Reality: the plain grid of Reality covers 'radius' for 'ticks'. */
-    public static void reality(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void reality(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         decree(sl, player, center, radius, ticks, Rule.REALITY, tag);
         ParticleShapes.burst(sl, DUST, center.add(0, 0.5, 0), 14, 0.06, 0.2);
         if (player instanceof ServerPlayer sp) status(sp, Status.REALITY, ticks);
@@ -1214,7 +1214,7 @@ public final class HandOfOrderFx {
      * A paper contract appears before the target and is signed, with no say in the matter; it then floats over
      * its head for 'ticks'.
      */
-    public static void contract(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void contract(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         speak(sl, player, Word.SIGN, 0.45f, false);
         float yaw = yawToward(target.position(), player.position());
         Vec3 before = chestOf(target).add(ahead(yaw).scale(0.9));
@@ -1257,7 +1257,7 @@ public final class HandOfOrderFx {
      * GUILTY: the Convict is named. A dawn-like halo of brass rises behind the Paladin's head, the Convict's brand
      * hangs over the target and a red ring follows it, all for 'ticks'.
      */
-    public static void punishment(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void punishment(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         speak(sl, player, Word.GUILTY);
         ModelFx halo = DAWN_HALO.color(0xC0F0D68C).scale(1.5f).lifetime(ticks).fade(10, 12).spin(1f).tag(tag)
                 .key(0, pose().forward(-0.35f).scale(0.3f).alpha(0f))
@@ -1271,7 +1271,7 @@ public final class HandOfOrderFx {
             if (target instanceof Player p) status(p, Status.SENTENCED, ticks);
         }
         sound(sl, player.position(), ModSounds.ORDER_PUNISHMENT, 1.2f, 1.0f);
-        status(player, Status.CONVICT, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.CONVICT, ticks);
     }
 
     /** A hit on the Convict: red sparks off its brand. */
@@ -1287,14 +1287,14 @@ public final class HandOfOrderFx {
         sound(sl, chestOf(target), ModSounds.ORDER_VIOLATION, 0.9f, 0.8f);
     }
 
-    public static void punishmentEnd(ServerLevel sl, Player player, LivingEntity target, String tag) {
+    public static void punishmentEnd(ServerLevel sl, LivingEntity player, LivingEntity target, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         if (target != null) {
             ParticleShapes.clearModels(sl, target, tag);
             ParticleShapes.clearModels(sl, target, tag + "_ring");
             if (target instanceof Player p) statusEnd(p, Status.SENTENCED);
         }
-        statusEnd(player, Status.CONVICT);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.CONVICT);
     }
 
     // ---------- sneak: Sword of Judgment
@@ -1306,7 +1306,7 @@ public final class HandOfOrderFx {
      * JUDGMENT: one stride from 'from' to before the target (the moving is the ability's), the Sword of Judgment rises
      * over the Chaos Hunter and cuts down; it cannot be dodged.
      */
-    public static void swordOfJudgment(ServerLevel sl, Player player, Vec3 from, LivingEntity target) {
+    public static void swordOfJudgment(ServerLevel sl, LivingEntity player, Vec3 from, LivingEntity target) {
         speak(sl, player, Word.JUDGMENT, 0.6f, false);
         ParticleShapes.slashBetween(sl, RUSH.width(0.7f), from.add(0, 1.0, 0), chestOf(player));
         for (int i = 0; i < 6; i++) {
@@ -1329,7 +1329,7 @@ public final class HandOfOrderFx {
     }
 
     /** The Judgment strips harmful effects off the one who gives it: gold rings rise round them. */
-    public static void judgmentCleanse(ServerLevel sl, Player player) {
+    public static void judgmentCleanse(ServerLevel sl, LivingEntity player) {
         SpellFx.risingRings(sl, player.position(), 0.9, 2.0, 3, 0xC0FFF3D0);
         ParticleShapes.burst(sl, WHITE_MOTE, chestOf(player), 10, 0.03, 0.08);
     }
@@ -1345,7 +1345,7 @@ public final class HandOfOrderFx {
      * BALANCE: the scales stand between the two, the heavier side (the target's) tips and then settles level; a
      * thread of gold joins them for 'ticks'.
      */
-    public static void balance(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void balance(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         speak(sl, player, Word.BALANCE);
         Vec3 mid = player.position().lerp(target.position(), 0.5);
         float yaw = yawToward(player.position(), target.position()) + 90f;
@@ -1365,19 +1365,19 @@ public final class HandOfOrderFx {
             SpellFx.shockRing(sl, mid, 2.0, 0xC0F0D68C, 8, 0);
         });
         sound(sl, mid, ModSounds.ORDER_BALANCE, 1.0f, 1.0f);
-        status(player, Status.BALANCE, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.BALANCE, ticks);
     }
 
-    public static void balanceEnd(ServerLevel sl, Player player, LivingEntity target, String tag) {
+    public static void balanceEnd(ServerLevel sl, LivingEntity player, LivingEntity target, String tag) {
         if (target != null) ParticleShapes.burst(sl, BRASS_MOTE, chestOf(target), 6, 0.02, 0.06);
-        statusEnd(player, Status.BALANCE);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.BALANCE);
     }
 
     /** The tick the ring of Order has risen. */
     public static final int DIVIDE_RISEN = 14;
 
     /** A ring of Order 'radius' blocks round 'center': a wall of brass bars rises and stays for 'ticks'. */
-    public static void divideBattlefield(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void divideBattlefield(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         wallRing(sl, ORDER_WALL, center, radius, 3.0, 0xB0C9A24B, ticks, DIVIDE_RISEN, tag);
         floor(sl, ORDER_SEAL, center, 2.5, 0x90C9A24B, ticks, 0.3f, tag, 0);
         SpellFx.steadyRing(sl, center, radius, 0xE0FFF3D0, DIVIDE_RISEN, 0);
@@ -1407,7 +1407,7 @@ public final class HandOfOrderFx {
     }
 
     /** NO RETURN: "Resurrection of the dead is prohibited here!" A shut door is laid on the ground for 'ticks'. */
-    public static void lawNoReturn(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void lawNoReturn(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         decree(sl, player, center, radius, ticks, Rule.RESURRECTION, tag);
     }
 
@@ -1433,7 +1433,7 @@ public final class HandOfOrderFx {
      * Order Proxy: the Brass Pillar rises huge behind the Hand of Order and white-gold light streams down it for
      * 'ticks' (proxyTick every few ticks). When it ends: proxyEnd.
      */
-    public static void orderProxy(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void orderProxy(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx pillar = BRASS_PILLAR.scale(3.2f).lifetime(ticks + 10).fade(4, 14).tag(tag)
                 .key(0, pose().forward(-1.6f).up(-6f).alpha(0f))
                 .key(12, pose().up(0f).alpha(1f), Ease.OUT);
@@ -1444,25 +1444,25 @@ public final class HandOfOrderFx {
         SpellFx.risingRings(sl, player.position(), 1.4, 3.0, 4, 0xC0F0D68C);
         ParticleShapes.burst(sl, BRASS_SPARK, chestOf(player), 24, 0.1, 0.3);
         sound(sl, player.position(), ModSounds.ORDER_PROXY, 1.6f, 1.0f);
-        status(player, Status.PROXY, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.PROXY, ticks);
     }
 
-    public static void proxyTick(ServerLevel sl, Player player) {
+    public static void proxyTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.ring(sl, BRASS_MOTE, player.position().add(0, 0.1, 0), 0.9, 6, 0.0);
         ParticleShapes.spawn(sl, anyLaw(), chestOf(player).add(Spells.rightOf(player).scale(0.6)), new Vec3(0, 0.05, 0));
     }
 
     /** It ends and the proxy is spent: the Pillar sinks, dust, a long weariness. */
-    public static void proxyEnd(ServerLevel sl, Player player, String tag) {
+    public static void proxyEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, DUST, player.position().add(0, 0.5, 0), 10, 0.03, 0.08);
         sound(sl, player.position(), ModSounds.ORDER_PROXY_END, 1.0f, 1.0f);
-        statusEnd(player, Status.PROXY);
-        status(player, Status.SPENT, 600);
+        if (player instanceof Player viewerOfHud) statusEnd(viewerOfHud, Status.PROXY);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.SPENT, 600);
     }
 
     /** Order restores itself within 'radius': nested squares spread out and the violet of Disorder is snuffed. */
-    public static void quellDisorder(ServerLevel sl, Player player, double radius) {
+    public static void quellDisorder(ServerLevel sl, LivingEntity player, double radius) {
         ModelFx seal = QUELL_SEAL.color(0xE0FFF3D0).lifetime(24).fade(0, 10).spin(4f)
                 .key(0, pose().scale(1f))
                 .key(20, pose().scale((float) (radius * 2.0)), Ease.OUT);
@@ -1495,7 +1495,7 @@ public final class HandOfOrderFx {
      * ORDER: the Ancient Court of Judgment. A floor of Order 'radius' wide, a wall of brass bars round its edge in
      * two tiers (a dome), the Brass Pillar behind the Justiciar, all for 'ticks'. clause(...) every 10 seconds.
      */
-    public static void court(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void court(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         speak(sl, player, Word.ORDER, 0.8f, false);
         floor(sl, COURT_FLOOR, center, Math.min(radius, 40.0), 0xA0C9A24B, ticks, 0.05f, tag, 0);
         floor(sl, ORDER_SEAL, center, 3.5, 0xE0FFF3D0, ticks, -0.3f, tag, 6);
@@ -1510,7 +1510,7 @@ public final class HandOfOrderFx {
         SpellFx.shockRing(sl, center, radius, 0xE0FFF3D0, COURT_RISEN, 0);
         SpellFx.risingRings(sl, center, 3.0, 5.0, 4, 0xC0F0D68C);
         sound(sl, center, ModSounds.ORDER_COURT, 2.5f, 1.0f);
-        status(player, Status.COURT, ticks);
+        if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.COURT, ticks);
     }
 
     /** Clause 'index' (1 to 7, in the order of docs/HAND_OF_ORDER.md) is written: a gavel strikes, law rains down. */
@@ -1577,7 +1577,7 @@ public final class HandOfOrderFx {
     // =====================================================================================
 
     /** The incomplete Mythical Creature form: the Brass Pillar rises behind the Mage and stays for 'ticks'. */
-    public static void brassPillar(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void brassPillar(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx pillar = BRASS_PILLAR.scale(1.8f).lifetime(ticks).fade(4, 12).tag(tag)
                 .key(0, pose().forward(-1.0f).up(-3.6f).alpha(0f))
                 .key(14, pose().up(0f).alpha(1f), Ease.OUT);
@@ -1591,7 +1591,7 @@ public final class HandOfOrderFx {
     // =====================================================================================
 
     /** Order (Arbiter): now and then a mote of brass circles the Arbiter, enough to keep weak things off. */
-    public static void orderPresence(ServerLevel sl, Player player) {
+    public static void orderPresence(ServerLevel sl, LivingEntity player) {
         double a = sl.getRandom().nextDouble() * Math.PI * 2;
         ParticleShapes.spawn(sl, BRASS_MOTE, player.position().add(Math.cos(a) * 0.7, 0.3, Math.sin(a) * 0.7), new Vec3(0, 0.03, 0));
     }
@@ -1622,7 +1622,7 @@ public final class HandOfOrderFx {
     }
 
     /** Self-Restraint (Disciplinary Paladin): a mind effect on the Paladin is shrugged off faster. */
-    public static void selfRestraint(ServerLevel sl, Player player) {
+    public static void selfRestraint(ServerLevel sl, LivingEntity player) {
         ParticleShapes.ring(sl, CHAIN, chestOf(player), 0.6, 6, 0.04);
     }
 
@@ -1644,7 +1644,7 @@ public final class HandOfOrderFx {
      * 1: a crossed pair of lightning slashes on the target. 2: either a ring of Rule glyphs spreading on the ground,
      * or a straight slash slamming down on the target like a gavel.
      */
-    public static void combo(ServerLevel sl, Player player, LivingEntity target, int step) {
+    public static void combo(ServerLevel sl, LivingEntity player, LivingEntity target, int step) {
         Vec3 chest = chestOf(player);
         switch (step) {
             case 0 -> {

@@ -434,28 +434,28 @@ public final class KnowledgeEmperorFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "knowledge_emperor/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "knowledge_emperor/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** How long something "until ended" is shown at most (an hour): show it again after that. */
     public static final int FOREVER = 72000;
 
     /** Only the status's picture, no clock: for what lasts until it is ended (the Whisper's free cast). */
-    public static void statusForever(Player player, Status status) {
+    public static void statusForever(LivingEntity player, Status status) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "knowledge_emperor/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "knowledge_emperor/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
-        HudTimer.hide(player, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -470,13 +470,13 @@ public final class KnowledgeEmperorFx {
     }
 
     /** Shows the scrolls in the pouch, oldest first (the one Read Scroll burns next is on the left). */
-    public static void pouch(Player player, List<Scroll> scrolls) {
+    public static void pouch(LivingEntity player, List<Scroll> scrolls) {
         for (int slot = 0; slot < POUCH_SLOTS; slot++) {
             if (slot < scrolls.size()) {
-                ScreenImages.show(player, pouchId(slot), "knowledge_emperor/" + scrolls.get(slot).image,
+                if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, pouchId(slot), "knowledge_emperor/" + scrolls.get(slot).image,
                         ScreenAnchor.BOTTOM, 103 + slot * 18, -3, 16, ScreenImages.FOREVER);
             } else {
-                ScreenImages.hide(player, pouchId(slot));
+                if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, pouchId(slot));
             }
         }
     }
@@ -589,7 +589,7 @@ public final class KnowledgeEmperorFx {
     // Study: the eye over an enemy that only the Hermit sees (docs/KNOWLEDGE_EMPEROR.md, "Study")
     // =====================================================================================
 
-    private static String studyTag(Player viewer) {
+    private static String studyTag(LivingEntity viewer) {
         return "ke_study_" + viewer.getUUID();
     }
 
@@ -642,7 +642,7 @@ public final class KnowledgeEmperorFx {
      * The eyes open: the Hermit's symbol flares before the face and a ring of sight races out 'reach' blocks.
      * secretInquiry = the Eyes of Secret Inquiry (Constellations Master): the ring is wider and stars wheel round.
      */
-    public static void pry(ServerLevel sl, Player player, double reach, boolean secretInquiry) {
+    public static void pry(ServerLevel sl, LivingEntity player, double reach, boolean secretInquiry) {
         ModelFx eyes = HERMIT_EYES.color(secretInquiry ? 0xFFF6F4FF : ORCHID).scale(0.7f).lifetime(24).fade(2, 12)
                 .key(0, pose().scale(0.2f).alpha(0f))
                 .key(5, pose().scale(1f).alpha(1f), Ease.OUT_BACK)
@@ -679,7 +679,7 @@ public final class KnowledgeEmperorFx {
      * A silver pendulum hangs from the raised hand. With a target (someone hidden), it swings toward them and a thread
      * of light points the way for 'ticks'; with none (null), it hangs still and fades.
      */
-    public static void dowse(ServerLevel sl, Player player, Entity target, int ticks, String tag) {
+    public static void dowse(ServerLevel sl, LivingEntity player, Entity target, int ticks, String tag) {
         Vec3 hand = player.getEyePosition().add(Spells.flatLook(player).scale(0.55)).add(Spells.rightOf(player).scale(0.3));
         int life = target == null ? 40 : Math.min(ticks, 80);
         float toward = target == null ? 0f : yawToward(player.position(), target.position()) - player.getYRot();
@@ -703,7 +703,7 @@ public final class KnowledgeEmperorFx {
         });
     }
 
-    public static void dowseEnd(ServerLevel sl, Player player, String tag) {
+    public static void dowseEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -715,7 +715,7 @@ public final class KnowledgeEmperorFx {
     public static final int STRIKE_LANDS = 3;
 
     /** A step forward ('from' = where the Scholar stood) and a precise cut where the target is weakest. */
-    public static void weakPointStrike(ServerLevel sl, Player player, Vec3 from, LivingEntity target) {
+    public static void weakPointStrike(ServerLevel sl, LivingEntity player, Vec3 from, LivingEntity target) {
         ParticleShapes.slashBetween(sl, DASH, from.add(0, 1.0, 0), chestOf(player));
         ParticleShapes.burst(sl, PAGE, from.add(0, 0.6, 0), 3, 0.03, 0.08);
         sound(sl, player.position(), ModSounds.KNOWLEDGE_WEAK_POINT, 1.0f, wobble(1.0f));
@@ -734,21 +734,21 @@ public final class KnowledgeEmperorFx {
     // ---------- sneak: Sidestep
 
     /** Ready to slip aside: a ring of pages turns at the feet for 'ticks'. */
-    public static void sidestep(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void sidestep(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 0.9, 0x80E8C4FF, ticks, tag);
         ParticleShapes.ring(sl, PAGE, player.position().add(0, 0.3, 0), 0.8, 8, 0.03);
         sound(sl, player.position(), ModSounds.KNOWLEDGE_SIDESTEP, 0.5f, 1.3f);
     }
 
     /** The blow is slipped: an afterimage of pages stays where the Scholar was, a streak to where they went. */
-    public static void sidestepSlip(ServerLevel sl, Player player, Vec3 from, Vec3 to) {
+    public static void sidestepSlip(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to) {
         ParticleShapes.slashBetween(sl, DASH.width(0.4f), from.add(0, 1.0, 0), to.add(0, 1.0, 0));
         ParticleShapes.burst(sl, PAGE, from.add(0, 1.0, 0), 8, 0.04, 0.12);
         ParticleShapes.burst(sl, TEXT, from.add(0, 1.0, 0), 5, 0.02, 0.06);
         sound(sl, to, ModSounds.KNOWLEDGE_SIDESTEP, 1.0f, wobble(1.0f));
     }
 
-    public static void sidestepEnd(ServerLevel sl, Player player, String tag) {
+    public static void sidestepEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -760,7 +760,7 @@ public final class KnowledgeEmperorFx {
     public static final int HEX_LANDS = 6;
 
     /** A dashed violet line from the hand, then the hex mark settles over the target for 'ticks'. */
-    public static void hex(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void hex(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) hand = chestOf(player);
         ParticleShapes.slashBetween(sl, HEX_LINE, hand, chestOf(target));
@@ -825,7 +825,7 @@ public final class KnowledgeEmperorFx {
      * cannot miss (bolt i lands at BOLT_FLIGHT + i * BOLT_STEP; do boltHit then). One target may be in the list
      * several times.
      */
-    public static void spellbolts(ServerLevel sl, Player player, List<LivingEntity> targets, Element element) {
+    public static void spellbolts(ServerLevel sl, LivingEntity player, List<LivingEntity> targets, Element element) {
         for (int i = 0; i < targets.size(); i++) {
             LivingEntity target = targets.get(i);
             int index = i;
@@ -877,7 +877,7 @@ public final class KnowledgeEmperorFx {
     public static final int ORB_FLIGHT = 12;
 
     /** Five homing orbs of orchid light (orb i leaves at i * BOLT_STEP, lands at ORB_FLIGHT + i * BOLT_STEP). */
-    public static void knowledgeOrbs(ServerLevel sl, Player player, List<LivingEntity> targets) {
+    public static void knowledgeOrbs(ServerLevel sl, LivingEntity player, List<LivingEntity> targets) {
         for (int i = 0; i < targets.size(); i++) {
             LivingEntity target = targets.get(i);
             int index = i;
@@ -908,7 +908,7 @@ public final class KnowledgeEmperorFx {
     // =====================================================================================
 
     /** A free scroll arrives in the pouch: a small scroll appears beside the Professor and sinks into them. */
-    public static void scrollReady(ServerLevel sl, Player player, Scroll scroll) {
+    public static void scrollReady(ServerLevel sl, LivingEntity player, Scroll scroll) {
         ModelFx arriving = SCROLL.scale(0.35f).lifetime(20).fade(4, 6)
                 .key(0, pose().right(0.6f).up(0.6f).alpha(0f).spin(0f))
                 .key(8, pose().right(0.6f).up(0.4f).alpha(1f).spin(180f), Ease.OUT)
@@ -923,7 +923,7 @@ public final class KnowledgeEmperorFx {
     public static final int READ_FIRES = 6;
 
     /** The oldest scroll unrolls before the Professor, its spell leaps off and the page burns away. */
-    public static void readScroll(ServerLevel sl, Player player, Scroll scroll) {
+    public static void readScroll(ServerLevel sl, LivingEntity player, Scroll scroll) {
         ModelFx sheet = SCROLL_SHEET.scale(0.8f).lifetime(18).fade(0, 8)
                 .key(0, pose().forward(0.7f).scale(0.2f).alpha(0f))
                 .key(READ_FIRES, pose().forward(0.9f).scale(1f).alpha(1f), Ease.OUT_BACK)
@@ -973,7 +973,7 @@ public final class KnowledgeEmperorFx {
     public static final int RAY_HITS = 4;
 
     /** A pale green ray flies from the Professor into the target, then holds it for 'ticks'. */
-    public static void paralysisRay(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void paralysisRay(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) hand = chestOf(player);
         ParticleShapes.slashBetween(sl, RAY_LINE, hand, chestOf(target));
@@ -1001,7 +1001,7 @@ public final class KnowledgeEmperorFx {
     public static final int INSCRIBED = 30;
 
     /** A blank sheet hangs before the Professor; a ring of glyphs turns round it, ink flies, a quill writes; it rolls up. */
-    public static void inscribe(ServerLevel sl, Player player) {
+    public static void inscribe(ServerLevel sl, LivingEntity player) {
         ModelFx sheet = SCROLL_SHEET.scale(0.8f).lifetime(INSCRIBED + 6).fade(4, 4)
                 .key(0, pose().forward(0.9f).alpha(0f).scale(0.6f))
                 .key(6, pose().forward(0.9f).alpha(1f).scale(1f), Ease.OUT)
@@ -1033,7 +1033,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** The pouch was full: its oldest scroll crumbles to dust beside the Professor. */
-    public static void scrollDropped(ServerLevel sl, Player player) {
+    public static void scrollDropped(ServerLevel sl, LivingEntity player) {
         Vec3 at = chestOf(player).add(Spells.rightOf(player).scale(-0.6));
         ParticleShapes.burst(sl, PAGE.color(0xFFB8A070).endColor(0x00604020), at, 8, 0.02, 0.06);
         ParticleShapes.burst(sl, INK_SMOKE, at, 3, 0.01, 0.03);
@@ -1047,7 +1047,7 @@ public final class KnowledgeEmperorFx {
     public static final int CAGE_LANDS = 14;
 
     /** Starlight gathers round the caster, then flies to the target as a small star. */
-    public static void starlightCage(ServerLevel sl, Player player, LivingEntity target) {
+    public static void starlightCage(ServerLevel sl, LivingEntity player, LivingEntity target) {
         SpellFx.closingRing(sl, player.position(), 2.6, 0xC0F6F4FF, 8, 0);
         ParticleShapes.spiral(sl, STAR_MOTE, player.position().add(0, 0.8, 0), 3, 30, 0.4, 2.2, 1.0, -0.08);
         sound(sl, player.position(), ModSounds.KNOWLEDGE_STARLIGHT_GATHER, 1.0f, 1.0f);
@@ -1096,7 +1096,7 @@ public final class KnowledgeEmperorFx {
     public static final int STELLAR_ARRIVES = 20;
 
     /** The body breaks into starlight at 'from' (a blinding flash there), streams to 'to' and re-forms. */
-    public static void stellarSelf(ServerLevel sl, Player player, Vec3 from, Vec3 to) {
+    public static void stellarSelf(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to) {
         Vec3 chestFrom = from.add(0, 1.0, 0);
         ParticleShapes.burst(sl, STAR_MOTE, chestFrom, 30, 0.05, 0.22);
         ParticleShapes.burst(sl, SPARKLE, chestFrom, 16, 0.08, 0.3);
@@ -1178,7 +1178,7 @@ public final class KnowledgeEmperorFx {
         return tag + "_" + index;
     }
 
-    private static Vec3 guardSpot(Player player, int index, int age) {
+    private static Vec3 guardSpot(LivingEntity player, int index, int age) {
         double angle = Math.toRadians(age * GUARD_SPEED + index * 90.0);
         return player.position().add(Math.cos(angle) * GUARD_RADIUS, 1.1 + Math.sin(age * 0.15 + index) * 0.15,
                 Math.sin(angle) * GUARD_RADIUS);
@@ -1188,13 +1188,13 @@ public final class KnowledgeEmperorFx {
      * Four small stars take their places round the caster for 'ticks'. They do not follow by themselves: call
      * starGuardTick every tick, which moves them round the caster (Star Guard does it from combat/Orbit's onTick).
      */
-    public static void starGuard(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void starGuard(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         for (int i = 0; i < 4; i++) spawnGuardStar(sl, player, tag, i, ticks, 0);
         ParticleShapes.ring(sl, STAR_MOTE, player.position().add(0, 1.1, 0), GUARD_RADIUS, 16, 0.02);
         sound(sl, player.position(), ModSounds.KNOWLEDGE_STAR_GUARD, 1.0f, 1.0f);
     }
 
-    private static void spawnGuardStar(ServerLevel sl, Player player, String tag, int index, int ticks, int age) {
+    private static void spawnGuardStar(ServerLevel sl, LivingEntity player, String tag, int index, int ticks, int age) {
         ModelFx star = STAR.scale(0.35f).lifetime(ticks).fade(4, 8).spin(12f).tag(guardTag(tag, index))
                 .key(0, pose().scale(0.1f).alpha(0f))
                 .key(6, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1202,7 +1202,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** Every tick while the guard holds: the stars move round the caster ('age' = ticks since it started). */
-    public static void starGuardTick(ServerLevel sl, Player player, String tag, int age) {
+    public static void starGuardTick(ServerLevel sl, LivingEntity player, String tag, int age) {
         for (int i = 0; i < 4; i++) {
             ParticleShapes.moveModel(sl, guardTag(tag, i), guardSpot(player, i, age), 0f, 0f, 0f);
         }
@@ -1210,28 +1210,28 @@ public final class KnowledgeEmperorFx {
     }
 
     /** Star 'index' stopped a projectile at 'at': it bursts and is gone until starGuardBack. */
-    public static void starGuardBlock(ServerLevel sl, Player player, String tag, int index, Vec3 at) {
+    public static void starGuardBlock(ServerLevel sl, LivingEntity player, String tag, int index, Vec3 at) {
         ParticleShapes.clearModels(sl, at, guardTag(tag, index));
         ParticleShapes.burst(sl, STAR_SPARK, at, 10, 0.05, 0.18);
         sound(sl, at, ModSounds.KNOWLEDGE_STAR_BLOCK, 1.0f, wobble(1.0f));
     }
 
     /** Star 'index' comes back (5 seconds later), for the 'ticksLeft' the guard still lasts. */
-    public static void starGuardBack(ServerLevel sl, Player player, String tag, int index, int ticksLeft, int age) {
+    public static void starGuardBack(ServerLevel sl, LivingEntity player, String tag, int index, int ticksLeft, int age) {
         if (ticksLeft <= 0) return;
         spawnGuardStar(sl, player, tag, index, ticksLeft, age);
         ParticleShapes.spawn(sl, SPARKLE, guardSpot(player, index, age), Vec3.ZERO);
     }
 
     /** A star strikes an enemy that came too close: a short bright line from the caster's side. */
-    public static void starGuardStrike(ServerLevel sl, Player player, LivingEntity target) {
+    public static void starGuardStrike(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 from = chestOf(player).add(chestOf(target).subtract(chestOf(player)).normalize().scale(GUARD_RADIUS));
         ParticleShapes.slashBetween(sl, STAR_TRAIL.lifetime(6).sweep(2), from, chestOf(target));
         ParticleShapes.burst(sl, STAR_SPARK, chestOf(target), 8, 0.05, 0.15);
         sound(sl, chestOf(target), ModSounds.KNOWLEDGE_STAR_BURST, 0.5f, wobble(1.5f));
     }
 
-    public static void starGuardEnd(ServerLevel sl, Player player, String tag) {
+    public static void starGuardEnd(ServerLevel sl, LivingEntity player, String tag) {
         for (int i = 0; i < 4; i++) ParticleShapes.clearModels(sl, player.position(), guardTag(tag, i));
         ParticleShapes.ring(sl, STAR_MOTE, player.position().add(0, 1.1, 0), GUARD_RADIUS, 12, 0.04);
     }
@@ -1244,7 +1244,7 @@ public final class KnowledgeEmperorFx {
      * Every Retelling begins the same way: the book of tales falls open before the teller and pages lift off it.
      * 'strength' is Obscurity's multiplier (1 = untold, down to 0.4): a story told too often looks paler.
      */
-    public static void tale(ServerLevel sl, Player player, Tale tale, float strength) {
+    public static void tale(ServerLevel sl, LivingEntity player, Tale tale, float strength) {
         int color = dimmed(tale.color, 0.4f + 0.6f * strength);
         ModelFx book = TALE_BOOK.scale(0.8f).lifetime(30).fade(4, 10)
                 .key(0, pose().forward(0.7f).up(-0.2f).scale(0.3f).alpha(0f))
@@ -1264,7 +1264,7 @@ public final class KnowledgeEmperorFx {
     public static final int SPINDLE_SLEEPS = 20;
 
     /** A golden spindle rises over the teller and turns; a ring of gold spreads 'radius' blocks. */
-    public static void sleepingBeauty(ServerLevel sl, Player player, Vec3 center, double radius) {
+    public static void sleepingBeauty(ServerLevel sl, LivingEntity player, Vec3 center, double radius) {
         ModelFx spindle = SPINDLE.scale(0.8f).lifetime(SPINDLE_SLEEPS + 20).fade(4, 14).spin(12f)
                 .key(0, pose().up(0f).alpha(0f))
                 .key(10, pose().up(1.2f).alpha(1f), Ease.OUT);
@@ -1333,7 +1333,7 @@ public final class KnowledgeEmperorFx {
     public static final int ARROW_LANDS = 10;
 
     /** An arrow of light flies to the target's heel; the heel mark hangs over them for 'ticks'. */
-    public static void achillesHeel(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void achillesHeel(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ModelFx arrow = SPELL_BOLT.color(0xFFF0DC96).scale(0.7f).rotation(0f, 90f, 0f).lifetime(ARROW_LANDS + 2).fade(0, 2);
         SpellFx.homing(sl, arrow, chestOf(player), target, ARROW_LANDS);
         sound(sl, player.position(), ModSounds.KNOWLEDGE_ACHILLES, 1.0f, wobble(1.0f));
@@ -1360,7 +1360,7 @@ public final class KnowledgeEmperorFx {
     public static final int HOPE_RISES = 40;
 
     /** A black box appears before the teller, its lid flies open and darkness spills out 'radius' blocks. */
-    public static void pandorasBox(ServerLevel sl, Player player, double radius) {
+    public static void pandorasBox(ServerLevel sl, LivingEntity player, double radius) {
         Vec3 at = player.position().add(Spells.flatLook(player).scale(1.4));
         float yaw = player.getYRot() + 180f;
         ModelFx box = BLACK_BOX.scale(0.9f).lifetime(HOPE_RISES + 16).fade(4, 10)
@@ -1409,7 +1409,7 @@ public final class KnowledgeEmperorFx {
     // ---------- Foresight
 
     /** The future opens before the seer's eyes for 'ticks': the Hermit's eyes turn pale before the face. */
-    public static void foresight(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void foresight(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx eyes = HERMIT_EYES.color(0xC0F6F4FF).scale(0.5f).lifetime(Math.min(ticks, 30)).fade(4, 12).tag(tag)
                 .key(0, pose().scale(0.2f).alpha(0f))
                 .key(6, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1427,13 +1427,13 @@ public final class KnowledgeEmperorFx {
     }
 
     /** A blow foreseen and dodged: the seer slides two blocks aside, a pale afterimage stays. */
-    public static void foresightDodge(ServerLevel sl, Player player, Vec3 from, Vec3 to) {
+    public static void foresightDodge(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to) {
         ParticleShapes.slashBetween(sl, DASH.color(0x80F6F4FF).width(0.35f), from.add(0, 1.0, 0), to.add(0, 1.0, 0));
         ParticleShapes.burst(sl, STAR_MOTE, from.add(0, 1.0, 0), 8, 0.02, 0.08);
         sound(sl, to, ModSounds.KNOWLEDGE_DODGE, 1.0f, wobble(1.0f));
     }
 
-    public static void foresightEnd(ServerLevel sl, Player player, String tag) {
+    public static void foresightEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.clearModels(sl, player, tag + "_circle");
     }
@@ -1441,7 +1441,7 @@ public final class KnowledgeEmperorFx {
     // ---------- Prophecy of Ruin
 
     /** The fate is pronounced: a wheel of fate hangs over the target and a red thread binds them to the seer. */
-    public static void prophecy(ServerLevel sl, Player player, LivingEntity target, int seconds, String tag) {
+    public static void prophecy(ServerLevel sl, LivingEntity player, LivingEntity target, int seconds, String tag) {
         int ticks = seconds * 20;
         ModelFx wheel = FATE_WHEEL.color(0xE0E04050).scale(0.7f).lifetime(ticks + 6).fade(4, 6).tag(tag)
                 .key(0, pose().scale(2.4f).alpha(0f))
@@ -1482,7 +1482,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** Against the stronger, a tenth of the ruin comes back on the seer: a red flash on them. */
-    public static void prophecyRebound(ServerLevel sl, Player player) {
+    public static void prophecyRebound(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, RUIN_MOTE, chestOf(player), 10, 0.04, 0.12);
         SpellFx.shockRing(sl, player.position(), 1.5, 0xA0E04050, 6, 0);
     }
@@ -1499,7 +1499,7 @@ public final class KnowledgeEmperorFx {
     // ---------- Informatization
 
     /** The body becomes a stream of information for 'ticks': panels of streaming glyphs wrap it. */
-    public static void informatization(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void informatization(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         for (int i = 0; i < 4; i++) {
             ModelFx panel = DATA_STREAM.color(0xC0C070E8).scale(0.7f, 2.1f, 1f).lifetime(ticks).fade(4, 8).tag(tag)
                     .key(0, pose().forward(0.36f).scale(0.2f).alpha(0f))
@@ -1512,7 +1512,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** Every few ticks while it lasts: text trails off the moving stream. */
-    public static void informatizationTick(ServerLevel sl, Player player) {
+    public static void informatizationTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, TEXT, player.position().add(0, 0.3 + sl.getRandom().nextDouble() * 1.4, 0),
                 Spells.flatLook(player).scale(-0.05));
         ParticleShapes.spawn(sl, anyGlyph(), player.position().add(0, 0.2, 0), new Vec3(0, 0.02, 0));
@@ -1540,7 +1540,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** The stream takes shape again; 'released' = the absorbed harm is let out round it (a ring of text). */
-    public static void informatizationEnd(ServerLevel sl, Player player, String tag, boolean released) {
+    public static void informatizationEnd(ServerLevel sl, LivingEntity player, String tag, boolean released) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, TEXT, chestOf(player), 12, 0.04, 0.12);
         if (released) {
@@ -1556,7 +1556,7 @@ public final class KnowledgeEmperorFx {
     public static final int ERASE_LANDS = 3;
 
     /** A white stroke from the Sage strikes the target out: its symbols break apart and fall. */
-    public static void erase(ServerLevel sl, Player player, LivingEntity target) {
+    public static void erase(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) hand = chestOf(player);
         ParticleShapes.slashBetween(sl, ERASE_LINE, hand, chestOf(target));
@@ -1590,7 +1590,7 @@ public final class KnowledgeEmperorFx {
      * OVERLOAD_REACHES a ring of glyphs locks round its head for 'ticks' (the hold). Do overloadHit when it takes the
      * damage, mindBurst if the mind detonates.
      */
-    public static void knowledgeOverload(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void knowledgeOverload(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ModelFx eyes = GLYPH_RING.color(0xE0E8C4FF).scale(0.45f).lifetime(OVERLOAD_REACHES + 10).fade(2, 8).spin(18f)
                 .key(0, pose().pitch(90f).scale(0.2f).alpha(0f))
                 .key(4, pose().pitch(90f).scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1604,7 +1604,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** The Hermit's form: every enemy within reach at once (one flood each, one sound). */
-    public static void overloadAll(ServerLevel sl, Player player, List<LivingEntity> targets, int ticks, String tag) {
+    public static void overloadAll(ServerLevel sl, LivingEntity player, List<LivingEntity> targets, int ticks, String tag) {
         ModelFx crown = GLYPH_RING.color(0xE0E8C4FF).scale(3f).lifetime(OVERLOAD_REACHES + 10).fade(2, 8).spin(10f);
         ParticleShapes.modelOn(sl, crown, player, new Vec3(0, player.getBbHeight() + 0.6, 0), 0f, 0f, 0f);
         SpellFx.steadyRing(sl, player.position(), 16.0, 0xC0C070E8, OVERLOAD_REACHES, 0);
@@ -1672,7 +1672,7 @@ public final class KnowledgeEmperorFx {
      * Knowledge condenses into a white spear above the Emperor's shoulder (count 3 = the Hermit's fan), pointing
      * the way they face, and is thrown at LANCE_THROWN. Fly LANCE in a Shot after that.
      */
-    public static void lanceForm(ServerLevel sl, Player player, int count) {
+    public static void lanceForm(ServerLevel sl, LivingEntity player, int count) {
         for (int i = 0; i < count; i++) {
             float side = count <= 1 ? 0f : (i - (count - 1) / 2f) * 0.7f;
             // tipped forward 90 degrees, so its point looks the way the body faces; in this frame forward(...) is
@@ -1709,7 +1709,7 @@ public final class KnowledgeEmperorFx {
     public static final int CONDENSED = 30;
 
     /** Light streams from every enemy whose Study is taken ('sources') into a ball between the clasped hands. */
-    public static void condenseKnowledge(ServerLevel sl, Player player, List<LivingEntity> sources) {
+    public static void condenseKnowledge(ServerLevel sl, LivingEntity player, List<LivingEntity> sources) {
         ModelFx ball = LIGHT_BALL.color(0xFFFFF0B0).scale(0.5f).lifetime(CONDENSED + 10).fade(4, 8).spin(8f)
                 .key(0, pose().forward(0.6f).scale(0.1f))
                 .key(CONDENSED, pose().forward(0.6f).scale(1f), Ease.OUT)
@@ -1735,7 +1735,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** With no Study around it works the other way: the hand glows until the next hit lands ('ticks' at most). */
-    public static void condenseInverse(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void condenseInverse(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 0.8, 0x90F0DC96, ticks, tag);
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand != null) ParticleShapes.burst(sl, GOLD_MOTE, hand, 8, 0.02, 0.06);
@@ -1745,7 +1745,7 @@ public final class KnowledgeEmperorFx {
     // ---------- Embodiment of Knowledge
 
     /** The Hermit unravels into their own information and is gone (the hiding is the ability's). */
-    public static void embodiment(ServerLevel sl, Player player) {
+    public static void embodiment(ServerLevel sl, LivingEntity player) {
         for (int i = 0; i < 4; i++) {
             ModelFx panel = DATA_STREAM.color(0xA08A70D0).scale(0.7f, 2.1f, 1f).lifetime(16).fade(0, 12)
                     .key(0, pose().forward(0.36f))
@@ -1758,7 +1758,7 @@ public final class KnowledgeEmperorFx {
     }
 
     /** The Hermit is seen again: lines of text fold back into a body. */
-    public static void embodimentEnd(ServerLevel sl, Player player) {
+    public static void embodimentEnd(ServerLevel sl, LivingEntity player) {
         SpellFx.closingRing(sl, player.position(), 1.8, 0xC08A70D0, 8, 0);
         ParticleShapes.burst(sl, TEXT, chestOf(player), 10, 0.02, 0.06);
         sound(sl, player.position(), ModSounds.KNOWLEDGE_REFORM, 0.7f, 0.9f);
@@ -1767,7 +1767,7 @@ public final class KnowledgeEmperorFx {
     // ---------- Indoctrination
 
     /** A pulse of knowledge over 'radius': an open book over the Hermit, a ring of orchid light racing out. */
-    public static void indoctrination(ServerLevel sl, Player player, double radius) {
+    public static void indoctrination(ServerLevel sl, LivingEntity player, double radius) {
         ModelFx book = TALE_BOOK.scale(1.2f).lifetime(30).fade(4, 12)
                 .key(0, pose().up(0f).alpha(0f))
                 .key(8, pose().up(0.8f).alpha(1f), Ease.OUT);
@@ -1803,7 +1803,7 @@ public final class KnowledgeEmperorFx {
      * The Knowledge Moor opens round the Hermit for 'ticks': its floor spreads 'radius' wide, a ring of shelves of
      * orchid light rises at its edge (two rows high), the Hermit's eyes open in the sky.
      */
-    public static void divineKingdom(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void divineKingdom(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         Vec3 center = player.position();
         floor(sl, KNOWLEDGE_MOOR, center, radius, 0xB0C070E8, ticks, 0.3f, tag, 0);
         floor(sl, GLYPH_RING, center, radius * 0.45, 0x90E8C4FF, ticks, -0.8f, tag, 10);
@@ -1897,18 +1897,18 @@ public final class KnowledgeEmperorFx {
     }
 
     /** Information Skin: harm without an attacker slides off: a flicker of text over the body. */
-    public static void informationSkin(ServerLevel sl, Player player) {
+    public static void informationSkin(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, TEXT, chestOf(player), 3, 0.02, 0.05);
     }
 
     /** Starlight: at night under open sky, faint stars drift down onto the Constellations Master now and then. */
-    public static void starlight(ServerLevel sl, Player player) {
+    public static void starlight(ServerLevel sl, LivingEntity player) {
         Vec3 above = player.position().add(sl.getRandom().nextDouble() - 0.5, 3.0, sl.getRandom().nextDouble() - 0.5);
         ParticleShapes.spawn(sl, STAR_MOTE.gravity(0.01f).lifetime(40, 10), above, new Vec3(0, -0.04, 0));
     }
 
     /** Law of Three: the third cast in a row is empowered: three points of gold join over the head. */
-    public static void lawOfThree(ServerLevel sl, Player player) {
+    public static void lawOfThree(ServerLevel sl, LivingEntity player) {
         Vec3 top = headOf(player).add(0, 0.5, 0);
         for (int i = 0; i < 3; i++) {
             double a = Math.PI * 2 * i / 3 + Math.PI / 2;
@@ -1944,7 +1944,7 @@ public final class KnowledgeEmperorFx {
      * 1: a tilted ring of star points, mirrored each time. 2: either a circle of constellations winding out on the
      * ground, or crossed page-edge cuts on the target with an eye opening over it.
      */
-    public static void combo(ServerLevel sl, Player player, LivingEntity target, int step) {
+    public static void combo(ServerLevel sl, LivingEntity player, LivingEntity target, int step) {
         Vec3 chest = chestOf(player);
         switch (step) {
             case 0 -> {

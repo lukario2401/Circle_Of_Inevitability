@@ -3,6 +3,8 @@ package net.lukario.circleofinevitability.combat;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobRules;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpells;
 import net.lukario.circleofinevitability.status.Cleansing;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Marionette;
@@ -23,6 +25,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -76,6 +79,11 @@ import java.util.function.Predicate;
  * caster's marionettes, team mates, armor stands, spectators and whoever is concealed. Add your own rule with
  * Spells.addAllyCheck(...), e.g. for summons of a new class.
  *
+ * Every caster here may also be a mob (a Beyonder mob's ability: blasphemy_slate/beyonder_mobs). Then its enemies
+ * are only what it is really fighting (MobSpells.isEnemy), its friends its own kind (MobSpells.isFriend), its aim
+ * is where it faces (MobSpells.face turns it first), and a player takes BeyonderMobRules.DAMAGE_TO_PLAYERS of its
+ * strikes. paySpirituality, costFor and the rules added with addAllyCheck and addCostScale stay players' only.
+ *
  * (PrinceOfAbolition has private copies of several of these: it was written before this class existed.)
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
@@ -103,9 +111,15 @@ public final class Spells {
     // Who is an enemy
     // =========================
 
-    public static boolean isEnemy(Player caster, LivingEntity other) {
+    /**
+     * For a player caster: everyone not on their side (isFriend). For a mob caster (a Beyonder mob's ability): only
+     * what it is really fighting, as blasphemy_slate/beyonder_mobs/MobSpells.isEnemy says, so a zombie's wave does
+     * not hurt the other zombies, nor the cows standing by.
+     */
+    public static boolean isEnemy(LivingEntity caster, LivingEntity other) {
         if (!other.isAlive() || other.isSpectator() || other instanceof ArmorStand) return false;
         if (Concealment.isHidden(other)) return false;
+        if (!(caster instanceof Player)) return caster instanceof Mob mob && MobSpells.isEnemy(mob, other);
         return !isFriend(caster, other);
     }
 
@@ -114,15 +128,16 @@ public final class Spells {
      * marionettes, team mates and every addAllyCheck rule. Unlike !isEnemy, a concealed body is judged as if it were
      * seen: for a wall that must keep hidden enemies out too (Hand Of God's Protection from Sequence 1).
      */
-    public static boolean isFriend(Player caster, LivingEntity other) {
+    public static boolean isFriend(LivingEntity caster, LivingEntity other) {
         // the UUID check also covers the caster's new body after dying and respawning while a spell is still running
         if (other == caster || other.getUUID().equals(caster.getUUID())) return true;
         if (other == caster.getVehicle()) return true;
         if (other instanceof OwnableEntity owned && owned.getOwnerReference() != null && caster.getUUID().equals(owned.getOwnerReference().getUUID())) return true;
         if (Marionette.isMarionetteOf(other, caster)) return true;
         if (caster.isAlliedTo(other)) return true;                // same scoreboard team
+        if (!(caster instanceof Player player)) return caster instanceof Mob mob && MobSpells.isFriend(mob, other);
         for (AllyCheck check : ALLY_CHECKS) {
-            if (check.isAlly(caster, other)) return true;
+            if (check.isAlly(player, other)) return true;
         }
         return false;
     }
@@ -153,7 +168,7 @@ public final class Spells {
     }
 
     /** Every enemy whose body is within 'radius' of a point. */
-    public static List<LivingEntity> enemiesAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+    public static List<LivingEntity> enemiesAround(LivingEntity caster, ServerLevel sl, Vec3 center, double radius) {
         List<LivingEntity> result = new ArrayList<>();
         AABB area = new AABB(center, center).inflate(radius + 2.0);
         for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> isEnemy(caster, other))) {
@@ -166,7 +181,7 @@ public final class Spells {
      * Every living body whose body is within 'radius' of a point, enemies and allies alike: everything alive except
      * the caster, spectators and armor stands (a sight that sees all, a splash that hurts some and helps others).
      */
-    public static List<LivingEntity> livingAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+    public static List<LivingEntity> livingAround(LivingEntity caster, ServerLevel sl, Vec3 center, double radius) {
         List<LivingEntity> result = new ArrayList<>();
         AABB area = new AABB(center, center).inflate(radius + 2.0);
         for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> other != caster
@@ -180,7 +195,7 @@ public final class Spells {
      * The caster's side within 'radius' of a point: everyone livingAround finds that is not an enemy (team mates,
      * pets, marionettes and summons, other players' concealed bodies). The caster is not in it; add them yourself.
      */
-    public static List<LivingEntity> alliesAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+    public static List<LivingEntity> alliesAround(LivingEntity caster, ServerLevel sl, Vec3 center, double radius) {
         List<LivingEntity> result = livingAround(caster, sl, center, radius);
         result.removeIf(other -> isEnemy(caster, other));
         return result;
@@ -191,7 +206,7 @@ public final class Spells {
      * pearls (one with no owner counts too), but not one lying still or stuck in a wall. For fields that slow, stop,
      * hang or bend what is shot through them (Star Dragon's Time Dilation, the storm, Gravity Authority, the black hole).
      */
-    public static List<Projectile> hostileShotsAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+    public static List<Projectile> hostileShotsAround(LivingEntity caster, ServerLevel sl, Vec3 center, double radius) {
         AABB area = new AABB(center, center).inflate(radius);
         List<Projectile> result = new ArrayList<>();
         for (Projectile shot : sl.getEntitiesOfClass(Projectile.class, area, Entity::isAlive)) {
@@ -208,7 +223,7 @@ public final class Spells {
      * dropped items, projectiles (flying or stuck in a wall), armor stands, and boats, minecarts and the like that
      * nobody rides. Never anything alive and never blocks; things already being thrown are left out.
      */
-    public static List<Entity> looseThingsAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+    public static List<Entity> looseThingsAround(LivingEntity caster, ServerLevel sl, Vec3 center, double radius) {
         AABB area = new AABB(center, center).inflate(radius + 1.0);
         List<Entity> result = new ArrayList<>(sl.getEntities((Entity) null, area,
                 entity -> isLoose(caster, entity) && entity.position().distanceToSqr(center) <= radius * radius));
@@ -217,14 +232,14 @@ public final class Spells {
     }
 
     /** True for a loose thing (see looseThingsAround). */
-    public static boolean isLoose(Player caster, Entity entity) {
+    public static boolean isLoose(LivingEntity caster, Entity entity) {
         if (!entity.isAlive() || entity == caster || entity.isPassenger() || entity.isVehicle() || Hurled.isFlying(entity)) return false;
         if (entity instanceof ItemEntity || entity instanceof Projectile || entity instanceof ArmorStand) return true;
         return !(entity instanceof LivingEntity) && entity.isPushable();                // boats, minecarts
     }
 
     /** Every enemy whose body (grown by 'grow' blocks) the line from..to passes through, nearest to 'from' first. */
-    public static List<LivingEntity> enemiesOnLine(Player caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+    public static List<LivingEntity> enemiesOnLine(LivingEntity caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
         List<LivingEntity> result = new ArrayList<>();
         if (from.distanceToSqr(to) < 1.0E-6) return result;
         AABB area = new AABB(from, to).inflate(grow + 0.5);
@@ -241,7 +256,7 @@ public final class Spells {
      * Every enemy the caster can see: within 'range' blocks, no more than 'halfAngle' degrees away from the crosshair
      * (45 is about what is on the screen) and not behind blocks. Nearest first.
      */
-    public static List<LivingEntity> enemiesInSight(Player caster, ServerLevel sl, double range, double halfAngle) {
+    public static List<LivingEntity> enemiesInSight(LivingEntity caster, ServerLevel sl, double range, double halfAngle) {
         Vec3 eye = caster.getEyePosition();
         List<LivingEntity> result = enemiesInCone(caster, sl, eye, caster.getLookAngle(), range, halfAngle);
         result.removeIf(candidate -> !canBeChosen(caster, candidate));     // seen, but no mind takes it in (status/Unnoticed)
@@ -256,7 +271,7 @@ public final class Spells {
      * 'direction'. Walls do not matter here (enemiesInSight is the one that looks). Nearest first.
      * For a breath, a roar, a blast out of a summon's mouth.
      */
-    public static List<LivingEntity> enemiesInCone(Player caster, ServerLevel sl, Vec3 from, Vec3 direction,
+    public static List<LivingEntity> enemiesInCone(LivingEntity caster, ServerLevel sl, Vec3 from, Vec3 direction,
                                                    double range, double halfAngle) {
         Vec3 along = direction.normalize();
         double narrowest = Math.cos(Math.toRadians(halfAngle));
@@ -280,7 +295,7 @@ public final class Spells {
      *   SpellFx.steadyRing(sl, ground, 16, 0xF09CFFD2, 20, 0);                       // what it looks like
      *   Spells.wave(player, sl, ground, 16, 20, 6, enemy -> Spells.strike(player, enemy, 45f));
      */
-    public static void wave(Player caster, ServerLevel sl, Vec3 ground, double radius, int ticks, double height,
+    public static void wave(LivingEntity caster, ServerLevel sl, Vec3 ground, double radius, int ticks, double height,
                             Consumer<LivingEntity> onReach) {
         Set<UUID> reached = new HashSet<>();
         int steps = Math.max(1, ticks);
@@ -301,7 +316,7 @@ public final class Spells {
     }
 
     /** The enemy on the line that is closest to 'from', or null. */
-    public static LivingEntity firstEnemyOnLine(Player caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+    public static LivingEntity firstEnemyOnLine(LivingEntity caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
         List<LivingEntity> onLine = enemiesOnLine(caster, sl, from, to, grow);
         return onLine.isEmpty() ? null : onLine.get(0);
     }
@@ -333,16 +348,17 @@ public final class Spells {
     }
 
     /** The same, when you know who is choosing (some rules only hide it from those outside, or from enemies). */
-    public static boolean canBeChosen(Player chooser, LivingEntity entity) {
+    public static boolean canBeChosen(LivingEntity chooser, LivingEntity entity) {
         if (!Unnoticed.canBeChosen(entity)) return false;
+        Player asking = chooser instanceof Player player ? player : null;      // a mob choosing counts as unknown
         for (UnchoosableCheck check : UNCHOOSABLE_CHECKS) {
-            if (check.cannotChoose(chooser, entity)) return false;
+            if (check.cannotChoose(asking, entity)) return false;
         }
         return true;
     }
 
     /** The enemy on the line closest to 'from' that can be chosen as a target (canBeChosen), or null. */
-    private static LivingEntity firstChosenOnLine(Player caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+    private static LivingEntity firstChosenOnLine(LivingEntity caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
         for (LivingEntity candidate : enemiesOnLine(caster, sl, from, to, grow)) {
             if (canBeChosen(caster, candidate)) return candidate;
         }
@@ -363,7 +379,7 @@ public final class Spells {
     // =========================
 
     /** The enemy the caster is looking at within range (not through walls), or null. */
-    public static LivingEntity aimEnemy(Player caster, ServerLevel sl, double range) {
+    public static LivingEntity aimEnemy(LivingEntity caster, ServerLevel sl, double range) {
         Vec3 eye = caster.getEyePosition();
         return firstChosenOnLine(caster, sl, eye, aimPoint(caster, sl, range), 0.4);
     }
@@ -373,7 +389,7 @@ public final class Spells {
      * a ward pinned on a friend, a blessing, a step back sent to someone else. Allies are the caster's side
      * (isFriend: team mates, pets, marionettes, summons); the caster themself is never it.
      */
-    public static LivingEntity aimAlly(Player caster, ServerLevel sl, double range) {
+    public static LivingEntity aimAlly(LivingEntity caster, ServerLevel sl, double range) {
         Vec3 eye = caster.getEyePosition();
         Vec3 to = aimPoint(caster, sl, range);
         if (eye.distanceToSqr(to) < 1.0E-6) return null;
@@ -395,7 +411,7 @@ public final class Spells {
     }
 
     /** Where the crosshair ends: on the first block in the way, or 'range' blocks out if there is none. */
-    public static Vec3 aimPoint(Player caster, ServerLevel sl, double range) {
+    public static Vec3 aimPoint(LivingEntity caster, ServerLevel sl, double range) {
         Vec3 eye = caster.getEyePosition();
         Vec3 end = eye.add(caster.getLookAngle().scale(range));
         return sl.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, caster)).getLocation();
@@ -406,7 +422,7 @@ public final class Spells {
      * far end of the range). Throw things that start BESIDE the caster along this (from a hand, a shoulder, a summon
      * standing next to them) and they land where the caster is aiming instead of a step to the side of it.
      */
-    public static Vec3 aimFrom(Player caster, ServerLevel sl, Vec3 from, double range) {
+    public static Vec3 aimFrom(LivingEntity caster, ServerLevel sl, Vec3 from, double range) {
         Vec3 eye = caster.getEyePosition();
         Vec3 look = caster.getLookAngle().normalize();
         Vec3 point = aimPoint(caster, sl, range);
@@ -424,7 +440,7 @@ public final class Spells {
      * The spot on the ground the caster is aiming at: under the first enemy in the way,
      * else where the look hits a block, else under the far end of the range.
      */
-    public static Vec3 aimGround(Player caster, ServerLevel sl, double range) {
+    public static Vec3 aimGround(LivingEntity caster, ServerLevel sl, double range) {
         Vec3 eye = caster.getEyePosition();
         Vec3 look = caster.getLookAngle().normalize();
         Vec3 stop = aimPoint(caster, sl, range);
@@ -439,7 +455,7 @@ public final class Spells {
      * starts inside a block "hits" at once, so when that happens it tries again from other heights:
      * from the point itself (the point is just under a ceiling), then from higher up (the point is inside a hill).
      */
-    public static Vec3 groundAt(Player caster, ServerLevel sl, Vec3 point) {
+    public static Vec3 groundAt(LivingEntity caster, ServerLevel sl, Vec3 point) {
         Vec3 to = new Vec3(point.x, point.y - 24.0, point.z);
         for (double lift : new double[]{0.5, 0.0, 1.5, 2.5, 3.5}) {
             Vec3 from = new Vec3(point.x, point.y + lift, point.z);
@@ -458,7 +474,7 @@ public final class Spells {
      *   Vec3 stands = Spells.groundNear(player, sl, Spells.spotAround(ground, yaw, 8), 3);
      *   if (stands != null) ParticleShapes.model(sl, STONE, stands, yaw, 0f, 0f);
      */
-    public static Vec3 groundNear(Player caster, ServerLevel sl, Vec3 spot, double reach) {
+    public static Vec3 groundNear(LivingEntity caster, ServerLevel sl, Vec3 spot, double reach) {
         Vec3 top = groundAt(caster, sl, spot.add(0, reach, 0));
         // (groundAt hands back the point it was given when it finds nothing)
         if (top.y > spot.y + reach - 0.01 || spot.y - top.y > reach) return null;
@@ -470,7 +486,7 @@ public final class Spells {
      * and the caster's eyes, else just in front of the block in the way. Without this, a spear that starts beside
      * you would start inside the wall whenever you stand next to one, and go nowhere.
      */
-    public static Vec3 clearStart(Player caster, ServerLevel sl, Vec3 wanted) {
+    public static Vec3 clearStart(LivingEntity caster, ServerLevel sl, Vec3 wanted) {
         Vec3 eye = caster.getEyePosition();
         BlockHitResult hit = sl.clip(new ClipContext(eye, wanted, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, caster));
         if (hit.getType() == HitResult.Type.MISS) return wanted;
@@ -479,7 +495,7 @@ public final class Spells {
     }
 
     /** True when nothing solid is between the two points. */
-    public static boolean clearLine(Player caster, ServerLevel sl, Vec3 from, Vec3 to) {
+    public static boolean clearLine(LivingEntity caster, ServerLevel sl, Vec3 from, Vec3 to) {
         return sl.clip(new ClipContext(from, to, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, caster)).getType()
                 == HitResult.Type.MISS;
     }
@@ -489,7 +505,7 @@ public final class Spells {
      * player fits and that can be seen from 'from': for blinks, dodges and swaps. It tries the preferred direction
      * first, then turns away from it step by step. Null if every direction is walled in.
      */
-    public static Vec3 freeSpotNear(Player player, ServerLevel sl, Vec3 from, Vec3 preferred, double distance) {
+    public static Vec3 freeSpotNear(LivingEntity player, ServerLevel sl, Vec3 from, Vec3 preferred, double distance) {
         Vec3 flat = new Vec3(preferred.x, 0, preferred.z);
         if (flat.lengthSqr() < 1.0E-6) flat = flatLook(player).scale(-1);
         float base = yawOf(flat.normalize());
@@ -516,7 +532,7 @@ public final class Spells {
      *   Vec3 there = Spells.blinkSpot(player, sl, 32);
      *   if (there != null) player.teleportTo(there.x, there.y, there.z);
      */
-    public static Vec3 blinkSpot(Player player, ServerLevel sl, double range) {
+    public static Vec3 blinkSpot(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         Vec3 point = aimPoint(player, sl, range);
@@ -542,7 +558,7 @@ public final class Spells {
      * The ground an entity stands on or hangs just above (no more than 4 blocks): where spikes, hands or a
      * circle for it should appear. For one higher in the air it is the spot at its feet.
      */
-    public static Vec3 groundUnder(Player caster, ServerLevel sl, LivingEntity entity) {
+    public static Vec3 groundUnder(LivingEntity caster, ServerLevel sl, LivingEntity entity) {
         if (entity.onGround()) return entity.position();
         Vec3 ground = groundAt(caster, sl, entity.position());
         return entity.getY() - ground.y <= 4.0 ? ground : entity.position();
@@ -554,7 +570,7 @@ public final class Spells {
     }
 
     /** True if the player's body fits with their feet on this spot (for teleports: never into a wall). */
-    public static boolean fits(Player player, ServerLevel sl, Vec3 feet) {
+    public static boolean fits(LivingEntity player, ServerLevel sl, Vec3 feet) {
         return sl.noCollision(player, player.getBoundingBox().move(feet.subtract(player.position())));
     }
 
@@ -601,7 +617,7 @@ public final class Spells {
      * The light source (at least 'minLight', see lightNear) nearest to what the crosshair is on, within 'around'
      * blocks of it, as far as 'range' away. Null if there is none.
      */
-    public static BlockPos lightAimed(Player caster, ServerLevel sl, double range, double around, int minLight) {
+    public static BlockPos lightAimed(LivingEntity caster, ServerLevel sl, double range, double around, int minLight) {
         Vec3 point = aimPoint(caster, sl, range);
         List<BlockPos> lights = lightNear(sl, point, around, minLight);
         return lights.isEmpty() ? null : lights.get(0);
@@ -675,7 +691,7 @@ public final class Spells {
      * crosshair stops on the surface of still water here (unlike aimPoint), so looking at a lake finds the lake.
      * Null if there is none.
      */
-    public static BlockPos reflectionAimed(Player caster, ServerLevel sl, double range, double around) {
+    public static BlockPos reflectionAimed(LivingEntity caster, ServerLevel sl, double range, double around) {
         Vec3 eye = caster.getEyePosition();
         Vec3 end = eye.add(caster.getLookAngle().scale(range));
         BlockHitResult hit = sl.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.SOURCE_ONLY, caster));
@@ -741,11 +757,15 @@ public final class Spells {
      * Damage from the caster. Clears the short invulnerability after a hit first, so quick hits in a row all count.
      * The target also becomes "what the caster last hit", which is what marionettes and tamed wolves go after.
      */
-    public static void strike(Player caster, LivingEntity target, float damage) {
+    public static void strike(LivingEntity caster, LivingEntity target, float damage) {
+        // a mob's ability numbers are the players', which were made against mobs: a player takes a share of them
+        if (!(caster instanceof Player) && target instanceof Player) damage *= BeyonderMobRules.DAMAGE_TO_PLAYERS;
+        if (damage <= 0f) return;
         target.invulnerableTime = 0;
         SPELL_HITS.add(target.getUUID());
         try {
-            target.hurt(caster.damageSources().playerAttack(caster), damage);
+            target.hurt(caster instanceof Player player ? caster.damageSources().playerAttack(player)
+                    : caster.damageSources().mobAttack(caster), damage);
         } finally {
             SPELL_HITS.remove(target.getUUID());
         }
@@ -770,7 +790,7 @@ public final class Spells {
      * A strike that nothing stops: a Dome's shield does not soften it, a Substitute does not take it and a DeathWard
      * does not save from it (none of them is used up either). For a sword of Glory, a divine judgement.
      */
-    public static void strikeThrough(Player caster, LivingEntity target, float damage) {
+    public static void strikeThrough(LivingEntity caster, LivingEntity target, float damage) {
         PIERCING.add(target.getUUID());
         try {
             strike(caster, target, damage);
@@ -789,7 +809,7 @@ public final class Spells {
      * take anything off. Something that cancels the hit outright (Concealment, an Exile, a miss) still stops it.
      * For a decree, an execution, a word that cannot be argued with.
      */
-    public static void strikeTrue(Player caster, LivingEntity target, float damage) {
+    public static void strikeTrue(LivingEntity caster, LivingEntity target, float damage) {
         target.stopUsingItem();
         TRUE_DAMAGE.put(target.getUUID(), -1f);
         try {
@@ -921,7 +941,7 @@ public final class Spells {
      * crops ripen, saplings grow, grass sprouts flowers. Call it every second for a garden that grows while it lasts.
      * Returns how many of them grew. (It changes blocks: only plants, the way bone meal does.)
      */
-    public static int growPlants(Player caster, ServerLevel sl, Vec3 ground, double radius, int spots) {
+    public static int growPlants(LivingEntity caster, ServerLevel sl, Vec3 ground, double radius, int spots) {
         ItemStack meal = new ItemStack(Items.BONE_MEAL, 64);
         int grew = 0;
         for (int i = 0; i < spots; i++) {
@@ -990,7 +1010,7 @@ public final class Spells {
     }
 
     /** False once the caster died, logged out or went to another dimension: spells that stay around them stop then. */
-    public static boolean casterStillHere(Player player, ServerLevel sl) {
+    public static boolean casterStillHere(LivingEntity player, ServerLevel sl) {
         return player.isAlive() && !player.isRemoved() && player.level() == sl;
     }
 }

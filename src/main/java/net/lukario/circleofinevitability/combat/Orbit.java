@@ -100,7 +100,7 @@ public final class Orbit {
 
     // ---------- while it is open ----------
 
-    private Player owner;
+    private LivingEntity owner;
     private ServerLevel level;
     private String name;
     private int age;
@@ -113,7 +113,7 @@ public final class Orbit {
     }
 
     /** 'count' bodies round a player. Nothing happens until open(...). */
-    public static Orbit around(Player owner, int count) {
+    public static Orbit around(LivingEntity owner, int count) {
         Orbit orbit = new Orbit(count);
         orbit.owner = owner;
         return orbit;
@@ -176,7 +176,7 @@ public final class Orbit {
     }
 
     /** Opens it. If this player already has one with this name, that one is closed first. */
-    public void open(Player owner, ServerLevel level, String name) {
+    public void open(LivingEntity owner, ServerLevel level, String name) {
         close(owner, name);
         this.owner = owner;
         this.level = level;
@@ -196,18 +196,18 @@ public final class Orbit {
 
     // ---------- asking / stopping ----------
 
-    public static boolean isOpen(Player owner, String name) {
+    public static boolean isOpen(LivingEntity owner, String name) {
         return find(owner, name) != null;
     }
 
     /** Ticks until it ends (0 = there is none). */
-    public static int ticksLeft(Player owner, String name) {
+    public static int ticksLeft(LivingEntity owner, String name) {
         Orbit orbit = find(owner, name);
         return orbit == null ? 0 : Math.max(1, orbit.lasts - orbit.age);
     }
 
     /** How many bodies are there right now (not away after a catch). 0 = there is no such orbit. */
-    public static int ready(Player owner, String name) {
+    public static int ready(LivingEntity owner, String name) {
         Orbit orbit = find(owner, name);
         if (orbit == null) return 0;
         int ready = 0;
@@ -216,13 +216,13 @@ public final class Orbit {
     }
 
     /** How many ticks it has been open (what onTick is given), or -1 if there is none. */
-    public static int age(Player owner, String name) {
+    public static int age(LivingEntity owner, String name) {
         Orbit orbit = find(owner, name);
         return orbit == null ? -1 : orbit.age;
     }
 
     /** The first body that is here (not away), or -1 (none is, or there is no such orbit). */
-    public static int firstReady(Player owner, String name) {
+    public static int firstReady(LivingEntity owner, String name) {
         Orbit orbit = find(owner, name);
         if (orbit == null) return -1;
         for (int i = 0; i < orbit.count; i++) if (orbit.isHere(i)) return i;
@@ -235,7 +235,7 @@ public final class Orbit {
      * from there), or null if there is no such orbit or that body is away already. The orbit draws nothing: take
      * its model away yourself.
      */
-    public static Vec3 release(Player owner, String name, int index, int awayTicks) {
+    public static Vec3 release(LivingEntity owner, String name, int index, int awayTicks) {
         Orbit orbit = find(owner, name);
         if (orbit == null || index < 0 || index >= orbit.count || !orbit.isHere(index)) return null;
         Vec3 at = orbit.spot(index, orbit.age);
@@ -244,12 +244,12 @@ public final class Orbit {
     }
 
     /** Ends it now (its onEnd runs). Does nothing if there is none. */
-    public static void close(Player owner, String name) {
+    public static void close(LivingEntity owner, String name) {
         Orbit orbit = find(owner, name);
         if (orbit != null) orbit.end();
     }
 
-    private static Orbit find(Player owner, String name) {
+    private static Orbit find(LivingEntity owner, String name) {
         for (Orbit orbit : OPEN) {
             if (!orbit.closed && orbit.name.equals(name) && orbit.owner.getUUID().equals(owner.getUUID())) return orbit;
         }

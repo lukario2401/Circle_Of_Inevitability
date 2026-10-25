@@ -89,11 +89,11 @@ public final class DamageFx {
     // API
     // =========================
 
-    public static boolean isOn(Player player) {
+    public static boolean isOn(LivingEntity player) {
         return player.getPersistentData().getCompoundOrEmpty(ServerPlayer.PERSISTED_NBT_TAG).getBooleanOr(KEY, false);
     }
 
-    public static void set(Player player, boolean on) {
+    public static void set(LivingEntity player, boolean on) {
         CompoundTag data = player.getPersistentData();
         CompoundTag kept = data.getCompoundOrEmpty(ServerPlayer.PERSISTED_NBT_TAG);
         kept.putBoolean(KEY, on);
@@ -105,7 +105,7 @@ public final class DamageFx {
      * Call it right before target.hurt(...) (or before the explosion / the lightning bolt). It only matters for
      * the numbers: the damage, who gets the kill and who the mob gets angry at stay exactly as they were.
      */
-    public static void credit(Player player, LivingEntity target) {
+    public static void credit(LivingEntity player, LivingEntity target) {
         if (player == null || target == null || target.level().isClientSide()) return;
         long now = target.level().getGameTime();
         CREDITS.put(target, new Credit(player.getUUID(), now + CREDIT_TICKS, now + ABILITY_CREDIT_TICKS));
@@ -129,7 +129,7 @@ public final class DamageFx {
                         .executes(ctx -> turn(ctx.getSource(), ctx.getSource().getPlayerOrException(), false))));
     }
 
-    private static int turn(CommandSourceStack source, Player player, boolean on) {
+    private static int turn(CommandSourceStack source, LivingEntity player, boolean on) {
         set(player, on);
         source.sendSuccess(() -> Component.translatable(
                 on ? "message.circle_of_inevitability.damage_fx.on" : "message.circle_of_inevitability.damage_fx.off"), false);

@@ -76,7 +76,7 @@ public final class Wall {
 
     // ---------- while it stands ----------
 
-    private Player owner;
+    private LivingEntity owner;
     private ServerLevel level;
     private String name;
     private int age;
@@ -130,7 +130,7 @@ public final class Wall {
     }
 
     /** Raises it. If this player already has one with this name, that one falls first. */
-    public void raise(Player owner, ServerLevel level, String name) {
+    public void raise(LivingEntity owner, ServerLevel level, String name) {
         close(owner, name);
         this.owner = owner;
         this.level = level;
@@ -144,28 +144,28 @@ public final class Wall {
 
     // ---------- asking / changing ----------
 
-    public static boolean isRaised(Player owner, String name) {
+    public static boolean isRaised(LivingEntity owner, String name) {
         return find(owner, name) != null;
     }
 
-    public static int ticksLeft(Player owner, String name) {
+    public static int ticksLeft(LivingEntity owner, String name) {
         Wall wall = find(owner, name);
         return wall == null ? 0 : Math.max(1, wall.lasts - wall.age);
     }
 
     /** It falls now (its onEnd runs). */
-    public static void close(Player owner, String name) {
+    public static void close(LivingEntity owner, String name) {
         Wall wall = find(owner, name);
         if (wall != null) wall.end();
     }
 
     /** Its whole time again, from now. */
-    public static void renew(Player owner, String name) {
+    public static void renew(LivingEntity owner, String name) {
         Wall wall = find(owner, name);
         if (wall != null) wall.age = 0;
     }
 
-    private static Wall find(Player owner, String name) {
+    private static Wall find(LivingEntity owner, String name) {
         for (Wall wall : RAISED) {
             if (!wall.closed && wall.name.equals(name) && wall.owner.getUUID().equals(owner.getUUID())) return wall;
         }

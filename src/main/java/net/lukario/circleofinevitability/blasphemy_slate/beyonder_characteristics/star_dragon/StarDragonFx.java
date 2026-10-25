@@ -333,7 +333,7 @@ public final class StarDragonFx {
     }
 
     /** Where a player's right hand is (their chest when they are gone). */
-    private static Vec3 handOf(Player player, ServerLevel sl) {
+    private static Vec3 handOf(LivingEntity player, ServerLevel sl) {
         Vec3 hand = SpellFx.handOf(player, sl);
         return hand == null ? chestOf(player) : hand;
     }
@@ -453,28 +453,28 @@ public final class StarDragonFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "star_dragon/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "star_dragon/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** How long something "until ended" is shown at most (an hour): show it again after that. */
     public static final int FOREVER = 72000;
 
     /** Only the picture, no clock: for what lasts until it is ended (Scaled Form is cast again to end it). */
-    public static void statusForever(Player player, Status status) {
+    public static void statusForever(LivingEntity player, Status status) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "star_dragon/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "star_dragon/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
-        HudTimer.hide(player, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -625,7 +625,7 @@ public final class StarDragonFx {
      * The Aficionado reads the sky over an enemy: an astrolabe opens under their feet and turns, a thread of starlight
      * reaches the target. What the target gets (the constellation) is for the Aficionado alone: charted(...).
      */
-    public static void starChart(ServerLevel sl, Player player, LivingEntity target) {
+    public static void starChart(ServerLevel sl, LivingEntity player, LivingEntity target) {
         floor(sl, ASTROLABE, player.position(), 1.4, 0xE0F4F6FF, 30, 3f, null, 0);
         ParticleShapes.ring(sl, TWINKLE, player.position().add(0, 2.4, 0), 1.0, 8, 0.0);
         Vec3 eye = player.getEyePosition();
@@ -676,7 +676,7 @@ public final class StarDragonFx {
     // ---------- sneak: Fate Glimpse
 
     /** Fate Glimpse: an eye of stars opens before the Worshipper; a ring of stars circles over their head for 'ticks'. */
-    public static void fateGlimpse(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void fateGlimpse(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         Vec3 front = player.getEyePosition().add(Spells.flatLook(player).scale(1.2));
         flash(sl, STAR_EYE, front, player.getYRot() + 180f, 0xF0D8D0FF, 1.2f, 22);
         ModelFx halo = FATE_RING.color(0xD0B8B0FF).scale(0.9f).lifetime(ticks).fade(6, 10).spin(2f).tag(tag)
@@ -688,7 +688,7 @@ public final class StarDragonFx {
     }
 
     /** An aimed attack is dodged: a ripple of starlight where the Worshipper stood, a streak to where they slipped. */
-    public static void glimpseDodge(ServerLevel sl, Player player, Vec3 from, Vec3 to) {
+    public static void glimpseDodge(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to) {
         SpellFx.shockRing(sl, from, 1.6, 0xD0B8B0FF, 8, 0);
         Vec3 a = from.add(0, player.getBbHeight() * 0.55, 0), b = to.add(0, player.getBbHeight() * 0.55, 0);
         ParticleShapes.slashBetween(sl, STAR_TRAIL.lifetime(6), a, b);
@@ -696,7 +696,7 @@ public final class StarDragonFx {
         sound(sl, to, ModSounds.STAR_DRAGON_GLIMPSE_DODGE, 0.9f, wobble(1.0f));
     }
 
-    public static void fateGlimpseEnd(ServerLevel sl, Player player, String tag) {
+    public static void fateGlimpseEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.ring(sl, TWINKLE, headOf(player).add(0, 0.3, 0), 0.5, 8, 0.05);
     }
@@ -757,19 +757,19 @@ public final class StarDragonFx {
     }
 
     /** Tidal Scholar: aimed at their own feet, the Scholar is lightened and flies: a pale ring under them, for 'ticks'. */
-    public static void lightened(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void lightened(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx well = GRAVITY_WELL.color(0x90D8F0FF).scale(1.6f).lifetime(ticks).fade(4, 10).spin(3f).tag(tag);
         ParticleShapes.modelOn(sl, well, player, new Vec3(0, -0.2, 0), 0f, 0f, 0f);
         sound(sl, player.position(), ModSounds.STAR_DRAGON_GRAVITY_LIFT, 1.0f, 1.2f);
     }
 
     /** The wave of air the lightened Scholar sheds: a ring bursting out 'radius' wide. */
-    public static void airWave(ServerLevel sl, Player player, double radius) {
+    public static void airWave(ServerLevel sl, LivingEntity player, double radius) {
         SpellFx.shockRing(sl, player.position(), radius, 0xC0D8F0FF, 8, 0);
         ParticleShapes.ring(sl, FOAM.color(0x80F4F6FF), player.position().add(0, 0.5, 0), 0.8, 14, 0.25);
     }
 
-    public static void lightenedEnd(ServerLevel sl, Player player, String tag) {
+    public static void lightenedEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -817,7 +817,7 @@ public final class StarDragonFx {
     }
 
     /** With no second enemy: the caster is drawn in and a hammer-like blow of force lands on the target. */
-    public static void hammerBlow(ServerLevel sl, Player player, LivingEntity target) {
+    public static void hammerBlow(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 at = chestOf(target);
         ModelFx fist = ORB.color(0xE0B8D4FF).lifetime(8)
                 .key(0, pose().scale(0.3f))
@@ -931,7 +931,7 @@ public final class StarDragonFx {
     public static final int SUNLIGHT_FIRES = 12;
 
     /** Sunlight condenses in the Scholar's hands: a small sun grows, flares drawn into it. Fire the ray at SUNLIGHT_FIRES. */
-    public static void sunlightCharge(ServerLevel sl, Player player) {
+    public static void sunlightCharge(ServerLevel sl, LivingEntity player) {
         ModelFx sun = ORB.color(0xF0FFF4D0).lifetime(SUNLIGHT_FIRES + 2).fade(0, 2)
                 .key(0, pose().scale(0.1f))
                 .key(SUNLIGHT_FIRES, pose().scale(0.9f), Ease.IN);
@@ -989,7 +989,7 @@ public final class StarDragonFx {
     }
 
     /** While no mob can find the Navigator: a faint shimmer of stars round them, for 'ticks'. */
-    public static void unnoticed(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void unnoticed(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         for (int t = 0; t < ticks; t += 6) {
             Later.run(sl, t, () -> {
                 if (player.isAlive()) ParticleShapes.spawn(sl, STILL_STAR.color(0x80B8B0FF), within(player.position(), 0.6, 0.4 + Math.random() * 1.4), Vec3.ZERO);
@@ -997,7 +997,7 @@ public final class StarDragonFx {
         }
     }
 
-    public static void unnoticedEnd(ServerLevel sl, Player player, String tag) {
+    public static void unnoticedEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.burst(sl, VIOLET_MOTE, chestOf(player), 6, 0.02, 0.06);
     }
 
@@ -1035,7 +1035,7 @@ public final class StarDragonFx {
     public static final double SURGE_REACH = 18.0;
 
     /** Tidal Surge: a crest 7 wide and 5 tall rises beside the Scholar and rolls SURGE_REACH blocks forward. */
-    public static void tidalSurge(ServerLevel sl, Player player) {
+    public static void tidalSurge(ServerLevel sl, LivingEntity player) {
         float yaw = player.getYRot();
         Vec3 start = player.position().add(ahead(yaw).scale(1.2));
         ModelFx crest = WAVE.scale(7f, 5f, 3f).lifetime(SURGE_TICKS + 8).fade(0, 8)
@@ -1066,7 +1066,7 @@ public final class StarDragonFx {
     }
 
     /** While the crest is still beside the Scholar, a melee blow is parried: a slap of water at the attacker. */
-    public static void surgeParry(ServerLevel sl, Player player, LivingEntity attacker) {
+    public static void surgeParry(ServerLevel sl, LivingEntity player, LivingEntity attacker) {
         Vec3 between = chestOf(player).add(chestOf(attacker)).scale(0.5);
         ParticleShapes.burst(sl, SPRAY, between, 14, 0.08, 0.22);
         SpellFx.shockRing(sl, attacker.position(), 1.4, 0xC08CD8D0, 6, 0);
@@ -1085,7 +1085,7 @@ public final class StarDragonFx {
      * Body (Heavybringer): 5 blocks tall and the ground pressed round it. Scaled Form ends when cast again, so give it
      * FOREVER and end it with scaledFormEnd.
      */
-    public static void scaledForm(ServerLevel sl, Player player, int ticks, boolean heavyBody, String tag) {
+    public static void scaledForm(ServerLevel sl, LivingEntity player, int ticks, boolean heavyBody, String tag) {
         float size = heavyBody ? HEAVY_BODY_SCALE : 1f;
         ModelFx body = SCALED.scale(size).fade(0, 10)
                 .key(0, pose().scale(0.85f).alpha(0f))
@@ -1112,12 +1112,12 @@ public final class StarDragonFx {
     }
 
     /** Every second the Heavy Body stands: the ground round it looks pressed down. */
-    public static void heavyBodyTick(ServerLevel sl, Player player) {
+    public static void heavyBodyTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.ring(sl, DARK_DUST.color(0x802A6A70), player.position().add(0, 0.15, 0), 3.0, 12, 0.02);
         ParticleShapes.ring(sl, CHEVRON.color(0xFF8CD8D0), player.position().add(0, 1.2, 0), 6.0, 10, 0.0);
     }
 
-    public static void scaledFormEnd(ServerLevel sl, Player player, String tag) {
+    public static void scaledFormEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (double y = 0.2; y < 2.0; y += 0.4) ParticleShapes.ring(sl, SCALE, player.position().add(0, y, 0), 0.5, 6, 0.06);
         sound(sl, player.position(), ModSounds.STAR_DRAGON_SCALES_OFF, 1.0f, 1.0f);
@@ -1128,7 +1128,7 @@ public final class StarDragonFx {
     // =====================================================================================
 
     /** Heavybringing: the Heavybringer becomes a source of gravity, a great well turning under them, for 'ticks'. */
-    public static void heavybringing(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void heavybringing(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         ModelFx well = GRAVITY_WELL.color(0xC06A5CFF).scale((float) (radius * 2.0)).lifetime(ticks).fade(10, 14).spin(-3f).tag(tag)
                 .key(0, pose().scale(0.1f).alpha(0f))
                 .key(14, pose().scale(1f).alpha(1f), Ease.OUT);
@@ -1140,7 +1140,7 @@ public final class StarDragonFx {
     }
 
     /** Every 10 ticks: motes and dust slide in toward the Heavybringer from the edge. */
-    public static void heavybringingTick(ServerLevel sl, Player player, double radius) {
+    public static void heavybringingTick(ServerLevel sl, LivingEntity player, double radius) {
         ParticleShapes.spiral(sl, VIOLET_MOTE, player.position().add(0, 0.3, 0), 3, 18, 2.0, radius, 0.3, -0.25);
         ParticleShapes.ring(sl, DARK_DUST, player.position().add(0, 0.2, 0), radius * 0.6, 8, -0.15);
         ParticleShapes.burst(sl, CHEVRON, headOf(player).add(0, 0.6, 0), 2, 0.0, 0.02);
@@ -1152,7 +1152,7 @@ public final class StarDragonFx {
         ParticleShapes.burst(sl, SPARK, from, 4, 0.02, 0.06);
     }
 
-    public static void heavybringingEnd(ServerLevel sl, Player player, String tag) {
+    public static void heavybringingEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         SpellFx.shockRing(sl, player.position(), 8.0, 0xA06A5CFF, 10, 0);
     }
@@ -1160,7 +1160,7 @@ public final class StarDragonFx {
     // ---------- Fate Convergence
 
     /** Fate Convergence: threads of Fate draw in from 'radius' to the Heavybringer for 'ticks'. */
-    public static void fateConvergence(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void fateConvergence(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         ModelFx web = FATE_WEB.color(0xC0B8B0FF).scale((float) (radius * 2.0)).lifetime(ticks).fade(10, 14).spin(-0.6f).tag(tag)
                 .key(0, pose().scale(1.4f).alpha(0f))
                 .key(16, pose().scale(1f).alpha(1f), Ease.OUT);
@@ -1210,7 +1210,7 @@ public final class StarDragonFx {
         ParticleShapes.spawn(sl, TWINKLE.color(0xFFFFE9B0), headOf(ally).add(0, 0.4, 0), new Vec3(0, 0.02, 0));
     }
 
-    public static void fateConvergenceEnd(ServerLevel sl, Player player, String tag) {
+    public static void fateConvergenceEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.ring(sl, TWINKLE, player.position().add(0, 0.5, 0), 3.0, 14, 0.15);
     }
@@ -1257,7 +1257,7 @@ public final class StarDragonFx {
     public static final int SERIES_STEP = 4;
 
     /** Dark-green light gathers in the Heavybringer's hands before the series. Fire ray i at SERIES_FIRES + i * SERIES_STEP. */
-    public static void seriesOfRays(ServerLevel sl, Player player) {
+    public static void seriesOfRays(ServerLevel sl, LivingEntity player) {
         Vec3 hand = handOf(player, sl);
         ModelFx glow = ORB.color(0xD07CE08A).lifetime(SERIES_FIRES + 6 * SERIES_STEP).fade(2, 6)
                 .key(0, pose().scale(0.1f))
@@ -1270,7 +1270,7 @@ public final class StarDragonFx {
     // ---------- Remote Sight
 
     /** Remote Sight: an eye of stars opens over the Heavybringer and a ring of sight spreads out, for 'ticks'. */
-    public static void remoteSight(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void remoteSight(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx eye = STAR_EYE.color(0xC0D8D0FF).scale(0.8f).lifetime(ticks).fade(8, 10).tag(tag)
                 .key(0, pose().scale(0.2f).alpha(0f))
                 .key(10, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1299,7 +1299,7 @@ public final class StarDragonFx {
         }
     }
 
-    public static void remoteSightEnd(ServerLevel sl, Player player, String tag) {
+    public static void remoteSightEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -1388,7 +1388,7 @@ public final class StarDragonFx {
     public static final int FISSION_SPLITS = 40;
 
     /** Fission Pulse: the target glows sickly green, nuclei loosening in it, faster and faster until FISSION_SPLITS. */
-    public static void fissionPulse(ServerLevel sl, Player player, LivingEntity target) {
+    public static void fissionPulse(ServerLevel sl, LivingEntity player, LivingEntity target) {
         ParticleShapes.slashBetween(sl, THREAD.color(0xC0C8FF6A).lifetime(10), handOf(player, sl), chestOf(target));
         SpellFx.circleUnder(sl, target, Math.max(0.7, target.getBbWidth()), 0xC0C8FF6A, FISSION_SPLITS, "sd_fission");
         for (int t = 0; t < FISSION_SPLITS; t += Math.max(2, 8 - t / 6)) {
@@ -1482,7 +1482,7 @@ public final class StarDragonFx {
     }
 
     /** Where cluster 'index' of 'count' is, 'age' ticks after it condensed. */
-    public static Vec3 fusionSpot(Player player, int index, int count, int age) {
+    public static Vec3 fusionSpot(LivingEntity player, int index, int count, int age) {
         double a = Math.toRadians(age * FUSION_SPEED + index * 360.0 / count);
         return player.position().add(Math.cos(a) * FUSION_RADIUS, FUSION_HEIGHT, Math.sin(a) * FUSION_RADIUS);
     }
@@ -1492,7 +1492,7 @@ public final class StarDragonFx {
      * They do not move by themselves: call fusionOrbit every tick. The Condenser's have no windup: launch them at once
      * (they are small for the first ticks, which reads as condensing in flight).
      */
-    public static void fusionCluster(ServerLevel sl, Player player, int count, int ticks, String tag) {
+    public static void fusionCluster(ServerLevel sl, LivingEntity player, int count, int ticks, String tag) {
         for (int i = 0; i < count; i++) {
             ModelFx one = FUSION.scale(0.55f).lifetime(ticks).fade(0, 4).spin(20f).tag(fusionTag(tag, i))
                     .key(0, pose().scale(0.05f))
@@ -1510,7 +1510,7 @@ public final class StarDragonFx {
     }
 
     /** Every tick while the clusters circle: they move round ('age' = ticks since they were made). */
-    public static void fusionOrbit(ServerLevel sl, Player player, int count, String tag, int age) {
+    public static void fusionOrbit(ServerLevel sl, LivingEntity player, int count, String tag, int age) {
         for (int i = 0; i < count; i++) {
             ParticleShapes.moveModel(sl, fusionTag(tag, i), fusionSpot(player, i, count, age), 0f, 0f, 0f);
         }
@@ -1518,7 +1518,7 @@ public final class StarDragonFx {
     }
 
     /** Cluster 'index' is launched (its circling model goes): returns where the Shot leaves from. */
-    public static Vec3 fusionLaunch(ServerLevel sl, Player player, int index, int count, String tag, int age) {
+    public static Vec3 fusionLaunch(ServerLevel sl, LivingEntity player, int index, int count, String tag, int age) {
         Vec3 at = fusionSpot(player, index, count, age);
         ParticleShapes.clearModels(sl, at, fusionTag(tag, index));
         ParticleShapes.burst(sl, SUN_MOTE, at, 6, 0.03, 0.08);
@@ -1549,7 +1549,7 @@ public final class StarDragonFx {
     public static final int ANGEL_READY = 20;
 
     /** Radiant Angel Form for 'ticks': a being of starlight 3 blocks tall with six pairs of wings, worn over the player. */
-    public static void radiantAngel(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void radiantAngel(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx body = ANGEL.fade(0, 14)
                 .key(0, pose().scale(0.3f).alpha(0f))
                 .key(ANGEL_READY, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1565,7 +1565,7 @@ public final class StarDragonFx {
     }
 
     /** Every 10 ticks of the form (and Radiance, the passive): a glow of motes out to 'radius'. */
-    public static void radiance(ServerLevel sl, Player player, double radius) {
+    public static void radiance(ServerLevel sl, LivingEntity player, double radius) {
         ParticleShapes.ring(sl, SUN_MOTE, player.position().add(0, 0.6, 0), radius * 0.5, 10, 0.1);
         ParticleShapes.spawn(sl, FLARE.size(0.4f).endSize(0.7f).color(0x60FFF4D0), player.position().add(0, 1.6, 0), Vec3.ZERO);
     }
@@ -1576,14 +1576,14 @@ public final class StarDragonFx {
         if (target.tickCount % 20 == 0) sound(sl, chestOf(target), ModSounds.STAR_DRAGON_RADIANCE, 0.5f, wobble(1.0f));
     }
 
-    public static void radiantAngelEnd(ServerLevel sl, Player player, String tag) {
+    public static void radiantAngelEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (double y = 0.2; y < 3.0; y += 0.5) ParticleShapes.ring(sl, SUN_MOTE, player.position().add(0, y, 0), 1.2, 8, 0.08);
         sound(sl, player.position(), ModSounds.STAR_DRAGON_FORM_END, 1.0f, 1.1f);
     }
 
     /** The weakness after a Mythical Creature Form: a dull grey haze clings to the player for 'ticks'. */
-    public static void formWeakness(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void formWeakness(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 0.7, 0x608A84B0, ticks, tag);
         for (int t = 0; t < ticks; t += 20) {
             Later.run(sl, t, () -> {
@@ -1699,7 +1699,7 @@ public final class StarDragonFx {
      * Star Dragon Form for 'ticks': a colossal dragon of transparent starlight (10.5 blocks long), worn by the player,
      * formed out of falling stars, beating its wings a few times and then gliding. Call dragonBeat while it flies.
      */
-    public static void starDragonForm(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void starDragonForm(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx body = DRAGON.scale(DRAGON_SCALE).fade(0, 16)
                 .key(0, pose().frame(1f).scale(0.2f).alpha(0f))
                 .key(DRAGON_READY, pose().frame(0f).scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1731,7 +1731,7 @@ public final class StarDragonFx {
     }
 
     /** One wingbeat (DRAGON_BEAT ticks) and back to gliding; 'ticksLeft' = how long the form still lasts. */
-    public static void dragonBeat(ServerLevel sl, Player player, int ticksLeft, String tag) {
+    public static void dragonBeat(ServerLevel sl, LivingEntity player, int ticksLeft, String tag) {
         ModelFx body = DRAGON.scale(DRAGON_SCALE).fade(0, 16)
                 .key(0, pose().frame(1f))
                 .key(DRAGON_BEAT / 3, pose().frame(0f), Ease.IN_OUT)
@@ -1756,27 +1756,27 @@ public final class StarDragonFx {
         return tag + "_asteroid";
     }
 
-    public static Vec3 asteroidSpot(Player player, int age) {
+    public static Vec3 asteroidSpot(LivingEntity player, int age) {
         double a = Math.toRadians(age * ASTEROID_SPEED);
         return player.position().add(Math.cos(a) * ASTEROID_RADIUS, ASTEROID_HEIGHT, Math.sin(a) * ASTEROID_RADIUS);
     }
 
     /** The Dragon's small asteroid takes its place for 'ticks'; move it with dragonAsteroidOrbit every tick. */
-    public static void dragonAsteroid(ServerLevel sl, Player player, int ticks, String tag, int age) {
+    public static void dragonAsteroid(ServerLevel sl, LivingEntity player, int ticks, String tag, int age) {
         ModelFx rock = ASTEROID.scale(0.6f).lifetime(ticks).fade(4, 6).spin(8f).tag(asteroidTag(tag))
                 .key(0, pose().scale(0.1f).alpha(0f))
                 .key(8, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
         ParticleShapes.model(sl, rock, asteroidSpot(player, age), 0f, 0f, 0f);
     }
 
-    public static void dragonAsteroidOrbit(ServerLevel sl, Player player, String tag, int age) {
+    public static void dragonAsteroidOrbit(ServerLevel sl, LivingEntity player, String tag, int age) {
         Vec3 at = asteroidSpot(player, age);
         ParticleShapes.moveModel(sl, asteroidTag(tag), at, 0f, 0f, 0f);
         if (age % 4 == 0) ParticleShapes.spawn(sl, EMBER, at, Vec3.ZERO);
     }
 
     /** The asteroid is launched (its circling model goes): returns where the Shot leaves from. */
-    public static Vec3 dragonShot(ServerLevel sl, Player player, String tag, int age) {
+    public static Vec3 dragonShot(ServerLevel sl, LivingEntity player, String tag, int age) {
         Vec3 at = asteroidSpot(player, age);
         ParticleShapes.clearModels(sl, at, asteroidTag(tag));
         ParticleShapes.burst(sl, EMBER, at, 8, 0.05, 0.12);
@@ -1792,13 +1792,13 @@ public final class StarDragonFx {
     }
 
     /** The asteroid comes back after its recharge, for the 'ticksLeft' the form still lasts. */
-    public static void dragonAsteroidBack(ServerLevel sl, Player player, int ticksLeft, String tag, int age) {
+    public static void dragonAsteroidBack(ServerLevel sl, LivingEntity player, int ticksLeft, String tag, int age) {
         if (ticksLeft <= 0) return;
         dragonAsteroid(sl, player, ticksLeft, tag, age);
         ParticleShapes.spawn(sl, SPARKLE, asteroidSpot(player, age), Vec3.ZERO);
     }
 
-    public static void starDragonFormEnd(ServerLevel sl, Player player, String tag) {
+    public static void starDragonFormEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.clearModels(sl, player.position(), asteroidTag(tag));
         for (int i = 0; i < 40; i++) {
@@ -1813,7 +1813,7 @@ public final class StarDragonFx {
     public static final int NEUTRON_READY = 22;
 
     /** Neutron Star for 'ticks': light crushed into a blinding core at the chest, pulsar beams sweeping, a well under. */
-    public static void neutronStar(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void neutronStar(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         Vec3 chest = new Vec3(0, player.getBbHeight() * 0.6, 0);
         ModelFx core = NEUTRON.scale(0.8f).lifetime(ticks).fade(0, 10).spin(14f).tag(tag)
                 .key(0, pose().scale(4f).alpha(0f).roll(22.5f))
@@ -1832,7 +1832,7 @@ public final class StarDragonFx {
     }
 
     /** Every 10 ticks of the Neutron Star: chevrons press in and the ground round it shakes. */
-    public static void neutronTick(ServerLevel sl, Player player, double radius) {
+    public static void neutronTick(ServerLevel sl, LivingEntity player, double radius) {
         ParticleShapes.ring(sl, CHEVRON, player.position().add(0, 2.4, 0), radius * 0.7, 10, 0.0);
         ParticleShapes.ring(sl, DARK_DUST, player.position().add(0, 0.1, 0), radius * 0.5, 8, -0.05);
     }
@@ -1844,7 +1844,7 @@ public final class StarDragonFx {
         if (target.tickCount % 20 < 10) sound(sl, target.position(), ModSounds.STAR_DRAGON_NEUTRON_CRUSH, 0.7f, wobble(1.0f));
     }
 
-    public static void neutronStarEnd(ServerLevel sl, Player player, String tag) {
+    public static void neutronStarEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, BLUE_MOTE, chestOf(player), 20, 0.05, 0.2);
     }
@@ -1855,7 +1855,7 @@ public final class StarDragonFx {
     public static final int SINGULARITY_GATHER = 60;
 
     /** The Condenser gathers for SINGULARITY_GATHER ticks: all light drains toward them, lines of it streaming in. */
-    public static void singularityGather(ServerLevel sl, Player player) {
+    public static void singularityGather(ServerLevel sl, LivingEntity player) {
         for (int t = 0; t < SINGULARITY_GATHER; t += 2) {
             int step = t;
             Later.run(sl, t, () -> {
@@ -1915,7 +1915,7 @@ public final class StarDragonFx {
     }
 
     /** The price paid: the Condenser is spent, grey ash falling off them. */
-    public static void spent(ServerLevel sl, Player player) {
+    public static void spent(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, DARK_DUST.color(0x808A84B0), chestOf(player), 10, 0.02, 0.06);
         sound(sl, player.position(), ModSounds.STAR_DRAGON_FORM_END, 1.0f, 0.7f);
     }
@@ -1923,7 +1923,7 @@ public final class StarDragonFx {
     // ---------- Quantum Uncertainty
 
     /** Quantum Uncertainty for 'ticks': a field of interference and wandering points 'radius' round the Condenser. */
-    public static void quantumUncertainty(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void quantumUncertainty(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         ModelFx field = QUANTUM_FIELD.color(0xB0D8D0FF).scale((float) (radius * 2.0)).lifetime(ticks).fade(10, 14).spin(0.5f).tag(tag)
                 .key(0, pose().scale(0.1f).alpha(0f))
                 .key(12, pose().scale(1f).alpha(1f), Ease.OUT);
@@ -1948,7 +1948,7 @@ public final class StarDragonFx {
         sound(sl, to, ModSounds.STAR_DRAGON_QUANTUM_SLIP, 0.9f, wobble(1.0f));
     }
 
-    public static void quantumEnd(ServerLevel sl, Player player, String tag) {
+    public static void quantumEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -1957,7 +1957,7 @@ public final class StarDragonFx {
     // =====================================================================================
 
     /** Stargazing (Astronomy Aficionado): standing still under open sky, faint stars drift down onto them. */
-    public static void stargazing(ServerLevel sl, Player player) {
+    public static void stargazing(ServerLevel sl, LivingEntity player) {
         Vec3 above = player.position().add(sl.getRandom().nextDouble() - 0.5, 3.0, sl.getRandom().nextDouble() - 0.5);
         ParticleShapes.spawn(sl, TWINKLE.gravity(0.01f).lifetime(40, 10), above, new Vec3(0, -0.04, 0));
         if (player.tickCount % 200 == 0) sound(sl, player.position(), ModSounds.STAR_DRAGON_STARGAZING, 0.4f, wobble(1.0f));
@@ -1976,7 +1976,7 @@ public final class StarDragonFx {
     }
 
     /** Star's Embrace (Star Sacrificer): a fall softened: a puff of starlight where they land. */
-    public static void embraceLanding(ServerLevel sl, Player player) {
+    public static void embraceLanding(ServerLevel sl, LivingEntity player) {
         ParticleShapes.ring(sl, STAR_MOTE, player.position().add(0, 0.1, 0), 0.6, 10, 0.06);
     }
 
@@ -1986,12 +1986,12 @@ public final class StarDragonFx {
     }
 
     /** Starlight Scales (Tidal Scholar): now and then, a scale glints on them as they swim. */
-    public static void starlightScales(ServerLevel sl, Player player) {
+    public static void starlightScales(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, SCALE.gravity(-0.01f), within(chestOf(player), 0.3, 0), Vec3.ZERO);
     }
 
     /** Dense Body (Heavybringer): a pull or lift of a lower Sequence fails on them: a flash of violet round the feet. */
-    public static void denseBody(ServerLevel sl, Player player) {
+    public static void denseBody(ServerLevel sl, LivingEntity player) {
         SpellFx.shockRing(sl, player.position(), 1.6, 0xC06A5CFF, 6, 0);
         ParticleShapes.burst(sl, CHEVRON, headOf(player).add(0, 0.3, 0), 2, 0.0, 0.02);
     }
@@ -2004,7 +2004,7 @@ public final class StarDragonFx {
     }
 
     /** Radiance (Radiant Angel), every second: a soft glow round them out to 'radius'. */
-    public static void radianceAura(ServerLevel sl, Player player, double radius) {
+    public static void radianceAura(ServerLevel sl, LivingEntity player, double radius) {
         ParticleShapes.ring(sl, SUN_MOTE, player.position().add(0, 0.8, 0), radius * 0.3, 6, 0.06);
     }
 
@@ -2014,7 +2014,7 @@ public final class StarDragonFx {
     }
 
     /** Weight and Density (Condenser): their steps shake the ground. */
-    public static void condenserStep(ServerLevel sl, Player player) {
+    public static void condenserStep(ServerLevel sl, LivingEntity player) {
         SpellFx.shockRing(sl, player.position(), 2.4, 0x806A5CFF, 8, 0);
         ParticleShapes.ring(sl, DARK_DUST, player.position().add(0, 0.1, 0), 0.5, 6, 0.08);
         sound(sl, player.position(), ModSounds.STAR_DRAGON_DENSE_STEP, 0.6f, wobble(1.0f));
@@ -2036,7 +2036,7 @@ public final class StarDragonFx {
         return "sd_fx_" + name + "_" + UUID.randomUUID();
     }
 
-    private static Vec3 aimAt(Player v, LivingEntity t, Vec3 spot) {
+    private static Vec3 aimAt(LivingEntity v, LivingEntity t, Vec3 spot) {
         return t == v ? spot.add(0, 1, 0) : chestOf(t);
     }
 

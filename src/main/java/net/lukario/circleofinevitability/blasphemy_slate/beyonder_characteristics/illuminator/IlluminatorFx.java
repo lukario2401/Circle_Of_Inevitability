@@ -374,7 +374,7 @@ public final class IlluminatorFx {
     }
 
     /** Where a player's right hand is (their chest when they are gone). */
-    private static Vec3 handOf(Player player, ServerLevel sl) {
+    private static Vec3 handOf(LivingEntity player, ServerLevel sl) {
         Vec3 hand = SpellFx.handOf(player, sl);
         return hand == null ? chestOf(player) : hand;
     }
@@ -454,28 +454,28 @@ public final class IlluminatorFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "illuminator/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "illuminator/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** How long something "until ended" is shown at most (an hour): show it again after that. */
     public static final int FOREVER = 72000;
 
     /** Only the picture, no clock: for what lasts until it is ended (the Mechanical Body from Illuminator on). */
-    public static void statusForever(Player player, Status status) {
+    public static void statusForever(LivingEntity player, Status status) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "illuminator/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "illuminator/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
-        HudTimer.hide(player, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -622,7 +622,7 @@ public final class IlluminatorFx {
     public static final ModelFx FLASK_FLYING = FLASK.scale(0.55f).spin(24f).lifetime(40).fade(0, 2);
 
     /** The flask leaves the hand. */
-    public static void flaskThrow(ServerLevel sl, Player player) {
+    public static void flaskThrow(ServerLevel sl, LivingEntity player) {
         Vec3 hand = handOf(player, sl);
         ParticleShapes.burst(sl, ACID_MOTE, hand, 4, 0.01, 0.04);
         ParticleShapes.slashBetween(sl, DASH.width(0.2f).lifetime(5).sweep(2), hand, hand.add(player.getLookAngle().scale(1.2)));
@@ -713,7 +713,7 @@ public final class IlluminatorFx {
     public static final int SURVEY_PULSE = 14;
 
     /** A pulse of blueprint light spreads 'reach' blocks from the Archaeologist; a lens flashes before their eyes. */
-    public static void survey(ServerLevel sl, Player player, double reach) {
+    public static void survey(ServerLevel sl, LivingEntity player, double reach) {
         float edge = (float) Math.min(reach, 48.0) * 2f;
         ModelFx pulse = BLUEPRINT_CIRCLE.color(0xC04696F0).lifetime(SURVEY_PULSE + 8).fade(0, 10).spin(1f)
                 .key(0, pose().scale(1f))
@@ -757,7 +757,7 @@ public final class IlluminatorFx {
     public static final int RITUAL_DRAWN = 16;
 
     /** A chalk circle 'radius' wide is drawn round the Archaeologist's feet and stays for 'ticks'. */
-    public static void ritualCircle(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void ritualCircle(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         ModelFx chalk = CHALK_CIRCLE.color(0xF0FFFAF0).scale((float) (radius * 2.0)).lifetime(ticks).fade(0, 12)
                 .spin(0.3f).tag(tag)
                 .key(0, pose().scale(0.05f).alpha(0.3f))
@@ -802,7 +802,7 @@ public final class IlluminatorFx {
     public static final int APPRAISE_LANDS = 5;
 
     /** A dashed blueprint line from the eye to the target, a lens flash, then the mark over its head for 'ticks'. */
-    public static void appraise(ServerLevel sl, Player player, LivingEntity target, Weakness weakness, int ticks, String tag) {
+    public static void appraise(ServerLevel sl, LivingEntity player, LivingEntity target, Weakness weakness, int ticks, String tag) {
         Vec3 eye = player.getEyePosition().add(Spells.flatLook(player).scale(0.4));
         ParticleShapes.slashBetween(sl, BLUEPRINT_LINE, eye, chestOf(target));
         ParticleShapes.spawn(sl, LENS, eye, Vec3.ZERO);
@@ -821,7 +821,7 @@ public final class IlluminatorFx {
     public static final int FLAW_LANDS = 4;
 
     /** A hairline of blueprint light finds the flaw, then it gives: the crack flashes on the body. */
-    public static void exploitFlaw(ServerLevel sl, Player player, LivingEntity target) {
+    public static void exploitFlaw(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 eye = player.getEyePosition().add(Spells.flatLook(player).scale(0.4));
         ParticleShapes.slashBetween(sl, HAIRLINE, eye, chestOf(target));
         sound(sl, player.position(), ModSounds.ILLUMINATOR_EXPLOIT_FLAW, 1.0f, wobble(1.0f));
@@ -836,12 +836,12 @@ public final class IlluminatorFx {
     }
 
     /** Illuminator: every Appraised enemy at once, a hairline to each. */
-    public static void exploitAll(ServerLevel sl, Player player, List<LivingEntity> targets) {
+    public static void exploitAll(ServerLevel sl, LivingEntity player, List<LivingEntity> targets) {
         for (LivingEntity target : targets) exploitFlaw(sl, player, target);
     }
 
     /** No mark on it: the hairline flickers and finds nothing (the message is the ability's). */
-    public static void noFlaw(ServerLevel sl, Player player) {
+    public static void noFlaw(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, EQUATIONS[0], player.getEyePosition().add(Spells.flatLook(player).scale(0.6)), 3, 0.01, 0.03);
         sound(sl, player.position(), ModSounds.ILLUMINATOR_APPRAISE, 0.4f, 0.7f);
     }
@@ -870,7 +870,7 @@ public final class IlluminatorFx {
      * The brass rifle appears in the hands (or, armCannon = true, the Mechanical Body's arm cannon is raised: no
      * winding), is wound, and fades after 'rounds' rounds. The rounds themselves: rifleShot at RIFLE_FIRES + i * STEP.
      */
-    public static void rifle(ServerLevel sl, Player player, int rounds, boolean armCannon) {
+    public static void rifle(ServerLevel sl, LivingEntity player, int rounds, boolean armCannon) {
         int last = (armCannon ? 2 : RIFLE_FIRES) + Math.max(0, rounds - 1) * RIFLE_STEP;
         if (!armCannon) {
             ModelFx gun = RIFLE.scale(0.55f).lifetime(last + 10).fade(3, 8)
@@ -891,7 +891,7 @@ public final class IlluminatorFx {
     }
 
     /** One round: the muzzle flash, a brass tracer to 'to', and a hit there. weakness: the mark it carries (or null). */
-    public static void rifleShot(ServerLevel sl, Player player, Vec3 from, Vec3 to, Weakness weakness) {
+    public static void rifleShot(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to, Weakness weakness) {
         ParticleShapes.slashBetween(sl, TRACER.color(weakness == null ? 0xC0FFE296 : withAlpha(weakness.color, 0xC0)), from, to);
         ParticleShapes.burst(sl, SPARK, from, 5, 0.04, 0.12);
         ParticleShapes.spawn(sl, STEAM.size(0.15f).endSize(0.4f), from, Spells.flatLook(player).scale(0.03));
@@ -1018,7 +1018,7 @@ public final class IlluminatorFx {
      * A ray of condensed starlight from the hand into the target. curse = the step of the ladder it now puts on (null:
      * only the ray, the first time).
      */
-    public static void starOfCurses(ServerLevel sl, Player player, LivingEntity target, Curse curse) {
+    public static void starOfCurses(ServerLevel sl, LivingEntity player, LivingEntity target, Curse curse) {
         Vec3 hand = handOf(player, sl);
         ParticleShapes.slashBetween(sl, STAR_RAY, hand, chestOf(target));
         ParticleShapes.burst(sl, STAR_SPARK, hand, 6, 0.03, 0.1);
@@ -1288,7 +1288,7 @@ public final class IlluminatorFx {
     public static final int MECH_ON = 12;
 
     /** Brass plates and gears fly onto the Alchemist and clamp on; the goggles go over the eyes. Worn for 'ticks'. */
-    public static void mechanicalBody(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void mechanicalBody(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         float scale = (float) (player.getBbHeight() / 1.8);
         ModelFx plates = MECH_BODY.scale(scale).fade(0, 8)
                 .key(0, pose().scale(1.6f).alpha(0f))
@@ -1309,13 +1309,13 @@ public final class IlluminatorFx {
     }
 
     /** The Mechanical Body's arm cannon raised (while the Clockwork Rifle fires through it), for 'ticks'. */
-    public static void armCannon(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void armCannon(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         float scale = (float) (player.getBbHeight() / 1.8);
         wear(sl, player, ARM_CANNON.scale(scale).fade(2, 6), Vec3.ZERO, ticks, tag + "_arm");
     }
 
     /** While the jetpack burns (call it every 2 or 3 ticks): steam and flame from the two nozzles. */
-    public static void jet(ServerLevel sl, Player player) {
+    public static void jet(ServerLevel sl, LivingEntity player) {
         Vec3 back = Spells.flatLook(player).scale(-0.32);
         Vec3 right = Spells.rightOf(player).scale(0.16);
         Vec3 base = player.position().add(0, 0.65, 0).add(back);
@@ -1327,7 +1327,7 @@ public final class IlluminatorFx {
     }
 
     /** The plates come away. */
-    public static void mechanicalBodyEnd(ServerLevel sl, Player player, String tag) {
+    public static void mechanicalBodyEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.clearModels(sl, player, tag + "_eyes");
         ParticleShapes.clearModels(sl, player, tag + "_arm");
@@ -1339,7 +1339,7 @@ public final class IlluminatorFx {
     // ---------- the Mythical Creature Form (Knowledge Magister): white steam
 
     /** The Magister dissolves into white steam for 'ticks' (the hiding is the ability's). */
-    public static void steamForm(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void steamForm(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ParticleShapes.burst(sl, STEAM, chestOf(player), 16, 0.04, 0.14);
         ParticleShapes.burst(sl, PAGE, chestOf(player), 6, 0.04, 0.1);
         SpellFx.shockRing(sl, player.position(), 2.0, 0xC0ECF0F6, 8, 0);
@@ -1347,13 +1347,13 @@ public final class IlluminatorFx {
     }
 
     /** Every tick or two in the steam form: a cloud rolling along the ground. */
-    public static void steamTrail(ServerLevel sl, Player player) {
+    public static void steamTrail(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, STEAM, player.position().add(0, 0.4, 0), Vec3.ZERO);
         if (sl.getRandom().nextInt(4) == 0) ParticleShapes.spawn(sl, TEXT, player.position().add(0, 0.6, 0), new Vec3(0, 0.02, 0));
     }
 
     /** The steam gathers back into the Magister. */
-    public static void steamReform(ServerLevel sl, Player player, String tag) {
+    public static void steamReform(ServerLevel sl, LivingEntity player, String tag) {
         SpellFx.closingRing(sl, player.position(), 2.0, 0xC0ECF0F6, 8, 0);
         ParticleShapes.burst(sl, STEAM, chestOf(player), 8, 0.02, 0.06);
         sound(sl, player.position(), ModSounds.ILLUMINATOR_STEAM_REFORM, 0.9f, 1.0f);
@@ -1362,7 +1362,7 @@ public final class IlluminatorFx {
     // ---------- Dissociation
 
     /** A clear, misty beam from the eye: 'from' (the eye) to 'to', 'width' blocks wide. Instant. */
-    public static void dissociation(ServerLevel sl, Player player, Vec3 from, Vec3 to, double width) {
+    public static void dissociation(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to, double width) {
         Vec3 way = to.subtract(from);
         double length = way.length();
         if (length < 0.1) return;
@@ -1400,7 +1400,7 @@ public final class IlluminatorFx {
      * The Scholar turns into drifting pages and flies from 'from' to 'to' in 'flight' ticks (into a mind, or a jump
      * when no enemy is in view). The hiding and the move are the ability's.
      */
-    public static void knowledgeSpirit(ServerLevel sl, Player player, Vec3 from, Vec3 to, int flight) {
+    public static void knowledgeSpirit(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to, int flight) {
         Vec3 a = from.add(0, 1.0, 0);
         Vec3 b = to.add(0, 1.0, 0);
         ParticleShapes.burst(sl, PAGE, a, 18, 0.05, 0.16);
@@ -1438,7 +1438,7 @@ public final class IlluminatorFx {
     }
 
     /** The Scholar steps out beside the target in a burst of pages. */
-    public static void spiritStepOut(ServerLevel sl, Player player) {
+    public static void spiritStepOut(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, PAGE, chestOf(player), 16, 0.05, 0.16);
         SpellFx.closingRing(sl, player.position(), 1.8, 0xC0F3E6C4, 8, 0);
     }
@@ -1494,7 +1494,7 @@ public final class IlluminatorFx {
     public static final float COLOSSUS_SCALE = 2f;
 
     /** A walking machine of brass and steam assembles round the Magister for 'ticks' (they stand in its cage). */
-    public static void colossus(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void colossus(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx body = COLOSSUS.scale(COLOSSUS_SCALE).fade(0, 12)
                 .key(0, pose().frame(1f).scale(0.3f).alpha(0f).spin(-90f))
                 .key(COLOSSUS_READY - 8, pose().scale(0.95f).alpha(1f).spin(0f), Ease.OUT)
@@ -1521,14 +1521,14 @@ public final class IlluminatorFx {
     }
 
     /** A step of the Colossus: the ground shakes in a ring 6 blocks wide, steam from its stacks. */
-    public static void colossusStep(ServerLevel sl, Player player) {
+    public static void colossusStep(ServerLevel sl, LivingEntity player) {
         SpellFx.shockRing(sl, player.position(), 6.0, 0x90D9A441, 8, 0);
         ParticleShapes.burst(sl, STEAM, player.position().add(Spells.flatLook(player).scale(-1.0)).add(0, 5.5, 0), 3, 0.02, 0.06);
         sound(sl, player.position(), ModSounds.ILLUMINATOR_COLOSSUS_STEP, 1.2f, wobble(1.0f));
     }
 
     /** Walking: the Colossus swings its legs for a stride (20 ticks); 'ticksLeft' = how long it still stands. */
-    public static void colossusStride(ServerLevel sl, Player player, int ticksLeft, String tag) {
+    public static void colossusStride(ServerLevel sl, LivingEntity player, int ticksLeft, String tag) {
         ModelFx body = COLOSSUS.scale(COLOSSUS_SCALE).fade(0, 12)
                 .key(0, pose().frame(0f))
                 .key(10, pose().frame(1f), Ease.IN_OUT)
@@ -1543,7 +1543,7 @@ public final class IlluminatorFx {
     public static final int FUSION_FIRES = 14;
 
     /** The fusion cannon is raised and charges (its arm comes up, the core brightens); 'ticksLeft' as above. */
-    public static void fusionCharge(ServerLevel sl, Player player, int ticksLeft, String tag) {
+    public static void fusionCharge(ServerLevel sl, LivingEntity player, int ticksLeft, String tag) {
         ModelFx body = COLOSSUS.scale(COLOSSUS_SCALE).fade(0, 12)
                 .key(0, pose().frame(0f))
                 .key(FUSION_FIRES - 4, pose().frame(2f), Ease.OUT)
@@ -1582,7 +1582,7 @@ public final class IlluminatorFx {
     }
 
     /** The Colossus comes apart (its time is up, or its absorption is gone). */
-    public static void colossusEnd(ServerLevel sl, Player player, String tag) {
+    public static void colossusEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         Vec3 at = player.position().add(0, 2.5, 0);
         ParticleShapes.burst(sl, GEAR, at, 16, 0.1, 0.3);
@@ -1597,7 +1597,7 @@ public final class IlluminatorFx {
     public static final int MURAL_COUNT = 8;
 
     /** Murals of history unfold in a ring 'radius' round the Illuminator for 'ticks', facing out, going where they go. */
-    public static void scrollsOfCivilization(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void scrollsOfCivilization(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         float start = randomYaw(sl);
         for (int k = 0; k < MURAL_COUNT; k++) {
             float azimuth = start + k * 360f / MURAL_COUNT;
@@ -1621,7 +1621,7 @@ public final class IlluminatorFx {
     public static final int SCROLLS_FLY = 10;
 
     /** The ring ends: the murals roll up and fly outward 'radius' blocks as scrolls. */
-    public static void scrollsRelease(ServerLevel sl, Player player, double radius, String tag) {
+    public static void scrollsRelease(ServerLevel sl, LivingEntity player, double radius, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         Vec3 center = player.position().add(0, 1.2, 0);
         float start = randomYaw(sl);
@@ -1654,7 +1654,7 @@ public final class IlluminatorFx {
     public static final int MAZE_CLOSED = 8;
 
     /** A lattice of equations closes round the target (a cube 'size' blocks), held there for 'ticks'. */
-    public static void mathematicalMaze(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void mathematicalMaze(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         float size = Math.max(3f, target.getBbHeight() * 1.4f);
         ModelFx cube = LATTICE.color(0xE04696F0).scale(size).lifetime(ticks).fade(0, 10).tag(tag)
                 .key(0, pose().scale(3f).alpha(0f).spin(90f))
@@ -1677,7 +1677,7 @@ public final class IlluminatorFx {
     }
 
     /** Aimed at an ally: Enlightenment for 'ticks': the lamp of knowledge flares over them, gold light round them. */
-    public static void enlightenment(ServerLevel sl, Player player, LivingEntity ally, int ticks, String tag) {
+    public static void enlightenment(ServerLevel sl, LivingEntity player, LivingEntity ally, int ticks, String tag) {
         flash(sl, EMBLEM, headOf(ally).add(0, 0.8, 0), yawToward(ally.position(), player.position()), 0xF0FFECAA, 1.2f, 20);
         SpellFx.circleUnder(sl, ally, Math.max(0.7, ally.getBbWidth()), 0x90FFECAA, ticks, tag);
         SpellFx.risingRings(sl, ally.position(), 0.9, 2.2, 3, 0xC0FFECAA);
@@ -1688,7 +1688,7 @@ public final class IlluminatorFx {
     // ---------- Masterwork
 
     /** The Illuminator conducts for up to 'ticks': a baton in the hand, a ring of the score at their feet. */
-    public static void masterwork(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void masterwork(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         ModelFx baton = BATON.scale(0.8f).fade(4, 6).key(0, pose().right(0.38f).forward(0.3f));
         for (int t = 0; t + 10 <= ticks && t < 300; t += 10) {                 // a beat every half second
             baton = baton.key(t + 5, pose().roll(t % 20 == 0 ? 30f : -20f).pitch(-25f), Ease.IN_OUT)
@@ -1704,7 +1704,7 @@ public final class IlluminatorFx {
     }
 
     /** Every 10 ticks while the music plays: notes rise round the Illuminator and drift out to 'radius'. */
-    public static void masterworkTick(ServerLevel sl, Player player, double radius) {
+    public static void masterworkTick(ServerLevel sl, LivingEntity player, double radius) {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         for (int i = 0; i < 6; i++) {
             double a = random.nextDouble() * Math.PI * 2;
@@ -1715,7 +1715,7 @@ public final class IlluminatorFx {
     }
 
     /** The music stops (its time is up, or another cast broke it off). */
-    public static void masterworkEnd(ServerLevel sl, Player player, String tag) {
+    public static void masterworkEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.clearModels(sl, player, tag + "_score");
         ParticleShapes.burst(sl, NOTE, chestOf(player).add(0, 0.5, 0), 6, 0.04, 0.1);
@@ -1727,7 +1727,7 @@ public final class IlluminatorFx {
     public static final int REALITY_LANDS = 6;
 
     /** Knowledge rejects the target for 'ticks': a struck-out book flashes before it and stays small over its head. */
-    public static void realityKnowledge(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void realityKnowledge(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ParticleShapes.slashBetween(sl, HAIRLINE.color(0xE01B2A41).core(0xFFD9A441), handOf(player, sl), chestOf(target));
         sound(sl, target.position(), ModSounds.ILLUMINATOR_REALITY_KNOWLEDGE, 1.3f, 1.0f);
         Later.run(sl, REALITY_LANDS, () -> {
@@ -1799,7 +1799,7 @@ public final class IlluminatorFx {
      * great gears turning overhead, a fainter wheel of them on the ground, gears hanging in the air and steam at the
      * edge.
      */
-    public static void mechanicalHeaven(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void mechanicalHeaven(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         Vec3 center = player.position();
         double sky = Math.min(radius, 24.0) * 0.5 + 10;
         ModelFx heavens = GEAR_SKY.scale((float) (Math.min(radius, 40.0) * 2.0)).lifetime(ticks).fade(HEAVEN_RISEN, 20)
@@ -1857,7 +1857,7 @@ public final class IlluminatorFx {
     // =====================================================================================
 
     /** Starlight (Astronomer): at night under open sky, faint stars drift down onto the Illuminator now and then. */
-    public static void starlight(ServerLevel sl, Player player) {
+    public static void starlight(ServerLevel sl, LivingEntity player) {
         Vec3 above = player.position().add(sl.getRandom().nextDouble() - 0.5, 3.0, sl.getRandom().nextDouble() - 0.5);
         ParticleShapes.spawn(sl, STAR_SPARK.gravity(0.01f).lifetime(40, 10), above, new Vec3(0, -0.04, 0));
     }
@@ -1873,7 +1873,7 @@ public final class IlluminatorFx {
     }
 
     /** Absorption (Arcane Scholar): a thread of life drawn from an enemy at 'from' into the Scholar. */
-    public static void absorption(ServerLevel sl, Player player, Vec3 from) {
+    public static void absorption(ServerLevel sl, LivingEntity player, Vec3 from) {
         Vec3 to = chestOf(player);
         ParticleShapes.spawn(sl, GOLD_MOTE.color(0xFFFFB0A0).fadeOut(), from, to.subtract(from).scale(0.08));
         if (player.tickCount % 40 == 0) sound(sl, player.position(), ModSounds.ILLUMINATOR_ABSORPTION, 0.4f, wobble(1.0f));
@@ -1894,7 +1894,7 @@ public final class IlluminatorFx {
     }
 
     /** Reality Knowledge (Paragon): someone tried to read or erase the Paragon and failed: pages close like a shield. */
-    public static void realityGuard(ServerLevel sl, Player player) {
+    public static void realityGuard(ServerLevel sl, LivingEntity player) {
         ParticleShapes.sphere(sl, PAGE, chestOf(player), 0.9, 12);
         sound(sl, player.position(), ModSounds.ILLUMINATOR_BOOK_RELEASE, 0.5f, 1.4f);
     }
@@ -1919,7 +1919,7 @@ public final class IlluminatorFx {
      * 1: a tilted ring of drifting pages, the other way. 2: either a blueprint spiral winding out on the ground, or two
      * crossed lines of equations on the target with a small lattice flashing round it.
      */
-    public static void combo(ServerLevel sl, Player player, LivingEntity target, int step) {
+    public static void combo(ServerLevel sl, LivingEntity player, LivingEntity target, int step) {
         Vec3 chest = chestOf(player);
         switch (step) {
             case 0 -> {

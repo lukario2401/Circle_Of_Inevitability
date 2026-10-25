@@ -345,28 +345,28 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "prince_of_abolition/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "prince_of_abolition/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** Shows the status's picture with no clock, until statusEnd (for what lasts as long as something else does). */
-    public static void statusForever(Player player, Status status) {
+    public static void statusForever(LivingEntity player, Status status) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "prince_of_abolition/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "prince_of_abolition/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
-        HudTimer.hide(player, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** A picture shown with statusForever stays this long (until statusEnd takes it away). */
     public static final int FOREVER = 72000;
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** The status a Bestowment feeling shows on a player. */
@@ -398,17 +398,17 @@ public final class PrinceOfAbolitionFx {
     private static final String ORDER_ID = "poa_order";
 
     /** Shows (or updates) the Order counter. count 0 still shows "Order 0/9"; orderEnd hides it. */
-    public static void order(Player player, int count) {
-        HudCounter.show(player, ORDER_ID, "prince_of_abolition/order", "Order", Math.max(0, count), ORDER_CAP, 0xE0B04A);
+    public static void order(LivingEntity player, int count) {
+        if (player instanceof Player viewerOfHud) HudCounter.show(viewerOfHud, ORDER_ID, "prince_of_abolition/order", "Order", Math.max(0, count), ORDER_CAP, 0xE0B04A);
     }
 
     /** Takes the Order counter away (the Pathway was lost, or the player left it). */
-    public static void orderEnd(Player player) {
-        HudCounter.hide(player, ORDER_ID);
+    public static void orderEnd(LivingEntity player) {
+        if (player instanceof Player viewerOfHud) HudCounter.hide(viewerOfHud, ORDER_ID);
     }
 
     /** A new standing order: a small crown rises from the Beyonder and a soft chime only they hear. */
-    public static void orderRaised(ServerLevel sl, Player player) {
+    public static void orderRaised(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, CROWN, headOf(player).add(0, 0.2, 0), new Vec3(0, 0.05, 0));
         if (player instanceof ServerPlayer sp) soundFor(sp, ModSounds.ABOLITION_ORDER, 0.6f, wobble(1.0f));
     }
@@ -547,7 +547,7 @@ public final class PrinceOfAbolitionFx {
     public static final int VERDICT_LANDS = 10;
 
     /** A black gavel appears high over the target, swings back and strikes: a gold ring, a court's echo. */
-    public static void verdict(ServerLevel sl, Player player, LivingEntity target) {
+    public static void verdict(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 top = headOf(target);
         float yaw = yawToward(target.position(), player.position());
         ModelFx gavel = GAVEL.scale(2.2f).lifetime(VERDICT_LANDS + 14).fade(3, 10)
@@ -584,7 +584,7 @@ public final class PrinceOfAbolitionFx {
     public static final int WORDS_LAND = 12;
 
     /** A few quiet words: legal script turns round the speaker's head, a stream of sections drifts to the target. */
-    public static void brainwash(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void brainwash(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ModelFx script = LAW_SCRIPT.color(0xD0C8AAFF).scale(1.3f).lifetime(30).fade(2, 10).spin(4f)
                 .key(0, pose().scale(0.4f).alpha(0f)).key(6, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
         ParticleShapes.modelOnHead(sl, script, player, -0.25, 0f, 0f, 0f);
@@ -618,7 +618,7 @@ public final class PrinceOfAbolitionFx {
             .lifetime(8).sweep(3);
 
     /** One blow with the whole body: a heavy arc, a gold shock where it lands and the ground thrown up. */
-    public static void bruteForce(ServerLevel sl, Player player, LivingEntity target) {
+    public static void bruteForce(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 center = chestOf(player).add(Spells.flatLook(player).scale(0.8));
         ParticleShapes.slash(sl, BRUTE_ARC, center, player.getYRot(), 0f, 20f);
         sound(sl, player.position(), ModSounds.ABOLITION_BRUTE_FORCE, 1.1f, wobble(0.95f));
@@ -631,7 +631,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Iron Will: grey rings close round the Beyonder and a cold aura stays on them for 'ticks'. */
-    public static void ironWill(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void ironWill(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.closingRing(sl, player.position(), 3.0, 0xC0A0A0AA, 8, 0);
         SpellFx.risingRings(sl, player.position(), 0.9, player.getBbHeight(), 3, 0xA0C0C0CA);
         ModelFx halo = LAW_SCRIPT.color(0x80A0A0AA).scale(1.4f).lifetime(ticks).fade(6, 10).spin(1.5f).tag(tagged(tag));
@@ -640,12 +640,12 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** A mind effect slides off: a grey flash at the temple and motes thrown away. */
-    public static void mindShrug(ServerLevel sl, Player player) {
+    public static void mindShrug(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, ASH_MOTE, player.getEyePosition(), 8, 0.08, 0.18);
         ParticleShapes.burst(sl, SPARK.color(0xFFC0C0CA), player.getEyePosition(), 5, 0.1, 0.2);
     }
 
-    public static void ironWillEnd(ServerLevel sl, Player player, String tag) {
+    public static void ironWillEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tagged(tag));
     }
 
@@ -660,7 +660,7 @@ public final class PrinceOfAbolitionFx {
      * A coin is flicked from the briber's hand onto the target, spinning; 'actual' (a real ingot or emerald was spent)
      * makes it bigger and leaves a little shower of coins where it lands.
      */
-    public static void bribe(ServerLevel sl, Player player, LivingEntity target, Bribe bribe, boolean actual) {
+    public static void bribe(ServerLevel sl, LivingEntity player, LivingEntity target, Bribe bribe, boolean actual) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) hand = chestOf(player);
         ModelFx coin = COIN_MODEL.scale(actual ? 0.42f : 0.3f).lifetime(BRIBE_LANDS + 4).fade(1, 3)
@@ -715,7 +715,7 @@ public final class PrinceOfAbolitionFx {
             .width(0.04f).taper(SlashFx.Taper.UNIFORM).translucent();
 
     /** Connect: a thin black thread from the briber to the target for 'ticks', gold motes along it at the start. */
-    public static void connect(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void connect(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         SpellFx.tether(sl, THREAD, player, target, ticks);
         ParticleShapes.line(sl, GOLD_MOTE, chestOf(player), chestOf(target), 1.2);
         SpellFx.circleUnder(sl, target, 0.7, 0x90E0B04A, ticks, tagged(tag));
@@ -730,7 +730,7 @@ public final class PrinceOfAbolitionFx {
             .width(0.07f).taper(SlashFx.Taper.COMET).lifetime(6);
 
     /** Coin Shot: the flick, a gold streak along the line to where it hits, and a ping. Hitscan: it is there at once. */
-    public static void coinShot(ServerLevel sl, Player player, Vec3 hitAt, boolean actual) {
+    public static void coinShot(ServerLevel sl, LivingEntity player, Vec3 hitAt, boolean actual) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) hand = player.getEyePosition();
         ParticleShapes.slashBetween(sl, actual ? COIN_TRAIL.width(0.12f) : COIN_TRAIL, hand, hitAt);
@@ -751,7 +751,7 @@ public final class PrinceOfAbolitionFx {
     // =====================================================================================
 
     /** A projectile or spell is distorted where it is: twisting motes, a reversed ring, a streak back to its sender. */
-    public static void distortShot(ServerLevel sl, Player player, Vec3 at, Vec3 backToward) {
+    public static void distortShot(ServerLevel sl, LivingEntity player, Vec3 at, Vec3 backToward) {
         SpellFx.closingRing(sl, at.add(0, -0.3, 0), 1.6, 0xC0C8AAFF, 6, 0);
         ParticleShapes.burst(sl, TWIST, at, 6, 0.03, 0.08);
         if (backToward != null) {
@@ -763,7 +763,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** An enemy's intent is distorted for 'ticks': a twisting swirl over its head. */
-    public static void distortIntent(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void distortIntent(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ParticleShapes.line(sl, TWIST, player.getEyePosition(), headOf(target), 1.0);
         ModelFx swirl = DISORDER_GLYPH.color(0xB0C8AAFF).scale(0.45f).lifetime(ticks).fade(4, 8).spin(-9f).tag(tagged(tag));
         ParticleShapes.modelOn(sl, swirl, target, new Vec3(0, target.getBbHeight() + 0.5, 0), 0f, 0f, 0f);
@@ -812,7 +812,7 @@ public final class PrinceOfAbolitionFx {
      * Seal: an illusory door rises in front of the Beyonder, swings open, slams shut, and a shell of gold lattice closes
      * round 'center' (radius blocks) for 'ticks'.
      */
-    public static void seal(ServerLevel sl, Player player, Vec3 center, double radius, int ticks, String tag) {
+    public static void seal(ServerLevel sl, LivingEntity player, Vec3 center, double radius, int ticks, String tag) {
         Vec3 front = player.position().add(Spells.flatLook(player).scale(1.6));
         door(sl, front, player.getYRot() + 180f, 1.4f, SEAL_SLAMS, tag);
         sound(sl, front, ModSounds.ABOLITION_DOOR_RISE, 1.0f, 1.0f);
@@ -840,7 +840,7 @@ public final class PrinceOfAbolitionFx {
      * Earl of the Fallen: the door is summoned anywhere and slams at once, and a wall of lattice 10 wide and 5 tall
      * stands across 'yaw' at 'middle' (the middle of its bottom edge) for 'ticks'.
      */
-    public static void gate(ServerLevel sl, Player player, Vec3 middle, float yaw, int ticks, String tag) {
+    public static void gate(ServerLevel sl, LivingEntity player, Vec3 middle, float yaw, int ticks, String tag) {
         door(sl, middle, yaw, 1.6f, GATE_SLAMS, tag);
         sound(sl, middle, ModSounds.ABOLITION_DOOR_RISE, 1.0f, 1.3f);
         Later.run(sl, GATE_SLAMS, () -> {
@@ -876,7 +876,7 @@ public final class PrinceOfAbolitionFx {
     // =====================================================================================
 
     /** Disorder: a clock all wrong spins over the enemy's head, cogs fall off it, the air slips out of tune. */
-    public static void disorder(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void disorder(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ParticleShapes.line(sl, ASH_MOTE, player.getEyePosition(), headOf(target), 1.5);
         ModelFx glyph = DISORDER_GLYPH.color(0xD0A0A0AA).scale(0.6f).lifetime(ticks).fade(4, 10).tag(tagged(tag))
                 .key(0, pose().scale(0.2f).alpha(0f)).key(6, pose().scale(1f).alpha(1f), Ease.OUT_BACK)
@@ -891,7 +891,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Disorder cast while held: everything holding the Beyonder comes apart in cogs and grey dust. */
-    public static void unbound(ServerLevel sl, Player player) {
+    public static void unbound(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, COG, chestOf(player), 14, 0.08, 0.2);
         ParticleShapes.burst(sl, ASH_DUST, player.position().add(0, 0.5, 0), 8, 0.04, 0.1);
         SpellFx.shockRing(sl, player.position(), 2.5, 0xC0A0A0AA, 8, 0);
@@ -902,7 +902,7 @@ public final class PrinceOfAbolitionFx {
      * Paces: a few long strides of light from 'from' to 'to', and the fake self left standing at 'from' for 'ticks'
      * (play it before moving the Beyonder; decoyBurst when it is struck).
      */
-    public static void paces(ServerLevel sl, Player player, Vec3 from, Vec3 to, int ticks, String tag) {
+    public static void paces(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to, int ticks, String tag) {
         Vec3 way = to.subtract(from);
         for (int i = 1; i <= 4; i++) {
             Vec3 foot = from.add(way.scale(i / 4.0)).add(0, 0.1, 0);
@@ -929,7 +929,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Earl of the Fallen: for a moment everything aimed at the Beyonder misses: a grey shimmer round them. */
-    public static void untouchable(ServerLevel sl, Player player) {
+    public static void untouchable(ServerLevel sl, LivingEntity player) {
         ParticleShapes.sphere(sl, ASH_MOTE, chestOf(player), 1.1, 24);
         ParticleShapes.burst(sl, TWIST.color(0xFFC0C0CA), chestOf(player), 4, 0.03, 0.06);
     }
@@ -1063,7 +1063,7 @@ public final class PrinceOfAbolitionFx {
     public static final int STEP_OUT = 6;
 
     /** Step: a gold door at the near end swallows the Beyonder and one at the mausoleum lets them out. */
-    public static void step(ServerLevel sl, Player player, Vec3 from, Vec3 to) {
+    public static void step(ServerLevel sl, LivingEntity player, Vec3 from, Vec3 to) {
         float yaw = yawToward(from, to);
         door(sl, from, yaw + 180f, 1.0f, STEP_OUT + 2, null);
         ParticleShapes.burst(sl, GOLD_MOTE, from.add(0, 1, 0), 12, 0.03, 0.1);
@@ -1076,7 +1076,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Corrosion: a dark, greedy tide rolls out from the Beyonder across 'radius'; coins glint in it. */
-    public static void corrosion(ServerLevel sl, Player player, double radius) {
+    public static void corrosion(ServerLevel sl, LivingEntity player, double radius) {
         SpellFx.shockRing(sl, player.position(), radius, 0xC02A1F3D, 14, 0);
         SpellFx.shockRing(sl, player.position(), radius * 0.7, 0x909A6AC0, 12, 3);
         ParticleShapes.ring(sl, JET_SMOKE, player.position().add(0, 0.3, 0), 1.0, 24, radius / 16.0);
@@ -1099,7 +1099,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Majesty: a crown of light over the Beyonder, the seal of the Black Emperor slams down under them. */
-    public static void majesty(ServerLevel sl, Player player, double radius) {
+    public static void majesty(ServerLevel sl, LivingEntity player, double radius) {
         ModelFx crown = CROWN_MODEL.scale(1.6f).lifetime(26).fade(3, 10)
                 .key(0, pose().up(1.2f).alpha(0f)).key(6, pose().up(0.4f).alpha(1f), Ease.OUT)
                 .key(12, pose().up(0.2f).scale(1.2f), Ease.IN);
@@ -1123,7 +1123,7 @@ public final class PrinceOfAbolitionFx {
     public static final int BESTOW_LANDS = 8;
 
     /** Bestowment: a mask in the feeling's color drifts from the Beyonder onto the target's face, and fades into it. */
-    public static void bestowment(ServerLevel sl, Player player, LivingEntity target, Feeling feeling, int ticks, String tag) {
+    public static void bestowment(ServerLevel sl, LivingEntity player, LivingEntity target, Feeling feeling, int ticks, String tag) {
         ModelFx mask = FEELING_MASK.color(withAlpha(feeling.color, 0xE0)).scale(0.6f).lifetime(BESTOW_LANDS + 12).fade(2, 10)
                 .key(BESTOW_LANDS, pose().scale(1f)).key(BESTOW_LANDS + 10, pose().scale(1.4f), Ease.OUT);
         SpellFx.homing(sl, mask, player.getEyePosition(), target, BESTOW_LANDS);
@@ -1139,19 +1139,19 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Exploit, in the air: the Beyonder hangs, gold motes trailing off their shoulders like wings, for 'ticks'. */
-    public static void exploitGlide(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void exploitGlide(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.risingRings(sl, player.position(), 1.0, 1.0, 2, 0xA0FFE08A);
         ModelFx halo = EMPEROR_SEAL.color(0x70FFE08A).scale(1.4f).lifetime(ticks).fade(4, 10).spin(1.2f).tag(tagged(tag));
         ParticleShapes.modelOn(sl, halo, player, new Vec3(0, -0.15, 0), 0f, 0f, 0f);
         sound(sl, player.position(), ModSounds.ABOLITION_EXPLOIT, 0.9f, 1.0f);
     }
 
-    public static void exploitGlideEnd(ServerLevel sl, Player player, String tag) {
+    public static void exploitGlideEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tagged(tag));
     }
 
     /** Exploit on an enemy: its states end early: what it carried is pulled off it in a spray of keyholes. */
-    public static void exploitStrip(ServerLevel sl, Player player, LivingEntity target) {
+    public static void exploitStrip(ServerLevel sl, LivingEntity player, LivingEntity target) {
         ParticleShapes.line(sl, GOLD_MOTE, player.getEyePosition(), chestOf(target), 1.5);
         ParticleShapes.burst(sl, KEYHOLE, chestOf(target), 8, 0.06, 0.16);
         SpellFx.closingRing(sl, target.position(), 2.0, 0xC0FFE08A, 6, 0);
@@ -1159,14 +1159,14 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Exploit on oneself: everything running is stretched: rings rise slowly and widen. */
-    public static void exploitExtend(ServerLevel sl, Player player) {
+    public static void exploitExtend(ServerLevel sl, LivingEntity player) {
         SpellFx.risingRings(sl, player.position(), 1.4, 2.4, 4, 0xA0FFE08A);
         ParticleShapes.spiral(sl, GOLD_MOTE, player.position().add(0, 0.2, 0), 3, 24, 0.3, 1.6, 1.2, 0.06);
         sound(sl, player.position(), ModSounds.ABOLITION_EXPLOIT, 1.0f, 1.2f);
     }
 
     /** Duke of Entropy, inside an Entropy field: the jump becomes a leap to the Moon: a burst of grey and gold below. */
-    public static void moonLeap(ServerLevel sl, Player player) {
+    public static void moonLeap(ServerLevel sl, LivingEntity player) {
         SpellFx.shockRing(sl, player.position(), 4.0, 0xC0A0A0AA, 10, 0);
         ParticleShapes.cone(sl, ASH_DUST, player.position(), new Vec3(0, -1, 0), 160, 14, 0.1, 0.3);
         ParticleShapes.cone(sl, GOLD_MOTE, player.position(), new Vec3(0, -1, 0), 120, 12, 0.1, 0.3);
@@ -1174,14 +1174,14 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Magnify: the next blow gathers: a gold glow round the Beyonder's hand for 'ticks' (cleared when used). */
-    public static void magnify(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void magnify(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx ring = EMPEROR_SEAL.color(0xB0E0B04A).scale(0.7f).lifetime(ticks).fade(6, 6).spin(6f).tag(tagged(tag));
         ParticleShapes.modelOnTurning(sl, ring, player, new Vec3(0, 1.0, 0), 0f, 90f, 0f);
         SpellFx.closingRing(sl, player.position(), 3.0, 0xC0E0B04A, 10, 0);
         sound(sl, player.position(), ModSounds.ABOLITION_MAGNIFY, 1.0f, 1.0f);
     }
 
-    public static void magnifyEnd(ServerLevel sl, Player player, String tag) {
+    public static void magnifyEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tagged(tag));
     }
 
@@ -1195,7 +1195,7 @@ public final class PrinceOfAbolitionFx {
      * A magnified Bribe travels as a thrown flower, spinning end over end from the Beyonder's hand to 'to'. Returns
      * the ticks until it lands (play quake there then).
      */
-    public static int magnifiedFlower(ServerLevel sl, Player player, Vec3 to) {
+    public static int magnifiedFlower(ServerLevel sl, LivingEntity player, Vec3 to) {
         Vec3 hand = SpellFx.handOf(player, sl);
         Vec3 from = hand == null ? player.getEyePosition() : hand;
         Vec3 way = to.subtract(from);
@@ -1219,7 +1219,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Magnify through a Connection: the thread snaps taut, gold, and the target is hauled in along it. */
-    public static void seize(ServerLevel sl, Player player, LivingEntity target) {
+    public static void seize(ServerLevel sl, LivingEntity player, LivingEntity target) {
         SlashFx taut = THREAD.color(0xE0E0B04A).core(0xFFFFFFFF).width(0.08f);
         SpellFx.tether(sl, taut, player, target, 14);
         ParticleShapes.burst(sl, GOLD_MOTE, chestOf(target), 10, 0.05, 0.12);
@@ -1267,7 +1267,7 @@ public final class PrinceOfAbolitionFx {
     public static final int RUIN_FIRES = 6;
 
     /** Ruin: black and gold gather in the hand, then a beam the full length of the line. */
-    public static void ruin(ServerLevel sl, Player player, Vec3 to) {
+    public static void ruin(ServerLevel sl, LivingEntity player, Vec3 to) {
         Vec3 hand = SpellFx.handOf(player, sl);
         Vec3 from = hand == null ? player.getEyePosition() : hand;
         SpellFx.closingRing(sl, player.position(), 2.0, 0xC02A1F3D, RUIN_FIRES, 0);
@@ -1295,7 +1295,7 @@ public final class PrinceOfAbolitionFx {
      * Frenzy: the Beyonder throws their arms open and black bolts leave a ring round them, each flying onto one of
      * 'targets' (the same ones again if there are fewer than twelve). With no targets they fly out in a ring and fade.
      */
-    public static void frenzy(ServerLevel sl, Player player, List<LivingEntity> targets) {
+    public static void frenzy(ServerLevel sl, LivingEntity player, List<LivingEntity> targets) {
         Vec3 chest = chestOf(player);
         SpellFx.shockRing(sl, player.position(), 3.0, 0xC0C8AAFF, 8, 0);
         sound(sl, player.position(), ModSounds.ABOLITION_FRENZY, 1.3f, 1.0f);
@@ -1389,7 +1389,7 @@ public final class PrinceOfAbolitionFx {
      * Inversion: the sigil of opposites lies under the Beyonder across 'radius', turning backward, and the light goes
      * dark round them for 'ticks'.
      */
-    public static void inversion(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void inversion(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         ModelFx sigil = INVERSION_SIGIL.color(0xC0E0B04A).scale((float) (radius * 2.0)).lifetime(ticks).fade(10, 14)
                 .spin(-0.8f).tag(tagged(tag))
                 .key(0, pose().scale(0.1f).alpha(0f)).key(14, pose().scale(1f).alpha(1f), Ease.OUT);
@@ -1400,7 +1400,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** One beat of Inversion: dark motes are drawn in toward the middle, gold ones thrown out. */
-    public static void inversionPulse(ServerLevel sl, Player player, double radius) {
+    public static void inversionPulse(ServerLevel sl, LivingEntity player, double radius) {
         ParticleShapes.ring(sl, JET_SMOKE, player.position().add(0, 0.6, 0), radius * 0.9, 16, -0.15);
         ParticleShapes.ring(sl, GOLD_MOTE, player.position().add(0, 0.4, 0), 0.6, 10, 0.25);
     }
@@ -1418,7 +1418,7 @@ public final class PrinceOfAbolitionFx {
      * Coronation: the mausoleums crown the Beyonder: a crown descends onto their head and stays there for 'ticks'
      * (call coronationPulse every 5 seconds), the seal of the Black Emperor under them.
      */
-    public static void coronation(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void coronation(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx crown = CROWN_MODEL.scale(0.9f).lifetime(ticks).fade(4, 12).tag(tagged(tag))
                 .key(0, pose().up(2.4f).alpha(0f).spin(-180f))
                 .key(CROWNED, pose().up(0f).alpha(1f).spin(0f), Ease.OUT);
@@ -1433,13 +1433,13 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** One of Coronation's Majesty pulses: a gold ring out of the crowned Beyonder. */
-    public static void coronationPulse(ServerLevel sl, Player player, double radius) {
+    public static void coronationPulse(ServerLevel sl, LivingEntity player, double radius) {
         SpellFx.shockRing(sl, player.position(), radius, 0xB0E0B04A, 12, 0);
         ParticleShapes.ring(sl, CROWN, player.position().add(0, 0.4, 0), 1.0, 8, radius / 14.0);
         sound(sl, player.position(), ModSounds.ABOLITION_MAJESTY, 0.8f, 1.2f);
     }
 
-    public static void coronationEnd(ServerLevel sl, Player player, String tag) {
+    public static void coronationEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tagged(tag));
         ParticleShapes.burst(sl, GOLD_MOTE, headOf(player), 10, 0.03, 0.08);
     }
@@ -1451,7 +1451,7 @@ public final class PrinceOfAbolitionFx {
      * Decree: the one word hangs before the speaker, then over the target, and a pillar of gold-white light falls on
      * it. The glyph burns brighter for every standing mausoleum ('mausoleums').
      */
-    public static void decree(ServerLevel sl, Player player, LivingEntity target, int mausoleums) {
+    public static void decree(ServerLevel sl, LivingEntity player, LivingEntity target, int mausoleums) {
         int glow = Math.min(0xFF, 0xA0 + mausoleums * 10);
         ModelFx word = DECREE_WORD.color(withAlpha(GOLD_LIGHT, glow)).scale(1.0f).lifetime(14).fade(3, 6)
                 .key(0, pose().scale(0.3f).alpha(0f)).key(6, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1479,7 +1479,7 @@ public final class PrinceOfAbolitionFx {
     // =====================================================================================
 
     /** A killing blow does not take: the Beyonder slips out of the real world (fog closes on them). */
-    public static void rebirthFall(ServerLevel sl, Player player) {
+    public static void rebirthFall(ServerLevel sl, LivingEntity player) {
         exile(sl, player);
         ParticleShapes.burst(sl, STELE, headOf(player), 5, 0.04, 0.1);
     }
@@ -1488,7 +1488,7 @@ public final class PrinceOfAbolitionFx {
      * The Beyonder rises from the mausoleum at 'ground' (its middle): light pours up through the stele, the Beyonder
      * steps out, a Majesty ring goes out. Play mausoleumCrumble on that mausoleum just after.
      */
-    public static void rebirthRise(ServerLevel sl, Player player, Vec3 ground) {
+    public static void rebirthRise(ServerLevel sl, LivingEntity player, Vec3 ground) {
         beam(sl, ground, ground.add(0, 6, 0), 1.2f, 16);
         SpellFx.risingRings(sl, ground, 1.6, 3.4, 4, 0xD0FFE08A);
         seal(sl, ground, 4.0, 0xD0E0B04A, 40, null);
@@ -1500,7 +1500,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Last Rebirth: the Beyonder rises where they fell, held up by the orders still standing: a smaller rising. */
-    public static void lastRebirth(ServerLevel sl, Player player) {
+    public static void lastRebirth(ServerLevel sl, LivingEntity player) {
         Vec3 ground = player.position();
         SpellFx.risingRings(sl, ground, 1.2, 2.4, 3, 0xC0E0B04A);
         seal(sl, ground, 2.5, 0xA0E0B04A, 30, null);
@@ -1518,7 +1518,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Presence: weak things nearby hesitate: a faint gold ring passes over the ground now and then. */
-    public static void presence(ServerLevel sl, Player player, double radius) {
+    public static void presence(ServerLevel sl, LivingEntity player, double radius) {
         SpellFx.steadyRing(sl, player.position(), radius, 0x40E0B04A, 20, 0);
     }
 
@@ -1528,7 +1528,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     /** Beyond the World: harm with no hand behind it is half lost: grey fog puffs from the Beyonder. */
-    public static void beyondTheWorld(ServerLevel sl, Player player) {
+    public static void beyondTheWorld(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, FOG_PUFF, chestOf(player), 3, 0.02, 0.05);
     }
 
@@ -1545,7 +1545,7 @@ public final class PrinceOfAbolitionFx {
             .radius(1.0f).arc(150f).width(0.4f).lifetime(8).sweep(2);
 
     /** Hit 'step' (0, 1, 2) of the melee combo on 'target'. The third picks a rune circle or crossed crescents. */
-    public static void combo(ServerLevel sl, Player player, LivingEntity target, int step) {
+    public static void combo(ServerLevel sl, LivingEntity player, LivingEntity target, int step) {
         Vec3 chest = chestOf(player);
         switch (step) {
             case 0 -> ParticleShapes.slash(sl, COMBO_RING, chest, player.getYRot(), 0f, 0f);

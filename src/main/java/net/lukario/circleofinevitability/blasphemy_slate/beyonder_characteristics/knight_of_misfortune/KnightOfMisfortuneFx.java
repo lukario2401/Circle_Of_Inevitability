@@ -368,17 +368,17 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "knight_of_misfortune/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "knight_of_misfortune/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -540,7 +540,7 @@ public final class KnightOfMisfortuneFx {
      * The pendulum swings in front of the caster and settles toward 'toward' (or swings on aimlessly when null); a thin
      * line of light points the way for 'ticks'.
      */
-    public static void dowsing(ServerLevel sl, Player player, Vec3 toward, int ticks, String tag) {
+    public static void dowsing(ServerLevel sl, LivingEntity player, Vec3 toward, int ticks, String tag) {
         float lean = 0f;
         if (toward != null) {
             float diff = yawToward(player.position(), toward) - player.getYRot();
@@ -565,7 +565,7 @@ public final class KnightOfMisfortuneFx {
         sound(sl, player.position(), ModSounds.KNIGHT_DOWSING, 0.8f, 1.0f);
     }
 
-    public static void dowsingEnd(ServerLevel sl, Player player, String tag) {
+    public static void dowsingEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -577,7 +577,7 @@ public final class KnightOfMisfortuneFx {
     public static final int POEM_LANDS = 10;
 
     /** Every poem: the script of the poem turns round the head and notes drift off; a whisper. */
-    public static void recite(ServerLevel sl, Player player, Poem poem, String tag) {
+    public static void recite(ServerLevel sl, LivingEntity player, Poem poem, String tag) {
         ModelFx script = POEM_SCRIPT.color(withAlpha(poem.color, 0xD0)).scale(1.4f).lifetime(30).fade(2, 10).spin(4f)
                 .key(0, pose().scale(0.4f).alpha(0f))
                 .key(6, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -588,7 +588,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Tranquilize: a pale ring of stillness spreads; the air goes quiet. */
-    public static void tranquilize(ServerLevel sl, Player player, double radius) {
+    public static void tranquilize(ServerLevel sl, LivingEntity player, double radius) {
         SpellFx.steadyRing(sl, player.position(), radius, 0xA0C8DCFF, 14, 4);
         SpellFx.risingRings(sl, player.position(), 1.0, 2.0, 3, 0x80C8DCFF);
         ParticleShapes.ring(sl, MOON_MOTE, player.position().add(0, 0.3, 0), 1.2, 20, 0.2);
@@ -609,7 +609,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Lullaby: a cone of notes and sleep drifts out 'range' blocks ahead. */
-    public static void lullaby(ServerLevel sl, Player player, double range) {
+    public static void lullaby(ServerLevel sl, LivingEntity player, double range) {
         Vec3 look = Spells.flatLook(player);
         ParticleShapes.cone(sl, NOTE.color(0xFFA8C0FF), player.getEyePosition(), look, 35, 18, 0.15, range / 20.0);
         ParticleShapes.cone(sl, SLEEP_Z, player.getEyePosition(), look, 30, 8, 0.1, range / 24.0);
@@ -634,7 +634,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Pacify: notes fly into the target; its will goes out of it and a grey ring weighs it down. */
-    public static void pacify(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void pacify(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ParticleShapes.line(sl, NOTE.color(0xFFB4B4D8), player.getEyePosition(), chestOf(target), 2);
         Later.run(sl, POEM_LANDS, () -> {
             if (!target.isAlive()) return;
@@ -646,7 +646,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Fear: a red-black wave of dread rolls out 'range' blocks ahead. */
-    public static void fear(ServerLevel sl, Player player, double range) {
+    public static void fear(ServerLevel sl, LivingEntity player, double range) {
         Vec3 look = Spells.flatLook(player);
         ParticleShapes.cone(sl, DARK_SMOKE.color(0xC0300818), chestOf(player), look, 40, 26, 0.15, range / 14.0);
         ParticleShapes.cone(sl, EYE.color(0xFFFF5A6A), player.getEyePosition(), look, 30, 8, 0.15, range / 18.0);
@@ -664,7 +664,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Agitating: the target's spirit is stirred: jagged red-violet sparks crackle round it. */
-    public static void agitate(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void agitate(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ParticleShapes.line(sl, NOTE.color(0xFFE04A9A), player.getEyePosition(), chestOf(target), 2);
         SpellFx.circleUnder(sl, target, widthOf(target), 0xB0E04A9A, ticks, tag);
         for (int t = POEM_LANDS; t < Math.min(ticks, 300); t += 10) {
@@ -690,7 +690,7 @@ public final class KnightOfMisfortuneFx {
     public static final int LIMBS_GROWN = 10;
 
     /** Four tentacles tear out of the caster's back and stand writhing behind the shoulders for 'ticks'. */
-    public static void nightmareLimbs(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void nightmareLimbs(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         float[][] limbs = {{-30f, -0.25f}, {30f, 0.25f}, {-60f, -0.2f}, {60f, 0.2f}};     // roll outward, side offset
         for (int i = 0; i < limbs.length; i++) {
             float roll = limbs[i][0];
@@ -713,7 +713,7 @@ public final class KnightOfMisfortuneFx {
             .color(0xE03A1A4A).core(0xC08A5AA0).width(0.22f).taper(SlashFx.Taper.COMET).translucent();
 
     /** One limb lashes 'target' (index 0..3 picks the shoulder): a whip of flesh from the back to it. */
-    public static void limbLash(ServerLevel sl, Player player, LivingEntity target, int index) {
+    public static void limbLash(ServerLevel sl, LivingEntity player, LivingEntity target, int index) {
         Vec3 from = player.position().add(0, 1.5, 0).add(Spells.rightOf(player).scale(index % 2 == 0 ? -0.4 : 0.4))
                 .subtract(Spells.flatLook(player).scale(0.2));
         ParticleShapes.slashBetween(sl, LASH, from, chestOf(target));
@@ -722,13 +722,13 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** The limbs are drawn back in (cast again, or their time is up early): they shrink into the back. */
-    public static void limbsRetract(ServerLevel sl, Player player, String tag) {
+    public static void limbsRetract(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, DARK_SMOKE, chestOf(player).subtract(Spells.flatLook(player).scale(0.3)), 6, 0.02, 0.06);
     }
 
     /** The limbs are torn off: a burst of dark blood and the backlash. */
-    public static void limbsTear(ServerLevel sl, Player player, String tag) {
+    public static void limbsTear(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         Vec3 back = chestOf(player).subtract(Spells.flatLook(player).scale(0.3)).add(0, 0.3, 0);
         ParticleShapes.burst(sl, BLOOD, back, 24, 0.08, 0.3);
@@ -745,7 +745,7 @@ public final class KnightOfMisfortuneFx {
      * The soul steps out: a pale figure rises out of the caster (who goes hidden: the ability's part) and goes with
      * them, seen while they are hidden. Show the body left behind with sleepingBody.
      */
-    public static void nightmareState(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void nightmareState(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx soul = SOUL_FIGURE.color(0xC0C8DCFF).scale(0.95f).lifetime(ticks).fade(6, 12).tag(tag).shownWhileHidden()
                 .key(0, pose().up(-0.6f).alpha(0f))
                 .key(SOUL_OUT, pose().up(0.15f).alpha(1f), Ease.OUT);
@@ -764,12 +764,12 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** While the soul drifts: wisps trail from it. */
-    public static void nightmareTick(ServerLevel sl, Player player) {
+    public static void nightmareTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, WISP, player.position().add(0, 1.0, 0), new Vec3(0, 0.02, 0));
     }
 
     /** The soul goes back into its body. */
-    public static void nightmareReturn(ServerLevel sl, Player player, Vec3 body, String tag) {
+    public static void nightmareReturn(ServerLevel sl, LivingEntity player, Vec3 body, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.clearModels(sl, body, tag);
         ParticleShapes.line(sl, WISP, chestOf(player), body.add(0, 0.5, 0), 3);
@@ -781,7 +781,7 @@ public final class KnightOfMisfortuneFx {
     public static final int DREAM_OPENS = 12;
 
     /** Dream Invasion: a thread of pale light to the sleeper and the oval of its dream over its head. */
-    public static void dreamInvade(ServerLevel sl, Player player, LivingEntity sleeper, int ticks, String tag) {
+    public static void dreamInvade(ServerLevel sl, LivingEntity player, LivingEntity sleeper, int ticks, String tag) {
         SlashFx thread = SlashFx.line("slash/dashed").color(0x90A8C0FF).core(0xC0FFFFFF)
                 .width(0.06f).taper(SlashFx.Taper.UNIFORM);
         SpellFx.tether(sl, thread, () -> player.isAlive() ? chestOf(player) : null,
@@ -847,7 +847,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Soothing Requiem: a warm silver wave spreads over the caster's allies. */
-    public static void soothingRequiem(ServerLevel sl, Player player, double radius) {
+    public static void soothingRequiem(ServerLevel sl, LivingEntity player, double radius) {
         SpellFx.steadyRing(sl, player.position(), radius, 0xA0E0E8FF, 12, 0);
         ParticleShapes.ring(sl, NOTE.color(0xFFE0E8FF), player.position().add(0, 1.0, 0), 1.0, 10, 0.12);
         ParticleShapes.burst(sl, STAR, chestOf(player), 12, 0.04, 0.12);
@@ -865,7 +865,7 @@ public final class KnightOfMisfortuneFx {
     // =====================================================================================
 
     /** A spirit leaves the caster's teeth: a spark of teeth at the mouth and a wisp flying to 'at'. */
-    public static void spiritRelease(ServerLevel sl, Player player, Vec3 at) {
+    public static void spiritRelease(ServerLevel sl, LivingEntity player, Vec3 at) {
         Vec3 mouth = player.getEyePosition().add(player.getLookAngle().scale(0.4)).add(0, -0.2, 0);
         ParticleShapes.burst(sl, TOOTH, mouth, 4, 0.04, 0.08);
         ParticleShapes.line(sl, WISP, mouth, at, 3);
@@ -906,7 +906,7 @@ public final class KnightOfMisfortuneFx {
     public static final int EARTH_SUNK = 8;
 
     /** The caster fuses with the earth: a ring of disturbed ground and a mound that goes where they go (seen while hidden). */
-    public static void earthMerge(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void earthMerge(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ParticleShapes.ring(sl, DUST, player.position().add(0, 0.1, 0), 0.8, 16, 0.12);
         SpellFx.closingRing(sl, player.position(), 1.6, 0xA0AA8256, EARTH_SUNK, 0);
         ModelFx mound = SOUL_FIGURE.color(0x90AA8256).scale(0.5f).lifetime(ticks).fade(2, 6).tag(tag).shownWhileHidden()
@@ -916,12 +916,12 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** While under the ground: earth churns where the caster passes. */
-    public static void earthTick(ServerLevel sl, Player player) {
+    public static void earthTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, DUST, player.position().add(0, 0.1, 0), new Vec3(0, 0.03, 0));
     }
 
     /** The caster rises out of the earth. */
-    public static void earthEmerge(ServerLevel sl, Player player, String tag) {
+    public static void earthEmerge(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.ring(sl, DUST, player.position().add(0, 0.1, 0), 0.6, 16, 0.18);
         SpellFx.shockRing(sl, player.position(), 2.2, 0xA0AA8256, 8, 0);
@@ -934,7 +934,7 @@ public final class KnightOfMisfortuneFx {
             .color(0x80C8E0FF).core(0xA0FFFFFF).radius(1.2f).arc(160f).width(0.25f).lifetime(8).sweep(3);
 
     /** A wind spirit lifts the caster: gusts circle them and a spirit's shape hangs over their shoulders. */
-    public static void gale(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void gale(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx spirit = SOUL_FIGURE.color(0x70C8E0FF).scale(1.15f).lifetime(ticks).fade(8, 12).tag(tag)
                 .key(0, pose().up(0.3f).alpha(0f)).key(10, pose().up(0.1f).forward(-0.25f).alpha(1f), Ease.OUT);
         ParticleShapes.modelOnTurning(sl, spirit, player, Vec3.ZERO, 0f, 0f, 0f);
@@ -944,13 +944,13 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Every few ticks of the flight: a gust swirls round the body. */
-    public static void galeTick(ServerLevel sl, Player player) {
+    public static void galeTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.slash(sl, GUST, chestOf(player), sl.getRandom().nextFloat() * 360f, 0f,
                 sl.getRandom().nextFloat() * 40f - 20f);
         ParticleShapes.spawn(sl, WIND, player.position(), Spells.flatLook(player).scale(-0.2));
     }
 
-    public static void galeEnd(ServerLevel sl, Player player, String tag) {
+    public static void galeEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, WIND, chestOf(player), 10, 0.1, 0.3);
     }
@@ -958,7 +958,7 @@ public final class KnightOfMisfortuneFx {
     // ---------- Command Spirits (Knight of Misfortune)
 
     /** The command: a dark choir; spirits rise all round the caster, 'radius' blocks. */
-    public static void commandSpirits(ServerLevel sl, Player player, double radius) {
+    public static void commandSpirits(ServerLevel sl, LivingEntity player, double radius) {
         seal(sl, player.position(), 3.0, 0xC0B4D4E8, 60, null);
         SpellFx.steadyRing(sl, player.position(), radius, 0x90B4D4E8, 20, 4);
         ParticleShapes.spiral(sl, WISP, player.position().add(0, 0.3, 0), 6, 48, 1.0, 4.0, 1.5, 0.08);
@@ -1025,7 +1025,7 @@ public final class KnightOfMisfortuneFx {
             .color(0xC0D8D8E8).core(0xE0FFFFFF).width(0.04f).taper(SlashFx.Taper.UNIFORM);
 
     /** Countless hairs lash out of the caster to everything 'caught'. */
-    public static void hairEntangle(ServerLevel sl, Player player, List<LivingEntity> caught) {
+    public static void hairEntangle(ServerLevel sl, LivingEntity player, List<LivingEntity> caught) {
         Vec3 from = chestOf(player);
         ParticleShapes.cone(sl, HAIR, from, Spells.flatLook(player), 35, 30, 0.2, 0.5);
         for (LivingEntity victim : caught) {
@@ -1055,7 +1055,7 @@ public final class KnightOfMisfortuneFx {
     public static final int CURSE_LANDS = 10;
 
     /** The curse flies: a broken horseshoe homes into the target. Show its mark with misfortune(...) at CURSE_LANDS. */
-    public static void curse(ServerLevel sl, Player player, LivingEntity target) {
+    public static void curse(ServerLevel sl, LivingEntity player, LivingEntity target) {
         ModelFx omen = MISFORTUNE_MARK.color(0xE0B8A25A).scale(0.6f).lifetime(CURSE_LANDS + 4).fade(2, 4).spin(10f);
         SpellFx.homing(sl, omen, player.getEyePosition(), target, CURSE_LANDS);
         ParticleShapes.line(sl, HORSESHOE, player.getEyePosition(), chestOf(target), 1);
@@ -1145,7 +1145,7 @@ public final class KnightOfMisfortuneFx {
      * Servant of Concealment's whole wolf with six arms. It turns with the body. (The caster's real size is the
      * ability's job, as for GiantForm: this is the skin of it.)
      */
-    public static void wolfForm(ServerLevel sl, Player player, double height, int ticks, String tag, boolean complete) {
+    public static void wolfForm(ServerLevel sl, LivingEntity player, double height, int ticks, String tag, boolean complete) {
         float full = (float) (height / 1.8);
         float start = (float) (player.getBbHeight() / 1.8);
         ModelFx body = (complete ? DEMONIC_WOLF_COMPLETE : DEMONIC_WOLF).scale(full).lifetime(ticks).fade(4, 12).tag(tag)
@@ -1166,13 +1166,13 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** A step of the wolf: the ground shudders a little (more for a bigger wolf). */
-    public static void wolfStep(ServerLevel sl, Player player, double height) {
+    public static void wolfStep(ServerLevel sl, LivingEntity player, double height) {
         SpellFx.shockRing(sl, player.position(), 1.0 + height * 0.5, 0x805A2E8C, 8, 0);
         sound(sl, player.position(), ModSounds.KNIGHT_WOLF_STEP, (float) Math.min(2.0, 0.5 + height * 0.15), wobble(1.0f));
     }
 
     /** The wolf howls: a dark ring and the howl, deeper for a bigger wolf. */
-    public static void wolfHowl(ServerLevel sl, Player player, double height) {
+    public static void wolfHowl(ServerLevel sl, LivingEntity player, double height) {
         Vec3 head = player.position().add(0, height * 0.75, 0).add(Spells.flatLook(player).scale(height * 0.8));
         ParticleShapes.cone(sl, DARK_WISP, head, Spells.flatLook(player).add(0, 0.6, 0), 30, 14, 0.1, 0.3);
         sound(sl, head, ModSounds.KNIGHT_WOLF_HOWL, (float) Math.min(3.0, 1.0 + height * 0.2),
@@ -1180,7 +1180,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** A bite: jaws of darkness close on the target. */
-    public static void wolfBite(ServerLevel sl, Player player, LivingEntity target) {
+    public static void wolfBite(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 at = chestOf(target);
         float yaw = player.getYRot();
         SlashFx jaw = SlashFx.arc("slash/streaks").color(0xE0E8E0CE).core(0xFFFFFFFF)
@@ -1192,7 +1192,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** The madness rising in the wolf (0..1): violet motes round its head, more the madder it is. */
-    public static void wolfMadness(ServerLevel sl, Player player, float madness, double height) {
+    public static void wolfMadness(ServerLevel sl, LivingEntity player, float madness, double height) {
         int count = Math.round(2 + madness * 10);
         Vec3 head = player.position().add(0, height * 0.8, 0);
         ParticleShapes.burst(sl, SPARK.color(0xFFFF5AC0), head, count, 0.03, 0.06 + madness * 0.1);
@@ -1200,7 +1200,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** The form ends: the wolf breaks into ash and bone. */
-    public static void wolfFormEnd(ServerLevel sl, Player player, double height, String tag) {
+    public static void wolfFormEnd(ServerLevel sl, LivingEntity player, double height, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (double y = 0; y < height; y += 0.6) {
             ParticleShapes.ring(sl, DARK_SMOKE, player.position().add(0, y, 0), height * 0.35, 8, 0.05);
@@ -1218,7 +1218,7 @@ public final class KnightOfMisfortuneFx {
     public static final int SWORD_FORMED = 12;
 
     /** The bone sword forms in the right hand out of darkness and is held at the ready beside the body, for 'ticks'. */
-    public static void darkSword(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void darkSword(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx held = BONE_SWORD.scale(0.85f).lifetime(ticks).fade(4, 10).tag(tag)
                 .key(0, pose().right(0.42f).forward(0.25f).pitch(25f).scale(0.1f).alpha(0f))
                 .key(SWORD_FORMED, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -1236,7 +1236,7 @@ public final class KnightOfMisfortuneFx {
             .lifetime(9).sweep(3).translucent();
 
     /** A swing of the sword: a black arc with a violet edge. */
-    public static void darkSwing(ServerLevel sl, Player player) {
+    public static void darkSwing(ServerLevel sl, LivingEntity player) {
         Vec3 center = chestOf(player).add(Spells.flatLook(player).scale(0.4));
         ParticleShapes.slash(sl, DARK_ARC, center, player.getYRot(), 0f, -15f);
         sound(sl, player.position(), ModSounds.KNIGHT_SHADOW_SWING, 1.0f, wobble(0.9f));
@@ -1246,7 +1246,7 @@ public final class KnightOfMisfortuneFx {
      * The tide of Darkness: a wall of black water forms in front of the swing and rolls 'length' blocks forward over
      * 'ticks', widening as it goes. Returns how long it is seen.
      */
-    public static int darkTide(ServerLevel sl, Player player, double length, int ticks) {
+    public static int darkTide(ServerLevel sl, LivingEntity player, double length, int ticks) {
         float yaw = player.getYRot();
         Vec3 ground = player.position().add(Spells.flatLook(player).scale(1.2));
         Vec3 side = Spells.rightOf(player);
@@ -1279,7 +1279,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** One of the three edicts lands with a swing (Knight of Misfortune). */
-    public static void edict(ServerLevel sl, Player player, LivingEntity target, Edict edict) {
+    public static void edict(ServerLevel sl, LivingEntity player, LivingEntity target, Edict edict) {
         Vec3 at = chestOf(target);
         flashEye(sl, at.add(0, 0.6, 0), player.getYRot() + 180f, withAlpha(edict.color, 0xC0), 1.1f);
         switch (edict) {
@@ -1300,7 +1300,7 @@ public final class KnightOfMisfortuneFx {
         }
     }
 
-    public static void darkSwordEnd(ServerLevel sl, Player player, String tag) {
+    public static void darkSwordEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         Vec3 hand = player.position().add(0, 0.9, 0).add(Spells.rightOf(player).scale(0.42));
         ParticleShapes.line(sl, BONE_CHIP, hand, hand.add(0, 2.0, 0), 3);
@@ -1409,7 +1409,7 @@ public final class KnightOfMisfortuneFx {
     public static final int MANTLE_RISEN = 12;
 
     /** The body half-dissolves into living Darkness: a black mantle round it, eyes of violet, two shadow arms. */
-    public static void mantle(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void mantle(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx shade = SOUL_FIGURE.color(0xD0180A28).scale(1.12f).lifetime(ticks).fade(MANTLE_RISEN, 14).tag(tag)
                 .key(0, pose().scale(0.9f)).key(MANTLE_RISEN, pose().scale(1f), Ease.OUT);
         ParticleShapes.modelOnTurning(sl, shade, player, Vec3.ZERO, 0f, 0f, 0f);
@@ -1420,7 +1420,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Every few ticks while it lasts: darkness drips off the body. */
-    public static void mantleTick(ServerLevel sl, Player player) {
+    public static void mantleTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, DARK_SMOKE, chestOf(player), new Vec3(0, -0.02, 0));
         ParticleShapes.spawn(sl, DARK_MOTE, player.getEyePosition(), new Vec3(0, 0.01, 0));
     }
@@ -1430,7 +1430,7 @@ public final class KnightOfMisfortuneFx {
             .lifetime(8).sweep(3).translucent();
 
     /** A swing with the mantle on: the two shadow arms follow, each to one of the 'struck'. */
-    public static void mantleSwing(ServerLevel sl, Player player, List<LivingEntity> struck) {
+    public static void mantleSwing(ServerLevel sl, LivingEntity player, List<LivingEntity> struck) {
         Vec3 center = chestOf(player);
         ParticleShapes.slash(sl, SHADOW_ARM, center, player.getYRot(), 0f, -40f);
         ParticleShapes.slash(sl, SHADOW_ARM, center, player.getYRot(), 0f, 220f);
@@ -1441,7 +1441,7 @@ public final class KnightOfMisfortuneFx {
         sound(sl, player.position(), ModSounds.KNIGHT_SHADOW_SWING, 1.0f, wobble(0.8f));
     }
 
-    public static void mantleEnd(ServerLevel sl, Player player, String tag) {
+    public static void mantleEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, DARK_SMOKE, chestOf(player), 16, 0.04, 0.12);
     }
@@ -1452,7 +1452,7 @@ public final class KnightOfMisfortuneFx {
     public static final int REST_FALLS = 20;
 
     /** The closed eye of Eternal Rest opens over the target, sinks onto it and darkness folds it away. */
-    public static void eternalRest(ServerLevel sl, Player player, LivingEntity target) {
+    public static void eternalRest(ServerLevel sl, LivingEntity player, LivingEntity target) {
         ModelFx sigil = REST_SIGIL.color(0xE0D2B4FF).scale(1.6f).lifetime(REST_FALLS + 16).fade(4, 12).spin(1f)
                 .key(0, pose().up(3f).scale(0.2f).alpha(0f))
                 .key(10, pose().up(3f).scale(1f).alpha(1f), Ease.OUT_BACK)
@@ -1468,7 +1468,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** Eternal Rest aimed at nothing: the caster's own rest waits over them (their next death is cancelled). */
-    public static void restWard(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void restWard(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ModelFx sigil = REST_SIGIL.color(0x90D2B4FF).scale(0.7f).lifetime(ticks).fade(6, 10).spin(0.8f).tag(tag);
         ParticleShapes.modelOnHead(sl, sigil, player, 0.4, 0f, 0f, 0f);
         SpellFx.risingRings(sl, player.position(), 0.8, 2.0, 3, 0x90D2B4FF);
@@ -1476,7 +1476,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** The ward is used: the caster rises out of the darkness that would have taken them. */
-    public static void restWake(ServerLevel sl, Player player, String tag) {
+    public static void restWake(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         SpellFx.risingRings(sl, player.position(), 1.0, 2.2, 5, 0xE0D2B4FF);
         ParticleShapes.burst(sl, STAR, chestOf(player), 20, 0.05, 0.2);
@@ -1536,7 +1536,7 @@ public final class KnightOfMisfortuneFx {
     // =====================================================================================
 
     /** Nocturnality, now and then in full dark: violet motes in the eyes. */
-    public static void nocturnality(ServerLevel sl, Player player) {
+    public static void nocturnality(ServerLevel sl, LivingEntity player) {
         ParticleShapes.spawn(sl, DARK_MOTE, player.getEyePosition().add(player.getLookAngle().scale(0.3)), Vec3.ZERO);
     }
 
@@ -1547,7 +1547,7 @@ public final class KnightOfMisfortuneFx {
     }
 
     /** The Horror Aura once a second: dark motes drift outward round the Bishop, now and then an eye. */
-    public static void horrorAura(ServerLevel sl, Player player, double radius) {
+    public static void horrorAura(ServerLevel sl, LivingEntity player, double radius) {
         ParticleShapes.ring(sl, DARK_SMOKE.color(0x70180A28), player.position().add(0, 0.2, 0), radius * 0.5, 8, 0.05);
         if (sl.getRandom().nextInt(4) == 0) ParticleShapes.spawn(sl, EYE, headOf(player).add(0, 0.4, 0), new Vec3(0, 0.02, 0));
     }

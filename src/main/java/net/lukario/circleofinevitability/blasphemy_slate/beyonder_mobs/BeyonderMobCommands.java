@@ -43,6 +43,8 @@ import java.util.List;
  *   /beyondermob clear <targets>                         makes them plain mobs again
  *   /beyondermob reroll <targets>                        clears them and rolls again by their Rule (BeyonderMobRules)
  *   /beyondermob info <target>                           what it is, and which abilities can be taken from it
+ *   /beyondermob cast <mob> "<ability>" [target]         it casts that ability now (an id such as "Hand Of Order/1",
+ *                                                        or its name), its spirituality and cooldowns aside: for testing
  *
  * Players among the targets are skipped (/sequence is for them). Example:
  * /beyondermob summon zombie "Hand Of Order" 7 ~ ~ ~ 3
@@ -116,6 +118,16 @@ public final class BeyonderMobCommands {
                                     return became;
                                 })))
 
+                // /beyondermob cast <mob> "<ability>" [target]
+                .then(Commands.literal("cast")
+                        .then(Commands.argument("mob", EntityArgument.entity())
+                                .then(Commands.argument("ability", StringArgumentType.string())
+                                        .suggests((ctx, builder) -> SharedSuggestionProvider.suggest(
+                                                MobAbilities.all().stream().map(ability -> "\"" + ability.id() + "\""), builder))
+                                        .executes(ctx -> cast(ctx, null))
+                                        .then(Commands.argument("target", EntityArgument.entity())
+                                                .executes(ctx -> cast(ctx, EntityArgument.getEntity(ctx, "target")))))))
+
                 // /beyondermob info <target>
                 .then(Commands.literal("info")
                         .then(Commands.argument("target", EntityArgument.entity())
@@ -164,6 +176,41 @@ public final class BeyonderMobCommands {
                 ? Component.literal("Summoned ").append(name)
                 : Component.literal("Summoned " + finalMade + " x ").append(name), true);
         return made;
+    }
+
+    /**
+     * Makes the mob cast that ability now, whatever its spirituality and cooldowns say (MobCasting.forceCast). Its
+     * target: the one given, else what it is fighting, else whoever ran the command.
+     */
+    private static int cast(CommandContext<CommandSourceStack> ctx, Entity given) throws CommandSyntaxException {
+        CommandSourceStack source = ctx.getSource();
+        Entity entity = EntityArgument.getEntity(ctx, "mob");
+        String id = StringArgumentType.getString(ctx, "ability");
+        if (!(entity instanceof Mob mob)) {
+            source.sendFailure(Component.literal("Only a mob can cast this way."));
+            return 0;
+        }
+        MobAbility ability = MobAbilities.byId(id);
+        if (ability == null) {
+            for (MobAbility one : MobAbilities.of(BeyonderMobs.pathway(mob))) {
+                if (one.name().equalsIgnoreCase(id)) ability = one;                 // its name will do too
+            }
+        }
+        if (ability == null) {
+            source.sendFailure(Component.literal("No mob ability is called \"" + id + "\" (use an id such as \"Hand Of Order/1\")."));
+            return 0;
+        }
+        LivingEntity target = given instanceof LivingEntity living ? living : MobSpells.fightTarget(mob);
+        if (target == null && source.getEntity() instanceof LivingEntity runner && runner != mob) target = runner;
+        MobCasting.Refusal why = MobCasting.forceCast(mob, ability, target, source.getLevel());
+        if (why != MobCasting.Refusal.NONE) {
+            source.sendFailure(Component.literal(ability.name() + " was not cast: "
+                    + (why == null ? "it refused (nothing to aim at, no room, or it failed: see the log)" : why.words()) + "."));
+            return 0;
+        }
+        MobAbility cast = ability;
+        source.sendSuccess(() -> Component.literal("Cast " + cast.name() + "."), false);
+        return 1;
     }
 
     /** "zombie" for minecraft:zombie, the full id for any other mod's mob. */

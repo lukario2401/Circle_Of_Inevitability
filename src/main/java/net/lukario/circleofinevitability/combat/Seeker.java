@@ -130,7 +130,7 @@ public final class Seeker {
      * The one-line version: 'model' flies from 'from' at 'target' and deals 'damage' (from 'owner') when it
      * touches it, with the default speed, turn and life. It goes for another enemy if 'target' dies first.
      */
-    public static void send(Player owner, ServerLevel sl, ModelFx model, Vec3 from, LivingEntity target, float damage) {
+    public static void send(LivingEntity owner, ServerLevel sl, ModelFx model, Vec3 from, LivingEntity target, float damage) {
         of(model).onHit((hit, at) -> Spells.strike(owner, hit, damage)).launch(owner, sl, from, null, target);
     }
 
@@ -191,7 +191,7 @@ public final class Seeker {
      * in onHit). 'startDirection' = the way it sets off (it then curves round to its enemy): null = straight at it.
      * 'target' may be null: it then flies along startDirection and takes the first enemy it finds within seek().
      */
-    public void launch(Player owner, ServerLevel sl, Vec3 from, Vec3 startDirection, LivingEntity target) {
+    public void launch(LivingEntity owner, ServerLevel sl, Vec3 from, Vec3 startDirection, LivingEntity target) {
         Vec3 heading = startDirection;
         if (heading == null || heading.lengthSqr() < 1.0E-6) {
             heading = target != null ? target.getBoundingBox().getCenter().subtract(from) : owner.getLookAngle();
@@ -205,7 +205,7 @@ public final class Seeker {
      * owner looks, and are shared out over 'enemies' (each enemy gets its first before any gets a second).
      * An empty list sends them out to find enemies themselves.
      */
-    public void launchAt(Player owner, ServerLevel sl, Vec3 from, List<LivingEntity> enemies, int count, int everyTicks) {
+    public void launchAt(LivingEntity owner, ServerLevel sl, Vec3 from, List<LivingEntity> enemies, int count, int everyTicks) {
         Vec3 look = owner.getLookAngle();
         for (int i = 0; i < count; i++) {
             LivingEntity target = enemies.isEmpty() ? null : enemies.get(i % enemies.size());
@@ -222,7 +222,7 @@ public final class Seeker {
 
     private static final class Flight {
         private final Seeker kind;
-        private final Player owner;
+        private final LivingEntity owner;
         private final ServerLevel sl;
         private final String tag;
         private Vec3 at;
@@ -231,7 +231,7 @@ public final class Seeker {
         private int age = 0;
         private int alone = 0;
 
-        Flight(Seeker kind, Player owner, ServerLevel sl, Vec3 from, Vec3 heading, LivingEntity target) {
+        Flight(Seeker kind, LivingEntity owner, ServerLevel sl, Vec3 from, Vec3 heading, LivingEntity target) {
             this.kind = kind;
             this.owner = owner;
             this.sl = sl;

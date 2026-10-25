@@ -5,7 +5,9 @@ import net.minecraft.world.entity.LivingEntity;
 
 /**
  * A Beyonder mob's spirituality: what its abilities spend (MobCasting). Its bar is BeyonderMobRules.SPIRITUALITY_SHARE
- * of a player's of the same Sequence, and it comes back at REGEN_SHARE of a player's speed (the table in Beyonder).
+ * of a player's of the same Sequence, and it comes back at REGEN_SHARE of a player's speed (the table in Beyonder);
+ * but the bar is never smaller than SPIRITUALITY_FLOOR_CASTS casts of its cheapest ability, and such a bar fills in
+ * FLOOR_REFILL_TICKS at most.
  * A new Beyonder mob starts full. Saved with the mob (persistent data, circle_of_inevitability_mob_spirituality).
  *
  *   MobSpirituality.get(mob) / max(mob)
@@ -18,18 +20,36 @@ public final class MobSpirituality {
 
     private MobSpirituality() {}
 
-    /** Its whole bar (0 when it is no Beyonder). */
+    /**
+     * Its whole bar (0 when it is no Beyonder): SPIRITUALITY_SHARE of a player's, but never less than
+     * SPIRITUALITY_FLOOR_CASTS casts of the cheapest ability it knows.
+     */
     public static float max(LivingEntity mob) {
         int sequence = BeyonderMobs.sequence(mob);
         if (sequence < 0) return 0f;
-        return Beyonder.maxSpirituality(sequence) * Math.max(0f, BeyonderMobRules.SPIRITUALITY_SHARE);
+        return Math.max(shareOfPlayers(sequence), floor(mob, sequence));
     }
 
-    /** What it gets back each tick. */
+    /** What it gets back each tick: REGEN_SHARE of a player's, and fast enough to fill a floor-raised bar in FLOOR_REFILL_TICKS. */
     public static float regenPerTick(LivingEntity mob) {
         int sequence = BeyonderMobs.sequence(mob);
         if (sequence < 0) return 0f;
-        return Beyonder.spiritualityRegenPerTick(sequence) * Math.max(0f, BeyonderMobRules.REGEN_SHARE);
+        float regen = Beyonder.spiritualityRegenPerTick(sequence) * Math.max(0f, BeyonderMobRules.REGEN_SHARE);
+        float floor = floor(mob, sequence);
+        if (floor > shareOfPlayers(sequence) && BeyonderMobRules.FLOOR_REFILL_TICKS > 0) {
+            regen = Math.max(regen, floor / BeyonderMobRules.FLOOR_REFILL_TICKS);
+        }
+        return regen;
+    }
+
+    private static float shareOfPlayers(int sequence) {
+        return Beyonder.maxSpirituality(sequence) * Math.max(0f, BeyonderMobRules.SPIRITUALITY_SHARE);
+    }
+
+    /** SPIRITUALITY_FLOOR_CASTS times the cheapest ability its Pathway and Sequence know (0 if it knows none). */
+    private static float floor(LivingEntity mob, int sequence) {
+        if (BeyonderMobRules.SPIRITUALITY_FLOOR_CASTS <= 0f) return 0f;
+        return MobAbilities.cheapestCost(BeyonderMobs.pathway(mob), sequence) * BeyonderMobRules.SPIRITUALITY_FLOOR_CASTS;
     }
 
     /** What it has now. A Beyonder mob never given any yet (made before this existed) has a full bar. */

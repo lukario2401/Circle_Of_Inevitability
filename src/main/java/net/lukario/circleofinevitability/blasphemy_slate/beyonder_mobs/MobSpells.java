@@ -6,12 +6,14 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.OwnableEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.ForgeEventFactory;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -63,26 +65,39 @@ public final class MobSpells {
         return other instanceof Player player && !player.isCreative() && caster instanceof Enemy;
     }
 
-    /** Every enemy whose body is within 'radius' of a point. */
+    /**
+     * On its side, so its abilities that help (a blessing, a heal, a shield) may reach it: itself, what it rides or
+     * carries, its own pets and team, and a mob of its kind that is not fighting it: another monster for a monster,
+     * else one of the same type. (Spells.isFriend asks this for a mob caster.)
+     */
+    public static boolean isFriend(Mob caster, LivingEntity other) {
+        if (other == null || !other.isAlive() || other.isSpectator() || other instanceof ArmorStand) return false;
+        if (other == caster || other == caster.getVehicle() || other.getVehicle() == caster) return true;
+        if (caster.isAlliedTo(other)) return true;
+        if (other instanceof OwnableEntity owned && owned.getOwnerReference() != null
+                && caster.getUUID().equals(owned.getOwnerReference().getUUID())) return true;
+        if (!(other instanceof Mob mob) || other == caster.getTarget() || other == caster.getLastHurtByMob()) return false;
+        if (mob.getTarget() == caster || mob.getLastHurtByMob() == caster) return false;
+        return caster instanceof Enemy ? other instanceof Enemy : other.getType() == caster.getType();
+    }
+
+    /** Every enemy whose body is within 'radius' of a point (Spells.enemiesAround, which asks isEnemy for a mob). */
     public static List<LivingEntity> enemiesAround(Mob caster, ServerLevel sl, Vec3 center, double radius) {
-        List<LivingEntity> result = new ArrayList<>();
-        AABB area = new AABB(center, center).inflate(radius + 2.0);
-        for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> isEnemy(caster, other))) {
-            if (Spells.distanceToBody(candidate, center) <= radius) result.add(candidate);
-        }
-        return result;
+        return Spells.enemiesAround(caster, sl, center, radius);
     }
 
     /** Every enemy whose body (grown by 'grow' blocks) the line from..to passes through, nearest to 'from' first. */
     public static List<LivingEntity> enemiesOnLine(Mob caster, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+        return Spells.enemiesOnLine(caster, sl, from, to, grow);
+    }
+
+    /** Its friends (isFriend) within 'radius' of a point, itself among them. */
+    public static List<LivingEntity> friendsAround(Mob caster, ServerLevel sl, Vec3 center, double radius) {
         List<LivingEntity> result = new ArrayList<>();
-        if (from.distanceToSqr(to) < 1.0E-6) return result;
-        AABB area = new AABB(from, to).inflate(grow + 0.5);
-        for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> isEnemy(caster, other))) {
-            AABB body = candidate.getBoundingBox().inflate(grow);
-            if (body.contains(from) || body.clip(from, to).isPresent()) result.add(candidate);
+        AABB area = new AABB(center, center).inflate(radius + 2.0);
+        for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> isFriend(caster, other))) {
+            if (Spells.distanceToBody(candidate, center) <= radius) result.add(candidate);
         }
-        result.sort(Comparator.comparingDouble(candidate -> candidate.getBoundingBox().getCenter().distanceToSqr(from)));
         return result;
     }
 
@@ -125,6 +140,20 @@ public final class MobSpells {
         return sl.clip(new ClipContext(from, far, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, caster)).getLocation();
     }
 
+    /**
+     * True if its ability may break, place or change blocks now: BeyonderMobRules.MOBS_CHANGE_BLOCKS, and the
+     * mobGriefing game rule (asked through Forge, so mods that decide it per mob are heard). When false, an ability
+     * still does everything else.
+     */
+    public static boolean mayChangeBlocks(LivingEntity caster, ServerLevel sl) {
+        return BeyonderMobRules.MOBS_CHANGE_BLOCKS && ForgeEventFactory.getMobGriefingEvent(sl, caster);
+    }
+
+    /** The spot on the ground under its target (or under the target's feet in the air): where ground abilities land. */
+    public static Vec3 groundUnder(Mob caster, ServerLevel sl, LivingEntity target) {
+        return Spells.groundUnder(caster, sl, target);
+    }
+
     /** False once it died or went elsewhere: a delayed part of its ability (Later.run) stops then. */
     public static boolean casterStillHere(LivingEntity caster, ServerLevel sl) {
         return caster.isAlive() && !caster.isRemoved() && caster.level() == sl;
@@ -135,16 +164,11 @@ public final class MobSpells {
     // =========================
 
     /**
-     * Damage from the mob's ability. A player takes BeyonderMobRules.DAMAGE_TO_PLAYERS of it (the numbers are the
-     * player abilities', which were made against mobs). The short invulnerability after a hit is cleared first, as
-     * Spells.strike does, so quick hits in a row all count.
+     * Damage from the mob's ability (Spells.strike: a player takes BeyonderMobRules.DAMAGE_TO_PLAYERS of it, the
+     * numbers being the player abilities', which were made against mobs). The short invulnerability after a hit is
+     * cleared first, so quick hits in a row all count.
      */
     public static void strike(Mob caster, LivingEntity target, float damage) {
-        if (!(caster.level() instanceof ServerLevel sl)) return;
-        float dealt = target instanceof Player ? damage * BeyonderMobRules.DAMAGE_TO_PLAYERS : damage;
-        if (dealt <= 0f) return;
-        target.invulnerableTime = 0;
-        target.hurt(sl.damageSources().mobAttack(caster), dealt);
-        caster.setLastHurtMob(target);
+        Spells.strike(caster, target, damage);
     }
 }

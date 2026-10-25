@@ -153,13 +153,13 @@ public final class HangedManFx {
     }
 
     /** A sound only this player hears (what 1.21's playNotifySound did; see Wanderer.playNotifySound). */
-    private static void playTo(Player player, Holder<SoundEvent> sound, float volume, float pitch) {
+    private static void playTo(LivingEntity player, Holder<SoundEvent> sound, float volume, float pitch) {
         if (!(player instanceof ServerPlayer serverPlayer)) return;
         serverPlayer.connection.send(new ClientboundSoundPacket(sound, SoundSource.PLAYERS,
                 player.getX(), player.getY(), player.getZ(), volume, pitch, player.getRandom().nextLong()));
     }
 
-    private static void playTo(Player player, SoundEvent sound, float volume, float pitch) {
+    private static void playTo(LivingEntity player, SoundEvent sound, float volume, float pitch) {
         playTo(player, BuiltInRegistries.SOUND_EVENT.wrapAsHolder(sound), volume, pitch);
     }
 
@@ -208,16 +208,16 @@ public final class HangedManFx {
     }
 
     /** Shows the status's picture (the same row and spacing as the Attendant's) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
-        ScreenImages.show(player, status.id(), "hanged_man/" + status.image,
+    public static void status(LivingEntity player, Status status, int ticks) {
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "hanged_man/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + status.ordinal() * 18, -21, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -240,7 +240,7 @@ public final class HangedManFx {
             .during(DIVINATION_PULSE, DIVINATION_PULSE + 4, pose().roll(0), Ease.OUT);
 
     /** The pendulum swings in front of the caster, stops, and a crimson pulse races out 24 blocks. */
-    public static void divination(ServerLevel sl, Player caster) {
+    public static void divination(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.modelOnTurning(sl, PENDULUM_HELD, caster, new Vec3(0, caster.getBbHeight() * 0.82, 0), 0f, 0f, 0f);
         play(sl, caster.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 1.0f, 0.6f);
         Later.run(sl, DIVINATION_PULSE, () -> {
@@ -290,7 +290,7 @@ public final class HangedManFx {
     }
 
     /** The price in blood: drops fall from the caster. */
-    public static void ritualPrice(ServerLevel sl, Player caster) {
+    public static void ritualPrice(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, BLOOD, chestOf(caster), 14, 0.03, 0.1);
         play(sl, caster.position(), SoundEvents.PLAYER_HURT, 0.5f, 0.7f);
     }
@@ -309,7 +309,7 @@ public final class HangedManFx {
             .color(0x90100810).core(0x60D0283C).width(0.06f).taper(SlashFx.Taper.UNIFORM).translucent();
 
     /** A dark thread runs from the caster's head to the target, and whispering mouths circle the target's head. */
-    public static void whispers(ServerLevel sl, Player caster, LivingEntity target, int ticks) {
+    public static void whispers(ServerLevel sl, LivingEntity caster, LivingEntity target, int ticks) {
         SpellFx.tether(sl, WHISPER_LINE, () -> SpellFx.topOf(caster, sl), () -> SpellFx.topOf(target, sl), 10);
         float scale = (float) Math.max(0.9, target.getBbWidth() * 1.5);
         ModelFx mouths = swinging(WHISPER_MOUTHS.scale(scale).lifetime(ticks).fade(6, 10).spin(4f).tag(WHISPERS_MOUTHS)
@@ -333,13 +333,13 @@ public final class HangedManFx {
     // ---------- sneak: Listen
 
     /** One sonar beat (every 2 seconds while Listen lasts). */
-    public static void listenPulse(ServerLevel sl, Player caster, double radius) {
+    public static void listenPulse(ServerLevel sl, LivingEntity caster, double radius) {
         SpellFx.steadyRing(sl, caster.position(), radius, 0x90C8C6D0, 20, 0);
         play(sl, caster.position(), SoundEvents.SCULK_CLICKING, 0.7f, 1.2f);
     }
 
     /** "That one is about to hit you": a line of motes runs from the attacker to the caster, who alone hears the bell. */
-    public static void listenWarning(ServerLevel sl, LivingEntity attacker, Player caster) {
+    public static void listenWarning(ServerLevel sl, LivingEntity attacker, LivingEntity caster) {
         ParticleShapes.line(sl, CRIMSON_MOTE, chestOf(attacker), chestOf(caster), 3);
         SpellFx.circleUnder(sl, attacker, Math.max(0.6, attacker.getBbWidth() * 0.8), 0xF0FF2A3A, 12, "hm_listen_warning");
         playTo(caster, SoundEvents.NOTE_BLOCK_BELL, 1.0f, 1.8f);
@@ -399,7 +399,7 @@ public final class HangedManFx {
     private static final String LURK_TAG = "hm_lurk";
 
     /** The caster sinks into their shadow: a ring closes on them and a pool of shadow stays under their feet. */
-    public static void lurkEnter(ServerLevel sl, Player caster, int ticks) {
+    public static void lurkEnter(ServerLevel sl, LivingEntity caster, int ticks) {
         SpellFx.closingRing(sl, caster.position(), 1.8, SHADOW, 10, 0);
         ParticleShapes.burst(sl, SHADOW_WISP, chestOf(caster), 16, 0.03, 0.1);
         SpellFx.circleUnder(sl, caster, 0.9, 0xD0080408, ticks, LURK_TAG);
@@ -407,12 +407,12 @@ public final class HangedManFx {
     }
 
     /** Every few ticks while lurking: the pool smokes a little. */
-    public static void lurkTick(ServerLevel sl, Player caster) {
+    public static void lurkTick(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, SHADOW_WISP, caster.position().add(0, 0.1, 0), 2, 0.005, 0.02);
     }
 
     /** They rise out of it again. */
-    public static void lurkExit(ServerLevel sl, Player caster) {
+    public static void lurkExit(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.clearModels(sl, caster, LURK_TAG);
         SpellFx.risingRings(sl, caster.position(), 1.0, 2.0, 3, SHADOW);
         ParticleShapes.burst(sl, SHADOW_WISP, chestOf(caster), 18, 0.04, 0.12);
@@ -441,7 +441,7 @@ public final class HangedManFx {
             .trail(FLESH_TRAIL);
 
     /** Where FLESH_BOMB leaves from: just off the caster's right hand. */
-    public static Vec3 fleshBombHand(Player caster, ServerLevel sl) {
+    public static Vec3 fleshBombHand(LivingEntity caster, ServerLevel sl) {
         return Spells.clearStart(caster, sl,
                 caster.getEyePosition().add(Spells.rightOf(caster).scale(0.35)).add(0, -0.25, 0));
     }
@@ -501,7 +501,7 @@ public final class HangedManFx {
     public static final ModelFx FLESH_CLOAK = ModelFx.of("hanged_man/flesh_cloak").seeThrough();
 
     /** The caster's body goes soft: the cloak wraps them and beats gently for 'ticks'. */
-    public static void fleshCloak(ServerLevel sl, Player caster, int ticks) {
+    public static void fleshCloak(ServerLevel sl, LivingEntity caster, int ticks) {
         float scale = caster.getBbHeight() / 1.9f;
         ModelFx cloak = swinging(FLESH_CLOAK.scale(scale).lifetime(ticks).fade(0, 10).tag(CLOAK_TAG)
                         .key(0, pose().scale(1.25f).alpha(0f))
@@ -515,19 +515,19 @@ public final class HangedManFx {
     }
 
     /** The cloak swallows a hit. */
-    public static void fleshCloakAbsorb(ServerLevel sl, Player caster) {
+    public static void fleshCloakAbsorb(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, BLOOD, chestOf(caster), 10, 0.05, 0.15);
         ParticleShapes.burst(sl, FLESH_CHUNK, chestOf(caster), 4, 0.05, 0.12);
         play(sl, caster.position(), SoundEvents.SLIME_SQUISH, 0.9f, 1.1f);
     }
 
     /** Every half second while it lasts: it mends them. */
-    public static void fleshCloakRegen(ServerLevel sl, Player caster) {
+    public static void fleshCloakRegen(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, FLESH_MOTE, chestOf(caster), 3, 0.01, 0.04);
     }
 
     /** Taken off (early or at the end). */
-    public static void fleshCloakEnd(ServerLevel sl, Player caster) {
+    public static void fleshCloakEnd(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.clearModels(sl, caster, CLOAK_TAG);
         ParticleShapes.burst(sl, FLESH_CHUNK, chestOf(caster), 8, 0.04, 0.1);
     }
@@ -582,7 +582,7 @@ public final class HangedManFx {
     }
 
     /** The caster takes the soul: it leaves the corpse and flies into their chest (arrives at STEAL_ARRIVES). */
-    public static void soulStolen(ServerLevel sl, Vec3 corpse, String soul, Player caster, int color) {
+    public static void soulStolen(ServerLevel sl, Vec3 corpse, String soul, LivingEntity caster, int color) {
         graveSoulFades(sl, corpse, soul);
         ModelFx flying = SOUL_ORB.color(color).scale(0.5f).lifetime(STEAL_ARRIVES + 4).fade(0, 4)
                 .during(STEAL_ARRIVES - 2, STEAL_ARRIVES + 2, pose().scale(0.2f), Ease.IN);
@@ -597,14 +597,14 @@ public final class HangedManFx {
     }
 
     /** Before a stolen ability's own look: a quick soul ring under the caster, so it reads as stolen. */
-    public static void stolenCast(ServerLevel sl, Player caster) {
+    public static void stolenCast(ServerLevel sl, LivingEntity caster) {
         SpellFx.shockRing(sl, caster.position(), 1.6, SOUL, 6, 0);
         ParticleShapes.burst(sl, SOUL_MOTE, chestOf(caster), 5, 0.02, 0.06);
         play(sl, caster.position(), SoundEvents.SOUL_ESCAPE, 0.5f, 1.4f);
     }
 
     /** The selected slot holds nothing. */
-    public static void emptySlot(ServerLevel sl, Player caster) {
+    public static void emptySlot(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, ASH, chestOf(caster), 5, 0.01, 0.04);
         playTo(caster, SoundEvents.SOUL_SAND_BREAK, 1.0f, 0.6f);
     }
@@ -629,7 +629,7 @@ public final class HangedManFx {
             .lifetime(10).sweep(3);
 
     /** A wide black arc with a crimson edge sweeps in front of the caster. */
-    public static void cull(ServerLevel sl, Player caster) {
+    public static void cull(ServerLevel sl, LivingEntity caster) {
         Vec3 center = caster.position().add(0, caster.getBbHeight() * 0.6, 0).add(Spells.flatLook(caster).scale(0.4));
         float yaw = caster.getYRot();
         ParticleShapes.slash(sl, CULL_BLACK, center, yaw, 0f, -8f);
@@ -661,7 +661,7 @@ public final class HangedManFx {
      * The plates fly in and lock onto the caster, and the helm comes down onto their head, for 'ticks'.
      * 'size' = how big the caster is now (their scale attribute; 1 = normal), so the armor grows with them.
      */
-    public static void blackArmor(ServerLevel sl, Player caster, int ticks, float size) {
+    public static void blackArmor(ServerLevel sl, LivingEntity caster, int ticks, float size) {
         int life = Math.max(ticks, ARMOR_LOCKS + 20);
         ModelFx plates = BLACK_ARMOR.scale(size).lifetime(life).fade(3, 0).tag(ARMOR_TAG)
                 .key(0, pose().frame(0).alpha(0f))
@@ -684,13 +684,13 @@ public final class HangedManFx {
     }
 
     /** A blow glances off the plates. */
-    public static void blackArmorHit(ServerLevel sl, Player caster) {
+    public static void blackArmorHit(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.burst(sl, STEEL_SPARK, chestOf(caster), 8, 0.08, 0.2);
         play(sl, caster.position(), SoundEvents.ANVIL_PLACE, 0.3f, 1.6f);
     }
 
     /** The armor is gone (early, or at the end if it should leave faster than its fade). */
-    public static void blackArmorEnd(ServerLevel sl, Player caster) {
+    public static void blackArmorEnd(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.clearModels(sl, caster, ARMOR_TAG);
         ParticleShapes.burst(sl, SHADOW_WISP, chestOf(caster), 14, 0.04, 0.12);
         ParticleShapes.burst(sl, ARMOR_SHARD, chestOf(caster), 8, 0.06, 0.15);
@@ -708,7 +708,7 @@ public final class HangedManFx {
             .color(0xC0D0283C).core(0x80FF8A90).width(0.08f).taper(SlashFx.Taper.UNIFORM);
 
     /** A crimson orb with a rotten core flies from the caster's hand into the target. */
-    public static void degeneration(ServerLevel sl, Player caster, LivingEntity target) {
+    public static void degeneration(ServerLevel sl, LivingEntity caster, LivingEntity target) {
         Vec3 hand = SpellFx.handOf(caster, sl);
         if (hand == null) return;
         ModelFx outer = SOUL_ORB.color(0xF0B01828).scale(0.55f).lifetime(DEGENERATION_ARRIVES + 4).fade(0, 4);
@@ -768,7 +768,7 @@ public final class HangedManFx {
     public static final ModelFx SHADOW_HEAD = ModelFx.of("hanged_man/shadow_head").glow();
 
     /** Two shadow heads grow from the caster's shoulders and two dark copies step out to their sides, for 'ticks'. */
-    public static void trinity(ServerLevel sl, Player caster, int ticks) {
+    public static void trinity(ServerLevel sl, LivingEntity caster, int ticks) {
         ParticleShapes.clearModels(sl, caster, TRINITY_TAG);
         float body = caster.getBbHeight() / 2.35f;
         for (int side = -1; side <= 1; side += 2) {
@@ -790,7 +790,7 @@ public final class HangedManFx {
     }
 
     /** The copies repeat a spell: a flash where each one stands. */
-    public static void trinityEcho(ServerLevel sl, Player caster) {
+    public static void trinityEcho(ServerLevel sl, LivingEntity caster) {
         Vec3 right = Spells.rightOf(caster).scale(TRINITY_SIDE);
         for (Vec3 at : new Vec3[]{caster.position().add(right), caster.position().subtract(right)}) {
             SpellFx.shockRing(sl, at, 1.2, 0xC0D0283C, 6, 0);
@@ -800,7 +800,7 @@ public final class HangedManFx {
     }
 
     /** The extra bodies and heads are gone. */
-    public static void trinityEnd(ServerLevel sl, Player caster) {
+    public static void trinityEnd(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.clearModels(sl, caster, TRINITY_TAG);
         Vec3 right = Spells.rightOf(caster).scale(TRINITY_SIDE);
         for (Vec3 at : new Vec3[]{caster.position().add(right), caster.position().subtract(right)}) {

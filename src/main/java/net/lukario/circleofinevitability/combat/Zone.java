@@ -114,7 +114,7 @@ public final class Zone {
 
     // ---------- while it is open ----------
 
-    private Player owner;
+    private LivingEntity owner;
     private ServerLevel level;
     private String name;
     private int age;
@@ -200,7 +200,7 @@ public final class Zone {
     }
 
     /** Opens the zone. If this player already has one open with this name, that one is closed first. */
-    public void open(Player owner, ServerLevel level, String name) {
+    public void open(LivingEntity owner, ServerLevel level, String name) {
         close(owner, name);
         this.owner = owner;
         this.level = level;
@@ -219,18 +219,18 @@ public final class Zone {
 
     // ---------- asking / stopping ----------
 
-    public static boolean isOpen(Player owner, String name) {
+    public static boolean isOpen(LivingEntity owner, String name) {
         return find(owner, name) != null;
     }
 
     /** Ticks until the zone ends (0 = this player has no zone with this name). */
-    public static int ticksLeft(Player owner, String name) {
+    public static int ticksLeft(LivingEntity owner, String name) {
         Zone zone = find(owner, name);
         return zone == null ? 0 : Math.max(1, zone.lasts - zone.age);
     }
 
     /** How long this entity has been in the zone, in ticks (0 = it is not in it, or there is no such zone). */
-    public static int ticksInside(Player owner, String name, Entity entity) {
+    public static int ticksInside(LivingEntity owner, String name, Entity entity) {
         Zone zone = find(owner, name);
         if (zone == null || entity == null) return 0;
         Stay stay = zone.stays.get(entity.getUUID());
@@ -238,19 +238,19 @@ public final class Zone {
     }
 
     /** Where the middle of this player's zone is right now (an aura moves with its entity), or null. */
-    public static Vec3 centerOf(Player owner, String name) {
+    public static Vec3 centerOf(LivingEntity owner, String name) {
         Zone zone = find(owner, name);
         return zone == null ? null : zone.center();
     }
 
     /** How far this player's zone reaches (0 = there is none). */
-    public static double radiusOf(Player owner, String name) {
+    public static double radiusOf(LivingEntity owner, String name) {
         Zone zone = find(owner, name);
         return zone == null ? 0.0 : zone.radius;
     }
 
     /** How long this player's zone has been open, in ticks (0 = there is none). */
-    public static int ticksOpen(Player owner, String name) {
+    public static int ticksOpen(LivingEntity owner, String name) {
         Zone zone = find(owner, name);
         return zone == null ? 0 : zone.age;
     }
@@ -259,7 +259,7 @@ public final class Zone {
      * True if 'at' lies in this player's zone: within its radius across, and between 1.5 blocks under its ground and
      * its height above. For "is this one standing in my field" outside the zone's own beat (a hurt event, a cost).
      */
-    public static boolean covers(Player owner, String name, Vec3 at) {
+    public static boolean covers(LivingEntity owner, String name, Vec3 at) {
         Zone zone = find(owner, name);
         if (zone == null || at == null) return false;
         Vec3 center = zone.center();
@@ -279,7 +279,7 @@ public final class Zone {
     }
 
     /** The zone lasts 'ticks' longer. False if there is none. */
-    public static boolean extend(Player owner, String name, int ticks) {
+    public static boolean extend(LivingEntity owner, String name, int ticks) {
         Zone zone = find(owner, name);
         if (zone == null || ticks <= 0) return false;
         zone.lasts += ticks;
@@ -293,7 +293,7 @@ public final class Zone {
     public static int closeNear(ServerLevel level, Vec3 point, double radius, Predicate<Player> whose) {
         int ended = 0;
         for (Zone zone : new ArrayList<>(OPEN)) {
-            if (zone.closed || zone.level != level || !whose.test(zone.owner)) continue;
+            if (zone.closed || zone.level != level || !(zone.owner instanceof Player player) || !whose.test(player)) continue;
             if (zone.center().distanceToSqr(point) > radius * radius) continue;
             zone.end();
             ended++;
@@ -302,12 +302,12 @@ public final class Zone {
     }
 
     /** Ends the zone now (its onLeave and onEnd run). Does nothing if there is none. */
-    public static void close(Player owner, String name) {
+    public static void close(LivingEntity owner, String name) {
         Zone zone = find(owner, name);
         if (zone != null) zone.end();
     }
 
-    private static Zone find(Player owner, String name) {
+    private static Zone find(LivingEntity owner, String name) {
         for (Zone zone : OPEN) {
             if (!zone.closed && zone.name.equals(name) && zone.owner.getUUID().equals(owner.getUUID())) return zone;
         }
@@ -319,7 +319,7 @@ public final class Zone {
     private boolean isAffected(LivingEntity entity) {
         if (entity == owner || entity.getUUID().equals(owner.getUUID())) return false;
         if (!entity.isAlive() || entity.isSpectator()) return false;
-        for (Shelter shelter : SHELTERS) if (shelter.shelters(owner, entity)) return false;
+        if (owner instanceof Player player) for (Shelter shelter : SHELTERS) if (shelter.shelters(player, entity)) return false;
         return affects != null ? affects.test(entity) : Spells.isEnemy(owner, entity);
     }
 

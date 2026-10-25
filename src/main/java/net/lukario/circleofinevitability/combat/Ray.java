@@ -105,14 +105,14 @@ public final class Ray {
     public Ray onEnd(Consumer<Vec3> action) { Ray c = copy(); c.onEnd = action; return c; }
 
     /** Where its line would end now: the first block on it (unless throughBlocks), or its range. */
-    public Vec3 end(Player caster, ServerLevel sl) {
+    public Vec3 end(LivingEntity caster, ServerLevel sl) {
         Vec3 far = from.add(direction.scale(range));
         if (throughBlocks) return far;
         return sl.clip(new ClipContext(from, far, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, caster)).getLocation();
     }
 
     /** Fires it (after its warning). Returns the ticks until it fires. */
-    public int fire(Player caster, ServerLevel sl) {
+    public int fire(LivingEntity caster, ServerLevel sl) {
         Vec3 to = end(caster, sl);
         if (warning > 0 && onWarn != null) onWarn.accept(from, to);
         if (warning <= 0) {
@@ -125,7 +125,7 @@ public final class Ray {
         return warning;
     }
 
-    private void go(Player caster, ServerLevel sl, Vec3 to) {
+    private void go(LivingEntity caster, ServerLevel sl, Vec3 to) {
         Vec3 stop = to;
         List<LivingEntity> onLine = Spells.enemiesOnLine(caster, sl, from, to, width);
         if (!pierces && !onLine.isEmpty()) {

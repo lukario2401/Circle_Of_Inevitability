@@ -8,7 +8,9 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Every ability a Beyonder mob can cast (MobAbility), by Pathway. A mob casts one only if it is of that Pathway and
@@ -24,6 +26,7 @@ import java.util.List;
 public final class MobAbilities {
 
     private static final List<MobAbility> ALL = new ArrayList<>();      // (before the static block: it fills this)
+    private static final Map<String, Float> CHEAPEST = new HashMap<>(); // cheapestCost, by "Pathway/sequence"
 
     static {
         HandOfOrderMobs.register();
@@ -48,6 +51,21 @@ public final class MobAbilities {
         }
         ALL.removeIf(one -> one.id().equals(ability.id()));
         ALL.add(ability);
+        CHEAPEST.clear();
+    }
+
+    /** The cost of the cheapest mob ability that Pathway knows at that Sequence (0 if none). Remembered. */
+    public static float cheapestCost(String pathway, int sequence) {
+        if (pathway == null || sequence < 0) return 0f;
+        return CHEAPEST.computeIfAbsent(pathway + "/" + sequence, key -> {
+            float cheapest = Float.MAX_VALUE;
+            for (MobAbility ability : ALL) {
+                if (ability.pathway().equals(pathway) && sequence <= ability.sequence() && ability.cost() > 0f) {
+                    cheapest = Math.min(cheapest, ability.cost());
+                }
+            }
+            return cheapest == Float.MAX_VALUE ? 0f : cheapest;
+        });
     }
 
     /** Every mob ability, in the order they were registered. */

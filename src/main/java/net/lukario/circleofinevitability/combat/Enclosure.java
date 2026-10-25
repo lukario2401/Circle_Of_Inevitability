@@ -72,7 +72,7 @@ public final class Enclosure {
     private IntConsumer onPulse;
     private Runnable onEnd;
 
-    private Player owner;
+    private LivingEntity owner;
     private ServerLevel level;
     private String name;
     private int age;
@@ -97,7 +97,7 @@ public final class Enclosure {
     public Enclosure onPulse(IntConsumer action) { this.onPulse = action; return this; }
     public Enclosure onEnd(Runnable action) { this.onEnd = action; return this; }
 
-    public void open(Player owner, ServerLevel level, String name) {
+    public void open(LivingEntity owner, ServerLevel level, String name) {
         close(owner, name);
         this.owner = owner;
         this.level = level;
@@ -112,16 +112,16 @@ public final class Enclosure {
     // Asking
     // =========================
 
-    public static boolean isOpen(Player owner, String name) {
+    public static boolean isOpen(LivingEntity owner, String name) {
         return find(owner, name) != null;
     }
 
-    public static int ticksLeft(Player owner, String name) {
+    public static int ticksLeft(LivingEntity owner, String name) {
         Enclosure open = find(owner, name);
         return open == null ? 0 : Math.max(0, open.lasts - open.age);
     }
 
-    public static void close(Player owner, String name) {
+    public static void close(LivingEntity owner, String name) {
         Enclosure open = find(owner, name);
         if (open != null) open.end();
     }
@@ -136,12 +136,12 @@ public final class Enclosure {
     public static List<Player> ownersAround(ServerLevel sl, Vec3 spot, String name) {
         List<Player> owners = new ArrayList<>();
         for (Enclosure open : OPEN) {
-            if (!open.closed && open.level == sl && open.covers(spot) && (name == null || open.name.equals(name))) owners.add(open.owner);
+            if (!open.closed && open.level == sl && open.covers(spot) && (name == null || open.name.equals(name)) && open.owner instanceof Player player) owners.add(player);
         }
         return owners;
     }
 
-    private static Enclosure find(Player owner, String name) {
+    private static Enclosure find(LivingEntity owner, String name) {
         for (Enclosure open : OPEN) {
             if (!open.closed && open.name.equals(name) && open.owner.getUUID().equals(owner.getUUID())) return open;
         }

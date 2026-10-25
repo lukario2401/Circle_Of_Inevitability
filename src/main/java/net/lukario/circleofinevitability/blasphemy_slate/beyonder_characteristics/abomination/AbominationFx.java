@@ -394,28 +394,28 @@ public final class AbominationFx {
     }
 
     /** Shows the status's picture (in the row above the hotbar stacks, rows of nine) and a clock beside the hotbar. */
-    public static void status(Player player, Status status, int ticks) {
+    public static void status(LivingEntity player, Status status, int ticks) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "abomination/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "abomination/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, ticks);
-        HudTimer.show(player, status.id(), status.label, ticks, status.rgb);
+        if (player instanceof Player viewerOfHud) HudTimer.show(viewerOfHud, status.id(), status.label, ticks, status.rgb);
     }
 
     /** How long something "until ended" is shown at most (an hour): show it again after that. */
     public static final int FOREVER = 72000;
 
     /** Only the status's picture, no clock: for what lasts until it is ended (Werewolf Form at Sequence 2, relics). */
-    public static void statusForever(Player player, Status status) {
+    public static void statusForever(LivingEntity player, Status status) {
         int slot = status.ordinal();
-        ScreenImages.show(player, status.id(), "abomination/" + status.image,
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, status.id(), "abomination/" + status.image,
                 ScreenAnchor.BOTTOM, 103 + (slot % 9) * 18, -21 - (slot / 9) * 18, 16, FOREVER);
-        HudTimer.hide(player, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     /** It ended early. */
-    public static void statusEnd(Player player, Status status) {
-        ScreenImages.hide(player, status.id());
-        HudTimer.hide(player, status.id());
+    public static void statusEnd(LivingEntity player, Status status) {
+        if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, status.id());
+        if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, status.id());
     }
 
     // =====================================================================================
@@ -528,7 +528,7 @@ public final class AbominationFx {
     public static final int CHAIN_REACHES = 4;
 
     /** A chain of blood lashes out of the hand to the target and wraps round it. */
-    public static void bloodChain(ServerLevel sl, Player player, LivingEntity target) {
+    public static void bloodChain(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 hand = SpellFx.handOf(player, sl);
         if (hand == null) hand = chestOf(player);
         Vec3 to = chestOf(target);
@@ -549,7 +549,7 @@ public final class AbominationFx {
     }
 
     /** While it holds (and drags): a chain of blood between hand and target, a cuff of blood round the target. */
-    public static void bloodChainHold(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void bloodChainHold(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         SpellFx.tether(sl, BLOOD_TETHER, () -> {
             if (!player.isAlive() || player.level() != sl) return null;
             Vec3 hand = SpellFx.handOf(player, sl);
@@ -588,7 +588,7 @@ public final class AbominationFx {
     public static final int RESTRAINT_LOCKED = 22;
 
     /** The Prisoner binds himself: chains wind in from all round, tighten, and a padlock locks on the chest. */
-    public static void restraint(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void restraint(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         float size = player.getBbHeight() / 1.8f;
         ModelFx chains = RESTRAINT.scale(size).lifetime(ticks).fade(2, 8).tag(tag)
                 .key(0, pose().scale(1.8f).alpha(0f).spin(-90f))
@@ -605,7 +605,7 @@ public final class AbominationFx {
     }
 
     /** A blow lands on the chains instead of the body: they rattle and spark. */
-    public static void restraintHit(ServerLevel sl, Player player) {
+    public static void restraintHit(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, IRON_LINK, chestOf(player), 4, 0.04, 0.1);
         ParticleShapes.burst(sl, ParticleFx.of("fx/spark").color(0xFFE0D0FF).endColor(0x006C3082).size(0.05f)
                 .endSize(0.02f).lifetime(8, 4).gravity(0.04f).friction(0.88f).glow(), chestOf(player), 6, 0.08, 0.2);
@@ -613,7 +613,7 @@ public final class AbominationFx {
     }
 
     /** The chains come off and fall in coils. */
-    public static void restraintEnd(ServerLevel sl, Player player, String tag) {
+    public static void restraintEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (double y = 0.2; y < player.getBbHeight(); y += 0.5) {
             ParticleShapes.ring(sl, IRON_LINK, player.position().add(0, y, 0), 0.45, 6, 0.04);
@@ -629,7 +629,7 @@ public final class AbominationFx {
     public static final int MOON_SHOWN = 10;
 
     /** A moon that is not there rises over the target's head and stares; pale crescents circle it. */
-    public static void moonstruck(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void moonstruck(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ModelFx moon = MAD_MOON.scale(0.9f).lifetime(ticks).fade(4, 12).tag(tag)
                 .key(0, pose().scale(0.1f).alpha(0f).up(-0.6f))
                 .key(MOON_SHOWN, pose().scale(1f).alpha(1f).up(0f), Ease.OUT_BACK)
@@ -656,7 +656,7 @@ public final class AbominationFx {
     // ---------- sneak: Lunar Frenzy
 
     /** The Lunatic gives in to the moon: a huge mad moon flares in the sky above, red light runs over the body. */
-    public static void lunarFrenzy(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void lunarFrenzy(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         Vec3 sky = player.position().add(Spells.flatLook(player).scale(6)).add(0, 9, 0);
         ModelFx moon = MAD_MOON.scale(7f).lifetime(50).fade(10, 25)
                 .key(0, pose().scale(0.5f).alpha(0f))
@@ -670,14 +670,14 @@ public final class AbominationFx {
     }
 
     /** Every few ticks of the frenzy: red motes and hot breath. */
-    public static void frenzyTick(ServerLevel sl, Player player) {
+    public static void frenzyTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, FRENZY_MOTE, chestOf(player), 2, 0.02, 0.06);
         ParticleShapes.spawn(sl, BREATH, player.getEyePosition().add(Spells.flatLook(player).scale(0.4)),
                 Spells.flatLook(player).scale(0.05));
     }
 
     /** The crash after: grey smoke sinks off the body, a dull ring under the feet. */
-    public static void frenzyCrash(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void frenzyCrash(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         SpellFx.circleUnder(sl, player, 0.9, 0x80908880, ticks, tag);
         for (double y = 0.3; y < player.getBbHeight(); y += 0.5) {
@@ -686,7 +686,7 @@ public final class AbominationFx {
         sound(sl, player.position(), ModSounds.ABOMINATION_FRENZY_CRASH, 0.9f, 1.0f);
     }
 
-    public static void frenzyEnd(ServerLevel sl, Player player, String tag) {
+    public static void frenzyEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -695,7 +695,7 @@ public final class AbominationFx {
     // =====================================================================================
 
     /** The leap: earth kicks up behind, a growl. */
-    public static void pounceLeap(ServerLevel sl, Player player) {
+    public static void pounceLeap(ServerLevel sl, LivingEntity player) {
         Vec3 back = player.position().subtract(Spells.flatLook(player).scale(0.5));
         ParticleShapes.cone(sl, DUST, back.add(0, 0.2, 0), Spells.flatLook(player).scale(-1).add(0, 0.4, 0), 70, 12, 0.05, 0.2);
         ParticleShapes.burst(sl, EARTH, player.position().add(0, 0.1, 0), 8, 0.08, 0.2);
@@ -704,7 +704,7 @@ public final class AbominationFx {
     }
 
     /** Every tick of the leap: grey-green streaks of speed behind the body. */
-    public static void pounceTrail(ServerLevel sl, Player player) {
+    public static void pounceTrail(ServerLevel sl, LivingEntity player) {
         Vec3 look = player.getDeltaMovement().lengthSqr() > 0.01 ? player.getDeltaMovement().normalize() : Spells.flatLook(player);
         Vec3 chest = chestOf(player);
         ParticleShapes.slashBetween(sl, LEAP_LINE, chest.subtract(look.scale(1.6)), chest);
@@ -712,7 +712,7 @@ public final class AbominationFx {
     }
 
     /** One of the three claws (index 0..2, the last throws it down): torn air, claw marks, blood. */
-    public static void pounceClaw(ServerLevel sl, Player player, LivingEntity target, int index) {
+    public static void pounceClaw(ServerLevel sl, LivingEntity player, LivingEntity target, int index) {
         boolean last = index >= 2;
         Vec3 at = chestOf(target);
         float yaw = player.getYRot();
@@ -745,7 +745,7 @@ public final class AbominationFx {
 
     /** Bones crack and fur bursts out: the Werewolf's body grows round the player, then a howl. 'height' = the
      *  player's height in the form (1.8 * 1.1 at Sequence 7). */
-    public static void werewolfForm(ServerLevel sl, Player player, double height, int ticks, String tag) {
+    public static void werewolfForm(ServerLevel sl, LivingEntity player, double height, int ticks, String tag) {
         float full = (float) (height / 2.0);
         ModelFx body = WEREWOLF.scale(full).lifetime(ticks).fade(4, 10).tag(tag)
                 .key(0, pose().scale(0.8f).alpha(0f))
@@ -767,7 +767,7 @@ public final class AbominationFx {
     }
 
     /** A claw blow in the form: a dark-green rend with blood behind it. */
-    public static void werewolfClaw(ServerLevel sl, Player player, LivingEntity target) {
+    public static void werewolfClaw(ServerLevel sl, LivingEntity player, LivingEntity target) {
         Vec3 at = chestOf(target);
         float roll = random() < 0.5f ? -40f : 40f;
         ParticleShapes.slash(sl, CLAW_ARC.color(0xE04C6050).core(0xFFE8FF90), chestOf(player).add(Spells.flatLook(player).scale(0.5)),
@@ -778,7 +778,7 @@ public final class AbominationFx {
     }
 
     /** The madness rising in the form (0..1): eye glints and red motes, more the madder. */
-    public static void werewolfMadness(ServerLevel sl, Player player, float madness, double height) {
+    public static void werewolfMadness(ServerLevel sl, LivingEntity player, float madness, double height) {
         int count = Math.round(1 + madness * 8);
         Vec3 eyes = player.position().add(0, height * 0.85, 0).add(Spells.flatLook(player).scale(0.4));
         ParticleShapes.burst(sl, WOLF_GLINT, eyes, 2, 0.0, 0.01);
@@ -787,7 +787,7 @@ public final class AbominationFx {
     }
 
     /** The howl: breath in the air, a ring of sound rolling out. */
-    public static void howl(ServerLevel sl, Player player) {
+    public static void howl(ServerLevel sl, LivingEntity player) {
         Vec3 mouth = player.getEyePosition().add(Spells.flatLook(player).scale(0.5)).add(0, 0.2, 0);
         ParticleShapes.cone(sl, BREATH, mouth, Spells.flatLook(player).add(0, 0.8, 0), 40, 8, 0.04, 0.1);
         for (int i = 0; i < 3; i++) SpellFx.shockRing(sl, player.position(), 4 + i * 3, 0x80C0D0C0, 16, i * 6);
@@ -795,7 +795,7 @@ public final class AbominationFx {
     }
 
     /** The form falls away: fur and dust. */
-    public static void werewolfFormEnd(ServerLevel sl, Player player, String tag) {
+    public static void werewolfFormEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (double y = 0.2; y < player.getBbHeight(); y += 0.5) {
             ParticleShapes.ring(sl, WOLF_HAIR, player.position().add(0, y, 0), 0.4, 6, 0.05);
@@ -852,7 +852,7 @@ public final class AbominationFx {
     public static final int CHILL_SPREAD = 14;
 
     /** Grave Chill: a jagged ring of frost spreads round the Zombie and stays with them; cold mist rolls out. */
-    public static void graveChill(ServerLevel sl, Player player, double radius, int ticks, String tag) {
+    public static void graveChill(ServerLevel sl, LivingEntity player, double radius, int ticks, String tag) {
         float width = (float) (radius * 2.0);
         ModelFx frost = FROST_RING.color(0xE096D2FF).scale(width).lifetime(ticks).fade(2, 14).spin(0.3f).tag(tag)
                 .key(0, pose().scale(0.1f).alpha(0f))
@@ -864,7 +864,7 @@ public final class AbominationFx {
     }
 
     /** Every few ticks: mist low over the ground and flakes drifting. */
-    public static void graveChillTick(ServerLevel sl, Player player, double radius) {
+    public static void graveChillTick(ServerLevel sl, LivingEntity player, double radius) {
         for (int i = 0; i < 4; i++) {
             double a = random() * Math.PI * 2, r = Math.sqrt(random()) * radius;
             Vec3 at = player.position().add(Math.cos(a) * r, 0.2, Math.sin(a) * r);
@@ -885,13 +885,13 @@ public final class AbominationFx {
         sound(sl, enemy.position(), ModSounds.ABOMINATION_FREEZE, 0.9f, wobble(1.0f));
     }
 
-    public static void graveChillEnd(ServerLevel sl, Player player, String tag) {
+    public static void graveChillEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.ring(sl, FROST_MIST, player.position().add(0, 0.3, 0), 2.0, 12, 0.06);
     }
 
     /** Undying Flesh: the heart stops and the body goes on; a slow dark-green beat under the feet. */
-    public static void undyingFlesh(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void undyingFlesh(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 1.0, 0xA07A9060, ticks, tag);
         SpellFx.shockRing(sl, player.position(), 2.4, 0xC05A7048, 12, 0);
         ParticleShapes.burst(sl, ROT_MOTE, chestOf(player), 12, 0.03, 0.1);
@@ -905,16 +905,16 @@ public final class AbominationFx {
     }
 
     /** Once a second: the flesh knits (green motes). */
-    public static void undyingTick(ServerLevel sl, Player player) {
+    public static void undyingTick(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, ROT_MOTE, chestOf(player), 2, 0.01, 0.04);
     }
 
     /** A blow that would hurt does not: grey dust puffs off dead skin, no blood. */
-    public static void undyingHit(ServerLevel sl, Player player) {
+    public static void undyingHit(ServerLevel sl, LivingEntity player) {
         ParticleShapes.burst(sl, GREY_SMOKE, chestOf(player), 3, 0.02, 0.06);
     }
 
-    public static void undyingEnd(ServerLevel sl, Player player, String tag) {
+    public static void undyingEnd(ServerLevel sl, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
     }
 
@@ -922,7 +922,7 @@ public final class AbominationFx {
     public static final int SENTENCE_LANDS = 6;
 
     /** Death Sentence: a knell, a purple coffin-mark over the sentenced head and a ring at its feet. */
-    public static void deathSentence(ServerLevel sl, Player player, LivingEntity target, int ticks, String tag) {
+    public static void deathSentence(ServerLevel sl, LivingEntity player, LivingEntity target, int ticks, String tag) {
         ModelFx mark = SENTENCE_MARK.color(0xE0B070FF).scale(0.8f).lifetime(ticks).fade(4, 6).tag(tag)
                 .key(0, pose().scale(0.2f).alpha(0f))
                 .key(8, pose().scale(1f).alpha(1f), Ease.OUT_BACK);
@@ -973,7 +973,7 @@ public final class AbominationFx {
     public static final int MIRROR_OPENS = 6;
 
     /** A ripple opens on the reflection and the Wraith is drawn into it, glass glittering. */
-    public static void mirrorEnter(ServerLevel sl, Player player, Vec3 mirror) {
+    public static void mirrorEnter(ServerLevel sl, LivingEntity player, Vec3 mirror) {
         mirrorDoor(sl, mirror, yawToward(mirror, player.position()), MIRROR_OPENS + 10);
         ParticleShapes.slashBetween(sl, GHOST_LINE.lifetime(MIRROR_OPENS + 2), chestOf(player), mirror.add(0, 1.0, 0));
         ParticleShapes.burst(sl, GLASS, chestOf(player), 12, 0.04, 0.12);
@@ -981,7 +981,7 @@ public final class AbominationFx {
     }
 
     /** Out of the other reflection: a ripple there, and the Wraith steps out of it. */
-    public static void mirrorExit(ServerLevel sl, Player player, Vec3 mirror) {
+    public static void mirrorExit(ServerLevel sl, LivingEntity player, Vec3 mirror) {
         mirrorDoor(sl, mirror, player.getYRot() + 180f, 16);
         ParticleShapes.burst(sl, GLASS, mirror.add(0, 1.0, 0), 16, 0.06, 0.16);
         sound(sl, mirror, ModSounds.ABOMINATION_MIRROR_EXIT, 1.0f, 1.0f);
@@ -1003,7 +1003,7 @@ public final class AbominationFx {
     public static final int GHOST_ARRIVES = 10;
 
     /** The Wraith's ghost leaves the body and dives into the host. */
-    public static void possessionDive(ServerLevel sl, Player player, LivingEntity host) {
+    public static void possessionDive(ServerLevel sl, LivingEntity player, LivingEntity host) {
         Vec3 from = player.position();
         Vec3 to = host.position();
         Vec3 dir = to.subtract(from);
@@ -1037,13 +1037,13 @@ public final class AbominationFx {
     }
 
     /** The body left behind while the ghost is away: grey and still, a cold ring under it. */
-    public static void bodyLeft(ServerLevel sl, Player player, int ticks, String tag) {
+    public static void bodyLeft(ServerLevel sl, LivingEntity player, int ticks, String tag) {
         SpellFx.circleUnder(sl, player, 0.8, 0x80A0A8B8, ticks, tag);
         ParticleShapes.burst(sl, GREY_SMOKE, chestOf(player), 4, 0.01, 0.03);
     }
 
     /** The ghost steps out of the host and back into the body. */
-    public static void possessionExit(ServerLevel sl, LivingEntity host, Player player, String tag) {
+    public static void possessionExit(ServerLevel sl, LivingEntity host, LivingEntity player, String tag) {
         ParticleShapes.clearModels(sl, host, tag);
         ParticleShapes.clearModels(sl, player, tag);
         ParticleShapes.burst(sl, GHOST_WISP, chestOf(host), 10, 0.03, 0.1);
@@ -1055,7 +1055,7 @@ public final class AbominationFx {
     public static final int GHOSTS_RISEN = 24;
 
     /** Ghost Host: a pale seal on the ground and 'count' ghosts rising out of it round the Wraith, wailing. */
-    public static void ghostHost(ServerLevel sl, Player player, int count) {
+    public static void ghostHost(ServerLevel sl, LivingEntity player, int count) {
         Vec3 ground = player.position();
         seal(sl, ground, 2.5, 0xC0C8E0FA, GHOSTS_RISEN + 20, null);
         int shown = Math.min(count, 6);
@@ -1098,7 +1098,7 @@ public final class AbominationFx {
     public static final int OBJECTS_RISE = 12;
 
     /** Animate Objects: purple strings run from the Puppet's hand to every loose thing, which glows as it lifts. */
-    public static void animateObjects(ServerLevel sl, Player player, List<? extends Entity> things) {
+    public static void animateObjects(ServerLevel sl, LivingEntity player, List<? extends Entity> things) {
         for (Entity thing : things) {
             SpellFx.tether(sl, STRING, () -> {
                 if (!player.isAlive() || player.level() != sl) return null;
@@ -1294,7 +1294,7 @@ public final class AbominationFx {
     }
 
     /** Sealed on yourself, you rise: thorns burst up in a ring round you, roses light, you are whole. */
-    public static void coffinRise(ServerLevel sl, Player player, double radius) {
+    public static void coffinRise(ServerLevel sl, LivingEntity player, double radius) {
         int around = (int) Math.max(5, Math.min(12, radius * 2.5));
         for (int i = 0; i < around; i++) {
             Vec3 at = player.position().add(ahead(i * 360f / around).scale(radius * (0.6 + random() * 0.4)));
@@ -1508,7 +1508,7 @@ public final class AbominationFx {
 
     /** Abomination Form: thorns burst up round the player, the doll-vessel closes round them, bound by vines,
      *  and the curses it holds spill out as glyphs. 'height' = how tall the vessel stands (2.75 = its own size). */
-    public static void abominationForm(ServerLevel sl, Player player, double height, int ticks, String tag) {
+    public static void abominationForm(ServerLevel sl, LivingEntity player, double height, int ticks, String tag) {
         float full = (float) (height / 2.75);
         ModelFx vessel = DOLL_VESSEL.scale(full).lifetime(ticks).fade(4, 14).tag(tag)
                 .key(0, pose().scale(0.3f).alpha(0f).spin(180f))
@@ -1534,7 +1534,7 @@ public final class AbominationFx {
     }
 
     /** Once a second in the form: curse glyphs drift out to the edge of the aura ('radius'). */
-    public static void abominationTick(ServerLevel sl, Player player, double radius) {
+    public static void abominationTick(ServerLevel sl, LivingEntity player, double radius) {
         for (int i = 0; i < 4; i++) {
             double a = random() * Math.PI * 2;
             Vec3 out = new Vec3(Math.cos(a), 0, Math.sin(a));
@@ -1563,7 +1563,7 @@ public final class AbominationFx {
     }
 
     /** The form ends: the vessel unravels into thorns, cloth and a last cloud of glyphs. */
-    public static void abominationFormEnd(ServerLevel sl, Player player, double height, String tag) {
+    public static void abominationFormEnd(ServerLevel sl, LivingEntity player, double height, String tag) {
         ParticleShapes.clearModels(sl, player, tag);
         for (double y = 0.2; y < height; y += 0.5) {
             ParticleShapes.ring(sl, THORN_P, player.position().add(0, y, 0), 0.6, 6, 0.06);
@@ -1577,7 +1577,7 @@ public final class AbominationFx {
     // =====================================================================================
 
     /** Lunatic: the full moon rises over the player (once, when the night of the full moon begins). */
-    public static void fullMoonRises(ServerLevel sl, Player player) {
+    public static void fullMoonRises(ServerLevel sl, LivingEntity player) {
         ParticleShapes.ring(sl, CRESCENT, player.position().add(0, 1.0, 0), 1.2, 10, 0.04);
         SpellFx.risingRings(sl, player.position(), 1.0, 2.2, 3, 0x80E8E4D6);
         sound(sl, player.position(), ModSounds.ABOMINATION_HOWL, 0.5f, 1.1f);
@@ -1600,7 +1600,7 @@ public final class AbominationFx {
     }
 
     /** Ancient Bane's aura, once a second: a few blood and black motes hang in the air round the player. */
-    public static void baneAura(ServerLevel sl, Player player, double radius) {
+    public static void baneAura(ServerLevel sl, LivingEntity player, double radius) {
         for (int i = 0; i < 3; i++) {
             double a = random() * Math.PI * 2, r = 1.5 + random() * (radius - 1.5);
             ParticleShapes.spawn(sl, i == 0 ? BANE_BLOOD : BANE_BLACK,
@@ -1609,7 +1609,7 @@ public final class AbominationFx {
     }
 
     /** Chained's aura, once a second: thorns and a rose petal at the ground round the player. */
-    public static void chainedAura(ServerLevel sl, Player player, double radius) {
+    public static void chainedAura(ServerLevel sl, LivingEntity player, double radius) {
         for (int i = 0; i < 3; i++) {
             double a = random() * Math.PI * 2, r = 1.0 + random() * (radius - 1.0);
             ParticleShapes.spawn(sl, i == 0 ? PETAL : THORN_P,

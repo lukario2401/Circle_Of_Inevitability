@@ -149,6 +149,28 @@ public final class MobCasting {
         return true;
     }
 
+    /**
+     * For testing (/beyondermob cast): casts it now at 'target' whatever its spirituality, cooldowns, range, when()
+     * and the CAST_PAUSE say. Its Pathway and Sequence must still allow it. Nothing is spent; the cast is remembered.
+     * The Refusal that stopped it, or NONE if it went off (null: it ran but refused, or failed).
+     */
+    public static Refusal forceCast(Mob mob, MobAbility ability, LivingEntity target, ServerLevel sl) {
+        if (!BeyonderMobs.isBeyonder(mob)) return Refusal.NOT_A_BEYONDER;
+        if (!ability.pathway().equals(BeyonderMobs.pathway(mob))) return Refusal.WRONG_PATHWAY;
+        if (BeyonderMobs.sequence(mob) > ability.sequence()) return Refusal.SEQUENCE_TOO_WEAK;
+        if (ability.range() > 0 && (target == null || target.level() != sl)) return null;     // it needs something to aim at
+        boolean wentOff;
+        try {
+            wentOff = ability.cast().run(mob, target, sl);
+        } catch (RuntimeException e) {
+            CircleOfInevitability.LOGGER.error("A mob ability failed: {} cast by {}", ability, mob, e);
+            return null;
+        }
+        if (!wentOff) return null;
+        if (ability.ability() != null) Casts.mobCast(mob, sl, Casts.madeUpFor(mob, sl, ability.ability(), ability.sneak()));
+        return Refusal.NONE;
+    }
+
     /** It forgets every cooldown (it is no Beyonder any more, or a command). */
     public static void clearCooldowns(LivingEntity mob) {
         mob.getPersistentData().remove(COOLDOWNS);
