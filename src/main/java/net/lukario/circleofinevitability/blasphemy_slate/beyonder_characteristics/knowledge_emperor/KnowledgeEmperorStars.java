@@ -61,68 +61,68 @@ public final class KnowledgeEmperorStars {
     // =========================
 
     static final int STARS_SEQUENCE = 5;                         // the key
-    private static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
+    static final float QUICK_CAST_COST = 2f;            // a sneak recast: no cooldown, this many times the cost
 
     // Starlight Cage
-    private static final int CAGE_SEQUENCE = 5;
-    private static final int CAGE_COST = 3000;                  // Sequence 5 holds 15500
-    private static final int CAGE_COOLDOWN = 280;
-    private static final double CAGE_RANGE = 24.0;
-    private static final double CAGE_RADIUS = 3.0;              // everyone this close to the target is caught too
-    private static final int CAGE_TICKS = 100;
-    private static final int CAGE_BOSS_TICKS = 40;              // bosses break out sooner...
-    private static final float CAGE_BREAKS_AT = 100f;           // ...and the amber breaks after this much damage
-    private static final int CAGE_STUDY = 15;
-    private static final int SAGE_CAGE_SEQUENCE = 2;            // Sage: wider, and bosses held the whole time
-    private static final double SAGE_CAGE_RADIUS = 5.0;
+    static final int CAGE_SEQUENCE = 5;
+    static final int CAGE_COST = 3000;                  // Sequence 5 holds 15500
+    static final int CAGE_COOLDOWN = 280;
+    static final double CAGE_RANGE = 24.0;
+    static final double CAGE_RADIUS = 3.0;              // everyone this close to the target is caught too
+    static final int CAGE_TICKS = 100;
+    static final int CAGE_BOSS_TICKS = 40;              // bosses break out sooner...
+    static final float CAGE_BREAKS_AT = 100f;           // ...and the amber breaks after this much damage
+    static final int CAGE_STUDY = 15;
+    static final int SAGE_CAGE_SEQUENCE = 2;            // Sage: wider, and bosses held the whole time
+    static final double SAGE_CAGE_RADIUS = 5.0;
 
     // Stellar Self
-    private static final int STELLAR_SEQUENCE = 5;
-    private static final int STELLAR_COST = 2500;
-    private static final int STELLAR_COOLDOWN = 200;
-    private static final double STELLAR_RANGE = 16.0;
-    private static final double STELLAR_BLIND_RADIUS = 4.0;     // the flash left behind blinds enemies this close...
-    private static final int STELLAR_BLIND_TICKS = 40;          // ...this long
-    private static final int CARRY_SEQUENCE = 3;                // Clairvoyant: further...
-    private static final double CARRY_RANGE = 40.0;
-    private static final double CARRY_RADIUS = 3.0;             // ...and allies this close come along
+    static final int STELLAR_SEQUENCE = 5;
+    static final int STELLAR_COST = 2500;
+    static final int STELLAR_COOLDOWN = 200;
+    static final double STELLAR_RANGE = 16.0;
+    static final double STELLAR_BLIND_RADIUS = 4.0;     // the flash left behind blinds enemies this close...
+    static final int STELLAR_BLIND_TICKS = 40;          // ...this long
+    static final int CARRY_SEQUENCE = 3;                // Clairvoyant: further...
+    static final double CARRY_RANGE = 40.0;
+    static final double CARRY_RADIUS = 3.0;             // ...and allies this close come along
 
     // Star Fall
-    private static final int FALL_SEQUENCE = 5;
-    private static final int FALL_COST = 3500;
-    private static final int FALL_COOLDOWN = 360;
-    private static final double FALL_RANGE = 28.0;
-    private static final int FALL_STARS = 5;
-    private static final int FALL_EVERY = 8;                    // ticks between two stars (five over about 2 seconds)
-    private static final double FALL_AREA = 6.0;                // they fall within this of where you aim...
-    private static final double FALL_RADIUS = 3.0;              // ...and each bursts this wide...
-    private static final float FALL_DAMAGE = 30f;               // ...for this much
+    static final int FALL_SEQUENCE = 5;
+    static final int FALL_COST = 3500;
+    static final int FALL_COOLDOWN = 360;
+    static final double FALL_RANGE = 28.0;
+    static final int FALL_STARS = 5;
+    static final int FALL_EVERY = 8;                    // ticks between two stars (five over about 2 seconds)
+    static final double FALL_AREA = 6.0;                // they fall within this of where you aim...
+    static final double FALL_RADIUS = 3.0;              // ...and each bursts this wide...
+    static final float FALL_DAMAGE = 30f;               // ...for this much
 
     // Star Guard
-    private static final int GUARD_SEQUENCE = 5;
-    private static final int GUARD_COST = 2800;
-    private static final int GUARD_COOLDOWN = 600;
-    private static final int GUARD_TICKS = 600;
-    private static final int GUARD_STARS = 4;
-    private static final int GUARD_RETURN = 100;                // a star that stopped a projectile is back after this
-    private static final double GUARD_RANGE = 3.0;              // an enemy this close...
-    private static final int GUARD_EVERY = 40;                  // ...is struck by a star this often...
-    private static final float GUARD_DAMAGE = 15f;              // ...for this much
-    private static final int GUARD_STUDY = 5;
+    static final int GUARD_SEQUENCE = 5;
+    static final int GUARD_COST = 2800;
+    static final int GUARD_COOLDOWN = 600;
+    static final int GUARD_TICKS = 600;
+    static final int GUARD_STARS = 4;
+    static final int GUARD_RETURN = 100;                // a star that stopped a projectile is back after this
+    static final double GUARD_RANGE = 3.0;              // an enemy this close...
+    static final int GUARD_EVERY = 40;                  // ...is struck by a star this often...
+    static final float GUARD_DAMAGE = 15f;              // ...for this much
+    static final int GUARD_STUDY = 5;
     // the orbit lines up with KnowledgeEmperorFx.starGuardTick (its GUARD_RADIUS, height and GUARD_SPEED)
-    private static final double GUARD_ORBIT_RADIUS = 1.2;
-    private static final double GUARD_ORBIT_HEIGHT = 1.1;
-    private static final float GUARD_ORBIT_SPEED = 6f;
+    static final double GUARD_ORBIT_RADIUS = 1.2;
+    static final double GUARD_ORBIT_HEIGHT = 1.1;
+    static final float GUARD_ORBIT_SPEED = 6f;
 
     // =========================
     // Names and what is kept
     // =========================
     static final String SCROLL_CAGE = "knowledge_emperor_starlight_cage";
     static final String SCROLL_STAR_FALL = "knowledge_emperor_star_fall";
-    private static final String GUARD = "knowledge_emperor_star_guard";
+    static final String GUARD = "knowledge_emperor_star_guard";
 
     /** Who is held in amber: how much the amber has taken, and under which tag it is shown. Not saved. */
-    private static final class Cage {
+    static final class Cage {
         final String tag;
         float taken;
 
@@ -130,13 +130,13 @@ public final class KnowledgeEmperorStars {
             this.tag = tag;
         }
     }
-    private static final Map<UUID, Cage> CAGES = new HashMap<>();
+    static final Map<UUID, Cage> CAGES = new HashMap<>();
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("knowledge_emperor_stars", "Stars")
+    static final AbilityWheel WHEEL = AbilityWheel.create("knowledge_emperor_stars", "Stars")
             .radius(72)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .cooldownBy(KnowledgeEmperor::cooldownFor)
@@ -176,16 +176,16 @@ public final class KnowledgeEmperorStars {
     // CAGE_BOSS_TICKS) unless the amber round one of them takes CAGE_BREAKS_AT damage first. CAGE_STUDY each.
     // Sage (2): SAGE_CAGE_RADIUS, and bosses are held the whole time. Scrollable.
     // =========================
-    private static AbilityWheel.Result starlightCage(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result starlightCage(LivingEntity player, ServerLevel sl) {
         if (!cage(player, sl, 1f)) return AbilityWheel.Result.REFUSED;
         Scrolls.cast(player, SCROLL_CAGE);
         return AbilityWheel.Result.DONE;
     }
 
-    private static boolean cage(ServerPlayer player, ServerLevel sl, float power) {
+    private static boolean cage(LivingEntity player, ServerLevel sl, float power) {
         LivingEntity target = Spells.aimEnemy(player, sl, CAGE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("The starlight has no one to settle on."));
+            Spells.tell(player, Component.literal("The starlight has no one to settle on."));
             return false; // nothing spent
         }
         boolean sage = Beyonder.hasSequence(player, SAGE_CAGE_SEQUENCE);
@@ -204,7 +204,7 @@ public final class KnowledgeEmperorStars {
     }
 
     /** One body set in amber for 'ticks'. */
-    private static void encase(Player player, ServerLevel sl, LivingEntity held, int ticks) {
+    private static void encase(LivingEntity player, ServerLevel sl, LivingEntity held, int ticks) {
         Cage old = CAGES.remove(held.getUUID());
         if (old != null) KnowledgeEmperorFx.cageEnd(sl, held, old.tag);               // a new cage over an old one
         String tag = "ke_cage_" + held.getId() + "_" + sl.getGameTime();
@@ -249,15 +249,15 @@ public final class KnowledgeEmperorStars {
     // fences, leaves or open doors. Not while held in place. Clairvoyant (3): CARRY_RANGE, and every ally within
     // CARRY_RADIUS comes along.
     // =========================
-    private static AbilityWheel.Result stellarSelf(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result stellarSelf(LivingEntity player, ServerLevel sl) {
         if (Root.has(player, RootRestriction.MOVE) || Root.has(player, RootRestriction.TELEPORT)) {
-            player.sendSystemMessage(Component.literal("You are held fast and cannot break into starlight."));
+            Spells.tell(player, Component.literal("You are held fast and cannot break into starlight."));
             return AbilityWheel.Result.REFUSED;
         }
         boolean carry = Beyonder.hasSequence(player, CARRY_SEQUENCE);
         Vec3 to = stellarSpot(player, sl, carry ? CARRY_RANGE : STELLAR_RANGE);
         if (to == null || to.distanceToSqr(player.position()) < 1.0) {
-            player.sendSystemMessage(Component.literal("There is no way for the starlight to go there."));
+            Spells.tell(player, Component.literal("There is no way for the starlight to go there."));
             return AbilityWheel.Result.REFUSED;
         }
         Vec3 from = player.position();
@@ -306,7 +306,7 @@ public final class KnowledgeEmperorStars {
      * Where the starlight re-forms: along the look, through everything that lets starlight by, up to 'range'; then
      * the nearest place on that line (going back) where the player's body fits. Null when there is none.
      */
-    static Vec3 stellarSpot(Player player, ServerLevel sl, double range) {
+    static Vec3 stellarSpot(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         Vec3 end = eye.add(look.scale(range));
@@ -355,13 +355,13 @@ public final class KnowledgeEmperorStars {
     // within FALL_RADIUS. The enemies you know best (50% Study or more) are aimed at first, then the others, then the
     // ground. Scrollable.
     // =========================
-    private static AbilityWheel.Result starFall(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result starFall(LivingEntity player, ServerLevel sl) {
         fall(player, sl, 1f);
         Scrolls.cast(player, SCROLL_STAR_FALL);
         return AbilityWheel.Result.DONE;
     }
 
-    private static boolean fall(ServerPlayer player, ServerLevel sl, float power) {
+    private static boolean fall(LivingEntity player, ServerLevel sl, float power) {
         Vec3 center = Spells.aimGround(player, sl, FALL_RANGE);
         String tag = "ke_starfall_" + player.getId() + "_" + sl.getGameTime();
         int lasts = (FALL_STARS - 1) * FALL_EVERY + KnowledgeEmperorFx.STAR_LANDS + 10;
@@ -386,7 +386,7 @@ public final class KnowledgeEmperorStars {
     }
 
     /** Where the next star falls: on an enemy not aimed at yet (the best known first), else on the ground near the middle. */
-    private static Vec3 nextStarSpot(Player player, ServerLevel sl, Vec3 center, Set<UUID> aimedAt) {
+    private static Vec3 nextStarSpot(LivingEntity player, ServerLevel sl, Vec3 center, Set<UUID> aimedAt) {
         LivingEntity chosen = null;
         int best = -1;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, center, FALL_AREA)) {
@@ -416,7 +416,7 @@ public final class KnowledgeEmperorStars {
     // GUARD_RETURN later; an enemy within GUARD_RANGE is struck by one for GUARD_DAMAGE every GUARD_EVERY. Cast again
     // for a fresh guard.
     // =========================
-    private static AbilityWheel.Result starGuard(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result starGuard(LivingEntity player, ServerLevel sl) {
         String tag = "ke_guard_" + player.getId() + "_" + sl.getGameTime();
         Orbit.close(player, GUARD);                                                  // the old guard first (its stars go)
         KnowledgeEmperorFx.starGuard(sl, player, GUARD_TICKS, tag);

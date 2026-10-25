@@ -108,162 +108,162 @@ public class KnowledgeEmperor {
     // =========================
 
     // Ability 1 - Mystery Prying (Sequence 9)
-    private static final int PRY_SEQUENCE = 9;
-    private static final int PRY_COST = 250;
-    private static final int PRY_TICKS = 200;                    // the eyes stay open this long
-    private static final double PRY_REACH = 30.0;                // hidden things this close glow; enemies this far are read
-    private static final int PRY_STUDY = 25;                     // each enemy read gains this much Study
-    private static final int PRY_GLOW_TICKS = 40;                // the glow is put on again every second while it lasts
-    private static final int INQUIRY_SEQUENCE = 5;               // Eyes of Secret Inquiry...
-    private static final double INQUIRY_REACH = 60.0;            // ...see this far...
-    private static final double INQUIRY_LIVING = 30.0;           // ...and everything alive this close glows
-    private static final int SEE_THROUGH_SEQUENCE = 4;           // Mysticologist: concealment, substitutes, marionette strings
-    private static final int CLAIRVOYANT_PRY_SEQUENCE = 3;       // Clairvoyant: Pathway, Sequence and abilities read...
-    private static final double CLAIRVOYANT_REACH = 80.0;        // ...this far
+    static final int PRY_SEQUENCE = 9;
+    static final int PRY_COST = 250;
+    static final int PRY_TICKS = 200;                    // the eyes stay open this long
+    static final double PRY_REACH = 30.0;                // hidden things this close glow; enemies this far are read
+    static final int PRY_STUDY = 25;                     // each enemy read gains this much Study
+    static final int PRY_GLOW_TICKS = 40;                // the glow is put on again every second while it lasts
+    static final int INQUIRY_SEQUENCE = 5;               // Eyes of Secret Inquiry...
+    static final double INQUIRY_REACH = 60.0;            // ...see this far...
+    static final double INQUIRY_LIVING = 30.0;           // ...and everything alive this close glows
+    static final int SEE_THROUGH_SEQUENCE = 4;           // Mysticologist: concealment, substitutes, marionette strings
+    static final int CLAIRVOYANT_PRY_SEQUENCE = 3;       // Clairvoyant: Pathway, Sequence and abilities read...
+    static final double CLAIRVOYANT_REACH = 80.0;        // ...this far
     // sneak: Dowsing
-    private static final int DOWSE_COST = 250;
-    private static final double DOWSE_RANGE = 64.0;
-    private static final int DOWSE_TICKS = 240;                  // the thread points the way this long
+    static final int DOWSE_COST = 250;
+    static final double DOWSE_RANGE = 64.0;
+    static final int DOWSE_TICKS = 240;                  // the thread points the way this long
 
     // Ability 2 - Weak-Point Strike (Sequence 8)
-    private static final int STRIKE_SEQUENCE = 8;
-    private static final int STRIKE_COST = 350;                  // Sequence 8 holds 400
-    private static final double STRIKE_STEP = 3.0;               // a step this long...
-    private static final double STRIKE_REACH = 3.5;              // ...to an enemy this far beyond it
-    private static final float STRIKE_DAMAGE = 30f;              // through armor (Spells.strikeTrue)
-    private static final int STRIKE_STAGGER = 15;
-    private static final int STRIKE_STUDY = 10;
+    static final int STRIKE_SEQUENCE = 8;
+    static final int STRIKE_COST = 350;                  // Sequence 8 holds 400
+    static final double STRIKE_STEP = 3.0;               // a step this long...
+    static final double STRIKE_REACH = 3.5;              // ...to an enemy this far beyond it
+    static final float STRIKE_DAMAGE = 30f;              // through armor (Spells.strikeTrue)
+    static final int STRIKE_STAGGER = 15;
+    static final int STRIKE_STUDY = 10;
     // sneak: Sidestep
-    private static final int SIDESTEP_COST = 350;
-    private static final int SIDESTEP_TICKS = 40;                // the next blow or projectile within this is slipped...
-    private static final double SIDESTEP_DISTANCE = 4.0;         // ...by a step this long (to the attacker's side)
-    private static final double SIDESTEP_TO_ATTACKER = 8.0;      // an attacker this close: you end up at its side
-    private static final int SIDESTEP_WINDOW = 40;               // your next hit within this is a free Weak-Point Strike
+    static final int SIDESTEP_COST = 350;
+    static final int SIDESTEP_TICKS = 40;                // the next blow or projectile within this is slipped...
+    static final double SIDESTEP_DISTANCE = 4.0;         // ...by a step this long (to the attacker's side)
+    static final double SIDESTEP_TO_ATTACKER = 8.0;      // an attacker this close: you end up at its side
+    static final int SIDESTEP_WINDOW = 40;               // your next hit within this is a free Weak-Point Strike
 
     // Ability 3 - Hex (Sequence 7)
     static final int HEX_SEQUENCE = 7;
     static final int HEX_COST = 1250;
-    private static final double HEX_RANGE = 24.0;
-    private static final int HEX_TICKS = 300;
-    private static final float HEX_VULNERABLE = 0.2f;            // 20% more damage from everything
-    private static final double HEX_JUMP = 6.0;                  // the hexed died: it jumps to the nearest enemy this close
-    private static final int HEX_STUDY = 20;
+    static final double HEX_RANGE = 24.0;
+    static final int HEX_TICKS = 300;
+    static final float HEX_VULNERABLE = 0.2f;            // 20% more damage from everything
+    static final double HEX_JUMP = 6.0;                  // the hexed died: it jumps to the nearest enemy this close
+    static final int HEX_STUDY = 20;
     // sneak: Spellbolts
     static final int BOLT_COST = 1250;
-    private static final double BOLT_RANGE = 24.0;
-    private static final int BOLT_COUNT = 3;
-    private static final float BOLT_DAMAGE = 20f;
-    private static final int FROST_TICKS = 60;                   // Frost: Slowness II this long
-    private static final int LIGHTNING_STUN = 10;                // Lightning: stunned this long
-    private static final int FIRE_TICKS = 80;                    // Fire: burning this long
-    private static final int ORBS_SEQUENCE = 2;                  // Sage: the Knowledge Orbs instead
-    private static final int ORB_COUNT = 5;
-    private static final float ORB_DAMAGE = 20f;
-    private static final int ORB_STUN = 10;
-    private static final int ORB_HUSH = 20;                      // no abilities this long (spirit-draining powers shut off)
+    static final double BOLT_RANGE = 24.0;
+    static final int BOLT_COUNT = 3;
+    static final float BOLT_DAMAGE = 20f;
+    static final int FROST_TICKS = 60;                   // Frost: Slowness II this long
+    static final int LIGHTNING_STUN = 10;                // Lightning: stunned this long
+    static final int FIRE_TICKS = 80;                    // Fire: burning this long
+    static final int ORBS_SEQUENCE = 2;                  // Sage: the Knowledge Orbs instead
+    static final int ORB_COUNT = 5;
+    static final float ORB_DAMAGE = 20f;
+    static final int ORB_STUN = 10;
+    static final int ORB_HUSH = 20;                      // no abilities this long (spirit-draining powers shut off)
 
     // Ability 4 - Read Scroll / Inscribe Scroll (Sequence 6)
-    private static final int SCROLLS_SEQUENCE = 6;
-    private static final int POUCH = 3;                          // scrolls the pouch holds...
-    private static final int FREE_SCROLL_EVERY = 500;            // ...and a free one (Freezing, Paralysis in turn) this often
-    private static final int BIG_POUCH_SEQUENCE = 4;             // Mysticologist:
-    private static final int BIG_POUCH = 5;
-    private static final int BIG_POUCH_EVERY = 300;
-    private static final float INSCRIBE_SURCHARGE = 1.25f;       // writing one costs the spell's cost plus 25%, now
-    private static final double SCROLL_RANGE = 24.0;
-    private static final int FREEZING_TICKS = 60;                // the Scroll of Freezing: Slowness V, no jumping
-    private static final int FREEZING_SLOWNESS = 4;
-    private static final int PARALYSIS_TICKS = 30;               // the Scroll of Paralysis: held completely
-    private static final int SCROLL_STUDY = 10;
+    static final int SCROLLS_SEQUENCE = 6;
+    static final int POUCH = 3;                          // scrolls the pouch holds...
+    static final int FREE_SCROLL_EVERY = 500;            // ...and a free one (Freezing, Paralysis in turn) this often
+    static final int BIG_POUCH_SEQUENCE = 4;             // Mysticologist:
+    static final int BIG_POUCH = 5;
+    static final int BIG_POUCH_EVERY = 300;
+    static final float INSCRIBE_SURCHARGE = 1.25f;       // writing one costs the spell's cost plus 25%, now
+    static final double SCROLL_RANGE = 24.0;
+    static final int FREEZING_TICKS = 60;                // the Scroll of Freezing: Slowness V, no jumping
+    static final int FREEZING_SLOWNESS = 4;
+    static final int PARALYSIS_TICKS = 30;               // the Scroll of Paralysis: held completely
+    static final int SCROLL_STUDY = 10;
 
     // Study (status/Study): what is gained, and the eye over each enemy
     static final int ABILITY_STUDY = 10;                         // an ability hit, unless it says otherwise
-    private static final int MELEE_STUDY = 5;                    // a melee hit (a full swing; any swing from Melee Scholar)
-    private static final float MELEE_MIN_CHARGE = 0.8f;
-    private static final int EYE_TICKS = 120;                    // the eye's life; it is shown again before it fades
-    private static final int EYE_REFRESH = 100;
+    static final int MELEE_STUDY = 5;                    // a melee hit (a full swing; any swing from Melee Scholar)
+    static final float MELEE_MIN_CHARGE = 0.8f;
+    static final int EYE_TICKS = 120;                    // the eye's life; it is shown again before it fades
+    static final int EYE_REFRESH = 100;
 
     // Passives (docs/KNOWLEDGE_EMPEROR.md, "Passives"); the once-a-second ones run from SequencePassives
-    private static final int INTUITION_SEQUENCE = 9;             // Spiritual Intuition: a chime when hunted unseen...
-    private static final int INTUITION_REST = 60;
-    private static final double INTUITION_RADIUS = 6.0;          // ...and hidden things this close show faintly
-    private static final int WHISPER_SEQUENCE = 9;               // Whisper of the Hidden Sage: about every 5 minutes...
-    private static final int WHISPER_EVERY = 6000;
-    private static final int WHISPER_SPREAD = 1200;              // ...give or take a minute: the next ability is free
-    private static final int FIGHTING_SEQUENCE = 8;              // Fighting Knowledge: faster attacks, more reach
-    private static final double FIGHTING_ATTACK_SPEED = 0.1;
-    private static final double FIGHTING_REACH = 0.5;
-    private static final int MIND_SEQUENCE = 7;                  // Warlock's Mind: harmful effects end this much sooner
-    private static final float MIND_SHORTER = 0.25f;
-    private static final int STARLIGHT_SEQUENCE = 5;             // Starlight: at night under open sky...
-    private static final float STARLIGHT_REGEN = 0.25f;          // ...spirituality returns this much faster
-    private static final int SKIN_SEQUENCE = 4;                  // Information Skin: damage with no attacker...
-    private static final float SKIN_CUT = 0.25f;                 // ...this much less (status/SupernaturalResistance)...
-    private static final double SKIN_FOOTING = 0.25;             // ...and knockback this much less
-    private static final int CLAIRAUDIENCE_SEQUENCE = 3;         // Clairaudience: a concealed enemy this close that acts
-    private static final double CLAIRAUDIENCE_RADIUS = 32.0;     // (moves, strikes) chimes from where it is
-    private static final double CLAIRAUDIENCE_MOVED = 0.5;
-    private static final int SAGE_MIND_SEQUENCE = 2;             // Sage's Mind: nausea, blindness, darkness do not take; no Study on you
-    private static final int LAW_SEQUENCE = 1;                   // Law of Three: the third cast in a row, each within...
-    private static final int LAW_GAP = 400;                      // ...this of the last, is free...
-    private static final float LAW_POWER = 1.5f;                 // ...and hits this much harder...
-    private static final int LAW_EMPOWERED = 60;                 // ...for this long
-    private static final int HERMIT_SEQUENCE = 0;                // Embodiment (passive): enemies this close...
-    private static final double HERMIT_PRESENCE = 24.0;
-    private static final int HERMIT_STUDY = 2;                   // ...gain this much Study a second...
-    private static final double HERMIT_DECAY = 0.5;              // ...and what you know fades this much slower
+    static final int INTUITION_SEQUENCE = 9;             // Spiritual Intuition: a chime when hunted unseen...
+    static final int INTUITION_REST = 60;
+    static final double INTUITION_RADIUS = 6.0;          // ...and hidden things this close show faintly
+    static final int WHISPER_SEQUENCE = 9;               // Whisper of the Hidden Sage: about every 5 minutes...
+    static final int WHISPER_EVERY = 6000;
+    static final int WHISPER_SPREAD = 1200;              // ...give or take a minute: the next ability is free
+    static final int FIGHTING_SEQUENCE = 8;              // Fighting Knowledge: faster attacks, more reach
+    static final double FIGHTING_ATTACK_SPEED = 0.1;
+    static final double FIGHTING_REACH = 0.5;
+    static final int MIND_SEQUENCE = 7;                  // Warlock's Mind: harmful effects end this much sooner
+    static final float MIND_SHORTER = 0.25f;
+    static final int STARLIGHT_SEQUENCE = 5;             // Starlight: at night under open sky...
+    static final float STARLIGHT_REGEN = 0.25f;          // ...spirituality returns this much faster
+    static final int SKIN_SEQUENCE = 4;                  // Information Skin: damage with no attacker...
+    static final float SKIN_CUT = 0.25f;                 // ...this much less (status/SupernaturalResistance)...
+    static final double SKIN_FOOTING = 0.25;             // ...and knockback this much less
+    static final int CLAIRAUDIENCE_SEQUENCE = 3;         // Clairaudience: a concealed enemy this close that acts
+    static final double CLAIRAUDIENCE_RADIUS = 32.0;     // (moves, strikes) chimes from where it is
+    static final double CLAIRAUDIENCE_MOVED = 0.5;
+    static final int SAGE_MIND_SEQUENCE = 2;             // Sage's Mind: nausea, blindness, darkness do not take; no Study on you
+    static final int LAW_SEQUENCE = 1;                   // Law of Three: the third cast in a row, each within...
+    static final int LAW_GAP = 400;                      // ...this of the last, is free...
+    static final float LAW_POWER = 1.5f;                 // ...and hits this much harder...
+    static final int LAW_EMPOWERED = 60;                 // ...for this long
+    static final int HERMIT_SEQUENCE = 0;                // Embodiment (passive): enemies this close...
+    static final double HERMIT_PRESENCE = 24.0;
+    static final int HERMIT_STUDY = 2;                   // ...gain this much Study a second...
+    static final double HERMIT_DECAY = 0.5;              // ...and what you know fades this much slower
 
     static final float BOSS_HEALTH = 150f;
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String PRY_UNTIL = "knowledge_emperor_pry_until";
-    private static final String PRY_REACH_NOW = "knowledge_emperor_pry_reach";
-    private static final String SIDESTEP_UNTIL = "knowledge_emperor_sidestep_until";
-    private static final String NEXT_SCROLL = "knowledge_emperor_next_scroll";
-    private static final String SCROLL_TURN = "knowledge_emperor_scroll_turn";
-    private static final String WHISPER_NEXT = "knowledge_emperor_whisper_next";
-    private static final String WHISPER_WAITING = "knowledge_emperor_whisper_waiting";
-    private static final String INTUITION_READY = "knowledge_emperor_intuition_ready";
-    private static final String LAW_LAST = "knowledge_emperor_law_last";          // when the last cast went off
-    private static final String LAW_CHAIN = "knowledge_emperor_law_chain";        // casts in a row so far
-    private static final String LAW_UNTIL = "knowledge_emperor_law_until";        // an empowered cast's hits land harder
+    static final String PRY_UNTIL = "knowledge_emperor_pry_until";
+    static final String PRY_REACH_NOW = "knowledge_emperor_pry_reach";
+    static final String SIDESTEP_UNTIL = "knowledge_emperor_sidestep_until";
+    static final String NEXT_SCROLL = "knowledge_emperor_next_scroll";
+    static final String SCROLL_TURN = "knowledge_emperor_scroll_turn";
+    static final String WHISPER_NEXT = "knowledge_emperor_whisper_next";
+    static final String WHISPER_WAITING = "knowledge_emperor_whisper_waiting";
+    static final String INTUITION_READY = "knowledge_emperor_intuition_ready";
+    static final String LAW_LAST = "knowledge_emperor_law_last";          // when the last cast went off
+    static final String LAW_CHAIN = "knowledge_emperor_law_chain";        // casts in a row so far
+    static final String LAW_UNTIL = "knowledge_emperor_law_until";        // an empowered cast's hits land harder
 
     // Names
-    private static final String SIDESTEP_STRIKE = "knowledge_emperor_sidestep_strike";
-    private static final String SKIN_GRANT = "knowledge_emperor_information_skin";
+    static final String SIDESTEP_STRIKE = "knowledge_emperor_sidestep_strike";
+    static final String SKIN_GRANT = "knowledge_emperor_information_skin";
     static final String SCROLL_HEX = "knowledge_emperor_hex";
     static final String SCROLL_SPELLBOLTS = "knowledge_emperor_spellbolts";
     static final String SCROLL_FREEZING = "knowledge_emperor_freezing";
     static final String SCROLL_PARALYSIS = "knowledge_emperor_paralysis";
 
-    private static final Identifier FIGHTING_SPEED_ID = Physique.id("knowledge_emperor_fighting_speed");
-    private static final Identifier FIGHTING_REACH_ID = Physique.id("knowledge_emperor_fighting_reach");
-    private static final Identifier SKIN_FOOTING_ID = Physique.id("knowledge_emperor_skin_footing");
+    static final Identifier FIGHTING_SPEED_ID = Physique.id("knowledge_emperor_fighting_speed");
+    static final Identifier FIGHTING_REACH_ID = Physique.id("knowledge_emperor_fighting_reach");
+    static final Identifier SKIN_FOOTING_ID = Physique.id("knowledge_emperor_skin_footing");
 
-    private static final Set<Item> METAL_ARMOR = Set.of(
+    static final Set<Item> METAL_ARMOR = Set.of(
             Items.IRON_HELMET, Items.IRON_CHESTPLATE, Items.IRON_LEGGINGS, Items.IRON_BOOTS,
             Items.CHAINMAIL_HELMET, Items.CHAINMAIL_CHESTPLATE, Items.CHAINMAIL_LEGGINGS, Items.CHAINMAIL_BOOTS,
             Items.GOLDEN_HELMET, Items.GOLDEN_CHESTPLATE, Items.GOLDEN_LEGGINGS, Items.GOLDEN_BOOTS,
             Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS);
 
     /** Who a Pry has read already, while the eyes are open. Not saved. */
-    private static final Map<UUID, Set<UUID>> PRY_READ = new HashMap<>();
+    static final Map<UUID, Set<UUID>> PRY_READ = new HashMap<>();
 
     /** Hexes: hexed -> whose, until when, under which tag. Not saved (the curse itself is Vulnerable and potion effects). */
     private record Hex(UUID caster, long until, String tag) {}
-    private static final Map<UUID, Hex> HEXES = new HashMap<>();
+    static final Map<UUID, Hex> HEXES = new HashMap<>();
 
     /** A real swing of a player, waiting for the damage it does in the same tick. Not saved. */
     private record Swing(UUID target, long tick, float charge) {}
-    private static final Map<UUID, Swing> SWINGS = new HashMap<>();
+    static final Map<UUID, Swing> SWINGS = new HashMap<>();
 
     /** Players whose own shortened effect is being put back on (Warlock's Mind must let that one through). */
-    private static final Set<UUID> SHORTENING = new HashSet<>();
+    static final Set<UUID> SHORTENING = new HashSet<>();
 
     /** Clairaudience: where each concealed body near each listener was a second ago. Not saved. */
-    private static final Map<UUID, Map<UUID, Vec3>> HEARD = new HashMap<>();
+    static final Map<UUID, Map<UUID, Vec3>> HEARD = new HashMap<>();
 
     // =========================
     // The melee combo (combat/MeleeCombos): three hits that repeat; KnowledgeEmperorFx.combo is the look of each
@@ -292,12 +292,12 @@ public class KnowledgeEmperor {
             Scrolls.addListener(KnowledgeEmperor::showPouch);
             Study.addListener(new Study.Listener() {
                 @Override
-                public void changed(Player caster, LivingEntity target, int before, int after) {
-                    showStudy(caster, target, before, after);
+                public void changed(LivingEntity caster, LivingEntity target, int before, int after) {
+                    if (caster instanceof Player scholar) showStudy(scholar, target, before, after);   // a mob's study shows nothing
                 }
 
                 @Override
-                public void forgotten(Player caster, LivingEntity target) {
+                public void forgotten(LivingEntity caster, LivingEntity target) {
                     if (caster instanceof ServerPlayer viewer && isKnowledgeEmperor(viewer, 9)) KnowledgeEmperorFx.studyEyeHide(viewer, target);
                 }
             });
@@ -475,7 +475,7 @@ public class KnowledgeEmperor {
         pry(player, sl);
     }
 
-    private static void pry(Player player, ServerLevel sl) {
+    static void pry(LivingEntity player, ServerLevel sl) {
         double reach = pryReach(player);
         CompoundTag data = player.getPersistentData();
         data.putLong(PRY_UNTIL, sl.getGameTime() + PRY_TICKS);
@@ -486,14 +486,14 @@ public class KnowledgeEmperor {
         glowHidden(player, sl, reach);
     }
 
-    private static double pryReach(Player player) {
+    private static double pryReach(LivingEntity player) {
         if (Beyonder.hasSequence(player, CLAIRVOYANT_PRY_SEQUENCE)) return CLAIRVOYANT_REACH;
         if (Beyonder.hasSequence(player, INQUIRY_SEQUENCE)) return INQUIRY_REACH;
         return PRY_REACH;
     }
 
     /** Every tick while the eyes are open: the one looked at is read (once); every second the hidden glow again. */
-    private static void pryTick(Player player, ServerLevel sl) {
+    static void pryTick(LivingEntity player, ServerLevel sl) {
         double reach = player.getPersistentData().getDoubleOr(PRY_REACH_NOW, PRY_REACH);
         if (player.tickCount % 20 == 0) glowHidden(player, sl, reach);
         LivingEntity looked = Spells.aimEnemy(player, sl, reach);
@@ -502,11 +502,11 @@ public class KnowledgeEmperor {
         if (!read.add(looked.getUUID())) return;
         Study.add(player, looked, PRY_STUDY);
         if (player instanceof ServerPlayer viewer) KnowledgeEmperorFx.pryRead(viewer, looked);
-        player.sendSystemMessage(read(player, looked));
+        Spells.tell(player, read(player, looked));
     }
 
     /** What can be seen of the hidden within reach: they glow (or, if they cannot be drawn at all, stars trace round them). */
-    private static void glowHidden(Player player, ServerLevel sl, double reach) {
+    private static void glowHidden(LivingEntity player, ServerLevel sl, double reach) {
         boolean seeThrough = Beyonder.hasSequence(player, SEE_THROUGH_SEQUENCE);
         boolean inquiry = Beyonder.hasSequence(player, INQUIRY_SEQUENCE);
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), reach)) {
@@ -532,7 +532,7 @@ public class KnowledgeEmperor {
     }
 
     /** What the eyes read on someone. */
-    private static Component read(Player player, LivingEntity one) {
+    private static Component read(LivingEntity player, LivingEntity one) {
         StringBuilder text = new StringBuilder();
         text.append(one.getDisplayName().getString())
                 .append(": ").append(Math.round(one.getHealth())).append("/").append(Math.round(one.getMaxHealth())).append(" health, ")
@@ -554,7 +554,7 @@ public class KnowledgeEmperor {
         return Component.literal(text.toString());
     }
 
-    private static String moodOf(Player player, LivingEntity one) {
+    private static String moodOf(LivingEntity player, LivingEntity one) {
         if (Fear.isAfraid(one)) return "afraid";
         if (one instanceof Mob mob && mob.getTarget() != null) return mob.getTarget() == player ? "furious with you" : "furious";
         return one instanceof Player ? "watchful" : "calm";
@@ -576,7 +576,7 @@ public class KnowledgeEmperor {
     }
 
     /** The nearest enemy within DOWSE_RANGE that the player cannot see (behind blocks, invisible, hidden), or null. */
-    private static LivingEntity unseenEnemy(Player player, ServerLevel sl) {
+    private static LivingEntity unseenEnemy(LivingEntity player, ServerLevel sl) {
         LivingEntity nearest = null;
         double best = Double.MAX_VALUE;
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), DOWSE_RANGE)) {
@@ -626,7 +626,7 @@ public class KnowledgeEmperor {
     }
 
     /** Where to stand for the strike: where you are if it is in reach, else a step toward it. Null: out of reach. */
-    private static Vec3 strikeSpot(Player player, ServerLevel sl, LivingEntity target) {
+    static Vec3 strikeSpot(LivingEntity player, ServerLevel sl, LivingEntity target) {
         double gap = Spells.distanceToBody(target, player.getEyePosition());
         if (gap <= STRIKE_REACH - 1.0) return player.position();
         if (Root.has(player, RootRestriction.MOVE) || Root.has(player, RootRestriction.TELEPORT)) {
@@ -644,7 +644,7 @@ public class KnowledgeEmperor {
         return gap <= STRIKE_REACH ? player.position() : null;
     }
 
-    private static void weakPointStrike(Player player, ServerLevel sl, LivingEntity target, Vec3 stand) {
+    static void weakPointStrike(LivingEntity player, ServerLevel sl, LivingEntity target, Vec3 stand) {
         Vec3 from = player.position();
         if (stand.distanceToSqr(from) > 0.01) {
             player.teleportTo(stand.x, stand.y, stand.z);
@@ -658,14 +658,14 @@ public class KnowledgeEmperor {
     }
 
     /** The cut itself: through armor, a stagger, and Study. */
-    private static void weakPointLands(Player player, LivingEntity target) {
+    private static void weakPointLands(LivingEntity player, LivingEntity target) {
         Spells.strikeTrue(player, target, STRIKE_DAMAGE);
         if (!target.isAlive()) return;
         Root.apply(target, STRIKE_STAGGER, RootRestriction.MOVE, RootRestriction.ATTACK);
         Study.add(player, target, STRIKE_STUDY);
     }
 
-    private static void sidestep(Player player, ServerLevel sl) {
+    static void sidestep(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + SIDESTEP_TICKS;
         player.getPersistentData().putLong(SIDESTEP_UNTIL, until);
         String tag = "ke_sidestep_" + player.getId();
@@ -681,7 +681,7 @@ public class KnowledgeEmperor {
     }
 
     /** The blow was slipped: a quick step to the attacker's side (or aside), and the next hit is a free Weak-Point Strike. */
-    private static void slip(Player player, ServerLevel sl, Entity attacker, String tag) {
+    private static void slip(LivingEntity player, ServerLevel sl, Entity attacker, String tag) {
         player.getPersistentData().remove(SIDESTEP_UNTIL);
         Vec3 from = player.position();
         Vec3 to = null;
@@ -703,7 +703,7 @@ public class KnowledgeEmperor {
         KnowledgeEmperorFx.sidestepSlip(sl, player, from, to != null ? to : from);
         KnowledgeEmperorFx.sidestepEnd(sl, player, tag);
         KnowledgeEmperorFx.statusEnd(player, Status.SIDESTEP);
-        EmpoweredHit.arm(player, SIDESTEP_STRIKE, SIDESTEP_WINDOW, (striker, target, amount, level) -> {
+        EmpoweredHit.armAny(player, SIDESTEP_STRIKE, SIDESTEP_WINDOW, (striker, target, amount, level) -> {
             KnowledgeEmperorFx.weakPointStrike(level, striker, striker.position(), target);
             Root.apply(target, STRIKE_STAGGER, RootRestriction.MOVE, RootRestriction.ATTACK);
             Study.add(striker, target, STRIKE_STUDY);
@@ -742,17 +742,17 @@ public class KnowledgeEmperor {
     }
 
     /** Hex as a spell (a scroll): the enemy the reader looks at, or nothing happens. */
-    private static boolean hexSpell(ServerPlayer reader, ServerLevel sl, float power) {
+    private static boolean hexSpell(LivingEntity reader, ServerLevel sl, float power) {
         LivingEntity target = Spells.aimEnemy(reader, sl, HEX_RANGE);
         if (target == null) {
-            reader.sendSystemMessage(Component.literal("There is no one to curse."));
+            Spells.tell(reader, Component.literal("There is no one to curse."));
             return false;
         }
         hex(reader, sl, target, Math.round(HEX_TICKS * power));
         return true;
     }
 
-    private static void hex(Player player, ServerLevel sl, LivingEntity target, int ticks) {
+    static void hex(LivingEntity player, ServerLevel sl, LivingEntity target, int ticks) {
         String tag = "ke_hex_" + target.getId();
         KnowledgeEmperorFx.hex(sl, player, target, ticks, tag);
         Later.run(sl, KnowledgeEmperorFx.HEX_LANDS, () -> {
@@ -763,7 +763,7 @@ public class KnowledgeEmperor {
     }
 
     /** The hex itself on 'target' for 'ticks' (its look is put on by KnowledgeEmperorFx.hex or hexJump). */
-    private static void curse(Player player, LivingEntity target, int ticks, String tag) {
+    private static void curse(LivingEntity player, LivingEntity target, int ticks, String tag) {
         if (ticks <= 0) return;
         Vulnerable.add(target, HEX_VULNERABLE, HEX_VULNERABLE, ticks);
         target.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, ticks, 0));
@@ -801,7 +801,7 @@ public class KnowledgeEmperor {
     }
 
     /** Spellbolts as a spell (also when read from a scroll): at the enemy in front, or one bolt where the reader aims. */
-    private static boolean spellbolts(ServerPlayer player, ServerLevel sl, float power) {
+    static boolean spellbolts(LivingEntity player, ServerLevel sl, float power) {
         if (Beyonder.hasSequence(player, ORBS_SEQUENCE)) return knowledgeOrbs(player, sl, power);
         LivingEntity target = Spells.aimEnemy(player, sl, BOLT_RANGE);
         if (target == null) {
@@ -825,7 +825,7 @@ public class KnowledgeEmperor {
     }
 
     /** Nothing in sight: one bolt of Lightning flies where the caster aims (a Shot). */
-    private static void boltWhereAimed(Player player, ServerLevel sl, float power) {
+    private static void boltWhereAimed(LivingEntity player, ServerLevel sl, float power) {
         Vec3 hand = Spells.clearStart(player, sl, player.getEyePosition().add(Spells.rightOf(player).scale(0.35)).add(0, -0.25, 0));
         Shot.of(KnowledgeEmperorFx.BOLT(Element.LIGHTNING))
                 .speed(2.0).range(BOLT_RANGE).width(0.4).tip(0.4)
@@ -841,7 +841,7 @@ public class KnowledgeEmperor {
     }
 
     /** One bolt lands: its damage (and Study on the first), and what its element does. */
-    private static void boltLands(Player player, LivingEntity target, Element element, float damage, boolean first) {
+    private static void boltLands(LivingEntity player, LivingEntity target, Element element, float damage, boolean first) {
         Study.strike(player, target, damage, first ? ABILITY_STUDY : 0);
         if (!target.isAlive()) return;
         switch (element) {
@@ -852,7 +852,7 @@ public class KnowledgeEmperor {
     }
 
     /** Sage: the Knowledge Orbs, shared out over the enemies in sight. With none, a bolt where the caster aims. */
-    private static boolean knowledgeOrbs(ServerPlayer player, ServerLevel sl, float power) {
+    private static boolean knowledgeOrbs(LivingEntity player, ServerLevel sl, float power) {
         List<LivingEntity> seen = Spells.enemiesInSight(player, sl, BOLT_RANGE, 45);
         if (seen.isEmpty()) {
             boltWhereAimed(player, sl, power);
@@ -930,7 +930,7 @@ public class KnowledgeEmperor {
     }
 
     /** How many scrolls this player's pouch holds. */
-    static int pouchSize(Player player) {
+    static int pouchSize(LivingEntity player) {
         return Beyonder.hasSequence(player, BIG_POUCH_SEQUENCE) ? BIG_POUCH : POUCH;
     }
 
@@ -961,7 +961,7 @@ public class KnowledgeEmperor {
     }
 
     /** The Scroll of Freezing: a clear ray falls on the enemy looked at: Slowness V and no jumping. */
-    private static boolean freezingSpell(ServerPlayer reader, ServerLevel sl, float power) {
+    private static boolean freezingSpell(LivingEntity reader, ServerLevel sl, float power) {
         LivingEntity target = Spells.aimEnemy(reader, sl, SCROLL_RANGE);
         if (target == null) return false;
         int ticks = Math.round(FREEZING_TICKS * power);
@@ -978,7 +978,7 @@ public class KnowledgeEmperor {
     }
 
     /** The Scroll of Paralysis: a pale green ray flies at the enemy looked at and holds it completely. */
-    private static boolean paralysisSpell(ServerPlayer reader, ServerLevel sl, float power) {
+    private static boolean paralysisSpell(LivingEntity reader, ServerLevel sl, float power) {
         LivingEntity target = Spells.aimEnemy(reader, sl, SCROLL_RANGE);
         if (target == null) return false;
         int ticks = Math.round(PARALYSIS_TICKS * power);
@@ -1015,7 +1015,7 @@ public class KnowledgeEmperor {
     // Study (status/Study): the eye over each studied enemy, which only the Hermit sees
     // =========================
 
-    private static void showStudy(Player caster, LivingEntity target, int before, int after) {
+    private static void showStudy(LivingEntity caster, LivingEntity target, int before, int after) {
         if (!(caster instanceof ServerPlayer viewer) || !isKnowledgeEmperor(viewer, 9)) return;
         KnowledgeEmperorFx.studyEye(viewer, target, after, EYE_TICKS);
         if (after >= Study.FULL && before < Study.FULL) KnowledgeEmperorFx.understood(viewer, target);
@@ -1031,7 +1031,7 @@ public class KnowledgeEmperor {
     }
 
     /** Every few seconds: the eyes are shown again before they fade. */
-    private static void refreshEyes(Player player) {
+    private static void refreshEyes(LivingEntity player) {
         if (!(player instanceof ServerPlayer viewer) || !isKnowledgeEmperor(viewer, 9)) return;
         for (Study.Known known : Study.knownBy(player)) {
             KnowledgeEmperorFx.studyEye(viewer, known.target(), known.percent(), EYE_TICKS);
@@ -1088,7 +1088,7 @@ public class KnowledgeEmperor {
     }
 
     /** What a wheel cooldown of 'ticks' is for this player now: 30% shorter while Indoctrination enlightens them. */
-    public static int cooldownFor(Player player, int ticks) {
+    public static int cooldownFor(LivingEntity player, int ticks) {
         if (KnowledgeEmperorKnowledge.isEnlightened(player)) return Math.round(ticks * KnowledgeEmperorKnowledge.ENLIGHTENED_COOLDOWN);
         return ticks;
     }
@@ -1116,13 +1116,13 @@ public class KnowledgeEmperor {
     }
 
     /** Law of Three (1): this cast is the third in a row, each within LAW_GAP of the last. */
-    private static boolean lawOfThreeDue(Player player) {
+    private static boolean lawOfThreeDue(LivingEntity player) {
         if (!Beyonder.hasSequence(player, LAW_SEQUENCE)) return false;
         CompoundTag data = player.getPersistentData();
         return data.getIntOr(LAW_CHAIN, 0) >= 2 && player.level().getGameTime() - data.getLongOr(LAW_LAST, 0L) <= LAW_GAP;
     }
 
-    private static void countForTheLaw(Player player, boolean third) {
+    private static void countForTheLaw(LivingEntity player, boolean third) {
         if (!Beyonder.hasSequence(player, LAW_SEQUENCE)) return;
         CompoundTag data = player.getPersistentData();
         long now = player.level().getGameTime();
@@ -1146,7 +1146,7 @@ public class KnowledgeEmperor {
      * Mystery Pryer (9), once a second: Spiritual Intuition's outlines (hidden things within INTUITION_RADIUS, for
      * the Hermit alone) and the Whisper of the Hidden Sage (about every 5 minutes the next ability is free).
      */
-    public static void mysteryPryerSenses(Player player) {
+    public static void mysteryPryerSenses(LivingEntity player) {
         if (!(player instanceof ServerPlayer viewer) || !(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), INTUITION_RADIUS)) {
             if (Spells.isFriend(player, one) || KnowledgeEmperorKnowledge.isEmbodied(one)) continue;
@@ -1165,7 +1165,7 @@ public class KnowledgeEmperor {
         if (now < next) return;
         data.putBoolean(WHISPER_WAITING, true);
         KnowledgeEmperorFx.whisper(viewer);
-        player.sendSystemMessage(Component.literal("A voice from nowhere whispers knowledge to you. Your next ability costs nothing."));
+        Spells.tell(player, Component.literal("A voice from nowhere whispers knowledge to you. Your next ability costs nothing."));
     }
 
     /** Constellations Master (5), once a second: at night under open sky, spirituality comes back STARLIGHT_REGEN faster. */
@@ -1178,12 +1178,12 @@ public class KnowledgeEmperor {
     }
 
     /** Mysticologist (4), once a second: Information Skin, damage with no attacker SKIN_CUT less. */
-    public static void informationSkin(Player player) {
+    public static void informationSkin(LivingEntity player) {
         SupernaturalResistance.grant(player, SKIN_GRANT, 40, SKIN_CUT, false, null);
     }
 
     /** Clairvoyant (3), once a second: each concealed enemy within CLAIRAUDIENCE_RADIUS that moved chimes from where it is. */
-    public static void clairaudience(Player player) {
+    public static void clairaudience(LivingEntity player) {
         if (!(player instanceof ServerPlayer listener) || !(player.level() instanceof ServerLevel sl)) return;
         Map<UUID, Vec3> was = HEARD.computeIfAbsent(player.getUUID(), id -> new HashMap<>());
         Map<UUID, Vec3> now = new HashMap<>();
@@ -1199,7 +1199,7 @@ public class KnowledgeEmperor {
     }
 
     /** A concealed one struck a blow: every Clairvoyant near who is not on its side hears it. */
-    private static void heardStrike(Player hidden, ServerLevel sl) {
+    private static void heardStrike(LivingEntity hidden, ServerLevel sl) {
         if (KnowledgeEmperorKnowledge.isEmbodied(hidden)) return;
         for (ServerPlayer listener : sl.players()) {
             if (listener == hidden || listener.distanceTo(hidden) > CLAIRAUDIENCE_RADIUS) continue;
@@ -1209,7 +1209,7 @@ public class KnowledgeEmperor {
     }
 
     /** Hermit (0), once a second: enemies within HERMIT_PRESENCE come to be known just by being near. */
-    public static void hermitPresence(Player player) {
+    public static void hermitPresence(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), HERMIT_PRESENCE)) {
             Study.add(player, enemy, HERMIT_STUDY);
@@ -1217,19 +1217,19 @@ public class KnowledgeEmperor {
     }
 
     /** Any Hermit, once a second: an Indoctrination's enlightenment gives a second's spirituality back again. */
-    public static void enlightenment(Player player) {
+    public static void enlightenment(LivingEntity player) {
         if (KnowledgeEmperorKnowledge.isEnlightened(player)) KnowledgeEmperorKnowledge.tide(player, 1f);
     }
 
-    private static int whisperGap(Player player) {
+    private static int whisperGap(LivingEntity player) {
         return WHISPER_EVERY - WHISPER_SPREAD + player.getRandom().nextInt(WHISPER_SPREAD * 2 + 1);
     }
 
-    static boolean whisperWaiting(Player player) {
+    static boolean whisperWaiting(LivingEntity player) {
         return player.getPersistentData().getBooleanOr(WHISPER_WAITING, false);
     }
 
-    private static void spendWhisper(Player player) {
+    private static void spendWhisper(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         data.remove(WHISPER_WAITING);
         data.putLong(WHISPER_NEXT, player.level().getGameTime() + whisperGap(player));
@@ -1237,7 +1237,7 @@ public class KnowledgeEmperor {
     }
 
     /** Once a second, for every player: Fighting Knowledge (8) while they are this Pathway at that Sequence; off otherwise. */
-    private static void bodyTick(Player player) {
+    private static void bodyTick(LivingEntity player) {
         boolean fighting = isKnowledgeEmperor(player, FIGHTING_SEQUENCE);
         Physique.keep(player, Attributes.ATTACK_SPEED, FIGHTING_SPEED_ID, FIGHTING_ATTACK_SPEED, AttributeModifier.Operation.ADD_MULTIPLIED_BASE, fighting);
         Physique.keep(player, Attributes.ENTITY_INTERACTION_RANGE, FIGHTING_REACH_ID, FIGHTING_REACH, AttributeModifier.Operation.ADD_VALUE, fighting);

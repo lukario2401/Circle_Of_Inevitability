@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorFx.Misfortune;
@@ -64,87 +65,87 @@ public final class KnowledgeEmperorRetellings {
     // =========================
 
     static final int RETELLINGS_SEQUENCE = 4;                    // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
     // Obscurity (combat/Tellings): every telling in the last OBSCURITY_WINDOW takes OBSCURITY_STEP off, never under OBSCURITY_FLOOR
-    private static final int OBSCURITY_WINDOW = 6000;
-    private static final float OBSCURITY_STEP = 0.2f;
-    private static final float OBSCURITY_FLOOR = 0.4f;
-    private static final int TALE_WAIT = 200;                    // the four Retellings share this wait
+    static final int OBSCURITY_WINDOW = 6000;
+    static final float OBSCURITY_STEP = 0.2f;
+    static final float OBSCURITY_FLOOR = 0.4f;
+    static final int TALE_WAIT = 200;                    // the four Retellings share this wait
 
     // Sleeping Beauty
-    private static final int BEAUTY_SEQUENCE = 4;
-    private static final int BEAUTY_COST = 6000;                 // Sequence 4 holds 32400
-    private static final int BEAUTY_COOLDOWN = 800;
-    private static final double BEAUTY_RADIUS = 8.0;
-    private static final int BEAUTY_SLEEP = 120;
-    private static final int BEAUTY_SLOW = 60;                   // bosses and players: Slowness IV this long instead
-    private static final float BEAUTY_WAKING_BLOW = 1.5f;
+    static final int BEAUTY_SEQUENCE = 4;
+    static final int BEAUTY_COST = 6000;                 // Sequence 4 holds 32400
+    static final int BEAUTY_COOLDOWN = 800;
+    static final double BEAUTY_RADIUS = 8.0;
+    static final int BEAUTY_SLEEP = 120;
+    static final int BEAUTY_SLOW = 60;                   // bosses and players: Slowness IV this long instead
+    static final float BEAUTY_WAKING_BLOW = 1.5f;
 
     // Avalon
-    private static final int AVALON_SEQUENCE = 4;
-    private static final int AVALON_COST = 6000;
-    private static final int AVALON_COOLDOWN = 800;
-    private static final double AVALON_RADIUS = 10.0;
-    private static final int AVALON_TICKS = 240;
-    private static final float AVALON_HEAL = 2f;                 // a heart a second
+    static final int AVALON_SEQUENCE = 4;
+    static final int AVALON_COST = 6000;
+    static final int AVALON_COOLDOWN = 800;
+    static final double AVALON_RADIUS = 10.0;
+    static final int AVALON_TICKS = 240;
+    static final float AVALON_HEAL = 2f;                 // a heart a second
 
     // Achilles' Heel
-    private static final int HEEL_SEQUENCE = 4;
-    private static final int HEEL_COST = 5000;
-    private static final int HEEL_COOLDOWN = 800;
-    private static final double HEEL_RANGE = 24.0;
-    private static final int HEEL_TICKS = 160;
-    private static final float HEEL_VULNERABLE = 0.4f;
+    static final int HEEL_SEQUENCE = 4;
+    static final int HEEL_COST = 5000;
+    static final int HEEL_COOLDOWN = 800;
+    static final double HEEL_RANGE = 24.0;
+    static final int HEEL_TICKS = 160;
+    static final float HEEL_VULNERABLE = 0.4f;
 
     // Pandora's Box
-    private static final int BOX_SEQUENCE = 3;
-    private static final int BOX_COST = 9000;
-    private static final int BOX_COOLDOWN = 900;
-    private static final double BOX_RADIUS = 10.0;
-    private static final int BOX_TICKS = 160;
+    static final int BOX_SEQUENCE = 3;
+    static final int BOX_COST = 9000;
+    static final int BOX_COOLDOWN = 900;
+    static final double BOX_RADIUS = 10.0;
+    static final int BOX_TICKS = 160;
 
     // Foresight
-    private static final int FORESIGHT_SEQUENCE = 3;
-    private static final int FORESIGHT_COST = 5000;
-    private static final int FORESIGHT_COOLDOWN = 500;
-    private static final int FORESIGHT_TICKS = 200;
-    private static final int FORESIGHT_DODGES = 3;
-    private static final double FORESIGHT_SLIDE = 2.0;
-    private static final double FORESIGHT_SEES = 16.0;          // the ghosts of blows from mobs this close
-    private static final int EMPEROR_FORESIGHT_SEQUENCE = 1;     // Knowledge Emperor:
-    private static final int EMPEROR_FORESIGHT_TICKS = 400;
-    private static final int EMPEROR_FORESIGHT_DODGES = 6;
+    static final int FORESIGHT_SEQUENCE = 3;
+    static final int FORESIGHT_COST = 5000;
+    static final int FORESIGHT_COOLDOWN = 500;
+    static final int FORESIGHT_TICKS = 200;
+    static final int FORESIGHT_DODGES = 3;
+    static final double FORESIGHT_SLIDE = 2.0;
+    static final double FORESIGHT_SEES = 16.0;          // the ghosts of blows from mobs this close
+    static final int EMPEROR_FORESIGHT_SEQUENCE = 1;     // Knowledge Emperor:
+    static final int EMPEROR_FORESIGHT_TICKS = 400;
+    static final int EMPEROR_FORESIGHT_DODGES = 6;
 
     // Prophecy of Ruin
-    private static final int PROPHECY_SEQUENCE = 3;
-    private static final int PROPHECY_COST = 9000;
-    private static final int PROPHECY_COOLDOWN = 900;
-    private static final double PROPHECY_RANGE = 24.0;
-    private static final int PROPHECY_SECONDS = 4;
-    private static final float PROPHECY_DAMAGE = 80f;
-    private static final int PROPHECY_UNDERSTOOD = 200;
-    private static final float PROPHECY_AGAINST_STRONGER = 0.5f;
-    private static final float PROPHECY_REBOUND = 0.1f;
+    static final int PROPHECY_SEQUENCE = 3;
+    static final int PROPHECY_COST = 9000;
+    static final int PROPHECY_COOLDOWN = 900;
+    static final double PROPHECY_RANGE = 24.0;
+    static final int PROPHECY_SECONDS = 4;
+    static final float PROPHECY_DAMAGE = 80f;
+    static final int PROPHECY_UNDERSTOOD = 200;
+    static final float PROPHECY_AGAINST_STRONGER = 0.5f;
+    static final float PROPHECY_REBOUND = 0.1f;
 
     // =========================
     // Names and what is kept
     // =========================
     static final String SCROLL_BEAUTY = "knowledge_emperor_sleeping_beauty";
     static final String SCROLL_BOX = "knowledge_emperor_pandoras_box";
-    private static final String TALE_READY = "knowledge_emperor_tale_ready";
-    private static final String AVALON = "knowledge_emperor_avalon";
-    private static final String FORESIGHT_UNTIL = "knowledge_emperor_foresight_until";
+    static final String TALE_READY = "knowledge_emperor_tale_ready";
+    static final String AVALON = "knowledge_emperor_avalon";
+    static final String FORESIGHT_UNTIL = "knowledge_emperor_foresight_until";
 
     /** Who sleeps under Sleeping Beauty (the blow that wakes them is stronger): sleeper -> its look's tag. Not saved. */
-    private static final Map<UUID, String> SLEEPERS = new HashMap<>();
+    static final Map<UUID, String> SLEEPERS = new HashMap<>();
 
     /** Achilles' Heel: target -> whose heel it is and until when (their hits on it go through armor). Not saved. */
     private record Heel(UUID caster, long until, String tag) {}
-    private static final Map<UUID, Heel> HEELS = new HashMap<>();
+    static final Map<UUID, Heel> HEELS = new HashMap<>();
     /** A hit on a heel, before armor: what it lands with, and in which tick (only during the hit). */
     private record Through(float amount, long tick) {}
-    private static final Map<UUID, Through> THROUGH_ARMOR = new HashMap<>();
+    static final Map<UUID, Through> THROUGH_ARMOR = new HashMap<>();
 
     static {
         Slumber.addWakeListener((sleeper, kind) -> {
@@ -160,7 +161,7 @@ public final class KnowledgeEmperorRetellings {
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("knowledge_emperor_retellings", "Retellings")
+    static final AbilityWheel WHEEL = AbilityWheel.create("knowledge_emperor_retellings", "Retellings")
             .radius(80)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .cooldownBy(KnowledgeEmperor::cooldownFor)
@@ -204,21 +205,21 @@ public final class KnowledgeEmperorRetellings {
     // =========================
 
     /** True (and says so) while the four Retellings' shared wait runs. */
-    private static boolean taleWaiting(Player player, ServerLevel sl) {
+    private static boolean taleWaiting(LivingEntity player, ServerLevel sl) {
         long left = player.getPersistentData().getLongOr(TALE_READY, 0L) - sl.getGameTime();
         if (left <= 0 || left > TALE_WAIT) return false;
-        player.sendSystemMessage(Component.literal("The last tale still hangs in the air (" + ((left + 19) / 20) + "s)."));
+        Spells.tell(player, Component.literal("The last tale still hangs in the air (" + ((left + 19) / 20) + "s)."));
         return true;
     }
 
     /** A Retelling is told now: its strength (Obscurity), the opening of the book, and the shared wait. */
-    private static float tell(Player player, ServerLevel sl, Tale tale) {
+    private static float tell(LivingEntity player, ServerLevel sl, Tale tale) {
         String key = "knowledge_emperor_tale_" + tale.name().toLowerCase();
         float strength = Tellings.strength(player, key, OBSCURITY_WINDOW, OBSCURITY_STEP, OBSCURITY_FLOOR);
         Tellings.tell(player, key);
         player.getPersistentData().putLong(TALE_READY, sl.getGameTime() + TALE_WAIT);
         KnowledgeEmperorFx.tale(sl, player, tale, strength);
-        if (strength < 1f) player.sendSystemMessage(Component.literal("The tale is too well known: it works at " + Math.round(strength * 100) + "%."));
+        if (strength < 1f) Spells.tell(player, Component.literal("The tale is too well known: it works at " + Math.round(strength * 100) + "%."));
         return strength;
     }
 
@@ -227,7 +228,7 @@ public final class KnowledgeEmperorRetellings {
     // BEAUTY_SLEEP (status/Slumber: the first blow wakes it, and that blow does BEAUTY_WAKING_BLOW times as much).
     // Bosses and players are only slowed hard for BEAUTY_SLOW. Scrollable.
     // =========================
-    private static AbilityWheel.Result sleepingBeauty(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result sleepingBeauty(LivingEntity player, ServerLevel sl) {
         if (taleWaiting(player, sl)) return AbilityWheel.Result.REFUSED;
         float strength = tell(player, sl, Tale.SLEEPING_BEAUTY);
         beauty(player, sl, strength);
@@ -235,7 +236,7 @@ public final class KnowledgeEmperorRetellings {
         return AbilityWheel.Result.DONE;
     }
 
-    private static boolean beauty(ServerPlayer player, ServerLevel sl, float power) {
+    private static boolean beauty(LivingEntity player, ServerLevel sl, float power) {
         Vec3 center = player.position();
         KnowledgeEmperorFx.sleepingBeauty(sl, player, center, BEAUTY_RADIUS);
         Later.run(sl, KnowledgeEmperorFx.SPINDLE_SLEEPS, () -> {
@@ -263,7 +264,7 @@ public final class KnowledgeEmperorRetellings {
     // Avalon: the isle stands AVALON_RADIUS round where you tell it, for AVALON_TICKS once risen. Each second allies in
     // it (and you) heal AVALON_HEAL and are cleansed; enemies in it are slowed and cannot heal.
     // =========================
-    private static AbilityWheel.Result avalon(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result avalon(LivingEntity player, ServerLevel sl) {
         if (taleWaiting(player, sl)) return AbilityWheel.Result.REFUSED;
         float strength = tell(player, sl, Tale.AVALON);
         Vec3 ground = Spells.groundUnder(player, sl, player);
@@ -310,11 +311,11 @@ public final class KnowledgeEmperorRetellings {
     // Achilles' Heel: the enemy you look at (HEEL_RANGE) is Understood for HEEL_TICKS (Study.hold), takes
     // HEEL_VULNERABLE more damage, and your hits on it go through armor and everything else that softens a hit.
     // =========================
-    private static AbilityWheel.Result achillesHeel(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result achillesHeel(LivingEntity player, ServerLevel sl) {
         if (taleWaiting(player, sl)) return AbilityWheel.Result.REFUSED;
         LivingEntity target = Spells.aimEnemy(player, sl, HEEL_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one whose weak spot you could name."));
+            Spells.tell(player, Component.literal("There is no one whose weak spot you could name."));
             return AbilityWheel.Result.REFUSED;
         }
         float strength = tell(player, sl, Tale.ACHILLES_HEEL);
@@ -338,7 +339,7 @@ public final class KnowledgeEmperorRetellings {
     }
 
     /** Is this a hit by the heel's owner on the heel? (while it lasts) */
-    private static boolean onTheHeel(LivingEntity target, Player attacker) {
+    private static boolean onTheHeel(LivingEntity target, LivingEntity attacker) {
         Heel heel = HEELS.get(target.getUUID());
         return heel != null && heel.caster().equals(attacker.getUUID()) && heel.until() > target.level().getGameTime();
     }
@@ -348,7 +349,7 @@ public final class KnowledgeEmperorRetellings {
     // (blindness, slowness, weakness, poison, nausea, no healing) for BOX_TICKS; at HOPE_RISES you and your allies
     // within BOX_RADIUS get Regeneration II for as long. Scrollable.
     // =========================
-    private static AbilityWheel.Result pandorasBox(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result pandorasBox(LivingEntity player, ServerLevel sl) {
         if (taleWaiting(player, sl)) return AbilityWheel.Result.REFUSED;
         float strength = tell(player, sl, Tale.PANDORAS_BOX);
         box(player, sl, strength);
@@ -356,7 +357,7 @@ public final class KnowledgeEmperorRetellings {
         return AbilityWheel.Result.DONE;
     }
 
-    private static boolean box(ServerPlayer player, ServerLevel sl, float power) {
+    private static boolean box(LivingEntity player, ServerLevel sl, float power) {
         int ticks = Math.round(BOX_TICKS * power);
         KnowledgeEmperorFx.pandorasBox(sl, player, BOX_RADIUS);
         Later.run(sl, KnowledgeEmperorFx.BOX_OPENS, () -> {
@@ -400,7 +401,7 @@ public final class KnowledgeEmperorRetellings {
     // the next FORESIGHT_DODGES hits on you are dodged (status/Substitute), each sliding you FORESIGHT_SLIDE aside.
     // Knowledge Emperor (1): EMPEROR_FORESIGHT_TICKS and EMPEROR_FORESIGHT_DODGES.
     // =========================
-    private static AbilityWheel.Result foresight(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result foresight(LivingEntity player, ServerLevel sl) {
         boolean emperor = Beyonder.hasSequence(player, EMPEROR_FORESIGHT_SEQUENCE);
         int ticks = emperor ? EMPEROR_FORESIGHT_TICKS : FORESIGHT_TICKS;
         int dodges = emperor ? EMPEROR_FORESIGHT_DODGES : FORESIGHT_DODGES;
@@ -427,14 +428,14 @@ public final class KnowledgeEmperorRetellings {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void endForesight(Player player, ServerLevel sl, String tag) {
+    private static void endForesight(LivingEntity player, ServerLevel sl, String tag) {
         player.getPersistentData().remove(FORESIGHT_UNTIL);
         KnowledgeEmperorFx.foresightEnd(sl, player, tag);
         KnowledgeEmperorFx.statusEnd(player, Status.FORESIGHT);
     }
 
     /** Twice a second while Foresight lasts: the ghost of each blow being readied against you. */
-    private static void foresightTick(Player player, ServerLevel sl) {
+    private static void foresightTick(LivingEntity player, ServerLevel sl) {
         if (!KnowledgeEmperor.isActive(player, FORESIGHT_UNTIL)) return;
         for (Mob mob : sl.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(FORESIGHT_SEES),
                 mob -> mob.isAlive() && mob.getTarget() == player)) {
@@ -449,18 +450,18 @@ public final class KnowledgeEmperorRetellings {
     // PROPHECY_UNDERSTOOD. Against a boss or a player of a stronger Sequence it is PROPHECY_AGAINST_STRONGER as strong
     // and PROPHECY_REBOUND of it comes back on you. It fails if the target dies or gets out of reach.
     // =========================
-    private static AbilityWheel.Result prophecyOfRuin(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result prophecyOfRuin(LivingEntity player, ServerLevel sl) {
         if (Countdown.isRunning(player)) {
-            player.sendSystemMessage(Component.literal("You are already pronouncing a fate."));
+            Spells.tell(player, Component.literal("You are already pronouncing a fate."));
             return AbilityWheel.Result.REFUSED;
         }
         LivingEntity target = Spells.aimEnemy(player, sl, PROPHECY_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one to pronounce a fate on."));
+            Spells.tell(player, Component.literal("There is no one to pronounce a fate on."));
             return AbilityWheel.Result.REFUSED;
         }
         boolean stronger = KnowledgeEmperor.isBoss(target)
-                || (target instanceof Player other && SoulCore.getSequence(other) < SoulCore.getSequence(player));
+                || (target instanceof Player other && SoulCore.getSequence(other) < Beyonders.sequenceOf(player));
         String tag = "ke_prophecy_" + target.getId();
         KnowledgeEmperorFx.prophecy(sl, player, target, PROPHECY_SECONDS, tag);
         if (target instanceof Player doomed) KnowledgeEmperorFx.status(doomed, Status.DOOMED, PROPHECY_SECONDS * 20);
@@ -493,7 +494,7 @@ public final class KnowledgeEmperorRetellings {
     // =========================
 
     /** Every tick, for every player. */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         if (player.tickCount % 10 == 0) foresightTick(player, sl);
     }
 
@@ -509,7 +510,7 @@ public final class KnowledgeEmperorRetellings {
     static void hurtLate(LivingHurtEvent event) {
         if (HEELS.isEmpty()) return;
         LivingEntity target = event.getEntity();
-        if (event.getSource().getEntity() instanceof Player attacker && onTheHeel(target, attacker)) {
+        if (event.getSource().getEntity() instanceof LivingEntity attacker && onTheHeel(target, attacker)) {   // a player's or a Beyonder mob's
             THROUGH_ARMOR.put(target.getUUID(), new Through(event.getAmount(), target.level().getGameTime()));
         }
     }

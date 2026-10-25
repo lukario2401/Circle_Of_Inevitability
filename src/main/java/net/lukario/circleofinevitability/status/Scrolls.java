@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.status;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -90,7 +91,7 @@ public final class Scrolls {
     // =========================
 
     /** A Scrollable spell was just cast by hand: it is what this player cast last. */
-    public static void cast(Player player, String key) {
+    public static void cast(LivingEntity player, String key) {
         if (KINDS.containsKey(key)) player.getPersistentData().putString(LAST_CAST, key);
     }
 

@@ -71,103 +71,103 @@ public final class KnowledgeEmperorKnowledge {
     // =========================
 
     static final int KNOWLEDGE_SEQUENCE = 2;                      // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
     // Informatization
-    private static final int INFO_SEQUENCE = 2;
-    private static final int INFO_COST = 20000;                   // from Sequence 2 the bar holds 78400 and refills at once
-    private static final int INFO_COOLDOWN = 600;
-    private static final int INFO_TICKS = 120;
-    private static final int INFO_SPEED = 2;                      // Speed III
-    private static final double DECOY_LURE = 16.0;                // enemies this close that hunted you go for the copy...
-    private static final double DECOY_TRIGGER = 1.6;              // ...which bursts when one comes this close
-    private static final double DECOY_RADIUS = 3.0;
-    private static final float DECOY_DAMAGE = 40f;
-    private static final float INFO_RELEASED = 0.3f;              // of what hit you, let out round you at the end...
-    private static final double INFO_RELEASE_RADIUS = 4.0;        // ...this far
-    private static final int EMPEROR_INFO_SEQUENCE = 1;           // Knowledge Emperor: longer, and cast again to flow
-    private static final int EMPEROR_INFO_TICKS = 200;
-    private static final double INFO_FLOW_RANGE = 16.0;
+    static final int INFO_SEQUENCE = 2;
+    static final int INFO_COST = 20000;                   // from Sequence 2 the bar holds 78400 and refills at once
+    static final int INFO_COOLDOWN = 600;
+    static final int INFO_TICKS = 120;
+    static final int INFO_SPEED = 2;                      // Speed III
+    static final double DECOY_LURE = 16.0;                // enemies this close that hunted you go for the copy...
+    static final double DECOY_TRIGGER = 1.6;              // ...which bursts when one comes this close
+    static final double DECOY_RADIUS = 3.0;
+    static final float DECOY_DAMAGE = 40f;
+    static final float INFO_RELEASED = 0.3f;              // of what hit you, let out round you at the end...
+    static final double INFO_RELEASE_RADIUS = 4.0;        // ...this far
+    static final int EMPEROR_INFO_SEQUENCE = 1;           // Knowledge Emperor: longer, and cast again to flow
+    static final int EMPEROR_INFO_TICKS = 200;
+    static final double INFO_FLOW_RANGE = 16.0;
 
     // Erase
-    private static final int ERASE_SEQUENCE = 2;
-    private static final int ERASE_COST = 15000;
-    private static final int ERASE_COOLDOWN = 400;
-    private static final double ERASE_RANGE = 24.0;
+    static final int ERASE_SEQUENCE = 2;
+    static final int ERASE_COST = 15000;
+    static final int ERASE_COOLDOWN = 400;
+    static final double ERASE_RANGE = 24.0;
 
     // Knowledge Overload
-    private static final int OVERLOAD_SEQUENCE = 1;
-    private static final int OVERLOAD_COST = 32000;
-    private static final int OVERLOAD_COOLDOWN = 800;
-    private static final double OVERLOAD_RANGE = 32.0;
-    private static final int OVERLOAD_HOLD = 40;
-    private static final int OVERLOAD_STRONG_HOLD = 20;           // bosses and players
-    private static final float OVERLOAD_DAMAGE = 120f;
-    private static final double MIND_BURST_RADIUS = 4.0;
-    private static final float MIND_BURST_DAMAGE = 60f;
-    private static final int HERMIT_OVERLOAD_SEQUENCE = 0;        // Hermit: every enemy within...
-    private static final double HERMIT_OVERLOAD_RADIUS = 16.0;
+    static final int OVERLOAD_SEQUENCE = 1;
+    static final int OVERLOAD_COST = 32000;
+    static final int OVERLOAD_COOLDOWN = 800;
+    static final double OVERLOAD_RANGE = 32.0;
+    static final int OVERLOAD_HOLD = 40;
+    static final int OVERLOAD_STRONG_HOLD = 20;           // bosses and players
+    static final float OVERLOAD_DAMAGE = 120f;
+    static final double MIND_BURST_RADIUS = 4.0;
+    static final float MIND_BURST_DAMAGE = 60f;
+    static final int HERMIT_OVERLOAD_SEQUENCE = 0;        // Hermit: every enemy within...
+    static final double HERMIT_OVERLOAD_RADIUS = 16.0;
 
     // Lance of Knowledge
-    private static final int LANCE_SEQUENCE = 1;
-    private static final int LANCE_COST = 26000;
-    private static final int LANCE_COOLDOWN = 500;
-    private static final double LANCE_RANGE = 40.0;
-    private static final double LANCE_SPEED = 2.5;
-    private static final float LANCE_SCALE = 0.7f;                // as KnowledgeEmperorFx.lanceForm shows it
-    private static final double LANCE_RADIUS = 5.0;
-    private static final float LANCE_DAMAGE = 200f;               // at the middle; half at the edge
-    private static final int LANCE_STUN = 20;
-    private static final int LANCE_NAUSEA = 600;
-    private static final int HERMIT_LANCE_SEQUENCE = 0;           // Hermit: three, this far apart
-    private static final double LANCE_FAN = 12.0;
+    static final int LANCE_SEQUENCE = 1;
+    static final int LANCE_COST = 26000;
+    static final int LANCE_COOLDOWN = 500;
+    static final double LANCE_RANGE = 40.0;
+    static final double LANCE_SPEED = 2.5;
+    static final float LANCE_SCALE = 0.7f;                // as KnowledgeEmperorFx.lanceForm shows it
+    static final double LANCE_RADIUS = 5.0;
+    static final float LANCE_DAMAGE = 200f;               // at the middle; half at the edge
+    static final int LANCE_STUN = 20;
+    static final int LANCE_NAUSEA = 600;
+    static final int HERMIT_LANCE_SEQUENCE = 0;           // Hermit: three, this far apart
+    static final double LANCE_FAN = 12.0;
 
     // Condense Knowledge
-    private static final int CONDENSE_SEQUENCE = 1;
-    private static final int CONDENSE_COST = 10000;
-    private static final int CONDENSE_COOLDOWN = 1200;
-    private static final double CONDENSE_RADIUS = 32.0;
-    private static final float CONDENSE_SPIRITUALITY = 0.1f;      // of your bar back for every 100% gathered
-    private static final int CONDENSE_STRENGTH_TICKS = 200;       // Strength II this long
-    private static final int CONDENSE_INVERSE_TICKS = 200;        // with nothing gathered: the next hit within this
+    static final int CONDENSE_SEQUENCE = 1;
+    static final int CONDENSE_COST = 10000;
+    static final int CONDENSE_COOLDOWN = 1200;
+    static final double CONDENSE_RADIUS = 32.0;
+    static final float CONDENSE_SPIRITUALITY = 0.1f;      // of your bar back for every 100% gathered
+    static final int CONDENSE_STRENGTH_TICKS = 200;       // Strength II this long
+    static final int CONDENSE_INVERSE_TICKS = 200;        // with nothing gathered: the next hit within this
 
     // Embodiment of Knowledge
-    private static final int EMBODIMENT_SEQUENCE = 0;
-    private static final int EMBODIMENT_COST = 45000;
-    private static final int EMBODIMENT_COOLDOWN = 1200;
-    private static final int EMBODIMENT_TICKS = 300;
+    static final int EMBODIMENT_SEQUENCE = 0;
+    static final int EMBODIMENT_COST = 45000;
+    static final int EMBODIMENT_COOLDOWN = 1200;
+    static final int EMBODIMENT_TICKS = 300;
 
     // Indoctrination
-    private static final int INDOCTRINATION_SEQUENCE = 0;
-    private static final int INDOCTRINATION_COST = 40000;
-    private static final int INDOCTRINATION_COOLDOWN = 1000;
-    private static final double INDOCTRINATION_RADIUS = 24.0;
+    static final int INDOCTRINATION_SEQUENCE = 0;
+    static final int INDOCTRINATION_COST = 40000;
+    static final int INDOCTRINATION_COOLDOWN = 1000;
+    static final double INDOCTRINATION_RADIUS = 24.0;
     static final int ENLIGHTENED_TICKS = 600;                     // allied Hermits: twice the spirituality back,
     static final float ENLIGHTENED_COOLDOWN = 0.7f;               // cooldowns 30% shorter
-    private static final int INDOCTRINATED_TICKS = 160;           // enemies: nausea, blindness, weakness
+    static final int INDOCTRINATED_TICKS = 160;           // enemies: nausea, blindness, weakness
 
     // Divine Kingdom
-    private static final int KINGDOM_SEQUENCE = 0;
-    private static final int KINGDOM_COST = 60000;
-    private static final int KINGDOM_COOLDOWN = 3600;
-    private static final double KINGDOM_RADIUS = 40.0;
-    private static final double KINGDOM_HEIGHT = 24.0;
-    private static final int KINGDOM_TICKS = 1200;
-    private static final int KINGDOM_STUDY = 5;                   // each second, on each enemy inside
-    private static final float KINGDOM_TIDE = 2f;                 // spirituality comes back this much extra (three times in all)
+    static final int KINGDOM_SEQUENCE = 0;
+    static final int KINGDOM_COST = 60000;
+    static final int KINGDOM_COOLDOWN = 3600;
+    static final double KINGDOM_RADIUS = 40.0;
+    static final double KINGDOM_HEIGHT = 24.0;
+    static final int KINGDOM_TICKS = 1200;
+    static final int KINGDOM_STUDY = 5;                   // each second, on each enemy inside
+    static final float KINGDOM_TIDE = 2f;                 // spirituality comes back this much extra (three times in all)
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String INFO_UNTIL = "knowledge_emperor_info_until";
-    private static final String EMBODIED_UNTIL = "knowledge_emperor_embodied_until";
-    private static final String EMBODIED_SINCE = "knowledge_emperor_embodied_since";
+    static final String INFO_UNTIL = "knowledge_emperor_info_until";
+    static final String EMBODIED_UNTIL = "knowledge_emperor_embodied_until";
+    static final String EMBODIED_SINCE = "knowledge_emperor_embodied_since";
     static final String ENLIGHTENED_UNTIL = "knowledge_emperor_enlightened_until";
     static final String KINGDOM = "knowledge_emperor_divine_kingdom";
-    private static final String CONDENSED_HIT = "knowledge_emperor_condensed";
+    static final String CONDENSED_HIT = "knowledge_emperor_condensed";
 
     /** The false copy each informatized player left behind. Not saved. */
-    private static final class Decoy {
+    static final class Decoy {
         final Vec3 at;
         final String tag;
         boolean burst;
@@ -177,7 +177,7 @@ public final class KnowledgeEmperorKnowledge {
             this.tag = tag;
         }
     }
-    private static final Map<UUID, Decoy> DECOYS = new HashMap<>();
+    static final Map<UUID, Decoy> DECOYS = new HashMap<>();
 
     static {
         // an Embodiment cannot be studied, read or chosen
@@ -189,7 +189,7 @@ public final class KnowledgeEmperorKnowledge {
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("knowledge_emperor_knowledge", "Knowledge")
+    static final AbilityWheel WHEEL = AbilityWheel.create("knowledge_emperor_knowledge", "Knowledge")
             .radius(92)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .cooldownBy(KnowledgeEmperor::cooldownFor)
@@ -239,10 +239,10 @@ public final class KnowledgeEmperorKnowledge {
     // Knowledge Emperor (1): EMPEROR_INFO_TICKS, and casting it again while it lasts (free) flows you to where you aim
     // through any gap, as Stellar Self does.
     // =========================
-    private static AbilityWheel.Result informatization(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result informatization(LivingEntity player, ServerLevel sl) {
         if (isInformatized(player)) {
             if (!Beyonder.hasSequence(player, EMPEROR_INFO_SEQUENCE)) {
-                player.sendSystemMessage(Component.literal("You are already a stream of information."));
+                Spells.tell(player, Component.literal("You are already a stream of information."));
                 return AbilityWheel.Result.REFUSED;
             }
             return flow(player, sl);
@@ -267,10 +267,10 @@ public final class KnowledgeEmperorKnowledge {
     }
 
     /** Knowledge Emperor: the stream flows to where you aim, through every gap starlight would pass. */
-    private static AbilityWheel.Result flow(ServerPlayer player, ServerLevel sl) {
+    private static AbilityWheel.Result flow(LivingEntity player, ServerLevel sl) {
         Vec3 to = KnowledgeEmperorStars.stellarSpot(player, sl, INFO_FLOW_RANGE);
         if (to == null || to.distanceToSqr(player.position()) < 1.0) {
-            player.sendSystemMessage(Component.literal("There is no way for the stream to go there."));
+            Spells.tell(player, Component.literal("There is no way for the stream to go there."));
             return AbilityWheel.Result.REFUSED;
         }
         Vec3 from = player.position();
@@ -283,7 +283,7 @@ public final class KnowledgeEmperorKnowledge {
     }
 
     /** The mobs that were after you go for the copy instead. */
-    private static void lure(Player player, ServerLevel sl, Decoy decoy) {
+    private static void lure(LivingEntity player, ServerLevel sl, Decoy decoy) {
         for (Mob mob : sl.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(DECOY_LURE),
                 mob -> mob.isAlive() && mob.getTarget() == player)) {
             if (Spells.isFriend(player, mob)) continue;
@@ -293,7 +293,7 @@ public final class KnowledgeEmperorKnowledge {
     }
 
     /** Every tick while informatized: text trails off you, and the copy bursts when an enemy reaches it. */
-    private static void informatizationTick(Player player, ServerLevel sl) {
+    private static void informatizationTick(LivingEntity player, ServerLevel sl) {
         if (!isInformatized(player)) return;
         if (player.tickCount % 4 == 0) KnowledgeEmperorFx.informatizationTick(sl, player);
         Decoy decoy = DECOYS.get(player.getUUID());
@@ -303,7 +303,7 @@ public final class KnowledgeEmperorKnowledge {
         }
     }
 
-    private static void burstDecoy(Player player, ServerLevel sl, Decoy decoy) {
+    private static void burstDecoy(LivingEntity player, ServerLevel sl, Decoy decoy) {
         if (decoy.burst) return;
         decoy.burst = true;
         KnowledgeEmperorFx.decoyBurst(sl, decoy.at, decoy.tag);
@@ -312,7 +312,7 @@ public final class KnowledgeEmperorKnowledge {
         }
     }
 
-    private static void endInformatization(Player player, ServerLevel sl, String tag) {
+    private static void endInformatization(LivingEntity player, ServerLevel sl, String tag) {
         player.getPersistentData().remove(INFO_UNTIL);
         Decoy decoy = DECOYS.remove(player.getUUID());
         if (decoy != null) burstDecoy(player, sl, decoy);
@@ -327,7 +327,7 @@ public final class KnowledgeEmperorKnowledge {
         KnowledgeEmperorFx.statusEnd(player, Status.INFORMATIZATION);
     }
 
-    static boolean isInformatized(Player player) {
+    static boolean isInformatized(LivingEntity player) {
         return KnowledgeEmperor.isActive(player, INFO_UNTIL);
     }
 
@@ -336,10 +336,10 @@ public final class KnowledgeEmperorKnowledge {
     // deleted outright; anything else loses every beneficial effect and every ward and hiding (status/Dispel), at
     // KnowledgeEmperorFx.ERASE_LANDS.
     // =========================
-    private static AbilityWheel.Result erase(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result erase(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, ERASE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is nothing before you to erase."));
+            Spells.tell(player, Component.literal("There is nothing before you to erase."));
             return AbilityWheel.Result.REFUSED;
         }
         KnowledgeEmperorFx.erase(sl, player, target);
@@ -353,7 +353,7 @@ public final class KnowledgeEmperorKnowledge {
             int boons = Dispel.boons(target);
             int wards = Dispel.statuses(target);
             Study.add(player, target, KnowledgeEmperor.ABILITY_STUDY);
-            player.sendSystemMessage(Component.literal("Erased from " + target.getDisplayName().getString() + ": "
+            Spells.tell(player, Component.literal("Erased from " + target.getDisplayName().getString() + ": "
                     + boons + (boons == 1 ? " blessing" : " blessings") + " and " + wards + (wards == 1 ? " ward." : " wards.")));
         });
         return AbilityWheel.Result.DONE;
@@ -365,13 +365,13 @@ public final class KnowledgeEmperorKnowledge {
     // OVERLOAD_DAMAGE. At 100% Study a mind that is neither a boss nor a player detonates: it dies, and every enemy
     // within MIND_BURST_RADIUS takes MIND_BURST_DAMAGE. Hermit (0): every enemy within HERMIT_OVERLOAD_RADIUS at once.
     // =========================
-    private static AbilityWheel.Result knowledgeOverload(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result knowledgeOverload(LivingEntity player, ServerLevel sl) {
         String tag = "ke_overload_" + player.getId() + "_" + sl.getGameTime();
         if (Beyonder.hasSequence(player, HERMIT_OVERLOAD_SEQUENCE)) {
             List<LivingEntity> all = Spells.enemiesAround(player, sl, player.position(), HERMIT_OVERLOAD_RADIUS);
             all.removeIf(enemy -> !Spells.canBeChosen(player, enemy));
             if (all.isEmpty()) {
-                player.sendSystemMessage(Component.literal("There is no mind near you to flood."));
+                Spells.tell(player, Component.literal("There is no mind near you to flood."));
                 return AbilityWheel.Result.REFUSED;
             }
             KnowledgeEmperorFx.overloadAll(sl, player, all, OVERLOAD_HOLD, tag);
@@ -380,7 +380,7 @@ public final class KnowledgeEmperorKnowledge {
         }
         LivingEntity target = Spells.aimEnemy(player, sl, OVERLOAD_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no mind before you to flood."));
+            Spells.tell(player, Component.literal("There is no mind before you to flood."));
             return AbilityWheel.Result.REFUSED;
         }
         KnowledgeEmperorFx.knowledgeOverload(sl, player, target, holdFor(target), tag);
@@ -392,7 +392,7 @@ public final class KnowledgeEmperorKnowledge {
         return KnowledgeEmperor.isBoss(target) || target instanceof Player ? OVERLOAD_STRONG_HOLD : OVERLOAD_HOLD;
     }
 
-    private static void overload(Player player, ServerLevel sl, LivingEntity target, String tag) {
+    private static void overload(LivingEntity player, ServerLevel sl, LivingEntity target, String tag) {
         int hold = holdFor(target);
         Later.run(sl, KnowledgeEmperorFx.OVERLOAD_REACHES, () -> {
             if (!target.isAlive() || target.level() != sl) return;
@@ -422,7 +422,7 @@ public final class KnowledgeEmperorKnowledge {
     // down to half at the edge (and the Study bonus, which is "grows with Study"), is stunned LANCE_STUN and sick with
     // nausea for LANCE_NAUSEA. Hermit (0): three lances, LANCE_FAN degrees apart.
     // =========================
-    private static AbilityWheel.Result lanceOfKnowledge(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result lanceOfKnowledge(LivingEntity player, ServerLevel sl) {
         int count = Beyonder.hasSequence(player, HERMIT_LANCE_SEQUENCE) ? 3 : 1;
         KnowledgeEmperorFx.lanceForm(sl, player, count);
         Later.run(sl, KnowledgeEmperorFx.LANCE_THROWN, () -> {
@@ -440,7 +440,7 @@ public final class KnowledgeEmperorKnowledge {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void lanceBursts(Player player, ServerLevel sl, Vec3 at) {
+    private static void lanceBursts(LivingEntity player, ServerLevel sl, Vec3 at) {
         if (!Spells.casterStillHere(player, sl)) return;
         KnowledgeEmperorFx.lanceImpact(sl, at, LANCE_RADIUS);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, at, LANCE_RADIUS)) {
@@ -458,7 +458,7 @@ public final class KnowledgeEmperorKnowledge {
     // CONDENSE_STRENGTH_TICKS. With nothing to gather, your next hit within CONDENSE_INVERSE_TICKS counts as full
     // Study (status/EmpoweredHit).
     // =========================
-    private static AbilityWheel.Result condenseKnowledge(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result condenseKnowledge(LivingEntity player, ServerLevel sl) {
         List<Study.Known> taken = Study.takeAround(player, sl, player.position(), CONDENSE_RADIUS);
         int total = 0;
         List<LivingEntity> sources = new ArrayList<>();
@@ -470,7 +470,7 @@ public final class KnowledgeEmperorKnowledge {
             String tag = "ke_condensed_" + player.getId();
             KnowledgeEmperorFx.condenseInverse(sl, player, CONDENSE_INVERSE_TICKS, tag);
             KnowledgeEmperorFx.status(player, Status.CONDENSED, CONDENSE_INVERSE_TICKS);
-            EmpoweredHit.arm(player, CONDENSED_HIT, CONDENSE_INVERSE_TICKS, (striker, target, amount, level) -> {
+            EmpoweredHit.armAny(player, CONDENSED_HIT, CONDENSE_INVERSE_TICKS, (striker, target, amount, level) -> {
                 KnowledgeEmperorFx.statusEnd(striker, Status.CONDENSED);
                 if (striker instanceof ServerPlayer viewer) KnowledgeEmperorFx.understood(viewer, target);
                 float known = Study.bonus(striker, target);                         // what Study gives it already
@@ -482,11 +482,10 @@ public final class KnowledgeEmperorKnowledge {
         KnowledgeEmperorFx.condenseKnowledge(sl, player, sources);
         Later.run(sl, KnowledgeEmperorFx.CONDENSED, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
-            float back = Beyonder.maxSpirituality(player) * CONDENSE_SPIRITUALITY * gathered / 100f;
-            SoulCore.setSpiritualityQuietly(player, SoulCore.getSpirituality(player) + back);
+            Spells.giveSpirituality(player, Spells.maxSpiritualityOf(player) * CONDENSE_SPIRITUALITY * gathered / 100f);
             player.addEffect(new MobEffectInstance(MobEffects.STRENGTH, CONDENSE_STRENGTH_TICKS, 1));
             KnowledgeEmperorFx.status(player, Status.CONDENSED, CONDENSE_STRENGTH_TICKS);
-            player.sendSystemMessage(Component.literal("You condense " + gathered + "% of knowledge."));
+            Spells.tell(player, Component.literal("You condense " + gathered + "% of knowledge."));
         });
         return AbilityWheel.Result.DONE;
     }
@@ -496,7 +495,7 @@ public final class KnowledgeEmperorKnowledge {
     // nothing can study you, choose you, read you with Prying or find you by Dowsing. Casting any other ability ends
     // it (KnowledgeEmperor.afterCast), and so does stepping out of the concealment (a blow you strike).
     // =========================
-    private static AbilityWheel.Result embodiment(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result embodiment(LivingEntity player, ServerLevel sl) {
         long now = sl.getGameTime();
         CompoundTag data = player.getPersistentData();
         data.putLong(EMBODIED_UNTIL, now + EMBODIMENT_TICKS);
@@ -512,10 +511,10 @@ public final class KnowledgeEmperorKnowledge {
     }
 
     static boolean isEmbodied(Entity entity) {
-        return entity instanceof Player player && KnowledgeEmperor.isActive(player, EMBODIED_UNTIL);
+        return entity instanceof LivingEntity one && KnowledgeEmperor.isActive(one, EMBODIED_UNTIL);      // a player or a Beyonder mob
     }
 
-    private static void endEmbodiment(Player player, ServerLevel sl) {
+    private static void endEmbodiment(LivingEntity player, ServerLevel sl) {
         if (!player.getPersistentData().contains(EMBODIED_UNTIL)) return;
         player.getPersistentData().remove(EMBODIED_UNTIL);
         player.getPersistentData().remove(EMBODIED_SINCE);
@@ -525,7 +524,7 @@ public final class KnowledgeEmperorKnowledge {
     }
 
     /** Any cast went off (KnowledgeEmperor.afterCast): an Embodiment cast before this tick ends. */
-    static void castSomething(Player player) {
+    static void castSomething(LivingEntity player) {
         if (!isEmbodied(player) || !(player.level() instanceof ServerLevel sl)) return;
         if (player.getPersistentData().getLongOr(EMBODIED_SINCE, 0L) == sl.getGameTime()) return;   // the Embodiment itself
         endEmbodiment(player, sl);
@@ -537,7 +536,7 @@ public final class KnowledgeEmperorKnowledge {
     // (KnowledgeEmperor.cooldownFor). Enemies get nausea, blindness and weakness for INDOCTRINATED_TICKS, and are
     // Understood (Study.set to 100).
     // =========================
-    private static AbilityWheel.Result indoctrination(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result indoctrination(LivingEntity player, ServerLevel sl) {
         KnowledgeEmperorFx.indoctrination(sl, player, INDOCTRINATION_RADIUS);
         long until = sl.getGameTime() + ENLIGHTENED_TICKS;
         for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), INDOCTRINATION_RADIUS)) {
@@ -557,7 +556,7 @@ public final class KnowledgeEmperorKnowledge {
         return AbilityWheel.Result.DONE;
     }
 
-    static boolean isEnlightened(Player player) {
+    static boolean isEnlightened(LivingEntity player) {
         return KnowledgeEmperor.isActive(player, ENLIGHTENED_UNTIL);
     }
 
@@ -568,7 +567,7 @@ public final class KnowledgeEmperorKnowledge {
     // Hermits get spirituality back three times as fast; your pouch is kept full. While you stand in it your casts cost
     // half (KnowledgeEmperor.costFor).
     // =========================
-    private static AbilityWheel.Result divineKingdom(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result divineKingdom(LivingEntity player, ServerLevel sl) {
         if (Zone.isOpen(player, KINGDOM)) {
             Zone.close(player, KINGDOM);
             return AbilityWheel.Result.FREE;
@@ -590,7 +589,9 @@ public final class KnowledgeEmperorKnowledge {
                         KnowledgeEmperorFx.kingdomTick(sl, ground, KINGDOM_RADIUS);
                         if (inKingdom(player)) {
                             tide(player, KINGDOM_TIDE);
-                            while (Scrolls.size(player) < KnowledgeEmperor.pouchSize(player)) KnowledgeEmperor.giveFreeScroll(player, sl);
+                            if (player instanceof Player reader) {                    // a pouch is a player's
+                                while (Scrolls.size(reader) < KnowledgeEmperor.pouchSize(reader)) KnowledgeEmperor.giveFreeScroll(reader, sl);
+                            }
                         }
                     })
                     .onEnd(() -> {
@@ -603,7 +604,7 @@ public final class KnowledgeEmperorKnowledge {
     }
 
     /** Once a second, for each one inside the Moor. */
-    private static void kingdomTouches(Player player, ServerLevel sl, LivingEntity one) {
+    private static void kingdomTouches(LivingEntity player, ServerLevel sl, LivingEntity one) {
         if (Spells.isFriend(player, one)) {
             if (one instanceof Player hermit && SoulCore.getPathway(hermit).equals(KnowledgeEmperor.PATHWAY)) tide(hermit, KINGDOM_TIDE);
             return;
@@ -625,14 +626,13 @@ public final class KnowledgeEmperorKnowledge {
     }
 
     /** True while the player stands in their own Divine Kingdom. */
-    static boolean inKingdom(Player player) {
+    static boolean inKingdom(LivingEntity player) {
         return Zone.covers(player, KINGDOM, player.position());
     }
 
     /** 'times' more of a second's spirituality regeneration, now. */
-    static void tide(Player player, float times) {
-        float extra = Beyonder.spiritualityRegenPerTick(player) * 20f * times;
-        SoulCore.setSpiritualityQuietly(player, SoulCore.getSpirituality(player) + extra);
+    static void tide(LivingEntity player, float times) {
+        Spells.giveSpirituality(player, Spells.spiritualityRegenOf(player) * 20f * times);
     }
 
     // =========================
@@ -640,7 +640,7 @@ public final class KnowledgeEmperorKnowledge {
     // =========================
 
     /** Every tick, for every player. */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         informatizationTick(player, sl);
         // the Embodiment ends with the concealment (a blow struck steps out of it)
         if (isEmbodied(player) && !Concealment.isHidden(player)) endEmbodiment(player, sl);
@@ -655,7 +655,7 @@ public final class KnowledgeEmperorKnowledge {
         Zone.close(player, KINGDOM);
     }
 
-    static void forget(Player player) {
+    static void forget(LivingEntity player) {
         DECOYS.remove(player.getUUID());
     }
 }

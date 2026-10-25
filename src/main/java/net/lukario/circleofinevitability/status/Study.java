@@ -79,10 +79,10 @@ public final class Study {
     /** The look and sound of Study (the ability decides; Study itself shows nothing). */
     public interface Listener {
         /** The gauge moved from one whole percent to another (also when it fell). */
-        default void changed(Player caster, LivingEntity target, int before, int after) {}
+        default void changed(LivingEntity caster, LivingEntity target, int before, int after) {}
 
         /** The caster forgot it: taken, forgotten, it fell to 0, or it died. */
-        default void forgotten(Player caster, LivingEntity target) {}
+        default void forgotten(LivingEntity caster, LivingEntity target) {}
     }
 
     private static final List<Listener> LISTENERS = new ArrayList<>();
@@ -134,24 +134,24 @@ public final class Study {
     // =========================
 
     /** What this caster knows of it, 0..100. */
-    public static int get(Player caster, Entity target) {
+    public static int get(LivingEntity caster, Entity target) {
         if (caster == null || target == null) return 0;
         Gauge gauge = gauge(caster, target, false);
         return gauge == null ? 0 : gauge.value(target.level().getGameTime());
     }
 
     /** 50% or more: the caster knows its weakness. */
-    public static boolean knowsWeakness(Player caster, Entity target) {
+    public static boolean knowsWeakness(LivingEntity caster, Entity target) {
         return get(caster, target) >= WEAKNESS;
     }
 
     /** 100%: Understood. */
-    public static boolean isUnderstood(Player caster, Entity target) {
+    public static boolean isUnderstood(LivingEntity caster, Entity target) {
         return get(caster, target) >= FULL;
     }
 
     /** What everything this caster does to it is multiplied by: 1 + BONUS_PER_TEN for every full 10%, MOST_BONUS at most. */
-    public static float bonus(Player caster, Entity target) {
+    public static float bonus(LivingEntity caster, Entity target) {
         int tens = get(caster, target) / 10;
         return 1f + Math.min(MOST_BONUS, tens * BONUS_PER_TEN);
     }
@@ -165,7 +165,7 @@ public final class Study {
     }
 
     /** Everything this caster knows something about right now (alive, in the caster's world), most known first. */
-    public static List<Known> knownBy(Player caster) {
+    public static List<Known> knownBy(LivingEntity caster) {
         List<Known> found = new ArrayList<>();
         long now = caster.level().getGameTime();
         for (Map<UUID, Gauge> byCaster : KNOWN.values()) {
@@ -183,7 +183,7 @@ public final class Study {
     // =========================
 
     /** 'percent' more (or less, when negative), kept within 0..100. Returns the new value. Nothing on the immune or on yourself. */
-    public static int add(Player caster, LivingEntity target, float percent) {
+    public static int add(LivingEntity caster, LivingEntity target, float percent) {
         if (!canStudy(caster, target)) return get(caster, target);
         Gauge gauge = gauge(caster, target, true);
         long now = target.level().getGameTime();
@@ -193,7 +193,7 @@ public final class Study {
     }
 
     /** Straight to a value (0..100), as if just studied. */
-    public static int set(Player caster, LivingEntity target, int percent) {
+    public static int set(LivingEntity caster, LivingEntity target, int percent) {
         if (!canStudy(caster, target)) return get(caster, target);
         Gauge gauge = gauge(caster, target, true);
         long now = target.level().getGameTime();
@@ -207,7 +207,7 @@ public final class Study {
      * meanwhile either). For "the weak spot is named for 8 seconds", "Understood for 10 seconds". Works on the immune too:
      * it is a power over that one entity, not study.
      */
-    public static void hold(Player caster, LivingEntity target, int percent, int ticks) {
+    public static void hold(LivingEntity caster, LivingEntity target, int percent, int ticks) {
         if (caster == null || target == null || caster == target) return;
         Gauge gauge = gauge(caster, target, true);
         long now = target.level().getGameTime();
@@ -217,7 +217,7 @@ public final class Study {
     }
 
     /** All of it gathered up: returns what was known and forgets it. */
-    public static int take(Player caster, LivingEntity target) {
+    public static int take(LivingEntity caster, LivingEntity target) {
         Gauge gauge = gauge(caster, target, false);
         if (gauge == null) return 0;
         int had = gauge.value(target.level().getGameTime());
@@ -226,7 +226,7 @@ public final class Study {
     }
 
     /** take() for everything within 'radius' of a point (its body). Returns what was known of each, most known first. */
-    public static List<Known> takeAround(Player caster, ServerLevel sl, Vec3 center, double radius) {
+    public static List<Known> takeAround(LivingEntity caster, ServerLevel sl, Vec3 center, double radius) {
         List<Known> taken = new ArrayList<>();
         for (Known known : knownBy(caster)) {
             if (known.target().level() != sl || Spells.distanceToBody(known.target(), center) > radius) continue;
@@ -236,12 +236,12 @@ public final class Study {
     }
 
     /** Spells.strike (with the Study bonus, as every hit gets), then 'gain' percent more. */
-    public static void strike(Player caster, LivingEntity target, float damage, float gain) {
+    public static void strike(LivingEntity caster, LivingEntity target, float damage, float gain) {
         Spells.strike(caster, target, damage);
         if (target.isAlive()) add(caster, target, gain);
     }
 
-    public static void forget(Player caster, LivingEntity target) {
+    public static void forget(LivingEntity caster, LivingEntity target) {
         Map<UUID, Gauge> byCaster = KNOWN.get(target.getUUID());
         if (byCaster == null || byCaster.remove(caster.getUUID()) == null) return;
         if (byCaster.isEmpty()) KNOWN.remove(target.getUUID());
@@ -249,7 +249,7 @@ public final class Study {
     }
 
     /** Everything this caster knows is forgotten (they left, died, or are no longer of the Pathway). */
-    public static void forgetAll(Player caster) {
+    public static void forgetAll(LivingEntity caster) {
         for (Known known : knownBy(caster)) forget(caster, known.target());
         // what is in another world or already dead is dropped without a word
         Iterator<Map<UUID, Gauge>> iterator = KNOWN.values().iterator();
@@ -264,13 +264,13 @@ public final class Study {
     // Internals
     // =========================
 
-    private static boolean canStudy(Player caster, LivingEntity target) {
+    private static boolean canStudy(LivingEntity caster, LivingEntity target) {
         if (caster == null || target == null || target.level().isClientSide()) return false;
         if (caster == target || caster.getUUID().equals(target.getUUID()) || !target.isAlive()) return false;
         return !isImmune(target);
     }
 
-    private static Gauge gauge(Player caster, Entity target, boolean make) {
+    private static Gauge gauge(LivingEntity caster, Entity target, boolean make) {
         Map<UUID, Gauge> byCaster = KNOWN.get(target.getUUID());
         if (byCaster == null) {
             if (!make || !(target instanceof LivingEntity living)) return null;
@@ -289,7 +289,7 @@ public final class Study {
     }
 
     /** Tells the listeners what changed since they were last told, and forgets a gauge that is empty. Returns the value now. */
-    private static int settle(Player caster, Gauge gauge, long now) {
+    private static int settle(LivingEntity caster, Gauge gauge, long now) {
         int after = gauge.value(now);
         int before = gauge.shown;
         gauge.shown = after;
@@ -300,9 +300,10 @@ public final class Study {
         return after;
     }
 
-    private static double decayScale(Player caster) {
+    private static double decayScale(LivingEntity caster) {
         double scale = 1.0;
-        for (ToDoubleFunction<Player> rule : DECAY_SCALES) scale *= Math.max(0.0, rule.applyAsDouble(caster));
+        if (!(caster instanceof Player player)) return scale;                 // the rules are a player's
+        for (ToDoubleFunction<Player> rule : DECAY_SCALES) scale *= Math.max(0.0, rule.applyAsDouble(player));
         return scale;
     }
 
@@ -322,7 +323,7 @@ public final class Study {
                     casters.remove();
                     continue;
                 }
-                Player caster = sl.getPlayerByUUID(known.getKey());
+                LivingEntity caster = sl.getEntity(known.getKey()) instanceof LivingEntity found ? found : null;   // a player or a Beyonder mob
                 if (caster == null) continue;                      // in another world for now: it waits
                 long idleSince = Math.max(gauge.lastGain, gauge.floorUntil);   // a hold keeps it from falling
                 if (now >= gauge.floorUntil && now - idleSince >= IDLE_TICKS) {
@@ -350,7 +351,7 @@ public final class Study {
     public static void onStudyHurt(LivingHurtEvent event) {
         LivingEntity target = event.getEntity();
         if (target.level().isClientSide() || KNOWN.isEmpty()) return;
-        if (!(event.getSource().getEntity() instanceof Player caster) || caster == target) return;
+        if (!(event.getSource().getEntity() instanceof LivingEntity caster) || caster == target) return;
         float bonus = bonus(caster, target);
         if (bonus > 1f) event.setAmount(event.getAmount() * bonus);
     }
@@ -362,11 +363,11 @@ public final class Study {
         Map<UUID, Gauge> byCaster = KNOWN.remove(dead.getUUID());
         if (byCaster != null && dead.level() instanceof ServerLevel sl) {
             for (UUID id : byCaster.keySet()) {
-                Player caster = sl.getPlayerByUUID(id);
+                LivingEntity caster = sl.getEntity(id) instanceof LivingEntity found ? found : null;
                 if (caster != null) for (Listener listener : LISTENERS) listener.forgotten(caster, dead);
             }
         }
-        if (dead instanceof Player player) forgetAll(player);        // a dead scholar forgets too
+        forgetAll(dead);                                              // a dead scholar forgets too
     }
 
     @SubscribeEvent

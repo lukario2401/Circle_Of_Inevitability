@@ -1,7 +1,7 @@
 package net.lukario.circleofinevitability.combat;
 
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ public final class Tellings {
     private Tellings() {}
 
     /** One more telling of 'key', now. */
-    public static void tell(Player player, String key) {
+    public static void tell(LivingEntity player, String key) {
         List<Long> times = times(player, key);
         times.add(player.level().getGameTime());
         while (times.size() > MOST_KEPT) times.remove(0);
@@ -39,7 +39,7 @@ public final class Tellings {
     }
 
     /** How often 'key' was told within the last 'window' ticks. */
-    public static int count(Player player, String key, int window) {
+    public static int count(LivingEntity player, String key, int window) {
         long since = player.level().getGameTime() - window;
         int told = 0;
         for (long time : times(player, key)) if (time > since) told++;
@@ -47,25 +47,25 @@ public final class Tellings {
     }
 
     /** 1 minus 'step' for every telling within the last 'window' ticks, never under 'floor'. */
-    public static float strength(Player player, String key, int window, float step, float floor) {
+    public static float strength(LivingEntity player, String key, int window, float step, float floor) {
         return Math.max(floor, 1f - step * count(player, key, window));
     }
 
     /** Ticks since 'key' was last told (Integer.MAX_VALUE: never). */
-    public static int sinceLast(Player player, String key) {
+    public static int sinceLast(LivingEntity player, String key) {
         List<Long> times = times(player, key);
         if (times.isEmpty()) return Integer.MAX_VALUE;
         long since = player.level().getGameTime() - times.get(times.size() - 1);
         return since < 0 || since > Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) since;
     }
 
-    public static void forget(Player player, String key) {
+    public static void forget(LivingEntity player, String key) {
         CompoundTag all = player.getPersistentData().getCompoundOrEmpty(TAG);
         all.remove(key);
         player.getPersistentData().put(TAG, all);
     }
 
-    private static List<Long> times(Player player, String key) {
+    private static List<Long> times(LivingEntity player, String key) {
         String saved = player.getPersistentData().getCompoundOrEmpty(TAG).getStringOr(key, "");
         List<Long> times = new ArrayList<>();
         if (saved.isEmpty()) return times;
@@ -81,7 +81,7 @@ public final class Tellings {
         return times;
     }
 
-    private static void save(Player player, String key, List<Long> times) {
+    private static void save(LivingEntity player, String key, List<Long> times) {
         CompoundTag all = player.getPersistentData().getCompoundOrEmpty(TAG);
         StringBuilder text = new StringBuilder();
         for (long time : times) {
