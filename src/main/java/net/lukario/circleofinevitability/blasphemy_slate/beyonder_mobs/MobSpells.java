@@ -229,6 +229,19 @@ public final class MobSpells {
         };
     }
 
+    /**
+     * The same for a player ability that pays for itself inside (Spells.paySpirituality) and returns nothing: it went
+     * off if it paid, and it refused (nothing spent) if it did not. Its MobAbility.cost() must be what it pays.
+     */
+    public static MobAbility.Cast paidCore(Core core) {
+        return (caster, target, sl) -> {
+            if (target != null) face(caster, target);
+            float before = MobSpirituality.prepaidLeft(caster);
+            core.run(caster, sl);
+            return MobSpirituality.prepaidLeft(caster) < before;
+        };
+    }
+
     /** False once it died or went elsewhere: a delayed part of its ability (Later.run) stops then. */
     public static boolean casterStillHere(LivingEntity caster, ServerLevel sl) {
         return caster.isAlive() && !caster.isRemoved() && caster.level() == sl;

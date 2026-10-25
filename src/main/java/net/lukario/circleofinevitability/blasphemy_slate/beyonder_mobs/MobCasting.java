@@ -137,12 +137,15 @@ public final class MobCasting {
         if (whyNot(mob, ability) != Refusal.NONE || !inReach(mob, ability, target)) return false;
         if (ability.when() != null && !ability.when().test(mob, target, sl)) return false;
         boolean wentOff;
+        MobSpirituality.prepaid(mob, ability.cost());                      // the player code it runs may pay for itself
         try {
             wentOff = ability.cast().run(mob, target, sl);
         } catch (RuntimeException e) {
             CircleOfInevitability.LOGGER.error("A mob ability failed: {} cast by {}", ability, mob, e);
             startCooldown(mob, sl, ability.id(), ability.cooldown());
             return false;
+        } finally {
+            MobSpirituality.endPrepaid(mob);
         }
         if (!wentOff) return false;                                         // refused: nothing spent
         MobSpirituality.spend(mob, ability.cost());
@@ -163,11 +166,14 @@ public final class MobCasting {
         if (BeyonderMobs.sequence(mob) > ability.sequence()) return Refusal.SEQUENCE_TOO_WEAK;
         if (ability.range() > 0 && (target == null || target.level() != sl)) return null;     // it needs something to aim at
         boolean wentOff;
+        MobSpirituality.prepaid(mob, Float.MAX_VALUE);                     // a test cast spends nothing
         try {
             wentOff = ability.cast().run(mob, target, sl);
         } catch (RuntimeException e) {
             CircleOfInevitability.LOGGER.error("A mob ability failed: {} cast by {}", ability, mob, e);
             return null;
+        } finally {
+            MobSpirituality.endPrepaid(mob);
         }
         if (!wentOff) return null;
         if (ability.ability() != null) Casts.mobCast(mob, sl, Casts.madeUpFor(mob, sl, ability.ability(), ability.sneak()));

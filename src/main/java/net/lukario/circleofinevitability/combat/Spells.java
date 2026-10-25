@@ -1011,12 +1011,12 @@ public final class Spells {
     }
 
     /**
-     * The same for any caster: a player as above; a Beyonder mob from its own bar (blasphemy_slate/beyonder_mobs), for
-     * what an ability keeps costing while it lasts (an upkeep). False when it cannot pay.
+     * The same for any caster: a player as above; a Beyonder mob out of what its running cast covers (MobCasting pays
+     * the ability's cost), the rest from its own bar (an upkeep later, a dearer form). False when it cannot pay.
      */
     public static boolean paySpirituality(LivingEntity caster, float cost) {
         if (caster instanceof Player player) return paySpirituality(player, cost);
-        return MobSpirituality.spend(caster, cost);
+        return MobSpirituality.pay(caster, cost);                              // what its cast covers first
     }
 
     /** Spirituality given back (never past the top): a player's, a Beyonder mob's own bar. */

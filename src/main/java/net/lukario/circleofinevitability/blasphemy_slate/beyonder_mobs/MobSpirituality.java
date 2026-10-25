@@ -79,6 +79,47 @@ public final class MobSpirituality {
         return true;
     }
 
+    // ---------- what a cast has paid for already
+
+    /** mob -> what its running cast still covers (MobCasting pays an ability's cost() itself). Not saved. */
+    private static final java.util.Map<java.util.UUID, Float> PREPAID = new java.util.HashMap<>();
+
+    /**
+     * While its ability runs (MobCasting): the player code it runs may pay for itself (Spells.paySpirituality, which
+     * comes here for a mob); up to 'amount' of that is the ability's cost(), which MobCasting takes, so it is free.
+     */
+    public static void prepaid(LivingEntity mob, float amount) {
+        PREPAID.put(mob.getUUID(), Math.max(0f, amount));
+    }
+
+    /** What its running cast still covers (0 when none runs). */
+    public static float prepaidLeft(LivingEntity mob) {
+        Float covered = PREPAID.get(mob.getUUID());
+        return covered == null ? 0f : covered;
+    }
+
+    /** The cast ended: what it covered is gone. */
+    public static void endPrepaid(LivingEntity mob) {
+        PREPAID.remove(mob.getUUID());
+    }
+
+    /**
+     * What the player code of an ability pays (Spells.paySpirituality for a mob): first out of what its running cast
+     * covers, the rest from its bar (an upkeep, a dearer form). False, and nothing taken, when it cannot.
+     */
+    public static boolean pay(LivingEntity mob, float cost) {
+        if (cost <= 0f) return true;
+        Float covered = PREPAID.get(mob.getUUID());
+        float free = covered == null ? 0f : covered;
+        if (cost <= free) {
+            PREPAID.put(mob.getUUID(), free - cost);
+            return true;
+        }
+        if (!spend(mob, cost - free)) return false;
+        if (covered != null) PREPAID.put(mob.getUUID(), 0f);
+        return true;
+    }
+
     public static void add(LivingEntity mob, float amount) {
         if (amount > 0f) set(mob, get(mob) + amount);
     }
