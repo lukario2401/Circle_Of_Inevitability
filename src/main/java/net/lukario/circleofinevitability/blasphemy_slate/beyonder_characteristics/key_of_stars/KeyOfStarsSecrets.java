@@ -56,63 +56,63 @@ public final class KeyOfStarsSecrets {
     static final int SECRETS_SEQUENCE = 4;                      // the key
 
     // Space Concealment
-    private static final int CONCEAL_COST = 6000;
-    private static final int CONCEAL_COOLDOWN = 500;
-    private static final double CONCEAL_RANGE = 24.0;
-    private static final double CONCEAL_RADIUS = 6.0;
-    private static final int CONCEAL_TICKS = 200;
-    private static final int CAGE_SEQUENCE = 3;                 // Wanderer: Spatial Cage, at once, the Door where you look
-    private static final int HOSTEL_SEQUENCE = 2;               // Planeswalker: this big, this long
-    private static final double HOSTEL_RADIUS = 10.0;
-    private static final int HOSTEL_TICKS = 400;
-    private static final double DOOR_WIDTH = 1.8;               // an enemy this close to the open Door may pass it
-    private static final float CONCEAL_HEAL = 1.0f;             // allies inside heal this much a second
+    static final int CONCEAL_COST = 6000;
+    static final int CONCEAL_COOLDOWN = 500;
+    static final double CONCEAL_RANGE = 24.0;
+    static final double CONCEAL_RADIUS = 6.0;
+    static final int CONCEAL_TICKS = 200;
+    static final int CAGE_SEQUENCE = 3;                 // Wanderer: Spatial Cage, at once, the Door where you look
+    static final int HOSTEL_SEQUENCE = 2;               // Planeswalker: this big, this long
+    static final double HOSTEL_RADIUS = 10.0;
+    static final int HOSTEL_TICKS = 400;
+    static final double DOOR_WIDTH = 1.8;               // an enemy this close to the open Door may pass it
+    static final float CONCEAL_HEAL = 1.0f;             // allies inside heal this much a second
 
     // Transfiguration
-    private static final int TRANSFIG_COST = 6000;
-    private static final int TRANSFIG_COOLDOWN = 800;
-    private static final int TRANSFIG_TICKS = 200;
-    private static final int LAYERS = 5;
-    private static final int MORE_LAYERS_SEQUENCE = 1;          // Key of Stars: this many
-    private static final int MORE_LAYERS = 8;
-    private static final double LAYER_STEP = 3.0;               // a torn layer puts you this far aside
+    static final int TRANSFIG_COST = 6000;
+    static final int TRANSFIG_COOLDOWN = 800;
+    static final int TRANSFIG_TICKS = 200;
+    static final int LAYERS = 5;
+    static final int MORE_LAYERS_SEQUENCE = 1;          // Key of Stars: this many
+    static final int MORE_LAYERS = 8;
+    static final double LAYER_STEP = 3.0;               // a torn layer puts you this far aside
 
     // Exile
-    private static final int EXILE_COST = 7000;
-    private static final int EXILE_COOLDOWN = 600;
-    private static final double EXILE_RANGE = 24.0;
-    private static final int EXILE_TICKS = 160;
-    private static final int EXILE_LONGER_SEQUENCE = 3;         // Wanderer: this long
-    private static final int EXILE_LONGER = 240;
-    private static final int EXILE_LONGEST_SEQUENCE = 1;        // Key of Stars: this long, and this many at once
-    private static final int EXILE_LONGEST = 400;
-    private static final int EXILE_MANY = 3;
-    private static final int EXILE_BOSS = 60;
-    private static final float EXILE_DAMAGE = 40f;
+    static final int EXILE_COST = 7000;
+    static final int EXILE_COOLDOWN = 600;
+    static final double EXILE_RANGE = 24.0;
+    static final int EXILE_TICKS = 160;
+    static final int EXILE_LONGER_SEQUENCE = 3;         // Wanderer: this long
+    static final int EXILE_LONGER = 240;
+    static final int EXILE_LONGEST_SEQUENCE = 1;        // Key of Stars: this long, and this many at once
+    static final int EXILE_LONGEST = 400;
+    static final int EXILE_MANY = 3;
+    static final int EXILE_BOSS = 60;
+    static final float EXILE_DAMAGE = 40f;
 
     // Pocket Space
-    private static final int POCKET_COST = 250;
-    private static final int POCKET_COOLDOWN = 60;
-    private static final int POCKET_OPENS = 8;                  // the menu opens when the Door has opened
+    static final int POCKET_COST = 250;
+    static final int POCKET_COOLDOWN = 60;
+    static final int POCKET_OPENS = 8;                  // the menu opens when the Door has opened
 
     // Space Tearing
     static final int TEARING_SEQUENCE = 3;
-    private static final int TEARING_COST = 12000;
-    private static final int TEARING_COOLDOWN = 300;
-    private static final double TEARING_RANGE = 8.0;
-    private static final double TEARING_RADIUS = 3.0;
-    private static final int TEARING_WIDE_SEQUENCE = 2;         // Planeswalker: this far, this wide, and round you too
-    private static final double TEARING_WIDE_RANGE = 12.0;
-    private static final double TEARING_WIDE_RADIUS = 5.0;
-    private static final float TEARING_DAMAGE = 80f;
-    private static final int STORM_SECONDS = 4;
-    private static final float STORM_DAMAGE = 12f;              // each second
+    static final int TEARING_COST = 12000;
+    static final int TEARING_COOLDOWN = 300;
+    static final double TEARING_RANGE = 8.0;
+    static final double TEARING_RADIUS = 3.0;
+    static final int TEARING_WIDE_SEQUENCE = 2;         // Planeswalker: this far, this wide, and round you too
+    static final double TEARING_WIDE_RANGE = 12.0;
+    static final double TEARING_WIDE_RADIUS = 5.0;
+    static final float TEARING_DAMAGE = 80f;
+    static final int STORM_SECONDS = 4;
+    static final float STORM_DAMAGE = 12f;              // each second
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String CONCEAL_DOME = "key_of_stars_concealment";        // combat/Dome
-    private static final String TRANSFIG_UNTIL = "key_of_stars_transfiguration_until";
+    static final String CONCEAL_DOME = "key_of_stars_concealment";        // combat/Dome
+    static final String TRANSFIG_UNTIL = "key_of_stars_transfiguration_until";
 
     /** A Space Concealment standing: where, how big, where its Door is and whether it is still open. */
     private static final class Concealed {

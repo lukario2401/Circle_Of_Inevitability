@@ -66,81 +66,81 @@ public final class KeyOfStarsStarlight {
     static final int DOOR_SEQUENCE = 0;
 
     // Toy Box
-    private static final int TOY_COST = 18000;
-    private static final int TOY_COOLDOWN = 600;
-    private static final double TOY_RANGE = 28.0;
-    private static final double TOY_RADIUS = 8.0;
-    private static final int TOY_TICKS = 160;
-    private static final float TOY_MAX_HEALTH = 150f;           // bigger than this (and players) are only slowed
-    private static final int TOY_SLOWED = 60;
+    static final int TOY_COST = 18000;
+    static final int TOY_COOLDOWN = 600;
+    static final double TOY_RANGE = 28.0;
+    static final double TOY_RADIUS = 8.0;
+    static final int TOY_TICKS = 160;
+    static final float TOY_MAX_HEALTH = 150f;           // bigger than this (and players) are only slowed
+    static final int TOY_SLOWED = 60;
 
     // Replication
-    private static final int REPLICATION_COST = 15000;
-    private static final int REPLICATION_COOLDOWN = 200;
-    private static final double REPLICATION_RANGE = 32.0;
-    private static final int REPLICATION_AGE = 100;             // cast no longer ago than this
-    private static final float REPLICATION_STRENGTH = 0.8f;
+    static final int REPLICATION_COST = 15000;
+    static final int REPLICATION_COOLDOWN = 200;
+    static final double REPLICATION_RANGE = 32.0;
+    static final int REPLICATION_AGE = 100;             // cast no longer ago than this
+    static final float REPLICATION_STRENGTH = 0.8f;
 
     // Space Fragmentation
-    private static final int FRAGMENTATION_COST = 30000;
-    private static final int FRAGMENTATION_COOLDOWN = 900;
-    private static final double FRAGMENTATION_RANGE = 32.0;
-    private static final double FRAGMENTATION_RADIUS = 12.0;
-    private static final int FRAGMENTATION_TICKS = 120;
-    private static final float FRAGMENTATION_DPS = 25f;         // each second, to every enemy inside
-    private static final float FRAGMENTATION_COLLAPSE = 120f;   // the shatter at the end
-    private static final double FRAGMENTATION_PULL = 0.35;      // blocks a tick at most
-    private static final double FRAGMENTATION_BEND = 0.25;      // shots are pushed away this much a beat
-    private static final double ANNIHILATION_RADIUS = 40.0;     // Door: the planet-annihilation
-    private static final float ANNIHILATION_DPS = 60f;
-    private static final float ANNIHILATION_COLLAPSE = 400f;
+    static final int FRAGMENTATION_COST = 30000;
+    static final int FRAGMENTATION_COOLDOWN = 900;
+    static final double FRAGMENTATION_RANGE = 32.0;
+    static final double FRAGMENTATION_RADIUS = 12.0;
+    static final int FRAGMENTATION_TICKS = 120;
+    static final float FRAGMENTATION_DPS = 25f;         // each second, to every enemy inside
+    static final float FRAGMENTATION_COLLAPSE = 120f;   // the shatter at the end
+    static final double FRAGMENTATION_PULL = 0.35;      // blocks a tick at most
+    static final double FRAGMENTATION_BEND = 0.25;      // shots are pushed away this much a beat
+    static final double ANNIHILATION_RADIUS = 40.0;     // Door: the planet-annihilation
+    static final float ANNIHILATION_DPS = 60f;
+    static final float ANNIHILATION_COLLAPSE = 400f;
 
     // Starlight Seal
-    private static final int SEAL_COST = 25000;
-    private static final int SEAL_COOLDOWN = 600;
-    private static final double SEAL_RANGE = 24.0;
-    private static final int SEAL_TICKS = 160;
-    private static final int SEAL_BOSS = 80;
-    private static final int SEAL_ALLY = 240;
+    static final int SEAL_COST = 25000;
+    static final int SEAL_COOLDOWN = 600;
+    static final double SEAL_RANGE = 24.0;
+    static final int SEAL_TICKS = 160;
+    static final int SEAL_BOSS = 80;
+    static final int SEAL_ALLY = 240;
 
     // Space-Time Labyrinth
-    private static final int LABYRINTH_COST = 30000;
-    private static final int LABYRINTH_COOLDOWN = 1200;
-    private static final double LABYRINTH_RANGE = 32.0;
-    private static final double LABYRINTH_RADIUS = 14.0;
-    private static final int LABYRINTH_TICKS = 300;
+    static final int LABYRINTH_COST = 30000;
+    static final int LABYRINTH_COOLDOWN = 1200;
+    static final double LABYRINTH_RANGE = 32.0;
+    static final double LABYRINTH_RADIUS = 14.0;
+    static final int LABYRINTH_TICKS = 300;
 
     // Alternate World
-    private static final int WORLD_COST = 60000;
-    private static final int WORLD_COOLDOWN = 2400;
-    private static final double WORLD_RADIUS = 40.0;
-    private static final int WORLD_TICKS = 1200;
-    private static final float WORLD_HOLDS_LONGER = 2f;         // roots and Seals on enemies inside
+    static final int WORLD_COST = 60000;
+    static final int WORLD_COOLDOWN = 2400;
+    static final double WORLD_RADIUS = 40.0;
+    static final int WORLD_TICKS = 1200;
+    static final float WORLD_HOLDS_LONGER = 2f;         // roots and Seals on enemies inside
 
     // Omnipresence
-    private static final int OMNI_COST = 45000;
-    private static final int OMNI_COOLDOWN = 1800;
-    private static final int OMNI_TICKS = 200;
-    private static final int AFTERIMAGES = 6;
-    private static final float OMNI_STRENGTH = 0.6f;
+    static final int OMNI_COST = 45000;
+    static final int OMNI_COOLDOWN = 1800;
+    static final int OMNI_TICKS = 200;
+    static final int AFTERIMAGES = 6;
+    static final float OMNI_STRENGTH = 0.6f;
 
     // Close the Door
-    private static final int CLOSE_COST = 40000;
-    private static final int CLOSE_COOLDOWN = 1800;
-    private static final double CLOSE_RADIUS = 48.0;
-    private static final int CLOSE_TICKS = 300;
-    private static final float CLOSE_LONGER = 2f;               // Seals, roots and Starlit marks on enemies
+    static final int CLOSE_COST = 40000;
+    static final int CLOSE_COOLDOWN = 1800;
+    static final double CLOSE_RADIUS = 48.0;
+    static final int CLOSE_TICKS = 300;
+    static final float CLOSE_LONGER = 2f;               // Seals, roots and Starlit marks on enemies
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String TOY_ZONE = "key_of_stars_toy_box";              // combat/Zone
-    private static final String FRAGMENTATION_ZONE = "key_of_stars_fragmentation";
-    private static final String CLOSE_ZONE = "key_of_stars_close_the_door";
+    static final String TOY_ZONE = "key_of_stars_toy_box";              // combat/Zone
+    static final String FRAGMENTATION_ZONE = "key_of_stars_fragmentation";
+    static final String CLOSE_ZONE = "key_of_stars_close_the_door";
     static final String LABYRINTH = "key_of_stars_labyrinth";                    // combat/Enclosure
     static final String WORLD = "key_of_stars_alternate_world";
-    private static final String OMNI_UNTIL = "key_of_stars_omnipresence_until";
-    private static final String OMNI_LEFT = "key_of_stars_omnipresence_left";    // which afterimages still stand (bits)
+    static final String OMNI_UNTIL = "key_of_stars_omnipresence_until";
+    static final String OMNI_LEFT = "key_of_stars_omnipresence_left";    // which afterimages still stand (bits)
 
     /** The toys of each caster's Toy Box, released when it closes. */
     private static final Map<UUID, List<LivingEntity>> TOYS = new HashMap<>();

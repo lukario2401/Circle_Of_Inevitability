@@ -49,73 +49,73 @@ public final class KeyOfStarsTricks {
     static final int TRICKS_SEQUENCE = 8;                       // the key and every trick
 
     // Flash
-    private static final int FLASH_COST = 300;
-    private static final int FLASH_COOLDOWN = 160;
-    private static final double FLASH_RANGE = 14.0;
-    private static final double FLASH_ANGLE = 35.0;             // half the cone, degrees
-    private static final int FLASH_BLIND = 60;
-    private static final int FLASH_FORGET = 20;                 // mobs lose their target this long
+    static final int FLASH_COST = 300;
+    static final int FLASH_COOLDOWN = 160;
+    static final double FLASH_RANGE = 14.0;
+    static final double FLASH_ANGLE = 35.0;             // half the cone, degrees
+    static final int FLASH_BLIND = 60;
+    static final int FLASH_FORGET = 20;                 // mobs lose their target this long
 
     // Black Screen
-    private static final int SCREEN_COST = 400;
-    private static final int SCREEN_COOLDOWN = 240;
-    private static final double SCREEN_AHEAD = 4.0;
-    private static final double SCREEN_HALF_WIDTH = 3.0;        // 6 wide...
-    private static final double SCREEN_HEIGHT = 3.0;            // ...3 tall
-    private static final int SCREEN_TICKS = 160;
-    private static final int SCREEN_CHECK = 10;                 // how often mobs behind it are looked at
-    private static final double SCREEN_HUNTERS = 32.0;
+    static final int SCREEN_COST = 400;
+    static final int SCREEN_COOLDOWN = 240;
+    static final double SCREEN_AHEAD = 4.0;
+    static final double SCREEN_HALF_WIDTH = 3.0;        // 6 wide...
+    static final double SCREEN_HEIGHT = 3.0;            // ...3 tall
+    static final int SCREEN_TICKS = 160;
+    static final int SCREEN_CHECK = 10;                 // how often mobs behind it are looked at
+    static final double SCREEN_HUNTERS = 32.0;
 
     // Loud Noise
-    private static final int NOISE_COST = 300;
-    private static final int NOISE_COOLDOWN = 200;
-    private static final double NOISE_RANGE = 24.0;
-    private static final double NOISE_RADIUS = 8.0;
-    private static final int NOISE_SLOW = 40;
-    private static final int NOISE_FORGET = 60;
+    static final int NOISE_COST = 300;
+    static final int NOISE_COOLDOWN = 200;
+    static final double NOISE_RANGE = 24.0;
+    static final double NOISE_RADIUS = 8.0;
+    static final int NOISE_SLOW = 40;
+    static final int NOISE_FORGET = 60;
 
     // Frost Ray
-    private static final int FROST_COST = 600;
-    private static final int FROST_COOLDOWN = 60;
-    private static final double FROST_RANGE = 10.0;
-    private static final double FROST_SPEED = 3.0;              // blocks a tick, an arrow's
-    private static final float FROST_DAMAGE = 14f;
-    private static final int FROST_SLOW = 60;                   // Slowness III this long
-    private static final int FROST_FROZEN = 160;                // freezing ticks it is left with
+    static final int FROST_COST = 600;
+    static final int FROST_COOLDOWN = 60;
+    static final double FROST_RANGE = 10.0;
+    static final double FROST_SPEED = 3.0;              // blocks a tick, an arrow's
+    static final float FROST_DAMAGE = 14f;
+    static final int FROST_SLOW = 60;                   // Slowness III this long
+    static final int FROST_FROZEN = 160;                // freezing ticks it is left with
 
     // Gale
-    private static final int GALE_COST = 500;
-    private static final int GALE_COOLDOWN = 160;
-    private static final double GALE_RANGE = 12.0;
-    private static final double GALE_ANGLE = 40.0;
-    private static final double GALE_PUSH = 1.2;                // about 6 blocks
-    private static final double GALE_LIFT = 0.35;
-    private static final double GALE_SHOTS = 1.2;               // how hard arrows and thrown things are blown aside
+    static final int GALE_COST = 500;
+    static final int GALE_COOLDOWN = 160;
+    static final double GALE_RANGE = 12.0;
+    static final double GALE_ANGLE = 40.0;
+    static final double GALE_PUSH = 1.2;                // about 6 blocks
+    static final double GALE_LIFT = 0.35;
+    static final double GALE_SHOTS = 1.2;               // how hard arrows and thrown things are blown aside
 
     // Tumble
-    private static final int TUMBLE_COST = 700;
-    private static final int TUMBLE_COOLDOWN = 280;
-    private static final double TUMBLE_RANGE = 16.0;
-    private static final double TUMBLE_RADIUS = 5.0;
-    private static final int TUMBLE_TICKS = 120;
-    private static final int TUMBLE_STAGGER_EVERY = 40;
-    private static final int TUMBLE_STAGGER = 20;
-    private static final double TUMBLE_SHOVE = 0.35;
+    static final int TUMBLE_COST = 700;
+    static final int TUMBLE_COOLDOWN = 280;
+    static final double TUMBLE_RANGE = 16.0;
+    static final double TUMBLE_RADIUS = 5.0;
+    static final int TUMBLE_TICKS = 120;
+    static final int TUMBLE_STAGGER_EVERY = 40;
+    static final int TUMBLE_STAGGER = 20;
+    static final double TUMBLE_SHOVE = 0.35;
 
     // Escape Trick
-    private static final int ESCAPE_COST = 500;
-    private static final int ESCAPE_COOLDOWN = 120;
-    private static final int DIVERSION_TICKS = 60;              // another trick this recently is the diversion...
-    private static final double ESCAPE_FAR = 10.0;              // ...and the shift goes this far
-    private static final int ESCAPE_FARTHER_SEQUENCE = 4;       // Secrets Sorcerer: this far
-    private static final double ESCAPE_FARTHER = 14.0;
-    private static final double ESCAPE_HOP = 4.0;               // with no diversion
+    static final int ESCAPE_COST = 500;
+    static final int ESCAPE_COOLDOWN = 120;
+    static final int DIVERSION_TICKS = 60;              // another trick this recently is the diversion...
+    static final double ESCAPE_FAR = 10.0;              // ...and the shift goes this far
+    static final int ESCAPE_FARTHER_SEQUENCE = 4;       // Secrets Sorcerer: this far
+    static final double ESCAPE_FARTHER = 14.0;
+    static final double ESCAPE_HOP = 4.0;               // with no diversion
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String LAST_TRICK = "key_of_stars_last_trick";            // game time of the last trick (not Escape)
-    private static final String TUMBLE = "key_of_stars_tumble";                    // combat/Zone
+    static final String LAST_TRICK = "key_of_stars_last_trick";            // game time of the last trick (not Escape)
+    static final String TUMBLE = "key_of_stars_tumble";                    // combat/Zone
 
     // =========================
     // The key

@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SequenceComman
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonMobs;
+import net.lukario.circleofinevitability.combat.Casts;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.ArrayList;
@@ -86,6 +87,27 @@ public final class MobAbilities {
     public static MobAbility byId(String id) {
         for (MobAbility ability : ALL) {
             if (ability.id().equals(id)) return ability;
+        }
+        return null;
+    }
+
+    /**
+     * The mob version of what was cast (combat/Casts), for the abilities that copy a power seen (Key Of Stars'
+     * Replication, Record): a wheel pick by its entry, a key by its key and form; a key whose mob versions are wheel
+     * entries (a mob's own cast of one) gives one of them. Null when that power has no mob version.
+     */
+    public static MobAbility forCast(Casts.Cast cast) {
+        if (cast == null || cast.pathway() == null) return null;
+        if (cast.entry() != null) {
+            for (MobAbility ability : ALL) {
+                if (ability.pathway().equals(cast.pathway()) && ability.entry().equals(cast.entry().key())) return ability;
+            }
+            return null;
+        }
+        MobAbility exact = byId(cast.pathway() + "/" + cast.key() + (cast.sneak() ? "/sneak" : ""));
+        if (exact != null) return exact;
+        for (MobAbility ability : ALL) {
+            if (ability.pathway().equals(cast.pathway()) && ability.key() == cast.key() && !ability.entry().isEmpty()) return ability;
         }
         return null;
     }

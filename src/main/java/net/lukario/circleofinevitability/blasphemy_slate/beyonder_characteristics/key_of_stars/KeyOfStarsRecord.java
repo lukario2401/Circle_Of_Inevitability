@@ -47,39 +47,39 @@ public final class KeyOfStarsRecord {
     // =========================
 
     static final int RECORD_SEQUENCE = 6;
-    private static final int RECORD_COST = 2450;
-    private static final int RECORD_COOLDOWN = 300;
-    private static final int RECORD_TICKS = 160;                // how long you watch
-    private static final double RECORD_RANGE = 32.0;            // a cast this close, in your sight
-    private static final int SLOTS = 3;
-    private static final int MORE_SLOTS_SEQUENCE = 5;           // Traveler: 4 slots
-    private static final int MORE_SLOTS = 4;
-    private static final int MOST_SLOTS_SEQUENCE = 4;           // Secrets Sorcerer: 5 slots, and Angel-level powers
-    private static final int MOST_SLOTS = 5;
-    private static final int ANGEL_LEVEL = 2;                   // an ability of this Sequence or stronger is Angel-level
-    private static final float ANGEL_CHANCE = 0.15f;            // what a Secrets Sorcerer or Wanderer gets at one
-    private static final int SURE_SEQUENCE = 2;                 // Planeswalker: no roll at your Sequence or weaker
+    static final int RECORD_COST = 2450;
+    static final int RECORD_COOLDOWN = 300;
+    static final int RECORD_TICKS = 160;                // how long you watch
+    static final double RECORD_RANGE = 32.0;            // a cast this close, in your sight
+    static final int SLOTS = 3;
+    static final int MORE_SLOTS_SEQUENCE = 5;           // Traveler: 4 slots
+    static final int MORE_SLOTS = 4;
+    static final int MOST_SLOTS_SEQUENCE = 4;           // Secrets Sorcerer: 5 slots, and Angel-level powers
+    static final int MOST_SLOTS = 5;
+    static final int ANGEL_LEVEL = 2;                   // an ability of this Sequence or stronger is Angel-level
+    static final float ANGEL_CHANCE = 0.15f;            // what a Secrets Sorcerer or Wanderer gets at one
+    static final int SURE_SEQUENCE = 2;                 // Planeswalker: no roll at your Sequence or weaker
     // the roll and the strength (docs: "Chances and strength of a record"); gap = its Sequence minus yours
-    private static final float CHANCE = 0.95f;                  // gap 0 or more
-    private static final float CHANCE_PER_STEP = 0.30f;         // less for every Sequence stronger than you
-    private static final int NEVER_GAP = -4;                    // this much stronger: never
-    private static final float STRENGTH = 0.5f;                 // replayed at STRENGTH + STRENGTH_PER_GAP * gap...
-    private static final float STRENGTH_PER_GAP = 0.1f;
-    private static final float STRENGTH_MIN = 0.3f;             // ...never less, never more than 1
+    static final float CHANCE = 0.95f;                  // gap 0 or more
+    static final float CHANCE_PER_STEP = 0.30f;         // less for every Sequence stronger than you
+    static final int NEVER_GAP = -4;                    // this much stronger: never
+    static final float STRENGTH = 0.5f;                 // replayed at STRENGTH + STRENGTH_PER_GAP * gap...
+    static final float STRENGTH_PER_GAP = 0.1f;
+    static final float STRENGTH_MIN = 0.3f;             // ...never less, never more than 1
     // sneak: Replay
-    private static final int REPLAY_COOLDOWN = 20;
+    static final int REPLAY_COOLDOWN = 20;
     // Quick Study (passive)
-    private static final int QUICK_STUDY_REST = 20;             // one glint at most this often
-    private static final int QUICK_STUDY_SHOWN = 40;
+    static final int QUICK_STUDY_REST = 20;             // one glint at most this often
+    static final int QUICK_STUDY_SHOWN = 40;
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String WATCH_UNTIL = "key_of_stars_record_until";
-    private static final String STUDY_READY = "key_of_stars_quick_study_ready";
-    private static final String RECORD_KEY = "key_of_stars_record";               // combat/Cooldowns
-    private static final String REPLAY_KEY = "key_of_stars_replay";
-    private static final String STUDY_CLOCK = "ks_quick_study";
+    static final String WATCH_UNTIL = "key_of_stars_record_until";
+    static final String STUDY_READY = "key_of_stars_quick_study_ready";
+    static final String RECORD_KEY = "key_of_stars_record";               // combat/Cooldowns
+    static final String REPLAY_KEY = "key_of_stars_replay";
+    static final String STUDY_CLOCK = "ks_quick_study";
 
     /** One Recorded Power: what was cast, how strongly it comes back, and whether it was an Angel's. */
     public record Recorded(Casts.Cast cast, float strength, boolean angel) {}

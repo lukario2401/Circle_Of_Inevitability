@@ -62,76 +62,76 @@ public final class KeyOfStarsTravel {
     static final int TRAVEL_SEQUENCE = 5;                       // the key
 
     // Traveler's Door
-    private static final int DOOR_COST = 3000;
-    private static final int DOOR_COOLDOWN = 200;
-    private static final double DOOR_RANGE = 48.0;
-    private static final int DOOR_FAR_SEQUENCE = 4;             // Secrets Sorcerer: this far
-    private static final double DOOR_FAR = 96.0;
-    private static final int DOOR_FARTHER_SEQUENCE = 3;         // Wanderer: this far
-    private static final double DOOR_FARTHER = 192.0;
-    private static final int DOOR_SIGHT_SEQUENCE = 2;           // Planeswalker: no waiting inside, any place you can see
-    private static final double DOOR_SIGHT = 256.0;
-    private static final double DOOR_WAIT_PER_BLOCK = 0.5;      // ticks inside for every block of the way
-    private static final double DOOR_COMPANY = 2.0;             // allies this close come along
-    private static final double ANCHOR_AIM = 6.0;               // aimed this close (degrees) at an Anchor: you go there
-    private static final int DOOR_WORLDS_SEQUENCE = 3;          // Wanderer: Anchors in other dimensions...
-    private static final float DOOR_WORLDS_PITCH = -75f;        // ...by looking at least this far up
-    private static final int DOOR_WORLDS_WAIT = 30;             // the wait inside, whatever the way
+    static final int DOOR_COST = 3000;
+    static final int DOOR_COOLDOWN = 200;
+    static final double DOOR_RANGE = 48.0;
+    static final int DOOR_FAR_SEQUENCE = 4;             // Secrets Sorcerer: this far
+    static final double DOOR_FAR = 96.0;
+    static final int DOOR_FARTHER_SEQUENCE = 3;         // Wanderer: this far
+    static final double DOOR_FARTHER = 192.0;
+    static final int DOOR_SIGHT_SEQUENCE = 2;           // Planeswalker: no waiting inside, any place you can see
+    static final double DOOR_SIGHT = 256.0;
+    static final double DOOR_WAIT_PER_BLOCK = 0.5;      // ticks inside for every block of the way
+    static final double DOOR_COMPANY = 2.0;             // allies this close come along
+    static final double ANCHOR_AIM = 6.0;               // aimed this close (degrees) at an Anchor: you go there
+    static final int DOOR_WORLDS_SEQUENCE = 3;          // Wanderer: Anchors in other dimensions...
+    static final float DOOR_WORLDS_PITCH = -75f;        // ...by looking at least this far up
+    static final int DOOR_WORLDS_WAIT = 30;             // the wait inside, whatever the way
 
     // Blink
-    private static final int BLINK_COST = 500;
-    private static final int BLINK_COOLDOWN = 80;               // starts with the first hop: the 2 s of the chain and 2 s more
-    private static final double BLINK_RANGE = 8.0;
-    private static final int BLINK_CHAIN = 3;                   // hops in a row...
-    private static final int BLINK_WINDOW = 40;                 // ...within this (each hop after the first is paid on its own)
-    private static final int BLINK_DODGE = 6;                   // the next hit within this misses
-    private static final int QUICK_SEQUENCE = 4;                // Secrets Sorcerer: after a Blink, for QUICK_TICKS, wheel
-    private static final int QUICK_TICKS = 60;                  // powers cost QUICK_COST and cool down in QUICK_COOLDOWN of
+    static final int BLINK_COST = 500;
+    static final int BLINK_COOLDOWN = 80;               // starts with the first hop: the 2 s of the chain and 2 s more
+    static final double BLINK_RANGE = 8.0;
+    static final int BLINK_CHAIN = 3;                   // hops in a row...
+    static final int BLINK_WINDOW = 40;                 // ...within this (each hop after the first is paid on its own)
+    static final int BLINK_DODGE = 6;                   // the next hit within this misses
+    static final int QUICK_SEQUENCE = 4;                // Secrets Sorcerer: after a Blink, for QUICK_TICKS, wheel
+    static final int QUICK_TICKS = 60;                  // powers cost QUICK_COST and cool down in QUICK_COOLDOWN of
     static final float QUICK_COST = 0.7f;                       // the time; a Blink also tears you out of mind control
     static final float QUICK_COOLDOWN = 0.5f;
-    private static final int ECHO_SEQUENCE = 2;                 // Planeswalker: the afterimage each Blink leaves stays...
-    private static final int ECHO_TICKS = 80;                   // ...this long and repeats every power you cast...
-    private static final int ECHO_MAX = 3;                      // ...at most this many at once...
-    private static final float ECHO_STRENGTH = 0.4f;            // ...its hits at this strength (combat/Echo)
+    static final int ECHO_SEQUENCE = 2;                 // Planeswalker: the afterimage each Blink leaves stays...
+    static final int ECHO_TICKS = 80;                   // ...this long and repeats every power you cast...
+    static final int ECHO_MAX = 3;                      // ...at most this many at once...
+    static final float ECHO_STRENGTH = 0.4f;            // ...its hits at this strength (combat/Echo)
 
     // Invisible Hand
-    private static final int HAND_COST = 1500;
-    private static final int HAND_COOLDOWN = 120;
-    private static final double HAND_RANGE = 24.0;
-    private static final double HAND_LOOSE = 2.0;               // loose things this close to where you aim fly to you
-    private static final int HAND_STAGGER = 20;
+    static final int HAND_COST = 1500;
+    static final int HAND_COOLDOWN = 120;
+    static final double HAND_RANGE = 24.0;
+    static final double HAND_LOOSE = 2.0;               // loose things this close to where you aim fly to you
+    static final int HAND_STAGGER = 20;
 
     // Star Anchor
-    private static final int ANCHOR_COST = 1000;
-    private static final int ANCHOR_COOLDOWN = 100;
-    private static final int ANCHOR_TICKS = 12000;              // 10 minutes
-    private static final int ANCHOR_MAX = 3;
-    private static final int ANCHOR_MORE_SEQUENCE = 3;          // Wanderer: this many
-    private static final int ANCHOR_MORE = 5;
-    private static final double ANCHOR_LIFT = 1.5;              // cast standing this close to one: it is lifted
+    static final int ANCHOR_COST = 1000;
+    static final int ANCHOR_COOLDOWN = 100;
+    static final int ANCHOR_TICKS = 12000;              // 10 minutes
+    static final int ANCHOR_MAX = 3;
+    static final int ANCHOR_MORE_SEQUENCE = 3;          // Wanderer: this many
+    static final int ANCHOR_MORE = 5;
+    static final double ANCHOR_LIFT = 1.5;              // cast standing this close to one: it is lifted
 
     // Wandering
     static final int WANDERING_SEQUENCE = 3;
-    private static final int WANDERING_COST = 12000;
-    private static final int WANDERING_COOLDOWN = 800;
-    private static final int WANDERING_TICKS = 160;
-    private static final double WANDERING_SPEED = 0.56;         // blocks a tick: twice a sprint
-    private static final int SYMBOLIZATION_SEQUENCE = 2;        // Planeswalker: Symbolization, this long...
-    private static final int SYMBOLIZATION_TICKS = 240;
-    private static final double SYMBOLIZATION_COMPANY = 2.0;    // ...and allies this close come along
-    private static final int CONCEPTUALIZATION_SEQUENCE = 0;    // Door: Conceptualization; enemies you fly through...
-    private static final double CONCEPTUALIZATION_REACH = 1.2;
-    private static final int CONCEPTUALIZATION_BANISH = 60;     // ...are out of the world this long (status/Exile)
-    private static final int WANDERING_LANDING = 60;            // no fall damage this long after stepping out
+    static final int WANDERING_COST = 12000;
+    static final int WANDERING_COOLDOWN = 800;
+    static final int WANDERING_TICKS = 160;
+    static final double WANDERING_SPEED = 0.56;         // blocks a tick: twice a sprint
+    static final int SYMBOLIZATION_SEQUENCE = 2;        // Planeswalker: Symbolization, this long...
+    static final int SYMBOLIZATION_TICKS = 240;
+    static final double SYMBOLIZATION_COMPANY = 2.0;    // ...and allies this close come along
+    static final int CONCEPTUALIZATION_SEQUENCE = 0;    // Door: Conceptualization; enemies you fly through...
+    static final double CONCEPTUALIZATION_REACH = 1.2;
+    static final int CONCEPTUALIZATION_BANISH = 60;     // ...are out of the world this long (status/Exile)
+    static final int WANDERING_LANDING = 60;            // no fall damage this long after stepping out
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String BLINK_HOPS = "key_of_stars_blink_hops";
-    private static final String BLINK_UNTIL = "key_of_stars_blink_until";
-    private static final String QUICK_UNTIL = "key_of_stars_quick_until";
-    private static final String WANDER_UNTIL = "key_of_stars_wander_until";
-    private static final String WANDER_FORM = "key_of_stars_wander_form";
+    static final String BLINK_HOPS = "key_of_stars_blink_hops";
+    static final String BLINK_UNTIL = "key_of_stars_blink_until";
+    static final String QUICK_UNTIL = "key_of_stars_quick_until";
+    static final String WANDER_UNTIL = "key_of_stars_wander_until";
+    static final String WANDER_FORM = "key_of_stars_wander_form";
 
     /** Who travels with a Wanderer, and where they keep to beside them. Not saved: a relog ends the Wandering. */
     private record Companion(UUID id, Vec3 offset) {}

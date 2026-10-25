@@ -95,78 +95,78 @@ public class KeyOfStars {
     // Ability 1 - Door Opening (Sequence 9)
     static final int DOOR_SEQUENCE = 9;
     static final int DOOR_COST = 250;
-    private static final int DOOR_COOLDOWN = 60;
-    private static final double DOOR_REAL_RANGE = 8.0;                   // a real door this close just swings open (free)
-    private static final double DOOR_WALL = 6.0;                         // the thickest wall it opens a Door in
-    private static final int DOOR_THICK_SEQUENCE = 3;                    // Wanderer: walls up to...
-    private static final double DOOR_THICK_WALL = 16.0;
-    private static final int DOOR_COMPANY_SEQUENCE = 7;                  // Astrologer: allies this close come through too
-    private static final double DOOR_COMPANY = 2.0;
+    static final int DOOR_COOLDOWN = 60;
+    static final double DOOR_REAL_RANGE = 8.0;                   // a real door this close just swings open (free)
+    static final double DOOR_WALL = 6.0;                         // the thickest wall it opens a Door in
+    static final int DOOR_THICK_SEQUENCE = 3;                    // Wanderer: walls up to...
+    static final double DOOR_THICK_WALL = 16.0;
+    static final int DOOR_COMPANY_SEQUENCE = 7;                  // Astrologer: allies this close come through too
+    static final double DOOR_COMPANY = 2.0;
     static final int UNBAR_SEQUENCE = 4;                         // Secrets Sorcerer: Door Opening and Slip Free
                                                                          // open Teleport roots on you
     // sneak: Slip Free
     static final int SLIP_COST = 400;
-    private static final int SLIP_COOLDOWN = 400;
-    private static final double SLIP_RANGE = 12.0;
+    static final int SLIP_COOLDOWN = 400;
+    static final double SLIP_RANGE = 12.0;
     static final int SLIP_GUARD = 30;                            // nothing of that kind takes again for this long
 
     // Ability 3 - Star Divination (Sequence 7)
     static final int ASTROLOGY_SEQUENCE = 7;
-    private static final int DIVINATION_COST = 1250;
-    private static final int DIVINATION_COOLDOWN = 240;
-    private static final double DIVINATION_RANGE = 48.0;
-    private static final int DIMENSION_SIGHT_SEQUENCE = 2;               // Planeswalker: Dimension Sight...
-    private static final double DIMENSION_SIGHT_RANGE = 128.0;           // ...this far, and your Starlit seen anywhere
-    private static final double SWEEP_RADIUS = 40.0;                     // aimed at nothing: every creature this close...
-    private static final int SWEEP_TICKS = 160;                          // ...shows as a star through walls this long
+    static final int DIVINATION_COST = 1250;
+    static final int DIVINATION_COOLDOWN = 240;
+    static final double DIVINATION_RANGE = 48.0;
+    static final int DIMENSION_SIGHT_SEQUENCE = 2;               // Planeswalker: Dimension Sight...
+    static final double DIMENSION_SIGHT_RANGE = 128.0;           // ...this far, and your Starlit seen anywhere
+    static final double SWEEP_RADIUS = 40.0;                     // aimed at nothing: every creature this close...
+    static final int SWEEP_TICKS = 160;                          // ...shows as a star through walls this long
     // sneak: Interference
-    private static final int INTERFERENCE_COST = 1250;
-    private static final int INTERFERENCE_COOLDOWN = 600;
-    private static final int INTERFERENCE_TICKS = 400;
-    private static final double INTERFERENCE_RANGE = 8.0;                // nothing further than this picks you out
-    private static final int TURNED_BACK_TICKS = 120;                    // the first search turned back: its caster Starlit
+    static final int INTERFERENCE_COST = 1250;
+    static final int INTERFERENCE_COOLDOWN = 600;
+    static final int INTERFERENCE_TICKS = 400;
+    static final double INTERFERENCE_RANGE = 8.0;                // nothing further than this picks you out
+    static final int TURNED_BACK_TICKS = 120;                    // the first search turned back: its caster Starlit
 
     // The Starlit mark (status/Starlit)
     public static final int STARLIT_TICKS = 240;
-    private static final double STARLIT_SEEN = 64.0;                     // you and your allies see your marks this close
+    static final double STARLIT_SEEN = 64.0;                     // you and your allies see your marks this close
 
     // Passives (docs/KEY_OF_STARS.md, "Passives")
-    private static final float FOOTPRINTS_SHORTER = 0.75f;               // Apprentice: roots and holds on you last 25% less
-    private static final int NIMBLE_SEQUENCE = 8;                        // Trickmaster: no fall damage under...
-    private static final double NIMBLE_FALL = 6.0;
-    private static final int INTUITION_SEQUENCE = 7;                     // Astrologer: a chime when something starts hunting
-    private static final int INTUITION_REST = 60;
+    static final float FOOTPRINTS_SHORTER = 0.75f;               // Apprentice: roots and holds on you last 25% less
+    static final int NIMBLE_SEQUENCE = 8;                        // Trickmaster: no fall damage under...
+    static final double NIMBLE_FALL = 6.0;
+    static final int INTUITION_SEQUENCE = 7;                     // Astrologer: a chime when something starts hunting
+    static final int INTUITION_REST = 60;
     static final int SAFE_LANDING_SEQUENCE = 5;                          // Traveler: no fall damage for a while after a
     static final int SAFE_LANDING_TICKS = 40;                    // teleport of this Pathway; Anchors shown
-    private static final int STARLIT_EYES_SEQUENCE = 4;                  // Secrets Sorcerer: blindness and nausea do not take
-    private static final int WORM_AURA_EVERY = 200;                      // the Worms of Star are drawn again this often
-    private static final int ASTRAL_SEQUENCE = 3;                        // Wanderer: Teleport roots last half as long, no fall
-    private static final float ASTRAL_SHORTER = 0.5f;                    // damage at all
-    private static final int AFTERIMAGES_SEQUENCE = 2;                   // Planeswalker: this share of the hits on you miss
-    private static final float AFTERIMAGES_MISS = 0.15f;
-    private static final int LOST_POSITION_SEQUENCE = 1;                 // Key of Stars: nothing further than this picks you
-    private static final double LOST_POSITION_RANGE = 24.0;              // out unless it has you Starlit
-    private static final int DOOR_OF_DOORS_SEQUENCE = 0;                 // Door: Door Opening, Escape Trick, Blink are free,
-    private static final float DOOR_OF_DOORS_LONGER = 1.5f;              // and your roots last this many times as long
+    static final int STARLIT_EYES_SEQUENCE = 4;                  // Secrets Sorcerer: blindness and nausea do not take
+    static final int WORM_AURA_EVERY = 200;                      // the Worms of Star are drawn again this often
+    static final int ASTRAL_SEQUENCE = 3;                        // Wanderer: Teleport roots last half as long, no fall
+    static final float ASTRAL_SHORTER = 0.5f;                    // damage at all
+    static final int AFTERIMAGES_SEQUENCE = 2;                   // Planeswalker: this share of the hits on you miss
+    static final float AFTERIMAGES_MISS = 0.15f;
+    static final int LOST_POSITION_SEQUENCE = 1;                 // Key of Stars: nothing further than this picks you
+    static final double LOST_POSITION_RANGE = 24.0;              // out unless it has you Starlit
+    static final int DOOR_OF_DOORS_SEQUENCE = 0;                 // Door: Door Opening, Escape Trick, Blink are free,
+    static final float DOOR_OF_DOORS_LONGER = 1.5f;              // and your roots last this many times as long
 
     // =========================
     // Names and what is saved on the player (game times are "until" this tick)
     // =========================
     static final String ANCHOR = "key_of_stars_anchor";                  // status/Anchors
-    private static final String INTERFERENCE_TURNS = "key_of_stars_interference_turns";   // the first search is turned back
-    private static final String INTERFERENCE_SHOWN = "key_of_stars_interference_shown";
-    private static final String INTUITION_READY = "key_of_stars_intuition_ready";
-    private static final String WORMS_SHOWN = "key_of_stars_worms_shown";
+    static final String INTERFERENCE_TURNS = "key_of_stars_interference_turns";   // the first search is turned back
+    static final String INTERFERENCE_SHOWN = "key_of_stars_interference_shown";
+    static final String INTUITION_READY = "key_of_stars_intuition_ready";
+    static final String WORMS_SHOWN = "key_of_stars_worms_shown";
 
     /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
     public static final boolean KEY_COOLDOWNS = false;
     /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
     public static final float QUICK_CAST_COST = 3f;
 
-    private static final String DOOR_KEY = "key_of_stars_door";          // combat/Cooldowns
-    private static final String SLIP_KEY = "key_of_stars_slip";
-    private static final String DIVINATION_KEY = "key_of_stars_divination";
-    private static final String INTERFERENCE_KEY = "key_of_stars_interference";
+    static final String DOOR_KEY = "key_of_stars_door";          // combat/Cooldowns
+    static final String SLIP_KEY = "key_of_stars_slip";
+    static final String DIVINATION_KEY = "key_of_stars_divination";
+    static final String INTERFERENCE_KEY = "key_of_stars_interference";
 
 
     // =========================
