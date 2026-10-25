@@ -185,13 +185,13 @@ public final class AbominationChains {
         int most = great ? ANIMATE_GREAT_MOST : ANIMATE_MOST;
         if (things.size() > most) things = new ArrayList<>(things.subList(0, most));
         if (things.isEmpty()) {
-            player.sendSystemMessage(Component.literal("There is nothing loose near you to move."));
+            Spells.tell(player, Component.literal("There is nothing loose near you to move."));
             return AbilityWheel.Result.REFUSED;
         }
         List<LivingEntity> enemies = new ArrayList<>(Spells.enemiesInSight(player, sl, ANIMATE_REACH, ANIMATE_SIGHT));
         enemies.removeIf(enemy -> !Spells.canBeChosen(player, enemy));
         if (enemies.isEmpty()) {
-            player.sendSystemMessage(Component.literal("There is no one before you to throw at."));
+            Spells.tell(player, Component.literal("There is no one before you to throw at."));
             return AbilityWheel.Result.REFUSED;
         }
 
@@ -232,7 +232,7 @@ public final class AbominationChains {
             bound.add(enemy);
         }
         if (bound.isEmpty()) {
-            player.sendSystemMessage(Component.literal("There is no one near you to shackle."));
+            Spells.tell(player, Component.literal("There is no one near you to shackle."));
             return AbilityWheel.Result.REFUSED;
         }
 
@@ -336,7 +336,7 @@ public final class AbominationChains {
     static AbilityWheel.Result coffinOfAges(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, COFFIN_RANGE);
         if (target != null && target.getMaxHealth() >= COFFIN_BOSS_HEALTH) {
-            player.sendSystemMessage(Component.literal("That one is too great for any coffin."));
+            Spells.tell(player, Component.literal("That one is too great for any coffin."));
             return AbilityWheel.Result.REFUSED;
         }
         if (target != null) coffinEnemy(player, sl, target);

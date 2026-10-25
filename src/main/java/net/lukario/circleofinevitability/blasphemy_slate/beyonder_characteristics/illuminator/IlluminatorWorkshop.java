@@ -178,7 +178,7 @@ public final class IlluminatorWorkshop {
     static AbilityWheel.Result spiritCannon(LivingEntity player, ServerLevel sl) {
         Vec3 spot = Spells.aimGround(player, sl, CANNON_PLACE);
         if (spot.distanceTo(player.position()) > CANNON_PLACE + 2.0) {
-            player.sendSystemMessage(Component.literal("There is no ground close enough for the cannon."));
+            Spells.tell(player, Component.literal("There is no ground close enough for the cannon."));
             return AbilityWheel.Result.REFUSED;
         }
         int slot = cannonSlot(player);

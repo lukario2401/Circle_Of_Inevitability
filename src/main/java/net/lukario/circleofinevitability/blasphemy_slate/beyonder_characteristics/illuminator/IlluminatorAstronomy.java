@@ -154,7 +154,7 @@ public final class IlluminatorAstronomy {
     static AbilityWheel.Result starOfCurses(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, CURSE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("The starlight has no one to fall on."));
+            Spells.tell(player, Component.literal("The starlight has no one to fall on."));
             return AbilityWheel.Result.REFUSED;
         }
         long now = sl.getGameTime();

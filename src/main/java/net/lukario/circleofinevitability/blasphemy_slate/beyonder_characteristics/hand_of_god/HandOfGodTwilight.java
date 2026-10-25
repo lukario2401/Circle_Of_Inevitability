@@ -246,7 +246,7 @@ public final class HandOfGodTwilight {
         LivingEntity enemy = ally == null ? Spells.aimEnemy(player, sl, MERCURY_RANGE) : null;
         Vec3 there = ally == null && enemy == null ? Spells.blinkSpot(player, sl, MERCURY_RANGE) : null;
         if (ally == null && enemy == null && there == null) {
-            player.sendSystemMessage(Component.literal("There is no room where you look."));
+            Spells.tell(player, Component.literal("There is no room where you look."));
             return AbilityWheel.Result.REFUSED;
         }
         MercuryMode mode = ally != null ? MercuryMode.ARMOR : enemy != null ? MercuryMode.COAT : MercuryMode.SLIDE;
@@ -348,7 +348,7 @@ public final class HandOfGodTwilight {
     static AbilityWheel.Result silverRapier(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, RAPIER_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no enemy before your eyes."));
+            Spells.tell(player, Component.literal("There is no enemy before your eyes."));
             return AbilityWheel.Result.REFUSED;
         }
         HandOfGodFx.silverRapiers(sl, target, RAPIER_COUNT);
@@ -385,13 +385,13 @@ public final class HandOfGodTwilight {
         boolean withering = entry == null || exit == null;
         if (withering) {
             if (!glory) {
-                player.sendSystemMessage(Component.literal(entry == null ? "There is no light near you to step into."
+                Spells.tell(player, Component.literal(entry == null ? "There is no light near you to step into."
                         : "There is no light where you look to step out of."));
                 return AbilityWheel.Result.REFUSED;
             }
             exit = Spells.blinkSpot(player, sl, LIGHT_RANGE);
             if (exit == null) {
-                player.sendSystemMessage(Component.literal("There is no room where you look."));
+                Spells.tell(player, Component.literal("There is no room where you look."));
                 return AbilityWheel.Result.REFUSED;
             }
         }

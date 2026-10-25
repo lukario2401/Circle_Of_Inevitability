@@ -261,7 +261,7 @@ public final class StarDragonGravity {
     static AbilityWheel.Result electromagneticAttraction(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, MAGNET_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("Nothing in sight to draw on."));
+            Spells.tell(player, Component.literal("Nothing in sight to draw on."));
             return AbilityWheel.Result.REFUSED;
         }
         LivingEntity partner = null;
@@ -398,7 +398,7 @@ public final class StarDragonGravity {
     static AbilityWheel.Result heavySphere(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, SPHERE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one to close the air round."));
+            Spells.tell(player, Component.literal("There is no one to close the air round."));
             return AbilityWheel.Result.REFUSED;
         }
         Vec3 center = target.getBoundingBox().getCenter();

@@ -130,7 +130,7 @@ public final class StarDragonVoid {
     static AbilityWheel.Result cosmicVoid(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, VOID_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one to cast into the void."));
+            Spells.tell(player, Component.literal("There is no one to cast into the void."));
             return AbilityWheel.Result.REFUSED;
         }
         VoidDepth depth = StarDragon.grown(player, ZERO_SEQUENCE) ? VoidDepth.ABSOLUTE_ZERO

@@ -202,11 +202,11 @@ public final class KnightOfMisfortunePoems {
         if (Beyonder.hasSequence(player, CITY_SEQUENCE)) return pacifyCity(player, sl);
         LivingEntity target = Spells.aimEnemy(player, sl, PACIFY_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("No one hears you."));
+            Spells.tell(player, Component.literal("No one hears you."));
             return AbilityWheel.Result.REFUSED;
         }
         if (KnightOfMisfortune.isBoss(target)) {
-            player.sendSystemMessage(Component.literal(target.getName().getString() + " is too great to be pacified."));
+            Spells.tell(player, Component.literal(target.getName().getString() + " is too great to be pacified."));
             return AbilityWheel.Result.REFUSED;
         }
         KnightOfMisfortuneFx.recite(sl, player, Poem.PACIFY, null);
@@ -225,7 +225,7 @@ public final class KnightOfMisfortunePoems {
         List<LivingEntity> hearers = Spells.enemiesAround(player, sl, player.position(), CITY_RANGE);
         hearers.removeIf(KnightOfMisfortune::isBoss);
         if (hearers.isEmpty()) {
-            player.sendSystemMessage(Component.literal("No one hears you."));
+            Spells.tell(player, Component.literal("No one hears you."));
             return AbilityWheel.Result.REFUSED;
         }
         KnightOfMisfortuneFx.recite(sl, player, Poem.PACIFY, null);
@@ -261,11 +261,11 @@ public final class KnightOfMisfortunePoems {
     static AbilityWheel.Result agitating(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, AGITATE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("No one hears you."));
+            Spells.tell(player, Component.literal("No one hears you."));
             return AbilityWheel.Result.REFUSED;
         }
         if (KnightOfMisfortune.isBoss(target)) {
-            player.sendSystemMessage(Component.literal(target.getName().getString() + " does not hear such small words."));
+            Spells.tell(player, Component.literal(target.getName().getString() + " does not hear such small words."));
             return AbilityWheel.Result.REFUSED;
         }
         KnightOfMisfortuneFx.recite(sl, player, Poem.AGITATING, null);
@@ -315,6 +315,6 @@ public final class KnightOfMisfortunePoems {
         if (GiantForm.isGiant(target)) line.append(", madness ").append(Math.round(GiantForm.madness(target) * 100)).append("%");
         if (Slumber.kind(target) != null) line.append(", asleep");
         if (Fear.isAfraid(target)) line.append(", afraid");
-        player.sendSystemMessage(Component.literal(line.toString()));
+        Spells.tell(player, Component.literal(line.toString()));
     }
 }

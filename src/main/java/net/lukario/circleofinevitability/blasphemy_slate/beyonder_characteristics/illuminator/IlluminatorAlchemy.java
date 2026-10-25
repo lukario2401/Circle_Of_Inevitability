@@ -338,7 +338,7 @@ public final class IlluminatorAlchemy {
                     })
                     .build(player, sl, at, yaw);
             if (golem == null) {
-                player.sendSystemMessage(Component.literal("There is no room for the golem to stand."));
+                Spells.tell(player, Component.literal("There is no room for the golem to stand."));
                 return;
             }
             String tag = "il_golem_" + golem.getId();
@@ -573,13 +573,13 @@ public final class IlluminatorAlchemy {
     // =========================
     static AbilityWheel.Result knowledgeSpirit(LivingEntity player, ServerLevel sl) {
         if (Root.has(player, RootRestriction.MOVE) || Root.has(player, RootRestriction.TELEPORT)) {
-            player.sendSystemMessage(Component.literal("You are held fast and cannot leave your body."));
+            Spells.tell(player, Component.literal("You are held fast and cannot leave your body."));
             return AbilityWheel.Result.REFUSED;
         }
         LivingEntity target = Spells.aimEnemy(player, sl, SPIRIT_RANGE);
         Vec3 jump = target == null ? Spells.blinkSpot(player, sl, SPIRIT_JUMP) : null;
         if (target == null && jump == null) {
-            player.sendSystemMessage(Component.literal("There is no mind in view and nowhere to go."));
+            Spells.tell(player, Component.literal("There is no mind in view and nowhere to go."));
             return AbilityWheel.Result.REFUSED;
         }
         Vec3 from = player.position();

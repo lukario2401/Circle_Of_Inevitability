@@ -554,7 +554,7 @@ public class KnightOfMisfortune {
         retractLimbs(player, sl);
         KnightOfMisfortuneFx.limbsTear(sl, player, tag);
         player.setHealth(Math.max(1f, player.getHealth() - player.getMaxHealth() * LIMBS_BACKLASH));
-        player.sendSystemMessage(Component.literal("Your Nightmare Limbs are torn off."));
+        Spells.tell(player, Component.literal("Your Nightmare Limbs are torn off."));
     }
 
     // ---------- Nightmare State
@@ -642,7 +642,7 @@ public class KnightOfMisfortune {
         data.putInt(LULL_COUNT, 0);
         if (Slumber.put(watched, LULL_SLEEP, Slumber.Kind.SLEEP)) {
             showSlumber(sl, watched, LULL_SLEEP);
-            player.sendSystemMessage(Component.literal(watched.getName().getString() + " drifts off to sleep."));
+            Spells.tell(player, Component.literal(watched.getName().getString() + " drifts off to sleep."));
         }
     }
 
@@ -774,25 +774,25 @@ public class KnightOfMisfortune {
     /** Secrets: what the dream gives away, in chat. */
     private static void tellSecrets(LivingEntity player, LivingEntity dreamer) {
         String name = dreamer.getName().getString();
-        player.sendSystemMessage(Component.literal("In the dream of " + name + ":"));
+        Spells.tell(player, Component.literal("In the dream of " + name + ":"));
         if (dreamer instanceof Player other) {
             String pathway = SoulCore.getPathway(other);
             if (pathway == null || pathway.equals("none")) {
-                player.sendSystemMessage(Component.literal("  no Beyonder power at all."));
+                Spells.tell(player, Component.literal("  no Beyonder power at all."));
             } else {
                 int percent = Math.round(100f * SoulCore.getSpirituality(other) / Math.max(1f, Beyonder.maxSpirituality(other)));
-                player.sendSystemMessage(Component.literal("  the " + pathway + " Pathway, Sequence " + SoulCore.getSequence(other)
+                Spells.tell(player, Component.literal("  the " + pathway + " Pathway, Sequence " + SoulCore.getSequence(other)
                         + ", spirituality " + percent + "%."));
             }
         } else if (Beyonders.isBeyonder(dreamer)) {                          // a Beyonder mob (blasphemy_slate/beyonder_mobs)
-            player.sendSystemMessage(Component.literal("  the " + Beyonders.pathwayOf(dreamer) + " Pathway, Sequence "
+            Spells.tell(player, Component.literal("  the " + Beyonders.pathwayOf(dreamer) + " Pathway, Sequence "
                     + Beyonders.sequenceOf(dreamer) + "."));
         }
-        player.sendSystemMessage(Component.literal("  health " + Math.round(dreamer.getHealth()) + " of " + Math.round(dreamer.getMaxHealth()) + "."));
+        Spells.tell(player, Component.literal("  health " + Math.round(dreamer.getHealth()) + " of " + Math.round(dreamer.getMaxHealth()) + "."));
         ItemStack held = dreamer.getItemBySlot(EquipmentSlot.MAINHAND);
-        if (!held.isEmpty()) player.sendSystemMessage(Component.literal("  it holds " + held.getHoverName().getString() + "."));
+        if (!held.isEmpty()) Spells.tell(player, Component.literal("  it holds " + held.getHoverName().getString() + "."));
         if (GiantForm.isGiant(dreamer)) {
-            player.sendSystemMessage(Component.literal("  its madness: " + Math.round(GiantForm.madness(dreamer) * 100) + "%."));
+            Spells.tell(player, Component.literal("  its madness: " + Math.round(GiantForm.madness(dreamer) * 100) + "%."));
         }
     }
 
@@ -1067,7 +1067,7 @@ public class KnightOfMisfortune {
     static boolean coolingDown(LivingEntity player, ServerLevel sl, String key, String name) {
         long left = player.getPersistentData().getLongOr(key, 0L) - sl.getGameTime();
         if (left <= 0) return false;
-        player.sendSystemMessage(Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));
+        Spells.tell(player, Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));
         return true;
     }
 

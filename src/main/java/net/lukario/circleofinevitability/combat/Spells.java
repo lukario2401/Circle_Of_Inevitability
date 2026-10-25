@@ -1019,9 +1019,37 @@ public final class Spells {
         return MobSpirituality.spend(caster, cost);
     }
 
+    /** Spirituality given back (never past the top): a player's, a Beyonder mob's own bar. */
+    public static void giveSpirituality(LivingEntity caster, float amount) {
+        if (amount <= 0f) return;
+        if (caster instanceof Player player) {
+            SoulCore.setSpiritualityQuietly(player, SoulCore.getSpirituality(player) + amount);      // it keeps within 0..max
+        } else {
+            MobSpirituality.add(caster, amount);
+        }
+    }
+
+    /** The most spirituality a caster holds: a player's by their Sequence, a Beyonder mob's own bar. */
+    public static float maxSpiritualityOf(LivingEntity caster) {
+        return caster instanceof Player player ? Beyonder.maxSpirituality(player) : MobSpirituality.max(caster);
+    }
+
+    /** What comes back to a caster each tick by itself. */
+    public static float spiritualityRegenOf(LivingEntity caster) {
+        return caster instanceof Player player ? Beyonder.spiritualityRegenPerTick(player) : MobSpirituality.regenPerTick(caster);
+    }
+
     /** What a caster has left: a player's spirituality, a Beyonder mob's own bar. */
     public static float spiritualityOf(LivingEntity caster) {
         return caster instanceof Player player ? SoulCore.getSpirituality(player) : MobSpirituality.get(caster);
+    }
+
+    /**
+     * A message in chat for the caster, when it is a player (a Beyonder mob casting the same ability reads nothing).
+     * For code written for any caster: a LivingEntity has no sendSystemMessage of its own.
+     */
+    public static void tell(LivingEntity caster, Component message) {
+        if (caster instanceof Player player) player.sendSystemMessage(message);
     }
 
     /** False once the caster died, logged out or went to another dimension: spells that stay around them stop then. */

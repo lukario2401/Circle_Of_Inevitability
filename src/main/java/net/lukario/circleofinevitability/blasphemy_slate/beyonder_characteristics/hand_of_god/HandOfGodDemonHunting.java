@@ -241,7 +241,7 @@ public final class HandOfGodDemonHunting {
         if (looked == null || !eye.marked.add(looked.getUUID())) return;
         Vulnerable.add(looked, EYE_WEAKNESS, EYE_WEAKNESS, left);
         HandOfGodFx.eyeMark(sl, looked, left, eye.tag);
-        player.sendSystemMessage(read(looked, eye.knight));
+        Spells.tell(player, read(looked, eye.knight));
     }
 
     /** What the eye reads on someone: its health, its weakness, its effects (and, for a Silver Knight, its Pathway). */
@@ -290,7 +290,7 @@ public final class HandOfGodDemonHunting {
             WeaponCoat.armAny(player, COAT, ALCHEMY_HITS, ALCHEMY_TICKS, (attacker, hit, amount, level) -> coatHit(hit, amount, level, coat));
             player.getPersistentData().putString(COAT_KIND, coat.name());
             HandOfGodFx.status(player, Status.ALCHEMY, ALCHEMY_TICKS);
-            player.sendSystemMessage(Component.literal("Your weapon is coated: " + coatName(coat) + "."));
+            Spells.tell(player, Component.literal("Your weapon is coated: " + coatName(coat) + "."));
         });
         return AbilityWheel.Result.DONE;
     }
@@ -394,7 +394,7 @@ public final class HandOfGodDemonHunting {
             return AbilityWheel.Result.FREE;
         }
         if (!Beyonders.pathwayOf(player).equals(HandOfGod.PATHWAY)) {
-            player.sendSystemMessage(Component.literal("Only a Demon Hunter's own body can become the Giant."));
+            Spells.tell(player, Component.literal("Only a Demon Hunter's own body can become the Giant."));
             return AbilityWheel.Result.REFUSED;
         }
         boolean glory = Beyonder.hasSequence(player, GIANT_GLORY_SEQUENCE);
@@ -445,7 +445,7 @@ public final class HandOfGodDemonHunting {
         if (madness >= 0.5f && !player.getPersistentData().contains(GIANT_MAD_SHOWN)) {
             player.getPersistentData().putBoolean(GIANT_MAD_SHOWN, true);
             HandOfGodFx.statusForever(player, Status.MADNESS);
-            player.sendSystemMessage(Component.literal("The Giant's madness is rising."));
+            Spells.tell(player, Component.literal("The Giant's madness is rising."));
         }
     }
 
@@ -467,7 +467,7 @@ public final class HandOfGodDemonHunting {
         player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, GIANT_BROKEN_TICKS, 1));
         player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, GIANT_BROKEN_TICKS, 0));
         player.addEffect(new MobEffectInstance(MobEffects.NAUSEA, GIANT_BROKEN_TICKS / 2, 0));
-        player.sendSystemMessage(Component.literal("The madness breaks the Giant's form."));
+        Spells.tell(player, Component.literal("The madness breaks the Giant's form."));
     }
 
     private static void giantGone(LivingEntity player) {

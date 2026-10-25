@@ -219,7 +219,7 @@ public final class KnightOfMisfortuneNightwatcher {
         List<LivingEntity> caught = Spells.enemiesInCone(player, sl, player.getEyePosition(), player.getLookAngle(),
                 HAIR_RANGE, HAIR_ANGLE);
         if (caught.isEmpty()) {
-            player.sendSystemMessage(Component.literal("Your hair finds no one to bind."));
+            Spells.tell(player, Component.literal("Your hair finds no one to bind."));
             return AbilityWheel.Result.REFUSED;
         }
         KnightOfMisfortuneFx.hairEntangle(sl, player, caught);
@@ -250,15 +250,15 @@ public final class KnightOfMisfortuneNightwatcher {
         if (Beyonder.hasSequence(player, 1)) return misfortuneArea(player, sl, Beyonder.hasSequence(player, 0));
         LivingEntity target = Spells.aimEnemy(player, sl, CURSE_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one there to curse."));
+            Spells.tell(player, Component.literal("There is no one there to curse."));
             return AbilityWheel.Result.REFUSED;
         }
         KnightOfMisfortuneFx.curse(sl, player, target);
         Later.run(sl, KnightOfMisfortuneFx.CURSE_LANDS, () -> {
             if (!target.isAlive() || !Spells.casterStillHere(player, sl)) return;
             int level = KnightOfMisfortune.curse(player, sl, target, CURSE_LEVEL, CURSE_LEVEL, CURSE_TICKS, false);
-            if (level > 0) player.sendSystemMessage(Component.literal(target.getName().getString() + " carries Misfortune " + level + "."));
-            else player.sendSystemMessage(Component.literal(target.getName().getString() + " shrugs the curse off."));
+            if (level > 0) Spells.tell(player, Component.literal(target.getName().getString() + " carries Misfortune " + level + "."));
+            else Spells.tell(player, Component.literal(target.getName().getString() + " shrugs the curse off."));
         });
         return AbilityWheel.Result.DONE;
     }
@@ -299,7 +299,7 @@ public final class KnightOfMisfortuneNightwatcher {
             return AbilityWheel.Result.FREE;
         }
         if (GiantForm.isGiant(player)) {
-            player.sendSystemMessage(Component.literal("Your body already wears another form."));
+            Spells.tell(player, Component.literal("Your body already wears another form."));
             return AbilityWheel.Result.REFUSED;
         }
         boolean complete = Beyonder.hasSequence(player, 2);
@@ -323,7 +323,7 @@ public final class KnightOfMisfortuneNightwatcher {
                 .onMad(giant -> {
                     player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, WOLF_SPENT, 0));
                     player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, WOLF_SPENT, 0));
-                    player.sendSystemMessage(Component.literal("Madness takes the wolf: the form breaks and leaves you spent."));
+                    Spells.tell(player, Component.literal("Madness takes the wolf: the form breaks and leaves you spent."));
                 })
                 .onEnd((giant, why) -> {
                     String old = player.getPersistentData().getStringOr(WOLF_TAG, tag);

@@ -183,7 +183,7 @@ public final class StarDragonRays {
     static AbilityWheel.Result seriesOfRays(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, SERIES_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("The light in your hands has no one to descend on."));
+            Spells.tell(player, Component.literal("The light in your hands has no one to descend on."));
             return AbilityWheel.Result.REFUSED;
         }
         StarDragonFx.seriesOfRays(sl, player);

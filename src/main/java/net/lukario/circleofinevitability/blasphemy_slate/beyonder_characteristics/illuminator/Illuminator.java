@@ -665,10 +665,10 @@ public class Illuminator {
             }
             if (Beyonder.hasSequence(player, RESIDUE_SEQUENCE) && player instanceof ServerPlayer viewer) surveyResidue(viewer, sl, reach);
             if (strongest == null) {
-                player.sendSystemMessage(Component.literal("Nothing hostile within " + Math.round(reach) + " blocks."));
+                Spells.tell(player, Component.literal("Nothing hostile within " + Math.round(reach) + " blocks."));
                 return;
             }
-            player.sendSystemMessage(Component.literal(found + " hostile within " + Math.round(reach) + " blocks. The strongest: "
+            Spells.tell(player, Component.literal(found + " hostile within " + Math.round(reach) + " blocks. The strongest: "
                     + strongest.getDisplayName().getString() + ", " + Math.round(strongest.getHealth()) + "/"
                     + Math.round(strongest.getMaxHealth()) + " health, " + Math.round(strongest.distanceTo(player)) + " blocks away."));
         });
@@ -781,7 +781,7 @@ public class Illuminator {
             Exposed.apply(target, left);
             if (analysis && Substitute.isArmed(target)) Substitute.disarm(target);
             if (target instanceof Player appraised) IlluminatorFx.status(appraised, Status.APPRAISED, left);
-            player.sendSystemMessage(read(target, weakness));
+            Spells.tell(player, read(target, weakness));
         });
     }
 

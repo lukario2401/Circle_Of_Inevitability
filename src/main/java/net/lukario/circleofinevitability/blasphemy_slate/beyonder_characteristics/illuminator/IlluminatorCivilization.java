@@ -470,7 +470,7 @@ public final class IlluminatorCivilization {
         if (target == null) {
             LivingEntity ally = Spells.aimAlly(player, sl, MAZE_RANGE);
             if (ally == null) {
-                player.sendSystemMessage(Component.literal("There is no one in sight for the equations."));
+                Spells.tell(player, Component.literal("There is no one in sight for the equations."));
                 return AbilityWheel.Result.REFUSED;
             }
             enlighten(player, sl, ally);
@@ -590,12 +590,12 @@ public final class IlluminatorCivilization {
     static AbilityWheel.Result realityKnowledge(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, REALITY_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one in sight for knowledge to reject."));
+            Spells.tell(player, Component.literal("There is no one in sight for knowledge to reject."));
             return AbilityWheel.Result.REFUSED;
         }
         if (AbilityLock.isImmune(target)) {
             if (target instanceof Player paragon) IlluminatorFx.realityGuard(sl, paragon);
-            player.sendSystemMessage(Component.literal("Its knowledge cannot be touched."));
+            Spells.tell(player, Component.literal("Its knowledge cannot be touched."));
             return AbilityWheel.Result.REFUSED;
         }
         int ticks = Illuminator.isBoss(target) ? REALITY_BOSS_TICKS : REALITY_TICKS;
@@ -625,11 +625,11 @@ public final class IlluminatorCivilization {
     static AbilityWheel.Result illusoryBook(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, BOOK_RANGE);
         if (target == null) {
-            player.sendSystemMessage(Component.literal("There is no one in sight to write down."));
+            Spells.tell(player, Component.literal("There is no one in sight to write down."));
             return AbilityWheel.Result.REFUSED;
         }
         if (Illuminator.isBoss(target)) {
-            player.sendSystemMessage(Component.literal("It is too great to be written."));
+            Spells.tell(player, Component.literal("It is too great to be written."));
             return AbilityWheel.Result.REFUSED;
         }
         List<LivingEntity> victims = new ArrayList<>();

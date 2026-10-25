@@ -202,7 +202,7 @@ public final class ConjuredWeapon {
                     continue;
                 }
                 if (SoulCore.getSpirituality(payer) < weapon.upkeepCost) {
-                    player.sendSystemMessage(Component.literal("Your spirituality runs dry and the weapon fades."));
+                    Spells.tell(player, Component.literal("Your spirituality runs dry and the weapon fades."));
                     finish(player, weapon.name, Ending.NO_SPIRITUALITY);
                     continue;
                 }

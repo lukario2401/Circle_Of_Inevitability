@@ -300,7 +300,7 @@ public final class AbominationZombie {
             if (one != null) sentenced.add(one);
         }
         if (sentenced.isEmpty()) {
-            player.sendSystemMessage(Component.literal("There is no one before you to sentence."));
+            Spells.tell(player, Component.literal("There is no one before you to sentence."));
             return AbilityWheel.Result.REFUSED;
         }
 

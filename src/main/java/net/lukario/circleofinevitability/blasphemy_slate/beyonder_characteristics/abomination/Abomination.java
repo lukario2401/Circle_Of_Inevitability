@@ -723,14 +723,14 @@ public class Abomination {
         if (madness >= 0.5f && !player.getPersistentData().contains(WOLF_MAD_SHOWN)) {
             player.getPersistentData().putBoolean(WOLF_MAD_SHOWN, true);
             AbominationFx.statusForever(player, Status.MADNESS);
-            player.sendSystemMessage(Component.literal("The wolf's madness is rising."));
+            Spells.tell(player, Component.literal("The wolf's madness is rising."));
         }
     }
 
     private static void wolfMaddened(LivingEntity player) {
         player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, WOLF_BROKEN_TICKS, 1));
         player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, WOLF_BROKEN_TICKS, 0));
-        player.sendSystemMessage(Component.literal("The madness tears the wolf out of you."));
+        Spells.tell(player, Component.literal("The madness tears the wolf out of you."));
     }
 
     private static void wolfGone(Player player) {
@@ -778,7 +778,7 @@ public class Abomination {
                 data.putBoolean(FULL_MOON_ON, true);
                 AbominationFx.fullMoonRises(sl, player);
                 AbominationFx.statusForever(player, Status.FULL_MOON);
-                player.sendSystemMessage(Component.literal("The full moon is up. Your blood answers it."));
+                Spells.tell(player, Component.literal("The full moon is up. Your blood answers it."));
             }
         } else if (was) {
             data.remove(FULL_MOON_ON);
@@ -891,7 +891,7 @@ public class Abomination {
     private static boolean coolingDown(LivingEntity player, ServerLevel sl, String key, String name) {
         long left = player.getPersistentData().getLongOr(key, 0L) - sl.getGameTime();
         if (left <= 0) return false;
-        player.sendSystemMessage(Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));
+        Spells.tell(player, Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));
         return true;
     }
 

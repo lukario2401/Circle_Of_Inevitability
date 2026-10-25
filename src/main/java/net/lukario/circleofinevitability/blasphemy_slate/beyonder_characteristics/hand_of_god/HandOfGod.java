@@ -927,7 +927,7 @@ public class HandOfGod {
     private static boolean coolingDown(LivingEntity player, ServerLevel sl, String key, String name) {
         long left = player.getPersistentData().getLongOr(key, 0L) - sl.getGameTime();
         if (left <= 0) return false;
-        player.sendSystemMessage(Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));
+        Spells.tell(player, Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));
         return true;
     }
 

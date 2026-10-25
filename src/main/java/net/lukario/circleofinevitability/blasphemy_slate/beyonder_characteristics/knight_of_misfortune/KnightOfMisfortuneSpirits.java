@@ -181,7 +181,7 @@ public final class KnightOfMisfortuneSpirits {
             return AbilityWheel.Result.FREE;
         }
         if (!onEarth(sl, player.blockPosition().below())) {
-            player.sendSystemMessage(Component.literal("There is no earth under you to sink into."));
+            Spells.tell(player, Component.literal("There is no earth under you to sink into."));
             return AbilityWheel.Result.REFUSED;
         }
         if (!freeTooth(player, sl)) return AbilityWheel.Result.REFUSED;
@@ -270,7 +270,7 @@ public final class KnightOfMisfortuneSpirits {
         List<Mob> answer = sl.getEntitiesOfClass(Mob.class, player.getBoundingBox().inflate(COMMAND_RADIUS),
                 mob -> commandable(player, mob));
         if (answer.isEmpty()) {
-            player.sendSystemMessage(Component.literal("No spirit is near enough to answer."));
+            Spells.tell(player, Component.literal("No spirit is near enough to answer."));
             return AbilityWheel.Result.REFUSED;
         }
         answer.sort(Comparator.comparingDouble(mob -> mob.distanceToSqr(player)));
@@ -288,7 +288,7 @@ public final class KnightOfMisfortuneSpirits {
                 }
             });
         }
-        player.sendSystemMessage(Component.literal(taken + " spirits answer your command."));
+        Spells.tell(player, Component.literal(taken + " spirits answer your command."));
         return AbilityWheel.Result.DONE;
     }
 
@@ -310,7 +310,7 @@ public final class KnightOfMisfortuneSpirits {
         if (mine != null) mine.removeIf(until -> until <= now);
         int used = mine == null ? 0 : mine.size();
         if (used < teeth) return true;
-        player.sendSystemMessage(Component.literal("Every tooth is empty: no spirit is left to call."));
+        Spells.tell(player, Component.literal("Every tooth is empty: no spirit is left to call."));
         return false;
     }
 
@@ -330,7 +330,7 @@ public final class KnightOfMisfortuneSpirits {
                 rise(player, sl, false);
             } else if (player.tickCount % 10 == 0 && !player.isSpectator()
                     && player.onGround() && !onEarth(sl, player.blockPosition().below())) {
-                player.sendSystemMessage(Component.literal("The earth ends: you rise out of it."));
+                Spells.tell(player, Component.literal("The earth ends: you rise out of it."));
                 rise(player, sl, false);
             } else if (player.tickCount % 4 == 0) {
                 KnightOfMisfortuneFx.earthTick(sl, player);

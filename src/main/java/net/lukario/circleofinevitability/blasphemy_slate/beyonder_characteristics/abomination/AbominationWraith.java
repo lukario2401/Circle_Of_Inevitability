@@ -140,18 +140,18 @@ public final class AbominationWraith {
     // =========================
     static AbilityWheel.Result mirrorStep(LivingEntity player, ServerLevel sl) {
         if (Root.has(player, RootRestriction.TELEPORT)) {
-            player.sendSystemMessage(Component.literal("Something holds you to this side of the glass."));
+            Spells.tell(player, Component.literal("Something holds you to this side of the glass."));
             return AbilityWheel.Result.REFUSED;
         }
         List<BlockPos> near = Spells.reflectionNear(sl, player.position(), MIRROR_IN);
         if (near.isEmpty()) {
-            player.sendSystemMessage(Component.literal("There is no reflection near you to step into."));
+            Spells.tell(player, Component.literal("There is no reflection near you to step into."));
             return AbilityWheel.Result.REFUSED;
         }
         BlockPos far = Spells.reflectionAimed(player, sl, MIRROR_OUT, MIRROR_AROUND);
         Vec3 exit = far == null ? null : stepOut(player, sl, far);
         if (far == null || exit == null || exit.distanceTo(player.position()) > MIRROR_OUT + 2) {
-            player.sendSystemMessage(Component.literal(far == null
+            Spells.tell(player, Component.literal(far == null
                     ? "There is no reflection where you look to step out of."
                     : "There is no room to step out of that reflection."));
             hints(player, near);
@@ -264,7 +264,7 @@ public final class AbominationWraith {
             AbominationFx.possessed(sl, host, ticks, tag);
             AbominationFx.status(parasite, Status.POSSESSION, ticks);
             boolean steers = host instanceof Mob;
-            parasite.sendSystemMessage(Component.literal("You ride inside " + host.getName().getString() + "."
+            Spells.tell(parasite, Component.literal("You ride inside " + host.getName().getString() + "."
                     + (steers ? " Move and look to steer it, left click to strike, right click to pick what it hunts." : " It carries you, unseen.")
                     + " Press the Wraith key again to step out."));
         }
@@ -286,7 +286,7 @@ public final class AbominationWraith {
             AbominationFx.statusEnd(parasite, Status.POSSESSION);
             if (why == Parasite.End.PARASITE_GONE) return;              // died or logged out: nothing more to show
             if (host != null) AbominationFx.possessionExit(sl, host, parasite, tag);
-            parasite.sendSystemMessage(Component.literal(switch (why) {
+            Spells.tell(parasite, Component.literal(switch (why) {
                 case TIME_UP -> "Your ghost cannot hold on any longer.";
                 case OUT_OF_POWER -> "Your spirituality runs dry and you are cast out.";
                 case HOST_DIED -> "Your host died under you.";

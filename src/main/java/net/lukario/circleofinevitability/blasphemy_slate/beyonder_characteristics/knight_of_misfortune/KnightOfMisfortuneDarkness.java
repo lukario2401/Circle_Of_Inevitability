@@ -385,7 +385,7 @@ public final class KnightOfMisfortuneDarkness {
         int ticks = CONCEALED_TICKS;
         if (enemy && KnightOfMisfortune.isBoss(target)) {
             if (!Beyonder.hasSequence(player, 0)) {
-                player.sendSystemMessage(Component.literal(target.getName().getString() + " is too vast to be hidden away."));
+                Spells.tell(player, Component.literal(target.getName().getString() + " is too vast to be hidden away."));
                 return AbilityWheel.Result.REFUSED;
             }
             ticks = CONCEALED_BOSS;
@@ -414,7 +414,7 @@ public final class KnightOfMisfortuneDarkness {
         Unnoticed.end(target);
         target.addEffect(new MobEffectInstance(MobEffects.GLOWING, REVEALED_TICKS, 0, false, false));
         KnightOfMisfortuneFx.reverseConcealment(sl, target);
-        player.sendSystemMessage(Component.literal(target.getName().getString() + " is torn out of hiding."));
+        Spells.tell(player, Component.literal(target.getName().getString() + " is torn out of hiding."));
     }
 
     /** The first living body on the crosshair's line, hidden or not, friend or foe (not the caster). */
@@ -573,11 +573,11 @@ public final class KnightOfMisfortuneDarkness {
                     KnightOfMisfortuneFx.statusEnd(rested, Status.ETERNAL_REST);
                 }
             });
-            player.sendSystemMessage(Component.literal("Your rest waits over you: the next death is not yours to die."));
+            Spells.tell(player, Component.literal("Your rest waits over you: the next death is not yours to die."));
             return AbilityWheel.Result.DONE;
         }
         if (KnightOfMisfortune.isBoss(target)) {
-            player.sendSystemMessage(Component.literal(target.getName().getString() + " is too vast to be laid to rest."));
+            Spells.tell(player, Component.literal(target.getName().getString() + " is too vast to be laid to rest."));
             return AbilityWheel.Result.REFUSED;
         }
         KnightOfMisfortuneFx.eternalRest(sl, player, target);

@@ -326,7 +326,7 @@ public final class AbominationCurses {
     static AbilityWheel.Result ancientBlight(LivingEntity player, ServerLevel sl) {
         LivingEntity first = Spells.aimEnemy(player, sl, BLIGHT_RANGE);
         if (first == null) {
-            player.sendSystemMessage(Component.literal("There is no one before you to carry the blight."));
+            Spells.tell(player, Component.literal("There is no one before you to carry the blight."));
             return AbilityWheel.Result.REFUSED;
         }
         String tag = "ab_blight_" + player.getId() + "_" + sl.getGameTime();
@@ -363,7 +363,7 @@ public final class AbominationCurses {
             return AbilityWheel.Result.FREE;
         }
         if (!Abomination.PATHWAY.equals(Beyonders.pathwayOf(player))) {
-            player.sendSystemMessage(Component.literal("Only an Abomination's own body can become the vessel."));
+            Spells.tell(player, Component.literal("Only an Abomination's own body can become the vessel."));
             return AbilityWheel.Result.REFUSED;
         }
         boolean forever = Beyonder.hasSequence(player, FORM_CHAINED_SEQUENCE);
