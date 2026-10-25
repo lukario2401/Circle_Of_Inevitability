@@ -53,11 +53,11 @@ public final class BeyonderMobRules {
     // =========================
     public static final Rule HOSTILE = Rule.chance(0.05)                           // 5% of hostile mobs
             .pathways(MOB_PATHWAYS)
-            .sequence(9,        55,     0.25,         0.15)
-            .sequence(8,        25,     0.50,         0.30)
-            .sequence(7,        12,     1.00,         0.50)
-            .sequence(6,         6,     1.50,         0.75)
-            .sequence(5,         2,     2.00,         1.00);
+            .sequence(9,        55,     1.25,         1.15)
+            .sequence(8,        25,     1.50,         1.30)
+            .sequence(7,        12,     2.00,         1.50)
+            .sequence(6,         6,     2.50,         1.75)
+            .sequence(5,         2,     3.00,         2.00);
 
     // =========================
     // Bosses: more likely to be Beyonders, and only they reach Sequence 4 and stronger.
@@ -65,11 +65,11 @@ public final class BeyonderMobRules {
     // =========================
     public static final Rule BOSS = Rule.chance(0.50)                              // 50% of bosses
             .pathways(MOB_PATHWAYS)
-            .sequence(4,        55,     0.25,         0.15)
-            .sequence(3,        25,     0.50,         0.30)
-            .sequence(2,        12,     0.75,         0.50)
-            .sequence(1,         6,     1.00,         0.75)
-            .sequence(0,         2,     1.50,         1.00);
+            .sequence(4,        55,     2.25,         3.15)
+            .sequence(3,        25,     2.50,         3.30)
+            .sequence(2,        12,     2.75,         3.50)
+            .sequence(1,         6,     3.00,         3.75)
+            .sequence(0,         2,     3.50,         4.00);
 
     // =========================
     // Looks (BeyonderMobs)
