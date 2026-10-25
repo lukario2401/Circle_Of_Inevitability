@@ -47,7 +47,7 @@ When it dies, the characteristic of its Pathway and Sequence drops where it fell
 | Worm Of Time: Theft (H) | one of their abilities, up to their Sequence | one of its Pathway's, up to its Sequence (then empty for 30 s, as before) | nothing |
 | Dark Angel: Grazing (L) | the same, when you kill them | the same, when you kill it | nothing |
 | Key Of Stars: Replication (Starlight wheel) | what they just cast | aimed at it: one of its Pathway's, up to its Sequence, cast at once | nothing |
-| Key Of Stars: Record (K) | the first thing they cast while you watch | looking at it when you press Record: one of its abilities, rolled for at once | nothing |
+| Key Of Stars: Record (K) | the first thing they cast while you watch | looking at it when you press Record: one of its abilities, rolled for at once; or, while you watch, the first thing it really casts (Quick Study glints at its casts too) | nothing |
 
 Only abilities marked `STEALABLE` in `PathwayAbilities` can be taken, as before.
 
@@ -82,7 +82,7 @@ The abilities mobs have so far:
 | Key Of Stars | Slip Free | 9 | 400 | 20 s | it is rooted, burning or under a harmful effect: all of it ends (Teleport roots too from 4) |
 | Star Dragon | Piercing Ray | 6 | 2450 | 8 s | its target is within 28 blocks and in sight: 40 damage to each enemy on the line, and Dimmed |
 
-What a mob's ability deals to a player is halved (`DAMAGE_TO_PLAYERS`): the player numbers were made against mobs. A mob's cast is remembered like a player's: the crystal ball shows it as its last power, and Replication can copy it.
+What a mob's ability deals to a player is halved (`DAMAGE_TO_PLAYERS`): the player numbers were made against mobs. A mob's cast is remembered like a player's: the crystal ball shows it as its last power, Replication can copy it, and a watching Record writes it down.
 
 `/beyondermob info <mob>` shows its spirituality and each ability it knows, with "ready" or why not.
 
@@ -146,7 +146,8 @@ MobCasting.tryCast(mob, ability, target, sl)  // cast now, with every check
 MobCasting.addBlocker((mob, ability) -> ...)  // one more thing that keeps mobs from casting
 MobAbilities.knownBy(mob)                  // what its Pathway and Sequence give it
 MobSpirituality.get(mob) / spend(mob, n) / add(mob, n)
-Casts.mobCast(mob, sl, cast)               // remember a mob's cast (MobCasting does this)
+Casts.mobCast(mob, sl, cast)               // remember a mob's cast and tell the AnyCasterListeners (MobCasting does this)
+Casts.addAnyCasterListener((caster, sl, cast) -> ...)   // hear players' and mobs' casts alike
 ```
 
 ## Changing the numbers
@@ -231,5 +232,4 @@ A summoned one spawns the way `/summon` spawns it (a skeleton has its bow), with
 ## Not done yet
 
 - Mobs cast only the five abilities above. The rest of each Pathway's abilities need their mob versions (see "Giving mobs another ability").
-- Key Of Stars' Record does not see a mob's cast (its listener is for player casters); the crystal ball and Replication do.
 - Mobs from spawners can be Beyonders too, so a spawner farm yields characteristics. If that is too generous, the roll can skip `EntitySpawnReason.SPAWNER` mobs.

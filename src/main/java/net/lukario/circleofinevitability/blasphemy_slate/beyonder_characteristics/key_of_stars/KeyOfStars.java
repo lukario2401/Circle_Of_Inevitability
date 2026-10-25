@@ -200,10 +200,10 @@ public class KeyOfStars {
                 if (caster == null || target == null || !(target.level() instanceof ServerLevel sl)) return;
                 KeyOfStarsFx.starlitEnd(sl, target, starlitTag(caster, target));
             });
-            // every cast anyone makes: a watching Scribe records it (Quick Study glints); Omnipresence and the
-            // Planeswalker's Blink afterimages repeat their own Beyonder's
+            // every cast anyone makes, a player or a Beyonder mob: a watching Scribe records it (Quick Study glints)
+            Casts.addAnyCasterListener(KeyOfStarsRecord::seen);
+            // Omnipresence and the Planeswalker's Blink afterimages repeat their own Beyonder's
             Casts.addListener((caster, sl, cast) -> {
-                KeyOfStarsRecord.seen(caster, sl, cast);
                 if (!SoulCore.getPathway(caster).equals(PATHWAY)) return;
                 KeyOfStarsStarlight.echo(caster, sl, cast);
                 KeyOfStarsTravel.echo(caster, sl, cast);

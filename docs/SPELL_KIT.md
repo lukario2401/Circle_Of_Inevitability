@@ -1049,7 +1049,7 @@ A key press counts when it took spirituality (every ability checks first and pay
 off (DONE or FREE). The keys (`keyPressed`/`keyDone`), `SoulCore` (`spent`) and `AbilityWheel` (`wheelCast`) tell it; nothing
 else has to. `copyable()` is false for an ability `PathwayAbilities` marks `OWN_PATHWAY_ONLY` and for a wheel entry marked
 `.notCopyable()` (it needs its own Pathway's tick or state). While a copy runs, `Cooldowns` neither stops it nor starts.
-Mobs do not use the keys. A Beyonder mob that casts in a fight (`beyonder_mobs/MobCasting`) is remembered with `Casts.mobCast(mob, sl, cast)`, so `last` and `latestNear` find it, but the listeners are not told (they take a player). `Casts.madeUpFor(mob, sl, ability, sneak)` (or `BeyonderMobs.castOf(mob, sl, random)`, which picks one it really has) makes a cast of one of its powers for an ability that copies from a mob directly, as Replication and Record do. Not saved.
+Mobs do not use the keys. A Beyonder mob that casts in a fight (`beyonder_mobs/MobCasting`) is remembered with `Casts.mobCast(mob, sl, cast)`, so `last` and `latestNear` find it, and `Casts.addAnyCasterListener` listeners hear it (the Record does); the `addListener` ones take a player and hear only players. `Casts.madeUpFor(mob, sl, ability, sneak)` (or `BeyonderMobs.castOf(mob, sl, random)`, which picks one it really has) makes a cast of one of its powers for an ability that copies from a mob directly, as Replication and Record do. Not saved.
 
 A mob version of an ability uses `beyonder_mobs/MobSpells` where a player one uses `Spells`: `fightTarget`, `isEnemy`, `enemiesAround`, `enemiesOnLine`, `face`, `toward`, `lineEnd`, `strike`, `hasSequence`, `casterStillHere` (docs/BEYONDER_MOBS.md, "Mobs casting").
 

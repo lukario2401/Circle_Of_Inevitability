@@ -34,6 +34,7 @@ import java.util.function.Supplier;
  *   Casts.Cast near = Casts.latestNear(sl, spot, 32, 100, cast -> cast.caster() != me);   // the newest one cast
  *                                                                 // within 32 blocks in the last 5 seconds
  *   Casts.addListener((caster, sl, cast) -> ...)                  // once, in a static block: every cast as it goes off
+ *   Casts.addAnyCasterListener((caster, sl, cast) -> ...)         // the same, Beyonder mobs' casts too
  *   boolean wentOff = Casts.recast(player, cast);                 // casts it again for this player: free, with no
  *                                                                 // Sequence gate and no cooldown, as a copy
  *   Casts.copying(player, () -> ...)                              // what runs inside is a copy: not told, not copied
@@ -103,10 +104,19 @@ public final class Casts {
         }
     }
 
-    /** Told after every cast that went off (never for a copy). */
+    /** Told after every cast a player made that went off (never for a copy). */
     @FunctionalInterface
     public interface Listener {
         void cast(ServerPlayer caster, ServerLevel sl, Cast cast);
+    }
+
+    /**
+     * Told after every cast that went off, a player's or a Beyonder mob's (beyonder_mobs/MobCasting); never for a
+     * copy. For powers that watch any caster (the Key Of Stars' Record). Told before the player-only Listeners.
+     */
+    @FunctionalInterface
+    public interface AnyCasterListener {
+        void cast(LivingEntity caster, ServerLevel sl, Cast cast);
     }
 
     /** The key press being handled (abilities run on the server thread, one press at a time). */
@@ -129,6 +139,7 @@ public final class Casts {
     private static final Map<UUID, Cast> LAST = new HashMap<>();
     private static final List<Cast> RECENT = new ArrayList<>();
     private static final List<Listener> LISTENERS = new ArrayList<>();
+    private static final List<AnyCasterListener> ANY_CASTER_LISTENERS = new ArrayList<>();
 
     private Casts() {}
 
@@ -161,6 +172,11 @@ public final class Casts {
     /** Once, in a static block. */
     public static void addListener(Listener listener) {
         LISTENERS.add(listener);
+    }
+
+    /** Once, in a static block: told of players' and Beyonder mobs' casts alike. */
+    public static void addAnyCasterListener(AnyCasterListener listener) {
+        ANY_CASTER_LISTENERS.add(listener);
     }
 
     /** True while a copy runs for this player (recast, copying). */
@@ -233,13 +249,14 @@ public final class Casts {
     /**
      * A creature that is no player cast something for real (a Beyonder mob, blasphemy_slate/beyonder_mobs/MobCasting):
      * it is remembered like a player's cast, so last() and latestNear() find it (the crystal ball's "last power",
-     * Replication copying what was just cast nearby). The listeners are not told: they are written for player casters.
-     * Make the cast with madeUpFor.
+     * Replication copying what was just cast nearby), and the AnyCasterListeners are told (the Record writes it down).
+     * The player-only Listeners are not. Make the cast with madeUpFor.
      */
     public static void mobCast(LivingEntity caster, ServerLevel sl, Cast cast) {
         if (caster == null || cast == null || caster instanceof Player) return;
         LAST.put(caster.getUUID(), cast);
         RECENT.add(cast);
+        tellAnyCaster(caster, sl, cast);
     }
 
     // =========================
@@ -286,7 +303,18 @@ public final class Casts {
     private static void tell(ServerPlayer caster, ServerLevel sl, Cast cast) {
         LAST.put(caster.getUUID(), cast);
         RECENT.add(cast);
+        tellAnyCaster(caster, sl, cast);
         for (Listener listener : List.copyOf(LISTENERS)) {
+            try {
+                listener.cast(caster, sl, cast);
+            } catch (Exception e) {
+                CircleOfInevitability.LOGGER.error("A cast listener failed", e);
+            }
+        }
+    }
+
+    private static void tellAnyCaster(LivingEntity caster, ServerLevel sl, Cast cast) {
+        for (AnyCasterListener listener : List.copyOf(ANY_CASTER_LISTENERS)) {
             try {
                 listener.cast(caster, sl, cast);
             } catch (Exception e) {

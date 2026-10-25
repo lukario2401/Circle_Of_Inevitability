@@ -151,7 +151,7 @@ public final class KeyOfStarsRecord {
     // =========================
 
     /** Every cast that went off: a watching Scribe near it records it; one not watching gets Quick Study's glint. */
-    static void seen(ServerPlayer caster, ServerLevel sl, Casts.Cast cast) {
+    static void seen(LivingEntity caster, ServerLevel sl, Casts.Cast cast) {
         if (!cast.copyable()) return;
         for (ServerPlayer watcher : sl.players()) {
             if (watcher == caster || !KeyOfStars.isKeyOfStars(watcher, RECORD_SEQUENCE)) continue;
