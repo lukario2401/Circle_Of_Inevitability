@@ -247,14 +247,14 @@ public class PrinceOfAbolition {
             // the look of the rot of Corrosion and Ruin (status/Corrosion does the rotting)
             Corrosion.addListener(new Corrosion.Listener() {
                 @Override
-                public void started(LivingEntity victim, LivingEntity source) {
+                public void started(LivingEntity victim, Player source) {
                     if (source == null || !isPrince(source, ANY_SEQUENCE) || !(victim.level() instanceof ServerLevel sl)) return;
                     PrinceOfAbolitionFx.corroded(sl, victim, PrinceOfAbolitionFx.FOREVER, rotTag(victim));
                     if (victim instanceof Player bearer) PrinceOfAbolitionFx.statusForever(bearer, Status.CORRODED);
                 }
 
                 @Override
-                public void bit(LivingEntity victim, float amount, LivingEntity source) {
+                public void bit(LivingEntity victim, float amount, Player source) {
                     if (source != null && isPrince(source, ANY_SEQUENCE) && victim.level() instanceof ServerLevel sl) {
                         PrinceOfAbolitionFx.corrosionBite(sl, victim, amount);
                     }

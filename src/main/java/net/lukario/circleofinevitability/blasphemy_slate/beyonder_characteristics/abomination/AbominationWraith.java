@@ -257,7 +257,7 @@ public final class AbominationWraith {
 
     private static final Parasite.Hooks HOOKS = new Parasite.Hooks() {
         @Override
-        public void entered(LivingEntity parasite, LivingEntity host, ServerLevel sl) {
+        public void entered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
             int ticks = Abomination.servantTicks(parasite, POSSESSION_TICKS);
             String tag = "ab_possession_" + parasite.getId() + "_" + sl.getGameTime();
             parasite.getPersistentData().putString(POSSESSION_TAG, tag);
@@ -280,7 +280,7 @@ public final class AbominationWraith {
         }
 
         @Override
-        public void left(LivingEntity parasite, LivingEntity host, ServerLevel sl, Parasite.End why) {
+        public void left(ServerPlayer parasite, LivingEntity host, ServerLevel sl, Parasite.End why) {
             String tag = parasite.getPersistentData().getStringOr(POSSESSION_TAG, "");
             parasite.getPersistentData().remove(POSSESSION_TAG);
             AbominationFx.statusEnd(parasite, Status.POSSESSION);
