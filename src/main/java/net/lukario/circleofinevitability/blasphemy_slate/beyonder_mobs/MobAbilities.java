@@ -14,6 +14,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngelMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddessMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMageMobs;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.AttendantOfMysteriesMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragonMobs;
@@ -57,6 +58,7 @@ public final class MobAbilities {
         DarkAngelMobs.register();
         BeautyGoddessMobs.register();
         FrenziedMageMobs.register();
+        AttendantOfMysteriesMobs.register();
     }
 
     private MobAbilities() {}

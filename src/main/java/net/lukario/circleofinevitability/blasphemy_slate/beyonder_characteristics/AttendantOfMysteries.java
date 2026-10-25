@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.combat.Countdown;
 import net.lukario.circleofinevitability.combat.Later;
@@ -77,265 +78,265 @@ import java.util.UUID;
  */
 public class AttendantOfMysteries {
 
-    private static final String PATHWAY = "Attendant Of Mysteries";
+    static final String PATHWAY = "Attendant Of Mysteries";
 
     // =========================
     // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
     // =========================
 
     // Stacks: every ability used adds one picture next to the hotbar, the 5th one explodes
-    private static final int MAX_STACKS = 5;
-    private static final float STACK_BURST_DAMAGE = 40f;
-    private static final double STACK_BURST_RADIUS = 8.0;
+    static final int MAX_STACKS = 5;
+    static final float STACK_BURST_DAMAGE = 40f;
+    static final double STACK_BURST_RADIUS = 8.0;
     // Pictures for the stacks, from assets/circle_of_inevitability/textures/gui/ (without .png). One is picked at random.
-    private static final List<String> STACK_IMAGES = List.of(
+    static final List<String> STACK_IMAGES = List.of(
             "attendant_stack_orb"
     );
 
     // Ability 1 - Paper Daggers (Sequence 9)
-    private static final int DAGGER_COST = 250;
-    private static final int DAGGER_COUNT = 3;                   // an odd number, so one flies straight at the crosshair
-    private static final double DAGGER_FAN = 30.0;               // degrees between the outermost daggers
-    private static final double DAGGER_RANGE = 32.0;
-    private static final float DAGGER_DAMAGE = 32f;              // each
-    private static final double DAGGER_SPEED = 3.0;              // blocks per tick
-    private static final int DAGGER_STICK_TICKS = 40;            // how long one stays stuck in a block
-    private static final int JUGGLE_WINDOW = 60;                 // throw again within this many ticks to add a dagger
-    private static final int JUGGLE_MAX_EXTRA = 3;               // 3 -> 4 -> 5 -> 6 daggers
-    private static final float JUGGLE_DAMAGE = 16f;              // each extra dagger (they all fly at the same target)
-    private static final int JUGGLE_STAGGER = 2;                 // ticks between the extra daggers: they follow each other
-    private static final int WIDE_FAN_COUNT = 7;                 // sneak (odd as well)
-    private static final double WIDE_FAN = 90.0;
-    private static final double WIDE_FAN_RANGE = 12.0;
-    private static final float WIDE_FAN_DAMAGE = 12f;
+    static final int DAGGER_COST = 250;
+    static final int DAGGER_COUNT = 3;                   // an odd number, so one flies straight at the crosshair
+    static final double DAGGER_FAN = 30.0;               // degrees between the outermost daggers
+    static final double DAGGER_RANGE = 32.0;
+    static final float DAGGER_DAMAGE = 32f;              // each
+    static final double DAGGER_SPEED = 3.0;              // blocks per tick
+    static final int DAGGER_STICK_TICKS = 40;            // how long one stays stuck in a block
+    static final int JUGGLE_WINDOW = 60;                 // throw again within this many ticks to add a dagger
+    static final int JUGGLE_MAX_EXTRA = 3;               // 3 -> 4 -> 5 -> 6 daggers
+    static final float JUGGLE_DAMAGE = 16f;              // each extra dagger (they all fly at the same target)
+    static final int JUGGLE_STAGGER = 2;                 // ticks between the extra daggers: they follow each other
+    static final int WIDE_FAN_COUNT = 7;                 // sneak (odd as well)
+    static final double WIDE_FAN = 90.0;
+    static final double WIDE_FAN_RANGE = 12.0;
+    static final float WIDE_FAN_DAMAGE = 12f;
 
     // Ability 2 - Flaming Jump (Sequence 8)
-    private static final int FLAME_COST = 1250;
-    private static final double JUMP_RANGE = 32.0;               // how far away a flame can be to jump to it
-    private static final double JUMP_AIM = 15.0;                 // degrees: a flame this close to your crosshair is "the one you look at"
-    private static final double JUMP_NEW_FLAME_RANGE = 20.0;     // no flame there: one is lit where you aim, this far at most
-    private static final int REAL_FIRE_REACH = 24;               // how far real fire and campfires are looked for, sideways
-    private static final int REAL_FIRE_HEIGHT = 10;              // ... and up/down
-    private static final double JUMP_BURST_RADIUS = 3.5;
-    private static final float JUMP_BURST_DAMAGE = 18f;          // where you leave and where you arrive
-    private static final int JUMP_BURN_TICKS = 100;
-    private static final double FLAME_RANGE = 24.0;              // sneak: how far away you can conjure a flame
-    private static final int FLAME_TICKS = 300;                  // how long a conjured flame stays (and can be jumped to)
-    private static final double FLAME_RADIUS = 1.8;
-    private static final float FLAME_HEIGHT = 2.6f;
-    private static final int FLAME_PULSE = 20;                   // ticks between burns
-    private static final float FLAME_DAMAGE = 4f;                // per burn
+    static final int FLAME_COST = 1250;
+    static final double JUMP_RANGE = 32.0;               // how far away a flame can be to jump to it
+    static final double JUMP_AIM = 15.0;                 // degrees: a flame this close to your crosshair is "the one you look at"
+    static final double JUMP_NEW_FLAME_RANGE = 20.0;     // no flame there: one is lit where you aim, this far at most
+    static final int REAL_FIRE_REACH = 24;               // how far real fire and campfires are looked for, sideways
+    static final int REAL_FIRE_HEIGHT = 10;              // ... and up/down
+    static final double JUMP_BURST_RADIUS = 3.5;
+    static final float JUMP_BURST_DAMAGE = 18f;          // where you leave and where you arrive
+    static final int JUMP_BURN_TICKS = 100;
+    static final double FLAME_RANGE = 24.0;              // sneak: how far away you can conjure a flame
+    static final int FLAME_TICKS = 300;                  // how long a conjured flame stays (and can be jumped to)
+    static final double FLAME_RADIUS = 1.8;
+    static final float FLAME_HEIGHT = 2.6f;
+    static final int FLAME_PULSE = 20;                   // ticks between burns
+    static final float FLAME_DAMAGE = 4f;                // per burn
 
     // Ability 3 - Damage Transfer (Sequence 7)
-    private static final int TRANSFER_COST = 1250;
-    private static final double TRANSFER_RANGE = 16.0;
-    private static final int TRANSFER_TICKS = 100;
-    private static final float TRANSFER_SHARE = 0.5f;            // part of every hit on you that goes to the target instead
-    private static final int SUBSTITUTE_TICKS = 200;             // sneak: how long the paper figurine waits for a hit
-    private static final double SUBSTITUTE_ESCAPE = 5.0;         // how far you slip away
-    private static final double SUBSTITUTE_SWAP_RANGE = 16.0;    // a marionette this close takes your place instead
-    private static final int SUBSTITUTE_DAGGERS = 3;             // the torn figurine throws these back at the attacker
-    private static final float SUBSTITUTE_DAGGER_DAMAGE = 12f;
+    static final int TRANSFER_COST = 1250;
+    static final double TRANSFER_RANGE = 16.0;
+    static final int TRANSFER_TICKS = 100;
+    static final float TRANSFER_SHARE = 0.5f;            // part of every hit on you that goes to the target instead
+    static final int SUBSTITUTE_TICKS = 200;             // sneak: how long the paper figurine waits for a hit
+    static final double SUBSTITUTE_ESCAPE = 5.0;         // how far you slip away
+    static final double SUBSTITUTE_SWAP_RANGE = 16.0;    // a marionette this close takes your place instead
+    static final int SUBSTITUTE_DAGGERS = 3;             // the torn figurine throws these back at the attacker
+    static final float SUBSTITUTE_DAGGER_DAMAGE = 12f;
 
     // Ability 4 - Air Cannon (Sequence 6)
-    private static final int CANNON_COST = 2450;
-    private static final double CANNON_RANGE = 24.0;
-    private static final double CANNON_SPEED = 4.0;              // blocks per tick
-    private static final float CANNON_DAMAGE = 64f;              // on what it hits
-    private static final double CANNON_BLAST_RADIUS = 3.0;
-    private static final float CANNON_SPLASH = 0.5f;             // part of the damage for everything else in the blast
-    private static final double CANNON_RECOIL = 1.8;
-    private static final double LEAP_SPEED = 3.9;                // sneak: how hard you are thrown upward. 3.9 is the most the game
+    static final int CANNON_COST = 2450;
+    static final double CANNON_RANGE = 24.0;
+    static final double CANNON_SPEED = 4.0;              // blocks per tick
+    static final float CANNON_DAMAGE = 64f;              // on what it hits
+    static final double CANNON_BLAST_RADIUS = 3.0;
+    static final float CANNON_SPLASH = 0.5f;             // part of the damage for everything else in the blast
+    static final double CANNON_RECOIL = 1.8;
+    static final double LEAP_SPEED = 3.9;                // sneak: how hard you are thrown upward. 3.9 is the most the game
                                                                  // allows (about 60 blocks up, as before); 1.9 is about 18 blocks
-    private static final double LEAP_BLAST_RADIUS = 5.0;
-    private static final float LEAP_DAMAGE = 20f;
-    private static final int LEAP_GUARD_TICKS = 400;             // no fall damage until you land, for at most this long
+    static final double LEAP_BLAST_RADIUS = 5.0;
+    static final float LEAP_DAMAGE = 20f;
+    static final int LEAP_GUARD_TICKS = 400;             // no fall damage until you land, for at most this long
 
     // Ability 5 - Spirit Body Threads (Sequence 5)
-    private static final int THREADS_COST = 3000;
-    private static final int COUNTDOWN_SECONDS = 5;
-    private static final int COUNTDOWN_COLOR = 0xE8C872;         // pale gold
-    private static final int COUNTDOWN_LAST_COLOR = 0xD83A4A;    // the final "1"
-    private static final String SNEAK_IMAGE = "attendant_of_mysteries_sneak"; // textures/gui/attendant_of_mysteries_sneak.png
-    private static final double THREADS_RANGE = 24.0;
-    private static final double THREADS_LEASH = 32.0;            // the target gets further away than this: the threads slip
-    private static final int MARIONETTE_TICKS = 600;             // how long a marionette serves
-    private static final float MARIONETTE_MAX_HEALTH = 150f;     // more max health than this (bosses), or a player: held instead
-    private static final int BIND_TICKS = 80;
-    private static final float BIND_DAMAGE = 30f;
-    private static final double WEB_RADIUS = 10.0;               // sneak: everything this close is caught
-    private static final int WEB_MAX_TARGETS = 12;
-    private static final double WEB_LEASH = 16.0;                // whoever got further away than this by the end is free
-    private static final float WEB_DAMAGE = 20f;
-    private static final int WEB_BIND_TICKS = 80;
+    static final int THREADS_COST = 3000;
+    static final int COUNTDOWN_SECONDS = 5;
+    static final int COUNTDOWN_COLOR = 0xE8C872;         // pale gold
+    static final int COUNTDOWN_LAST_COLOR = 0xD83A4A;    // the final "1"
+    static final String SNEAK_IMAGE = "attendant_of_mysteries_sneak"; // textures/gui/attendant_of_mysteries_sneak.png
+    static final double THREADS_RANGE = 24.0;
+    static final double THREADS_LEASH = 32.0;            // the target gets further away than this: the threads slip
+    static final int MARIONETTE_TICKS = 600;             // how long a marionette serves
+    static final float MARIONETTE_MAX_HEALTH = 150f;     // more max health than this (bosses), or a player: held instead
+    static final int BIND_TICKS = 80;
+    static final float BIND_DAMAGE = 30f;
+    static final double WEB_RADIUS = 10.0;               // sneak: everything this close is caught
+    static final int WEB_MAX_TARGETS = 12;
+    static final double WEB_LEASH = 16.0;                // whoever got further away than this by the end is free
+    static final float WEB_DAMAGE = 20f;
+    static final int WEB_BIND_TICKS = 80;
 
     // Ability 6 - Historical Void (Sequence 4)
-    private static final int HISTORY_COST = 6000;
-    private static final int PROJECTION_TICKS = 300;             // how long your past self stays
-    private static final float PROJECTION_POWER = 0.5f;          // how hard its copies of your spells hit
-    private static final int PROJECTION_DELAY = 8;               // ticks after your cast that it repeats it (Air Cannon: at once,
+    static final int HISTORY_COST = 6000;
+    static final int PROJECTION_TICKS = 300;             // how long your past self stays
+    static final float PROJECTION_POWER = 0.5f;          // how hard its copies of your spells hit
+    static final int PROJECTION_DELAY = 8;               // ticks after your cast that it repeats it (Air Cannon: at once,
                                                                  // a later blast would only find what the first threw away)
-    private static final double PROJECTION_SIDE = 1.4;           // how far beside you it stands
-    private static final int FOG_TICKS = 80;                     // sneak: how long you stay hidden
-    private static final int FOG_SPEED_LEVEL = 1;                // 0 = Speed I, 1 = Speed II while hidden
+    static final double PROJECTION_SIDE = 1.4;           // how far beside you it stands
+    static final int FOG_TICKS = 80;                     // sneak: how long you stay hidden
+    static final int FOG_SPEED_LEVEL = 1;                // 0 = Speed I, 1 = Speed II while hidden
 
     // Ability 7 - Grafting (Sequence 3)
-    private static final int GRAFT_COST = 12000;
-    private static final double GRAFT_RANGE = 28.0;
-    private static final double GRAFT_RADIUS = 8.0;
-    private static final float GRAFT_DAMAGE = 45f;
-    private static final int GRAFT_WARNING = 20;                 // ticks the needle hangs in the air first
-    private static final int NEEDLE_FALL = 5;                    // ticks the fall takes
-    private static final float NEEDLE_HANG = 9f;                 // how high its point hangs above the spot
-    private static final int GRAFT_PULL_TICKS = 8;               // how long the thread drags everything to the needle
-    private static final double GRAFT_PULL_SPEED = 1.5;          // blocks per tick, at most
-    private static final int GRAFT_TICKS = 200;                  // how long they stay stitched together
-    private static final float GRAFT_SHARE = 0.5f;               // part of one's damage that each of the others takes
-    private static final int MIRACLE_TICKS = 1200;               // sneak: how long the miracle waits for your death
-    private static final float MIRACLE_HEALTH = 0.5f;            // the health you come back with (part of your maximum)
-    private static final double MIRACLE_PUSH_RADIUS = 6.0;
-    private static final int MIRACLE_FOG_TICKS = 40;             // you come back hidden for this long
+    static final int GRAFT_COST = 12000;
+    static final double GRAFT_RANGE = 28.0;
+    static final double GRAFT_RADIUS = 8.0;
+    static final float GRAFT_DAMAGE = 45f;
+    static final int GRAFT_WARNING = 20;                 // ticks the needle hangs in the air first
+    static final int NEEDLE_FALL = 5;                    // ticks the fall takes
+    static final float NEEDLE_HANG = 9f;                 // how high its point hangs above the spot
+    static final int GRAFT_PULL_TICKS = 8;               // how long the thread drags everything to the needle
+    static final double GRAFT_PULL_SPEED = 1.5;          // blocks per tick, at most
+    static final int GRAFT_TICKS = 200;                  // how long they stay stitched together
+    static final float GRAFT_SHARE = 0.5f;               // part of one's damage that each of the others takes
+    static final int MIRACLE_TICKS = 1200;               // sneak: how long the miracle waits for your death
+    static final float MIRACLE_HEALTH = 0.5f;            // the health you come back with (part of your maximum)
+    static final double MIRACLE_PUSH_RADIUS = 6.0;
+    static final int MIRACLE_FOG_TICKS = 40;             // you come back hidden for this long
 
     // =========================
     // Saved on the player
     // =========================
-    private static final String STACKS = "attendant_of_mysteries_stacks";
-    private static final String STACK_IMAGE_KEY = "attendant_of_mysteries_stack_image_"; // + slot number
-    private static final String STACK_IMAGE_ID = "aom_stack_";                           // screen image ids
-    private static final String JUGGLE_EXTRA = "attendant_of_mysteries_juggle_extra";
-    private static final String JUGGLE_LEFT = "attendant_of_mysteries_juggle_ticks";
-    private static final String PROJECTION_LEFT = "attendant_of_mysteries_projection_ticks";
-    private static final String PROJECTION_X = "attendant_of_mysteries_projection_x";   // where it stands, from you
-    private static final String PROJECTION_Z = "attendant_of_mysteries_projection_z";
+    static final String STACKS = "attendant_of_mysteries_stacks";
+    static final String STACK_IMAGE_KEY = "attendant_of_mysteries_stack_image_"; // + slot number
+    static final String STACK_IMAGE_ID = "aom_stack_";                           // screen image ids
+    static final String JUGGLE_EXTRA = "attendant_of_mysteries_juggle_extra";
+    static final String JUGGLE_LEFT = "attendant_of_mysteries_juggle_ticks";
+    static final String PROJECTION_LEFT = "attendant_of_mysteries_projection_ticks";
+    static final String PROJECTION_X = "attendant_of_mysteries_projection_x";   // where it stands, from you
+    static final String PROJECTION_Z = "attendant_of_mysteries_projection_z";
 
     // Small pictures above the stacks that show what is active. Files: textures/gui/attendant_of_mysteries/<name>.png
-    private static final String STATUS_SUBSTITUTE = "aom_status_substitute";
-    private static final String STATUS_PROJECTION = "aom_status_projection";
-    private static final String STATUS_MIRACLE = "aom_status_miracle";
-    private static final String STATUS_TRANSFER = "aom_status_transfer";
+    static final String STATUS_SUBSTITUTE = "aom_status_substitute";
+    static final String STATUS_PROJECTION = "aom_status_projection";
+    static final String STATUS_MIRACLE = "aom_status_miracle";
+    static final String STATUS_TRANSFER = "aom_status_transfer";
 
     // =========================
     // 3D models (models/model_fx/..., textures in textures/model_fx/...)
     // =========================
-    private static final String MODELS = "attendant_of_mysteries/";
-    private static final float DAGGER_SIZE = 1.0f;
-    private static final double DAGGER_TIP = (20 - 10) / 16.0 * DAGGER_SIZE;      // middle of the dagger -> its tip, in blocks
-    private static final ModelFx PAPER_DAGGER = ModelFx.of(MODELS + "paper_dagger")
+    static final String MODELS = "attendant_of_mysteries/";
+    static final float DAGGER_SIZE = 1.0f;
+    static final double DAGGER_TIP = (20 - 10) / 16.0 * DAGGER_SIZE;      // middle of the dagger -> its tip, in blocks
+    static final ModelFx PAPER_DAGGER = ModelFx.of(MODELS + "paper_dagger")
             .scale(DAGGER_SIZE).pivot(8, 10, 8)                   // tip up, turns around its middle
             .glow().aura(0x60FFF2D0, 0.04f, 2).spin(34f);         // whirls around its own length as it flies
-    private static final ModelFx PAPER_FIGURINE = ModelFx.of(MODELS + "paper_figurine")   // a paper doll, 2 blocks tall
+    static final ModelFx PAPER_FIGURINE = ModelFx.of(MODELS + "paper_figurine")   // a paper doll, 2 blocks tall
             .glow().aura(0x50FFF2D0, 0.05f, 2);
-    private static final ModelFx AIR_SHELL = ModelFx.of("orb")    // the shared white orb, tinted
+    static final ModelFx AIR_SHELL = ModelFx.of("orb")    // the shared white orb, tinted
             .pivot(8, 8, 8).glow().unshaded().seeThrough()
             .color(0xD0E4F4FF).spin(30f);
-    private static final ModelFx PROJECTION = ModelFx.of(MODELS + "projection")       // a grey figure in a top hat
+    static final ModelFx PROJECTION = ModelFx.of(MODELS + "projection")       // a grey figure in a top hat
             .pivot(8, -6, 8).glow().unshaded().seeThrough()
             .color(0xC0C4CCDC).tag("aom_projection");
-    private static final float NEEDLE_SIZE = 4.5f;                // 1 = the size it has in Blockbench (3 blocks tall)
-    private static final ModelFx NEEDLE = ModelFx.of(MODELS + "needle")
+    static final float NEEDLE_SIZE = 4.5f;                // 1 = the size it has in Blockbench (3 blocks tall)
+    static final ModelFx NEEDLE = ModelFx.of(MODELS + "needle")
             .scale(NEEDLE_SIZE).pivot(8, -16, 8)                  // hangs point down, turns around its point
             .glow().aura(0xB0D8C0FF, 0.2f, 3);                    // not full strength: the shaft is two cubes in one, the glow adds up
-    private static final ModelFx THREAD = ModelFx.of(MODELS + "thread")   // a taut thread, 3 blocks long, standing up
+    static final ModelFx THREAD = ModelFx.of(MODELS + "thread")   // a taut thread, 3 blocks long, standing up
             .pivot(8, -16, 8).glow().unshaded().seeThrough();
-    private static final ModelFx FOOL_CARD = ModelFx.of(MODELS + "fool_card")
+    static final ModelFx FOOL_CARD = ModelFx.of(MODELS + "fool_card")
             .pivot(8, 8, 8).glow().aura(0x90FFE9A8, 0.08f, 3);
 
     // =========================
     // Small particles and trails that go with them
     // =========================
-    private static final ParticleFx PAPER_SCRAP = ParticleFx.of("fx/paper")
+    static final ParticleFx PAPER_SCRAP = ParticleFx.of("fx/paper")
             .color(0xFFFFF8E8).endColor(0x00E0D4B8)
             .size(0.1f).endSize(0.07f).sizeRandom(0.45f)
             .lifetime(24, 14).gravity(0.3f).friction(0.9f)
             .collide().spin(16f).randomRotation();
-    private static final ParticleFx AIR_PUFF = ParticleFx.of("fx/smoke")
+    static final ParticleFx AIR_PUFF = ParticleFx.of("fx/smoke")
             .color(0x80E8F4FF).endColor(0x00C8DCF0)
             .size(0.3f).endSize(0.9f).sizeRandom(0.3f)
             .lifetime(14, 8).friction(0.86f)
             .spin(3f).randomRotation();
-    private static final ParticleFx THREAD_MOTE = ParticleFx.of("fx/glow")
+    static final ParticleFx THREAD_MOTE = ParticleFx.of("fx/glow")
             .color(0xFFD8C8FF).endColor(0x00483070)
             .size(0.07f).endSize(0.02f)
             .lifetime(16, 8).friction(0.9f)
             .glow();
-    private static final ParticleFx HISTORY_FOG = ParticleFx.of("fx/smoke")
+    static final ParticleFx HISTORY_FOG = ParticleFx.of("fx/smoke")
             .color(0xB0C4C8D2).endColor(0x00808490)
             .size(0.5f).endSize(1.3f).sizeRandom(0.35f)
             .lifetime(30, 16).gravity(-0.01f).friction(0.9f)
             .spin(2f).randomRotation();
-    private static final ParticleFx GOLD_MOTE = ParticleFx.of("fx/spark")
+    static final ParticleFx GOLD_MOTE = ParticleFx.of("fx/spark")
             .color(0xFFFFE9A8).endColor(0x00FFB040)
             .size(0.12f).endSize(0.03f).sizeRandom(0.4f)
             .lifetime(26, 14).gravity(-0.04f).friction(0.92f)
             .glow().spin(12f).randomRotation();
-    private static final ParticleFx STACK_SPARK = ParticleFx.of("fx/glow")
+    static final ParticleFx STACK_SPARK = ParticleFx.of("fx/glow")
             .color(0xFFFF5A6A).endColor(0x00801020)
             .size(0.12f).endSize(0.03f).sizeRandom(0.4f)
             .lifetime(18, 10).friction(0.9f)
             .glow();
 
-    private static final SlashFx DAGGER_STREAK = SlashFx.line("slash/smooth")      // the streak behind a thrown dagger
+    static final SlashFx DAGGER_STREAK = SlashFx.line("slash/smooth")      // the streak behind a thrown dagger
             .color(0xA0FFF4DC).core(0xE0FFFFFF)
             .width(0.12f).taper(SlashFx.Taper.COMET);
-    private static final SlashFx AIR_STREAK = SlashFx.line("slash/smooth")         // the wake of the air shell
+    static final SlashFx AIR_STREAK = SlashFx.line("slash/smooth")         // the wake of the air shell
             .color(0x70DCEEFF).core(0xC0FFFFFF)
             .width(0.5f).taper(SlashFx.Taper.COMET);
     // Spirit Body Threads: dark with a pale core, so they show against the sky as well as in a cave
-    private static final SlashFx SPIRIT_THREAD = SlashFx.line("slash/smooth")
+    static final SlashFx SPIRIT_THREAD = SlashFx.line("slash/smooth")
             .translucent().color(0xD0281C3C).core(0xD0E6DCFF)
             .width(0.07f).taper(SlashFx.Taper.UNIFORM);
-    private static final SlashFx TRANSFER_THREAD = SlashFx.line("slash/smooth")    // the red line damage travels along
+    static final SlashFx TRANSFER_THREAD = SlashFx.line("slash/smooth")    // the red line damage travels along
             .color(0xC0FF4A5A).core(0xE0FFE0E0)
             .width(0.06f).taper(SlashFx.Taper.UNIFORM);
-    private static final SlashFx STITCH = SlashFx.line("slash/dashed")             // the golden seam of Grafting
+    static final SlashFx STITCH = SlashFx.line("slash/dashed")             // the golden seam of Grafting
             .color(0xF0FFD890)
             .width(0.16f).taper(SlashFx.Taper.UNIFORM);
 
     /** A paper dagger in flight. What it does when it hits is added per throw (see throwDagger). */
-    private static final Shot DAGGER_SHOT = Shot.of(PAPER_DAGGER)
+    static final Shot DAGGER_SHOT = Shot.of(PAPER_DAGGER)
             .speed(DAGGER_SPEED).width(0.35).tip(DAGGER_TIP)
             .trail(DAGGER_STREAK).stick(DAGGER_STICK_TICKS);
-    private static final Shot AIR_SHOT = Shot.of(AIR_SHELL)
+    static final Shot AIR_SHOT = Shot.of(AIR_SHELL)
             .speed(CANNON_SPEED).range(CANNON_RANGE).width(0.5)
             .trail(AIR_STREAK);
 
     /** The flames you conjured: where they are and until when they can be jumped to. */
     private record SpiritFlame(ServerLevel level, UUID owner, Vec3 spot, long expires) {}
 
-    private static final List<SpiritFlame> FLAMES = new ArrayList<>();
+    static final List<SpiritFlame> FLAMES = new ArrayList<>();
 
     // =========================
     // Melee combo (hitting mobs as Attendant Of Mysteries), registered in combat/MeleeCombos:
     // 1 = ring sweeping around you, 2 = tilted ring around you, 3 = ground spiral around you OR crystal X on the target
     // =========================
-    private static final int COMBO_HEAD = 0xF2F4F2C9;   // cream front
-    private static final int COMBO_MID = 0xEE52E3C4;    // mint cyan middle
-    private static final int COMBO_TAIL = 0xA05B3B33;   // dark brown fading tail
+    static final int COMBO_HEAD = 0xF2F4F2C9;   // cream front
+    static final int COMBO_MID = 0xEE52E3C4;    // mint cyan middle
+    static final int COMBO_TAIL = 0xA05B3B33;   // dark brown fading tail
 
-    private static final SlashFx COMBO_RING = SlashFx.arc("slash/band")
+    static final SlashFx COMBO_RING = SlashFx.arc("slash/band")
             .color(COMBO_MID).tailColor(COMBO_TAIL).headColor(COMBO_HEAD)
             .translucent()
             .radius(2.6f).arc(320f).width(1.1f).taper(SlashFx.Taper.COMET)
             .layers(3).spread(0.28f)
             .lifetime(12).sweep(5).spin(10f);             // draws itself, keeps spinning, then wipes away
-    private static final SlashFx COMBO_TILTED_RING = COMBO_RING
+    static final SlashFx COMBO_TILTED_RING = COMBO_RING
             .radius(2.4f).arc(-270f).width(1.2f)          // negative arc = sweeps the other way
             .sweep(4).spin(-8f)
             .rotation(0f, -35f, 30f);                     // big arch over and around you, tilted
-    private static final SlashFx COMBO_GROUND_SPIRAL = COMBO_RING.flat()
+    static final SlashFx COMBO_GROUND_SPIRAL = COMBO_RING.flat()
             .radius(1.2f).endRadius(3.6f).arc(540f).width(1.3f)   // lies on the ground, winds outward
             .spread(0.4f)
             .lifetime(14).sweep(6).spin(9f);
-    private static final SlashFx COMBO_CRYSTAL = SlashFx.line("slash/crystal")
+    static final SlashFx COMBO_CRYSTAL = SlashFx.line("slash/crystal")
             .color(0xC89CFFE6).core(0x70FFFFFF)
             .radius(1.9f).width(0.32f).taper(SlashFx.Taper.CRESCENT)   // pointed at both ends
             .lifetime(16).sweep(2).fromCenter();                       // shoots out, holds, fades
-    private static final ParticleFx COMBO_STAR = ParticleFx.of("fx/spark")
+    static final ParticleFx COMBO_STAR = ParticleFx.of("fx/spark")
             .color(0xFFB8FFEE).fadeOut()
             .size(0.12f).endSize(0.03f).sizeRandom(0.4f)
             .lifetime(28, 14).friction(0.96f)
             .glow().spin(12f).randomRotation();
-    private static final ParticleFx COMBO_STAR_WHITE = COMBO_STAR.color(0xFFFFFFFF).fadeOut();
+    static final ParticleFx COMBO_STAR_WHITE = COMBO_STAR.color(0xFFFFFFFF).fadeOut();
 
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
             .step(AttendantOfMysteries::comboRing)
@@ -388,7 +389,7 @@ public class AttendantOfMysteries {
     // =========================
     // Ability 1 - Paper Daggers
     // =========================
-    public static void attendantOfMysteriesPaperDagger(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void attendantOfMysteriesPaperDagger(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 9)) return;
         if (!Spells.paySpirituality(player, DAGGER_COST)) return;
         stepOutOfTheFog(player);
@@ -408,7 +409,7 @@ public class AttendantOfMysteries {
      * (they follow the fan one after another, straight at the crosshair).
      * Returns how many extra daggers this cast gets.
      */
-    private static int juggle(Player player) {
+    private static int juggle(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         int extra = data.getIntOr(JUGGLE_LEFT, 0) > 0 ? Math.min(JUGGLE_MAX_EXTRA, data.getIntOr(JUGGLE_EXTRA, 0) + 1) : 0;
         data.putInt(JUGGLE_EXTRA, extra);
@@ -420,7 +421,7 @@ public class AttendantOfMysteries {
      * Normal: a narrow fan that flies far. Sneak: a wide fan at close range. Also used by the projection.
      * Thrown from 'from' toward what the caster's crosshair is on.
      */
-    private static void paperDaggers(Player player, ServerLevel sl, Vec3 from, boolean sneak, int extra, float power) {
+    private static void paperDaggers(LivingEntity player, ServerLevel sl, Vec3 from, boolean sneak, int extra, float power) {
         int count = sneak ? WIDE_FAN_COUNT : DAGGER_COUNT;
         double fan = sneak ? WIDE_FAN : DAGGER_FAN;
         double range = sneak ? WIDE_FAN_RANGE : DAGGER_RANGE;
@@ -442,7 +443,7 @@ public class AttendantOfMysteries {
      * One paper dagger: it stops in the first enemy it reaches, or stays stuck in the block it hits.
      * 'windup' = ticks it hangs in the air before it leaves (0 = at once).
      */
-    private static void throwDagger(Player player, ServerLevel sl, Vec3 from, Vec3 direction, double range, float damage, int windup) {
+    private static void throwDagger(LivingEntity player, ServerLevel sl, Vec3 from, Vec3 direction, double range, float damage, int windup) {
         DAGGER_SHOT.range(range).windup(windup)
                 .onHit((target, at) -> {
                     Spells.strike(player, target, damage);
@@ -460,14 +461,14 @@ public class AttendantOfMysteries {
     // =========================
     // Ability 2 - Flaming Jump
     // =========================
-    public static void attendantOfMysteriesFlamingJump(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void attendantOfMysteriesFlamingJump(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 8)) return;
 
         if (player.isShiftKeyDown()) {
             // Sneak - Flame Control: a flame on the spot you aim at. It burns what stands in it and you can jump to it.
             Vec3 spot = Spells.aimGround(player, sl, FLAME_RANGE);
             if (!onSolidGround(sl, spot)) {
-                player.sendSystemMessage(Component.literal("There is nothing there to set alight."));
+                Spells.tell(player, Component.literal("There is nothing there to set alight."));
                 return; // nothing spent
             }
             if (!Spells.paySpirituality(player, FLAME_COST)) return;
@@ -477,18 +478,18 @@ public class AttendantOfMysteries {
             echo(player, sl, PROJECTION_DELAY, () -> flameBurst(player, sl, spot, PROJECTION_POWER));
         } else {
             if (Root.has(player, RootRestriction.TELEPORT)) {
-                player.sendSystemMessage(Component.literal("You cannot leave this place."));
+                Spells.tell(player, Component.literal("You cannot leave this place."));
                 return;
             }
             // Normal: to the flame you are looking at. If there is none, one is lit where you aim.
             Vec3 lit = flameToJumpTo(player, sl);
             Vec3 destination = lit != null ? lit : Spells.aimGround(player, sl, JUMP_NEW_FLAME_RANGE);
             if (lit == null && !onSolidGround(sl, destination)) {
-                player.sendSystemMessage(Component.literal("There is nothing there to set alight."));
+                Spells.tell(player, Component.literal("There is nothing there to set alight."));
                 return; // nothing spent
             }
             if (!Spells.fits(player, sl, destination)) {
-                player.sendSystemMessage(Component.literal("There is no room to step out of that flame."));
+                Spells.tell(player, Component.literal("There is no room to step out of that flame."));
                 return; // nothing spent
             }
             if (!Spells.paySpirituality(player, FLAME_COST)) return;
@@ -501,7 +502,7 @@ public class AttendantOfMysteries {
     }
 
     /** Leaves in a burst of fire and arrives in another. Both ends keep a flame, so you can jump back and forth. */
-    private static void flamingJump(Player player, ServerLevel sl, Vec3 destination, boolean lightOneThere) {
+    private static void flamingJump(LivingEntity player, ServerLevel sl, Vec3 destination, boolean lightOneThere) {
         Vec3 left = player.position();
         flameBurst(player, sl, left, 1f);
         if (onSolidGround(sl, left) && flameAt(player, sl, left) == null) conjureFlame(player, sl, left);
@@ -515,7 +516,7 @@ public class AttendantOfMysteries {
     }
 
     /** A burst of fire around a spot on the ground: hurts and sets alight. Also used by the projection. */
-    private static void flameBurst(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void flameBurst(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         Vec3 center = ground.add(0, 0.9, 0);
         for (LivingEntity target : Spells.enemiesAround(player, sl, center, JUMP_BURST_RADIUS)) {
             Spells.strike(player, target, JUMP_BURST_DAMAGE * power);
@@ -526,7 +527,7 @@ public class AttendantOfMysteries {
     }
 
     /** A flame that stays for FLAME_TICKS: it burns whoever stands in it, and Flaming Jump can go to it. */
-    private static void conjureFlame(Player player, ServerLevel sl, Vec3 ground) {
+    private static void conjureFlame(LivingEntity player, ServerLevel sl, Vec3 ground) {
         FLAMES.removeIf(flame -> flame.expires() < flame.level().getGameTime());
         FLAMES.add(new SpiritFlame(sl, player.getUUID(), ground, sl.getGameTime() + FLAME_TICKS));
 
@@ -541,7 +542,7 @@ public class AttendantOfMysteries {
     }
 
     /** One burn every FLAME_PULSE ticks for as long as the flame lasts. It stops burning when its caster is gone. */
-    private static void burnInFlame(Player player, ServerLevel sl, Vec3 ground, int ticksLeft) {
+    private static void burnInFlame(LivingEntity player, ServerLevel sl, Vec3 ground, int ticksLeft) {
         if (ticksLeft <= FLAME_PULSE) return;
         Later.run(sl, FLAME_PULSE, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
@@ -558,7 +559,7 @@ public class AttendantOfMysteries {
      * The flame nearest to the caster's crosshair (within JUMP_AIM degrees of it): one they conjured, real fire
      * or a lit campfire. Returns where to stand in it, or null if they are not looking at any flame.
      */
-    private static Vec3 flameToJumpTo(Player player, ServerLevel sl) {
+    private static Vec3 flameToJumpTo(LivingEntity player, ServerLevel sl) {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         double bestAngle = Math.toRadians(JUMP_AIM);
@@ -605,7 +606,7 @@ public class AttendantOfMysteries {
     }
 
     /** The caster's conjured flame on this spot (within a block), or null. */
-    private static SpiritFlame flameAt(Player player, ServerLevel sl, Vec3 spot) {
+    private static SpiritFlame flameAt(LivingEntity player, ServerLevel sl, Vec3 spot) {
         long now = sl.getGameTime();
         for (SpiritFlame flame : FLAMES) {
             if (flame.level() != sl || flame.expires() < now || !flame.owner().equals(player.getUUID())) continue;
@@ -617,7 +618,7 @@ public class AttendantOfMysteries {
     // =========================
     // Ability 3 - Damage Transfer
     // =========================
-    public static void attendantOfMysteriesDamageTransfer(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void attendantOfMysteriesDamageTransfer(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 7)) return;
 
         if (player.isShiftKeyDown()) {
@@ -627,7 +628,7 @@ public class AttendantOfMysteries {
         } else {
             LivingEntity target = Spells.aimEnemy(player, sl, TRANSFER_RANGE);
             if (target == null) {
-                player.sendSystemMessage(Component.literal("No one stands before you."));
+                Spells.tell(player, Component.literal("No one stands before you."));
                 return; // nothing spent
             }
             if (!Spells.paySpirituality(player, TRANSFER_COST)) return;
@@ -640,7 +641,7 @@ public class AttendantOfMysteries {
 
     // Normal: for TRANSFER_TICKS, part of every hit on you is dealt to the target instead.
     // The harmful effects you carry right now move onto it as well.
-    private static void damageTransfer(Player player, ServerLevel sl, LivingEntity target) {
+    private static void damageTransfer(LivingEntity player, ServerLevel sl, LivingEntity target) {
         DamageLink.redirect(player, target, TRANSFER_SHARE, TRANSFER_TICKS);
 
         for (MobEffectInstance wound : Spells.harmfulEffects(player)) {
@@ -664,7 +665,7 @@ public class AttendantOfMysteries {
     }
 
     // Sneak: the next hit within SUBSTITUTE_TICKS lands on a paper figurine instead of you (see figurineEscape).
-    private static void readySubstitute(Player player, ServerLevel sl) {
+    private static void readySubstitute(LivingEntity player, ServerLevel sl) {
         Substitute.arm(player, SUBSTITUTE_TICKS, 1, AttendantOfMysteries::figurineEscape);
 
         // a figurine folds itself in front of you and slips into your sleeve
@@ -715,7 +716,7 @@ public class AttendantOfMysteries {
     }
 
     /** The figurine that stands where you stood: it is torn apart, and throws paper daggers back at the attacker. */
-    private static void paperFigurineDecoy(Player player, ServerLevel sl, Vec3 where, float facing, Entity attacker) {
+    private static void paperFigurineDecoy(LivingEntity player, ServerLevel sl, Vec3 where, float facing, Entity attacker) {
         ModelFx decoy = PAPER_FIGURINE.scale(0.95f).lifetime(14).fade(0, 4)
                 .key(0, ModelFx.pose().scale(0.5f).alpha(0f))
                 .key(2, ModelFx.pose().scale(1f).alpha(1f), ModelFx.Ease.OUT_BACK)
@@ -740,7 +741,7 @@ public class AttendantOfMysteries {
     }
 
     /** The caster's nearest marionette within range, or null. */
-    private static Mob nearestMarionette(Player player, double range) {
+    private static Mob nearestMarionette(LivingEntity player, double range) {
         Mob nearest = null;
         double best = range * range;
         for (Mob puppet : Marionette.of(player)) {
@@ -756,7 +757,7 @@ public class AttendantOfMysteries {
     // =========================
     // Ability 4 - Air Cannon
     // =========================
-    public static void attendantOfMysteriesAirCannon(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void attendantOfMysteriesAirCannon(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 6)) return;
         if (!Spells.paySpirituality(player, CANNON_COST)) return;
         stepOutOfTheFog(player);
@@ -790,7 +791,7 @@ public class AttendantOfMysteries {
      * part of it and is thrown away from it. Also used by the projection.
      * Fired from 'from' toward what the caster's crosshair is on.
      */
-    private static void airCannon(Player player, ServerLevel sl, Vec3 from, float power) {
+    private static void airCannon(LivingEntity player, ServerLevel sl, Vec3 from, float power) {
         Vec3 direction = Spells.aimFrom(player, sl, from, CANNON_RANGE);
         LivingEntity[] struck = new LivingEntity[1];                // what the shell itself hit, if anything
         int arrives = AIR_SHOT
@@ -823,7 +824,7 @@ public class AttendantOfMysteries {
     }
 
     /** Sneak: a blast against the ground. Hurts and throws away everything around the spot. Also used by the projection. */
-    private static void airBurst(Player player, ServerLevel sl, Vec3 ground, float power) {
+    private static void airBurst(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
         for (LivingEntity target : Spells.enemiesAround(player, sl, ground.add(0, 0.5, 0), LEAP_BLAST_RADIUS)) {
             Spells.strike(player, target, LEAP_DAMAGE * power);
             Spells.push(target, ground, 1.3, 0.55);
@@ -849,15 +850,14 @@ public class AttendantOfMysteries {
     // =========================
     // Ability 5 - Spirit Body Threads
     // =========================
-    public static void attendantOfMysteriesCountdown(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void attendantOfMysteriesCountdown(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 5)) return;
-        if (!(player instanceof ServerPlayer)) return;
         if (Countdown.isRunning(player)) return; // already counting
 
         if (player.isShiftKeyDown()) {
             List<LivingEntity> caught = Spells.enemiesAround(player, sl, player.position().add(0, 1.0, 0), WEB_RADIUS);
             if (caught.isEmpty()) {
-                player.sendSystemMessage(Component.literal("There are no threads within your reach."));
+                Spells.tell(player, Component.literal("There are no threads within your reach."));
                 return; // nothing spent
             }
             if (!Spells.paySpirituality(player, THREADS_COST)) return;
@@ -867,7 +867,7 @@ public class AttendantOfMysteries {
         } else {
             LivingEntity target = Spells.aimEnemy(player, sl, THREADS_RANGE);
             if (target == null) {
-                player.sendSystemMessage(Component.literal("No one stands before you."));
+                Spells.tell(player, Component.literal("No one stands before you."));
                 return; // nothing spent
             }
             if (!Spells.paySpirituality(player, THREADS_COST)) return;
@@ -880,7 +880,7 @@ public class AttendantOfMysteries {
 
     // Normal: you take hold of one target's Spirit Body Threads. For five seconds it grows slower and slower;
     // if it is still within reach at 0, it is yours (see takeHold).
-    private static void seizeThreads(Player player, ServerLevel sl, LivingEntity target) {
+    private static void seizeThreads(LivingEntity player, ServerLevel sl, LivingEntity target) {
         int ticks = COUNTDOWN_SECONDS * 20;
         Countdown.seconds(COUNTDOWN_SECONDS)
                 .colors(COUNTDOWN_COLOR, COUNTDOWN_LAST_COLOR)
@@ -892,7 +892,7 @@ public class AttendantOfMysteries {
                 .keepWhile(() -> target.isAlive() && target.level() == sl && player.level() == sl
                         && player.distanceToSqr(target) <= THREADS_LEASH * THREADS_LEASH)
                 .onCancel(() -> {
-                    player.sendSystemMessage(Component.literal("The threads slip from your fingers."));
+                    Spells.tell(player, Component.literal("The threads slip from your fingers."));
                     Spells.sound(sl, player.position(), SoundEvents.CHAIN_PLACE, 0.7f, 0.5f);
                 })
                 .onFinish(() -> takeHold(player, sl, target))
@@ -914,7 +914,7 @@ public class AttendantOfMysteries {
     }
 
     /** The countdown reached 0. A mob becomes a marionette; a player or something too strong for that is bound and hurt. */
-    private static void takeHold(Player player, ServerLevel sl, LivingEntity target) {
+    private static void takeHold(LivingEntity player, ServerLevel sl, LivingEntity target) {
         Vec3 feet = target.position();
         if (target instanceof Mob mob && mob.getMaxHealth() <= MARIONETTE_MAX_HEALTH
                 && Marionette.control(mob, player, MARIONETTE_TICKS)) {
@@ -933,9 +933,9 @@ public class AttendantOfMysteries {
 
     // Sneak: the eye opens and you see every thread around you. All of them are taken at once:
     // everything caught slows down for five seconds, and what is still close at the end is strung up and hurt.
-    private static void threadWeb(Player player, ServerLevel sl, List<LivingEntity> caught) {
+    private static void threadWeb(LivingEntity player, ServerLevel sl, List<LivingEntity> caught) {
         int ticks = COUNTDOWN_SECONDS * 20;
-        ScreenImages.show(player, "aom_sneak", SNEAK_IMAGE, 128, ticks);
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, "aom_sneak", SNEAK_IMAGE, 128, ticks);
 
         Countdown.seconds(COUNTDOWN_SECONDS)
                 .silent()                                               // the eye is shown instead of the numbers
@@ -946,7 +946,9 @@ public class AttendantOfMysteries {
                     Spells.sound(sl, player.position(), SoundEvents.AMETHYST_BLOCK_CHIME, 0.9f, 0.6f + (COUNTDOWN_SECONDS - left) * 0.2f);
                 })
                 .keepWhile(() -> player.level() == sl)
-                .onCancel(() -> ScreenImages.hide(player, "aom_sneak"))
+                .onCancel(() -> {
+                    if (player instanceof Player viewer) ScreenImages.hide(viewer, "aom_sneak");
+                })
                 .onFinish(() -> pullWeb(player, sl, caught))
                 .start(player);
 
@@ -959,11 +961,11 @@ public class AttendantOfMysteries {
         Spells.sound(sl, player.position(), SoundEvents.CHAIN_PLACE, 1f, 1.4f);
     }
 
-    private static boolean inWeb(Player player, ServerLevel sl, LivingEntity target) {
+    private static boolean inWeb(LivingEntity player, ServerLevel sl, LivingEntity target) {
         return target.isAlive() && target.level() == sl && player.distanceToSqr(target) <= WEB_LEASH * WEB_LEASH;
     }
 
-    private static void pullWeb(Player player, ServerLevel sl, List<LivingEntity> caught) {
+    private static void pullWeb(LivingEntity player, ServerLevel sl, List<LivingEntity> caught) {
         for (LivingEntity target : caught) {
             if (!inWeb(player, sl, target)) continue;                   // it got away in time
             Spells.strike(player, target, WEB_DAMAGE);
@@ -995,7 +997,7 @@ public class AttendantOfMysteries {
     // =========================
     // Ability 6 - Historical Void
     // =========================
-    public static void attendantOfMysteriesHistoricalVoid(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void attendantOfMysteriesHistoricalVoid(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 4)) return;
 
         if (player.isShiftKeyDown()) {
@@ -1016,7 +1018,7 @@ public class AttendantOfMysteries {
 
     // Normal: a projection of your past self stands beside you for PROJECTION_TICKS. When you cast Paper Daggers,
     // Flaming Jump or Air Cannon it casts them too, weaker and for free (see echo).
-    private static void summonProjection(Player player, ServerLevel sl) {
+    private static void summonProjection(LivingEntity player, ServerLevel sl) {
         Vec3 side = Spells.rightOf(player).scale(PROJECTION_SIDE);
         CompoundTag data = player.getPersistentData();
         data.putInt(PROJECTION_LEFT, PROJECTION_TICKS);
@@ -1036,12 +1038,12 @@ public class AttendantOfMysteries {
         Spells.sound(sl, there, SoundEvents.BEACON_ACTIVATE, 0.8f, 0.6f);
     }
 
-    private static boolean projectionActive(Player player) {
+    private static boolean projectionActive(LivingEntity player) {
         return player.getPersistentData().getIntOr(PROJECTION_LEFT, 0) > 0;
     }
 
     /** Where the projection's raised hand is. */
-    private static Vec3 projectionHand(Player player) {
+    private static Vec3 projectionHand(LivingEntity player) {
         CompoundTag data = player.getPersistentData();
         return player.position().add(data.getDoubleOr(PROJECTION_X, 0.0), 1.5, data.getDoubleOr(PROJECTION_Z, 0.0));
     }
@@ -1050,7 +1052,7 @@ public class AttendantOfMysteries {
      * If the projection is there, it repeats what the caster just did: 'repeat' runs 'delay' ticks later (0 = at once).
      * Give it the same spell cast from projectionHand(player) at PROJECTION_POWER. It costs nothing and adds no stack.
      */
-    private static void echo(Player player, ServerLevel sl, int delay, Runnable repeat) {
+    private static void echo(LivingEntity player, ServerLevel sl, int delay, Runnable repeat) {
         if (!projectionActive(player)) return;
         Later.run(sl, delay, () -> {
             if (!Spells.casterStillHere(player, sl) || !projectionActive(player)) return;
@@ -1064,7 +1066,7 @@ public class AttendantOfMysteries {
 
     // Sneak: you step into the fog of history. Nothing sees, targets or hurts you for FOG_TICKS, you move faster,
     // and what ailed you stays behind. Casting, attacking or pressing the key again steps back out.
-    private static void hideInHistory(Player player, ServerLevel sl) {
+    private static void hideInHistory(LivingEntity player, ServerLevel sl) {
         Spells.cleanse(player);
         Concealment.hide(player, FOG_TICKS);
         player.addEffect(new MobEffectInstance(MobEffects.SPEED, FOG_TICKS, FOG_SPEED_LEVEL, false, false));
@@ -1077,14 +1079,14 @@ public class AttendantOfMysteries {
     }
 
     /** Casting anything else ends the concealment: you cannot act from inside history. */
-    private static void stepOutOfTheFog(Player player) {
+    private static void stepOutOfTheFog(LivingEntity player) {
         if (Concealment.isHidden(player)) Concealment.reveal(player);
     }
 
     // =========================
     // Ability 7 - Grafting
     // =========================
-    public static void attendantOfMysteriesGrafting(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+    public static void attendantOfMysteriesGrafting(LivingEntity player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, 3)) return;
         if (!Spells.paySpirituality(player, GRAFT_COST)) return;
         stepOutOfTheFog(player);
@@ -1097,7 +1099,7 @@ public class AttendantOfMysteries {
 
     // Normal: a colossal needle hangs over the spot you aim at, then stabs down. Everything under it is hurt,
     // dragged to it by its thread and stitched together: for GRAFT_TICKS, what hurts one of them hurts them all.
-    private static void graft(Player player, ServerLevel sl, Vec3 ground) {
+    private static void graft(LivingEntity player, ServerLevel sl, Vec3 ground) {
         int land = GRAFT_WARNING + NEEDLE_FALL;
         SpellFx.warningCircle(sl, ground, GRAFT_RADIUS, 0xE0C8A8FF, land);
 
@@ -1125,7 +1127,7 @@ public class AttendantOfMysteries {
                 .during(0, GRAFT_WARNING, ModelFx.pose().spin(360f), ModelFx.Ease.OUT);        // one turn while it hangs
     }
 
-    private static void graftImpact(Player player, ServerLevel sl, Vec3 ground) {
+    private static void graftImpact(LivingEntity player, ServerLevel sl, Vec3 ground) {
         List<LivingEntity> caught = Spells.enemiesAround(player, sl, ground, GRAFT_RADIUS);
         for (LivingEntity target : caught) Spells.strike(player, target, GRAFT_DAMAGE);
 
@@ -1153,7 +1155,7 @@ public class AttendantOfMysteries {
     }
 
     /** Grafted: the survivors share their pain for GRAFT_TICKS, and the seams between them stay visible. */
-    private static void stitchTogether(Player player, ServerLevel sl, Vec3 ground, List<LivingEntity> caught) {
+    private static void stitchTogether(LivingEntity player, ServerLevel sl, Vec3 ground, List<LivingEntity> caught) {
         List<LivingEntity> grafted = new ArrayList<>();
         for (LivingEntity target : caught) {
             if (target.isAlive() && target.level() == sl) grafted.add(target);
@@ -1173,7 +1175,7 @@ public class AttendantOfMysteries {
     }
 
     // Sneak - Miracle: you are made whole, and for MIRACLE_TICKS your death is undone once (see miracleReturn).
-    private static void miracle(Player player, ServerLevel sl) {
+    private static void miracle(LivingEntity player, ServerLevel sl) {
         player.setHealth(player.getMaxHealth());
         Spells.cleanse(player);
         DeathWard.arm(player, MIRACLE_TICKS, MIRACLE_HEALTH, AttendantOfMysteries::miracleReturn);
@@ -1225,7 +1227,7 @@ public class AttendantOfMysteries {
     // Stacks
     // =========================
 
-    private static void addStack(Player player, ServerLevel sl) {
+    private static void addStack(LivingEntity player, ServerLevel sl) {
         int slot = player.getPersistentData().getIntOr(STACKS, 0); // 0..4
         String image = STACK_IMAGES.get(player.getRandom().nextInt(STACK_IMAGES.size()));
         player.getPersistentData().putString(STACK_IMAGE_KEY + slot, image);
@@ -1234,14 +1236,14 @@ public class AttendantOfMysteries {
         int stacks = slot + 1;
         if (stacks >= MAX_STACKS) {
             unleashStacks(player, sl);
-            ScreenImages.hide(player, STACK_IMAGE_ID + "*", 10); // let the 5th show for a moment, then all fade
+            if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, STACK_IMAGE_ID + "*", 10); // let the 5th show for a moment, then all fade
             stacks = 0;
         }
         player.getPersistentData().putInt(STACKS, stacks);
     }
 
     // Runs when the 5th stack is added. Big hit on every enemy around the player.
-    private static void unleashStacks(Player player, ServerLevel sl) {
+    private static void unleashStacks(LivingEntity player, ServerLevel sl) {
         Vec3 feet = player.position();
         Vec3 center = feet.add(0, 1.0, 0);
         for (LivingEntity target : Spells.enemiesAround(player, sl, center, STACK_BURST_RADIUS)) {
@@ -1257,19 +1259,19 @@ public class AttendantOfMysteries {
     }
 
     // Stacks sit to the right of the hotbar, 18px apart like hotbar slots
-    private static void showStackImage(Player player, int slot, String image) {
-        ScreenImages.show(player, STACK_IMAGE_ID + slot, image,
+    private static void showStackImage(LivingEntity player, int slot, String image) {
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, STACK_IMAGE_ID + slot, image,
                 ScreenAnchor.BOTTOM, 103 + slot * 18, -3, 16, ScreenImages.FOREVER);
     }
 
-    private static void refreshStackImages(Player player) {
+    private static void refreshStackImages(LivingEntity player) {
         int stacks = player.getPersistentData().getIntOr(STACKS, 0);
         for (int slot = 0; slot < MAX_STACKS; slot++) {
             if (slot < stacks) {
                 String image = player.getPersistentData().getStringOr(STACK_IMAGE_KEY + slot, "");
                 showStackImage(player, slot, image.isEmpty() ? STACK_IMAGES.get(0) : image);
             } else {
-                ScreenImages.hide(player, STACK_IMAGE_ID + slot);
+                if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, STACK_IMAGE_ID + slot);
             }
         }
     }
@@ -1278,8 +1280,8 @@ public class AttendantOfMysteries {
      * A small picture in the row above the stacks for as long as something is active (it fades by itself).
      * 'image' is a file in textures/gui/attendant_of_mysteries/ without .png; slot 0 is right above the first stack.
      */
-    private static void showStatus(Player player, int slot, String id, String image, int ticks) {
-        ScreenImages.show(player, id, "attendant_of_mysteries/" + image,
+    private static void showStatus(LivingEntity player, int slot, String id, String image, int ticks) {
+        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, id, "attendant_of_mysteries/" + image,
                 ScreenAnchor.BOTTOM, 103 + slot * 18, -21, 16, ticks);
     }
 
@@ -1288,12 +1290,12 @@ public class AttendantOfMysteries {
     // =========================
 
     /** Has this pathway (or the check is skipped) and has reached the Sequence the ability needs. */
-    private static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
-        if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return false;
+    private static boolean ready(LivingEntity player, boolean bypassClassCheck, int sequence) {
+        if (!bypassClassCheck && !Beyonders.pathwayOf(player).equals(PATHWAY)) return false;   // a player, or a Beyonder mob
         return Beyonder.hasSequence(player, sequence);
     }
 
-    private static void countDown(CompoundTag data, String key) {
+    static void countDown(CompoundTag data, String key) {
         int left = data.getIntOr(key, 0);
         if (left > 0) data.putInt(key, left - 1);
     }
@@ -1308,7 +1310,7 @@ public class AttendantOfMysteries {
     // =========================
 
     // Hit 1: a ring sweeping around the player
-    private static void comboRing(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void comboRing(LivingEntity player, LivingEntity target, ServerLevel sl) {
         Vec3 center = player.position().add(0, 0.9, 0);
         // sweeps either way, starts from a different side each time, slightly tilted
         SlashFx ring = COMBO_RING.varied(player.getRandom(), 60f, 8f, 12f);
@@ -1317,7 +1319,7 @@ public class AttendantOfMysteries {
     }
 
     // Hit 2: a tilted, almost upright ring around the player
-    private static void comboTiltedRing(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void comboTiltedRing(LivingEntity player, LivingEntity target, ServerLevel sl) {
         Vec3 center = player.position().add(0, 1.1, 0);
         // tilted to the left or right side (mirrored), leaning a bit more or less each time
         SlashFx ring = COMBO_TILTED_RING.varied(player.getRandom(), 25f, 10f, 15f);
@@ -1326,7 +1328,7 @@ public class AttendantOfMysteries {
     }
 
     // Hit 3 (a): spiral whirling on the ground around the player
-    private static void comboGroundSpiral(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void comboGroundSpiral(LivingEntity player, LivingEntity target, ServerLevel sl) {
         Vec3 center = player.position().add(0, 0.15, 0);
         // starts at any angle and spins either way (both spirals the same way)
         RandomSource random = player.getRandom();
@@ -1339,7 +1341,7 @@ public class AttendantOfMysteries {
     }
 
     // Hit 3 (b): crossed crystal blades in an X on the target + a swirling galaxy of sparkles under it
-    private static void comboCrystalCross(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void comboCrystalCross(LivingEntity player, LivingEntity target, ServerLevel sl) {
         Vec3 hit = target.getBoundingBox().getCenter();
         RandomSource random = player.getRandom();
         float xTurn = (random.nextFloat() * 2f - 1f) * 25f;   // the whole X turned a bit

@@ -242,6 +242,33 @@ public final class MobSpells {
         };
     }
 
+    /** A player's whole key, written for any caster: (caster, level, sl) as PathwayAbilities casts it. */
+    @FunctionalInterface
+    public interface Key {
+        void run(LivingEntity caster, ServerLevel sl);
+    }
+
+    /**
+     * A player's whole key run by the mob, its normal or its sneak form: the mob turns to its target, crouches for the
+     * sneak form while the key runs (the key reads isShiftKeyDown, as for a player), and the key checks, pays (out of
+     * what the mob's cast covers) and goes off, or refuses and nothing is spent. Its MobAbility.cost() must be what
+     * that form pays.
+     */
+    public static MobAbility.Cast key(boolean sneak, Key key) {
+        return (caster, target, sl) -> {
+            if (target != null) face(caster, target);
+            boolean crouched = caster.isShiftKeyDown();
+            float before = MobSpirituality.prepaidLeft(caster);
+            caster.setShiftKeyDown(sneak);
+            try {
+                key.run(caster, sl);
+            } finally {
+                caster.setShiftKeyDown(crouched);
+            }
+            return MobSpirituality.prepaidLeft(caster) < before;
+        };
+    }
+
     /** False once it died or went elsewhere: a delayed part of its ability (Later.run) stops then. */
     public static boolean casterStillHere(LivingEntity caster, ServerLevel sl) {
         return caster.isAlive() && !caster.isRemoved() && caster.level() == sl;
