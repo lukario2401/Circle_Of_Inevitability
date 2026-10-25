@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
+import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;
 import net.lukario.circleofinevitability.particles.fx.ModelFx;
@@ -65,186 +66,186 @@ public class FrenziedMage {
     // =========================
 
     // Side effects kept from the old abilities
-    private static final int BRIBE_TICKS = 120;                  // old Bribe: slowness, weakness, mining fatigue
-    private static final int CORROSION_TICKS = 180;              // old Corrosion: wither + poison
-    private static final int CORROSION_CORRUPTION = 10;          // old sneak Corrosion: corruption added (100 kills)
+    static final int BRIBE_TICKS = 120;                  // old Bribe: slowness, weakness, mining fatigue
+    static final int CORROSION_TICKS = 180;              // old Corrosion: wither + poison
+    static final int CORROSION_CORRUPTION = 10;          // old sneak Corrosion: corruption added (100 kills)
 
     // Ability 1 - Spear of Abolition (Sequence 9)
-    private static final int SPEAR_COST = 250;
-    private static final double SPEAR_RANGE = 28.0;
-    private static final double SPEAR_SPEED = 3.0;               // blocks per tick
-    private static final int SPEAR_WINDUP = 4;                   // ticks it hangs beside you before it flies
-    private static final float SPEAR_DAMAGE = 12f;
-    private static final double SPEAR_RAIN_RANGE = 24.0;
-    private static final int SPEAR_RAIN_COUNT = 7;
-    private static final double SPEAR_RAIN_SPREAD = 4.0;         // how far from the aim point they can land
-    private static final float SPEAR_RAIN_DAMAGE = 9f;
-    private static final double SPEAR_RAIN_HIT = 1.8;            // radius hurt around each fallen spear
-    private static final int SPEAR_FALL = 5;                     // ticks a falling spear takes to land
+    static final int SPEAR_COST = 250;
+    static final double SPEAR_RANGE = 28.0;
+    static final double SPEAR_SPEED = 3.0;               // blocks per tick
+    static final int SPEAR_WINDUP = 4;                   // ticks it hangs beside you before it flies
+    static final float SPEAR_DAMAGE = 12f;
+    static final double SPEAR_RAIN_RANGE = 24.0;
+    static final int SPEAR_RAIN_COUNT = 7;
+    static final double SPEAR_RAIN_SPREAD = 4.0;         // how far from the aim point they can land
+    static final float SPEAR_RAIN_DAMAGE = 9f;
+    static final double SPEAR_RAIN_HIT = 1.8;            // radius hurt around each fallen spear
+    static final int SPEAR_FALL = 5;                     // ticks a falling spear takes to land
 
     // Ability 2 - Corroding Flame (Sequence 8)
-    private static final int FLAME_COST = 1000;
-    private static final double FIREBALL_RANGE = 26.0;
-    private static final double FIREBALL_SPEED = 1.3;            // blocks per tick
-    private static final double FIREBALL_RADIUS = 3.5;
-    private static final float FIREBALL_DAMAGE = 14f;
-    private static final int FIREBALL_BURN_TICKS = 100;
-    private static final double PYRE_RANGE = 20.0;
-    private static final double PYRE_RADIUS = 3.0;
-    private static final float PYRE_HEIGHT = 5f;
-    private static final int PYRE_TICKS = 60;
-    private static final int PYRE_PULSE = 10;                    // ticks between burns
-    private static final float PYRE_DAMAGE = 4f;                 // per burn
+    static final int FLAME_COST = 1000;
+    static final double FIREBALL_RANGE = 26.0;
+    static final double FIREBALL_SPEED = 1.3;            // blocks per tick
+    static final double FIREBALL_RADIUS = 3.5;
+    static final float FIREBALL_DAMAGE = 14f;
+    static final int FIREBALL_BURN_TICKS = 100;
+    static final double PYRE_RANGE = 20.0;
+    static final double PYRE_RADIUS = 3.0;
+    static final float PYRE_HEIGHT = 5f;
+    static final int PYRE_TICKS = 60;
+    static final int PYRE_PULSE = 10;                    // ticks between burns
+    static final float PYRE_DAMAGE = 4f;                 // per burn
 
     // Ability 3 - Frost (Sequence 7)
-    private static final int FROST_COST = 1250;
-    private static final int SPIKE_COUNT = 10;
-    private static final double SPIKE_FIRST = 1.2;               // how far in front of you the first one comes up
-    private static final double SPIKE_SPACING = 1.1;
-    private static final float SPIKE_DAMAGE = 16f;               // once per enemy, however many spikes reach it
-    private static final int SPIKE_FREEZE_TICKS = 60;
-    private static final double SPIKE_HIT = 1.4;                 // radius hurt around each spike
-    private static final int SPIKE_LIFE = 34;                    // ticks a spike stays
-    private static final double GLACIER_RANGE = 24.0;
-    private static final int GLACIER_FREEZE_TICKS = 160;
-    private static final float GLACIER_DAMAGE = 8f;
+    static final int FROST_COST = 1250;
+    static final int SPIKE_COUNT = 10;
+    static final double SPIKE_FIRST = 1.2;               // how far in front of you the first one comes up
+    static final double SPIKE_SPACING = 1.1;
+    static final float SPIKE_DAMAGE = 16f;               // once per enemy, however many spikes reach it
+    static final int SPIKE_FREEZE_TICKS = 60;
+    static final double SPIKE_HIT = 1.4;                 // radius hurt around each spike
+    static final int SPIKE_LIFE = 34;                    // ticks a spike stays
+    static final double GLACIER_RANGE = 24.0;
+    static final int GLACIER_FREEZE_TICKS = 160;
+    static final float GLACIER_DAMAGE = 8f;
 
     // Ability 4 - Gavel of Ruin (Sequence 6)
-    private static final int HAMMER_COST = 2500;
-    private static final double HAMMERFALL_RANGE = 24.0;
-    private static final double HAMMERFALL_RADIUS = 4.5;
-    private static final float HAMMERFALL_DAMAGE = 24f;
-    private static final float HAMMERFALL_SIZE = 2.6f;           // 1 = the size it has in Blockbench (3 blocks tall)
-    private static final int HAMMERFALL_WARNING = 10;            // ticks the circle shows before the hammer appears
-    private static final int HAMMER_FALL = 7;                    // ticks the fall takes
-    private static final float WHIRL_SIZE = 1.5f;
-    private static final double WHIRL_RADIUS = 4.5;
-    private static final float WHIRL_DAMAGE = 12f;               // per turn, two turns
+    static final int HAMMER_COST = 2500;
+    static final double HAMMERFALL_RANGE = 24.0;
+    static final double HAMMERFALL_RADIUS = 4.5;
+    static final float HAMMERFALL_DAMAGE = 24f;
+    static final float HAMMERFALL_SIZE = 2.6f;           // 1 = the size it has in Blockbench (3 blocks tall)
+    static final int HAMMERFALL_WARNING = 10;            // ticks the circle shows before the hammer appears
+    static final int HAMMER_FALL = 7;                    // ticks the fall takes
+    static final float WHIRL_SIZE = 1.5f;
+    static final double WHIRL_RADIUS = 4.5;
+    static final float WHIRL_DAMAGE = 12f;               // per turn, two turns
 
     // Ability 5 - Meteor (Sequence 5)
-    private static final int METEOR_COST = 5000;
-    private static final double METEOR_RANGE = 28.0;
-    private static final float METEOR_SIZE = 2.6f;
-    private static final double METEOR_RADIUS = 6.0;
-    private static final float METEOR_DAMAGE = 40f;              // in the middle, half at the edge
-    private static final int METEOR_BURN_TICKS = 160;
-    private static final int METEOR_FALL = 24;                   // ticks from the sky to the ground
-    private static final double METEOR_START_HEIGHT = 26.0;
-    private static final double METEOR_START_BACK = 14.0;        // it comes in from this far behind the landing spot
-    private static final int SHOWER_COUNT = 6;
-    private static final double SHOWER_SPREAD = 7.0;
-    private static final float SHOWER_SIZE = 1.2f;
-    private static final double SHOWER_RADIUS = 3.0;
-    private static final float SHOWER_DAMAGE = 16f;
+    static final int METEOR_COST = 5000;
+    static final double METEOR_RANGE = 28.0;
+    static final float METEOR_SIZE = 2.6f;
+    static final double METEOR_RADIUS = 6.0;
+    static final float METEOR_DAMAGE = 40f;              // in the middle, half at the edge
+    static final int METEOR_BURN_TICKS = 160;
+    static final int METEOR_FALL = 24;                   // ticks from the sky to the ground
+    static final double METEOR_START_HEIGHT = 26.0;
+    static final double METEOR_START_BACK = 14.0;        // it comes in from this far behind the landing spot
+    static final int SHOWER_COUNT = 6;
+    static final double SHOWER_SPREAD = 7.0;
+    static final float SHOWER_SIZE = 1.2f;
+    static final double SHOWER_RADIUS = 3.0;
+    static final float SHOWER_DAMAGE = 16f;
 
     // Ability 6 - Entropy (Sequence 4)
-    private static final int ENTROPY_COST = 6000;
-    private static final double ENTROPY_RANGE = 20.0;
-    private static final float ENTROPY_SIZE = 2.2f;
-    private static final int ENTROPY_ARRIVE = 8;                 // ticks until the sphere is in place
-    private static final int ENTROPY_TICKS = 100;                // how long it pulls after that
-    private static final int ENTROPY_PULSE = 10;                 // ticks between its damage pulses
-    private static final double ENTROPY_PULL_RADIUS = 8.0;
-    private static final double ENTROPY_PULL = 0.3;              // how hard it drags, blocks per tick
-    private static final double ENTROPY_HURT_RADIUS = 3.5;
-    private static final float ENTROPY_PULSE_DAMAGE = 4f;
-    private static final int ENTROPY_PULSE_CORRUPTION = 2;
-    private static final double ENTROPY_BURST_RADIUS = 5.5;
-    private static final float ENTROPY_BURST_DAMAGE = 22f;
+    static final int ENTROPY_COST = 6000;
+    static final double ENTROPY_RANGE = 20.0;
+    static final float ENTROPY_SIZE = 2.2f;
+    static final int ENTROPY_ARRIVE = 8;                 // ticks until the sphere is in place
+    static final int ENTROPY_TICKS = 100;                // how long it pulls after that
+    static final int ENTROPY_PULSE = 10;                 // ticks between its damage pulses
+    static final double ENTROPY_PULL_RADIUS = 8.0;
+    static final double ENTROPY_PULL = 0.3;              // how hard it drags, blocks per tick
+    static final double ENTROPY_HURT_RADIUS = 3.5;
+    static final float ENTROPY_PULSE_DAMAGE = 4f;
+    static final int ENTROPY_PULSE_CORRUPTION = 2;
+    static final double ENTROPY_BURST_RADIUS = 5.5;
+    static final float ENTROPY_BURST_DAMAGE = 22f;
 
     // Ability 7 - Abolition (Sequence 3)
-    private static final int ABOLITION_COST = 12000;
-    private static final double ABOLITION_RANGE = 28.0;
-    private static final double ABOLITION_RADIUS = 8.0;
-    private static final float ABOLITION_DAMAGE = 60f;
-    private static final int ABOLITION_WARNING = 20;             // ticks the blade hangs in the air first
-    private static final float BLADE_HANG = 9f;                  // how high its point hangs above the spot (low enough to see)
-    private static final int BLADE_FALL = 5;                     // ticks the fall takes
-    private static final int ABOLITION_CORRUPTION = 15;
-    private static final int FRENZY_TICKS = 120;
-    private static final int FRENZY_INTERVAL = 6;                // ticks between its random spells
-    private static final double FRENZY_RANGE = 16.0;
-    private static final int FRENZY_BUFF_TICKS = 520;            // how long the old sneak Bribe's buffs last
+    static final int ABOLITION_COST = 12000;
+    static final double ABOLITION_RANGE = 28.0;
+    static final double ABOLITION_RADIUS = 8.0;
+    static final float ABOLITION_DAMAGE = 60f;
+    static final int ABOLITION_WARNING = 20;             // ticks the blade hangs in the air first
+    static final float BLADE_HANG = 9f;                  // how high its point hangs above the spot (low enough to see)
+    static final int BLADE_FALL = 5;                     // ticks the fall takes
+    static final int ABOLITION_CORRUPTION = 15;
+    static final int FRENZY_TICKS = 120;
+    static final int FRENZY_INTERVAL = 6;                // ticks between its random spells
+    static final double FRENZY_RANGE = 16.0;
+    static final int FRENZY_BUFF_TICKS = 520;            // how long the old sneak Bribe's buffs last
 
     // =========================
     // 3D models (models/model_fx/..., textures in textures/model_fx/...)
     // =========================
-    private static final float SPEAR_SIZE = 1.25f;
-    private static final double SPEAR_TIP = (32 - 8) / 16.0 * SPEAR_SIZE;   // middle of the shaft -> tip, in blocks
-    private static final ModelFx SPEAR = ModelFx.of("prince_of_abolition/spear")
+    static final float SPEAR_SIZE = 1.25f;
+    static final double SPEAR_TIP = (32 - 8) / 16.0 * SPEAR_SIZE;   // middle of the shaft -> tip, in blocks
+    static final ModelFx SPEAR = ModelFx.of("prince_of_abolition/spear")
             .scale(SPEAR_SIZE).pivot(8, 8, 8)                     // turns around the middle of the shaft
             .glow().aura(0xFFFF5A2A, 0.07f, 3);
     // .unshaded() = every face equally bright: fire and energy should not have dark sides like a solid thing
-    private static final ModelFx FIREBALL = ModelFx.of("fireball")
+    static final ModelFx FIREBALL = ModelFx.of("fireball")
             .pivot(8, 8, 8).glow().unshaded().seeThrough()
             .aura(0xFFFF7A1A, 0.14f, 3).spin(26f);
-    private static final ModelFx FIRE_BLAST = ModelFx.of("fire_blast")     // the flash of an explosion, about 1 block wide
+    static final ModelFx FIRE_BLAST = ModelFx.of("fire_blast")     // the flash of an explosion, about 1 block wide
             .pivot(8, 8, 8).glow().unshaded().seeThrough();
-    private static final ModelFx FLAMES = ModelFx.of("flame_pillar")  // 1 block wide, 2 tall, animated texture
+    static final ModelFx FLAMES = ModelFx.of("flame_pillar")  // 1 block wide, 2 tall, animated texture
             .glow().unshaded().seeThrough();
-    private static final ModelFx ICE_SPIKE = ModelFx.of("ice_spike")
+    static final ModelFx ICE_SPIKE = ModelFx.of("ice_spike")
             .glow().aura(0x5560D8FF, 0.05f, 2);
-    private static final ModelFx HAMMER = ModelFx.of("prince_of_abolition/hammer")
+    static final ModelFx HAMMER = ModelFx.of("prince_of_abolition/hammer")
             .glow().aura(0xFFFF2A1A, 0.12f, 3);
-    private static final ModelFx METEOR = ModelFx.of("meteor")
+    static final ModelFx METEOR = ModelFx.of("meteor")
             .pivot(8, 6, 8).glow().aura(0xFFFF6A1A, 0.2f, 3);
-    private static final ModelFx METEOR_TAIL = ModelFx.of("meteor_tail")   // the flames behind the rock, same pivot
+    static final ModelFx METEOR_TAIL = ModelFx.of("meteor_tail")   // the flames behind the rock, same pivot
             .pivot(8, 6, 8).glow().unshaded().seeThrough();
-    private static final ModelFx ENTROPY_ORB = ModelFx.of("prince_of_abolition/entropy_orb")
+    static final ModelFx ENTROPY_ORB = ModelFx.of("prince_of_abolition/entropy_orb")
             .pivot(8, 8, 8).glow().unshaded().seeThrough()
             .aura(0x40C0102A, 0.16f, 3);                          // weak on purpose: a strong aura turns the dark core pink
-    private static final ModelFx ENTROPY_DISC = ModelFx.of("prince_of_abolition/entropy_disc")   // the ring around it
+    static final ModelFx ENTROPY_DISC = ModelFx.of("prince_of_abolition/entropy_disc")   // the ring around it
             .pivot(8, 8, 8).glow().unshaded().seeThrough();
-    private static final ModelFx BLADE = ModelFx.of("prince_of_abolition/blade")
+    static final ModelFx BLADE = ModelFx.of("prince_of_abolition/blade")
             .scale(4f).pivot(8, -16, 8)                           // hangs point down, turns around its tip
             .glow().aura(0xFFFF3A1A, 0.22f, 3);
     // flat plates, one block wide and white: .scale(...) is their width in blocks, .color(...) tints them
-    private static final ModelFx RUNE_CIRCLE = ModelFx.of("rune_circle").glow().unshaded().seeThrough();
-    private static final ModelFx SHOCK_RING = ModelFx.of("shock_ring").glow().unshaded().seeThrough();
+    static final ModelFx RUNE_CIRCLE = ModelFx.of("rune_circle").glow().unshaded().seeThrough();
+    static final ModelFx SHOCK_RING = ModelFx.of("shock_ring").glow().unshaded().seeThrough();
 
     // =========================
     // Small particles and trails that go with them
     // =========================
-    private static final ParticleFx FIRE_EMBER = ParticleFx.of("fx/glow")
+    static final ParticleFx FIRE_EMBER = ParticleFx.of("fx/glow")
             .color(0xFFFFB04A).endColor(0x00C01810)
             .size(0.11f).endSize(0.03f).sizeRandom(0.4f)
             .lifetime(14, 10).gravity(-0.03f).friction(0.9f)
             .glow();
-    private static final ParticleFx FIRE_SMOKE = ParticleFx.of("fx/smoke")
+    static final ParticleFx FIRE_SMOKE = ParticleFx.of("fx/smoke")
             .color(0xA0241818).endColor(0x00100808)
             .size(0.35f).endSize(1.0f).sizeRandom(0.3f)
             .lifetime(28, 14).gravity(-0.03f).friction(0.9f)
             .spin(2f).randomRotation();
-    private static final ParticleFx DEBRIS = ParticleFx.of("fx/splinter")
+    static final ParticleFx DEBRIS = ParticleFx.of("fx/splinter")
             .color(0xFF6A5648).endColor(0x00403028)
             .size(0.13f).endSize(0.06f).sizeRandom(0.4f)
             .lifetime(22, 10).gravity(0.9f).friction(0.96f)
             .collide().spin(20f).randomRotation();
-    private static final ParticleFx FROST = ParticleFx.of("fx/flake")
+    static final ParticleFx FROST = ParticleFx.of("fx/flake")
             .color(0xFFE8FBFF).fadeOut()
             .size(0.08f).endSize(0.03f)
             .lifetime(16, 8).friction(0.86f).gravity(0.02f)
             .glow().spin(8f).randomRotation();
-    private static final ParticleFx ICE_SPLINTER = ParticleFx.of("fx/splinter")
+    static final ParticleFx ICE_SPLINTER = ParticleFx.of("fx/splinter")
             .color(0xFFF2FCFF).endColor(0x0060D8FF)
             .size(0.12f).endSize(0.05f).sizeRandom(0.4f)
             .lifetime(18, 10).gravity(0.9f).friction(0.96f)
             .glow().collide().spin(25f).randomRotation();
-    private static final ParticleFx VOID_MOTE = ParticleFx.of("fx/glow")
+    static final ParticleFx VOID_MOTE = ParticleFx.of("fx/glow")
             .color(0xFFD01838).endColor(0x00300010)
             .size(0.09f).endSize(0.02f)
             .lifetime(16, 8).friction(0.92f)
             .glow();
 
-    private static final SlashFx SPEAR_TRAIL = SlashFx.line("slash/smooth")       // streak behind the thrown spear
+    static final SlashFx SPEAR_TRAIL = SlashFx.line("slash/smooth")       // streak behind the thrown spear
             .color(0xE0FF8A3A).core(0xFFFFF1D6)
             .width(0.22f).taper(SlashFx.Taper.COMET);
-    private static final SlashFx WHIRL_TRAIL = SlashFx.arc("slash/edge")           // the whirling hammer's wake
+    static final SlashFx WHIRL_TRAIL = SlashFx.arc("slash/edge")           // the whirling hammer's wake
             .color(0xF0FF5A2A).tailColor(0x90A01010).headColor(0xFFFFE0B0)
             .radius(3.0f).arc(330f).width(1.0f).taper(SlashFx.Taper.COMET)
             .layers(2).spread(0.25f)
             .lifetime(18).sweep(6).delay(4).spin(40f);
-    private static final SlashFx GROUND_CRACK = SlashFx.line("slash/shatter")      // glowing cracks around an impact
+    static final SlashFx GROUND_CRACK = SlashFx.line("slash/shatter")      // glowing cracks around an impact
             .color(0xF0FF7A3A).tailColor(0x90FF3A1A).headColor(0xFFFFE8C0)
             .width(0.9f).taper(SlashFx.Taper.COMET)
             .lifetime(14).sweep(3);
@@ -256,34 +257,34 @@ public class FrenziedMage {
     // Every slash starts as a dotted line, turns into a solid blade of light, then shatters into flakes.
     // =========================
 
-    private static final int EDGE_GLOW = 0xF0FFF1D6;   // warm white body
-    private static final int EDGE_TAIL = 0x90FFCF94;   // dimmer, warmer tail
-    private static final int EDGE_HEAD = 0xFFFFFFFF;   // pure white front
-    private static final int EDGE_LEAD = 0xD8FFE2AE;   // dotted lead-in lines
+    static final int EDGE_GLOW = 0xF0FFF1D6;   // warm white body
+    static final int EDGE_TAIL = 0x90FFCF94;   // dimmer, warmer tail
+    static final int EDGE_HEAD = 0xFFFFFFFF;   // pure white front
+    static final int EDGE_LEAD = 0xD8FFE2AE;   // dotted lead-in lines
 
     /** The yellow/orange spikes around whatever gets hit. Set to false to hide them. */
-    private static final boolean SHOW_HIT_RAYS = true;
+    static final boolean SHOW_HIT_RAYS = true;
 
     // Hit 1: two thin cuts crossing on the target (dotted first, then solid)
-    private static final SlashFx EDGE_X_LEAD = SlashFx.line("slash/dashed")
+    static final SlashFx EDGE_X_LEAD = SlashFx.line("slash/dashed")
             .color(EDGE_LEAD).width(0.11f).taper(SlashFx.Taper.UNIFORM)
             .lifetime(4).sweep(1);
-    private static final SlashFx EDGE_X_CUT = SlashFx.line("slash/smooth")
+    static final SlashFx EDGE_X_CUT = SlashFx.line("slash/smooth")
             .color(0xC8FFC878).core(0xFFFFFFFF)
             .width(0.1f).taper(SlashFx.Taper.CRESCENT)
             .lifetime(20).sweep(2).delay(2);
 
     // Hit 2: a dotted line runs along the ground, then a jagged blade of light tears along it
-    private static final float REND_LENGTH = 10f;
-    private static final SlashFx EDGE_REND_LEAD = SlashFx.line("slash/dashed")
+    static final float REND_LENGTH = 10f;
+    static final SlashFx EDGE_REND_LEAD = SlashFx.line("slash/dashed")
             .color(EDGE_LEAD).width(0.14f).taper(SlashFx.Taper.UNIFORM)
             .lifetime(12).sweep(2);
-    private static final SlashFx EDGE_REND = SlashFx.line("slash/shatter")
+    static final SlashFx EDGE_REND = SlashFx.line("slash/shatter")
             .color(EDGE_GLOW).tailColor(EDGE_TAIL).headColor(EDGE_HEAD)
             .width(1.4f).taper(SlashFx.Taper.COMET)
             .layers(2).spread(0.3f)
             .lifetime(28).sweep(4).delay(3);
-    private static final SlashFx EDGE_REND_CORE = SlashFx.line("slash/smooth")
+    static final SlashFx EDGE_REND_CORE = SlashFx.line("slash/smooth")
             .color(0xE0FFF4E0).core(0xFFFFFFFF)
             .width(0.16f).taper(SlashFx.Taper.UNIFORM)
             .lifetime(24).sweep(3).delay(3);
@@ -291,28 +292,28 @@ public class FrenziedMage {
 
 
     // Hit 3: wide crescent sweeping around the front
-    private static final SlashFx EDGE_SWEEP_LEAD = SlashFx.arc("slash/dashed_fine")
+    static final SlashFx EDGE_SWEEP_LEAD = SlashFx.arc("slash/dashed_fine")
             .color(EDGE_LEAD).radius(2.75f).arc(250f).width(0.12f).taper(SlashFx.Taper.UNIFORM)
             .lifetime(6).sweep(3);
-    private static final SlashFx EDGE_SWEEP = SlashFx.arc("slash/edge")
+    static final SlashFx EDGE_SWEEP = SlashFx.arc("slash/edge")
             .color(EDGE_GLOW).tailColor(EDGE_TAIL).headColor(EDGE_HEAD)
             .radius(2.6f).arc(225f).width(0.85f).taper(SlashFx.Taper.CRESCENT)
             .layers(2).spread(0.18f)
             .lifetime(10).sweep(3).delay(2);
 
     // Hit 4: tall slanted cleave from high above down onto the target, then it shatters
-    private static final SlashFx EDGE_CLEAVE_LEAD = SlashFx.arc("slash/smooth")
+    static final SlashFx EDGE_CLEAVE_LEAD = SlashFx.arc("slash/smooth")
             .color(0xE8FFF0D0).core(0xFFFFFFFF)
             .radius(2.55f).arc(135f).width(0.12f).taper(SlashFx.Taper.CRESCENT)
             .lifetime(6).sweep(2)
             .rotation(0f, -30f, -72f);                  // standing up, slanted, coming down in front
-    private static final SlashFx EDGE_CLEAVE = SlashFx.arc("slash/edge")
+    static final SlashFx EDGE_CLEAVE = SlashFx.arc("slash/edge")
             .color(EDGE_GLOW).tailColor(EDGE_TAIL).headColor(EDGE_HEAD)
             .radius(2.45f).arc(130f).width(0.8f).taper(SlashFx.Taper.CRESCENT)
             .layers(2).spread(0.18f)
             .lifetime(9).sweep(2).delay(2)
             .rotation(0f, -30f, -72f);
-    private static final SlashFx EDGE_CLEAVE_BREAK = SlashFx.arc("slash/shatter")
+    static final SlashFx EDGE_CLEAVE_BREAK = SlashFx.arc("slash/shatter")
             .color(0xB8FFF1D6).tailColor(0x50FFCF94).headColor(0xC8FFFFFF)
             .radius(2.45f).arc(120f).width(1.0f).taper(SlashFx.Taper.CRESCENT)
             .layers(2).spread(0.26f)
@@ -320,47 +321,47 @@ public class FrenziedMage {
             .rotation(0f, -30f, -72f);
 
     // Hit 5: dotted circle -> thin ring of light -> thick spinning blade around you
-    private static final SlashFx EDGE_RING_LEAD = SlashFx.arc("slash/dashed_fine")
+    static final SlashFx EDGE_RING_LEAD = SlashFx.arc("slash/dashed_fine")
             .color(EDGE_LEAD).radius(2.7f).arc(360f).width(0.11f).taper(SlashFx.Taper.UNIFORM)
             .lifetime(6).sweep(3);
-    private static final SlashFx EDGE_RING_LINE = SlashFx.arc("slash/smooth")
+    static final SlashFx EDGE_RING_LINE = SlashFx.arc("slash/smooth")
             .color(0xF0FFF1D6).core(0xFFFFFFFF)
             .radius(2.6f).arc(345f).width(0.13f).taper(SlashFx.Taper.UNIFORM)
             .lifetime(8).sweep(2).delay(2);
-    private static final SlashFx EDGE_RING = SlashFx.arc("slash/edge")
+    static final SlashFx EDGE_RING = SlashFx.arc("slash/edge")
             .color(EDGE_GLOW).tailColor(EDGE_TAIL).headColor(EDGE_HEAD)
             .radius(2.5f).arc(300f).width(1.1f).taper(SlashFx.Taper.COMET)
             .layers(2).spread(0.25f)
             .lifetime(11).sweep(3).delay(4).spin(14f);
 
     // Hit sparks (yellow -> orange-red spikes) around whatever gets hit
-    private static final SlashFx EDGE_HIT_RAY = SlashFx.line("slash/smooth")
+    static final SlashFx EDGE_HIT_RAY = SlashFx.line("slash/smooth")
             .color(0xFFFFC23A).tailColor(0xFFFFF27A).headColor(0xFFFF6A1E).core(0xC0FFFFE0)
             .width(0.1f).taper(SlashFx.Taper.CRESCENT)
             .lifetime(7).sweep(2);
 
     // Broken pieces of the blades, red embers and red mist
-    private static final ParticleFx EDGE_FLAKE = ParticleFx.of("fx/flake")
+    static final ParticleFx EDGE_FLAKE = ParticleFx.of("fx/flake")
             .color(0xFFFFF4DE).endColor(0x00FFE2B0)
             .size(0.17f).endSize(0.06f).sizeRandom(0.45f)
             .lifetime(12, 10).gravity(-0.05f).friction(0.88f)
             .glow().randomRotation();
-    private static final ParticleFx EDGE_SLIVER = ParticleFx.of("fx/sliver")
+    static final ParticleFx EDGE_SLIVER = ParticleFx.of("fx/sliver")
             .color(0xFFFFF4DE).endColor(0x00FFE2B0)
             .size(0.22f).endSize(0.08f).sizeRandom(0.4f)
             .lifetime(10, 8).gravity(-0.05f).friction(0.88f)
             .glow().randomRotation();
-    private static final ParticleFx EDGE_EMBER = ParticleFx.of("fx/glow")
+    static final ParticleFx EDGE_EMBER = ParticleFx.of("fx/glow")
             .color(0xFFFF3A24).endColor(0x00A01010)
             .size(0.035f).endSize(0.02f).sizeRandom(0.4f)
             .lifetime(22, 16).friction(0.93f)
             .glow();
-    private static final ParticleFx EDGE_MIST = ParticleFx.of("fx/smoke")
+    static final ParticleFx EDGE_MIST = ParticleFx.of("fx/smoke")
             .color(0x88A01C1C).endColor(0x00501010)
             .size(0.3f).endSize(0.75f).sizeRandom(0.3f)
             .lifetime(26, 12).gravity(-0.02f).friction(0.92f)
             .spin(2f).randomRotation();
-    private static final ParticleFx EDGE_GROUND_MIST = ParticleFx.of("fx/smoke")
+    static final ParticleFx EDGE_GROUND_MIST = ParticleFx.of("fx/smoke")
             .color(0x806A2A1C).endColor(0x00402010)
             .size(0.28f).endSize(0.55f).sizeRandom(0.3f)
             .lifetime(30, 10).friction(0.85f)
@@ -388,7 +389,7 @@ public class FrenziedMage {
     }
 
     // Normal: one spear appears beside you and flies to where you aim, through everything, until it hits a block
-    private static void spearThrow(Player player, ServerLevel sl) {
+    static void spearThrow(LivingEntity player, ServerLevel sl) {
         Vec3 eye = player.getEyePosition();
         Vec3 from = clearStart(player, sl, eye.add(rightOf(player).scale(0.5)).add(0, -0.3, 0));   // beside the right shoulder
         // It starts beside you, so it is aimed at the point under your crosshair. Flying straight along
@@ -435,7 +436,7 @@ public class FrenziedMage {
     }
 
     // Sneak: spears drop out of the sky around the spot you aim at
-    private static void spearRain(Player player, ServerLevel sl) {
+    static void spearRain(LivingEntity player, ServerLevel sl) {
         Vec3 center = aimGround(player, sl, SPEAR_RAIN_RANGE);
         RandomSource random = sl.getRandom();
         warningCircle(sl, center, SPEAR_RAIN_SPREAD + 1.0, 0xE0FF5A2A, SPEAR_RAIN_COUNT * 3 + SPEAR_FALL + 8);
@@ -456,7 +457,7 @@ public class FrenziedMage {
     }
 
     /** One spear dropping out of the sky onto a spot, 'delay' ticks from now (also used by Frenzy). */
-    private static void spearFromSky(Player player, ServerLevel sl, Vec3 ground, int delay, float damage, double radius) {
+    private static void spearFromSky(LivingEntity player, ServerLevel sl, Vec3 ground, int delay, float damage, double radius) {
         RandomSource random = sl.getRandom();
         // Upside down (pitch 180) and leaning a little. Its up axis now points DOWN, so up(-14) is 14 blocks above.
         ModelFx spear = SPEAR.pivot(8, 32, 8)                    // turn around the tip, which lands on the spot
@@ -482,8 +483,13 @@ public class FrenziedMage {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 8)) return;
         if (!paySpirituality(player, FLAME_COST)) return;
+        flameCast(player, sl, player.isShiftKeyDown());
+    }
 
-        if (player.isShiftKeyDown()) {
+    /** What frenziedMageFlame does once it is paid for, its sneak form or not (a Beyonder mob casts it this way too). */
+    static void flameCast(LivingEntity player, ServerLevel sl, boolean sneak) {
+
+        if (sneak) {
             pyre(player, sl, aimGround(player, sl, PYRE_RANGE));
         } else {
             Vec3 look = player.getLookAngle().normalize();
@@ -497,7 +503,7 @@ public class FrenziedMage {
      * Normal: a fireball from 'from' along 'direction' (length 1) that bursts on the first enemy or block in its way.
      * Whatever is in the burst burns and gets the old Corrosion: wither and poison. Also used by Frenzy.
      */
-    private static void launchFireball(Player player, ServerLevel sl, Vec3 from, Vec3 direction, double range,
+    private static void launchFireball(LivingEntity player, ServerLevel sl, Vec3 from, Vec3 direction, double range,
                                        float size, double radius, float damage) {
         Vec3 end = from.add(direction.scale(range));
         Vec3 wall = sl.clip(new ClipContext(from, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player)).getLocation();
@@ -529,7 +535,7 @@ public class FrenziedMage {
     }
 
     // Sneak: a pillar of fire on the spot you aim at. It burns whoever stands in it and corrupts them (the old sneak Corrosion).
-    private static void pyre(Player player, ServerLevel sl, Vec3 ground) {
+    private static void pyre(LivingEntity player, ServerLevel sl, Vec3 ground) {
         warningCircle(sl, ground, PYRE_RADIUS, 0xE0C01818, PYRE_TICKS + 6);
         float width = (float) (PYRE_RADIUS * 1.7);
         ModelFx flames = FLAMES.scale(width, PYRE_HEIGHT / 2f, width)          // the model is 1 block wide and 2 tall
@@ -582,7 +588,7 @@ public class FrenziedMage {
     }
 
     /** Where the row of spikes comes up: along the ground in front of the caster, over slopes and steps, up to the first wall. */
-    private static List<Vec3> spikeSpots(Player player, ServerLevel sl) {
+    static List<Vec3> spikeSpots(LivingEntity player, ServerLevel sl) {
         List<Vec3> spots = new ArrayList<>();
         Vec3 forward = flatLook(player);
         Vec3 walker = player.position().add(0, 1.2, 0);           // runs ahead at chest height to find walls and steps
@@ -598,7 +604,7 @@ public class FrenziedMage {
     }
 
     // Normal: ice spikes burst out of the ground one after another in a row in front of you
-    private static void iceSpikes(Player player, ServerLevel sl, List<Vec3> spots) {
+    static void iceSpikes(LivingEntity player, ServerLevel sl, List<Vec3> spots) {
         Set<LivingEntity> alreadyHit = new HashSet<>();           // shared by the whole row: each enemy is hurt once
         for (int i = 0; i < spots.size(); i++) {
             iceSpikeAt(player, sl, spots.get(i), i, 1.15f + i * 0.07f, SPIKE_DAMAGE, SPIKE_FREEZE_TICKS, alreadyHit);
@@ -611,7 +617,7 @@ public class FrenziedMage {
      * Whoever it hurts is added to 'alreadyHit' and whoever is already in there is left alone,
      * so spikes that share one set hurt each enemy only once.
      */
-    private static void iceSpikeAt(Player player, ServerLevel sl, Vec3 ground, int delay, float size, float damage,
+    private static void iceSpikeAt(LivingEntity player, ServerLevel sl, Vec3 ground, int delay, float size, float damage,
                                    int freezeTicks, Set<LivingEntity> alreadyHit) {
         RandomSource random = sl.getRandom();
         float hidden = -2.3f * size;                                             // far enough down to be fully underground
@@ -636,7 +642,7 @@ public class FrenziedMage {
     }
 
     // Sneak: the target you look at is sealed in ice for a long time, with a crown of spikes around it
-    private static void glacier(Player player, ServerLevel sl, LivingEntity target) {
+    static void glacier(LivingEntity player, ServerLevel sl, LivingEntity target) {
         strike(player, target, GLACIER_DAMAGE);
         Freeze.apply(target, GLACIER_FREEZE_TICKS);
 
@@ -678,7 +684,7 @@ public class FrenziedMage {
      * Normal: a hammer drops head first out of the sky onto a spot, 'delay' ticks from now.
      * Whatever it lands on is thrown up and gets the old Bribe: slowness, weakness, mining fatigue. Also used by Frenzy.
      */
-    private static void hammerFall(Player player, ServerLevel sl, Vec3 ground, float size, double radius, float damage, int delay) {
+    static void hammerFall(LivingEntity player, ServerLevel sl, Vec3 ground, float size, double radius, float damage, int delay) {
         int land = delay + HAMMER_FALL;
         warningCircle(sl, ground, radius, 0xE0FF2A1A, land);
 
@@ -706,7 +712,7 @@ public class FrenziedMage {
     }
 
     // Sneak: the hammer appears in your hands and whirls around you twice, knocking everything away
-    private static void hammerWhirl(Player player, ServerLevel sl) {
+    static void hammerWhirl(LivingEntity player, ServerLevel sl) {
         ModelFx hammer = HAMMER.scale(WHIRL_SIZE).pivot(8, -10, 8)                   // turns around the grip
                 .lifetime(26).fade(0, 6)
                 .key(0, ModelFx.pose().pitch(85f).scale(0.4f).alpha(0f))
@@ -721,7 +727,8 @@ public class FrenziedMage {
                 if (!casterStillHere(player, sl)) return;
                 for (LivingEntity target : enemiesAround(player, sl, player.position().add(0, 1.0, 0), WHIRL_RADIUS)) {
                     strike(player, target, WHIRL_DAMAGE);
-                    target.knockback(0.9, player.getX() - target.getX(), player.getZ() - target.getZ(), player.damageSources().playerAttack(player), WHIRL_DAMAGE);
+                    target.knockback(0.9, player.getX() - target.getX(), player.getZ() - target.getZ(),
+                            player instanceof Player whirler ? player.damageSources().playerAttack(whirler) : player.damageSources().mobAttack(player), WHIRL_DAMAGE);
                 }
                 sound(sl, player.position(), SoundEvents.PLAYER_ATTACK_SWEEP, 1f, 0.7f);
             });
@@ -735,9 +742,14 @@ public class FrenziedMage {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 5)) return;
         if (!paySpirituality(player, METEOR_COST)) return;
+        meteorCast(player, sl, player.isShiftKeyDown());
+    }
+
+    /** What frenziedMageMeteor does once it is paid for, its sneak form or not (a Beyonder mob casts it this way too). */
+    static void meteorCast(LivingEntity player, ServerLevel sl, boolean sneak) {
 
         Vec3 ground = aimGround(player, sl, METEOR_RANGE);
-        if (player.isShiftKeyDown()) {
+        if (sneak) {
             // Sneak: a shower of small meteors. The first lands on the spot itself, the rest around it.
             RandomSource random = sl.getRandom();
             for (int i = 0; i < SHOWER_COUNT; i++) {
@@ -756,7 +768,7 @@ public class FrenziedMage {
     }
 
     /** A meteor crashing onto a spot, coming in over the caster's head, 'delay' ticks from now (also used by Frenzy). */
-    private static void meteorAt(Player player, ServerLevel sl, Vec3 ground, float size, double radius, float damage, int delay) {
+    private static void meteorAt(LivingEntity player, ServerLevel sl, Vec3 ground, float size, double radius, float damage, int delay) {
         Vec3 toCaster = new Vec3(player.getX() - ground.x, 0, player.getZ() - ground.z);
         Vec3 back = toCaster.lengthSqr() < 1.0 ? flatLook(player).scale(-1) : toCaster.normalize();
         Vec3 path = back.scale(METEOR_START_BACK).add(0, METEOR_START_HEIGHT, 0);   // from the landing spot up to where it starts
@@ -812,8 +824,13 @@ public class FrenziedMage {
         if (!canUseClass(player, bypassClassCheck)) return;
         if (!Beyonder.hasSequence(player, 4)) return;
         if (!paySpirituality(player, ENTROPY_COST)) return;
+        entropyCast(player, sl, player.isShiftKeyDown());
+    }
 
-        if (player.isShiftKeyDown()) {
+    /** What frenziedMageEntropy does once it is paid for, its sneak form or not (a Beyonder mob casts it this way too). */
+    static void entropyCast(LivingEntity player, ServerLevel sl, boolean sneak) {
+
+        if (sneak) {
             // Sneak: the sphere forms over your head and moves with you
             Vec3 above = new Vec3(0, 3.0, 0);
             for (ModelFx part : new ModelFx[]{ENTROPY_ORB.spin(9f), ENTROPY_DISC.spin(-14f)}) {
@@ -852,7 +869,7 @@ public class FrenziedMage {
     }
 
     /** Pulls, hurts and finally bursts around 'center', which is asked again every time so it can follow the caster. */
-    private static void runEntropy(Player player, ServerLevel sl, Supplier<Vec3> center) {
+    private static void runEntropy(LivingEntity player, ServerLevel sl, Supplier<Vec3> center) {
         int end = ENTROPY_ARRIVE + ENTROPY_TICKS;
         for (int tick = ENTROPY_ARRIVE; tick < end; tick += 2) {
             boolean pulse = (tick - ENTROPY_ARRIVE) % ENTROPY_PULSE == 0;
@@ -865,7 +882,7 @@ public class FrenziedMage {
         });
     }
 
-    private static void entropyTick(Player player, ServerLevel sl, Vec3 center, boolean pulse) {
+    private static void entropyTick(LivingEntity player, ServerLevel sl, Vec3 center, boolean pulse) {
         for (LivingEntity target : enemiesAround(player, sl, center, ENTROPY_PULL_RADIUS)) {
             Vec3 to = center.subtract(target.getBoundingBox().getCenter());
             double distance = to.length();
@@ -891,7 +908,7 @@ public class FrenziedMage {
         }
     }
 
-    private static void entropyBurst(Player player, ServerLevel sl, Vec3 center) {
+    private static void entropyBurst(LivingEntity player, ServerLevel sl, Vec3 center) {
         for (LivingEntity target : enemiesAround(player, sl, center, ENTROPY_BURST_RADIUS)) {
             strike(player, target, ENTROPY_BURST_DAMAGE);
             corrode(target, CORROSION_TICKS);
@@ -922,7 +939,7 @@ public class FrenziedMage {
 
     // Normal: a colossal blade appears in the air over the spot you aim at, then falls.
     // Everything under it loses its good effects and gets the old Bribe and Corrosion on top of the damage.
-    private static void bladeOfAbolition(Player player, ServerLevel sl, Vec3 ground) {
+    static void bladeOfAbolition(LivingEntity player, ServerLevel sl, Vec3 ground) {
         int land = ABOLITION_WARNING + BLADE_FALL;
         warningCircle(sl, ground, ABOLITION_RADIUS, 0xF0FF2A1A, land);
 
@@ -976,7 +993,7 @@ public class FrenziedMage {
 
     // Sneak: Frenzy. You get all the buffs of the old sneak Bribe, and for a while a random spell
     // hits a random enemy near you every few ticks.
-    private static void frenzy(Player player, ServerLevel sl) {
+    static void frenzy(LivingEntity player, ServerLevel sl) {
         bribeEmpower(player, FRENZY_BUFF_TICKS);
 
         ModelFx circle = RUNE_CIRCLE.color(0xE0FF3A24).scale(3.4f).lifetime(FRENZY_TICKS).fade(5, 10).spin(9f);
@@ -988,7 +1005,7 @@ public class FrenziedMage {
         }
     }
 
-    private static void frenzyCast(Player player, ServerLevel sl) {
+    private static void frenzyCast(LivingEntity player, ServerLevel sl) {
         if (!casterStillHere(player, sl)) return;
         List<LivingEntity> targets = enemiesAround(player, sl, player.position().add(0, 1.0, 0), FRENZY_RANGE);
         if (targets.isEmpty()) return;
@@ -1019,7 +1036,7 @@ public class FrenziedMage {
     }
 
     /** False once the caster died, logged out or went to another dimension: spells that stay around them stop then. */
-    private static boolean casterStillHere(Player player, ServerLevel sl) {
+    private static boolean casterStillHere(LivingEntity player, ServerLevel sl) {
         return player.isAlive() && player.level() == sl;
     }
 
@@ -1036,16 +1053,17 @@ public class FrenziedMage {
      * What the spells hit: anything alive except the caster, what the caster rides or owns (pets, tamed horses),
      * armor stands (decoration, and the invisible ones other pathways use as markers) and spectators.
      */
-    private static boolean isEnemy(Player player, LivingEntity other) {
+    private static boolean isEnemy(LivingEntity player, LivingEntity other) {
         // the UUID check also covers the caster's new body after dying and respawning while a spell is still running
         if (other == player || other.getUUID().equals(player.getUUID())) return false;
         if (!other.isAlive() || other.isSpectator() || other instanceof ArmorStand) return false;
+        if (!(player instanceof Player)) return Spells.isEnemy(player, other);  // a Beyonder mob spares its own side
         if (other == player.getVehicle()) return false;
         return !(other instanceof OwnableEntity owned && owned.getOwnerReference() != null && player.getUUID().equals(owned.getOwnerReference().getUUID()));
     }
 
     /** Every enemy whose body is within 'radius' of a point. */
-    private static List<LivingEntity> enemiesAround(Player player, ServerLevel sl, Vec3 center, double radius) {
+    private static List<LivingEntity> enemiesAround(LivingEntity player, ServerLevel sl, Vec3 center, double radius) {
         List<LivingEntity> result = new ArrayList<>();
         AABB area = new AABB(center, center).inflate(radius + 2.0);
         for (LivingEntity candidate : sl.getEntitiesOfClass(LivingEntity.class, area, other -> isEnemy(player, other))) {
@@ -1059,7 +1077,7 @@ public class FrenziedMage {
     }
 
     /** Every enemy whose body (grown by 'grow' blocks) the line from..to passes through. */
-    private static List<LivingEntity> enemiesOnLine(Player player, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+    private static List<LivingEntity> enemiesOnLine(LivingEntity player, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
         List<LivingEntity> result = new ArrayList<>();
         if (from.distanceToSqr(to) < 1.0E-6) return result;
         AABB area = new AABB(from, to).inflate(grow + 0.5);
@@ -1072,7 +1090,7 @@ public class FrenziedMage {
     }
 
     /** The enemy on the line that is closest to 'from', or null. */
-    private static LivingEntity firstEnemyOnLine(Player player, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+    private static LivingEntity firstEnemyOnLine(LivingEntity player, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
         LivingEntity closest = null;
         double best = Double.MAX_VALUE;
         for (LivingEntity candidate : enemiesOnLine(player, sl, from, to, grow)) {
@@ -1086,7 +1104,7 @@ public class FrenziedMage {
     }
 
     /** The enemy the caster is looking at within range (not through walls), or null. */
-    private static LivingEntity aimEnemy(Player player, ServerLevel sl, double range) {
+    private static LivingEntity aimEnemy(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         Vec3 end = eye.add(player.getLookAngle().scale(range));
         Vec3 stop = sl.clip(new ClipContext(eye, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player)).getLocation();
@@ -1097,7 +1115,7 @@ public class FrenziedMage {
      * The spot on the ground the caster is aiming at: under the first enemy in the way,
      * else where the look hits a block, else under the far end of the range.
      */
-    private static Vec3 aimGround(Player player, ServerLevel sl, double range) {
+    static Vec3 aimGround(LivingEntity player, ServerLevel sl, double range) {
         Vec3 eye = player.getEyePosition();
         Vec3 look = player.getLookAngle().normalize();
         Vec3 end = eye.add(look.scale(range));
@@ -1113,7 +1131,7 @@ public class FrenziedMage {
      * starts inside a block "hits" at once, so when that happens it tries again from other heights:
      * from the point itself (the point is just under a ceiling), then from higher up (the point is inside a hill).
      */
-    private static Vec3 groundAt(Player player, ServerLevel sl, Vec3 point) {
+    private static Vec3 groundAt(LivingEntity player, ServerLevel sl, Vec3 point) {
         Vec3 to = new Vec3(point.x, point.y - 24.0, point.z);
         for (double lift : new double[]{0.5, 0.0, 1.5, 2.5, 3.5}) {
             Vec3 from = new Vec3(point.x, point.y + lift, point.z);
@@ -1129,7 +1147,7 @@ public class FrenziedMage {
      * and the caster's eyes, else just in front of the block in the way. Without this, a spear that starts beside
      * you would start inside the wall whenever you stand next to one, and go nowhere.
      */
-    private static Vec3 clearStart(Player player, ServerLevel sl, Vec3 wanted) {
+    private static Vec3 clearStart(LivingEntity player, ServerLevel sl, Vec3 wanted) {
         Vec3 eye = player.getEyePosition();
         BlockHitResult hit = sl.clip(new ClipContext(eye, wanted, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, player));
         if (hit.getType() == HitResult.Type.MISS) return wanted;
@@ -1143,12 +1161,16 @@ public class FrenziedMage {
     }
 
     /** Horizontal direction to the caster's right. */
-    private static Vec3 rightOf(Player player) {
+    private static Vec3 rightOf(LivingEntity player) {
         return flatLook(player).cross(UP).normalize();
     }
 
     /** Damage from the caster. Clears the short invulnerability after a hit first, so quick hits in a row all count. */
-    private static void strike(Player player, LivingEntity target, float damage) {
+    private static void strike(LivingEntity caster, LivingEntity target, float damage) {
+        if (!(caster instanceof Player player)) {                      // a Beyonder mob: its ability's strike
+            Spells.strike(caster, target, damage);
+            return;
+        }
         target.invulnerableTime = 0;
         target.hurt(player.damageSources().playerAttack(player), damage);
     }
@@ -1161,7 +1183,7 @@ public class FrenziedMage {
     }
 
     /** The old sneak Bribe: every buff it gave the caster, unchanged. */
-    private static void bribeEmpower(Player player, int ticks) {
+    private static void bribeEmpower(LivingEntity player, int ticks) {
         player.addEffect(new MobEffectInstance(MobEffects.STRENGTH, ticks, 1));
         player.addEffect(new MobEffectInstance(MobEffects.SPEED, ticks, 1));
         player.addEffect(new MobEffectInstance(MobEffects.HASTE, ticks, 1));
@@ -1184,7 +1206,7 @@ public class FrenziedMage {
         SoulCore.setCorruption(target, SoulCore.getCorruption(target) + amount);
     }
 
-    private static void sound(ServerLevel sl, Vec3 at, SoundEvent event, float volume, float pitch) {
+    static void sound(ServerLevel sl, Vec3 at, SoundEvent event, float volume, float pitch) {
         sl.playSound(null, at.x, at.y, at.z, event, SoundSource.PLAYERS, volume, pitch);
     }
 
@@ -1241,14 +1263,14 @@ public class FrenziedMage {
     // Melee combo hits
     // =========================
 
-    private static final Vec3 UP = new Vec3(0, 1, 0);
+    static final Vec3 UP = new Vec3(0, 1, 0);
 
-    private static Vec3 flatLook(Player player) {
+    private static Vec3 flatLook(LivingEntity player) {
         return Vec3.directionFromRotation(0f, player.getYRot());
     }
 
     // Hit 1: two thin cuts cross on the target, red mist bursts out of it
-    private static void edgeCrossCut(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void edgeCrossCut(LivingEntity player, LivingEntity target, ServerLevel sl) {
         RandomSource random = player.getRandom();
         Vec3 hit = target.getBoundingBox().getCenter();
         Vec3 look = flatLook(player);
@@ -1289,7 +1311,7 @@ public class FrenziedMage {
     }
 
     // Hit 2: a dotted line shoots along the ground, then a jagged blade of light tears along it
-    private static void edgeGroundRend(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void edgeGroundRend(LivingEntity player, LivingEntity target, ServerLevel sl) {
         RandomSource random = player.getRandom();
         Vec3 look = flatLook(player);
         Vec3 side = look.cross(UP).normalize();
@@ -1321,7 +1343,7 @@ public class FrenziedMage {
     }
 
     // Hit 3: a wide crescent sweeps around the front and breaks into flakes
-    private static void edgeWideSweep(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void edgeWideSweep(LivingEntity player, LivingEntity target, ServerLevel sl) {
         RandomSource random = player.getRandom();
         Vec3 center = player.position().add(0, 1.0, 0);
         float yaw = player.getYRot();
@@ -1339,7 +1361,7 @@ public class FrenziedMage {
     }
 
     // Hit 4: a tall slanted cleave comes down from high above onto the target, then shatters
-    private static void edgeCleave(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void edgeCleave(LivingEntity player, LivingEntity target, ServerLevel sl) {
         RandomSource random = player.getRandom();
         float yaw = player.getYRot();
         // the arc's center sits between you and the target, so the blade comes down right through it
@@ -1360,7 +1382,7 @@ public class FrenziedMage {
     }
 
     // Hit 5: dotted circle -> thin ring of light -> thick blade spinning around you, then flakes
-    private static void edgeRing(ServerPlayer player, LivingEntity target, ServerLevel sl) {
+    private static void edgeRing(LivingEntity player, LivingEntity target, ServerLevel sl) {
         RandomSource random = player.getRandom();
         Vec3 center = player.position().add(0, 0.95, 0);
         float yaw = player.getYRot();
