@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.status;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpells;
 import net.lukario.circleofinevitability.particles.fx.ModelFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
@@ -38,7 +39,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Marionette: a mob whose strings a player holds. It stops hunting its master and fights for them instead.
+ * Marionette: a mob whose strings a player holds (or a Beyonder mob: a mob's summons are its marionettes too). It stops hunting its master and fights for them instead.
  * Works from any class/ability:
  *
  *   Marionette.control(mob, player, 600);       // 30 seconds. false if it could not be taken
@@ -119,7 +120,7 @@ public final class Marionette {
      * Hands the mob's strings to the master for 'ticks' ticks.
      * @return false if it cannot be taken: dead, in another dimension, or another player's marionette
      */
-    public static boolean control(Mob mob, Player master, int ticks) {
+    public static boolean control(Mob mob, LivingEntity master, int ticks) {
         if (Decree.violate(master, Decree.Rule.MARIONETTES)) return false;     // strings are prohibited here
         return take(mob, master, ticks, false);
     }
@@ -128,7 +129,7 @@ public final class Marionette {
      * A creature an ability has just called up fights for the master for 'ticks' ticks, then vanishes (no drops).
      * Does not count toward MAX_PER_MASTER and shows no control bar. False if it could not be taken (as control).
      */
-    public static boolean summon(Mob mob, Player master, int ticks) {
+    public static boolean summon(Mob mob, LivingEntity master, int ticks) {
         return take(mob, master, ticks, true);
     }
 
@@ -138,7 +139,7 @@ public final class Marionette {
      *
      *   Mob hound = Marionette.spawnSummon(EntityTypes.WOLF, player, sl, Spells.groundAt(player, sl, spot), yaw, 600);
      */
-    public static Mob spawnSummon(EntityType<? extends Mob> type, Player master, ServerLevel sl, Vec3 feet, float yaw, int ticks) {
+    public static Mob spawnSummon(EntityType<? extends Mob> type, LivingEntity master, ServerLevel sl, Vec3 feet, float yaw, int ticks) {
         Mob mob = type.create(sl, EntitySpawnReason.MOB_SUMMONED);
         if (mob == null) return null;
         mob.snapTo(feet.x, feet.y, feet.z, yaw, 0f);
@@ -157,7 +158,7 @@ public final class Marionette {
         return tag != null && tag.getBooleanOr(SUMMONED, false);
     }
 
-    private static boolean take(Mob mob, Player master, int ticks, boolean summoned) {
+    private static boolean take(Mob mob, LivingEntity master, int ticks, boolean summoned) {
         if (ticks <= 0 || !mob.isAlive() || !(mob.level() instanceof ServerLevel sl) || master.level() != sl) return false;
         UUID holder = masterId(mob);
         if (holder != null && !holder.equals(master.getUUID())) return false;
@@ -210,7 +211,7 @@ public final class Marionette {
     }
 
     /** The marionettes this player holds that are alive and loaded in the player's dimension. */
-    public static List<Mob> of(Player master) {
+    public static List<Mob> of(LivingEntity master) {
         List<Mob> result = new ArrayList<>();
         Set<UUID> ids = HELD.get(master.getUUID());
         if (ids == null || !(master.level() instanceof ServerLevel sl)) return result;
@@ -276,7 +277,7 @@ public final class Marionette {
         ParticleShapes.burst(sl, STRING_SNAP, mob.position().add(0, mob.getBbHeight() + 0.6, 0), 12, 0.03, 0.14);
         sl.playSound(null, mob.blockPosition(), SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 0.8f, 0.6f);
         if (dies) {
-            Player master = holder == null ? null : sl.getPlayerByUUID(holder);
+            LivingEntity master = holder == null ? null : sl.getEntity(holder) instanceof LivingEntity found ? found : null;
             // the master gets the kill (and the drops) if they are still around
             if (master != null) mob.hurt(sl.damageSources().indirectMagic(master, master), mob.getMaxHealth() * 100f);
             if (mob.isAlive()) mob.kill(sl);
@@ -300,7 +301,7 @@ public final class Marionette {
         }
     }
 
-    private static boolean canFight(Mob mob, Player master, LivingEntity target) {
+    private static boolean canFight(Mob mob, LivingEntity master, LivingEntity target) {
         if (target == null || target == mob || target == master || !target.isAlive() || target.isSpectator()) return false;
         if (target.level() != mob.level() || isMarionetteOf(target, master) || Concealment.isHidden(target)) return false;
         if (target instanceof Player player && player.getAbilities().invulnerable) return false;   // creative
@@ -308,7 +309,11 @@ public final class Marionette {
         return mob.distanceToSqr(target) <= (SEEK_RANGE * 1.5) * (SEEK_RANGE * 1.5);
     }
 
-    private static LivingEntity pickTarget(Mob mob, Player master, ServerLevel sl) {
+    private static LivingEntity pickTarget(Mob mob, LivingEntity master, ServerLevel sl) {
+        if (master instanceof Mob boss) {                       // a mob's summon fights what its master fights
+            LivingEntity fought = boss.getTarget();
+            if (canFight(mob, master, fought)) return fought;
+        }
         LivingEntity struck = master.getLastHurtMob();          // what its master hit last
         if (canFight(mob, master, struck)) return struck;
         LivingEntity attacker = master.getLastHurtByMob();      // what hit its master last
@@ -320,8 +325,9 @@ public final class Marionette {
 
         LivingEntity nearest = null;                            // else the nearest monster
         double best = SEEK_RANGE * SEEK_RANGE;
+        // else the nearest monster (for a mob's summon: the nearest of its master's enemies)
         for (LivingEntity other : sl.getEntitiesOfClass(LivingEntity.class, mob.getBoundingBox().inflate(SEEK_RANGE),
-                candidate -> candidate instanceof Enemy)) {
+                candidate -> master instanceof Mob boss ? MobSpells.isEnemy(boss, candidate) : candidate instanceof Enemy)) {
             double distance = mob.distanceToSqr(other);
             if (distance <= best && canFight(mob, master, other)) {
                 best = distance;
@@ -331,7 +337,7 @@ public final class Marionette {
         return nearest;
     }
 
-    private static void think(Mob mob, Player master, ServerLevel sl, CompoundTag tag) {
+    private static void think(Mob mob, LivingEntity master, ServerLevel sl, CompoundTag tag) {
         LivingEntity target = pickTarget(mob, master, sl);
         aim(mob, target);
 
@@ -375,7 +381,8 @@ public final class Marionette {
             end(mob, DIES_WHEN_TIME_RUNS_OUT);
             return;
         }
-        Player master = sl.getPlayerByUUID(holder);         // null when the master is gone or in another dimension
+        // null when the master is gone or in another dimension (a player, or a Beyonder mob that called it up)
+        LivingEntity master = sl.getEntity(holder) instanceof LivingEntity found ? found : null;
         if (master == null || !master.isAlive()) {
             end(mob, false);
             return;

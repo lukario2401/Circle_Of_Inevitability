@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationFx.Status;
@@ -102,128 +103,128 @@ public class Abomination {
     // =========================
 
     // Ability 1 - Blood Chain (Sequence 9)
-    private static final int CHAIN_SEQUENCE = 9;
-    private static final int CHAIN_COST = 250;
-    private static final double CHAIN_RANGE = 16.0;
-    private static final float CHAIN_DAMAGE = 14f;
-    private static final int CHAIN_BLEED_TICKS = 80;             // the wound bleeds this long...
-    private static final float CHAIN_BLEED = 2f;                 // ...this much a second
-    private static final int CHAIN_DRAG_TICKS = 20;              // it is dragged for this long at most...
-    private static final double CHAIN_DRAG_SPEED = 1.1;
-    private static final double CHAIN_DRAG_TO = 2.0;             // ...until it is this close
-    private static final int CHAIN_HOLD = 30;                    // then held this long
-    private static final int CHAIN_TWO_SEQUENCE = 4;             // Puppet: a second chain...
-    private static final double CHAIN_SPREAD = 8.0;              // ...to the nearest other enemy this close to the first
-    private static final int CHAIN_FOUR_SEQUENCE = 1;            // Abomination: four chains...
-    private static final int CHAIN_FOUR_HOLD = 60;               // ...each holding this long
-    private static final float CHAIN_NO_DRAG_HEALTH = 150f;      // this much health or more: held where it stands, not dragged
+    static final int CHAIN_SEQUENCE = 9;
+    static final int CHAIN_COST = 250;
+    static final double CHAIN_RANGE = 16.0;
+    static final float CHAIN_DAMAGE = 14f;
+    static final int CHAIN_BLEED_TICKS = 80;             // the wound bleeds this long...
+    static final float CHAIN_BLEED = 2f;                 // ...this much a second
+    static final int CHAIN_DRAG_TICKS = 20;              // it is dragged for this long at most...
+    static final double CHAIN_DRAG_SPEED = 1.1;
+    static final double CHAIN_DRAG_TO = 2.0;             // ...until it is this close
+    static final int CHAIN_HOLD = 30;                    // then held this long
+    static final int CHAIN_TWO_SEQUENCE = 4;             // Puppet: a second chain...
+    static final double CHAIN_SPREAD = 8.0;              // ...to the nearest other enemy this close to the first
+    static final int CHAIN_FOUR_SEQUENCE = 1;            // Abomination: four chains...
+    static final int CHAIN_FOUR_HOLD = 60;               // ...each holding this long
+    static final float CHAIN_NO_DRAG_HEALTH = 150f;      // this much health or more: held where it stands, not dragged
     // sneak: Restraint
-    private static final int RESTRAINT_COST = 250;
-    private static final int RESTRAINT_TICKS = 200;
-    private static final float RESTRAINT_CUT = 0.5f;             // melee and projectiles 50% less
-    private static final int RESTRAINT_SILENT_SEQUENCE = 3;      // Disciple of Silence: 60% less, and not slowed
-    private static final float RESTRAINT_SILENT_CUT = 0.6f;
-    private static final float RESTRAINT_FULL_MOON_CUT = 0.35f;  // under the full moon it holds less
-    private static final int RESTRAINT_SLOW = 1;                 // Slowness II while bound
+    static final int RESTRAINT_COST = 250;
+    static final int RESTRAINT_TICKS = 200;
+    static final float RESTRAINT_CUT = 0.5f;             // melee and projectiles 50% less
+    static final int RESTRAINT_SILENT_SEQUENCE = 3;      // Disciple of Silence: 60% less, and not slowed
+    static final float RESTRAINT_SILENT_CUT = 0.6f;
+    static final float RESTRAINT_FULL_MOON_CUT = 0.35f;  // under the full moon it holds less
+    static final int RESTRAINT_SLOW = 1;                 // Slowness II while bound
 
     // Ability 2 - Moonstruck (Sequence 8)
-    private static final int MOON_SEQUENCE = 8;
-    private static final int MOON_COST = 300;
-    private static final double MOON_RANGE = 24.0;
-    private static final int MOON_TICKS = 120;
-    private static final double MOON_TURN_RANGE = 16.0;          // a mob turns on the nearest other mob this close
+    static final int MOON_SEQUENCE = 8;
+    static final int MOON_COST = 300;
+    static final double MOON_RANGE = 24.0;
+    static final int MOON_TICKS = 120;
+    static final double MOON_TURN_RANGE = 16.0;          // a mob turns on the nearest other mob this close
     // sneak: Lunar Frenzy
-    private static final int FRENZY_COST = 400;
-    private static final int FRENZY_TICKS = 200;
-    private static final int FRENZY_STRENGTH = 1;                // Strength II
-    private static final int FRENZY_SPEED = 1;                   // Speed II
-    private static final int FRENZY_REGENERATION = 0;            // Regeneration I
-    private static final int CRASH_TICKS = 120;                  // then Weakness I and Slowness I this long
+    static final int FRENZY_COST = 400;
+    static final int FRENZY_TICKS = 200;
+    static final int FRENZY_STRENGTH = 1;                // Strength II
+    static final int FRENZY_SPEED = 1;                   // Speed II
+    static final int FRENZY_REGENERATION = 0;            // Regeneration I
+    static final int CRASH_TICKS = 120;                  // then Weakness I and Slowness I this long
                                                                  // (twice as long after a frenzy under the full moon)
 
     // Ability 3 - Rending Pounce (Sequence 7)
-    private static final int POUNCE_SEQUENCE = 7;
-    private static final int POUNCE_COST = 700;
-    private static final double POUNCE_RANGE = 14.0;
-    private static final double POUNCE_SPEED = 1.3;
-    private static final int POUNCE_TICKS = 20;                  // the leap lets go after this long anyway
-    private static final int CLAWS = 3;
-    private static final int CLAW_EVERY = 4;
-    private static final float CLAW_DAMAGE = 14f;
-    private static final double CLAW_REACH = 4.0;
-    private static final int CLAW_BLEED_TICKS = 80;
-    private static final float CLAW_BLEED = 2f;
-    private static final int CLAW_DOWN = 20;                     // the last claw throws it down: it cannot move or jump this long
+    static final int POUNCE_SEQUENCE = 7;
+    static final int POUNCE_COST = 700;
+    static final double POUNCE_RANGE = 14.0;
+    static final double POUNCE_SPEED = 1.3;
+    static final int POUNCE_TICKS = 20;                  // the leap lets go after this long anyway
+    static final int CLAWS = 3;
+    static final int CLAW_EVERY = 4;
+    static final float CLAW_DAMAGE = 14f;
+    static final double CLAW_REACH = 4.0;
+    static final int CLAW_BLEED_TICKS = 80;
+    static final float CLAW_BLEED = 2f;
+    static final int CLAW_DOWN = 20;                     // the last claw throws it down: it cannot move or jump this long
     // sneak: Werewolf Form
-    private static final int WOLF_COST = 1000;
-    private static final int WOLF_COOLDOWN = 1200;
-    private static final int WOLF_TICKS = 800;
-    private static final double WOLF_SCALE = 1.1;                // a tenth bigger...
-    private static final double WOLF_PUPPET_SCALE = 1.25;        // ...a quarter at Puppet (4)
-    private static final int WOLF_PUPPET_SEQUENCE = 4;
-    private static final int WOLF_BANE_SEQUENCE = 2;             // Ancient Bane: no madness, until cast again
-    private static final double WOLF_REACH = 0.5;
-    private static final double WOLF_STEP = 0.5;
-    private static final float WOLF_MADNESS = 1f / 40f;          // full after 40 s...
-    private static final float WOLF_PUPPET_MADNESS = 1f / 60f;   // ...60 s at Puppet; twice as fast under the full moon
-    private static final int WOLF_STRENGTH = 1;                  // Strength II
-    private static final int WOLF_SPEED = 1;                     // Speed II
-    private static final float WOLF_CLAW_DAMAGE = 5f;            // more on every swing while in the form...
-    private static final int WOLF_CLAW_BLEED_TICKS = 60;         // ...which bleeds...
-    private static final float WOLF_CLAW_BLEED = 2f;
-    private static final int WOLF_CLAW_NO_HEAL = 60;             // ...and stops it healing
-    private static final int WOLF_BROKEN_TICKS = 200;            // full madness: the form breaks and you are weak this long
+    static final int WOLF_COST = 1000;
+    static final int WOLF_COOLDOWN = 1200;
+    static final int WOLF_TICKS = 800;
+    static final double WOLF_SCALE = 1.1;                // a tenth bigger...
+    static final double WOLF_PUPPET_SCALE = 1.25;        // ...a quarter at Puppet (4)
+    static final int WOLF_PUPPET_SEQUENCE = 4;
+    static final int WOLF_BANE_SEQUENCE = 2;             // Ancient Bane: no madness, until cast again
+    static final double WOLF_REACH = 0.5;
+    static final double WOLF_STEP = 0.5;
+    static final float WOLF_MADNESS = 1f / 40f;          // full after 40 s...
+    static final float WOLF_PUPPET_MADNESS = 1f / 60f;   // ...60 s at Puppet; twice as fast under the full moon
+    static final int WOLF_STRENGTH = 1;                  // Strength II
+    static final int WOLF_SPEED = 1;                     // Speed II
+    static final float WOLF_CLAW_DAMAGE = 5f;            // more on every swing while in the form...
+    static final int WOLF_CLAW_BLEED_TICKS = 60;         // ...which bleeds...
+    static final float WOLF_CLAW_BLEED = 2f;
+    static final int WOLF_CLAW_NO_HEAL = 60;             // ...and stops it healing
+    static final int WOLF_BROKEN_TICKS = 200;            // full madness: the form breaks and you are weak this long
 
     // Passives that need more than SequencePassives' check once a second
-    private static final int LUNATIC_SEQUENCE = 8;               // Lunatic Mind: fear and nausea do not take; the Full Moon
-    private static final int FULL_MOON_STRENGTH = 1;             // under the full moon: Strength II...
-    private static final int FULL_MOON_SPEED = 0;                // ...and Speed I
-    private static final int KEEN_SEQUENCE = 7;                  // Keen Senses: a sound when something starts hunting you unseen
-    private static final int KEEN_REST = 60;
-    private static final int UNLIVING_SEQUENCE = 6;              // Unliving Body: poison, hunger and freezing do not take...
-    private static final float UNLIVING_PROJECTILE_CUT = 0.25f;  // ...and projectiles do 25% less
-    private static final int WEIGHTLESS_SEQUENCE = 5;            // Weightless: no fall damage; spirits near you are marked
-    private static final double WEIGHTLESS_SIGHT = 16.0;
-    private static final int PUPPETEER_SEQUENCE = 4;             // Puppeteer: what you summon or take over lasts longer
-    private static final float PUPPETEER_LONGER = 1.5f;
-    private static final int WHISPER_SEQUENCE = 3;               // Whispering Curse: a melee attacker may be cursed...
-    private static final float WHISPER_CHANCE = 0.15f;
-    private static final int WHISPER_CURSE_TICKS = 200;          // ...Misfortune I this long; a hush does not stop your keys
-    private static final int BANE_AURA_SEQUENCE = 2;             // Bane Aura: enemies near you carry Misfortune I...
-    private static final double BANE_AURA_RADIUS = 10.0;
-    private static final int BANE_AURA_TICKS = 40;               // ...for 2 seconds after they leave; Misfortune, Fear, Decay do not take
-    private static final int COLLECTION_SEQUENCE = 1;            // Collection of Curses: curses you lay last longer...
-    private static final float COLLECTION_LONGER = 1.5f;
-    private static final float COLLECTION_CHANCE = 0.25f;        // ...and a melee attacker is cursed more often
-    private static final int CHAINED_SEQUENCE = 0;               // Chained Aura: enemies near you are slowed and cannot teleport...
-    private static final double CHAINED_AURA_RADIUS = 16.0;
-    private static final float CHAINED_THORNS = 4f;              // ...and a melee attacker takes thorn damage
+    static final int LUNATIC_SEQUENCE = 8;               // Lunatic Mind: fear and nausea do not take; the Full Moon
+    static final int FULL_MOON_STRENGTH = 1;             // under the full moon: Strength II...
+    static final int FULL_MOON_SPEED = 0;                // ...and Speed I
+    static final int KEEN_SEQUENCE = 7;                  // Keen Senses: a sound when something starts hunting you unseen
+    static final int KEEN_REST = 60;
+    static final int UNLIVING_SEQUENCE = 6;              // Unliving Body: poison, hunger and freezing do not take...
+    static final float UNLIVING_PROJECTILE_CUT = 0.25f;  // ...and projectiles do 25% less
+    static final int WEIGHTLESS_SEQUENCE = 5;            // Weightless: no fall damage; spirits near you are marked
+    static final double WEIGHTLESS_SIGHT = 16.0;
+    static final int PUPPETEER_SEQUENCE = 4;             // Puppeteer: what you summon or take over lasts longer
+    static final float PUPPETEER_LONGER = 1.5f;
+    static final int WHISPER_SEQUENCE = 3;               // Whispering Curse: a melee attacker may be cursed...
+    static final float WHISPER_CHANCE = 0.15f;
+    static final int WHISPER_CURSE_TICKS = 200;          // ...Misfortune I this long; a hush does not stop your keys
+    static final int BANE_AURA_SEQUENCE = 2;             // Bane Aura: enemies near you carry Misfortune I...
+    static final double BANE_AURA_RADIUS = 10.0;
+    static final int BANE_AURA_TICKS = 40;               // ...for 2 seconds after they leave; Misfortune, Fear, Decay do not take
+    static final int COLLECTION_SEQUENCE = 1;            // Collection of Curses: curses you lay last longer...
+    static final float COLLECTION_LONGER = 1.5f;
+    static final float COLLECTION_CHANCE = 0.25f;        // ...and a melee attacker is cursed more often
+    static final int CHAINED_SEQUENCE = 0;               // Chained Aura: enemies near you are slowed and cannot teleport...
+    static final double CHAINED_AURA_RADIUS = 16.0;
+    static final float CHAINED_THORNS = 4f;              // ...and a melee attacker takes thorn damage
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String RESTRAINT_UNTIL = "abomination_restraint_until";
-    private static final String RESTRAINT_TAG = "abomination_restraint_tag";
-    private static final String FRENZY_UNTIL = "abomination_frenzy_until";
-    private static final String FRENZY_TAG = "abomination_frenzy_tag";
-    private static final String FRENZY_FULL_MOON = "abomination_frenzy_full_moon";
-    private static final String CRASH_UNTIL = "abomination_crash_until";
-    private static final String POUNCE_UNTIL = "abomination_pounce_until";
-    private static final String WOLF_READY = "abomination_wolf_ready";
-    private static final String WOLF_TAG = "abomination_wolf_tag";
-    private static final String WOLF_HEIGHT = "abomination_wolf_height";
-    private static final String WOLF_MAD_SHOWN = "abomination_wolf_mad_shown";
-    private static final String FULL_MOON_ON = "abomination_full_moon_on";
-    private static final String KEEN_READY = "abomination_keen_ready";
+    static final String RESTRAINT_UNTIL = "abomination_restraint_until";
+    static final String RESTRAINT_TAG = "abomination_restraint_tag";
+    static final String FRENZY_UNTIL = "abomination_frenzy_until";
+    static final String FRENZY_TAG = "abomination_frenzy_tag";
+    static final String FRENZY_FULL_MOON = "abomination_frenzy_full_moon";
+    static final String CRASH_UNTIL = "abomination_crash_until";
+    static final String POUNCE_UNTIL = "abomination_pounce_until";
+    static final String WOLF_READY = "abomination_wolf_ready";
+    static final String WOLF_TAG = "abomination_wolf_tag";
+    static final String WOLF_HEIGHT = "abomination_wolf_height";
+    static final String WOLF_MAD_SHOWN = "abomination_wolf_mad_shown";
+    static final String FULL_MOON_ON = "abomination_full_moon_on";
+    static final String KEEN_READY = "abomination_keen_ready";
 
     // Saved on an enemy
-    private static final String MOONSTRUCK_UNTIL = "abomination_moonstruck_until";
+    static final String MOONSTRUCK_UNTIL = "abomination_moonstruck_until";
     /** On a risen servant or a ghost: what it hits carries a level of Misfortune (Ancient Bane). */
     static final String BANE_TOUCH = "abomination_bane_touch";
     static final int BANE_TOUCH_TICKS = 200;
 
     // Names of the parts that a player has one of
-    private static final String CLAWS_NAME = "abomination_werewolf_claws";
+    static final String CLAWS_NAME = "abomination_werewolf_claws";
 
     // Attribute modifiers (beyonder/Physique)
     private static final Identifier RESTRAINT_FOOTING_ID = Physique.id("abomination_restraint_footing");
@@ -296,7 +297,9 @@ public class Abomination {
                 if (owner != null && victim != owner) curse(victim, owner, 1, Misfortune.MAX_LEVEL, curseTicks(owner, BANE_TOUCH_TICKS), false);
             }
 
-            if (!(victim instanceof Player player)) return;
+            // a player, or a Beyonder mob of this Pathway (its Restraint, its form and its curses answer blows too)
+            if (!(victim instanceof Player) && !PATHWAY.equals(Beyonders.pathwayOf(victim))) return;
+            LivingEntity player = victim;
             boolean projectile = source.is(DamageTypeTags.IS_PROJECTILE);
             LivingEntity attacker = source.getEntity() instanceof LivingEntity living && living != player ? living : null;
             boolean melee = !projectile && attacker != null && source.getDirectEntity() == attacker && !source.is(DamageTypes.THORNS);
@@ -400,7 +403,7 @@ public class Abomination {
         bloodChain(player, sl, target);
     }
 
-    private static void bloodChain(Player player, ServerLevel sl, LivingEntity first) {
+    static void bloodChain(LivingEntity player, ServerLevel sl, LivingEntity first) {
         int count = Beyonder.hasSequence(player, CHAIN_FOUR_SEQUENCE) ? 4 : Beyonder.hasSequence(player, CHAIN_TWO_SEQUENCE) ? 2 : 1;
         int hold = Beyonder.hasSequence(player, CHAIN_FOUR_SEQUENCE) ? CHAIN_FOUR_HOLD : CHAIN_HOLD;
         List<LivingEntity> bound = new ArrayList<>();
@@ -413,7 +416,7 @@ public class Abomination {
     }
 
     /** One chain: it reaches, strikes, drags and holds, then lets go at a fixed time. */
-    private static void chainOne(Player player, ServerLevel sl, LivingEntity target, int hold) {
+    private static void chainOne(LivingEntity player, ServerLevel sl, LivingEntity target, int hold) {
         AbominationFx.bloodChain(sl, player, target);
         String tag = "ab_chain_" + player.getId() + "_" + target.getId() + "_" + sl.getGameTime();
         Later.run(sl, AbominationFx.CHAIN_REACHES, () -> {
@@ -439,7 +442,7 @@ public class Abomination {
         });
     }
 
-    private static void restraint(Player player, ServerLevel sl) {
+    static void restraint(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         long until = sl.getGameTime() + RESTRAINT_TICKS;
         String tag = "ab_restraint_" + player.getId() + "_" + sl.getGameTime();
@@ -453,7 +456,7 @@ public class Abomination {
         });
     }
 
-    private static void endRestraint(Player player, ServerLevel sl) {
+    static void endRestraint(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         String tag = data.getStringOr(RESTRAINT_TAG, "");
         data.remove(RESTRAINT_UNTIL);
@@ -465,11 +468,11 @@ public class Abomination {
         AbominationFx.statusEnd(player, Status.RESTRAINT);
     }
 
-    private static void restraintBody(Player player, boolean on) {
+    private static void restraintBody(LivingEntity player, boolean on) {
         Physique.keep(player, Attributes.KNOCKBACK_RESISTANCE, RESTRAINT_FOOTING_ID, 1.0, AttributeModifier.Operation.ADD_VALUE, on);
     }
 
-    private static float restraintCut(Player player, ServerLevel sl) {
+    private static float restraintCut(LivingEntity player, ServerLevel sl) {
         float cut = Beyonder.hasSequence(player, RESTRAINT_SILENT_SEQUENCE) ? RESTRAINT_SILENT_CUT : RESTRAINT_CUT;
         return underFullMoon(player, sl) ? Math.min(cut, RESTRAINT_FULL_MOON_CUT) : cut;
     }
@@ -500,7 +503,7 @@ public class Abomination {
         moonstruck(player, sl, target);
     }
 
-    private static void moonstruck(Player player, ServerLevel sl, LivingEntity target) {
+    static void moonstruck(LivingEntity player, ServerLevel sl, LivingEntity target) {
         String tag = "ab_moon_" + player.getId() + "_" + target.getId();
         long until = sl.getGameTime() + MOON_TICKS;
         target.getPersistentData().putLong(MOONSTRUCK_UNTIL, until);
@@ -534,7 +537,7 @@ public class Abomination {
     }
 
     /** The nearest mob to 'mob' that is not on the caster's side, within MOON_TURN_RANGE, or null. */
-    private static LivingEntity nearestOtherMob(Player player, ServerLevel sl, Mob mob) {
+    private static LivingEntity nearestOtherMob(LivingEntity player, ServerLevel sl, Mob mob) {
         LivingEntity best = null;
         double bestDistance = Double.MAX_VALUE;
         for (LivingEntity other : Spells.enemiesAround(player, sl, mob.position(), MOON_TURN_RANGE)) {
@@ -548,7 +551,7 @@ public class Abomination {
         return best;
     }
 
-    private static void lunarFrenzy(Player player, ServerLevel sl) {
+    static void lunarFrenzy(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         AbominationFx.frenzyEnd(sl, player, data.getStringOr(FRENZY_TAG, ""));       // cast again: one glow, not two
         long until = sl.getGameTime() + FRENZY_TICKS;
@@ -570,7 +573,7 @@ public class Abomination {
     }
 
     /** The frenzy is over: the body pays for it. */
-    private static void crash(Player player, ServerLevel sl, String tag) {
+    private static void crash(LivingEntity player, ServerLevel sl, String tag) {
         CompoundTag data = player.getPersistentData();
         int ticks = data.getBooleanOr(FRENZY_FULL_MOON, false) ? CRASH_TICKS * 2 : CRASH_TICKS;
         long until = sl.getGameTime() + ticks;
@@ -634,7 +637,7 @@ public class Abomination {
         pounce(player, sl, target);
     }
 
-    private static void pounce(Player player, ServerLevel sl, LivingEntity target) {
+    static void pounce(LivingEntity player, ServerLevel sl, LivingEntity target) {
         long until = sl.getGameTime() + POUNCE_TICKS;
         player.getPersistentData().putLong(POUNCE_UNTIL, until);
         FallGuard.protect(player, 100);
@@ -654,7 +657,7 @@ public class Abomination {
                 .start(sl);
     }
 
-    private static void claws(Player player, ServerLevel sl, LivingEntity target) {
+    private static void claws(LivingEntity player, ServerLevel sl, LivingEntity target) {
         for (int i = 0; i < CLAWS; i++) {
             int claw = i;
             Later.run(sl, i * CLAW_EVERY, () -> {
@@ -710,7 +713,7 @@ public class Abomination {
     }
 
     /** Once a second in the form: its strength, and the madness shown. */
-    private static void wolfSecond(Player player, float madness) {
+    private static void wolfSecond(LivingEntity player, float madness) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         Spells.keepEffect(player, MobEffects.STRENGTH, WOLF_STRENGTH, 40);
         Spells.keepEffect(player, MobEffects.SPEED, WOLF_SPEED, 40);
@@ -724,7 +727,7 @@ public class Abomination {
         }
     }
 
-    private static void wolfMaddened(Player player) {
+    private static void wolfMaddened(LivingEntity player) {
         player.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, WOLF_BROKEN_TICKS, 1));
         player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, WOLF_BROKEN_TICKS, 0));
         player.sendSystemMessage(Component.literal("The madness tears the wolf out of you."));
@@ -744,7 +747,7 @@ public class Abomination {
         for (String key : List.of(WOLF_TAG, WOLF_HEIGHT, WOLF_MAD_SHOWN)) data.remove(key);
     }
 
-    private static boolean isWolf(Player player) {
+    private static boolean isWolf(LivingEntity player) {
         return GiantForm.isGiant(player) && player.getPersistentData().contains(WOLF_TAG);
     }
 
@@ -753,18 +756,18 @@ public class Abomination {
     // =========================
 
     /** Once a second, for every player: the body. Restraint's footing while it lasts; off otherwise. */
-    private static void bodyTick(Player player) {
+    private static void bodyTick(LivingEntity player) {
         restraintBody(player, isActive(player, RESTRAINT_UNTIL));
     }
 
     /** True for a Lunatic (or stronger) out under the full moon at night. */
-    static boolean underFullMoon(Player player, ServerLevel sl) {
+    static boolean underFullMoon(LivingEntity player, ServerLevel sl) {
         return isAbomination(player, LUNATIC_SEQUENCE) && Spells.isFullMoonNight(sl)
                 && sl.canSeeSky(BlockPos.containing(player.getEyePosition()));
     }
 
     /** The Full Moon, once a second: Strength II and Speed I under it, and its rising and setting shown once. */
-    private static void fullMoonTick(Player player, ServerLevel sl) {
+    private static void fullMoonTick(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         boolean on = underFullMoon(player, sl);
         boolean was = data.getBooleanOr(FULL_MOON_ON, false);
@@ -784,7 +787,7 @@ public class Abomination {
     }
 
     /** Weightless, once a second: spirits, ghosts and summons near the Wraith are marked, for them alone. */
-    private static void weightlessTick(Player player, ServerLevel sl) {
+    private static void weightlessTick(LivingEntity player, ServerLevel sl) {
         if (!(player instanceof ServerPlayer viewer)) return;
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), WEIGHTLESS_SIGHT)) {
             if (isSpirit(one)) AbominationFx.spiritSeen(viewer, one);
@@ -798,12 +801,12 @@ public class Abomination {
     }
 
     /** Puppeteer: what an Abomination of Puppet (4) or stronger summons or takes over lasts PUPPETEER_LONGER as long. */
-    static int servantTicks(Player player, int ticks) {
+    static int servantTicks(LivingEntity player, int ticks) {
         return isAbomination(player, PUPPETEER_SEQUENCE) ? Math.round(ticks * PUPPETEER_LONGER) : ticks;
     }
 
     /** Whispering Curse and Collection of Curses: a melee attacker may be cursed. Chained: it is pricked by thorns. */
-    private static void meleeAnswered(Player player, ServerLevel sl, LivingEntity attacker) {
+    static void meleeAnswered(LivingEntity player, ServerLevel sl, LivingEntity attacker) {
         if (isAbomination(player, WHISPER_SEQUENCE)) {
             float chance = isAbomination(player, COLLECTION_SEQUENCE) ? COLLECTION_CHANCE : WHISPER_CHANCE;
             if (player.getRandom().nextFloat() < chance
@@ -818,7 +821,7 @@ public class Abomination {
     }
 
     /** Bane Aura, once a second (SequencePassives): enemies near the Bane carry Misfortune I while they stay. */
-    public static void baneAura(Player player) {
+    public static void baneAura(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), BANE_AURA_RADIUS)) {
             if (Misfortune.level(enemy) == 0) curse(enemy, player, 1, 1, curseTicks(player, BANE_AURA_TICKS), false);
@@ -827,7 +830,7 @@ public class Abomination {
     }
 
     /** Chained Aura, once a second (SequencePassives): enemies near the Chained are slowed and cannot teleport. */
-    public static void chainedAura(Player player) {
+    public static void chainedAura(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), CHAINED_AURA_RADIUS)) {
             Spells.keepEffect(enemy, MobEffects.SLOWNESS, 0, 40);
@@ -837,12 +840,12 @@ public class Abomination {
     }
 
     /** Whispering Curse: a Disciple of Silence (or stronger) casts through a hush, but not asleep or held fast. */
-    static boolean castsThroughHush(Player player) {
+    static boolean castsThroughHush(LivingEntity player) {
         return isAbomination(player, WHISPER_SEQUENCE) && !Root.has(player, RootRestriction.MOVE) && !Slumber.isAsleep(player);
     }
 
     /** Collection of Curses: curses an Abomination (1) or stronger lays last COLLECTION_LONGER as long. */
-    static int curseTicks(Player player, int ticks) {
+    static int curseTicks(LivingEntity player, int ticks) {
         return isAbomination(player, COLLECTION_SEQUENCE) ? Math.round(ticks * COLLECTION_LONGER) : ticks;
     }
 
@@ -851,16 +854,22 @@ public class Abomination {
      * cursed one becomes the caster's connection (status/Connection). Unlike a plain Misfortune.add it never makes a
      * longer curse shorter. Returns the level it has now (0 = it cannot be cursed).
      */
-    static int curse(LivingEntity target, Player source, int levels, int max, int ticks, boolean catastrophe) {
+    static int curse(LivingEntity target, LivingEntity source, int levels, int max, int ticks, boolean catastrophe) {
         if (target == null || source == null || target == source || !target.isAlive()) return 0;
         int level = Misfortune.add(target, source, levels, max, Math.max(ticks, Misfortune.ticksLeft(target)), catastrophe);
-        if (level > 0) Connection.touch(source, target);
+        if (level > 0 && source instanceof Player owner) Connection.touch(owner, target);     // (a mob keeps no connections)
         return level;
     }
 
     /** True for this Pathway at this Sequence or stronger. */
     static boolean isAbomination(Player player, int sequence) {
         return SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, sequence);
+    }
+
+    /** The same for anyone: a player as above, a Beyonder mob of this Pathway by its own Sequence. */
+    static boolean isAbomination(LivingEntity entity, int sequence) {
+        if (entity instanceof Player player) return isAbomination(player, sequence);
+        return PATHWAY.equals(Beyonders.pathwayOf(entity)) && Beyonder.hasSequence(entity, sequence);
     }
 
     // =========================
@@ -879,7 +888,7 @@ public class Abomination {
     }
 
     /** True (and says so) while the cooldown saved under 'key' runs. */
-    private static boolean coolingDown(Player player, ServerLevel sl, String key, String name) {
+    private static boolean coolingDown(LivingEntity player, ServerLevel sl, String key, String name) {
         long left = player.getPersistentData().getLongOr(key, 0L) - sl.getGameTime();
         if (left <= 0) return false;
         player.sendSystemMessage(Component.literal(name + " is not ready yet (" + ((left + 19) / 20) + "s)."));
@@ -887,7 +896,7 @@ public class Abomination {
     }
 
     /** Takes an effect off only if it is the one this Pathway gave (same level), so a stronger one from elsewhere stays. */
-    static void removeOwn(Player player, Holder<MobEffect> effect, int amplifier) {
+    static void removeOwn(LivingEntity player, Holder<MobEffect> effect, int amplifier) {
         MobEffectInstance has = player.getEffect(effect);
         if (has != null && has.getAmplifier() == amplifier) player.removeEffect(effect);
     }

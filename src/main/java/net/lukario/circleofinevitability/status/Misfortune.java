@@ -106,6 +106,15 @@ public final class Misfortune {
     // API
     // =========================
 
+    /** The same from anyone: a Beyonder mob's curse has no player to credit (its source is left empty). */
+    public static int add(LivingEntity target, LivingEntity source, int levels, int max, int ticks, boolean catastrophe) {
+        return add(target, source instanceof Player player ? player : null, levels, max, ticks, catastrophe);
+    }
+
+    public static int add(LivingEntity target, LivingEntity source, int levels, int max, int ticks) {
+        return add(target, source instanceof Player player ? player : null, levels, max, ticks, false);
+    }
+
     /** 'levels' more (up to 'max'), all of them lasting 'ticks' from now. Returns the level it has now (0 = immune). */
     public static int add(LivingEntity target, Player source, int levels, int max, int ticks) {
         return add(target, source, levels, max, ticks, false);

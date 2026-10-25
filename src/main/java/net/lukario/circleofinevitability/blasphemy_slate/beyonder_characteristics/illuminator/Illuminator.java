@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorFx.Status;
@@ -1000,6 +1001,12 @@ public class Illuminator {
     /** True for this Pathway at this Sequence or stronger. */
     public static boolean isIlluminator(Player player, int sequence) {
         return SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, sequence);
+    }
+
+    /** The same for anyone: a player as above, a Beyonder mob of this Pathway by its own Sequence. */
+    public static boolean isIlluminator(LivingEntity entity, int sequence) {
+        if (entity instanceof Player player) return isIlluminator(player, sequence);
+        return PATHWAY.equals(Beyonders.pathwayOf(entity)) && Beyonder.hasSequence(entity, sequence);
     }
 
     /** Has this pathway (or the check is skipped) and has reached the Sequence the ability needs. */

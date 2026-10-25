@@ -126,7 +126,7 @@ public final class StoredDamage {
      * Hits 'victim' with 'amount' as magic from 'owner' (owner may be null): armor does not take its share again,
      * the short invulnerability after a hit does not swallow it, and it is never written down by a StoredDamage.
      */
-    public static void deal(LivingEntity victim, Player owner, float amount) {
+    public static void deal(LivingEntity victim, LivingEntity owner, float amount) {
         if (amount <= 0f || !victim.isAlive() || !(victim.level() instanceof ServerLevel sl)) return;
         DamageSource source = owner == null ? sl.damageSources().magic() : sl.damageSources().indirectMagic(owner, owner);
         dealing = true;

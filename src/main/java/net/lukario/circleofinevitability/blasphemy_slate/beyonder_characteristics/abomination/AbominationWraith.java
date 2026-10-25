@@ -50,31 +50,31 @@ public final class AbominationWraith {
     // =========================
 
     static final int WRAITH_SEQUENCE = 5;                        // the key
-    private static final int WRAITH_KEY = 5;
-    private static final float QUICK_CAST_COST = 2f;
+    static final int WRAITH_KEY = 5;
+    static final float QUICK_CAST_COST = 2f;
 
     // Mirror Step
-    private static final int MIRROR_SEQUENCE = 5;
-    private static final int MIRROR_COST = 3000;
-    private static final int MIRROR_COOLDOWN = 200;
-    private static final double MIRROR_IN = 6.0;                 // a reflection this close to step into...
-    private static final double MIRROR_OUT = 32.0;               // ...and one this far to come out of
-    private static final double MIRROR_AROUND = 3.0;             // how near the crosshair the far one must be
-    private static final int MIRROR_TRAVEL = 20;                 // unseen on the way this long
-    private static final int MIRROR_HINTS = 8;                   // a refused step shows this many reflections near you
+    static final int MIRROR_SEQUENCE = 5;
+    static final int MIRROR_COST = 3000;
+    static final int MIRROR_COOLDOWN = 200;
+    static final double MIRROR_IN = 6.0;                 // a reflection this close to step into...
+    static final double MIRROR_OUT = 32.0;               // ...and one this far to come out of
+    static final double MIRROR_AROUND = 3.0;             // how near the crosshair the far one must be
+    static final int MIRROR_TRAVEL = 20;                 // unseen on the way this long
+    static final int MIRROR_HINTS = 8;                   // a refused step shows this many reflections near you
 
     // Possession
-    private static final int POSSESSION_SEQUENCE = 5;
-    private static final int POSSESSION_COST = 4000;
-    private static final int POSSESSION_COOLDOWN = 600;
-    private static final double POSSESSION_RANGE = 16.0;
-    private static final float POSSESSION_MAX_HEALTH = 150f;     // nothing stronger can be ridden (until Ancient Bane)
-    private static final int POSSESSION_TICKS = 1200;            // at most (longer with Puppeteer)
-    private static final int POSSESSION_BEAT = 20;
-    private static final int POSSESSION_UPKEEP = 100;            // spirituality every beat
-    private static final int POSSESSION_PLAYERS_SEQUENCE = 3;    // Disciple of Silence: players carry you (not steered)
-    private static final int POSSESSION_ANY_SEQUENCE = 2;        // Ancient Bane: any mob, a boss too
-    private static final int POSSESSION_KEY_REST = 20;           // the key does not step out in the first second inside
+    static final int POSSESSION_SEQUENCE = 5;
+    static final int POSSESSION_COST = 4000;
+    static final int POSSESSION_COOLDOWN = 600;
+    static final double POSSESSION_RANGE = 16.0;
+    static final float POSSESSION_MAX_HEALTH = 150f;     // nothing stronger can be ridden (until Ancient Bane)
+    static final int POSSESSION_TICKS = 1200;            // at most (longer with Puppeteer)
+    static final int POSSESSION_BEAT = 20;
+    static final int POSSESSION_UPKEEP = 100;            // spirituality every beat
+    static final int POSSESSION_PLAYERS_SEQUENCE = 3;    // Disciple of Silence: players carry you (not steered)
+    static final int POSSESSION_ANY_SEQUENCE = 2;        // Ancient Bane: any mob, a boss too
+    static final int POSSESSION_KEY_REST = 20;           // the key does not step out in the first second inside
     private static final ParasiteControl.Settings STEERING = new ParasiteControl.Settings(
             40,      // idle this long and the host acts on its own again
             1.0,     // walk speed (its own)
@@ -87,20 +87,20 @@ public final class AbominationWraith {
             24);     // right click: how far it can be told to hunt
 
     // Ghost Host
-    private static final int GHOSTS_SEQUENCE = 5;
-    private static final int GHOSTS_COST = 3500;
-    private static final int GHOSTS_COOLDOWN = 400;
-    private static final int GHOSTS_COUNT = 3;
-    private static final int GHOSTS_BANE_SEQUENCE = 2;           // Ancient Bane: six, and their touch carries Misfortune
-    private static final int GHOSTS_BANE_COUNT = 6;
-    private static final int GHOSTS_TICKS = 400;                 // they serve this long (longer with Puppeteer)
-    private static final double GHOSTS_TAKE_RANGE = 24.0;        // vexes and phantoms this close are taken over
-    private static final int GHOSTS_EVERY = 4;                   // ticks between two ghosts coming out
+    static final int GHOSTS_SEQUENCE = 5;
+    static final int GHOSTS_COST = 3500;
+    static final int GHOSTS_COOLDOWN = 400;
+    static final int GHOSTS_COUNT = 3;
+    static final int GHOSTS_BANE_SEQUENCE = 2;           // Ancient Bane: six, and their touch carries Misfortune
+    static final int GHOSTS_BANE_COUNT = 6;
+    static final int GHOSTS_TICKS = 400;                 // they serve this long (longer with Puppeteer)
+    static final double GHOSTS_TAKE_RANGE = 24.0;        // vexes and phantoms this close are taken over
+    static final int GHOSTS_EVERY = 4;                   // ticks between two ghosts coming out
 
     // =========================
     // What is saved on the player
     // =========================
-    private static final String POSSESSION_TAG = "abomination_possession_tag";
+    static final String POSSESSION_TAG = "abomination_possession_tag";
 
     // =========================
     // The key
@@ -138,7 +138,7 @@ public final class AbominationWraith {
     // way (status/Concealment). There has to be a reflection at both ends and room to stand at the far one; if not,
     // it costs nothing and the reflections near you glint (only you see them).
     // =========================
-    private static AbilityWheel.Result mirrorStep(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result mirrorStep(LivingEntity player, ServerLevel sl) {
         if (Root.has(player, RootRestriction.TELEPORT)) {
             player.sendSystemMessage(Component.literal("Something holds you to this side of the glass."));
             return AbilityWheel.Result.REFUSED;
@@ -178,7 +178,7 @@ public final class AbominationWraith {
     }
 
     /** Where to stand coming out of a reflection: on it (water, ice, a metal floor), else beside it (a pane, a wall). */
-    private static Vec3 stepOut(Player player, ServerLevel sl, BlockPos mirror) {
+    private static Vec3 stepOut(LivingEntity player, ServerLevel sl, BlockPos mirror) {
         Vec3 onTop = Vec3.atBottomCenterOf(mirror.above());
         if (Spells.fits(player, sl, onTop)) return onTop;
         List<BlockPos> sides = new ArrayList<>();
@@ -200,9 +200,10 @@ public final class AbominationWraith {
     }
 
     /** A refused step: the reflections near the player glint, for them alone. */
-    private static void hints(ServerPlayer player, List<BlockPos> near) {
+    private static void hints(LivingEntity player, List<BlockPos> near) {
+        if (!(player instanceof ServerPlayer viewer)) return;                     // shown to a player only
         for (int i = 0; i < Math.min(MIRROR_HINTS, near.size()); i++) {
-            AbominationFx.reflectionHint(player, Vec3.atCenterOf(near.get(i)).add(0, 0.5, 0));
+            AbominationFx.reflectionHint(viewer, Vec3.atCenterOf(near.get(i)).add(0, 0.5, 0));
         }
     }
 
@@ -256,7 +257,7 @@ public final class AbominationWraith {
 
     private static final Parasite.Hooks HOOKS = new Parasite.Hooks() {
         @Override
-        public void entered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
+        public void entered(LivingEntity parasite, LivingEntity host, ServerLevel sl) {
             int ticks = Abomination.servantTicks(parasite, POSSESSION_TICKS);
             String tag = "ab_possession_" + parasite.getId() + "_" + sl.getGameTime();
             parasite.getPersistentData().putString(POSSESSION_TAG, tag);
@@ -279,7 +280,7 @@ public final class AbominationWraith {
         }
 
         @Override
-        public void left(ServerPlayer parasite, LivingEntity host, ServerLevel sl, Parasite.End why) {
+        public void left(LivingEntity parasite, LivingEntity host, ServerLevel sl, Parasite.End why) {
             String tag = parasite.getPersistentData().getStringOr(POSSESSION_TAG, "");
             parasite.getPersistentData().remove(POSSESSION_TAG);
             AbominationFx.statusEnd(parasite, Status.POSSESSION);
@@ -311,7 +312,7 @@ public final class AbominationWraith {
     // vex or phantom within GHOSTS_TAKE_RANGE that is not yours is taken over for the same time instead, in place of
     // one of them. Ancient Bane (2): GHOSTS_BANE_COUNT, and what they touch carries a level of Misfortune.
     // =========================
-    private static AbilityWheel.Result ghostHost(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result ghostHost(LivingEntity player, ServerLevel sl) {
         boolean bane = Beyonder.hasSequence(player, GHOSTS_BANE_SEQUENCE);
         int count = bane ? GHOSTS_BANE_COUNT : GHOSTS_COUNT;
         int ticks = Abomination.servantTicks(player, GHOSTS_TICKS);

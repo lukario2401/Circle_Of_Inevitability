@@ -72,11 +72,11 @@ public final class Contagion {
 
     /** One outbreak: who it belongs to and who has had it. */
     private static final class Outbreak {
-        final Player owner;
+        final LivingEntity owner;
         final ServerLevel sl;
         final Set<UUID> caught = new HashSet<>();
 
-        Outbreak(Player owner, ServerLevel sl) {
+        Outbreak(LivingEntity owner, ServerLevel sl) {
             this.owner = owner;
             this.sl = sl;
         }
@@ -163,7 +163,7 @@ public final class Contagion {
     }
 
     /** Starts the outbreak on 'first', which carries stage 1. */
-    public void start(Player owner, ServerLevel sl, LivingEntity first) {
+    public void start(LivingEntity owner, ServerLevel sl, LivingEntity first) {
         if (first == null || !first.isAlive() || first.level() != sl) return;
         Outbreak outbreak = new Outbreak(owner, sl);
         outbreak.caught.add(first.getUUID());

@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationFx.Status;
 import net.lukario.circleofinevitability.combat.Contagion;
@@ -62,88 +63,88 @@ public final class AbominationCurses {
     // =========================
 
     static final int CURSES_SEQUENCE = 3;                        // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
     // Curse by Connection
-    private static final int CONNECTION_SEQUENCE = 3;
-    private static final int CONNECTION_COST = 8000;
-    private static final int CONNECTION_COOLDOWN = 600;
-    private static final double CONNECTION_SIGHT = 64.0;         // the one you look at, this far...
-    private static final int CONNECTION_WINDOW = 12000;          // ...if you touched it in the last 10 minutes
-    private static final int CONNECTION_CURSE_TICKS = 600;
-    private static final int CONNECTION_CURSE = 2;               // Misfortune II...
-    private static final float CONNECTION_VULNERABLE = 0.15f;    // ...and 15% more damage taken
-    private static final int CONNECTION_BANE_SEQUENCE = 2;       // Ancient Bane: 30 minutes, and twice as long a curse
-    private static final int CONNECTION_BANE_WINDOW = 36000;
+    static final int CONNECTION_SEQUENCE = 3;
+    static final int CONNECTION_COST = 8000;
+    static final int CONNECTION_COOLDOWN = 600;
+    static final double CONNECTION_SIGHT = 64.0;         // the one you look at, this far...
+    static final int CONNECTION_WINDOW = 12000;          // ...if you touched it in the last 10 minutes
+    static final int CONNECTION_CURSE_TICKS = 600;
+    static final int CONNECTION_CURSE = 2;               // Misfortune II...
+    static final float CONNECTION_VULNERABLE = 0.15f;    // ...and 15% more damage taken
+    static final int CONNECTION_BANE_SEQUENCE = 2;       // Ancient Bane: 30 minutes, and twice as long a curse
+    static final int CONNECTION_BANE_WINDOW = 36000;
 
     // Cursed Artifact
-    private static final int RELIC_SEQUENCE = 3;
-    private static final int RELIC_COST = 6000;
-    private static final int RELIC_COOLDOWN = 100;
-    private static final double RELIC_RANGE = 24.0;
-    private static final double RELIC_RADIUS = 1.5;
-    private static final int RELIC_MOST = 3;
-    private static final int RELIC_TICKS = 6000;                 // each waits 5 minutes
-    private static final int RELIC_ARMS = 20;
-    private static final int RELIC_CURSE = 3;                    // heavy Misfortune...
-    private static final int RELIC_CURSE_TICKS = 300;
-    private static final int RELIC_HUSH = 100;                   // ...and hushed 5 seconds
+    static final int RELIC_SEQUENCE = 3;
+    static final int RELIC_COST = 6000;
+    static final int RELIC_COOLDOWN = 100;
+    static final double RELIC_RANGE = 24.0;
+    static final double RELIC_RADIUS = 1.5;
+    static final int RELIC_MOST = 3;
+    static final int RELIC_TICKS = 6000;                 // each waits 5 minutes
+    static final int RELIC_ARMS = 20;
+    static final int RELIC_CURSE = 3;                    // heavy Misfortune...
+    static final int RELIC_CURSE_TICKS = 300;
+    static final int RELIC_HUSH = 100;                   // ...and hushed 5 seconds
 
     // Rite of Silence
-    private static final int RITE_SEQUENCE = 3;
-    private static final int RITE_COST = 7000;
-    private static final int RITE_COOLDOWN = 600;
-    private static final double RITE_RANGE = 32.0;
-    private static final double RITE_RADIUS = 8.0;               // 16 blocks across
-    private static final int RITE_TICKS = 160;
+    static final int RITE_SEQUENCE = 3;
+    static final int RITE_COST = 7000;
+    static final int RITE_COOLDOWN = 600;
+    static final double RITE_RANGE = 32.0;
+    static final double RITE_RADIUS = 8.0;               // 16 blocks across
+    static final int RITE_TICKS = 160;
 
     // Bane Mist
-    private static final int MIST_SEQUENCE = 2;
-    private static final int MIST_COST = 20000;
-    private static final int MIST_COOLDOWN = 900;
-    private static final double MIST_RANGE = 32.0;
-    private static final double MIST_RADIUS = 20.0;
-    private static final int MIST_TICKS = 300;
-    private static final int MIST_DEEPER = 60;                   // one level more Misfortune allowed every 3 seconds inside...
-    private static final int MIST_CURSE_TICKS = 100;             // ...each level lasting this long after
-    private static final int MIST_BRAWL_EVERY = 60;              // mobs in it turn on each other this often
+    static final int MIST_SEQUENCE = 2;
+    static final int MIST_COST = 20000;
+    static final int MIST_COOLDOWN = 900;
+    static final double MIST_RANGE = 32.0;
+    static final double MIST_RADIUS = 20.0;
+    static final int MIST_TICKS = 300;
+    static final int MIST_DEEPER = 60;                   // one level more Misfortune allowed every 3 seconds inside...
+    static final int MIST_CURSE_TICKS = 100;             // ...each level lasting this long after
+    static final int MIST_BRAWL_EVERY = 60;              // mobs in it turn on each other this often
 
     // Ancient Blight
-    private static final int BLIGHT_SEQUENCE = 2;
-    private static final int BLIGHT_COST = 25000;
-    private static final int BLIGHT_COOLDOWN = 1200;
-    private static final double BLIGHT_RANGE = 32.0;
-    private static final int BLIGHT_CARRIED = 100;               // each carries it this long before it jumps
-    private static final double BLIGHT_REACH = 8.0;
-    private static final int BLIGHT_CHAIN = 5;                   // up to 5 in a chain...
-    private static final int BLIGHT_MOST = 30;                   // ...30 in all
-    private static final int BLIGHT_CURSE_TICKS = 200;
+    static final int BLIGHT_SEQUENCE = 2;
+    static final int BLIGHT_COST = 25000;
+    static final int BLIGHT_COOLDOWN = 1200;
+    static final double BLIGHT_RANGE = 32.0;
+    static final int BLIGHT_CARRIED = 100;               // each carries it this long before it jumps
+    static final double BLIGHT_REACH = 8.0;
+    static final int BLIGHT_CHAIN = 5;                   // up to 5 in a chain...
+    static final int BLIGHT_MOST = 30;                   // ...30 in all
+    static final int BLIGHT_CURSE_TICKS = 200;
 
     // Abomination Form
-    private static final int FORM_SEQUENCE = 1;
-    private static final int FORM_COST = 30000;
-    private static final int FORM_COOLDOWN = 3600;
-    private static final int FORM_TICKS = 1200;
-    private static final int FORM_CHAINED_SEQUENCE = 0;          // Chained: until cast again
-    private static final double FORM_SCALE = 0.5;                // a doll's body: half your size...
-    private static final double FORM_REACH = 1.5;                // ...with longer reach to make up for it
-    private static final int FORM_STRENGTH = 2;                  // Strength III
-    private static final float FORM_CUT = 0.3f;                  // 30% less damage
-    private static final double FORM_AURA = 8.0;                 // whoever is this close...
-    private static final int FORM_AURA_EVERY = 60;               // ...loses a level of luck this often
-    private static final int FORM_CURSE_TICKS = 200;
-    private static final double FORM_CALAMITY_RADIUS = 32.0;     // at the end: every enemy this close with your Misfortune
+    static final int FORM_SEQUENCE = 1;
+    static final int FORM_COST = 30000;
+    static final int FORM_COOLDOWN = 3600;
+    static final int FORM_TICKS = 1200;
+    static final int FORM_CHAINED_SEQUENCE = 0;          // Chained: until cast again
+    static final double FORM_SCALE = 0.5;                // a doll's body: half your size...
+    static final double FORM_REACH = 1.5;                // ...with longer reach to make up for it
+    static final int FORM_STRENGTH = 2;                  // Strength III
+    static final float FORM_CUT = 0.3f;                  // 30% less damage
+    static final double FORM_AURA = 8.0;                 // whoever is this close...
+    static final int FORM_AURA_EVERY = 60;               // ...loses a level of luck this often
+    static final int FORM_CURSE_TICKS = 200;
+    static final double FORM_CALAMITY_RADIUS = 32.0;     // at the end: every enemy this close with your Misfortune
 
     // =========================
     // Names and what is saved on the player
     // =========================
-    private static final String RELIC_TRAP = "abomination_relic";
-    private static final String RITE_ZONE = "abomination_rite";
-    private static final String MIST_ZONE = "abomination_bane_mist";
-    private static final String FORM_ZONE = "abomination_form_aura";
-    private static final String FORM_ARMOR = "abomination_vessel";
-    private static final String FORM_TAG = "abomination_form_tag";
-    private static final String FORM_HEIGHT = "abomination_form_height";
+    static final String RELIC_TRAP = "abomination_relic";
+    static final String RITE_ZONE = "abomination_rite";
+    static final String MIST_ZONE = "abomination_bane_mist";
+    static final String FORM_ZONE = "abomination_form_aura";
+    static final String FORM_ARMOR = "abomination_vessel";
+    static final String FORM_TAG = "abomination_form_tag";
+    static final String FORM_HEIGHT = "abomination_form_height";
 
     // =========================
     // The key
@@ -184,7 +185,7 @@ public final class AbominationCurses {
     // look at (CONNECTION_SIGHT) is picked; with none in sight, the one you connected with last. Ancient Bane (2):
     // CONNECTION_BANE_WINDOW, and the curse lasts twice as long.
     // =========================
-    private static AbilityWheel.Result curseByConnection(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result curseByConnection(ServerPlayer player, ServerLevel sl) {
         boolean bane = Beyonder.hasSequence(player, CONNECTION_BANE_SEQUENCE);
         int window = bane ? CONNECTION_BANE_WINDOW : CONNECTION_WINDOW;
         LivingEntity target = Spells.aimEnemy(player, sl, CONNECTION_SIGHT);
@@ -221,7 +222,7 @@ public final class AbominationCurses {
     // RELIC_CURSE_TICKS, hushed for RELIC_HUSH (status/Silence), and it becomes your connection. RELIC_MOST relics at
     // once (one more takes the place of the oldest); each waits RELIC_TICKS.
     // =========================
-    private static AbilityWheel.Result cursedArtifact(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result cursedArtifact(ServerPlayer player, ServerLevel sl) {
         Vec3 ground = Spells.aimGround(player, sl, RELIC_RANGE);
         Trap.at(ground, RELIC_RADIUS)
                 .armsAfter(RELIC_ARMS)
@@ -248,7 +249,7 @@ public final class AbominationCurses {
     // the moment the hush has fallen (AbominationFx.RITE_FALLS). Enemies in it cannot use abilities, and mobs cannot
     // attack (status/Silence, renewed while they stay and for a second after).
     // =========================
-    private static AbilityWheel.Result riteOfSilence(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result riteOfSilence(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, RITE_RANGE);
         String tag = "ab_rite_" + player.getId() + "_" + sl.getGameTime();
         Zone.close(player, RITE_ZONE);                                     // one rite at a time
@@ -279,7 +280,7 @@ public final class AbominationCurses {
     // other (status/Taunt, every MIST_BRAWL_EVERY), players flinch and slow (status/Fear), and every second in it takes
     // more of their luck: one level of Misfortune more is allowed every MIST_DEEPER they stay, up to 5.
     // =========================
-    private static AbilityWheel.Result baneMist(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result baneMist(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, MIST_RANGE);
         String tag = "ab_mist_" + player.getId() + "_" + sl.getGameTime();
         Zone.close(player, MIST_ZONE);                                     // one mist at a time
@@ -322,7 +323,7 @@ public final class AbominationCurses {
     // BLIGHT_CARRIED it jumps to the 2 or 3 nearest enemies within BLIGHT_REACH, up to BLIGHT_CHAIN in a chain and
     // BLIGHT_MOST in all. What it carries is Misfortune of its stage: I on the first, one level deeper at every jump.
     // =========================
-    private static AbilityWheel.Result ancientBlight(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result ancientBlight(LivingEntity player, ServerLevel sl) {
         LivingEntity first = Spells.aimEnemy(player, sl, BLIGHT_RANGE);
         if (first == null) {
             player.sendSystemMessage(Component.literal("There is no one before you to carry the blight."));
@@ -356,12 +357,12 @@ public final class AbominationCurses {
     // Misfortune suffers a calamity. Chained (0): no timer, it stays until you pick it again (free). Only for an
     // Abomination's own body.
     // =========================
-    private static AbilityWheel.Result abominationForm(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result abominationForm(LivingEntity player, ServerLevel sl) {
         if (inForm(player)) {                                               // the pick again: the vessel opens
             GiantForm.end(player);
             return AbilityWheel.Result.FREE;
         }
-        if (!SoulCore.getPathway(player).equals(Abomination.PATHWAY)) {
+        if (!Abomination.PATHWAY.equals(Beyonders.pathwayOf(player))) {
             player.sendSystemMessage(Component.literal("Only an Abomination's own body can become the vessel."));
             return AbilityWheel.Result.REFUSED;
         }
@@ -396,24 +397,24 @@ public final class AbominationCurses {
     }
 
     /** True while the player is the vessel. */
-    static boolean inForm(Player player) {
+    static boolean inForm(LivingEntity player) {
         return GiantForm.isGiant(player) && player.getPersistentData().contains(FORM_TAG);
     }
 
     /** Once a second in the form: its strength, and the curses drifting off it. */
-    private static void formSecond(Player player) {
+    private static void formSecond(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         Spells.keepEffect(player, MobEffects.STRENGTH, FORM_STRENGTH, 40);
         AbominationFx.abominationTick(sl, player, FORM_AURA);
     }
 
     /** Someone hurt the vessel: it is cursed. */
-    static void hurtInForm(Player player, ServerLevel sl, LivingEntity attacker) {
+    static void hurtInForm(LivingEntity player, ServerLevel sl, LivingEntity attacker) {
         int level = Abomination.curse(attacker, player, 1, Misfortune.MAX_LEVEL, Abomination.curseTicks(player, FORM_CURSE_TICKS), false);
         if (level > 0) AbominationFx.abominationCursed(sl, attacker);
     }
 
-    private static void formGone(Player player, GiantForm.Ending why) {
+    private static void formGone(LivingEntity player, GiantForm.Ending why) {
         CompoundTag data = player.getPersistentData();
         ConjuredArmor.takeOff(player, FORM_ARMOR);
         Zone.close(player, FORM_ZONE);
@@ -428,7 +429,7 @@ public final class AbominationCurses {
     }
 
     /** Every curse comes due: each enemy near the vessel that carries this player's Misfortune suffers a calamity. */
-    private static void calamity(Player player, ServerLevel sl) {
+    private static void calamity(LivingEntity player, ServerLevel sl) {
         UUID mine = player.getUUID();
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), FORM_CALAMITY_RADIUS)) {
             if (!mine.equals(Misfortune.sourceId(enemy))) continue;

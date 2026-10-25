@@ -843,6 +843,12 @@ public class HandOfOrder {
         return SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, sequence);
     }
 
+    /** The same for anyone: a player as above, a Beyonder mob of this Pathway by its own Sequence. */
+    public static boolean isHandOfOrder(LivingEntity entity, int sequence) {
+        if (entity instanceof Player player) return isHandOfOrder(player, sequence);
+        return PATHWAY.equals(Beyonders.pathwayOf(entity)) && Beyonder.hasSequence(entity, sequence);
+    }
+
     /** Has this pathway (or the check is skipped) and has reached the Sequence the ability needs. */
     static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
         if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return false;

@@ -58,67 +58,67 @@ public final class AbominationZombie {
     // =========================
 
     static final int ZOMBIE_SEQUENCE = 6;                        // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
     // Raise the Dead
-    private static final int RAISE_SEQUENCE = 6;
-    private static final int RAISE_COST = 1500;
-    private static final int RAISE_COOLDOWN = 200;
-    private static final double RAISE_RANGE = 24.0;
-    private static final double RAISE_SPREAD = 2.5;              // the zombies come up this far round the spot
-    private static final int RAISE_COUNT = 3;
-    private static final int RAISE_PUPPET_SEQUENCE = 4;          // Puppet: six
-    private static final int RAISE_PUPPET_COUNT = 6;
-    private static final int RAISE_BANE_SEQUENCE = 2;            // Ancient Bane: ten, and their blows carry Misfortune
-    private static final int RAISE_BANE_COUNT = 10;
-    private static final int RAISE_TICKS = 600;                  // they serve this long (longer with Puppeteer)
-    private static final int RAISE_STAGGER = 3;                  // ticks between two hands coming up
-    private static final double FALLEN_RADIUS = 10.0;            // the dead that fell this close...
-    private static final int FALLEN_AGE = 200;                   // ...this lately...
-    private static final int FALLEN_MOST = 3;                    // ...rise too, this many at most
+    static final int RAISE_SEQUENCE = 6;
+    static final int RAISE_COST = 1500;
+    static final int RAISE_COOLDOWN = 200;
+    static final double RAISE_RANGE = 24.0;
+    static final double RAISE_SPREAD = 2.5;              // the zombies come up this far round the spot
+    static final int RAISE_COUNT = 3;
+    static final int RAISE_PUPPET_SEQUENCE = 4;          // Puppet: six
+    static final int RAISE_PUPPET_COUNT = 6;
+    static final int RAISE_BANE_SEQUENCE = 2;            // Ancient Bane: ten, and their blows carry Misfortune
+    static final int RAISE_BANE_COUNT = 10;
+    static final int RAISE_TICKS = 600;                  // they serve this long (longer with Puppeteer)
+    static final int RAISE_STAGGER = 3;                  // ticks between two hands coming up
+    static final double FALLEN_RADIUS = 10.0;            // the dead that fell this close...
+    static final int FALLEN_AGE = 200;                   // ...this lately...
+    static final int FALLEN_MOST = 3;                    // ...rise too, this many at most
 
     // Grave Chill
-    private static final int CHILL_SEQUENCE = 6;
-    private static final int CHILL_COST = 2000;
-    private static final int CHILL_COOLDOWN = 300;
-    private static final double CHILL_RADIUS = 10.0;
-    private static final int CHILL_TICKS = 160;
-    private static final int CHILL_EVERY = 10;
-    private static final int CHILL_DEEPER = 20;                  // one level of slowness more every second inside...
-    private static final int CHILL_MOST_SLOW = 3;                // ...up to Slowness IV
-    private static final int CHILL_FREEZE_AFTER = 60;            // after 3 seconds inside: frozen...
-    private static final int CHILL_FREEZE_TICKS = 20;            // ...for a second, once each
+    static final int CHILL_SEQUENCE = 6;
+    static final int CHILL_COST = 2000;
+    static final int CHILL_COOLDOWN = 300;
+    static final double CHILL_RADIUS = 10.0;
+    static final int CHILL_TICKS = 160;
+    static final int CHILL_EVERY = 10;
+    static final int CHILL_DEEPER = 20;                  // one level of slowness more every second inside...
+    static final int CHILL_MOST_SLOW = 3;                // ...up to Slowness IV
+    static final int CHILL_FREEZE_AFTER = 60;            // after 3 seconds inside: frozen...
+    static final int CHILL_FREEZE_TICKS = 20;            // ...for a second, once each
 
     // Undying Flesh
-    private static final int UNDYING_SEQUENCE = 6;
-    private static final int UNDYING_COST = 1800;
-    private static final int UNDYING_COOLDOWN = 300;
-    private static final int UNDYING_TICKS = 400;
-    private static final float UNDYING_CUT = 0.35f;              // 35% less from everything...
-    private static final float UNDYING_PROJECTILE_CUT = 0.6f;    // ...60% less from projectiles
-    private static final float UNDYING_HEAL = 0.02f;             // of the maximum health, every second
+    static final int UNDYING_SEQUENCE = 6;
+    static final int UNDYING_COST = 1800;
+    static final int UNDYING_COOLDOWN = 300;
+    static final int UNDYING_TICKS = 400;
+    static final float UNDYING_CUT = 0.35f;              // 35% less from everything...
+    static final float UNDYING_PROJECTILE_CUT = 0.6f;    // ...60% less from projectiles
+    static final float UNDYING_HEAL = 0.02f;             // of the maximum health, every second
 
     // Death Sentence
-    private static final int SENTENCE_SEQUENCE = 6;
-    private static final int SENTENCE_COST = 2500;
-    private static final int SENTENCE_COOLDOWN = 600;
-    private static final double SENTENCE_RANGE = 24.0;
-    private static final double SENTENCE_LEASH = 32.0;           // further than this at 0: the sentence is lifted
-    private static final int SENTENCE_SECONDS = 5;
-    private static final float SENTENCE_SHARE = 0.3f;            // of its maximum health...
-    private static final float SENTENCE_LOW_SHARE = 0.5f;        // ...this much if it was below half health
-    private static final int SENTENCE_BANE_SEQUENCE = 2;         // Ancient Bane: up to three in sight
-    private static final int SENTENCE_BANE_MOST = 3;
-    private static final double SENTENCE_SIGHT = 30.0;           // degrees from the crosshair
-    private static final int SENTENCE_RISEN_TICKS = 600;         // one it kills serves this long (longer with Puppeteer)
+    static final int SENTENCE_SEQUENCE = 6;
+    static final int SENTENCE_COST = 2500;
+    static final int SENTENCE_COOLDOWN = 600;
+    static final double SENTENCE_RANGE = 24.0;
+    static final double SENTENCE_LEASH = 32.0;           // further than this at 0: the sentence is lifted
+    static final int SENTENCE_SECONDS = 5;
+    static final float SENTENCE_SHARE = 0.3f;            // of its maximum health...
+    static final float SENTENCE_LOW_SHARE = 0.5f;        // ...this much if it was below half health
+    static final int SENTENCE_BANE_SEQUENCE = 2;         // Ancient Bane: up to three in sight
+    static final int SENTENCE_BANE_MOST = 3;
+    static final double SENTENCE_SIGHT = 30.0;           // degrees from the crosshair
+    static final int SENTENCE_RISEN_TICKS = 600;         // one it kills serves this long (longer with Puppeteer)
 
     // =========================
     // Names and what is saved on the player
     // =========================
-    private static final String CHILL_ZONE = "abomination_grave_chill";
-    private static final String CHILL_TAG = "abomination_chill_tag";
-    private static final String UNDYING = "abomination_undying_flesh";
-    private static final String UNDYING_TAG = "abomination_undying_tag";
+    static final String CHILL_ZONE = "abomination_grave_chill";
+    static final String CHILL_TAG = "abomination_chill_tag";
+    static final String UNDYING = "abomination_undying_flesh";
+    static final String UNDYING_TAG = "abomination_undying_tag";
 
     // =========================
     // The key
@@ -154,7 +154,7 @@ public final class AbominationZombie {
     // FALLEN_MOST, as what they were (combat/Fallen; bosses never rise). Puppet (4): RAISE_PUPPET_COUNT. Ancient
     // Bane (2): RAISE_BANE_COUNT, and what they hit carries a level of Misfortune.
     // =========================
-    private static AbilityWheel.Result raiseTheDead(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result raiseTheDead(LivingEntity player, ServerLevel sl) {
         Vec3 ground = Spells.aimGround(player, sl, RAISE_RANGE);
         boolean bane = Beyonder.hasSequence(player, RAISE_BANE_SEQUENCE);
         int count = bane ? RAISE_BANE_COUNT : Beyonder.hasSequence(player, RAISE_PUPPET_SEQUENCE) ? RAISE_PUPPET_COUNT : RAISE_COUNT;
@@ -202,7 +202,7 @@ public final class AbominationZombie {
     }
 
     /** One of the dead is up and serving: its mark, no burning, and the Bane's touch. */
-    static void risen(Player player, ServerLevel sl, Mob servant, int ticks, boolean bane) {
+    static void risen(LivingEntity player, ServerLevel sl, Mob servant, int ticks, boolean bane) {
         AbominationFx.servantMark(sl, servant, ticks, "ab_risen_" + servant.getId());
         servant.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, ticks, 0, false, false));
         if (bane) servant.getPersistentData().putBoolean(Abomination.BANE_TOUCH, true);
@@ -214,7 +214,7 @@ public final class AbominationZombie {
     // every CHILL_DEEPER they stay (up to CHILL_MOST_SLOW), and after CHILL_FREEZE_AFTER they are frozen in ice for
     // CHILL_FREEZE_TICKS, once each.
     // =========================
-    private static AbilityWheel.Result graveChill(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result graveChill(LivingEntity player, ServerLevel sl) {
         String tag = "ab_chill_" + player.getId() + "_" + sl.getGameTime();
         player.getPersistentData().putString(CHILL_TAG, tag);
         AbominationFx.graveChill(sl, player, CHILL_RADIUS, CHILL_TICKS, tag);
@@ -253,7 +253,7 @@ public final class AbominationZombie {
     // everything and UNDYING_PROJECTILE_CUT less from projectiles, no knockback, bleeding and poison do not take (and
     // end at once), and you regenerate UNDYING_HEAL of your health every second.
     // =========================
-    private static AbilityWheel.Result undyingFlesh(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result undyingFlesh(LivingEntity player, ServerLevel sl) {
         CompoundTag data = player.getPersistentData();
         AbominationFx.undyingEnd(sl, player, data.getStringOr(UNDYING_TAG, ""));       // cast again: one mark, not two
         String tag = "ab_undying_" + player.getId() + "_" + sl.getGameTime();
@@ -277,7 +277,7 @@ public final class AbominationZombie {
     }
 
     /** True while Undying Flesh is on the player. */
-    static boolean isUndying(Player player) {
+    static boolean isUndying(LivingEntity player) {
         return ConjuredArmor.isWorn(player, UNDYING);
     }
 
@@ -288,7 +288,7 @@ public final class AbominationZombie {
     // (combat/Fallen) for SENTENCE_RISEN_TICKS. Sentencing someone else ends the first (one countdown at a time).
     // Ancient Bane (2): up to SENTENCE_BANE_MOST enemies in sight are sentenced at once.
     // =========================
-    private static AbilityWheel.Result deathSentence(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result deathSentence(LivingEntity player, ServerLevel sl) {
         List<LivingEntity> sentenced = new ArrayList<>();
         if (Beyonder.hasSequence(player, SENTENCE_BANE_SEQUENCE)) {
             for (LivingEntity one : Spells.enemiesInSight(player, sl, SENTENCE_RANGE, SENTENCE_SIGHT)) {
@@ -329,18 +329,18 @@ public final class AbominationZombie {
                 .start(player);
         for (LivingEntity one : sentenced) {
             AbominationFx.deathSentence(sl, player, one, ticks, tag);
-            Connection.touch(player, one);                               // the sentenced are your connections
+            if (player instanceof Player owner) Connection.touch(owner, one);   // the sentenced are your connections
         }
         AbominationFx.status(player, Status.SENTENCE, ticks);
         return AbilityWheel.Result.DONE;
     }
 
-    private static boolean stillSentenced(Player player, ServerLevel sl, LivingEntity one) {
+    private static boolean stillSentenced(LivingEntity player, ServerLevel sl, LivingEntity one) {
         return one.isAlive() && one.level() == sl && player.distanceTo(one) <= SENTENCE_LEASH;
     }
 
     /** The count reached 0: the mark falls, and the blow lands when it gets there. */
-    private static void sentenceFalls(Player player, ServerLevel sl, LivingEntity one, String tag) {
+    private static void sentenceFalls(LivingEntity player, ServerLevel sl, LivingEntity one, String tag) {
         AbominationFx.sentenceFalls(sl, one, tag);
         Later.run(sl, AbominationFx.SENTENCE_LANDS, () -> {
             if (!Spells.casterStillHere(player, sl) || !one.isAlive() || one.level() != sl) return;

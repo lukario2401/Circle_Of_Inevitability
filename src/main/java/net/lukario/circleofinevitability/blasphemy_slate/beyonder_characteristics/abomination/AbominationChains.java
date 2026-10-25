@@ -57,89 +57,89 @@ public final class AbominationChains {
     // =========================
 
     static final int CHAINS_SEQUENCE = 4;                        // the key
-    private static final float QUICK_CAST_COST = 2f;
+    static final float QUICK_CAST_COST = 2f;
 
     // Animate Objects
-    private static final int ANIMATE_SEQUENCE = 4;
-    private static final int ANIMATE_COST = 3000;
-    private static final int ANIMATE_COOLDOWN = 200;
-    private static final double ANIMATE_RADIUS = 16.0;           // things this close to you rise...
-    private static final int ANIMATE_MOST = 12;                  // ...this many at most
-    private static final int ANIMATE_GREAT_SEQUENCE = 1;         // Abomination: further and more
-    private static final double ANIMATE_GREAT_RADIUS = 32.0;
-    private static final int ANIMATE_GREAT_MOST = 30;
-    private static final double ANIMATE_SIGHT = 60.0;            // enemies within this many degrees of the crosshair...
-    private static final double ANIMATE_REACH = 32.0;            // ...and this far are thrown at
-    private static final float ANIMATE_DAMAGE = 10f;
-    private static final double ANIMATE_SPEED = 1.4;
-    private static final int ANIMATE_STAGGER = 2;                // ticks between two throws
-    private static final int ANIMATE_FLIGHT = 60;
+    static final int ANIMATE_SEQUENCE = 4;
+    static final int ANIMATE_COST = 3000;
+    static final int ANIMATE_COOLDOWN = 200;
+    static final double ANIMATE_RADIUS = 16.0;           // things this close to you rise...
+    static final int ANIMATE_MOST = 12;                  // ...this many at most
+    static final int ANIMATE_GREAT_SEQUENCE = 1;         // Abomination: further and more
+    static final double ANIMATE_GREAT_RADIUS = 32.0;
+    static final int ANIMATE_GREAT_MOST = 30;
+    static final double ANIMATE_SIGHT = 60.0;            // enemies within this many degrees of the crosshair...
+    static final double ANIMATE_REACH = 32.0;            // ...and this far are thrown at
+    static final float ANIMATE_DAMAGE = 10f;
+    static final double ANIMATE_SPEED = 1.4;
+    static final int ANIMATE_STAGGER = 2;                // ticks between two throws
+    static final int ANIMATE_FLIGHT = 60;
 
     // Grave Shackles
-    private static final int SHACKLES_SEQUENCE = 4;
-    private static final int SHACKLES_COST = 4000;
-    private static final int SHACKLES_COOLDOWN = 400;
-    private static final double SHACKLES_RADIUS = 10.0;
-    private static final int SHACKLES_MOST = 8;
-    private static final int SHACKLES_HOLD = 80;                 // held in place this long...
-    private static final int SHACKLES_LINK = 160;                // ...and feel each other's pain this long
-    private static final float SHACKLES_SHARE = 0.5f;            // half of what one takes, the others take too
-    private static final int SHACKLES_CHAINED_SEQUENCE = 0;      // Chained: every enemy in sight...
-    private static final double SHACKLES_CHAINED_RANGE = 24.0;
-    private static final int SHACKLES_CHAINED_MOST = 24;
-    private static final double SHACKLES_GROUND = 1.5;           // ...and held while you stay this close to where you cast
+    static final int SHACKLES_SEQUENCE = 4;
+    static final int SHACKLES_COST = 4000;
+    static final int SHACKLES_COOLDOWN = 400;
+    static final double SHACKLES_RADIUS = 10.0;
+    static final int SHACKLES_MOST = 8;
+    static final int SHACKLES_HOLD = 80;                 // held in place this long...
+    static final int SHACKLES_LINK = 160;                // ...and feel each other's pain this long
+    static final float SHACKLES_SHARE = 0.5f;            // half of what one takes, the others take too
+    static final int SHACKLES_CHAINED_SEQUENCE = 0;      // Chained: every enemy in sight...
+    static final double SHACKLES_CHAINED_RANGE = 24.0;
+    static final int SHACKLES_CHAINED_MOST = 24;
+    static final double SHACKLES_GROUND = 1.5;           // ...and held while you stay this close to where you cast
 
     // Thorned Mausoleum
-    private static final int MAUSOLEUM_SEQUENCE = 0;
-    private static final int MAUSOLEUM_COST = 40000;
-    private static final int MAUSOLEUM_COOLDOWN = 2400;
-    private static final double MAUSOLEUM_RANGE = 32.0;
-    private static final double MAUSOLEUM_RADIUS = 6.0;          // 12 blocks across
-    private static final int MAUSOLEUM_TICKS = 600;
-    private static final float MAUSOLEUM_SHIELD = 0.4f;          // allies inside take 40% less
-    private static final float MAUSOLEUM_THORNS = 8f;            // enemies inside bleed this much a second
-    private static final int MAUSOLEUM_SLOW = 1;                 // Slowness II inside
+    static final int MAUSOLEUM_SEQUENCE = 0;
+    static final int MAUSOLEUM_COST = 40000;
+    static final int MAUSOLEUM_COOLDOWN = 2400;
+    static final double MAUSOLEUM_RANGE = 32.0;
+    static final double MAUSOLEUM_RADIUS = 6.0;          // 12 blocks across
+    static final int MAUSOLEUM_TICKS = 600;
+    static final float MAUSOLEUM_SHIELD = 0.4f;          // allies inside take 40% less
+    static final float MAUSOLEUM_THORNS = 8f;            // enemies inside bleed this much a second
+    static final int MAUSOLEUM_SLOW = 1;                 // Slowness II inside
 
     // Coffin of Ages
-    private static final int COFFIN_SEQUENCE = 0;
-    private static final int COFFIN_COST = 30000;
-    private static final int COFFIN_COOLDOWN = 1800;
-    private static final double COFFIN_RANGE = 32.0;
-    private static final int COFFIN_TICKS = 240;                 // an enemy sleeps sealed this long...
-    private static final float COFFIN_BOSS_HEALTH = 150f;        // (not a boss)
-    private static final int COFFIN_CURSE = 3;                   // ...and wakes with Misfortune III...
-    private static final int COFFIN_CURSE_TICKS = 300;
-    private static final float COFFIN_VULNERABLE = 0.2f;         // ...and taking 20% more, as long
-    private static final int COFFIN_SELF_TICKS = 120;            // sealed yourself this long...
-    private static final float COFFIN_SELF_HEAL = 0.5f;          // ...you rise healed by half of your health...
-    private static final double COFFIN_BURST = 6.0;              // ...and the thorns hold everything this close...
-    private static final int COFFIN_BURST_HOLD = 60;             // ...this long
-    private static final float COFFIN_BURST_DAMAGE = 12f;
+    static final int COFFIN_SEQUENCE = 0;
+    static final int COFFIN_COST = 30000;
+    static final int COFFIN_COOLDOWN = 1800;
+    static final double COFFIN_RANGE = 32.0;
+    static final int COFFIN_TICKS = 240;                 // an enemy sleeps sealed this long...
+    static final float COFFIN_BOSS_HEALTH = 150f;        // (not a boss)
+    static final int COFFIN_CURSE = 3;                   // ...and wakes with Misfortune III...
+    static final int COFFIN_CURSE_TICKS = 300;
+    static final float COFFIN_VULNERABLE = 0.2f;         // ...and taking 20% more, as long
+    static final int COFFIN_SELF_TICKS = 120;            // sealed yourself this long...
+    static final float COFFIN_SELF_HEAL = 0.5f;          // ...you rise healed by half of your health...
+    static final double COFFIN_BURST = 6.0;              // ...and the thorns hold everything this close...
+    static final int COFFIN_BURST_HOLD = 60;             // ...this long
+    static final float COFFIN_BURST_DAMAGE = 12f;
 
     // Thorn Garden
-    private static final int GARDEN_SEQUENCE = 0;
-    private static final int GARDEN_COST = 35000;
-    private static final int GARDEN_COOLDOWN = 1800;
-    private static final double GARDEN_RANGE = 32.0;
-    private static final double GARDEN_RADIUS = 10.0;            // 20 blocks across
-    private static final int GARDEN_TICKS = 400;
-    private static final int GARDEN_SLOW_EVERY = 20;             // one level of slowness more every second inside...
-    private static final int GARDEN_MOST_SLOW = 3;               // ...up to IV
-    private static final int GARDEN_HELD_AFTER = 60;             // after 3 seconds inside: held while in it
-    private static final float GARDEN_THORNS = 2f;               // bleeding a second, one more every GARDEN_THORNS_EVERY...
-    private static final int GARDEN_THORNS_EVERY = 40;
-    private static final float GARDEN_MOST_THORNS = 6f;          // ...up to this
-    private static final float GARDEN_HEAL = 2f;                 // allies (and you) heal this much a second...
-    private static final int GARDEN_ABSORPTION = 0;              // ...and have Absorption I
+    static final int GARDEN_SEQUENCE = 0;
+    static final int GARDEN_COST = 35000;
+    static final int GARDEN_COOLDOWN = 1800;
+    static final double GARDEN_RANGE = 32.0;
+    static final double GARDEN_RADIUS = 10.0;            // 20 blocks across
+    static final int GARDEN_TICKS = 400;
+    static final int GARDEN_SLOW_EVERY = 20;             // one level of slowness more every second inside...
+    static final int GARDEN_MOST_SLOW = 3;               // ...up to IV
+    static final int GARDEN_HELD_AFTER = 60;             // after 3 seconds inside: held while in it
+    static final float GARDEN_THORNS = 2f;               // bleeding a second, one more every GARDEN_THORNS_EVERY...
+    static final int GARDEN_THORNS_EVERY = 40;
+    static final float GARDEN_MOST_THORNS = 6f;          // ...up to this
+    static final float GARDEN_HEAL = 2f;                 // allies (and you) heal this much a second...
+    static final int GARDEN_ABSORPTION = 0;              // ...and have Absorption I
 
     // =========================
     // Names and what is saved
     // =========================
-    private static final String SHACKLES_TAG = "abomination_shackles_tag";
-    private static final String MAUSOLEUM_DOME = "abomination_mausoleum";
-    private static final String MAUSOLEUM_ZONE = "abomination_mausoleum_inside";
-    private static final String GARDEN_ENEMIES = "abomination_garden_thorns";
-    private static final String GARDEN_ALLIES = "abomination_garden_roses";
+    static final String SHACKLES_TAG = "abomination_shackles_tag";
+    static final String MAUSOLEUM_DOME = "abomination_mausoleum";
+    static final String MAUSOLEUM_ZONE = "abomination_mausoleum_inside";
+    static final String GARDEN_ENEMIES = "abomination_garden_thorns";
+    static final String GARDEN_ALLIES = "abomination_garden_roses";
     /** On anyone in a Coffin of Ages: until this game time nothing can hurt it. */
     static final String SEALED_UNTIL = "abomination_sealed_until";
 
@@ -179,7 +179,7 @@ public final class AbominationChains {
     // ANIMATE_STAGGER. Each hits once for ANIMATE_DAMAGE. Arrows and other projectiles are turned round and become
     // yours. Abomination (1): ANIMATE_GREAT_RADIUS, ANIMATE_GREAT_MOST. Nothing to move, or no one to throw at: refused.
     // =========================
-    private static AbilityWheel.Result animateObjects(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result animateObjects(LivingEntity player, ServerLevel sl) {
         boolean great = Beyonder.hasSequence(player, ANIMATE_GREAT_SEQUENCE);
         List<Entity> things = Spells.looseThingsAround(player, sl, player.position(), great ? ANIMATE_GREAT_RADIUS : ANIMATE_RADIUS);
         int most = great ? ANIMATE_GREAT_MOST : ANIMATE_MOST;
@@ -218,7 +218,7 @@ public final class AbominationChains {
     // enemy is only held). Chained (0): every enemy in sight within SHACKLES_CHAINED_RANGE (SHACKLES_CHAINED_MOST),
     // and while you stay within SHACKLES_GROUND of where you cast, the chains hold for the whole link.
     // =========================
-    private static AbilityWheel.Result graveShackles(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result graveShackles(LivingEntity player, ServerLevel sl) {
         boolean chained = Beyonder.hasSequence(player, SHACKLES_CHAINED_SEQUENCE);
         List<LivingEntity> bound = new ArrayList<>();
         List<LivingEntity> near = chained
@@ -264,11 +264,11 @@ public final class AbominationChains {
     }
 
     /** Chained: the hold is renewed once a second while the caster stands their ground, up to 'left' more ticks. */
-    private static void holdGround(Player player, ServerLevel sl, List<LivingEntity> held, Vec3 ground, String tag, int left) {
+    private static void holdGround(LivingEntity player, ServerLevel sl, List<LivingEntity> held, Vec3 ground, String tag, int left) {
         Later.run(sl, Math.max(1, SHACKLES_HOLD - 20), () -> renewHold(player, sl, held, ground, tag, left));
     }
 
-    private static void renewHold(Player player, ServerLevel sl, List<LivingEntity> held, Vec3 ground, String tag, int left) {
+    private static void renewHold(LivingEntity player, ServerLevel sl, List<LivingEntity> held, Vec3 ground, String tag, int left) {
         if (left <= 0 || !Spells.casterStillHere(player, sl)) return;
         if (!player.getPersistentData().getStringOr(SHACKLES_TAG, "").equals(tag)) return;     // shackled others since
         if (player.position().distanceTo(ground) > SHACKLES_GROUND) return;                    // you moved: they break
@@ -284,7 +284,7 @@ public final class AbominationChains {
     // it but your allies (combat/Dome: enemies kept in and out, their projectiles stopped), allies inside take
     // MAUSOLEUM_SHIELD less, and enemies inside are slowed, cannot heal and bleed MAUSOLEUM_THORNS a second.
     // =========================
-    private static AbilityWheel.Result thornedMausoleum(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result thornedMausoleum(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, MAUSOLEUM_RANGE);
         String tag = "ab_mausoleum_" + player.getId() + "_" + sl.getGameTime();
         Dome.close(player, MAUSOLEUM_DOME);                                // one at a time: the old one crumbles first
@@ -333,7 +333,7 @@ public final class AbominationChains {
     // and untouchable, and rise healed by COFFIN_SELF_HEAL of your health and cleansed, in a burst of thorns that
     // strikes and holds every enemy within COFFIN_BURST for COFFIN_BURST_HOLD.
     // =========================
-    private static AbilityWheel.Result coffinOfAges(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result coffinOfAges(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, COFFIN_RANGE);
         if (target != null && target.getMaxHealth() >= COFFIN_BOSS_HEALTH) {
             player.sendSystemMessage(Component.literal("That one is too great for any coffin."));
@@ -344,7 +344,7 @@ public final class AbominationChains {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void coffinEnemy(Player player, ServerLevel sl, LivingEntity target) {
+    private static void coffinEnemy(LivingEntity player, ServerLevel sl, LivingEntity target) {
         String tag = "ab_coffin_" + target.getId() + "_" + sl.getGameTime();
         int whole = AbominationFx.COFFIN_SHUT + COFFIN_TICKS;
         AbominationFx.coffinOfAges(sl, target, whole + 10, tag);
@@ -371,7 +371,7 @@ public final class AbominationChains {
         });
     }
 
-    private static void coffinSelf(Player player, ServerLevel sl) {
+    private static void coffinSelf(LivingEntity player, ServerLevel sl) {
         String tag = "ab_coffin_" + player.getId() + "_" + sl.getGameTime();
         long until = sl.getGameTime() + COFFIN_SELF_TICKS;
         player.getPersistentData().putLong(SEALED_UNTIL, until);                // untouchable at once: it is a refuge
@@ -409,7 +409,7 @@ public final class AbominationChains {
     // GARDEN_THORNS a second, more the longer they stay. Allies in it, and you, heal GARDEN_HEAL a second and have
     // Absorption from the roses.
     // =========================
-    private static AbilityWheel.Result thornGarden(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result thornGarden(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, GARDEN_RANGE);
         String tag = "ab_garden_" + player.getId() + "_" + sl.getGameTime();
         Zone.close(player, GARDEN_ENEMIES);                                 // one garden at a time

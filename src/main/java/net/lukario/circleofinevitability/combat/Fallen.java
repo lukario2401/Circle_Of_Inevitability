@@ -85,7 +85,7 @@ public final class Fallen {
      * It is taken off the list if it is still on it. Null if it cannot rise (not a mob, no room, another dimension,
      * or it never really died).
      */
-    public static Mob rise(Body body, Player master, ServerLevel sl, int ticks) {
+    public static Mob rise(Body body, LivingEntity master, ServerLevel sl, int ticks) {
         if (body.dimension() != sl.dimension()) return null;
         take(body);
         Entity same = sl.getEntity(body.id());

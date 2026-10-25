@@ -139,7 +139,7 @@ public final class DamageLink {
      * For 'ticks' ticks, whenever one of the group is hurt each of the others takes 'fraction' of that damage.
      * Entities that were in another group leave it. 'credit' gets the kills (null = nobody).
      */
-    public static void share(Collection<? extends LivingEntity> group, float fraction, int ticks, Player credit) {
+    public static void share(Collection<? extends LivingEntity> group, float fraction, int ticks, LivingEntity credit) {
         if (group.size() < 2 || ticks <= 0) return;
         Bond bond = null;
         for (LivingEntity member : group) {

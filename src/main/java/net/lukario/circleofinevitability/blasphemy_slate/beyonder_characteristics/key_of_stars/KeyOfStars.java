@@ -560,6 +560,12 @@ public class KeyOfStars {
         return SoulCore.getPathway(player).equals(PATHWAY) && Beyonder.hasSequence(player, sequence);
     }
 
+    /** The same for anyone: a player as above, a Beyonder mob of this Pathway by its own Sequence. */
+    public static boolean isKeyOfStars(LivingEntity entity, int sequence) {
+        if (entity instanceof Player player) return isKeyOfStars(player, sequence);
+        return PATHWAY.equals(Beyonders.pathwayOf(entity)) && Beyonder.hasSequence(entity, sequence);
+    }
+
     /** The key's gate: the Pathway (unless a stolen cast), the Sequence, and not while Wandering. */
     static boolean ready(Player player, boolean bypassClassCheck, int sequence) {
         if (!bypassClassCheck && !SoulCore.getPathway(player).equals(PATHWAY)) return false;

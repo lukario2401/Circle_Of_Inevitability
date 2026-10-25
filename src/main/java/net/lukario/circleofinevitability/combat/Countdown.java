@@ -4,8 +4,10 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.network.CShowHudOverlayPacket;
 import net.lukario.circleofinevitability.network.PacketHandler;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -17,7 +19,7 @@ import java.util.function.BooleanSupplier;
 import java.util.function.IntConsumer;
 
 /**
- * A countdown on a player's screen: big numbers 5, 4, 3, 2, 1 in the middle of it, then something happens.
+ * A countdown on a player's screen (for a Beyonder mob it counts the same, unseen): big numbers 5, 4, 3, 2, 1 in the middle of it, then something happens.
  * For abilities that need time to take hold, charge up or go off:
  *
  *   Countdown.seconds(5)
@@ -118,7 +120,7 @@ public final class Countdown {
     }
 
     /** Starts counting for this player (cancelling the countdown they already had, if any). */
-    public void start(Player player) {
+    public void start(LivingEntity player) {
         cancel(player);
         this.ticksLeft = seconds * 20;
         RUNNING.put(player.getUUID(), this);
@@ -127,25 +129,25 @@ public final class Countdown {
 
     // ---------- asking / stopping ----------
 
-    public static boolean isRunning(Player player) {
+    public static boolean isRunning(LivingEntity player) {
         return RUNNING.containsKey(player.getUUID());
     }
 
     /** Ticks until the player's countdown reaches 0 (0 = none is running). */
-    public static int ticksLeft(Player player) {
+    public static int ticksLeft(LivingEntity player) {
         Countdown running = RUNNING.get(player.getUUID());
         return running == null ? 0 : running.ticksLeft;
     }
 
     /** Stops the player's countdown early (its onCancel runs). Does nothing if none is running. */
-    public static void cancel(Player player) {
+    public static void cancel(LivingEntity player) {
         Countdown running = RUNNING.remove(player.getUUID());
         if (running != null && running.onCancel != null) running.onCancel.run();
     }
 
     // ---------- internals ----------
 
-    private void announce(Player player, int number) {
+    private void announce(LivingEntity player, int number) {
         if (!silent && player instanceof ServerPlayer serverPlayer) {
             int rgb = number == 1 ? lastColor : color;
             PacketHandler.sendToPlayer(CShowHudOverlayPacket.number(number, rgb, 20), serverPlayer);
@@ -153,7 +155,7 @@ public final class Countdown {
         if (onSecond != null) onSecond.accept(number);
     }
 
-    private void tick(Player player) {
+    private void tick(LivingEntity player) {
         if (!player.isAlive() || (keepWhile != null && !keepWhile.getAsBoolean())) {
             cancel(player);
             return;
@@ -170,7 +172,7 @@ public final class Countdown {
     }
 
     /** One tick of this countdown. If one of its parts fails, it is logged and the countdown ends (the game goes on). */
-    private void tickSafely(Player player) {
+    private void tickSafely(LivingEntity player) {
         try {
             tick(player);
         } catch (Exception e) {
@@ -184,6 +186,15 @@ public final class Countdown {
         if (event.player().level().isClientSide()) return;
         Countdown running = RUNNING.get(event.player().getUUID());
         if (running != null) running.tickSafely(event.player());
+    }
+
+    /** A Beyonder mob's countdown (a mob casting an ability that counts down) ticks with the mob. */
+    @SubscribeEvent
+    public static void onCountdownMobTick(LivingEvent.LivingTickEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (RUNNING.isEmpty() || entity instanceof Player || entity.level().isClientSide()) return;
+        Countdown running = RUNNING.get(entity.getUUID());
+        if (running != null) running.tickSafely(entity);
     }
 
     @SubscribeEvent
