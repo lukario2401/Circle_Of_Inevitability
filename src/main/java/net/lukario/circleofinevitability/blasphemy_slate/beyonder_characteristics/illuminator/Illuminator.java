@@ -107,126 +107,126 @@ public class Illuminator {
     // =========================
 
     // Ability 1 - Compound Flask (Sequence 9)
-    private static final int FLASK_SEQUENCE = 9;
-    private static final int FLASK_COST = 250;
-    private static final int FLASK_COOLDOWN = 1;
-    private static final double FLASK_RANGE = 24.0;
-    private static final double FLASK_SPEED = 1.4;              // blocks a tick: a lob you can see coming
-    private static final float FLASK_DAMAGE = 36f;              // to the one it hits...
-    private static final float FLASK_SPLASH = 18f;              // ...and to everything else within...
-    private static final double FLASK_RADIUS = 3.0;             // ...this
-    private static final double FLASK_SHOVE = 0.5;
-    private static final int CORRODED_TICKS = 160;              // Corroded: takes this much more damage...
-    private static final float CORRODED_EXTRA = 0.15f;          // ...for this long (status/Vulnerable, not stacking)
-    private static final int TWIN_FLASK_SEQUENCE = 6;           // Artisan: two flasks...
-    private static final int TWIN_FLASK_DELAY = 4;              // ...this far apart
-    private static final int ACID_SEQUENCE = 3;                 // Arcane Scholar: the burst leaves a puddle...
-    private static final double ACID_RADIUS = 3.0;
-    private static final int ACID_TICKS = 100;
-    private static final float ACID_PER_SECOND = 4f;            // ...that bites whoever stands in it and Corrodes them
+    static final int FLASK_SEQUENCE = 9;
+    static final int FLASK_COST = 250;
+    static final int FLASK_COOLDOWN = 1;
+    static final double FLASK_RANGE = 24.0;
+    static final double FLASK_SPEED = 1.4;              // blocks a tick: a lob you can see coming
+    static final float FLASK_DAMAGE = 36f;              // to the one it hits...
+    static final float FLASK_SPLASH = 18f;              // ...and to everything else within...
+    static final double FLASK_RADIUS = 3.0;             // ...this
+    static final double FLASK_SHOVE = 0.5;
+    static final int CORRODED_TICKS = 160;              // Corroded: takes this much more damage...
+    static final float CORRODED_EXTRA = 0.15f;          // ...for this long (status/Vulnerable, not stacking)
+    static final int TWIN_FLASK_SEQUENCE = 6;           // Artisan: two flasks...
+    static final int TWIN_FLASK_DELAY = 4;              // ...this far apart
+    static final int ACID_SEQUENCE = 3;                 // Arcane Scholar: the burst leaves a puddle...
+    static final double ACID_RADIUS = 3.0;
+    static final int ACID_TICKS = 100;
+    static final float ACID_PER_SECOND = 4f;            // ...that bites whoever stands in it and Corrodes them
     // sneak: Recall
-    private static final int RECALL_COST = 300;                 // Sequence 8 holds 400
-    private static final int RECALL_COOLDOWN = 1;
-    private static final int RECALL_TICKS = 60;                 // back 3 seconds...
-    private static final int RECALL_FAR_SEQUENCE = 5;           // ...5 from Astronomer...
-    private static final int RECALL_FAR_TICKS = 100;
-    private static final int RECALL_ALLY_SEQUENCE = 1;          // ...8 from Illuminator, who can send an ally back instead
-    private static final int RECALL_ALLY_TICKS = 160;
-    private static final double RECALL_ALLY_RANGE = 24.0;
-    private static final float RECALL_HEAL = 0.5f;              // half of what was lost since then comes back
-    private static final int RECALL_LANDING = 40;               // no fall damage on arrival for this long
+    static final int RECALL_COST = 300;                 // Sequence 8 holds 400
+    static final int RECALL_COOLDOWN = 1;
+    static final int RECALL_TICKS = 60;                 // back 3 seconds...
+    static final int RECALL_FAR_SEQUENCE = 5;           // ...5 from Astronomer...
+    static final int RECALL_FAR_TICKS = 100;
+    static final int RECALL_ALLY_SEQUENCE = 1;          // ...8 from Illuminator, who can send an ally back instead
+    static final int RECALL_ALLY_TICKS = 160;
+    static final double RECALL_ALLY_RANGE = 24.0;
+    static final float RECALL_HEAL = 0.5f;              // half of what was lost since then comes back
+    static final int RECALL_LANDING = 40;               // no fall damage on arrival for this long
 
     // Ability 2 - Survey (Sequence 8)
-    private static final int SURVEY_SEQUENCE = 8;
-    private static final int SURVEY_COST = 350;                 // Sequence 8 holds 400 (the plan's 600 could not be paid)
-    private static final int SURVEY_COOLDOWN = 1;
-    private static final double SURVEY_REACH = 40.0;
-    private static final int SURVEY_FAR_SEQUENCE = 5;           // Astronomer: further
-    private static final double SURVEY_FAR_REACH = 64.0;
-    private static final double MECH_EYES_REACH = 1.5;          // the Mechanical Body's eyes see this much further (key 6)
-    private static final int SURVEY_TICKS = 160;                // the outlines last this long
-    private static final int SURVEY_FORCED_OUT = 60;            // the hidden cannot hide again for this long
-    private static final int RESIDUE_SEQUENCE = 3;              // Arcane Scholar (Environment Controller): where abilities...
-    private static final int RESIDUE_AGE = 1200;                // ...were cast in the last minute show (combat/Residue)...
+    static final int SURVEY_SEQUENCE = 8;
+    static final int SURVEY_COST = 350;                 // Sequence 8 holds 400 (the plan's 600 could not be paid)
+    static final int SURVEY_COOLDOWN = 1;
+    static final double SURVEY_REACH = 40.0;
+    static final int SURVEY_FAR_SEQUENCE = 5;           // Astronomer: further
+    static final double SURVEY_FAR_REACH = 64.0;
+    static final double MECH_EYES_REACH = 1.5;          // the Mechanical Body's eyes see this much further (key 6)
+    static final int SURVEY_TICKS = 160;                // the outlines last this long
+    static final int SURVEY_FORCED_OUT = 60;            // the hidden cannot hide again for this long
+    static final int RESIDUE_SEQUENCE = 3;              // Arcane Scholar (Environment Controller): where abilities...
+    static final int RESIDUE_AGE = 1200;                // ...were cast in the last minute show (combat/Residue)...
     // sneak: Ritual Circle
-    private static final int RITUAL_COST = 400;
-    private static final int RITUAL_COOLDOWN = 1;
-    private static final double RITUAL_RADIUS = 6.0;
-    private static final int RITUAL_WIDE_SEQUENCE = 3;          // Arcane Scholar: a wider circle
-    private static final double RITUAL_WIDE_RADIUS = 10.0;
-    private static final int RITUAL_TICKS = 400;
-    private static final int RITUAL_CLEANSE_EVERY = 60;         // one harmful effect off each ally inside this often
-    private static final float RITE_LONGER = 1.5f;              // the Rite: Workshop casts from inside last this much longer...
-    private static final float RITE_CHEAPER = 0.8f;             // ...and cost this much
-    private static final int RITE_ALCHEMY_SEQUENCE = 4;         // Alchemist: the Rite covers the Alchemy and Arcana wheel too
+    static final int RITUAL_COST = 400;
+    static final int RITUAL_COOLDOWN = 1;
+    static final double RITUAL_RADIUS = 6.0;
+    static final int RITUAL_WIDE_SEQUENCE = 3;          // Arcane Scholar: a wider circle
+    static final double RITUAL_WIDE_RADIUS = 10.0;
+    static final int RITUAL_TICKS = 400;
+    static final int RITUAL_CLEANSE_EVERY = 60;         // one harmful effect off each ally inside this often
+    static final float RITE_LONGER = 1.5f;              // the Rite: Workshop casts from inside last this much longer...
+    static final float RITE_CHEAPER = 0.8f;             // ...and cost this much
+    static final int RITE_ALCHEMY_SEQUENCE = 4;         // Alchemist: the Rite covers the Alchemy and Arcana wheel too
 
     // Ability 3 - Appraise (Sequence 7)
-    private static final int APPRAISE_SEQUENCE = 7;
-    private static final int APPRAISE_COST = 1250;
-    private static final int APPRAISE_COOLDOWN = 1;
-    private static final double APPRAISE_RANGE = 24.0;
-    private static final int APPRAISED_TICKS = 240;             // the mark lasts 12 seconds...
-    private static final float APPRAISED_BONUS = 0.15f;         // ...and your ability hits on it do this much more
-    private static final int ANALYSIS_SEQUENCE = 2;             // Knowledge Magister: Analysis sees the essence...
-    private static final float ANALYSIS_BONUS = 0.25f;          // ...a bigger bonus, and its hiding and substitutes go
-    private static final int PARAGON_SEQUENCE = 0;              // Paragon: the mark lasts twice as long...
-    private static final double PARAGON_EXPLOIT_RANGE = 64.0;   // ...and can be Exploited from anywhere you see it
+    static final int APPRAISE_SEQUENCE = 7;
+    static final int APPRAISE_COST = 1250;
+    static final int APPRAISE_COOLDOWN = 1;
+    static final double APPRAISE_RANGE = 24.0;
+    static final int APPRAISED_TICKS = 240;             // the mark lasts 12 seconds...
+    static final float APPRAISED_BONUS = 0.15f;         // ...and your ability hits on it do this much more
+    static final int ANALYSIS_SEQUENCE = 2;             // Knowledge Magister: Analysis sees the essence...
+    static final float ANALYSIS_BONUS = 0.25f;          // ...a bigger bonus, and its hiding and substitutes go
+    static final int PARAGON_SEQUENCE = 0;              // Paragon: the mark lasts twice as long...
+    static final double PARAGON_EXPLOIT_RANGE = 64.0;   // ...and can be Exploited from anywhere you see it
     // sneak: Exploit Flaw
-    private static final int EXPLOIT_COST = 1500;
-    private static final int EXPLOIT_COOLDOWN = 1;
-    private static final double EXPLOIT_RANGE = 24.0;
-    private static final float EXPLOIT_DAMAGE = 90f;            // through armor (Spells.strikeTrue)
-    private static final int EXPLOIT_STAGGER = 20;
-    private static final int CONSTRUCT_STUN = 60;               // a construct is held this long...
-    private static final float CONSTRUCT_FRAGILE = 150f;        // ...or taken apart if its maximum health is under this
-    private static final int EXPLOIT_STRIP_SEQUENCE = 3;        // Arcane Scholar: its Substitute goes too
-    private static final int EXPLOIT_ALL_SEQUENCE = 1;          // Illuminator: every Appraised enemy within...
-    private static final double EXPLOIT_ALL_RANGE = 24.0;
-    private static final float EXPLOIT_ALL_SHARE = 0.6f;        // ...for this share (the one you look at takes it all)
+    static final int EXPLOIT_COST = 1500;
+    static final int EXPLOIT_COOLDOWN = 1;
+    static final double EXPLOIT_RANGE = 24.0;
+    static final float EXPLOIT_DAMAGE = 90f;            // through armor (Spells.strikeTrue)
+    static final int EXPLOIT_STAGGER = 20;
+    static final int CONSTRUCT_STUN = 60;               // a construct is held this long...
+    static final float CONSTRUCT_FRAGILE = 150f;        // ...or taken apart if its maximum health is under this
+    static final int EXPLOIT_STRIP_SEQUENCE = 3;        // Arcane Scholar: its Substitute goes too
+    static final int EXPLOIT_ALL_SEQUENCE = 1;          // Illuminator: every Appraised enemy within...
+    static final double EXPLOIT_ALL_RANGE = 24.0;
+    static final float EXPLOIT_ALL_SHARE = 0.6f;        // ...for this share (the one you look at takes it all)
 
     // Costs and passives (docs/ILLUMINATOR.md, "Passives"); the once-a-second ones run from SequencePassives
-    private static final int QUICK_STUDY_SEQUENCE = 9;          // Quick Study: the same ability again within...
-    private static final int QUICK_STUDY_WINDOW = 400;
-    private static final float QUICK_STUDY_COST = 0.9f;         // ...costs this much
-    private static final int FIELD_SEQUENCE = 8;                // Field Physique: two more hearts...
-    private static final double FIELD_HEARTS = 4.0;
-    private static final float FIELD_CUT = 0.25f;               // ...and falls, drowning, cacti, walls hurt this much less
-    private static final int EYE_SEQUENCE = 7;                  // Appraiser's Eye: the health of what you look at...
-    private static final double EYE_RANGE = 24.0;               // ...this far, by the hotbar
-    private static final int EYE_EVERY = 5;
+    static final int QUICK_STUDY_SEQUENCE = 9;          // Quick Study: the same ability again within...
+    static final int QUICK_STUDY_WINDOW = 400;
+    static final float QUICK_STUDY_COST = 0.9f;         // ...costs this much
+    static final int FIELD_SEQUENCE = 8;                // Field Physique: two more hearts...
+    static final double FIELD_HEARTS = 4.0;
+    static final float FIELD_CUT = 0.25f;               // ...and falls, drowning, cacti, walls hurt this much less
+    static final int EYE_SEQUENCE = 7;                  // Appraiser's Eye: the health of what you look at...
+    static final double EYE_RANGE = 24.0;               // ...this far, by the hotbar
+    static final int EYE_EVERY = 5;
     static final int CRAFTSMAN_SEQUENCE = 6;                    // Craftsman's Hands: the Workshop's cooldowns...
     static final float CRAFTSMAN_COOLDOWN = 0.85f;              // ...this much...
     static final float CRAFTSMAN_LONGER = 1.25f;                // ...and what it makes lasts this much longer
-    private static final int STARLIGHT_SEQUENCE = 5;            // Starlight: at night under open sky...
-    private static final float STARLIGHT_REGEN = 0.2f;          // ...spirituality returns this much faster, and night vision
-    private static final double BOND_RADIUS = 16.0;             // Constructor's Bond (4): your constructs this close...
-    private static final float BOND_HEAL = 0.01f;               // ...heal this share of their health a second, traced for you
-    private static final double ABSORB_RADIUS = 6.0;            // Absorption (3): every enemy this close...
-    private static final float ABSORB_DRAIN = 1f;               // ...loses this a second...
-    private static final float ABSORB_MOST = 2f;                // ...and you heal half of it, this much a second at most
-    private static final double ANALYSIS_RADIUS = 16.0;         // Analysis (2): the hidden this close are plain to you
-    private static final int ANALYSIS_EXPOSED = 30;
-    private static final int AURA_SEQUENCE = 1;                 // Enlightenment Aura (1): allies this close...
-    private static final double AURA_RADIUS = 16.0;
-    private static final float AURA_COST = 0.9f;                // ...spend this much...
-    private static final float AURA_SHORTER = 0.5f;             // ...and confusion and blindness on them last half as long
+    static final int STARLIGHT_SEQUENCE = 5;            // Starlight: at night under open sky...
+    static final float STARLIGHT_REGEN = 0.2f;          // ...spirituality returns this much faster, and night vision
+    static final double BOND_RADIUS = 16.0;             // Constructor's Bond (4): your constructs this close...
+    static final float BOND_HEAL = 0.01f;               // ...heal this share of their health a second, traced for you
+    static final double ABSORB_RADIUS = 6.0;            // Absorption (3): every enemy this close...
+    static final float ABSORB_DRAIN = 1f;               // ...loses this a second...
+    static final float ABSORB_MOST = 2f;                // ...and you heal half of it, this much a second at most
+    static final double ANALYSIS_RADIUS = 16.0;         // Analysis (2): the hidden this close are plain to you
+    static final int ANALYSIS_EXPOSED = 30;
+    static final int AURA_SEQUENCE = 1;                 // Enlightenment Aura (1): allies this close...
+    static final double AURA_RADIUS = 16.0;
+    static final float AURA_COST = 0.9f;                // ...spend this much...
+    static final float AURA_SHORTER = 0.5f;             // ...and confusion and blindness on them last half as long
 
     static final float BOSS_HEALTH = 150f;
 
     // =========================
     // Saved on the player (game times are "until" this tick)
     // =========================
-    private static final String LAST_CAST = "illuminator_last_cast_";            // + ability key: Quick Study
-    private static final String RITUAL_CAST = "illuminator_ritual_cast";          // which Ritual Circle is the current one
-    private static final String ACID_TURN = "illuminator_acid_turn";
+    static final String LAST_CAST = "illuminator_last_cast_";            // + ability key: Quick Study
+    static final String RITUAL_CAST = "illuminator_ritual_cast";          // which Ritual Circle is the current one
+    static final String ACID_TURN = "illuminator_acid_turn";
     /** Set by the Mechanical Body (key 6, the second half): game time until it is worn. */
     static final String MECH_UNTIL = "illuminator_mechanical_body_until";
 
     // Names
     static final String RITUAL = "illuminator_ritual_circle";                      // its Zone
-    private static final String ACID = "illuminator_acid_";                       // + 0..2: up to three puddles
-    private static final String EYE = "illuminator_eye";                           // Appraiser's Eye's counter
-    private static final Identifier FIELD_HEARTS_ID = Physique.id("illuminator_field_hearts");
+    static final String ACID = "illuminator_acid_";                       // + 0..2: up to three puddles
+    static final String EYE = "illuminator_eye";                           // Appraiser's Eye's counter
+    static final Identifier FIELD_HEARTS_ID = Physique.id("illuminator_field_hearts");
 
     // Cooldown keys (combat/Cooldowns)
     /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
@@ -234,12 +234,12 @@ public class Illuminator {
     /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
     public static final float QUICK_CAST_COST = 3f;
 
-    private static final String CD_FLASK = "illuminator_flask";
-    private static final String CD_RECALL = "illuminator_recall";
-    private static final String CD_SURVEY = "illuminator_survey";
-    private static final String CD_RITUAL = "illuminator_ritual";
-    private static final String CD_APPRAISE = "illuminator_appraise";
-    private static final String CD_EXPLOIT = "illuminator_exploit";
+    static final String CD_FLASK = "illuminator_flask";
+    static final String CD_RECALL = "illuminator_recall";
+    static final String CD_SURVEY = "illuminator_survey";
+    static final String CD_RITUAL = "illuminator_ritual";
+    static final String CD_APPRAISE = "illuminator_appraise";
+    static final String CD_EXPLOIT = "illuminator_exploit";
 
     // =========================
     // The weakness table (status/WeaknessTable): read from the top, the first that fits wins
@@ -280,7 +280,7 @@ public class Illuminator {
     }
 
     /** What 'caster' knows 'target' to be weak to (Appraised by them), or null. */
-    static Weakness appraisedWeakness(Player caster, LivingEntity target) {
+    static Weakness appraisedWeakness(LivingEntity caster, LivingEntity target) {
         return weakness(Appraisal.weakness(caster, target));
     }
 
@@ -297,8 +297,8 @@ public class Illuminator {
         int cost(Player player, int cost, String ability, Group group);
     }
 
-    private static final List<CostRule> COST_RULES = new ArrayList<>();
-    private static final List<BiConsumer<Player, String>> AFTER_CAST = new ArrayList<>();
+    static final List<CostRule> COST_RULES = new ArrayList<>();
+    static final List<BiConsumer<Player, String>> AFTER_CAST = new ArrayList<>();
 
     /** One more rule for what a cast costs (Enlightenment's -20%, Mechanical Heaven's -30%...). Once, in a static block. */
     public static void addCostRule(CostRule rule) {
@@ -347,13 +347,13 @@ public class Illuminator {
     }
 
     /** True while the player stands in their own Ritual Circle and the Rite covers a cast of this group. */
-    public static boolean inRite(Player player, Group group) {
+    public static boolean inRite(LivingEntity player, Group group) {
         boolean covered = group == Group.WORKSHOP || (group == Group.ALCHEMY && Beyonder.hasSequence(player, RITE_ALCHEMY_SEQUENCE));
         return covered && Zone.covers(player, RITUAL, player.position());
     }
 
     /** How long something a cast of this group makes lasts: Craftsman's Hands (Workshop) and the Rite make it longer. */
-    public static int lasting(Player player, int ticks, Group group) {
+    public static int lasting(LivingEntity player, int ticks, Group group) {
         float scale = 1f;
         if (group == Group.WORKSHOP && isIlluminator(player, CRAFTSMAN_SEQUENCE)) scale *= CRAFTSMAN_LONGER;
         if (inRite(player, group)) scale *= RITE_LONGER;
@@ -371,12 +371,12 @@ public class Illuminator {
             .minCharge(0.8f);
 
     /** Players whose own shortened effect is being put back on (the Enlightenment Aura must let that one through). */
-    private static final Set<UUID> SHORTENING = new HashSet<>();
+    static final Set<UUID> SHORTENING = new HashSet<>();
 
     /** Which (caster, target) pairs carry an Illuminator's lens, so the end of another Pathway's mark shows nothing. */
-    private static final Set<String> LENSES = new HashSet<>();
+    static final Set<String> LENSES = new HashSet<>();
     /** Who sees the Appraiser's Eye counter right now, and what it says (it is only sent again when that changes). */
-    private static final Map<UUID, String> EYE_SHOWN = new HashMap<>();
+    static final Map<UUID, String> EYE_SHOWN = new HashMap<>();
 
     @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class IlluminatorEvents {
@@ -511,7 +511,7 @@ public class Illuminator {
         }
     }
 
-    private static void throwFlask(Player player, ServerLevel sl) {
+    static void throwFlask(LivingEntity player, ServerLevel sl) {
         Vec3 hand = Spells.clearStart(player, sl, player.getEyePosition().add(Spells.rightOf(player).scale(0.35)).add(0, -0.25, 0));
         Vec3 direction = Spells.aimFrom(player, sl, hand, FLASK_RANGE);
         boolean acid = Beyonder.hasSequence(player, ACID_SEQUENCE);
@@ -535,7 +535,7 @@ public class Illuminator {
     }
 
     /** The flask bursts at 'at': the splash, the shove, and everyone hit Corroded. */
-    private static void flaskBurst(Player player, ServerLevel sl, Vec3 at, List<LivingEntity> struck, boolean acid) {
+    private static void flaskBurst(LivingEntity player, ServerLevel sl, Vec3 at, List<LivingEntity> struck, boolean acid) {
         IlluminatorFx.flaskBurst(sl, at, FLASK_RADIUS);
         Set<LivingEntity> corroded = new HashSet<>(struck);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, at, FLASK_RADIUS)) {
@@ -558,7 +558,7 @@ public class Illuminator {
     }
 
     /** Arcane Scholar: a puddle of acid ACID_RADIUS wide for ACID_TICKS; whoever stands in it is bitten and Corroded. */
-    private static void acidPuddle(Player player, ServerLevel sl, Vec3 ground) {
+    private static void acidPuddle(LivingEntity player, ServerLevel sl, Vec3 ground) {
         CompoundTag data = player.getPersistentData();
         int turn = (data.getIntOr(ACID_TURN, 0) + 1) % 3;
         data.putInt(ACID_TURN, turn);
@@ -639,12 +639,12 @@ public class Illuminator {
         survey(player, sl);
     }
 
-    private static double surveyReach(Player player) {
+    static double surveyReach(LivingEntity player) {
         double reach = Beyonder.hasSequence(player, SURVEY_FAR_SEQUENCE) ? SURVEY_FAR_REACH : SURVEY_REACH;
         return wearsMechanicalBody(player) ? reach * MECH_EYES_REACH : reach;
     }
 
-    private static void survey(Player player, ServerLevel sl) {
+    static void survey(LivingEntity player, ServerLevel sl) {
         double reach = surveyReach(player);
         IlluminatorFx.survey(sl, player, reach);
         IlluminatorFx.status(player, Status.SURVEY, SURVEY_TICKS);
@@ -675,11 +675,11 @@ public class Illuminator {
     }
 
     /** Hostile to the Illuminator: a monster, an enemy player, or a mob that is hunting them. */
-    private static boolean isHostile(Player player, LivingEntity one) {
+    private static boolean isHostile(LivingEntity player, LivingEntity one) {
         return one instanceof Player || one instanceof Enemy || (one instanceof Mob mob && mob.getTarget() == player);
     }
 
-    private static void ritualCircle(Player player, ServerLevel sl) {
+    static void ritualCircle(LivingEntity player, ServerLevel sl) {
         double radius = Beyonder.hasSequence(player, RITUAL_WIDE_SEQUENCE) ? RITUAL_WIDE_RADIUS : RITUAL_RADIUS;
         Vec3 center = Spells.groundAt(player, sl, player.position().add(0, 0.5, 0));
         long cast = sl.getGameTime();
@@ -757,17 +757,17 @@ public class Illuminator {
         appraise(player, sl, target);
     }
 
-    private static double appraiseRange(Player player) {
+    static double appraiseRange(LivingEntity player) {
         return wearsMechanicalBody(player) ? APPRAISE_RANGE * MECH_EYES_REACH : APPRAISE_RANGE;
     }
 
     /** How long this player's marks last. */
-    static int appraisedTicks(Player player) {
+    static int appraisedTicks(LivingEntity player) {
         return Beyonder.hasSequence(player, PARAGON_SEQUENCE) ? APPRAISED_TICKS * 2 : APPRAISED_TICKS;
     }
 
     /** Appraises 'target' for this player (also for the second half: a Survey or Starship Barrage that appraises). */
-    static void appraise(Player player, ServerLevel sl, LivingEntity target) {
+    static void appraise(LivingEntity player, ServerLevel sl, LivingEntity target) {
         Weakness weakness = weakness(WEAKNESS.of(target));
         int ticks = appraisedTicks(player);
         String tag = lensTag(player.getUUID(), target);
@@ -845,7 +845,7 @@ public class Illuminator {
     }
 
     /** The flaw gives: through armor, a stagger, the mark spent; a construct held or taken apart. */
-    private static void flawGives(Player player, ServerLevel sl, LivingEntity target, float share) {
+    static void flawGives(LivingEntity player, ServerLevel sl, LivingEntity target, float share) {
         if (Beyonder.hasSequence(player, EXPLOIT_STRIP_SEQUENCE) && Substitute.isArmed(target)) Substitute.disarm(target);
         if (Construct.isConstruct(target)) {
             boolean apart = target.getMaxHealth() < CONSTRUCT_FRAGILE;
@@ -868,12 +868,12 @@ public class Illuminator {
     // =========================
 
     /** Appraiser's Eye (7), every few ticks: the health of the enemy looked at, by the hotbar (combat/HudCounter). */
-    private static void appraisersEye(Player player, ServerLevel sl) {
+    private static void appraisersEye(LivingEntity player, ServerLevel sl) {
         boolean shown = EYE_SHOWN.containsKey(player.getUUID());
         LivingEntity looked = isIlluminator(player, EYE_SEQUENCE) ? Spells.aimEnemy(player, sl, EYE_RANGE) : null;
         if (looked == null) {
             if (shown) {
-                HudCounter.hide(player, EYE);
+                if (player instanceof Player viewerOfHud) HudCounter.hide(viewerOfHud, EYE);
                 EYE_SHOWN.remove(player.getUUID());
             }
             return;
@@ -886,7 +886,7 @@ public class Illuminator {
         int most = Math.round(looked.getMaxHealth());
         String says = name + "|" + health + "|" + most + "|" + color;
         if (says.equals(EYE_SHOWN.get(player.getUUID()))) return;
-        HudCounter.show(player, EYE, "illuminator/appraised", name, health, most, color);
+        if (player instanceof Player viewerOfHud) HudCounter.show(viewerOfHud, EYE, "illuminator/appraised", name, health, most, color);
         EYE_SHOWN.put(player.getUUID(), says);
     }
 
@@ -901,7 +901,7 @@ public class Illuminator {
     }
 
     /** Alchemist (4), once a second: Constructor's Bond. Your constructs near you heal, and you see them through walls. */
-    public static void constructorsBond(Player player) {
+    public static void constructorsBond(LivingEntity player) {
         if (!(player instanceof ServerPlayer viewer)) return;
         for (Mob made : Construct.ofOwner(player, null)) {
             if (made.level() != player.level() || made.distanceTo(player) > BOND_RADIUS) continue;
@@ -911,7 +911,7 @@ public class Illuminator {
     }
 
     /** Arcane Scholar (3), once a second: Absorption. Every enemy near you loses a little, and half of it is yours. */
-    public static void absorption(Player player) {
+    public static void absorption(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         float drawn = 0f;
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), ABSORB_RADIUS)) {
@@ -925,7 +925,7 @@ public class Illuminator {
 
     /** Knowledge Magister (2), once a second: Analysis. The concealed, unnoticed and invisible near you are dragged into
      *  the open (status/Exposed), and they and those with a Substitute ready are marked for you alone. */
-    public static void analysis(Player player) {
+    public static void analysis(LivingEntity player) {
         if (!(player instanceof ServerPlayer viewer) || !(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity one : Spells.livingAround(player, sl, player.position(), ANALYSIS_RADIUS)) {
             if (Spells.isFriend(player, one)) continue;
@@ -936,7 +936,7 @@ public class Illuminator {
     }
 
     /** Illuminator (1), once a second: the Enlightenment Aura shows on the allies near you now and then. */
-    public static void enlightenmentAura(Player player) {
+    public static void enlightenmentAura(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), AURA_RADIUS)) {
             if (sl.getRandom().nextInt(3) == 0) IlluminatorFx.enlightenmentAura(sl, ally);
@@ -947,7 +947,7 @@ public class Illuminator {
      * The Enlightenment Aura's cost for any player (Spells.addCostScale): AURA_COST when an Illuminator of Sequence 1 or
      * stronger is within AURA_RADIUS and counts them as an ally (the Illuminator too), else 1.
      */
-    static float auraCost(Player player) {
+    static float auraCost(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return 1f;
         for (Player one : sl.players()) {
             if (one.distanceToSqr(player) > AURA_RADIUS * AURA_RADIUS || !isIlluminator(one, AURA_SEQUENCE)) continue;
@@ -970,7 +970,7 @@ public class Illuminator {
     }
 
     /** Once a second, for every player: Field Physique's hearts (8) while they are this Pathway at that Sequence. */
-    private static void bodyTick(Player player) {
+    private static void bodyTick(LivingEntity player) {
         Physique.keep(player, Attributes.MAX_HEALTH, FIELD_HEARTS_ID, FIELD_HEARTS, AttributeModifier.Operation.ADD_VALUE,
                 isIlluminator(player, FIELD_SEQUENCE));
     }
@@ -989,12 +989,12 @@ public class Illuminator {
      * An Illuminator ability hit of one kind: Spells.strike, with the Appraised bonus and, when 'kind' is what the
      * target is weak to, the match (status/Appraisal). kind null: an ability hit of no kind.
      */
-    static void hit(Player player, LivingEntity target, float damage, Weakness kind) {
+    static void hit(LivingEntity player, LivingEntity target, float damage, Weakness kind) {
         Appraisal.strike(player, target, damage, kind(kind));
     }
 
     /** True while the Mechanical Body (key 6, the second half) is worn: it sets MECH_UNTIL. */
-    static boolean wearsMechanicalBody(Player player) {
+    static boolean wearsMechanicalBody(LivingEntity player) {
         return isActive(player, MECH_UNTIL);
     }
 

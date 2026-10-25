@@ -73,112 +73,112 @@ public final class IlluminatorCivilization {
     // =========================
 
     static final int CIVILIZATION_SEQUENCE = 2;                 // the key
-    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
+    static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Rewrite Principles
-    private static final int PRINCIPLES_SEQUENCE = 2;
-    private static final int PRINCIPLES_COST = 15000;           // Sequence 2 holds 78400
-    private static final int PRINCIPLES_COOLDOWN = 800;
-    private static final double PRINCIPLES_RANGE = 28.0;
-    private static final double PRINCIPLES_RADIUS = 14.0;
-    private static final int PRINCIPLES_TICKS = 240;
-    private static final double LIFT = 0.12;                    // an enemy on the ground is lifted this fast (no gravity: status/Gravity)
+    static final int PRINCIPLES_SEQUENCE = 2;
+    static final int PRINCIPLES_COST = 15000;           // Sequence 2 holds 78400
+    static final int PRINCIPLES_COOLDOWN = 800;
+    static final double PRINCIPLES_RANGE = 28.0;
+    static final double PRINCIPLES_RADIUS = 14.0;
+    static final int PRINCIPLES_TICKS = 240;
+    static final double LIFT = 0.12;                    // an enemy on the ground is lifted this fast (no gravity: status/Gravity)
 
     // Colossus
-    private static final int COLOSSUS_SEQUENCE = 2;
-    private static final int COLOSSUS_COST = 20000;
-    private static final int COLOSSUS_COOLDOWN = 1800;
-    private static final int COLOSSUS_TICKS = 800;
-    private static final double COLOSSUS_SIZE = 1.5;            // the body grows this much (status/GiantForm)...
-    private static final double COLOSSUS_REACH = 2.5;           // ...and reaches this much further
-    private static final float COLOSSUS_ABSORPTION = 40f;       // its plating (status/ConjuredArmor): gone, the Colossus falls
-    private static final double STEP_SHAKE = 6.0;              // its steps slow enemies this close
-    private static final int FUSION_COOLDOWN = 160;             // the Fusion Beam, cast again while it stands
-    private static final double FUSION_RANGE = 40.0;
-    private static final double FUSION_WIDTH = 4.0;
-    private static final float FUSION_DAMAGE = 120f;
+    static final int COLOSSUS_SEQUENCE = 2;
+    static final int COLOSSUS_COST = 20000;
+    static final int COLOSSUS_COOLDOWN = 1800;
+    static final int COLOSSUS_TICKS = 800;
+    static final double COLOSSUS_SIZE = 1.5;            // the body grows this much (status/GiantForm)...
+    static final double COLOSSUS_REACH = 2.5;           // ...and reaches this much further
+    static final float COLOSSUS_ABSORPTION = 40f;       // its plating (status/ConjuredArmor): gone, the Colossus falls
+    static final double STEP_SHAKE = 6.0;              // its steps slow enemies this close
+    static final int FUSION_COOLDOWN = 160;             // the Fusion Beam, cast again while it stands
+    static final double FUSION_RANGE = 40.0;
+    static final double FUSION_WIDTH = 4.0;
+    static final float FUSION_DAMAGE = 120f;
 
     // Scrolls of Civilization
-    private static final int SCROLLS_SEQUENCE = 1;
-    private static final int SCROLLS_COST = 24000;
-    private static final int SCROLLS_COOLDOWN = 600;
-    private static final double SCROLLS_RADIUS = 5.0;
-    private static final int SCROLLS_TICKS = 200;
-    private static final float SCROLLS_OUTSIDE_CUT = 0.5f;      // hits from outside the ring do this much less
-    private static final double SCROLLS_FLY = 12.0;             // then they fly this far...
-    private static final int IMMERSED_TICKS = 60;               // ...and every enemy they reach is held this long...
-    private static final float IMMERSED_DAMAGE = 40f;           // ...and hurt this much
+    static final int SCROLLS_SEQUENCE = 1;
+    static final int SCROLLS_COST = 24000;
+    static final int SCROLLS_COOLDOWN = 600;
+    static final double SCROLLS_RADIUS = 5.0;
+    static final int SCROLLS_TICKS = 200;
+    static final float SCROLLS_OUTSIDE_CUT = 0.5f;      // hits from outside the ring do this much less
+    static final double SCROLLS_FLY = 12.0;             // then they fly this far...
+    static final int IMMERSED_TICKS = 60;               // ...and every enemy they reach is held this long...
+    static final float IMMERSED_DAMAGE = 40f;           // ...and hurt this much
 
     // Mathematical Maze / Enlightenment
-    private static final int MAZE_SEQUENCE = 1;
-    private static final int MAZE_COST = 28000;
-    private static final int MAZE_COOLDOWN = 600;
-    private static final double MAZE_RANGE = 24.0;
-    private static final int MAZE_TICKS = 160;
-    private static final double MAZE_HALF = 1.5;                // the cube is 3 blocks: held within this of its middle
-    private static final float MAZE_TOUCH_DAMAGE = 10f;
-    private static final int MAZE_TOUCH_EVERY = 10;
-    private static final int ENLIGHTENED_TICKS = 600;
-    private static final float ENLIGHTENED_COST = 0.8f;         // an Enlightened ally's abilities cost this much
+    static final int MAZE_SEQUENCE = 1;
+    static final int MAZE_COST = 28000;
+    static final int MAZE_COOLDOWN = 600;
+    static final double MAZE_RANGE = 24.0;
+    static final int MAZE_TICKS = 160;
+    static final double MAZE_HALF = 1.5;                // the cube is 3 blocks: held within this of its middle
+    static final float MAZE_TOUCH_DAMAGE = 10f;
+    static final int MAZE_TOUCH_EVERY = 10;
+    static final int ENLIGHTENED_TICKS = 600;
+    static final float ENLIGHTENED_COST = 0.8f;         // an Enlightened ally's abilities cost this much
 
     // Masterwork
-    private static final int MASTERWORK_SEQUENCE = 1;
-    private static final int MASTERWORK_COST = 30000;
-    private static final int MASTERWORK_COOLDOWN = 1200;
-    private static final double MASTERWORK_RADIUS = 20.0;
-    private static final int MASTERWORK_TICKS = 200;
+    static final int MASTERWORK_SEQUENCE = 1;
+    static final int MASTERWORK_COST = 30000;
+    static final int MASTERWORK_COOLDOWN = 1200;
+    static final double MASTERWORK_RADIUS = 20.0;
+    static final int MASTERWORK_TICKS = 200;
 
     // Reality Knowledge
-    private static final int REALITY_SEQUENCE = 0;
-    private static final int REALITY_COST = 40000;
-    private static final int REALITY_COOLDOWN = 600;
-    private static final double REALITY_RANGE = 32.0;
-    private static final int REALITY_TICKS = 200;
-    private static final int REALITY_BOSS_TICKS = 100;
+    static final int REALITY_SEQUENCE = 0;
+    static final int REALITY_COST = 40000;
+    static final int REALITY_COOLDOWN = 600;
+    static final double REALITY_RANGE = 32.0;
+    static final int REALITY_TICKS = 200;
+    static final int REALITY_BOSS_TICKS = 100;
 
     // Illusory Book
-    private static final int BOOK_SEQUENCE = 0;
-    private static final int BOOK_COST = 45000;
-    private static final int BOOK_COOLDOWN = 900;
-    private static final double BOOK_RANGE = 32.0;
-    private static final double BOOK_GATHERS = 4.0;             // up to two more within this of the target
-    private static final int BOOK_MOST = 3;
-    private static final int BOOK_TICKS = 160;
-    private static final int BOOK_PLAYER_TICKS = 100;
-    private static final float BOOK_TOLL = 0.2f;                // they step out with this share of their health lost
+    static final int BOOK_SEQUENCE = 0;
+    static final int BOOK_COST = 45000;
+    static final int BOOK_COOLDOWN = 900;
+    static final double BOOK_RANGE = 32.0;
+    static final double BOOK_GATHERS = 4.0;             // up to two more within this of the target
+    static final int BOOK_MOST = 3;
+    static final int BOOK_TICKS = 160;
+    static final int BOOK_PLAYER_TICKS = 100;
+    static final float BOOK_TOLL = 0.2f;                // they step out with this share of their health lost
 
     // Mechanical Heaven
-    private static final int HEAVEN_SEQUENCE = 0;
-    private static final int HEAVEN_COST = 60000;
-    private static final int HEAVEN_COOLDOWN = 2400;
-    private static final double HEAVEN_RADIUS = 40.0;
-    private static final int HEAVEN_TICKS = 1200;
-    private static final float HEAVEN_ALLY_COST = 0.7f;         // allies' abilities cost this much inside
-    private static final float HEAVEN_ENEMY_COOLDOWN = 1.5f;    // enemies' cooldowns are this much longer inside
-    private static final float HEAVEN_CONSTRUCTS = 1.5f;        // your constructs inside hit this much harder (and do not run out)
-    private static final int HEAVEN_STATIC_EVERY = 40;          // one enemy projectile inside turns to static this often
+    static final int HEAVEN_SEQUENCE = 0;
+    static final int HEAVEN_COST = 60000;
+    static final int HEAVEN_COOLDOWN = 2400;
+    static final double HEAVEN_RADIUS = 40.0;
+    static final int HEAVEN_TICKS = 1200;
+    static final float HEAVEN_ALLY_COST = 0.7f;         // allies' abilities cost this much inside
+    static final float HEAVEN_ENEMY_COOLDOWN = 1.5f;    // enemies' cooldowns are this much longer inside
+    static final float HEAVEN_CONSTRUCTS = 1.5f;        // your constructs inside hit this much harder (and do not run out)
+    static final int HEAVEN_STATIC_EVERY = 40;          // one enemy projectile inside turns to static this often
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String PRINCIPLES = "illuminator_principles";            // the Zones
-    private static final String MASTERWORK = "illuminator_masterwork";
+    static final String PRINCIPLES = "illuminator_principles";            // the Zones
+    static final String MASTERWORK = "illuminator_masterwork";
     static final String HEAVEN = "illuminator_heaven";
-    private static final String LIFTED = "illuminator_lifted";                    // its Gravity
-    private static final String COLOSSUS_ARMOR = "illuminator_colossus";
-    private static final String COLOSSUS_UNTIL = "illuminator_colossus_until";
-    private static final String SCROLLS_UNTIL = "illuminator_scrolls_until";
+    static final String LIFTED = "illuminator_lifted";                    // its Gravity
+    static final String COLOSSUS_ARMOR = "illuminator_colossus";
+    static final String COLOSSUS_UNTIL = "illuminator_colossus_until";
+    static final String SCROLLS_UNTIL = "illuminator_scrolls_until";
     static final String ENLIGHTENED_UNTIL = "illuminator_enlightened_until";
     static final String CD_FUSION = "illuminator_fusion_beam";
 
     /** Who holds a Rewrite Principles or a Mechanical Heaven now (for the questions asked outside the zones). Not saved. */
-    private static final Set<UUID> PRINCIPLE_OWNERS = new HashSet<>();
-    private static final Set<UUID> HEAVEN_OWNERS = new HashSet<>();
+    static final Set<UUID> PRINCIPLE_OWNERS = new HashSet<>();
+    static final Set<UUID> HEAVEN_OWNERS = new HashSet<>();
     /** Where each Colossus stood a second ago (it strides when it moved). */
-    private static final Map<UUID, Vec3> COLOSSUS_WAS = new HashMap<>();
+    static final Map<UUID, Vec3> COLOSSUS_WAS = new HashMap<>();
 
     /** One held in a maze: its cube's middle, until when, whose, and under which tag. Not saved. */
-    private static final class Maze {
+    static final class Maze {
         final LivingEntity target;
         final UUID caster;
         final Vec3 center;
@@ -194,13 +194,13 @@ public final class IlluminatorCivilization {
             this.tag = tag;
         }
     }
-    private static final Map<UUID, Maze> MAZES = new HashMap<>();
+    static final Map<UUID, Maze> MAZES = new HashMap<>();
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("illuminator_civilization", "Civilization")
+    static final AbilityWheel WHEEL = AbilityWheel.create("illuminator_civilization", "Civilization")
             .radius(92)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("rewrite_principles", IlluminatorFx.WHEEL_REWRITE_PRINCIPLES, "Rewrite Principles", PRINCIPLES_SEQUENCE,
@@ -248,7 +248,7 @@ public final class IlluminatorCivilization {
     // ends. Allies, you too: Slow Falling and Speed I. Combustion makes no flame: fire and explosions from enemies (or
     // from nobody) do not hurt your side inside (shelters). Cast again: the old one ends.
     // =========================
-    private static AbilityWheel.Result rewritePrinciples(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result rewritePrinciples(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, PRINCIPLES_RANGE);
         String tag = "il_principles_" + player.getId() + "_" + sl.getGameTime();
         Zone.close(player, PRINCIPLES);
@@ -329,42 +329,38 @@ public final class IlluminatorCivilization {
     // its plating is gone. While it stands, casting it again fires the Fusion Beam (free; FUSION_COOLDOWN of its own):
     // at IlluminatorFx.FUSION_FIRES a line FUSION_RANGE long and FUSION_WIDTH wide, FUSION_DAMAGE to every enemy on it.
     // =========================
-    private static AbilityWheel.Result colossus(ServerPlayer player, ServerLevel sl) {
-        if (colossusStands(player)) return fusionBeam(player, sl);
+    static AbilityWheel.Result colossus(LivingEntity player, ServerLevel sl) {
+        if (colossusStands(player)) return player instanceof ServerPlayer pilot ? fusionBeam(pilot, sl) : AbilityWheel.Result.REFUSED;
         int ticks = COLOSSUS_TICKS;
         String tag = colossusTag(player);
         player.getPersistentData().putLong(COLOSSUS_UNTIL, sl.getGameTime() + ticks);
         IlluminatorFx.colossus(sl, player, ticks, tag);
         IlluminatorFx.status(player, Status.COLOSSUS, ticks);
         GiantForm.of(COLOSSUS_SIZE).reach(COLOSSUS_REACH).stepHeight(1.0).lasts(ticks)
-                .onEnd((giant, why) -> {
-                    if (giant instanceof Player stood) colossusFalls(stood);
-                })
+                .onEnd((giant, why) -> colossusFalls(giant))
                 .grow(player);
         ConjuredArmor.of(COLOSSUS_ARMOR)
                 .lasts(ticks)
                 .absorption(COLOSSUS_ABSORPTION)
                 .onHit((hurt, amount) -> Later.run(sl, 1, () -> {
-                    if (hurt.getAbsorptionAmount() <= 0.01f && hurt instanceof Player stood) colossusFalls(stood);
+                    if (hurt.getAbsorptionAmount() <= 0.01f) colossusFalls(hurt);
                 }))
-                .onEnd(wearer -> {
-                    if (wearer instanceof Player stood) colossusFalls(stood);
-                })
+                .onEnd(IlluminatorCivilization::colossusFalls)
                 .wear(player);
         COLOSSUS_WAS.put(player.getUUID(), player.position());
         return AbilityWheel.Result.DONE;
     }
 
-    static boolean colossusStands(Player player) {
+    static boolean colossusStands(LivingEntity player) {
         return Illuminator.isActive(player, COLOSSUS_UNTIL);
     }
 
-    private static String colossusTag(Player player) {
+    private static String colossusTag(LivingEntity player) {
         return "il_colossus_" + player.getId();
     }
 
     /** The Colossus comes apart, however it ended (runs once). */
-    private static void colossusFalls(Player player) {
+    private static void colossusFalls(LivingEntity player) {
         if (!player.getPersistentData().contains(COLOSSUS_UNTIL)) return;
         player.getPersistentData().remove(COLOSSUS_UNTIL);
         COLOSSUS_WAS.remove(player.getUUID());
@@ -379,6 +375,12 @@ public final class IlluminatorCivilization {
     private static AbilityWheel.Result fusionBeam(ServerPlayer player, ServerLevel sl) {
         if (!Cooldowns.ready(player, CD_FUSION, "The Fusion Beam")) return AbilityWheel.Result.REFUSED;
         Cooldowns.start(player, CD_FUSION, FUSION_COOLDOWN);
+        fireFusionBeam(player, sl);
+        return AbilityWheel.Result.FREE;
+    }
+
+    /** The Fusion Beam once its cooldown let it (a Beyonder mob's has its own). */
+    static void fireFusionBeam(LivingEntity player, ServerLevel sl) {
         int left = (int) Math.max(1, player.getPersistentData().getLongOr(COLOSSUS_UNTIL, 0L) - sl.getGameTime());
         IlluminatorFx.fusionCharge(sl, player, left, colossusTag(player));
         Later.run(sl, IlluminatorFx.FUSION_FIRES, () -> {
@@ -390,11 +392,10 @@ public final class IlluminatorCivilization {
                 Illuminator.hit(player, enemy, FUSION_DAMAGE, null);
             }
         });
-        return AbilityWheel.Result.FREE;
     }
 
     /** Every second while the Colossus stands: its strength, and a stride when it moved. */
-    private static void colossusTick(Player player, ServerLevel sl) {
+    private static void colossusTick(LivingEntity player, ServerLevel sl) {
         if (!player.getPersistentData().contains(COLOSSUS_UNTIL)) return;
         if (!colossusStands(player)) {
             colossusFalls(player);
@@ -418,7 +419,7 @@ public final class IlluminatorCivilization {
     // SCROLLS_OUTSIDE_CUT less. When it ends, the scrolls fly out SCROLLS_FLY: every enemy they reach (at
     // IlluminatorFx.SCROLLS_FLY) is immersed in a vision, held completely for IMMERSED_TICKS and hurt IMMERSED_DAMAGE.
     // =========================
-    private static AbilityWheel.Result scrollsOfCivilization(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result scrollsOfCivilization(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + SCROLLS_TICKS;
         player.getPersistentData().putLong(SCROLLS_UNTIL, until);
         String tag = "il_scrolls_" + player.getId() + "_" + sl.getGameTime();
@@ -443,7 +444,7 @@ public final class IlluminatorCivilization {
     }
 
     /** Every tick while the murals stand: the projectiles of those not on your side that came inside stop. */
-    private static void scrollsTick(Player player, ServerLevel sl) {
+    private static void scrollsTick(LivingEntity player, ServerLevel sl) {
         if (!Illuminator.isActive(player, SCROLLS_UNTIL)) return;
         Vec3 middle = player.position().add(0, 1, 0);
         AABB around = new AABB(middle, middle).inflate(SCROLLS_RADIUS);
@@ -464,7 +465,7 @@ public final class IlluminatorCivilization {
     // Enlightenment for ENLIGHTENED_TICKS: Haste II, every ability ENLIGHTENED_COST as dear (Spells.addCostScale),
     // harmful effects cleansed.
     // =========================
-    private static AbilityWheel.Result mathematicalMaze(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result mathematicalMaze(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, MAZE_RANGE);
         if (target == null) {
             LivingEntity ally = Spells.aimAlly(player, sl, MAZE_RANGE);
@@ -492,7 +493,7 @@ public final class IlluminatorCivilization {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void enlighten(Player player, ServerLevel sl, LivingEntity ally) {
+    private static void enlighten(LivingEntity player, ServerLevel sl, LivingEntity ally) {
         String tag = "il_enlightened_" + ally.getId();
         ally.addEffect(new MobEffectInstance(MobEffects.HASTE, ENLIGHTENED_TICKS, 1));
         Spells.cleanse(ally);
@@ -502,12 +503,12 @@ public final class IlluminatorCivilization {
     }
 
     /** What every ability costs an Enlightened player (Spells.addCostScale). */
-    static float enlightenedCost(Player player) {
+    static float enlightenedCost(LivingEntity player) {
         return Illuminator.isActive(player, ENLIGHTENED_UNTIL) ? ENLIGHTENED_COST : 1f;
     }
 
     /** Every tick, for the caster: the ones they hold in a maze stay in its cube. */
-    private static void mazeTick(Player player, ServerLevel sl) {
+    private static void mazeTick(LivingEntity player, ServerLevel sl) {
         if (MAZES.isEmpty()) return;
         long now = sl.getGameTime();
         for (Maze maze : new ArrayList<>(MAZES.values())) {
@@ -539,7 +540,7 @@ public final class IlluminatorCivilization {
     // Allies, you too: Strength I, Haste I, Regeneration I. Enemies: Slowness II, Weakness I (no sprint). Casting
     // anything else stops it (castSomething, through Illuminator.addAfterCast).
     // =========================
-    private static AbilityWheel.Result masterwork(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result masterwork(LivingEntity player, ServerLevel sl) {
         String tag = "il_masterwork_" + player.getId();
         Zone.close(player, MASTERWORK);
         IlluminatorFx.masterwork(sl, player, MASTERWORK_RADIUS, MASTERWORK_TICKS, tag);
@@ -576,7 +577,7 @@ public final class IlluminatorCivilization {
     }
 
     /** Anything cast that is not Masterwork stops the music (Illuminator.addAfterCast). */
-    static void castSomething(Player player, String ability) {
+    static void castSomething(LivingEntity player, String ability) {
         if (!"masterwork".equals(ability) && Zone.isOpen(player, MASTERWORK)) Zone.close(player, MASTERWORK);
     }
 
@@ -586,7 +587,7 @@ public final class IlluminatorCivilization {
     // special attacks and fights only in melee (status/AbilityLock). It also ends the reading done on you: every mark
     // on you is wiped (status/Appraisal) and a player target forgets what they had studied of you (status/Study).
     // =========================
-    private static AbilityWheel.Result realityKnowledge(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result realityKnowledge(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, REALITY_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("There is no one in sight for knowledge to reject."));
@@ -621,7 +622,7 @@ public final class IlluminatorCivilization {
     // hidden, untouchable, unable to act) for BOOK_TICKS (BOOK_PLAYER_TICKS for players), then they step out under the
     // book, BOOK_TOLL of their health lost (nothing softens it).
     // =========================
-    private static AbilityWheel.Result illusoryBook(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result illusoryBook(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, BOOK_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("There is no one in sight to write down."));
@@ -655,7 +656,7 @@ public final class IlluminatorCivilization {
     }
 
     /** One written into the book is back: the toll. */
-    private static void stepsOut(Player player, ServerLevel sl, LivingEntity who) {
+    private static void stepsOut(LivingEntity player, ServerLevel sl, LivingEntity who) {
         if (who instanceof Player shown) IlluminatorFx.statusEnd(shown, Status.WRITTEN);
         if (!who.isAlive() || !Spells.casterStillHere(player, sl)) return;
         Appraisal.strikeTrue(player, who, who.getHealth() * BOOK_TOLL, null);
@@ -669,7 +670,7 @@ public final class IlluminatorCivilization {
     // as long (combat/Cooldowns.addScale), and every HEAVEN_STATIC_EVERY one of their projectiles inside collapses into
     // static. Cast again: it ends early (free).
     // =========================
-    private static AbilityWheel.Result mechanicalHeaven(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result mechanicalHeaven(LivingEntity player, ServerLevel sl) {
         if (Zone.isOpen(player, HEAVEN)) {
             Zone.close(player, HEAVEN);
             return AbilityWheel.Result.FREE;
@@ -709,7 +710,7 @@ public final class IlluminatorCivilization {
     }
 
     /** One projectile of an enemy inside the Kingdom collapses into static. */
-    private static void heavenStatic(Player player, ServerLevel sl, Vec3 center) {
+    private static void heavenStatic(LivingEntity player, ServerLevel sl, Vec3 center) {
         AABB inside = new AABB(center, center).inflate(HEAVEN_RADIUS, 40, HEAVEN_RADIUS);
         for (Projectile projectile : sl.getEntitiesOfClass(Projectile.class, inside, Entity::isAlive)) {
             Entity owner = projectile.getOwner();
@@ -722,19 +723,19 @@ public final class IlluminatorCivilization {
     }
 
     /** What every ability costs a player who stands in an ally's Mechanical Heaven (Spells.addCostScale). */
-    static float heavenCost(Player player) {
+    static float heavenCost(LivingEntity player) {
         Player owner = heavenOver(player);
         return owner != null && Spells.isFriend(owner, player) ? HEAVEN_ALLY_COST : 1f;
     }
 
     /** How long the cooldowns of a player in an enemy's Mechanical Heaven are (Cooldowns.addScale). */
-    static float heavenCooldown(Player player) {
+    static float heavenCooldown(LivingEntity player) {
         Player owner = heavenOver(player);
         return owner != null && Spells.isEnemy(owner, player) ? HEAVEN_ENEMY_COOLDOWN : 1f;
     }
 
     /** The owner of a Mechanical Heaven that covers this player, or null. */
-    private static Player heavenOver(Player player) {
+    private static Player heavenOver(LivingEntity player) {
         if (HEAVEN_OWNERS.isEmpty() || !(player.level() instanceof ServerLevel sl)) return null;
         for (UUID id : HEAVEN_OWNERS) {
             Player owner = sl.getPlayerByUUID(id);
@@ -748,7 +749,7 @@ public final class IlluminatorCivilization {
     // =========================
 
     /** Every tick, for every player: the Colossus, the murals and the mazes they hold. */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         colossusTick(player, sl);
         scrollsTick(player, sl);
         mazeTick(player, sl);
@@ -773,7 +774,7 @@ public final class IlluminatorCivilization {
     }
 
     /** A player left: the mazes they held end where they are. */
-    static void forget(Player player) {
+    static void forget(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
         for (Maze maze : new ArrayList<>(MAZES.values())) {
             if (!maze.caster.equals(player.getUUID())) continue;

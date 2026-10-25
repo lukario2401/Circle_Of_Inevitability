@@ -62,7 +62,7 @@ public final class Appraisal {
     /** The look of every mark: Appraisal shows nothing itself. Every method is optional. */
     public interface Listener {
         /** A mark was put on (also when one is put on again over the old one). */
-        default void marked(Player caster, LivingEntity target, String weakness, int ticks) {}
+        default void marked(LivingEntity caster, LivingEntity target, String weakness, int ticks) {}
 
         /** A mark came off. The caster may have left already: it is given by id. */
         default void ended(UUID caster, LivingEntity target, End why) {}
@@ -91,7 +91,7 @@ public final class Appraisal {
      * and the caster's ability hits on it do 'bonus' more (0.15f = 15%). Replaces this caster's old mark on it. False when
      * it cannot be marked (immune, dead).
      */
-    public static boolean mark(Player caster, LivingEntity target, String weakness, int ticks, float bonus) {
+    public static boolean mark(LivingEntity caster, LivingEntity target, String weakness, int ticks, float bonus) {
         if (target.level().isClientSide() || ticks <= 0 || !target.isAlive()) return false;
         for (Predicate<LivingEntity> immune : IMMUNE) if (immune.test(target)) return false;
         Mark mark = new Mark(target, weakness, target.level().getGameTime() + ticks, Math.max(0f, bonus));
@@ -112,7 +112,7 @@ public final class Appraisal {
     }
 
     /** True while 'caster' has a mark on 'target'. */
-    public static boolean isMarked(Player caster, Entity target) {
+    public static boolean isMarked(LivingEntity caster, Entity target) {
         return mark(caster.getUUID(), target) != null;
     }
 
@@ -126,19 +126,19 @@ public final class Appraisal {
     }
 
     /** What 'caster' knows 'target' to be weak to, or null when they have no mark on it (or it named none). */
-    public static String weakness(Player caster, Entity target) {
+    public static String weakness(LivingEntity caster, Entity target) {
         Mark mark = mark(caster.getUUID(), target);
         return mark == null ? null : mark.weakness();
     }
 
     /** Ticks left on this caster's mark (0 = none). */
-    public static int ticksLeft(Player caster, Entity target) {
+    public static int ticksLeft(LivingEntity caster, Entity target) {
         Mark mark = mark(caster.getUUID(), target);
         return mark == null ? 0 : (int) Math.max(0, mark.until() - target.level().getGameTime());
     }
 
     /** The mark's own bonus (0 = no mark). */
-    public static float bonus(Player caster, Entity target) {
+    public static float bonus(LivingEntity caster, Entity target) {
         Mark mark = mark(caster.getUUID(), target);
         return mark == null ? 0f : mark.bonus();
     }
@@ -147,7 +147,7 @@ public final class Appraisal {
      * What a hit by 'caster' of 'kind' on 'target' is multiplied by: 1 with no mark; 1 + bonus with one; and
      * MATCH_BONUS more when 'kind' is what it is weak to.
      */
-    public static float multiplier(Player caster, Entity target, String kind) {
+    public static float multiplier(LivingEntity caster, Entity target, String kind) {
         Mark mark = mark(caster.getUUID(), target);
         if (mark == null) return 1f;
         boolean match = kind != null && kind.equals(mark.weakness());
@@ -155,7 +155,7 @@ public final class Appraisal {
     }
 
     /** Takes this caster's mark off (a finisher used it up). False if there was none. */
-    public static boolean spend(Player caster, LivingEntity target) {
+    public static boolean spend(LivingEntity caster, LivingEntity target) {
         return end(caster.getUUID(), target, End.SPENT);
     }
 
@@ -170,7 +170,7 @@ public final class Appraisal {
     }
 
     /** Everything 'caster' has a mark on right now, alive and in their level, nearest first. */
-    public static List<LivingEntity> markedBy(Player caster) {
+    public static List<LivingEntity> markedBy(LivingEntity caster) {
         List<LivingEntity> found = new ArrayList<>();
         long now = caster.level().getGameTime();
         for (Map<UUID, Mark> on : MARKS.values()) {
@@ -192,12 +192,12 @@ public final class Appraisal {
     // =========================
 
     /** Spells.strike, counted as an ability hit of 'kind' (null: of no kind): the mark's bonus and the match apply. */
-    public static void strike(Player caster, LivingEntity target, float damage, String kind) {
+    public static void strike(LivingEntity caster, LivingEntity target, float damage, String kind) {
         as(kind, () -> Spells.strike(caster, target, damage));
     }
 
     /** Spells.strikeTrue (nothing softens it), counted as an ability hit of 'kind'. */
-    public static void strikeTrue(Player caster, LivingEntity target, float damage, String kind) {
+    public static void strikeTrue(LivingEntity caster, LivingEntity target, float damage, String kind) {
         as(kind, () -> Spells.strikeTrue(caster, target, damage));
     }
 
@@ -268,7 +268,7 @@ public final class Appraisal {
         if (abilityDepth <= 0 || MARKS.isEmpty()) return;
         LivingEntity target = event.getEntity();
         if (target.level().isClientSide()) return;
-        if (!(event.getSource().getEntity() instanceof Player caster) || caster == target) return;
+        if (!(event.getSource().getEntity() instanceof LivingEntity caster) || caster == target) return;
         float multiplier = multiplier(caster, target, hitKind);
         if (multiplier != 1f) event.setAmount(event.getAmount() * multiplier);
     }

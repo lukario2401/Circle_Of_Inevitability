@@ -45,48 +45,48 @@ public final class IlluminatorWorkshop {
     // =========================
 
     static final int WORKSHOP_SEQUENCE = 6;                     // the key
-    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
+    static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Clockwork Rifle
-    private static final int RIFLE_SEQUENCE = 6;
-    private static final int RIFLE_COST = 1800;                 // Sequence 6 holds 6400
-    private static final int RIFLE_COOLDOWN = 100;
-    private static final double RIFLE_RANGE = 48.0;
-    private static final int RIFLE_ROUNDS = 3;
-    private static final int RIFLE_MORE_SEQUENCE = 4;           // Alchemist: more rounds
-    private static final int RIFLE_MORE_ROUNDS = 5;
-    private static final float RIFLE_DAMAGE = 24f;              // each round; a pierce hit, or the Appraised weakness
-    private static final float ARM_CANNON_COST = 0.5f;          // through the Mechanical Body's arm cannon (key 6): half
+    static final int RIFLE_SEQUENCE = 6;
+    static final int RIFLE_COST = 1800;                 // Sequence 6 holds 6400
+    static final int RIFLE_COOLDOWN = 100;
+    static final double RIFLE_RANGE = 48.0;
+    static final int RIFLE_ROUNDS = 3;
+    static final int RIFLE_MORE_SEQUENCE = 4;           // Alchemist: more rounds
+    static final int RIFLE_MORE_ROUNDS = 5;
+    static final float RIFLE_DAMAGE = 24f;              // each round; a pierce hit, or the Appraised weakness
+    static final float ARM_CANNON_COST = 0.5f;          // through the Mechanical Body's arm cannon (key 6): half
                                                                 // the cost and no cooldown
 
     // Spirit Cannon
-    private static final int CANNON_SEQUENCE = 6;
-    private static final int CANNON_COST = 2450;
-    private static final int CANNON_COOLDOWN = 600;
-    private static final double CANNON_PLACE = 12.0;            // where you aim, this far at most
-    private static final int CANNON_TICKS = 400;                // it stands this long (longer with Craftsman's Hands and the Rite)...
-    private static final int CANNON_EVERY = 40;                 // ...and fires this often...
-    private static final double CANNON_REACH = 24.0;            // ...at the nearest enemy it can see this far
-    private static final double CANNONBALL_SPEED = 1.6;
-    private static final float CANNON_DAMAGE = 30f;             // to the one it hits (a pierce hit)...
-    private static final double CANNON_BLAST = 2.5;             // ...and this share of it to the rest within this
-    private static final float CANNON_SPLASH = 0.5f;
-    private static final int TWIN_CANNON_SEQUENCE = 4;          // Alchemist: two cannons at once
+    static final int CANNON_SEQUENCE = 6;
+    static final int CANNON_COST = 2450;
+    static final int CANNON_COOLDOWN = 600;
+    static final double CANNON_PLACE = 12.0;            // where you aim, this far at most
+    static final int CANNON_TICKS = 400;                // it stands this long (longer with Craftsman's Hands and the Rite)...
+    static final int CANNON_EVERY = 40;                 // ...and fires this often...
+    static final double CANNON_REACH = 24.0;            // ...at the nearest enemy it can see this far
+    static final double CANNONBALL_SPEED = 1.6;
+    static final float CANNON_DAMAGE = 30f;             // to the one it hits (a pierce hit)...
+    static final double CANNON_BLAST = 2.5;             // ...and this share of it to the rest within this
+    static final float CANNON_SPLASH = 0.5f;
+    static final int TWIN_CANNON_SEQUENCE = 4;          // Alchemist: two cannons at once
 
     // Mystic Brooch
-    private static final int BROOCH_SEQUENCE = 6;
-    private static final int BROOCH_COST = 1500;
-    private static final int BROOCH_COOLDOWN = 800;
-    private static final double BROOCH_RANGE = 24.0;            // the ally looked at, or you
-    private static final int BROOCH_TICKS = 1200;
-    private static final float BROOCH_WARD = 60f;               // it soaks up this much (status/ConjuredArmor's absorption)
-    private static final double BROOCH_BURST_RADIUS = 5.0;      // used up or run out: enemies this close are shoved...
-    private static final float BROOCH_BURST_DAMAGE = 20f;       // ...and hurt
+    static final int BROOCH_SEQUENCE = 6;
+    static final int BROOCH_COST = 1500;
+    static final int BROOCH_COOLDOWN = 800;
+    static final double BROOCH_RANGE = 24.0;            // the ally looked at, or you
+    static final int BROOCH_TICKS = 1200;
+    static final float BROOCH_WARD = 60f;               // it soaks up this much (status/ConjuredArmor's absorption)
+    static final double BROOCH_BURST_RADIUS = 5.0;      // used up or run out: enemies this close are shoved...
+    static final float BROOCH_BURST_DAMAGE = 20f;       // ...and hurt
 
     // =========================
     // Names
     // =========================
-    private static final String CANNON = "illuminator_cannon_";                   // + 0 or 1: its Zone
+    static final String CANNON = "illuminator_cannon_";                   // + 0 or 1: its Zone
     static final String BROOCH = "illuminator_brooch";                            // its ConjuredArmor
 
     // =========================
@@ -133,7 +133,7 @@ public final class IlluminatorWorkshop {
     // (the match bonus on every round). Through the Mechanical Body's arm cannon (key 6) it fires at once, for half
     // the cost and with no cooldown.
     // =========================
-    private static AbilityWheel.Result clockworkRifle(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result clockworkRifle(LivingEntity player, ServerLevel sl) {
         int rounds = Beyonder.hasSequence(player, RIFLE_MORE_SEQUENCE) ? RIFLE_MORE_ROUNDS : RIFLE_ROUNDS;
         boolean armCannon = Illuminator.wearsMechanicalBody(player);
         int first = armCannon ? 2 : IlluminatorFx.RIFLE_FIRES;
@@ -150,7 +150,7 @@ public final class IlluminatorWorkshop {
     }
 
     /** One round from the muzzle to what the crosshair is on now. */
-    private static void fireRound(Player player, ServerLevel sl) {
+    private static void fireRound(LivingEntity player, ServerLevel sl) {
         Vec3 muzzle = Spells.clearStart(player, sl, player.getEyePosition()
                 .add(Spells.rightOf(player).scale(0.38)).add(player.getLookAngle().scale(0.9)).add(0, -0.2, 0));
         Vec3 direction = Spells.aimFrom(player, sl, muzzle, RIFLE_RANGE);
@@ -175,7 +175,7 @@ public final class IlluminatorWorkshop {
     // CANNON_SPLASH of it to the rest within CANNON_BLAST, all pierce hits. One at a time (a new one replaces the
     // old); two from Alchemist (the one with less time left goes).
     // =========================
-    private static AbilityWheel.Result spiritCannon(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result spiritCannon(LivingEntity player, ServerLevel sl) {
         Vec3 spot = Spells.aimGround(player, sl, CANNON_PLACE);
         if (spot.distanceTo(player.position()) > CANNON_PLACE + 2.0) {
             player.sendSystemMessage(Component.literal("There is no ground close enough for the cannon."));
@@ -204,7 +204,7 @@ public final class IlluminatorWorkshop {
     }
 
     /** Which cannon the new one is: the free slot, else the one with the least time left. */
-    private static int cannonSlot(Player player) {
+    private static int cannonSlot(LivingEntity player) {
         int slots = Beyonder.hasSequence(player, TWIN_CANNON_SEQUENCE) ? 2 : 1;
         int best = 0;
         int least = Integer.MAX_VALUE;
@@ -220,7 +220,7 @@ public final class IlluminatorWorkshop {
     }
 
     /** The nearest enemy within reach that the cannon can see from its barrel and that can be chosen, or null. */
-    private static LivingEntity cannonTarget(Player player, ServerLevel sl, Vec3 spot) {
+    private static LivingEntity cannonTarget(LivingEntity player, ServerLevel sl, Vec3 spot) {
         Vec3 barrel = spot.add(0, 0.8, 0);
         LivingEntity best = null;
         double nearest = Double.MAX_VALUE;
@@ -236,7 +236,7 @@ public final class IlluminatorWorkshop {
         return best;
     }
 
-    private static void fireCannon(Player player, ServerLevel sl, Vec3 spot, String tag, LivingEntity target) {
+    private static void fireCannon(LivingEntity player, ServerLevel sl, Vec3 spot, String tag, LivingEntity target) {
         Vec3 aim = target.getBoundingBox().getCenter();
         Vec3 muzzle = IlluminatorFx.cannonFire(sl, spot, tag, aim);
         Vec3 direction = aim.subtract(muzzle).normalize();
@@ -267,7 +267,7 @@ public final class IlluminatorWorkshop {
     // used up or runs out it bursts: enemies within BROOCH_BURST_RADIUS are shoved and take BROOCH_BURST_DAMAGE. A
     // new brooch on the same wearer replaces the old one without a burst.
     // =========================
-    private static AbilityWheel.Result mysticBrooch(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result mysticBrooch(LivingEntity player, ServerLevel sl) {
         LivingEntity aimed = Spells.aimAlly(player, sl, BROOCH_RANGE);
         LivingEntity wearer = aimed != null ? aimed : player;
         int ticks = Illuminator.lasting(player, BROOCH_TICKS, Group.WORKSHOP);
@@ -288,7 +288,7 @@ public final class IlluminatorWorkshop {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void broochBursts(Player player, ServerLevel sl, LivingEntity wearer, String tag) {
+    private static void broochBursts(LivingEntity player, ServerLevel sl, LivingEntity wearer, String tag) {
         if (wearer instanceof Player pinned) IlluminatorFx.statusEnd(pinned, Status.BROOCH);
         if (wearer.isRemoved() || wearer.level() != sl) return;                    // logged out: nothing to burst
         IlluminatorFx.broochBurst(sl, wearer, BROOCH_BURST_RADIUS, tag);

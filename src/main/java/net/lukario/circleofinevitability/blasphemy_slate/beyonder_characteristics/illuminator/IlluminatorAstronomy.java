@@ -52,72 +52,72 @@ public final class IlluminatorAstronomy {
     // =========================
 
     static final int ASTRONOMY_SEQUENCE = 5;                    // the key
-    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
+    static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Star of Curses
-    private static final int CURSE_SEQUENCE = 5;
-    private static final int CURSE_COST = 2500;                 // Sequence 5 holds 15500
-    private static final int CURSE_COOLDOWN = 60;
-    private static final double CURSE_RANGE = 32.0;
-    private static final float CURSE_DAMAGE = 40f;              // a starlight hit
-    private static final int LADDER_WINDOW = 240;               // struck again within this, the next curse on the ladder
-    private static final int WEAK_TICKS = 160;                  // Weakness II
-    private static final int TRAUMA_TICKS = 160;                // Trauma: bleeding (status/Bleeding) that nothing heals...
-    private static final float TRAUMA_PER_SECOND = 4f;          // ...this much a second
-    private static final int MUTATION_TICKS = 200;              // Mutation: it deals this much less (status/Enfeebled)...
-    private static final float MUTATION_WEAKER = 0.3f;
-    private static final float MUTATION_VULNERABLE = 0.2f;      // ...takes this much more, and glows
+    static final int CURSE_SEQUENCE = 5;
+    static final int CURSE_COST = 2500;                 // Sequence 5 holds 15500
+    static final int CURSE_COOLDOWN = 60;
+    static final double CURSE_RANGE = 32.0;
+    static final float CURSE_DAMAGE = 40f;              // a starlight hit
+    static final int LADDER_WINDOW = 240;               // struck again within this, the next curse on the ladder
+    static final int WEAK_TICKS = 160;                  // Weakness II
+    static final int TRAUMA_TICKS = 160;                // Trauma: bleeding (status/Bleeding) that nothing heals...
+    static final float TRAUMA_PER_SECOND = 4f;          // ...this much a second
+    static final int MUTATION_TICKS = 200;              // Mutation: it deals this much less (status/Enfeebled)...
+    static final float MUTATION_WEAKER = 0.3f;
+    static final float MUTATION_VULNERABLE = 0.2f;      // ...takes this much more, and glows
 
     // Blessing of Stars
-    private static final int BLESSING_SEQUENCE = 5;
-    private static final int BLESSING_COST = 3000;
-    private static final int BLESSING_COOLDOWN = 400;
-    private static final double BLESSING_RANGE = 28.0;
-    private static final double BLESSING_RADIUS = 8.0;
-    private static final int BLESSING_TICKS = 160;
-    private static final float PRESS_DAMAGE = 3f;               // a gravity hit, every second, to each enemy inside...
-    private static final double PRESS_GRAVITY = 2.5;            // ...who is this much heavier (status/Gravity), slowed, unable to jump
+    static final int BLESSING_SEQUENCE = 5;
+    static final int BLESSING_COST = 3000;
+    static final int BLESSING_COOLDOWN = 400;
+    static final double BLESSING_RANGE = 28.0;
+    static final double BLESSING_RADIUS = 8.0;
+    static final int BLESSING_TICKS = 160;
+    static final float PRESS_DAMAGE = 3f;               // a gravity hit, every second, to each enemy inside...
+    static final double PRESS_GRAVITY = 2.5;            // ...who is this much heavier (status/Gravity), slowed, unable to jump
 
     // False Constellations
-    private static final int SKY_SEQUENCE = 5;
-    private static final int SKY_COST = 3500;
-    private static final int SKY_COOLDOWN = 800;
-    private static final double SKY_RANGE = 24.0;
-    private static final double SKY_RADIUS = 14.0;
-    private static final int SKY_TICKS = 400;
-    private static final double SKY_UNREADABLE = 6.0;           // your side inside cannot be picked out from further (status/Unreadable)
+    static final int SKY_SEQUENCE = 5;
+    static final int SKY_COST = 3500;
+    static final int SKY_COOLDOWN = 800;
+    static final double SKY_RANGE = 24.0;
+    static final double SKY_RADIUS = 14.0;
+    static final int SKY_TICKS = 400;
+    static final double SKY_UNREADABLE = 6.0;           // your side inside cannot be picked out from further (status/Unreadable)
 
     // Meteor Shower
-    private static final int METEOR_SEQUENCE = 5;
-    private static final int METEOR_COST = 5000;
-    private static final int METEOR_COOLDOWN = 500;
-    private static final double METEOR_RANGE = 32.0;
-    private static final double METEOR_AREA = 8.0;              // they fall within this of where you aim...
-    private static final int METEOR_COUNT = 8;
-    private static final int METEOR_EVERY = 10;                 // ...one this often (eight over 4 seconds)...
-    private static final double METEOR_RADIUS = 2.5;            // ...each striking this wide...
-    private static final double METEOR_STRONG_RADIUS = 3.2;     // (under a false sky)
-    private static final float METEOR_DAMAGE = 28f;             // ...for this much, a starlight hit...
-    private static final float METEOR_STRONG = 1.5f;            // ...this much more under a false sky
-    private static final double METEOR_SHOVE = 0.4;
+    static final int METEOR_SEQUENCE = 5;
+    static final int METEOR_COST = 5000;
+    static final int METEOR_COOLDOWN = 500;
+    static final double METEOR_RANGE = 32.0;
+    static final double METEOR_AREA = 8.0;              // they fall within this of where you aim...
+    static final int METEOR_COUNT = 8;
+    static final int METEOR_EVERY = 10;                 // ...one this often (eight over 4 seconds)...
+    static final double METEOR_RADIUS = 2.5;            // ...each striking this wide...
+    static final double METEOR_STRONG_RADIUS = 3.2;     // (under a false sky)
+    static final float METEOR_DAMAGE = 28f;             // ...for this much, a starlight hit...
+    static final float METEOR_STRONG = 1.5f;            // ...this much more under a false sky
+    static final double METEOR_SHOVE = 0.4;
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String BLESSING = "illuminator_blessing";               // its Zone
+    static final String BLESSING = "illuminator_blessing";               // its Zone
     static final String SKY = "illuminator_false_sky";                           // its Zone
-    private static final String PRESSED = "illuminator_pressed";                 // its Gravity
-    private static final String MUTATED = "illuminator_mutation";                // its Enfeebled
+    static final String PRESSED = "illuminator_pressed";                 // its Gravity
+    static final String MUTATED = "illuminator_mutation";                // its Enfeebled
 
     /** The ladder of the Star of Curses on each enemy: whose, the step it is at, and when it was struck. Not saved. */
     private record Ladder(UUID caster, int step, long last) {}
-    private static final Map<UUID, Ladder> LADDERS = new HashMap<>();
+    static final Map<UUID, Ladder> LADDERS = new HashMap<>();
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("illuminator_astronomy", "Astronomy")
+    static final AbilityWheel WHEEL = AbilityWheel.create("illuminator_astronomy", "Astronomy")
             .radius(72)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("star_of_curses", IlluminatorFx.WHEEL_STAR_OF_CURSES, "Star of Curses", CURSE_SEQUENCE,
@@ -151,7 +151,7 @@ public final class IlluminatorAstronomy {
     // Mutation (MUTATION_WEAKER less dealt, MUTATION_VULNERABLE more taken, glowing, MUTATION_TICKS); after Mutation the
     // next strike is a plain ray again and the ladder starts over.
     // =========================
-    private static AbilityWheel.Result starOfCurses(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result starOfCurses(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, CURSE_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("The starlight has no one to fall on."));
@@ -173,7 +173,7 @@ public final class IlluminatorAstronomy {
     }
 
     /** One step of the ladder on 'target' (its mark over the head replaces the step before). */
-    private static void curse(Player player, ServerLevel sl, LivingEntity target, Curse curse) {
+    private static void curse(LivingEntity player, ServerLevel sl, LivingEntity target, Curse curse) {
         String tag = "il_curse_" + target.getId();
         switch (curse) {
             case WEAKNESS -> {
@@ -203,7 +203,7 @@ public final class IlluminatorAstronomy {
     // (Slowness III, no jumping, PRESS_GRAVITY times as heavy, PRESS_DAMAGE a gravity hit) and allies, you too, are
     // weightless (Jump Boost II, Slow Falling, Speed I). Cast again: the old one ends.
     // =========================
-    private static AbilityWheel.Result blessingOfStars(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result blessingOfStars(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, BLESSING_RANGE);
         long cast = sl.getGameTime();
         String tag = "il_blessing_" + player.getId() + "_" + cast;
@@ -246,7 +246,7 @@ public final class IlluminatorAstronomy {
     }
 
     /** An enemy pressed down for the next second and a bit. */
-    private static void press(Player player, ServerLevel sl, LivingEntity enemy) {
+    private static void press(LivingEntity player, ServerLevel sl, LivingEntity enemy) {
         Spells.keepEffect(enemy, MobEffects.SLOWNESS, 2, 40);
         Root.apply(enemy, 25, RootRestriction.JUMP);
         Gravity.set(enemy, PRESSED, PRESS_GRAVITY, 25);
@@ -268,7 +268,7 @@ public final class IlluminatorAstronomy {
     // every half second): mobs further away forget them, and abilities cannot choose them from further. A Meteor
     // Shower whose middle is under it is METEOR_STRONG stronger. Cast again: the old sky ends.
     // =========================
-    private static AbilityWheel.Result falseConstellations(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result falseConstellations(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, SKY_RANGE);
         String tag = "il_false_sky_" + player.getId() + "_" + sl.getGameTime();
         Zone.close(player, SKY);
@@ -297,7 +297,7 @@ public final class IlluminatorAstronomy {
     // starlight hit) and a shove to every enemy within METEOR_RADIUS; allies take nothing. Under your own false sky:
     // METEOR_STRONG times the damage, METEOR_STRONG_RADIUS wide. Light only: no fire, no broken ground.
     // =========================
-    private static AbilityWheel.Result meteorShower(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result meteorShower(LivingEntity player, ServerLevel sl) {
         Vec3 center = Spells.aimGround(player, sl, METEOR_RANGE);
         boolean strong = Zone.covers(player, SKY, center);
         double radius = strong ? METEOR_STRONG_RADIUS : METEOR_RADIUS;
@@ -321,7 +321,7 @@ public final class IlluminatorAstronomy {
     }
 
     /** A random spot of ground within METEOR_AREA of the middle (the middle itself if none is found). */
-    private static Vec3 meteorSpot(Player player, ServerLevel sl, Vec3 center) {
+    private static Vec3 meteorSpot(LivingEntity player, ServerLevel sl, Vec3 center) {
         for (int tries = 0; tries < 6; tries++) {
             double angle = sl.getRandom().nextDouble() * Math.PI * 2;
             double far = Math.sqrt(sl.getRandom().nextDouble()) * METEOR_AREA;
@@ -336,7 +336,7 @@ public final class IlluminatorAstronomy {
     // =========================
 
     /** After a relog, a death or a logout: the ladders this player started are forgotten. */
-    static void forget(Player player) {
+    static void forget(LivingEntity player) {
         LADDERS.values().removeIf(ladder -> ladder.caster().equals(player.getUUID()));
     }
 }

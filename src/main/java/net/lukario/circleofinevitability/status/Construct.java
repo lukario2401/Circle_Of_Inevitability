@@ -145,7 +145,7 @@ public final class Construct {
     public Construct onEnd(Ended action) { this.onEnd = action; return this; }
 
     /** Builds it with its feet at 'feet', facing 'yaw', for 'owner'. Returns the mob, or null if it could not be made. */
-    public Mob build(Player owner, ServerLevel sl, Vec3 feet, float yaw) {
+    public Mob build(LivingEntity owner, ServerLevel sl, Vec3 feet, float yaw) {
         int summonTicks = lasts > 0 ? lasts + 40 : NO_TIMER_SUMMON;
         Mob mob = Marionette.spawnSummon(type, owner, sl, feet, yaw, summonTicks);
         if (mob == null) return null;
@@ -212,7 +212,7 @@ public final class Construct {
     }
 
     /** The constructs of this group the owner has standing, oldest first (group null: all of them). */
-    public static List<Mob> ofOwner(Player owner, String group) {
+    public static List<Mob> ofOwner(LivingEntity owner, String group) {
         List<Built> found = new ArrayList<>();
         for (Built built : BUILT.values()) {
             if (built.owner.equals(owner.getUUID()) && (group == null || built.group.equals(group)) && built.mob.isAlive()) found.add(built);
@@ -243,7 +243,7 @@ public final class Construct {
     }
 
     /** Ends every construct of this group the owner has (group null: all). */
-    public static void endAll(Player owner, String group) {
+    public static void endAll(LivingEntity owner, String group) {
         for (Mob mob : ofOwner(owner, group)) finish(mob, End.ENDED);
     }
 
@@ -284,7 +284,7 @@ public final class Construct {
                 continue;
             }
             if (!leashes) continue;
-            Player owner = sl.getPlayerByUUID(built.owner);
+            LivingEntity owner = sl.getEntity(built.owner) instanceof LivingEntity found ? found : null;   // a player or a Beyonder mob
             if (owner == null || !owner.isAlive()) {
                 finish(built.mob, End.OWNER_GONE);
             } else if (built.leash > 0 && owner.distanceTo(built.mob) > built.leash) {

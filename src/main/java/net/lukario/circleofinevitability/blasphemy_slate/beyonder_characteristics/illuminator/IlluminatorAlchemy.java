@@ -81,100 +81,100 @@ public final class IlluminatorAlchemy {
     // =========================
 
     static final int ALCHEMY_SEQUENCE = 4;                      // the key
-    private static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
+    static final float QUICK_CAST_COST = Illuminator.QUICK_CAST_COST;            // a sneak recast: no cooldown, this many times the cost
 
     // Living Doll
-    private static final int DOLL_SEQUENCE = 4;
-    private static final int DOLL_COST = 4000;                  // Sequence 4 holds 32400
-    private static final int DOLL_COOLDOWN = 400;
-    private static final int DOLL_TICKS = 500;
-    private static final int TWO_DOLLS_SEQUENCE = 3;            // Arcane Scholar: two, the second a decoy that looks like you
-    private static final int THREE_DOLLS_SEQUENCE = 2;          // Knowledge Magister: three
-    private static final float DOLL_SCALE = 0.75f;              // a doll is a husk this size under its model
-    private static final float DOLL_DAMAGE = 6f;
-    private static final double DOLL_LEASH = 40.0;
-    private static final int BOLT_EVERY = 40;                   // the Iron Doll throws a bolt this often...
-    private static final double BOLT_RANGE = 16.0;              // ...at what it fights this close...
-    private static final float BOLT_DAMAGE = 14f;               // ...for this much
-    private static final int DUST_BLIND = 40;                   // the Dust Doll's hits blind this long
-    private static final int FROST_SLOW = 60;                   // the Frost Doll's hits slow (Slowness II) this long
-    private static final double STRAW_SHOVE = 3.0;              // the Straw Doll falling shoves everything this close
-    private static final double DECOY_TAUNT = 10.0;             // mobs this close go for the decoy...
-    private static final int DECOY_TAUNT_EVERY = 60;            // ...told again this often
+    static final int DOLL_SEQUENCE = 4;
+    static final int DOLL_COST = 4000;                  // Sequence 4 holds 32400
+    static final int DOLL_COOLDOWN = 400;
+    static final int DOLL_TICKS = 500;
+    static final int TWO_DOLLS_SEQUENCE = 3;            // Arcane Scholar: two, the second a decoy that looks like you
+    static final int THREE_DOLLS_SEQUENCE = 2;          // Knowledge Magister: three
+    static final float DOLL_SCALE = 0.75f;              // a doll is a husk this size under its model
+    static final float DOLL_DAMAGE = 6f;
+    static final double DOLL_LEASH = 40.0;
+    static final int BOLT_EVERY = 40;                   // the Iron Doll throws a bolt this often...
+    static final double BOLT_RANGE = 16.0;              // ...at what it fights this close...
+    static final float BOLT_DAMAGE = 14f;               // ...for this much
+    static final int DUST_BLIND = 40;                   // the Dust Doll's hits blind this long
+    static final int FROST_SLOW = 60;                   // the Frost Doll's hits slow (Slowness II) this long
+    static final double STRAW_SHOVE = 3.0;              // the Straw Doll falling shoves everything this close
+    static final double DECOY_TAUNT = 10.0;             // mobs this close go for the decoy...
+    static final int DECOY_TAUNT_EVERY = 60;            // ...told again this often
 
     // Golem
-    private static final int GOLEM_SEQUENCE = 4;
-    private static final int GOLEM_COST = 6000;
-    private static final int GOLEM_COOLDOWN = 1200;
-    private static final int GOLEM_TICKS = 1800;
-    private static final float GOLEM_HEALTH = 200f;
-    private static final float GOLEM_DAMAGE = 20f;
-    private static final double GOLEM_TAUNT = 10.0;             // it calls the enemies this close to it...
-    private static final int GOLEM_TAUNT_EVERY = 60;            // ...this often
-    private static final double GOLEM_LEASH = 40.0;             // gone if you are further than this
-    private static final int TWO_GOLEMS_SEQUENCE = 3;           // Arcane Scholar: two golems
-    private static final int ENDLESS_GOLEM_SEQUENCE = 0;        // Paragon: no timer
+    static final int GOLEM_SEQUENCE = 4;
+    static final int GOLEM_COST = 6000;
+    static final int GOLEM_COOLDOWN = 1200;
+    static final int GOLEM_TICKS = 1800;
+    static final float GOLEM_HEALTH = 200f;
+    static final float GOLEM_DAMAGE = 20f;
+    static final double GOLEM_TAUNT = 10.0;             // it calls the enemies this close to it...
+    static final int GOLEM_TAUNT_EVERY = 60;            // ...this often
+    static final double GOLEM_LEASH = 40.0;             // gone if you are further than this
+    static final int TWO_GOLEMS_SEQUENCE = 3;           // Arcane Scholar: two golems
+    static final int ENDLESS_GOLEM_SEQUENCE = 0;        // Paragon: no timer
 
     // Mechanical Body
-    private static final int MECH_SEQUENCE = 4;
-    private static final int MECH_COST = 6000;
-    private static final int MECH_COOLDOWN = 1200;
-    private static final int MECH_TICKS = 800;
-    private static final float MECH_ABSORPTION = 20f;           // a layer of absorption (status/ConjuredArmor)
-    private static final int JET_FUEL = 100;                    // ticks of flight on the jetpack, refilled on the ground
-    private static final int STEAM_SEQUENCE = 2;                // Knowledge Magister: a sneak recast turns you to steam...
-    private static final int STEAM_TICKS = 80;
-    private static final double STEAM_RANGE = 24.0;             // ...and you re-form where you aim, this far at most
-    private static final int ENDLESS_MECH_SEQUENCE = 1;         // Illuminator: no timer
+    static final int MECH_SEQUENCE = 4;
+    static final int MECH_COST = 6000;
+    static final int MECH_COOLDOWN = 1200;
+    static final int MECH_TICKS = 800;
+    static final float MECH_ABSORPTION = 20f;           // a layer of absorption (status/ConjuredArmor)
+    static final int JET_FUEL = 100;                    // ticks of flight on the jetpack, refilled on the ground
+    static final int STEAM_SEQUENCE = 2;                // Knowledge Magister: a sneak recast turns you to steam...
+    static final int STEAM_TICKS = 80;
+    static final double STEAM_RANGE = 24.0;             // ...and you re-form where you aim, this far at most
+    static final int ENDLESS_MECH_SEQUENCE = 1;         // Illuminator: no timer
 
     // Dissociation
-    private static final int DISSOCIATION_SEQUENCE = 3;
-    private static final int DISSOCIATION_COST = 9000;          // Sequence 3 holds 59780
-    private static final int DISSOCIATION_COOLDOWN = 240;
-    private static final double DISSOCIATION_RANGE = 24.0;
-    private static final double DISSOCIATION_WIDTH = 1.5;
-    private static final int WIDE_BEAM_SEQUENCE = 2;            // Knowledge Magister: a wider beam
-    private static final double WIDE_BEAM_WIDTH = 3.0;
-    private static final float DISSOCIATION_DAMAGE = 70f;       // a corrosion hit
-    private static final float CONSTRUCT_FRAGILE = 150f;        // a construct under this maximum health is dissolved
-    private static final float ARMOR_WEAR = 0.25f;              // each armor piece loses this share of its durability
-    private static final int SHREDDER_SEQUENCE = 0;             // Paragon: the Information Shredder
-    private static final int SHREDDED_EXPOSED = 100;
+    static final int DISSOCIATION_SEQUENCE = 3;
+    static final int DISSOCIATION_COST = 9000;          // Sequence 3 holds 59780
+    static final int DISSOCIATION_COOLDOWN = 240;
+    static final double DISSOCIATION_RANGE = 24.0;
+    static final double DISSOCIATION_WIDTH = 1.5;
+    static final int WIDE_BEAM_SEQUENCE = 2;            // Knowledge Magister: a wider beam
+    static final double WIDE_BEAM_WIDTH = 3.0;
+    static final float DISSOCIATION_DAMAGE = 70f;       // a corrosion hit
+    static final float CONSTRUCT_FRAGILE = 150f;        // a construct under this maximum health is dissolved
+    static final float ARMOR_WEAR = 0.25f;              // each armor piece loses this share of its durability
+    static final int SHREDDER_SEQUENCE = 0;             // Paragon: the Information Shredder
+    static final int SHREDDED_EXPOSED = 100;
 
     // Knowledge Spirit
-    private static final int SPIRIT_SEQUENCE = 3;
-    private static final int SPIRIT_COST = 12000;
-    private static final int SPIRIT_COOLDOWN = 500;
-    private static final double SPIRIT_RANGE = 30.0;
-    private static final double SPIRIT_JUMP = 20.0;             // with no enemy in view, a jump this far
-    private static final double SPIRIT_SPEED = 1.2;             // blocks a tick as pages
-    private static final int SPIRIT_MOST_FLIGHT = 80;           // 4 seconds at most
-    private static final int SPIRIT_AFTER = 40;                 // still hidden this long after stepping out
-    private static final int ERODED_TICKS = 160;                // Eroded: nausea, it deals this much less...
-    private static final float ERODED_WEAKER = 0.3f;
-    private static final float ERODED_COST = 1.5f;              // ...and every ability costs it this much (Spells.addCostScale)
+    static final int SPIRIT_SEQUENCE = 3;
+    static final int SPIRIT_COST = 12000;
+    static final int SPIRIT_COOLDOWN = 500;
+    static final double SPIRIT_RANGE = 30.0;
+    static final double SPIRIT_JUMP = 20.0;             // with no enemy in view, a jump this far
+    static final double SPIRIT_SPEED = 1.2;             // blocks a tick as pages
+    static final int SPIRIT_MOST_FLIGHT = 80;           // 4 seconds at most
+    static final int SPIRIT_AFTER = 40;                 // still hidden this long after stepping out
+    static final int ERODED_TICKS = 160;                // Eroded: nausea, it deals this much less...
+    static final float ERODED_WEAKER = 0.3f;
+    static final float ERODED_COST = 1.5f;              // ...and every ability costs it this much (Spells.addCostScale)
 
     // =========================
     // Names and what is kept
     // =========================
-    private static final String DOLLS = "illuminator_doll";                       // the Construct groups
-    private static final String GOLEMS = "illuminator_golem";
-    private static final String MECH_ARMOR = "illuminator_mechanical_body";      // its ConjuredArmor
-    private static final String JET_FUEL_LEFT = "illuminator_jet_fuel";
-    private static final String STEAM_UNTIL = "illuminator_steam_until";
+    static final String DOLLS = "illuminator_doll";                       // the Construct groups
+    static final String GOLEMS = "illuminator_golem";
+    static final String MECH_ARMOR = "illuminator_mechanical_body";      // its ConjuredArmor
+    static final String JET_FUEL_LEFT = "illuminator_jet_fuel";
+    static final String STEAM_UNTIL = "illuminator_steam_until";
     static final String ERODED_UNTIL = "illuminator_eroded_until";
-    private static final String ERODED = "illuminator_eroded";                    // its Enfeebled
+    static final String ERODED = "illuminator_eroded";                    // its Enfeebled
 
     /** What each doll is made of and the tag of its body; and the golems' tags. Not saved (nor are the constructs). */
     private record Doll(Material material, String tag, boolean decoy) {}
-    private static final Map<UUID, Doll> DOLL_BODIES = new HashMap<>();
-    private static final Map<UUID, String> GOLEM_BODIES = new HashMap<>();
+    static final Map<UUID, Doll> DOLL_BODIES = new HashMap<>();
+    static final Map<UUID, String> GOLEM_BODIES = new HashMap<>();
 
     // =========================
     // The key
     // =========================
 
-    private static final AbilityWheel WHEEL = AbilityWheel.create("illuminator_alchemy", "Alchemy and Arcana")
+    static final AbilityWheel WHEEL = AbilityWheel.create("illuminator_alchemy", "Alchemy and Arcana")
             .radius(80)
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("living_doll", IlluminatorFx.WHEEL_LIVING_DOLL, "Living Doll", DOLL_SEQUENCE,
@@ -214,7 +214,7 @@ public final class IlluminatorAlchemy {
     // slow. Arcane Scholar (3): two, the second a decoy that looks like you (your armor and what you hold, no doll's
     // body) that the mobs near go for first; Knowledge Magister (2): three. A new cast replaces the old dolls.
     // =========================
-    private static AbilityWheel.Result livingDoll(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result livingDoll(LivingEntity player, ServerLevel sl) {
         Material material = materialUnder(sl, player.position());
         int count = Beyonder.hasSequence(player, THREE_DOLLS_SEQUENCE) ? 3 : Beyonder.hasSequence(player, TWO_DOLLS_SEQUENCE) ? 2 : 1;
         int ticks = Illuminator.lasting(player, DOLL_TICKS, Group.ALCHEMY);
@@ -233,7 +233,7 @@ public final class IlluminatorAlchemy {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void raiseDoll(Player player, ServerLevel sl, Vec3 at, float yaw, Material material, int ticks, int count, boolean decoy) {
+    private static void raiseDoll(LivingEntity player, ServerLevel sl, Vec3 at, float yaw, Material material, int ticks, int count, boolean decoy) {
         String tag = "il_doll_" + player.getId() + "_" + sl.getGameTime() + "_" + (decoy ? "d" : material.name());
         Construct body = Construct.of(EntityTypes.HUSK)
                 .health(dollHealth(material)).damage(DOLL_DAMAGE).speed(dollSpeed(material)).scale(DOLL_SCALE)
@@ -291,7 +291,7 @@ public final class IlluminatorAlchemy {
     }
 
     /** A doll fell (dead, out of time, replaced, its maker too far): it crumbles; a Straw Doll shoves as it falls. */
-    private static void dollEnds(Player player, ServerLevel sl, LivingEntity doll) {
+    private static void dollEnds(LivingEntity player, ServerLevel sl, LivingEntity doll) {
         Doll made = DOLL_BODIES.remove(doll.getUUID());
         if (made == null) return;
         if (made.decoy()) {
@@ -306,7 +306,7 @@ public final class IlluminatorAlchemy {
     }
 
     /** The mobs near the decoy go for it. */
-    private static void tauntToDecoy(Player player, ServerLevel sl, LivingEntity decoy) {
+    private static void tauntToDecoy(LivingEntity player, ServerLevel sl, LivingEntity decoy) {
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, decoy.position(), DECOY_TAUNT)) {
             if (enemy instanceof Mob) Taunt.apply(enemy, decoy, DECOY_TAUNT_EVERY + 20);
         }
@@ -319,7 +319,7 @@ public final class IlluminatorAlchemy {
     // further than GOLEM_LEASH. One at a time (a new one replaces the oldest); Arcane Scholar (3): two; Paragon (0):
     // no timer.
     // =========================
-    private static AbilityWheel.Result golem(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result golem(LivingEntity player, ServerLevel sl) {
         Vec3 spot = Spells.freeSpotNear(player, sl, player.position(), Spells.flatLook(player), 3.0);
         Vec3 at = spot != null ? spot : player.position();
         float yaw = player.getYRot();
@@ -350,7 +350,7 @@ public final class IlluminatorAlchemy {
     }
 
     /** The golem calls the mobs near to it. */
-    private static void golemCalls(Player player, ServerLevel sl, LivingEntity golem) {
+    private static void golemCalls(LivingEntity player, ServerLevel sl, LivingEntity golem) {
         IlluminatorFx.golemTaunt(sl, golem, GOLEM_TAUNT);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, golem.position(), GOLEM_TAUNT)) {
             if (enemy instanceof Mob) Taunt.apply(enemy, golem, GOLEM_TAUNT_EVERY + 20);
@@ -366,7 +366,7 @@ public final class IlluminatorAlchemy {
     // (free). Knowledge Magister (2): a sneak recast while it is worn turns you to white steam for STEAM_TICKS instead
     // (hidden, untouchable, fast), and you re-form where you aim then (STEAM_RANGE).
     // =========================
-    private static AbilityWheel.Result mechanicalBody(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result mechanicalBody(LivingEntity player, ServerLevel sl) {
         if (Illuminator.wearsMechanicalBody(player)) {
             if (player.isShiftKeyDown() && Beyonder.hasSequence(player, STEAM_SEQUENCE)) {
                 if (Illuminator.isActive(player, STEAM_UNTIL)) return AbilityWheel.Result.REFUSED;
@@ -387,30 +387,39 @@ public final class IlluminatorAlchemy {
         ConjuredArmor.of(MECH_ARMOR)
                 .lasts(ticks)
                 .absorption(MECH_ABSORPTION)
-                .onEnd(wearer -> {
-                    if (wearer instanceof Player worn) bodyComesOff(worn);
-                })
+                .onEnd(IlluminatorAlchemy::bodyComesOff)
                 .wear(player);
         return AbilityWheel.Result.DONE;
     }
 
-    private static String mechTag(Player player) {
+    private static String mechTag(LivingEntity player) {
         return "il_mech_" + player.getId();
     }
 
     /** The plates come off: the flight, the effects and the look go with them. */
-    private static void bodyComesOff(Player player) {
+    private static void bodyComesOff(LivingEntity player) {
         if (!player.getPersistentData().contains(Illuminator.MECH_UNTIL)) return;
         player.getPersistentData().remove(Illuminator.MECH_UNTIL);
         player.getPersistentData().remove(JET_FUEL_LEFT);
-        stopJet(player);
+        if (player instanceof Player flier) stopJet(flier);
         player.removeEffect(MobEffects.RESISTANCE);
         IlluminatorFx.statusEnd(player, Status.MECHANICAL_BODY);
         if (player.level() instanceof ServerLevel sl) IlluminatorFx.mechanicalBodyEnd(sl, player, mechTag(player));
     }
 
     /** Every tick while the body is worn: its effects, and the jetpack. */
-    private static void bodyTick(Player player, ServerLevel sl) {
+    private static void bodyTick(LivingEntity wearer, ServerLevel sl) {
+        CompoundTag worn = wearer.getPersistentData();
+        if (!(wearer instanceof Player player)) {                                 // a Beyonder mob's: no jetpack
+            if (!worn.contains(Illuminator.MECH_UNTIL)) return;
+            if (!Illuminator.wearsMechanicalBody(wearer) || !ConjuredArmor.isWorn(wearer, MECH_ARMOR)) {
+                ConjuredArmor.takeOff(wearer, MECH_ARMOR);
+                bodyComesOff(wearer);
+            } else if (wearer.tickCount % 20 == 0) {
+                Spells.keepEffect(wearer, MobEffects.RESISTANCE, 0, 60);
+            }
+            return;
+        }
         CompoundTag data = player.getPersistentData();
         if (!data.contains(Illuminator.MECH_UNTIL)) return;
         if (!Illuminator.wearsMechanicalBody(player) || !ConjuredArmor.isWorn(player, MECH_ARMOR)) {
@@ -450,7 +459,7 @@ public final class IlluminatorAlchemy {
         FallGuard.protect(player, 200);
     }
 
-    private static void steamForm(Player player, ServerLevel sl) {
+    static void steamForm(LivingEntity player, ServerLevel sl) {
         long until = sl.getGameTime() + STEAM_TICKS;
         player.getPersistentData().putLong(STEAM_UNTIL, until);
         String tag = mechTag(player) + "_steam";
@@ -488,7 +497,7 @@ public final class IlluminatorAlchemy {
     // (status/Appraisal), it cannot hide (status/Exposed), and a player forgets everything they had studied
     // (status/Study).
     // =========================
-    private static AbilityWheel.Result dissociation(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result dissociation(LivingEntity player, ServerLevel sl) {
         double width = Beyonder.hasSequence(player, WIDE_BEAM_SEQUENCE) ? WIDE_BEAM_WIDTH : DISSOCIATION_WIDTH;
         boolean shredder = Beyonder.hasSequence(player, SHREDDER_SEQUENCE);
         Vec3 eye = player.getEyePosition();
@@ -518,7 +527,7 @@ public final class IlluminatorAlchemy {
     }
 
     /** Everything alive and not on the caster's side whose body (grown by 'grow') the line passes, the hidden too. */
-    private static List<LivingEntity> touchedBy(Player player, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
+    private static List<LivingEntity> touchedBy(LivingEntity player, ServerLevel sl, Vec3 from, Vec3 to, double grow) {
         List<LivingEntity> found = new ArrayList<>();
         AABB area = new AABB(from, to).inflate(grow + 0.5);
         for (LivingEntity one : sl.getEntitiesOfClass(LivingEntity.class, area, other -> other.isAlive()
@@ -562,7 +571,7 @@ public final class IlluminatorAlchemy {
     // every ability costs it ERODED_COST times as much (Spells.addCostScale, erodedCost). With no enemy in view you step
     // out where you aim instead (SPIRIT_JUMP), like a jump. Not while held in place.
     // =========================
-    private static AbilityWheel.Result knowledgeSpirit(ServerPlayer player, ServerLevel sl) {
+    static AbilityWheel.Result knowledgeSpirit(LivingEntity player, ServerLevel sl) {
         if (Root.has(player, RootRestriction.MOVE) || Root.has(player, RootRestriction.TELEPORT)) {
             player.sendSystemMessage(Component.literal("You are held fast and cannot leave your body."));
             return AbilityWheel.Result.REFUSED;
@@ -610,7 +619,7 @@ public final class IlluminatorAlchemy {
     }
 
     /** What every ability costs an Eroded player (Spells.addCostScale). */
-    static float erodedCost(Player player) {
+    static float erodedCost(LivingEntity player) {
         return Illuminator.isActive(player, ERODED_UNTIL) ? ERODED_COST : 1f;
     }
 
@@ -619,7 +628,7 @@ public final class IlluminatorAlchemy {
     // =========================
 
     /** Every tick, for every player: the Mechanical Body; every so often the dolls' bolts, the decoy's and golems' calls. */
-    static void tick(Player player, ServerLevel sl) {
+    static void tick(LivingEntity player, ServerLevel sl) {
         bodyTick(player, sl);
         if (DOLL_BODIES.isEmpty() && GOLEM_BODIES.isEmpty()) return;
         boolean bolts = player.tickCount % BOLT_EVERY == 0;
@@ -636,7 +645,7 @@ public final class IlluminatorAlchemy {
     }
 
     /** The Iron Doll throws a bolt at what it fights. */
-    private static void dollBolt(Player player, ServerLevel sl, Mob doll) {
+    private static void dollBolt(LivingEntity player, ServerLevel sl, Mob doll) {
         LivingEntity target = doll.getTarget();
         if (target == null || !target.isAlive() || target.distanceTo(doll) > BOLT_RANGE || !Spells.isEnemy(player, target)) return;
         IlluminatorFx.dollBolt(sl, doll, target.getBoundingBox().getCenter());

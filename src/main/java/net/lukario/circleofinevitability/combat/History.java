@@ -1,5 +1,7 @@
 package net.lukario.circleofinevitability.combat;
 
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraft.world.entity.LivingEntity;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
@@ -30,7 +32,8 @@ import java.util.UUID;
  *
  * A moment is written every EVERY ticks for every player on the server, and KEEP_TICKS of them are kept. It is not
  * saved, and logging out, dying or changing dimension starts it afresh (a moment in another world is no use).
- * Only players are followed; a mob ally would need its own record (copy the tick below with a LivingTickEvent).
+ * Players are followed by themselves; anything else only while something calls History.write(entity) for it every
+ * tick (a Beyonder mob whose ability steps back in time: blasphemy_slate/beyonder_mobs).
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -57,7 +60,7 @@ public final class History {
      * Where the player was 'ticksAgo' ticks ago (the nearest moment written at or before then), or null when the record
      * does not go that far back (they just logged in, died, changed dimension or the record was forgotten).
      */
-    public static Moment ago(Player player, int ticksAgo) {
+    public static Moment ago(LivingEntity player, int ticksAgo) {
         Deque<Moment> record = RECORDS.get(player.getUUID());
         if (record == null || record.isEmpty()) return null;
         long wanted = player.level().getGameTime() - Math.max(0, ticksAgo);
@@ -75,7 +78,7 @@ public final class History {
     }
 
     /** The oldest moment kept, at most 'ticksAgo' back, or null: "as far back as it goes". */
-    public static Moment asFarAs(Player player, int ticksAgo) {
+    public static Moment asFarAs(LivingEntity player, int ticksAgo) {
         Moment exact = ago(player, ticksAgo);
         if (exact != null) return exact;
         Deque<Moment> record = RECORDS.get(player.getUUID());
@@ -85,13 +88,13 @@ public final class History {
     }
 
     /** The health lost since 'ticksAgo' ticks ago (0 when they have more now, or the record does not reach). */
-    public static float healthLost(Player player, int ticksAgo) {
+    public static float healthLost(LivingEntity player, int ticksAgo) {
         Moment then = ago(player, ticksAgo);
         return then == null ? 0f : Math.max(0f, then.health() - player.getHealth());
     }
 
     /** Starts the player's record afresh. */
-    public static void forget(Player player) {
+    public static void forget(LivingEntity player) {
         RECORDS.remove(player.getUUID());
     }
 
@@ -102,7 +105,13 @@ public final class History {
     @SubscribeEvent
     public static void onHistoryPlayerTick(TickEvent.PlayerTickEvent.Post event) {
         Player player = event.player();
-        if (player.level().isClientSide() || player.isSpectator()) return;
+        if (player.isSpectator()) return;
+        write(player);
+    }
+
+    /** Called every tick for something that is no player, it keeps a record too (a moment every EVERY ticks). */
+    public static void write(LivingEntity player) {
+        if (player.level().isClientSide()) return;
         long now = player.level().getGameTime();
         if (now % EVERY != 0) return;
         Deque<Moment> record = RECORDS.computeIfAbsent(player.getUUID(), id -> new ArrayDeque<>());
@@ -112,6 +121,11 @@ public final class History {
         record.addLast(new Moment(player.position(), player.getYRot(), player.getXRot(), player.getHealth(), now,
                 player.level().dimension()));
         while (!record.isEmpty() && now - record.peekFirst().tick() > KEEP_TICKS) record.removeFirst();
+    }
+
+    @SubscribeEvent
+    public static void onHistoryDeath(LivingDeathEvent event) {
+        if (!(event.getEntity() instanceof Player) && RECORDS.containsKey(event.getEntity().getUUID())) forget(event.getEntity());
     }
 
     @SubscribeEvent
