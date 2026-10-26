@@ -16,13 +16,17 @@ public final class WormOfTimeFx {
     private static final SlashFx THREAD = SlashFx.line("slash/smooth").color(0xC052E3C4)
             .core(0xD0FFFFFF).width(0.07f).lifetime(10).sweep(3);
     private static final SlashFx CUT = SlashFx.arc("slash/band")
-            .color(0xD04DDACD).tailColor(0x10314F60).headColor(0xFFF0FFFF)
-            .core(0xC0FFFFFF).radius(0.9f).arc(155).width(0.19f)
-            .taper(SlashFx.Taper.COMET).layers(2).spread(0.065f)
-            .lifetime(7).sweep(2);
+            .color(0xDC53CDE0).tailColor(0x70312E62).headColor(0xFFF0FFFA)
+            .core(0xA0DFFFFF).radius(3.2f).arc(190).width(0.65f)
+            .taper(SlashFx.Taper.CRESCENT).layers(3).spread(0.16f)
+            .lifetime(11).sweep(4);
     private static final SlashFx SCAR = SlashFx.line("slash/crystal")
-            .color(0xC060DBD2).core(0xF0FFFFFF).width(0.075f)
+            .color(0xD080DDE7).core(0xF0F1FFF5).width(0.14f)
             .taper(SlashFx.Taper.CRESCENT).lifetime(7).sweep(1).fromCenter();
+    private static final SlashFx SPEAR = SlashFx.line("slash/crystal")
+            .color(0xD061D8DC).tailColor(0x50463B80).headColor(0xFFF5FFEB)
+            .core(0xE0FFFFFF).width(0.24f).taper(SlashFx.Taper.COMET)
+            .layers(2).spread(0.08f).lifetime(10).sweep(3);
     private static final SlashFx DIAL = SlashFx.arc("slash/smooth")
             .color(0x9052B9BA).headColor(0xD0CEFFFF).radius(0.6f)
             .arc(300).width(0.035f).lifetime(8).sweep(2);
@@ -49,9 +53,14 @@ public final class WormOfTimeFx {
         float scale = hitScale(t);
         float yaw = hitYaw(p, t);
         float tilt = roll + (p.getRandom().nextFloat() - 0.5f) * 10;
-        SlashFx slash = CUT.radius(scale);
+        float radius = 3.0f + p.getRandom().nextFloat() * 0.5f;
+        SlashFx slash = CUT.radius(radius).arc(175 + p.getRandom().nextFloat() * 30);
         if (reverse) slash = slash.mirrored();
-        ParticleShapes.slash(sl, slash, hit, yaw, 0, tilt);
+        // Broad half circle around the attacker, aimed toward the struck mob.
+        Vec3 center = p.position().add(0, p.getBbHeight() * 0.55, 0);
+        ParticleShapes.slash(sl, slash, center, yaw, 0, tilt);
+        ParticleShapes.slash(sl, slash.radius(radius - 0.3f).layers(1).width(0.12f)
+                .color(0x806BA5E0).core(0).delay(2), center, yaw, 0, tilt + 7);
         ParticleShapes.slash(sl, SCAR.radius(scale * 0.75f),
                 hit, yaw, 0, tilt);
         ParticleShapes.burst(sl, HIT_SPARK, hit, 7, 0.045, 0.12);
@@ -61,9 +70,39 @@ public final class WormOfTimeFx {
 
     public static void crossCut(ServerPlayer p, LivingEntity t, ServerLevel sl) {
         cut(p, t, sl, -42, false);
-        ParticleShapes.slash(sl, SCAR.radius(hitScale(t)).width(0.11f).delay(2),
-                t.getBoundingBox().getCenter(), hitYaw(p, t), 0, 42);
+        diagonalCross(p, t, sl);
         dial(p, t, sl, false);
+    }
+
+    private static void diagonalCross(ServerPlayer p, LivingEntity t, ServerLevel sl) {
+        float radius = Math.max(1.7f, hitScale(t) * 1.6f);
+        float turn = (p.getRandom().nextFloat() - 0.5f) * 16;
+        Vec3 hit = t.getBoundingBox().getCenter();
+        for (int i = 0; i < 2; i++) {
+            float roll = (i == 0 ? -43 : 43) + turn;
+            ParticleShapes.slash(sl, SCAR.radius(radius).width(0.28f).layers(2).spread(0.10f)
+                    .lifetime(12).sweep(2).delay(i * 2), hit, hitYaw(p, t), 0, roll);
+        }
+    }
+
+    /** A long thrust with a split spearhead, from the attacker's hand through the victim. */
+    public static void spearThrust(ServerPlayer p, LivingEntity t, ServerLevel sl) {
+        Vec3 from = p.position().add(0, p.getBbHeight() * 0.65, 0);
+        Vec3 hit = t.getBoundingBox().getCenter();
+        Vec3 direction = hit.subtract(from).normalize();
+        if (direction.lengthSqr() < 0.001) direction = p.getLookAngle();
+        Vec3 tip = hit.add(direction.scale(1.5));
+        ParticleShapes.slashBetween(sl, SPEAR, from, tip);
+        Vec3 side = direction.cross(new Vec3(0, 1, 0)).normalize();
+        if (side.lengthSqr() < 0.001) side = new Vec3(1, 0, 0);
+        Vec3 shoulder = tip.subtract(direction.scale(1.1));
+        for (int sign : new int[]{-1, 1}) {
+            ParticleShapes.slashBetween(sl, SPEAR.width(0.18f).layers(1).delay(1),
+                    shoulder.add(side.scale(sign * 0.5)), tip);
+        }
+        ParticleShapes.burst(sl, HIT_SPARK, hit, 12, 0.07, 0.18);
+        Spells.sound(sl, hit, SoundEvents.PLAYER_ATTACK_KNOCKBACK, 0.7f, 1.3f);
+        Spells.sound(sl, hit, SoundEvents.AMETHYST_BLOCK_HIT, 0.4f, 1.8f);
     }
 
     /** A broken clock face contracts into the hit instead of obscuring the fight with a vortex. */
@@ -78,10 +117,11 @@ public final class WormOfTimeFx {
     /** Three precise afterimage cuts; particle delay keeps the whole effect at the original impact. */
     public static void timeFracture(ServerPlayer p, LivingEntity t, ServerLevel sl) {
         cut(p, t, sl, -35, false);
+        diagonalCross(p, t, sl);
         Vec3 hit = t.getBoundingBox().getCenter();
         for (int i = 0; i < 3; i++) {
-            ParticleShapes.slash(sl, SCAR.radius(hitScale(t) * (1f - i * 0.12f))
-                    .width(0.1f - i * 0.02f).delay(2 + i * 2),
+            ParticleShapes.slash(sl, SCAR.radius(1.9f - i * 0.15f)
+                    .width(0.18f - i * 0.025f).delay(2 + i * 2),
                     hit.add(0, (i - 1) * 0.12, 0), hitYaw(p, t), 0, 40 + i * 55);
         }
         dial(p, t, sl, true);

@@ -167,10 +167,10 @@ public class WormOfTime {
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
             .step(WormOfTimeFx::openingCut)
             .step(WormOfTimeFx::returnCut)
-            .step(WormOfTimeFx::risingCut)
+            .randomStep(WormOfTimeFx::risingCut, WormOfTimeFx::spearThrust)
             .step(WormOfTimeFx::fallingCut)
             .step(WormOfTimeFx::crossCut)
-            .randomStep(WormOfTimeFx::clockBreak, WormOfTimeFx::timeFracture);
+            .randomStep(WormOfTimeFx::clockBreak, WormOfTimeFx::timeFracture, WormOfTimeFx::spearThrust);
 
     public static void wormOfTimeAbility1(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!WormOfTimePowers.ready(player, bypassClassCheck, 9)) return;
