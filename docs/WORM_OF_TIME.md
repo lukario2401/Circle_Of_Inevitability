@@ -37,15 +37,17 @@ J again leaves either host mode after the one-second key debounce. Only J works 
 
 - Item theft: 250 spirituality, six-block aimed enemy, one main-hand item per cast. Creative/spectator inventories are excluded. A full thief inventory drops the transferred item normally; items are moved, never copied.
 - Life theft: 1800 spirituality, 24 blocks, `12 × might` true damage; heal 60% of health actually removed. The old permanently escalating vulnerability counter is no longer used.
-- Distance theft: 1500 spirituality, 24 blocks (48 from Sequence 1), collision-checked destination, respects teleport restrictions and grants five seconds of fall protection. These G casts share a two-second cooldown after success.
-- Observation: 150 spirituality; reports the nearest loose item within 10 or 32 blocks. It does not inspect unopened containers. Decryption costs 700 and has a separate Sequence 7 check; both share a three-second cooldown.
-- Power theft: 1500 spirituality and a three-second cooldown per attempt, 32 blocks (48 from Sequence 5). Higher-ranking spirits resist: success is `max(0.15, 1 − 0.18 × Sequence gap + 0.25 if decrypted)`, capped implicitly by comparing to a random value below one. Failed resistance checks spend the attempt; absent targets/full storage do not.
+- Distance theft: 1500 spirituality, 24 blocks (48 from Sequence 1), collision-checked destination, respects teleport restrictions and grants five seconds of fall protection. These G casts have no cooldown.
+- Observation: 150 spirituality; reports the nearest loose item within 10 or 32 blocks. It does not inspect unopened containers. Decryption costs 700 and has a separate Sequence 7 check; both have no cooldown.
+- Power theft: 1500 spirituality with no cooldown per attempt, 32 blocks (48 from Sequence 5). Higher-ranking spirits resist: success is `max(0.15, 1 − 0.18 × Sequence gap + 0.25 if decrypted)`, capped implicitly by comparing to a random value below one. Failed resistance checks spend the attempt; absent targets/full storage do not.
 - Up to five powers are held for twenty minutes. Sneak H releases the newest first. The victim's player key stays unavailable until release/expiry/death/logout/respec. A Beyonder mob supplies eligible abilities and is emptied for thirty seconds; this does not disable its AI abilities. At Sequence 3+, a successful attempt takes up to three distinct eligible powers, stopping when storage fills. Already-held player powers cannot be taken again. A failed stolen cast stays stored if it refused normally.
 - Parasite entry costs 6000, reaches six blocks and lasts at most two minutes. Initial mode costs 900/second and heals one health/second. Deep mode costs 2600/second and drains two health/second without reducing the host below two health. A stronger Beyonder, creative/spectator player, occupied host or recently exited host is refused. Hosts resist re-entry for five seconds; parasite entry/exit has a one-second debounce. Host death ejects the parasite for eight magic damage. Leaving is free.
 
 ## Thought and Deceit wheel
 
-Cooldowns below apply equally to menu selections and sneak recasts. Target failures are free.
+Cooldowns below apply to menu selections. Sneak recasts ignore and do not start cooldowns, and cost three times the listed spirituality. Existing menu cooldowns remain in place; a sneak recast does not clear them. Target failures are free.
+
+All regular G/H/K casts have no cooldown. Parasite keeps its one-second input debounce to prevent a held J press from entering and immediately leaving, plus the host's five-second resistance after exit. These are host/toggle rules rather than regular cast cooldowns.
 
 | Entry | Sequence | Cost | Cooldown | Effect |
 | --- | --- | --- | --- | --- |
@@ -82,7 +84,7 @@ Avatar limits are two at Sequence 3, three at Sequence 2 and four at Sequences 1
 | Error: Leave Reality | 0 | 40000 | 30 s | Three seconds in the shared Exile state: cannot interact with reality and cannot be attacked normally; returns to the original position |
 | Error: Misdirection | 0 | 35000 | 25 s | Five-second, three-charge substitute; eligible incoming hits are cancelled and redirected to the chosen living enemy, capped at 150 damage each |
 
-While ordinary roots silence abilities, M attempts only Exploit Loophole directly; it cannot cast other Time/Error entries through that hold. Exile, stolen/sealed keys and external ability prohibitions still prevent it.
+While ordinary roots silence abilities, M attempts only Exploit Loophole directly (normal cost/cooldown; sneak costs 3� and bypasses cooldown); it cannot cast other Time/Error entries through that hold. Exile, stolen/sealed keys and external ability prohibitions still prevent it.
 
 Misdirection still consumes a defensive charge if its receiver dies or moves out of range; that charge cancels the hit without redirecting damage.
 

@@ -44,6 +44,7 @@ public final class WormOfTimeAuthority {
 
     static final AbilityWheel WHEEL = AbilityWheel.create("worm_of_time_authority", "Time and Error")
             .radius(90)
+            .quickCastCooldown(false).quickCastCost(3f)
             .entry("loophole", WormOfTimePowers.icon("loophole"), "Exploit Loophole", 2, 12000, 400, WormOfTimePowers.guarded(WormOfTimeAuthority::loophole))
             .entry("aging", WormOfTimePowers.icon("aging"), "Steal Lifespan", 1, 18000, 200, WormOfTimePowers.guarded(WormOfTimeAuthority::aging))
             .entry("slow", WormOfTimePowers.icon("slow"), "Slow Time", 1, 16000, 400, WormOfTimePowers.guarded(WormOfTimeAuthority::slow)).notCopyable()
@@ -58,7 +59,8 @@ public final class WormOfTimeAuthority {
         if (!WormOfTimePowers.ready(p, bypass, 2)) return;
         // A silenced key may only exploit its escape loophole, never cast other authorities through the hold.
         if (Root.has(p, RootRestriction.ABILITIES) && p instanceof ServerPlayer serverPlayer) {
-            WHEEL.cast(serverPlayer, WHEEL.entry("loophole"));
+            boolean quick = p.isShiftKeyDown();
+            WHEEL.cast(serverPlayer, WHEEL.entry("loophole"), quick, quick ? 3f : 1f);
             return;
         }
         if (p.isShiftKeyDown()) WHEEL.quickCast(p); else WHEEL.open(p);

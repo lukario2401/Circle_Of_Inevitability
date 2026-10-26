@@ -69,7 +69,6 @@ public final class WormOfTimePowers {
             observation(player, sl, false);
             return;
         }
-        if (!Cooldowns.ready(player, "worm_of_time_marauder", "Theft")) return;
         if (player.isShiftKeyDown()) {
             if (Root.has(player, RootRestriction.TELEPORT)) { refuse(player, "Your position is bound."); return; }
             Vec3 to = Spells.blinkSpot(player, sl, Beyonder.hasSequence(player, 1) ? 48 : 24);
@@ -100,7 +99,6 @@ public final class WormOfTimePowers {
             }
             WormOfTimeFx.steal(sl, player, target);
         }
-        Cooldowns.start(player, "worm_of_time_marauder", 40);
     }
 
     /** Key 4: observation; sneak decrypts evidence from the entity actually in sight. */
@@ -111,7 +109,6 @@ public final class WormOfTimePowers {
 
     private static void observation(Player player, ServerLevel sl, boolean decrypt) {
         if (decrypt && !Beyonder.hasSequence(player, 7)) { refuse(player, "Decryption requires Sequence 7."); return; }
-        if (!Cooldowns.ready(player, "worm_of_time_insight", "Observation")) return;
         double range = Beyonder.hasSequence(player, 6) ? 32 : 10;
         if (decrypt) {
             LivingEntity target = target(player, sl, range);
@@ -139,10 +136,10 @@ public final class WormOfTimePowers {
                 }
             }
         }
-        Cooldowns.start(player, "worm_of_time_insight", 60);
     }
 
     private static final AbilityWheel DECEIT = AbilityWheel.create("worm_of_time_deceit", "Thought and Deceit")
+            .quickCastCooldown(false).quickCastCost(3f)
             .entry("swindle", icon("swindle"), "Swindler's Charm", 8, 500, 160, WormOfTimePowers.guarded(WormOfTimePowers::swindle))
             .entry("intent", icon("intent"), "Steal Intent", 5, 2000, 160, WormOfTimePowers.guarded(WormOfTimePowers::intent))
             .entry("dream", icon("dream"), "Steal Dream", 5, 2400, 240, WormOfTimePowers.guarded(WormOfTimePowers::dream))
@@ -150,6 +147,7 @@ public final class WormOfTimePowers {
             .entry("attack", icon("attack"), "Steal Attack", 5, 2400, 240, WormOfTimePowers.guarded(WormOfTimePowers::stealAttack));
 
     private static final AbilityWheel DESTINY = AbilityWheel.create("worm_of_time_destiny", "Parasite and Destiny")
+            .quickCastCooldown(false).quickCastCost(3f)
             .entry("swarm", icon("swarm"), "Worms of Time", 4, 6000, 400, WormOfTimePowers.guarded(WormOfTimePowers::swarm)).notCopyable()
             .entry("avatar", icon("avatar"), "Create Avatar", 3, 9000, 200, WormOfTimePowers.guarded(WormOfTimePowers::avatar)).notCopyable()
             .entry("recall", icon("recall"), "Recall Avatars", 3, 0, 0, WormOfTimePowers.guarded(WormOfTimePowers::recall)).notCopyable()

@@ -46,6 +46,11 @@ public class WormOfTime {
 
     private static final String PATHWAY = "Worm Of Time";
 
+    static {
+        // Single-key casts are limited by spirituality; AbilityWheel owns its separate cooldowns.
+        Cooldowns.addFree(Cooldowns.keysStartingWith("worm_of_time_"));
+    }
+
     private static final int COMBO_HEAD = 0xF2F8FFFF;
     private static final int COMBO_MID  = 0xEE1BB8E8;
     private static final int COMBO_TAIL = 0xA00A1022;
