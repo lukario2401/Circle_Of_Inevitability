@@ -229,8 +229,8 @@ public static final SwingRule HAND_OF_ORDER_AXE = SwingRule.of(
 
 ## Link a rule to a MeleeCombos step
 
-The selection layer does not depend on `MeleeCombos` (the five classes with combos keep theirs as
-they are; Worm Of Time has no combo in this port, which is why its rule triggers on the plain swing).
+The selection layer does not depend on `MeleeCombos`. Worm Of Time and Prince Of Abolition
+have both a client sword-swing rule and a separate server hit combo.
 Two ways to line the animations up with a combo's steps:
 
 1. **Mirror the combo on the client (no network).** Give the rule as many ids as the combo has steps,
@@ -365,5 +365,5 @@ one-line change in `ThirdPersonSwing` (the `current != ITEM && current != EMPTY`
 - Swing length does not follow Haste or Mining Fatigue (only `SPEED`).
 - First-person brightness follows the world's lighting like vanilla's (light level and the two fixed
   light directions of the level), so at night or in caves the sword is as dark as a vanilla one.
-- The slash particles of the other classes do not follow these arcs (Worm Of Time has no slash on a
-  plain swing). Follow-up.
+- Server hit slashes and client sword animations advance independently. Misses, weak attacks and
+  different viewer histories can make their sequences differ; trails are not attached to the blade.

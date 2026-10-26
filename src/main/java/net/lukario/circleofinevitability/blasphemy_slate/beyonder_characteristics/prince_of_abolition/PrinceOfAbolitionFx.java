@@ -100,7 +100,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *          orderEnd(player) hides it.
  *   Passives: weaknessDetection(viewer, target) (only the viewer sees it), presence(sl, player, radius),
  *          looseOrder(sl, at), beyondTheWorld(sl, player)
- *   Melee: combo(sl, player, target, step) for the three hits of docs/PRINCE_OF_ABOLITION.md, "Melee combo".
+ *   Melee: combo(sl, player, target, step) for the twelve hits of docs/PRINCE_OF_ABOLITION.md, "Melee combo".
  *   Shells: shell(sl, center, radius, Shell.X, color, ticks, tag), a sphere of tiles (Seal, Abolition).
  *   Every timed cast: status(player, Status.X, ticks) shows its picture and clock; statusEnd(player, Status.X) takes them away.
  *
@@ -1536,31 +1536,62 @@ public final class PrinceOfAbolitionFx {
     // Melee combo (docs/PRINCE_OF_ABOLITION.md, "Melee combo")
     // =====================================================================================
 
-    private static final SlashFx COMBO_RING = SlashFx.arc("slash/streaks")
-            .color(0xEE2A1F3D).headColor(0xF2E0B04A).tailColor(0xA05A5A66).core(0xFFFFE08A)
-            .radius(1.6f).arc(300f).width(0.5f).layers(2).spread(0.1f).lifetime(8).sweep(3).flat();
-    private static final SlashFx COMBO_TILTED = COMBO_RING.rotation(0f, 0f, 28f).mirrored();
-    private static final SlashFx COMBO_CRESCENT = SlashFx.arc("slash/smooth")
-            .color(0xEE16121F).headColor(0xF2E0B04A).tailColor(0xA05A5A66).core(0xFFFFE08A)
-            .radius(1.0f).arc(150f).width(0.4f).lifetime(8).sweep(2);
+    private static final SlashFx COMBO_EDGE = SlashFx.arc("slash/streaks")
+            .color(0xD070488C).tailColor(0x30502068).headColor(0xFFFFE08A).core(0xFFFFF2BE)
+            .radius(1.8f).arc(190f).width(0.42f).layers(3).spread(0.12f).lifetime(10).sweep(3);
+    // A translucent silhouette keeps the black blade visible even in bright daylight.
+    private static final SlashFx COMBO_SHADOW = SlashFx.arc("slash/smooth")
+            .color(0xD016121F).translucent().radius(1.78f).arc(190f).width(0.7f).lifetime(12).sweep(3);
+    private static final SlashFx COMBO_THRUST = SlashFx.line("slash/crystal")
+            .color(0xC0C8AAFF).headColor(0xFFFFE08A).core(0xFFFFF2BE)
+            .radius(1.3f).width(0.22f).layers(3).spread(0.09f).lifetime(9).sweep(2).fromCenter();
 
-    /** Hit 'step' (0, 1, 2) of the melee combo on 'target'. The third picks a rune circle or crossed crescents. */
+    /** Twelve visual hits. Geometry varies within each move without changing damage or attack speed. */
     public static void combo(ServerLevel sl, LivingEntity player, LivingEntity target, int step) {
+        int move = Math.floorMod(step, 12);
         Vec3 chest = chestOf(player);
-        switch (step) {
-            case 0 -> ParticleShapes.slash(sl, COMBO_RING, chest, player.getYRot(), 0f, 0f);
-            case 1 -> ParticleShapes.slash(sl, COMBO_TILTED, chest, player.getYRot(), 0f, 0f);
-            default -> {
-                if (sl.getRandom().nextBoolean()) {
-                    SpellFx.runeCircle(sl, target.position(), 1.4, 0xE0E0B04A, 16, 6f);
-                    ParticleShapes.burst(sl, SECTION, chestOf(target), 4, 0.04, 0.1);
-                } else {
-                    Vec3 at = chestOf(target);
-                    float yaw = yawToward(player.position(), target.position());
-                    ParticleShapes.slash(sl, COMBO_CRESCENT, at, yaw, 0f, 45f);
-                    ParticleShapes.slash(sl, COMBO_CRESCENT, at, yaw, 0f, -45f);
+        Vec3 impact = chestOf(target);
+        float yaw = yawToward(player.position(), target.position());
+        float tilt = switch (move) {
+            case 3 -> 35f;
+            case 4, 10 -> -55f;
+            case 6 -> -32f;
+            case 7 -> 85f;
+            default -> 0f;
+        };
+        float turn = (move == 1 || move == 9) ? -1f : 1f;
+        if (move == 2 || move == 8) {
+            ParticleShapes.slashBetween(sl, COMBO_THRUST, chest, impact);
+            ParticleShapes.slash(sl, COMBO_EDGE.radius(0.75f).arc(320f).width(0.16f)
+                    .delay(2).rotation(0, -90, 0), impact, yaw, 0, 0);
+        } else {
+            boolean flourish = move == 5 || move == 11;
+            SlashFx edge = COMBO_EDGE.arc(turn * (flourish ? 330f : 190f))
+                    .radius(flourish ? 2.2f : 1.8f).jittered(sl.getRandom(), 8f, 5f, 7f);
+            ParticleShapes.slash(sl, COMBO_SHADOW.arc(turn * (flourish ? 330f : 190f))
+                    .radius(flourish ? 2.18f : 1.78f).alignedWith(edge), chest, yaw, 0f, tilt);
+            ParticleShapes.slash(sl, edge, chest, yaw, 0f, tilt);
+            ParticleShapes.slash(sl, edge.radius(1.45f).width(0.16f).layers(1).delay(2)
+                    .color(0xC0E0B04A), chest.add(0, 0.12, 0), yaw, 0f, tilt);
+        }
+        ParticleShapes.burst(sl, SPARK, impact, move == 11 ? 12 : 4, 0.06, 0.14);
+        if (move == 5 || move == 11) {
+            int variant = sl.getRandom().nextInt(3);
+            if (variant == 0) {
+                SpellFx.runeCircle(sl, target.position(), 1.7, 0xE0E0B04A, 18, 6f);
+                ParticleShapes.slash(sl, COMBO_EDGE.radius(0.6f).endRadius(2.3f).arc(540f)
+                        .spin(8f).width(0.22f).layers(2).delay(3), impact, yaw, 0f, 0f);
+            } else if (variant == 1) {
+                for (int i = 0; i < 3; i++) {
+                    ParticleShapes.slash(sl, COMBO_THRUST.radius(1.6f).delay(i * 2)
+                            .rotation(0, -90, -60 + i * 60), impact, yaw, 0, 0);
                 }
-                ParticleShapes.burst(sl, SPARK, chestOf(target), 6, 0.08, 0.18);
+            } else {
+                for (int i = 0; i < 2; i++) {
+                    ParticleShapes.slash(sl, COMBO_EDGE.radius(1.3f).arc(i == 0 ? 220 : -220)
+                            .delay(2 + i * 2), impact, yaw, 0, i == 0 ? 45 : -45);
+                }
+                ParticleShapes.burst(sl, SECTION, impact, 4, 0.04, 0.1);
             }
         }
     }
@@ -1825,10 +1856,10 @@ public final class PrinceOfAbolitionFx {
                 }
                 Later.run(sl, 30, () -> looseOrder(sl, chestOf(v).add(Spells.flatLook(v).scale(1.5))));
             }),
-            new Case("combo", 40, false, (sl, v, t, spot) -> {
-                for (int i = 0; i < 3; i++) {
+            new Case("combo", 170, false, (sl, v, t, spot) -> {
+                for (int i = 0; i < 12; i++) {
                     int step = i;
-                    Later.run(sl, i * 10, () -> combo(sl, v, t, step));
+                    Later.run(sl, i * 13, () -> combo(sl, v, t, step));
                 }
             }));
 

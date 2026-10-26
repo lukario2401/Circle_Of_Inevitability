@@ -219,9 +219,19 @@ public class PrinceOfAbolition {
 
     /** The melee combo (docs/PRINCE_OF_ABOLITION.md, "Melee combo"), registered in combat/MeleeCombos. */
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
+            .resetAfter(40)
             .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 0))
             .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 1))
-            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 2));
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 2))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 3))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 4))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 5))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 6))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 7))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 8))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 9))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 10))
+            .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 11));
 
     @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class PrinceOfAbolitionEvents {

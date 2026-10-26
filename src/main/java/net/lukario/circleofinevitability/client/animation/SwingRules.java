@@ -30,10 +30,20 @@ public final class SwingRules {
             SwingAnimations.HORIZONTAL_REVERSE, SwingAnimations.VERTICAL_DOWN, SwingAnimations.DIAGONAL_UP,
             SwingAnimations.SPIN_SLASH);
 
+    /** A twelve-swing imperial sword chain; resets after two seconds. */
+    public static final SwingRule PRINCE_OF_ABOLITION_SWORD = SwingRule.of(
+            (player, held) -> hasPathway(player, "Prince Of Abolition") && held.is(ItemTags.SWORDS),
+            40,
+            SwingAnimations.HORIZONTAL, SwingAnimations.HORIZONTAL_REVERSE, SwingAnimations.STAB,
+            SwingAnimations.DIAGONAL_DOWN, SwingAnimations.UPPERCUT, SwingAnimations.SPIN_SLASH,
+            SwingAnimations.DIAGONAL_UP, SwingAnimations.VERTICAL_DOWN, SwingAnimations.STAB,
+            SwingAnimations.HORIZONTAL_REVERSE, SwingAnimations.UPPERCUT, SwingAnimations.SPIN_SLASH);
+
     private static final List<SwingRule> RULES = new ArrayList<>();
 
     static {
         register(WORM_OF_TIME_SWORD);
+        register(PRINCE_OF_ABOLITION_SWORD);
     }
 
     private SwingRules() {}

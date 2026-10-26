@@ -182,7 +182,11 @@ These do not get their own key or entry. The same ability is stronger from the S
 
 ## Melee combo
 
-Same pattern as Attendant Of Mysteries (MeleeCombo.forPathway, registered in combat/MeleeCombos). Colors: gold head 0xF2E0B04A, dark violet middle 0xEE2A1F3D, ash grey tail 0xA05A5A66. Hit 1: a ring sweeping around you, gold edge on black. Hit 2: a tilted ring the other way. Hit 3, random: a gold rune circle stamped on the ground under the target, or two crossed black crescents on the target.
+The registered `MeleeCombo` now has twelve hits: horizontal, backhand, thrust, descending diagonal, uppercut, wide sweep, rising diagonal, overhead, thrust, backhand, uppercut and wide finisher. It resets after more than 40 ticks without a qualifying hit; attacks below 80% charge do not advance it. As before, the server combo works with any held item, while custom player swing animations require a main-hand sword.
+
+Each cut layers a translucent black silhouette, violet-to-gold streaks with a bright core, and a delayed thin gold aftertrail. Thrusts draw crystal lines toward the target and a small impact ring. Hits 6 and 12 randomly choose an expanding rune spiral, a staggered crystal fan, or crossed crescents with seal fragments. Small orientation jitter varies cuts between chains; particle counts and delayed layers are bounded. These changes are visual and do not add damage or change attack speed.
+
+Sword swings use the same first- and third-person animation implementation as Worm Of Time, with a twelve-swing rule and a 40-tick reset. Swing and hit counters are independent: misses and weak attacks can make the visual sequences differ. See [Custom swing implementation](CUSTOM_SWING_IMPLEMENTATION.md) and [Animation authoring](ANIMATIONS.md). Preview the complete particle chain with `/abolitionfx combo`.
 
 ## Starting numbers
 
@@ -262,7 +266,7 @@ Everything the abilities need to look and sound right is in `PrinceOfAbolitionFx
 | 7 Sovereign (wheel) | `ruin(sl, player, to)` (fires at `RUIN_FIRES`), `ruinHit`. `frenzy(sl, player, targets)` (bolt i at `FRENZY_FIRST + i * FRENZY_STEP`), `frenzyHit`. `entropy` + `entropyPulse(sl, center, radius, strength)` + `entropyEnd`. `abolition` (closed at `ABOLITION_CLOSED`) + `abolitionEnd`. `exile(sl, who)`, `exileReturn`. `inversion` + `inversionPulse` + `inverted`. `coronation` (crowned at `CROWNED`) + `coronationPulse` every 5 seconds + `coronationEnd`. `decree(sl, player, target, mausoleums)` (falls at `DECREE_LANDS`). Icons `WHEEL_RUIN` ... `WHEEL_DECREE` | the last pick again |
 | Death | `rebirthFall(sl, player)`, then `rebirthRise(sl, player, ground)` at the mausoleum (and `mausoleumCrumble` on it); `lastRebirth(sl, player)` | |
 | Passives | `weaknessDetection(viewer, target)` (only the viewer sees it), `presence`, `looseOrder`, `beyondTheWorld` | |
-| Melee | `combo(sl, player, target, step)` for hits 0, 1 and 2 | |
+| Melee | `combo(sl, player, target, step)` for hits 0 through 11 | |
 
 **Order** is shown as `[sigil] Order 4/9` to the left of the hotbar: `PrinceOfAbolitionFx.order(player, count)` whenever the count changes, `orderRaised(sl, player)` for a new standing order (a small crown and a chime only the Beyonder hears), `orderEnd(player)` to hide it. It is drawn by the new, reusable `combat/HudCounter` (see [SPELL_KIT.md](SPELL_KIT.md)).
 
