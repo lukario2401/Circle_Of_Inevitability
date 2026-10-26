@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.particles.fx.*;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
@@ -14,7 +15,97 @@ public final class WormOfTimeFx {
             .size(0.09f).endSize(0.02f).lifetime(16, 5).glow();
     private static final SlashFx THREAD = SlashFx.line("slash/smooth").color(0xC052E3C4)
             .core(0xD0FFFFFF).width(0.07f).lifetime(10).sweep(3);
+    private static final SlashFx CUT = SlashFx.arc("slash/band")
+            .color(0xD04DDACD).tailColor(0x10314F60).headColor(0xFFF0FFFF)
+            .core(0xC0FFFFFF).radius(0.9f).arc(155).width(0.19f)
+            .taper(SlashFx.Taper.COMET).layers(2).spread(0.065f)
+            .lifetime(7).sweep(2);
+    private static final SlashFx SCAR = SlashFx.line("slash/crystal")
+            .color(0xC060DBD2).core(0xF0FFFFFF).width(0.075f)
+            .taper(SlashFx.Taper.CRESCENT).lifetime(7).sweep(1).fromCenter();
+    private static final SlashFx DIAL = SlashFx.arc("slash/smooth")
+            .color(0x9052B9BA).headColor(0xD0CEFFFF).radius(0.6f)
+            .arc(300).width(0.035f).lifetime(8).sweep(2);
+    private static final ParticleFx HIT_SPARK = MOTE.size(0.065f).endSize(0.01f).lifetime(8, 2);
     private WormOfTimeFx() {}
+
+    public static void openingCut(ServerPlayer p, LivingEntity t, ServerLevel sl) { cut(p, t, sl, -24, false); }
+    public static void returnCut(ServerPlayer p, LivingEntity t, ServerLevel sl) { cut(p, t, sl, 28, true); }
+    public static void risingCut(ServerPlayer p, LivingEntity t, ServerLevel sl) { cut(p, t, sl, -62, false); }
+    public static void fallingCut(ServerPlayer p, LivingEntity t, ServerLevel sl) { cut(p, t, sl, 68, true); }
+
+    // Orient toward the actual victim, even when the attack catches a mob off the player's crosshair.
+    private static float hitYaw(ServerPlayer p, LivingEntity t) {
+        Vec3 direction = t.position().subtract(p.position());
+        return (float) Math.toDegrees(Math.atan2(-direction.x, direction.z));
+    }
+
+    private static float hitScale(LivingEntity t) {
+        return (float) Math.clamp(Math.max(t.getBbWidth() * 0.85, t.getBbHeight() * 0.45), 0.45, 1.35);
+    }
+
+    private static void cut(ServerPlayer p, LivingEntity t, ServerLevel sl, float roll, boolean reverse) {
+        Vec3 hit = t.getBoundingBox().getCenter();
+        float scale = hitScale(t);
+        float yaw = hitYaw(p, t);
+        float tilt = roll + (p.getRandom().nextFloat() - 0.5f) * 10;
+        SlashFx slash = CUT.radius(scale);
+        if (reverse) slash = slash.mirrored();
+        ParticleShapes.slash(sl, slash, hit, yaw, 0, tilt);
+        ParticleShapes.slash(sl, SCAR.radius(scale * 0.75f),
+                hit, yaw, 0, tilt);
+        ParticleShapes.burst(sl, HIT_SPARK, hit, 7, 0.045, 0.12);
+        Spells.sound(sl, hit, SoundEvents.PLAYER_ATTACK_SWEEP, 0.55f, reverse ? 1.35f : 1.15f);
+        Spells.sound(sl, hit, SoundEvents.AMETHYST_BLOCK_HIT, 0.3f, 1.7f);
+    }
+
+    public static void crossCut(ServerPlayer p, LivingEntity t, ServerLevel sl) {
+        cut(p, t, sl, -42, false);
+        ParticleShapes.slash(sl, SCAR.radius(hitScale(t)).width(0.11f).delay(2),
+                t.getBoundingBox().getCenter(), hitYaw(p, t), 0, 42);
+        dial(p, t, sl, false);
+    }
+
+    /** A broken clock face contracts into the hit instead of obscuring the fight with a vortex. */
+    public static void clockBreak(ServerPlayer p, LivingEntity t, ServerLevel sl) {
+        cut(p, t, sl, 80, true);
+        dial(p, t, sl, true);
+        ParticleShapes.slash(sl, DIAL.radius(hitScale(t) * 1.25f).endRadius(0.12f)
+                .arc(-330).delay(2).lifetime(10), t.getBoundingBox().getCenter(), hitYaw(p, t), -90, 0);
+        Spells.sound(sl, t.position(), SoundEvents.AMETHYST_CLUSTER_BREAK, 0.65f, 1.25f);
+    }
+
+    /** Three precise afterimage cuts; particle delay keeps the whole effect at the original impact. */
+    public static void timeFracture(ServerPlayer p, LivingEntity t, ServerLevel sl) {
+        cut(p, t, sl, -35, false);
+        Vec3 hit = t.getBoundingBox().getCenter();
+        for (int i = 0; i < 3; i++) {
+            ParticleShapes.slash(sl, SCAR.radius(hitScale(t) * (1f - i * 0.12f))
+                    .width(0.1f - i * 0.02f).delay(2 + i * 2),
+                    hit.add(0, (i - 1) * 0.12, 0), hitYaw(p, t), 0, 40 + i * 55);
+        }
+        dial(p, t, sl, true);
+        Spells.sound(sl, hit, SoundEvents.PLAYER_ATTACK_CRIT, 0.6f, 1.35f);
+    }
+
+    private static void dial(ServerPlayer p, LivingEntity t, ServerLevel sl, boolean finisher) {
+        Vec3 hit = t.getBoundingBox().getCenter();
+        float scale = hitScale(t);
+        float yaw = hitYaw(p, t);
+        ParticleShapes.slash(sl, DIAL.radius(scale * 0.8f), hit, yaw, -90, 0);
+        // Twelve clean hour ticks, with two longer hands. All are local to the impact plane.
+        Vec3 right = new Vec3(Math.cos(Math.toRadians(yaw)), 0, Math.sin(Math.toRadians(yaw)));
+        int ticks = finisher ? 12 : 6;
+        for (int i = 0; i < ticks; i++) {
+            double angle = i * Math.PI * 2 / ticks;
+            Vec3 at = hit.add(right.scale(Math.cos(angle) * scale * 0.8))
+                    .add(0, Math.sin(angle) * scale * 0.8, 0);
+            ParticleShapes.slash(sl, SCAR.radius(scale * 0.065f).width(0.035f).lifetime(6),
+                    at, yaw, 0, (float) Math.toDegrees(angle));
+        }
+        ParticleShapes.slash(sl, SCAR.radius(scale * 0.4f).width(0.045f).delay(1), hit, yaw, 0, 75);
+        ParticleShapes.slash(sl, SCAR.radius(scale * 0.27f).width(0.045f).delay(1), hit, yaw, 0, -20);
+    }
 
     public static void steal(ServerLevel sl, LivingEntity thief, LivingEntity target) {
         ParticleShapes.slashBetween(sl, THREAD, target.getBoundingBox().getCenter(), thief.getBoundingBox().getCenter());

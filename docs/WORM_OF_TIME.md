@@ -102,7 +102,9 @@ Self-history is sampled every five ticks, capped to five seconds, cleared on dea
 - Keys 4–7 dispatch through their normal network handlers and existing restrictions; `PathwayAbilities` lists all seven keys. Stateful Destiny/Time keys and entries cannot be stolen or copied. Delayed menu picks recheck Pathway ownership unless executing an authorized copied/stolen cast.
 - `tools/model_gen/worm_of_time/generate.py` regenerates twenty 32×32 RGBA wheel glyphs, three model JSONs and two model textures. Requires Pillow. Every wheel icon and model has its own Worm Of Time asset path.
 
-Worm Of Time keeps its eight custom sword swings and six-hit melee particle combo. See [CUSTOM_SWING_IMPLEMENTATION.md](CUSTOM_SWING_IMPLEMENTATION.md) for the existing render hooks; this completion changes the power kit, not the shared sword animation presets.
+Worm Of Time keeps its eight custom sword swings. Its six-hit melee FX chain now uses target-centered opening, return, rising, falling and cross cuts, followed by a random clock-break or time-fracture finisher. Cyan ribbons have thin white cores, short impact scars and seven small sparks per hit. Cross cuts and finishers briefly draw a clock dial at the victim; finishers add a contracting ring or three staggered afterimage cuts. Effects face the attacker-to-target direction and scale within 0.45�1.35 blocks so small mobs stay readable and large mobs do not produce oversized flashes. Delayed particles stay at the original hit location. No damage, cooldown or attack-charge rules change.
+
+Melee visuals are implemented in `WormOfTimeFx.java` and wired through `WormOfTime.MELEE_COMBO`; theft and parasite transition visuals remain separate. See [CUSTOM_SWING_IMPLEMENTATION.md](CUSTOM_SWING_IMPLEMENTATION.md) for the sword render hooks. To check the effects in game, land six fully charged hits as Worm Of Time, then repeat on a small and large mob, from different directions and in first and third person. Check both random finishers.
 
 ## Verification
 
