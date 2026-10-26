@@ -48,7 +48,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | Wanderer | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
 | Key Of Stars | Door Opening 9 (sneak: Slip Free) | Tricks 8 (wheel: Flash, Black Screen, Loud Noise, Frost Ray, Gale, Tumble, Escape Trick, all at 8) | Star Divination 7 (sneak: Interference) | Record 6 (sneak: Replay) | Travel 5 (wheel: Traveler's Door, Blink, Invisible Hand, Star Anchor at 5, Wandering 3) | Secrets and Space 4 (wheel: Space Concealment, Transfiguration, Exile, Pocket Space at 4, Space Tearing 3) | Starlight 2 (wheel: Toy Box, Replication at 2, Space Fragmentation, Starlight Seal, Space-Time Labyrinth at 1, Alternate World, Omnipresence, Close the Door at 0) |
-| Worm Of Time | Life Theft 9 | Theft 8 | Parasite 4 | - | - | - | - |
+| Worm Of Time | Marauder Theft 9 (Life/Distance Theft 4) | Power Theft 6 | Parasite 4 | Observation 9 / Decryption 7 | Thought and Deceit 8 | Parasite and Destiny 4 | Time and Error 2 |
 | Hand Of Order | Halt 9 (sneak: Presence) | Jurisdiction 8 (sneak: Recognition) | Interrogation 7 (wheel: Psychic Lashing, Psychic Piercing, Whip of Pain, all at 7) | Verdict 6 (wheel: Imprison, Exile, Death, Maintain Secrecy at 6, Deprivation, Execution at 4) | Decree 6 (wheel: Prohibition: Passage, Prohibition: Concealment at 6, Imperative: Reality, Contract at 4) | Punishment 5 (sneak: Sword of Judgment at 3) | Order 2 (wheel: Balance, Divide the Battlefield, Law: No Return at 2, Order Proxy, Quell Disorder at 1, Court of Judgment at 0) |
 | Attendant Of Mysteries | Paper Dagger 9 | Flaming Jump 8 | Damage Transfer 7 | Air Cannon 6 | Countdown (Spirit Body Threads) 5 | Historical Void 4 | Grafting 3 |
 | Frenzied Mage | Spear 9 | Flame 8 | Frost 7 | Hammer 6 | Meteor 5 | Entropy 4 | Abolition 3 |
@@ -69,9 +69,13 @@ The number is the weakest Sequence that can use it (that Sequence and every stro
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
-Worm Of Time's Parasite (J) is the only key that works while its player is inside a host: J again puts them back out (`status/Parasite`; see "Parasite" in [SPELL_KIT.md](SPELL_KIT.md)). Inside a mob, the walk keys, jump, sprint, mouse and both clicks steer it instead (`status/ParasiteControl`).
+Worm Of Time's Parasite (J) is the only key that works while its player is inside a host: J again puts them back out (`status/Parasite`; see "Parasite" in [SPELL_KIT.md](SPELL_KIT.md)). Inside a mob in deep parasitism, the walk keys, jump, sprint, mouse and both clicks steer it instead (`status/ParasiteControl`).
 
-Worm Of Time's Theft (H) holds `THEFT_MAX_HELD` (5) stolen abilities at once and releases the newest first (sneak + H). It steals from players with a Pathway and from Beyonder mobs only: one of their Pathway's abilities, up to their Sequence ([BEYONDER_MOBS.md](BEYONDER_MOBS.md)).
+Worm Of Time's Theft (H) holds `THEFT_MAX_HELD` (5) stolen abilities at once and releases the newest first (sneak + H). From Sequence 6 it steals from players with a Pathway and from Beyonder mobs only: one of their Pathway's abilities, up to their Sequence (up to three distinct powers per attempt from Sequence 3) ([BEYONDER_MOBS.md](BEYONDER_MOBS.md)).
+
+Worm Of Time's complete key map, wheels, passive progression, costs and gameplay adaptations are in
+[WORM_OF_TIME.md](WORM_OF_TIME.md). Sneak + J enters initial parasitism (hiding and healing);
+normal J enters deep parasitism (drain and mob steering). Both leave with J again.
 
 Dark Angel's Grazing (L) keeps an ability from every Beyonder its owner kills (a player with a Pathway, or a Beyonder mob: one of its Pathway's abilities, up to its Sequence; [BEYONDER_MOBS.md](BEYONDER_MOBS.md)), in 7 slots that are kept for good (through death too). It casts the selected one whatever its Sequence, for three times that ability's own cost (`Beyonder.castUnbound(player, 3f, ...)`). Sneak + L picks the slot; by a soul that waits on its corpse (all slots full), it picks the slot that soul replaces.
 

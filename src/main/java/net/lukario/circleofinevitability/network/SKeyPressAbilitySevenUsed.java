@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
 import net.lukario.circleofinevitability.combat.Casts;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimeAuthority;
 import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.KeySeal;
 import net.lukario.circleofinevitability.status.Parasite;
@@ -63,6 +64,7 @@ public class SKeyPressAbilitySevenUsed {
         KeySeal.pressed(player, 7);
         Casts.keyPressed(player, 7);                 // combat/Casts: told if the press goes off
         try {
+            WormOfTimeAuthority.authority(player, level, serverLevel, false);
 
             wandererCosmicPlague(player,level,serverLevel,false);
 

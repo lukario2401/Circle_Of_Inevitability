@@ -32,6 +32,8 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFallen;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionSovereign;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimePowers;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimeAuthority;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -171,12 +173,20 @@ public final class PathwayAbilities {
                     (player, level, sl) -> PaleEmperor.paleEmperorWraiths(player, level, sl, true)),
 
             // ---- Worm Of Time ----
-            new Ability("Worm Of Time", 1, "Life Theft", 9, SNEAK, STEALABLE,
+            new Ability("Worm Of Time", 1, "Marauder Theft", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility1(player, level, sl, true)),
-            new Ability("Worm Of Time", 2, "Theft", 8, SNEAK, OWN_PATHWAY_ONLY,           // the theft itself is not stolen
+            new Ability("Worm Of Time", 2, "Power Theft", 6, SNEAK, OWN_PATHWAY_ONLY,           // the theft itself is not stolen
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility2(player, level, sl, true)),
-            new Ability("Worm Of Time", 3, "Parasite", 4, NO_SNEAK, OWN_PATHWAY_ONLY,     // the same key is the way back out, and only this Pathway has it
+            new Ability("Worm Of Time", 3, "Parasite", 4, SNEAK, OWN_PATHWAY_ONLY,     // the same key is the way back out, and only this Pathway has it
                     (player, level, sl) -> WormOfTime.wormOfTimeAbility3(player, level, sl, true)),
+            new Ability("Worm Of Time", 4, "Observation and Decryption", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> WormOfTimePowers.insight(player, level, sl, true)),
+            new Ability("Worm Of Time", 5, "Thought and Deceit", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> WormOfTimePowers.deceit(player, level, sl, true)),
+            new Ability("Worm Of Time", 6, "Parasite and Destiny", 4, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> WormOfTimePowers.destiny(player, level, sl, true)),
+            new Ability("Worm Of Time", 7, "Time and Error", 2, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> WormOfTimeAuthority.authority(player, level, sl, true)),
 
             // ---- Conqueror ----
             new Ability("Conqueror", 1, "Hunter's Trap", 9, SNEAK, STEALABLE,

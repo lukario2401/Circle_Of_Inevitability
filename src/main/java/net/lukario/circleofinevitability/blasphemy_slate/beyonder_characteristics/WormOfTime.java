@@ -1,6 +1,10 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimePowers;
+import net.lukario.circleofinevitability.combat.Cooldowns;
+import net.lukario.circleofinevitability.combat.Casts;
+import net.lukario.circleofinevitability.status.Exposed;
 import net.lukario.circleofinevitability.combat.HudTimer;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;
@@ -35,12 +39,12 @@ import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class WormOfTime {
 
     private static final String PATHWAY = "Worm Of Time";
-
-    static final String LIFE_THEFT_VULNERABILITY = "word_of_time_life_theft_vulnerability";
 
     private static final int COMBO_HEAD = 0xF2F8FFFF;
     private static final int COMBO_MID  = 0xEE1BB8E8;
@@ -79,10 +83,10 @@ public class WormOfTime {
     // =========================
     // Ability 2 - Theft: the numbers and the looks
     // =========================
-    private static final int THEFT_SEQUENCE = 8;
-    private static final int THEFT_COST = 250;                 // for stealing. Releasing costs nothing
+    private static final int THEFT_SEQUENCE = 6;
+    private static final int THEFT_COST = 1500;                 // for stealing. Releasing costs nothing
     private static final double THEFT_RANGE = 32;
-    private static final int THEFT_HELD_TICKS = 1200*20;          // a stolen ability is held for a minute at most
+    private static final int THEFT_HELD_TICKS = 1200*20;          // a stolen ability is held for twenty minutes at most
     private static final int THEFT_MAX_HELD = 5;               // how many stolen abilities can be held at once (0 = no limit).
                                                                // When full, a new theft is refused until one is released
     private static final int THEFT_MOB_EMPTY_TICKS = 600;      // a mob that was stolen from has nothing more to give for this long (0 = no limit)
@@ -104,6 +108,7 @@ public class WormOfTime {
     // Ability 3 - Parasite: the numbers and the looks
     // (what it DOES to the host is further down: "Parasite: what it does")
     // =========================
+    private static final String PARASITE_INITIAL = "worm_of_time_initial_parasitism";
     private static final int PARASITE_KEY = 3;                    // J
     private static final int PARASITE_SEQUENCE = 4;
     private static final int PARASITE_COST = 6000;                // for going in. Leaving costs nothing
@@ -163,7 +168,9 @@ public class WormOfTime {
 
         @Override
         public ParasiteControl.Settings control(LivingEntity host) {
-            return PARASITE_STEERS_MOBS ? PARASITE_STEERING : null;     // (only asked for a mob)
+            ServerPlayer inside = Parasite.parasiteIn(host);
+            return PARASITE_STEERS_MOBS && inside != null
+                    && !inside.getPersistentData().getBooleanOr(PARASITE_INITIAL, false) ? PARASITE_STEERING : null;     // (only asked for a mob)
         }
 
         @Override
@@ -181,54 +188,9 @@ public class WormOfTime {
             .randomStep(WormOfTime::comboGroundSpiral, WormOfTime::comboCrystalCross);
 
     public static void wormOfTimeAbility1(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!canUseCharacteristic(player, bypassClassCheck)) return;
-        if (SoulCore.getSpirituality(player) < 250) return;
-        if (!Beyonder.hasSequence(player, 9)) return;
-
-        SoulCore.setSpirituality(player,SoulCore.getSpirituality(player)-250);
-
-
-        if (!player.isShiftKeyDown()){
-
-            LivingEntity livingEntity = Spells.aimEnemy(player,sl,24);
-            if (livingEntity == null) return;
-            int hitCount = livingEntity.getPersistentData().getIntOr(LIFE_THEFT_VULNERABILITY, 0);
-            if (hitCount==0)hitCount=1;
-            int healthStealAmount = 15*hitCount;
-
-            if (livingEntity.getHealth()>healthStealAmount){
-                livingEntity.setHealth(livingEntity.getHealth()-healthStealAmount);
-                player.sendSystemMessage(Component.literal(""+hitCount));
-                player.setHealth(player.getHealth()+healthStealAmount);
-            }else{
-                player.setHealth((player.getHealth()+livingEntity.getHealth()));
-                livingEntity.kill(sl);
-            }
-            livingEntity.getPersistentData().putInt(LIFE_THEFT_VULNERABILITY,hitCount+1);
-
-        }else{
-            if (Root.has(player, RootRestriction.TELEPORT)) {
-                player.sendSystemMessage(Component.literal("You are held in place."));
-                return;
-            }
-
-            Vec3 there = Spells.blinkSpot(player, sl, 32);
-
-            LivingEntity livingEntity = Spells.aimEnemy(player,sl,32);
-            if (livingEntity!=null){
-                there=livingEntity.position();
-            }
-
-            if (there == null) {
-                player.sendSystemMessage(Component.literal("There is no room for you there."));
-                return;                                                  // nothing spent
-            }
-            player.teleportTo(there.x, there.y, there.z);
-            FallGuard.protect(player, 200);
-
-        }
+        if (!WormOfTimePowers.ready(player, bypassClassCheck, 9)) return;
+        WormOfTimePowers.marauder(player, sl);
     }
-
 
     // =========================
     // Ability 2 - Theft
@@ -236,6 +198,7 @@ public class WormOfTime {
     //         abilities their Sequence gives them, and they cannot use it while you hold it. From a Beyonder mob
     //         (blasphemy_slate/beyonder_mobs): one of its Pathway's, up to its Sequence. Other mobs have nothing.
     // Sneak:  releases the newest one you hold: it is cast once, whatever its Sequence, at no cost.
+    // Sequence 6 unlocks power theft; Sequence 3 takes up to three different powers in one attempt.
     // Who holds what is kept by StolenAbilities; the list of abilities is PathwayAbilities.
     // =========================
     public static void wormOfTimeAbility2(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
@@ -247,7 +210,8 @@ public class WormOfTime {
     }
 
     private static void steal(Player player, ServerLevel sl) {
-        LivingEntity target = Spells.aimEnemy(player, sl, THEFT_RANGE);
+        if (!Cooldowns.ready(player, "worm_of_time_power_theft", "Power Theft")) return;
+        LivingEntity target = Spells.aimEnemy(player, sl, Beyonder.hasSequence(player, 5) ? 48 : THEFT_RANGE);
         if (target == null) {
             player.sendSystemMessage(Component.literal("No one stands before you."));
             return;                                                  // nothing spent
@@ -257,7 +221,7 @@ public class WormOfTime {
                     + " stolen abilities. Release one first (sneak)."));
             return;
         }
-        PathwayAbilities.Ability ability = pickToSteal(player, target);
+        PathwayAbilities.Ability ability = pickToSteal(player, target, Set.of());
         if (ability == null) {
             String why;
             if (hasPathway(target)) why = "They have nothing you can steal right now.";
@@ -268,19 +232,31 @@ public class WormOfTime {
             return;
         }
         if (!Spells.paySpirituality(player, THEFT_COST)) return;
-
-        boolean sneakForm = ability.sneakForm() && player.getRandom().nextBoolean();
-        Player victim = hasPathway(target) ? (Player) target : null;
-        StolenAbilities.Held held = StolenAbilities.hold(player, ability, sneakForm, victim, THEFT_HELD_TICKS, THEFT_MAX_HELD);
-        if (held == null) return;                                    // (full: checked above)
-        if (victim == null && THEFT_MOB_EMPTY_TICKS > 0) Marks.add(target, THEFT_EMPTY, 1, THEFT_MOB_EMPTY_TICKS);
-
-        player.sendSystemMessage(Component.literal("You stole " + held.label() + " of the " + ability.pathway()
-                + " Pathway. Sneak and press the key again to release it."));
-        if (victim != null) {
-            victim.sendSystemMessage(Component.literal("Your " + ability.name() + " was stolen."));
+        Cooldowns.start(player, "worm_of_time_power_theft", 60);
+        int gap = Math.max(0, SoulCore.getSequence(player) - Beyonders.sequenceOf(target));
+        boolean studied = Marks.count(target, player, WormOfTimePowers.DECRYPTED) > 0;
+        float chance = Math.max(0.15f, 1f - gap * 0.18f + (studied ? 0.25f : 0));
+        if (player.getRandom().nextFloat() > chance) {
+            player.sendSystemMessage(Component.literal("The stronger spirit resists your theft. Decrypt it first."));
+            return;
         }
-        theftShows(player, sl, target, held, victim == null);
+
+        Player victim = hasPathway(target) ? (Player) target : null;
+        Set<PathwayAbilities.Ability> taken = new HashSet<>();
+        int count = Beyonder.hasSequence(player, 3) ? 3 : 1;
+        for (int i = 0; i < count && ability != null && !StolenAbilities.isFull(player, THEFT_MAX_HELD); i++) {
+            boolean sneakForm = ability.sneakForm() && player.getRandom().nextBoolean();
+            StolenAbilities.Held held = StolenAbilities.hold(player, ability, sneakForm, victim, THEFT_HELD_TICKS, THEFT_MAX_HELD);
+            if (held == null) break;
+            taken.add(ability);
+            player.sendSystemMessage(Component.literal("You stole " + held.label() + " of the " + ability.pathway()
+                    + " Pathway. Sneak and press the key again to release it."));
+            if (victim != null) victim.sendSystemMessage(Component.literal("Your " + ability.name() + " was stolen."));
+            theftShows(player, sl, target, held, victim == null);
+            ability = pickToSteal(player, target, taken);
+        }
+        if (!taken.isEmpty() && victim == null && THEFT_MOB_EMPTY_TICKS > 0)
+            Marks.add(target, THEFT_EMPTY, 1, THEFT_MOB_EMPTY_TICKS);
     }
 
     /** A player who follows a Pathway that has abilities: only those lose one of their own. */
@@ -289,7 +265,7 @@ public class WormOfTime {
     }
 
     /** What the theft takes from this target, or null if there is nothing to take right now. */
-    private static PathwayAbilities.Ability pickToSteal(Player thief, LivingEntity target) {
+    private static PathwayAbilities.Ability pickToSteal(Player thief, LivingEntity target, Set<PathwayAbilities.Ability> excluded) {
         List<PathwayAbilities.Ability> choices = new ArrayList<>();
         if (hasPathway(target)) {
             Player victim = (Player) target;
@@ -305,7 +281,13 @@ public class WormOfTime {
             if (!BeyonderMobs.isBeyonder(target) || Marks.count(target, THEFT_EMPTY) > 0) return null;
             choices.addAll(Beyonders.takeableFrom(target));
         }
-        return choices.isEmpty() ? null : choices.get(thief.getRandom().nextInt(choices.size()));
+        choices.removeAll(excluded);
+        if (choices.isEmpty()) return null;
+        Casts.Cast recent = Casts.last(target);
+        if (recent != null && recent.ability() != null && choices.contains(recent.ability())
+                && (Beyonder.hasSequence(thief, 3) || Marks.count(target, thief, WormOfTimePowers.DECRYPTED) > 0))
+            return recent.ability();
+        return choices.get(thief.getRandom().nextInt(choices.size()));
     }
 
     private static void releaseStolen(Player player, Level level, ServerLevel sl) {
@@ -347,6 +329,8 @@ public class WormOfTime {
 
     // =========================
     // Ability 3 - Parasite
+    // Normal: deep parasitism, with mob steering and life drain. Sneak: initial parasitism,
+    //         a lower-upkeep hiding mode that heals without draining or steering the host.
     // Outside a host: you leave your body and go into what you look at (a mob or a player). It carries you,
     //         you see through its eyes, and nothing can see or hurt you. While you are inside: an upkeep and a
     //         life drain at each beat, two minutes at most, and you are thrown out hurt if it dies.
@@ -363,7 +347,6 @@ public class WormOfTime {
 
         if (Parasite.isInside(player)) {
             if (Parasite.ticksInside(player) < PARASITE_KEY_REST) return;    // still the press that took them in
-            // TODO(parasite): sneak + the key from inside does the same as the key alone for now: free for something later
             Parasite.leave(player, Parasite.End.LEFT);
             return;
         }
@@ -386,7 +369,9 @@ public class WormOfTime {
         if (!Spells.paySpirituality(player, PARASITE_COST)) return;
 
         Vec3 chest = player.position().add(0, 1.1, 0);              // where the body was, for the looks
+        parasite.getPersistentData().putBoolean(PARASITE_INITIAL, player.isShiftKeyDown());
         if (!Parasite.enter(parasite, host, PARASITE_MAX_TICKS, PARASITE_HOOKS)) {
+            parasite.getPersistentData().remove(PARASITE_INITIAL);
             // (refused after all, e.g. by another mod: checked above, so this should not happen)
             SoulCore.setSpiritualityQuietly(player, SoulCore.getSpirituality(player) + PARASITE_COST);
             player.sendSystemMessage(Component.literal("You cannot enter that."));
@@ -397,9 +382,13 @@ public class WormOfTime {
 
     /**
      * Why this player cannot take this host, as the text they are told, or null if they can.
-     * TODO(parasite): rules for later go here (a Beyonder of a stronger Sequence, a boss, a host taken too recently...).
+     * Stronger Beyonders and creative/spectator players cannot be used as hosts.
      */
     private static String parasiteRefusal(Player player, LivingEntity host) {
+        if (host instanceof Player p && (p.isCreative() || p.isSpectator())) return "That body cannot be parasitized.";
+        if (Beyonders.isBeyonder(host) && Beyonders.sequenceOf(host) < SoulCore.getSequence(player))
+            return "That spirit is too strong to parasitize.";
+        if (Marks.count(host, PARASITE_RESTING) > 0) return "That host is still resisting a previous parasite.";
         if (Parasite.isHost(host)) return "Something lives in it already.";
         if (!Parasite.canEnter(player, host)) return "You cannot enter that.";
         return null;
@@ -409,7 +398,8 @@ public class WormOfTime {
 
     /** Once, when the parasite has just gone in. */
     private static void parasiteEntered(ServerPlayer parasite, LivingEntity host, ServerLevel sl) {
-        boolean steers = PARASITE_STEERS_MOBS && host instanceof Mob;
+        boolean steers = PARASITE_STEERS_MOBS && host instanceof Mob
+                && !parasite.getPersistentData().getBooleanOr(PARASITE_INITIAL, false);
         parasite.sendSystemMessage(Component.literal("You are inside " + host.getName().getString() + "."
                 + (steers ? " Move and look to steer it, left click to strike, right click to pick what it hunts." : "")
                 + " Press the key again to leave it."));
@@ -418,20 +408,28 @@ public class WormOfTime {
             carrier.sendSystemMessage(Component.literal("Something has crawled into you."));
             if (PARASITE_MAX_TICKS > 0) HudTimer.show(carrier, PARASITE_HOST_CLOCK, "Parasitized", PARASITE_MAX_TICKS, 0xFF7A6A);
         }
-        // TODO(parasite): what begins with it (a mark on the host, a first bite, a weakness...)
+        if (!parasite.getPersistentData().getBooleanOr(PARASITE_INITIAL, false)) Exposed.apply(host, 40);
     }
 
     /** Every tick while inside (ticksInside starts at 1). Parasite.leave(parasite, ...) from here ends it. */
     private static void parasiteTick(ServerPlayer parasite, LivingEntity host, ServerLevel sl, int ticksInside) {
         if (ticksInside % PARASITE_BEAT != 0) return;               // everything below happens once a beat
 
-        if (PARASITE_UPKEEP > 0 && !Spells.paySpirituality(parasite, PARASITE_UPKEEP)) {
+        if (!PATHWAY.equals(SoulCore.getPathway(parasite)) || !Beyonder.hasSequence(parasite, 4)) {
+            Parasite.leave(parasite, Parasite.End.LEFT);
+            return;
+        }
+        boolean initial = parasite.getPersistentData().getBooleanOr(PARASITE_INITIAL, false);
+        int upkeep = initial ? 900 : PARASITE_UPKEEP;
+        if (!Spells.paySpirituality(parasite, upkeep)) {
             Parasite.leave(parasite, Parasite.End.OUT_OF_POWER);
             return;
         }
-        parasiteDrain(parasite, host, sl);
-        // TODO(parasite): more that happens while inside (stealing from the host without aiming, its spirituality,
-        //                 slowly taking it over...). 'host' may be a mob or a Player. Steering is status/ParasiteControl.
+        if (initial) parasite.heal(1f);
+        else {
+            parasiteDrain(parasite, host, sl);
+            Exposed.apply(host, 40);
+        }
     }
 
     /**
@@ -445,6 +443,7 @@ public class WormOfTime {
             HudTimer.hide(carrier, PARASITE_HOST_CLOCK);
             if (why != Parasite.End.HOST_DIED) carrier.sendSystemMessage(Component.literal("Whatever was inside you is gone."));
         }
+        parasite.getPersistentData().remove(PARASITE_INITIAL);
         if (why == Parasite.End.PARASITE_GONE) return;              // died or logged out: nothing more to do or show
 
         if (PARASITE_KEY_REST > 0) Marks.add(parasite, PARASITE_RESTING, 1, PARASITE_KEY_REST);
@@ -453,7 +452,7 @@ public class WormOfTime {
             parasite.invulnerableTime = 0;
             parasite.hurt(sl.damageSources().magic(), PARASITE_THROWN_OUT_DAMAGE);
         }
-        // TODO(parasite): what it leaves behind (a lasting mark or wound on the host, a time before the next host...)
+        if (host != null && host.isAlive()) Marks.add(host, PARASITE_RESTING, 1, 100);
     }
 
     /**
@@ -470,9 +469,10 @@ public class WormOfTime {
 
     /**
      * Right after the parasite made its mob host hit (or shoot at) 'target' with left click.
-     * TODO(parasite): what a steered strike adds (the parasite's own power in the blow, a mark, stealing from it...)
+     * A steered strike exposes its victim briefly; all actual strike damage is still ParasiteControl's.
      */
     private static void parasiteStruck(ServerPlayer parasite, LivingEntity host, LivingEntity target, ServerLevel sl) {
+        Exposed.apply(target, 40);
     }
 
     private static String parasiteEndText(Parasite.End why) {

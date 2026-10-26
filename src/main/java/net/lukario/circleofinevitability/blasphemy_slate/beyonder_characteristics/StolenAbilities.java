@@ -174,8 +174,8 @@ public final class StolenAbilities {
         }
     }
 
-    /** Everything this player holds goes back (they died or left). */
-    private static void dropAll(Player holder) {
+    /** Everything this player holds goes back (death, logout, or the owning Pathway is lost). */
+    public static void dropAll(Player holder) {
         List<Held> list = HELD.remove(holder.getUUID());
         if (list == null) return;
         for (Held held : list) {
