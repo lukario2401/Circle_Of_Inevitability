@@ -367,3 +367,10 @@ one-line change in `ThirdPersonSwing` (the `current != ITEM && current != EMPTY`
   light directions of the level), so at night or in caves the sword is as dark as a vanilla one.
 - Server hit slashes and client sword animations advance independently. Misses, weak attacks and
   different viewer histories can make their sequences differ; trails are not attached to the blade.
+
+## Prince Of Abolition variants
+
+`PrinceSwordSwings.java` contains twelve dedicated animations registered by `SwingAnimations`.
+See [the implementation guide](CUSTOM_SWING_IMPLEMENTATION.md#prince-choreography-and-previews)
+for their order and preview IDs. These use a softer `OUT` cut easing, smaller hand paths and
+restrained body yaw; the shared presets above remain the Worm Of Time animations.

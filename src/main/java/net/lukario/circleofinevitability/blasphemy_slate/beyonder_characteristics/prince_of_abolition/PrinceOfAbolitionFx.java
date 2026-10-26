@@ -1538,13 +1538,13 @@ public final class PrinceOfAbolitionFx {
 
     private static final SlashFx COMBO_EDGE = SlashFx.arc("slash/streaks")
             .color(0xD070488C).tailColor(0x30502068).headColor(0xFFFFE08A).core(0xFFFFF2BE)
-            .radius(1.8f).arc(190f).width(0.42f).layers(3).spread(0.12f).lifetime(10).sweep(3);
+            .radius(1.8f).arc(190f).width(0.30f).layers(2).spread(0.08f).lifetime(8).sweep(3);
     // A translucent silhouette keeps the black blade visible even in bright daylight.
     private static final SlashFx COMBO_SHADOW = SlashFx.arc("slash/smooth")
-            .color(0xD016121F).translucent().radius(1.78f).arc(190f).width(0.7f).lifetime(12).sweep(3);
+            .color(0xD016121F).translucent().radius(1.78f).arc(190f).width(0.48f).lifetime(9).sweep(3);
     private static final SlashFx COMBO_THRUST = SlashFx.line("slash/crystal")
             .color(0xC0C8AAFF).headColor(0xFFFFE08A).core(0xFFFFF2BE)
-            .radius(1.3f).width(0.22f).layers(3).spread(0.09f).lifetime(9).sweep(2).fromCenter();
+            .radius(1.3f).width(0.16f).layers(2).spread(0.07f).lifetime(8).sweep(2).fromCenter();
 
     /** Twelve visual hits. Geometry varies within each move without changing damage or attack speed. */
     public static void combo(ServerLevel sl, LivingEntity player, LivingEntity target, int step) {
@@ -1553,34 +1553,37 @@ public final class PrinceOfAbolitionFx {
         Vec3 impact = chestOf(target);
         float yaw = yawToward(player.position(), target.position());
         float tilt = switch (move) {
-            case 3 -> 35f;
-            case 4, 10 -> -55f;
-            case 6 -> -32f;
-            case 7 -> 85f;
+            case 3 -> 48f;
+            case 4 -> 54f;
+            case 10 -> -52f;
+            case 6 -> -36f;
+            case 7 -> 70f;
+            case 9 -> -18f;
+            case 11 -> 50f;
             default -> 0f;
         };
-        float turn = (move == 1 || move == 9) ? -1f : 1f;
+        float turn = (move == 1 || move == 4 || move == 9) ? -1f : 1f;
         if (move == 2 || move == 8) {
             ParticleShapes.slashBetween(sl, COMBO_THRUST, chest, impact);
             ParticleShapes.slash(sl, COMBO_EDGE.radius(0.75f).arc(320f).width(0.16f)
                     .delay(2).rotation(0, -90, 0), impact, yaw, 0, 0);
         } else {
             boolean flourish = move == 5 || move == 11;
-            SlashFx edge = COMBO_EDGE.arc(turn * (flourish ? 330f : 190f))
-                    .radius(flourish ? 2.2f : 1.8f).jittered(sl.getRandom(), 8f, 5f, 7f);
-            ParticleShapes.slash(sl, COMBO_SHADOW.arc(turn * (flourish ? 330f : 190f))
-                    .radius(flourish ? 2.18f : 1.78f).alignedWith(edge), chest, yaw, 0f, tilt);
+            SlashFx edge = COMBO_EDGE.arc(turn * (flourish ? 270f : 165f))
+                    .radius(flourish ? 2.0f : 1.65f).jittered(sl.getRandom(), 3f, 2f, 3f);
+            ParticleShapes.slash(sl, COMBO_SHADOW.arc(turn * (flourish ? 270f : 165f))
+                    .radius(flourish ? 1.98f : 1.63f).alignedWith(edge), chest, yaw, 0f, tilt);
             ParticleShapes.slash(sl, edge, chest, yaw, 0f, tilt);
-            ParticleShapes.slash(sl, edge.radius(1.45f).width(0.16f).layers(1).delay(2)
+            ParticleShapes.slash(sl, edge.radius(1.45f).width(0.10f).layers(1).delay(2)
                     .color(0xC0E0B04A), chest.add(0, 0.12, 0), yaw, 0f, tilt);
         }
-        ParticleShapes.burst(sl, SPARK, impact, move == 11 ? 12 : 4, 0.06, 0.14);
+        ParticleShapes.burst(sl, SPARK, impact, move == 11 ? 8 : 3, 0.06, 0.14);
         if (move == 5 || move == 11) {
             int variant = sl.getRandom().nextInt(3);
             if (variant == 0) {
                 SpellFx.runeCircle(sl, target.position(), 1.7, 0xE0E0B04A, 18, 6f);
-                ParticleShapes.slash(sl, COMBO_EDGE.radius(0.6f).endRadius(2.3f).arc(540f)
-                        .spin(8f).width(0.22f).layers(2).delay(3), impact, yaw, 0f, 0f);
+                ParticleShapes.slash(sl, COMBO_EDGE.radius(0.6f).endRadius(2.3f).arc(400f)
+                        .spin(5f).width(0.16f).layers(2).delay(3), impact, yaw, 0f, 0f);
             } else if (variant == 1) {
                 for (int i = 0; i < 3; i++) {
                     ParticleShapes.slash(sl, COMBO_THRUST.radius(1.6f).delay(i * 2)
@@ -1588,7 +1591,7 @@ public final class PrinceOfAbolitionFx {
                 }
             } else {
                 for (int i = 0; i < 2; i++) {
-                    ParticleShapes.slash(sl, COMBO_EDGE.radius(1.3f).arc(i == 0 ? 220 : -220)
+                    ParticleShapes.slash(sl, COMBO_EDGE.radius(1.3f).width(0.22f).layers(1).arc(i == 0 ? 190 : -190)
                             .delay(2 + i * 2), impact, yaw, 0, i == 0 ? 45 : -45);
                 }
                 ParticleShapes.burst(sl, SECTION, impact, 4, 0.04, 0.1);

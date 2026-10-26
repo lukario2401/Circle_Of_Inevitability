@@ -203,6 +203,7 @@ public final class SwingAnimations {
         register(STAB_THRUST);
         register(UPPERCUT_CUT);
         register(SPIN_SLASH_CUT);
+        PrinceSwordSwings.registerAll();
     }
 
     private SwingAnimations() {}

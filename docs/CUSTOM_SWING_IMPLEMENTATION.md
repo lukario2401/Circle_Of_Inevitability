@@ -6,7 +6,7 @@ This describes the existing Java animation system shared by Worm Of Time and Pri
 
 The implementation lives in `src/main/java/net/lukario/circleofinevitability/client/animation/`.
 
-- `SwingAnimations` registers named keyframe animations, including horizontal cuts, diagonals, overhead, stab, uppercut and spin slash. Each definition contains its duration and normalized keyframe times.
+- `SwingAnimations` registers named keyframe animations. The eight shared presets remain available for Worm Of Time; `PrinceSwordSwings` supplies twelve dedicated Prince animations and registers them through `registerAll`. Each definition contains its duration and normalized keyframe times.
 - `SwingRule` pairs a player/item predicate with an ordered sequence and reset timeout. `SwingRules.find` uses the first matching rule. Both pathways require the main-hand item to belong to `minecraft:swords`; modded swords work when tagged correctly.
 - `SwingRules.pathwayOf` reads `ClientPathwayData` for the local player and `PlayerPathwayCache` for remote players. Pathway synchronization supplies those values.
 - `SwingPlayer` watches vanilla `swinging` and `swingTime` each client tick. A start or restart selects the next animation. Local playback also requires an attack-key event, so local block interactions do not advance the chain. Remote playback uses vanilla swing synchronization; no custom swing packet is required.
@@ -41,3 +41,24 @@ Client swings count attack swings, including misses. Server effects count qualif
 4. Check another player observing the attacks, bright daylight visibility and cleanup after changing worlds. Viewer sequences may differ because their swing histories differ.
 
 Build with `gradlew.bat build`. In-game visual verification is separate from compilation.
+
+## Prince choreography and previews
+
+Prince now uses twelve unique definitions instead of repeating the eight shared presets. Each has a compact first-person hand path and its own third-person arm and torso movement. Cut easing uses `OUT` instead of the shared presets' sharper `OUT_EXPO`; wind-up occupies 28%, impact arrives at 48%, follow-through ends at 66%, and recovery returns to rest at 100%. Durations range from 13 to 18 ticks. Eclipse Sweep and Final Decree have an intermediate passing pose; the two thrusts have a recoil pose. All twelve retain interruption blending and automatic left-hand mirroring.
+
+The ordered preview IDs (prefix each with `/swinganim `, optionally followed by `5` for slow playback) are:
+
+1. `abolition_imperial_draw` — measured horizontal cut.
+2. `abolition_silk_return` — compact backhand.
+3. `abolition_royal_lunge` — thrust from a low guard.
+4. `abolition_guillotine` — descending diagonal.
+5. `abolition_crown_lift` — rising backhand.
+6. `abolition_eclipse_sweep` — rounded sweep through a raised passing pose.
+7. `abolition_oblique_rise` — shallow rising forehand.
+8. `abolition_sovereign_fall` — overhead cut angled across the center.
+9. `abolition_needle_decree` — thrust from a high guard.
+10. `abolition_low_reprisal` — low backhand.
+11. `abolition_ascendant_reap` — steep rising forehand.
+12. `abolition_final_decree` — broad diagonal finisher.
+
+The particle chain uses thinner silhouettes, two main streak layers, shorter lifetimes, smaller orientation jitter and a fine gold aftertrail. Finisher spirals and crossed cuts are narrower so they leave the target visible. The Crown Lift trail now follows the rising backhand direction. These are visual tuning changes; damage and attack charge rules remain the same.

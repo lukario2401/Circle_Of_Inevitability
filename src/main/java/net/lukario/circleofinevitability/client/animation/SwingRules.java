@@ -34,10 +34,10 @@ public final class SwingRules {
     public static final SwingRule PRINCE_OF_ABOLITION_SWORD = SwingRule.of(
             (player, held) -> hasPathway(player, "Prince Of Abolition") && held.is(ItemTags.SWORDS),
             40,
-            SwingAnimations.HORIZONTAL, SwingAnimations.HORIZONTAL_REVERSE, SwingAnimations.STAB,
-            SwingAnimations.DIAGONAL_DOWN, SwingAnimations.UPPERCUT, SwingAnimations.SPIN_SLASH,
-            SwingAnimations.DIAGONAL_UP, SwingAnimations.VERTICAL_DOWN, SwingAnimations.STAB,
-            SwingAnimations.HORIZONTAL_REVERSE, SwingAnimations.UPPERCUT, SwingAnimations.SPIN_SLASH);
+            PrinceSwordSwings.IMPERIAL_DRAW, PrinceSwordSwings.SILK_RETURN, PrinceSwordSwings.ROYAL_LUNGE,
+            PrinceSwordSwings.GUILLOTINE, PrinceSwordSwings.CROWN_LIFT, PrinceSwordSwings.ECLIPSE_SWEEP,
+            PrinceSwordSwings.OBLIQUE_RISE, PrinceSwordSwings.SOVEREIGN_FALL, PrinceSwordSwings.NEEDLE_DECREE,
+            PrinceSwordSwings.LOW_REPRISAL, PrinceSwordSwings.ASCENDANT_REAP, PrinceSwordSwings.ABOLITION_FINISH);
 
     private static final List<SwingRule> RULES = new ArrayList<>();
 

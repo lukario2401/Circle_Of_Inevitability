@@ -182,11 +182,11 @@ These do not get their own key or entry. The same ability is stronger from the S
 
 ## Melee combo
 
-The registered `MeleeCombo` now has twelve hits: horizontal, backhand, thrust, descending diagonal, uppercut, wide sweep, rising diagonal, overhead, thrust, backhand, uppercut and wide finisher. It resets after more than 40 ticks without a qualifying hit; attacks below 80% charge do not advance it. As before, the server combo works with any held item, while custom player swing animations require a main-hand sword.
+The registered `MeleeCombo` now has twelve hits: Imperial Draw, Silk Return, Royal Lunge, Guillotine, Crown Lift, Eclipse Sweep, Oblique Rise, Sovereign Fall, Needle Decree, Low Reprisal, Ascendant Reap and Final Decree. It resets after more than 40 ticks without a qualifying hit; attacks below 80% charge do not advance it. As before, the server combo works with any held item, while custom player swing animations require a main-hand sword.
 
 Each cut layers a translucent black silhouette, violet-to-gold streaks with a bright core, and a delayed thin gold aftertrail. Thrusts draw crystal lines toward the target and a small impact ring. Hits 6 and 12 randomly choose an expanding rune spiral, a staggered crystal fan, or crossed crescents with seal fragments. Small orientation jitter varies cuts between chains; particle counts and delayed layers are bounded. These changes are visual and do not add damage or change attack speed.
 
-Sword swings use the same first- and third-person animation implementation as Worm Of Time, with a twelve-swing rule and a 40-tick reset. Swing and hit counters are independent: misses and weak attacks can make the visual sequences differ. See [Custom swing implementation](CUSTOM_SWING_IMPLEMENTATION.md) and [Animation authoring](ANIMATIONS.md). Preview the complete particle chain with `/abolitionfx combo`.
+Sword swings use the same first- and third-person animation implementation as Worm Of Time, with twelve dedicated Prince poses, a twelve-swing rule and a 40-tick reset. Swing and hit counters are independent: misses and weak attacks can make the visual sequences differ. See [Custom swing implementation](CUSTOM_SWING_IMPLEMENTATION.md) and [Animation authoring](ANIMATIONS.md). Preview the complete particle chain with `/abolitionfx combo`.
 
 ## Starting numbers
 
