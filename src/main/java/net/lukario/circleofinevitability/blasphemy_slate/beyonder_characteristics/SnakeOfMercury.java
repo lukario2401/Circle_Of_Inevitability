@@ -24,13 +24,13 @@ import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-/** First playable slice of the Fate pathway: previewed Wheel and both Premonition casts. */
+/** Material Wheel display, signed luck readouts and both Premonition casts. */
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID)
 public final class SnakeOfMercury {
     public static final String PATHWAY = "Snake Of Mercury";
     private static final String VISION_RANGE = "snake_vision_range";
     private static final String VISION = "snake_of_mercury_vision", PREMONITION = "snake_of_mercury_premonition";
-    static { Cooldowns.addFree(Cooldowns.keysStartingWith("snake_of_mercury_")); }
+    static { Cooldowns.addFree(Cooldowns.keysStartingWith("snake_of_mercury_", "snake_of_mercury_spin")); }
     private static final ParticleFx SILVER = ParticleFx.of("fx/spark").color(0xFFC9D3E0).glow().size(.08f).lifetime(12, 0);
     private SnakeOfMercury() {}
 
@@ -39,7 +39,7 @@ public final class SnakeOfMercury {
         if (!Beyonder.hasSequence(player, 9)) return;
         // Like Worm Of Time: no fixed cooldown; spirituality limits repeated activation.
         if (!player.isShiftKeyDown() && net.lukario.circleofinevitability.status.Decree.violate(player, net.lukario.circleofinevitability.status.Decree.Rule.STAND_INS)) return;
-        if (!Spells.paySpirituality(player, 250)) return;
+        if (!Spells.paySpirituality(player, 10)) return;
         boolean own = PATHWAY.equals(SoulCore.getPathway(player)) && !Casts.isCopying(player);
         WheelTier omen = own ? Fate.peek(player) : WheelTier.GOLD;
         float power = omen.duration;

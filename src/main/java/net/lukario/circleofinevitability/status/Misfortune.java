@@ -107,6 +107,8 @@ public final class Misfortune {
     private static final List<Listener> LISTENERS = new ArrayList<>();
 
     private static final String RECOVERY = "next_mishap";
+    private static LivingEntity mishapDamage;
+    public static boolean isMishapDamage(LivingEntity victim) { return mishapDamage == victim; }
     private Misfortune() {}
 
     /** Early Snake casts feed the shared curse without replacing other Pathways' status hooks. */
@@ -152,11 +154,23 @@ public final class Misfortune {
         int had = level(target);
         int level = Math.max(had, Math.min(cap, had + levels));
         tag.putInt(LEVEL, level);
+        tag.remove("explicit_source");
         tag.putLong(UNTIL, target.level().getGameTime() + ticks);
         if (source != null) tag.store(SOURCE, UUIDUtil.CODEC, source.getUUID());
         if (catastrophe) tag.putBoolean(CATASTROPHE, true);
         target.getPersistentData().put(TAG, tag);
         return level;
+    }
+
+    /** An explicitly chosen curse may affect an ally; ordinary automatic curse applications keep friendly protection. */
+    public static int addDeliberate(LivingEntity target, Player source, int levels, int ticks) {
+        int applied = add(target, source, levels, 10, ticks);
+        if (applied > 0 && source != null) {
+            CompoundTag tag = target.getPersistentData().getCompoundOrEmpty(TAG);
+            tag.putString("explicit_source", source.getUUID().toString());
+            target.getPersistentData().put(TAG, tag);
+        }
+        return applied;
     }
 
     /** 0 when it carries none. */
@@ -204,12 +218,30 @@ public final class Misfortune {
         LISTENERS.add(listener);
     }
 
+    /** Forced spell attempt, still respecting immunity, player-safe effects and shared recovery. */
+    public static boolean trigger(LivingEntity victim, boolean severe) {
+        if (!(victim.level() instanceof ServerLevel sl) || !victim.isAlive() || isImmune(victim) || level(victim) <= 0
+                || victim instanceof Player p && (p.isCreative() || p.isSpectator())) return false;
+        CompoundTag tag = victim.getPersistentData().getCompoundOrEmpty(TAG);
+        long now = sl.getGameTime();
+        if (tag.getLongOr(RECOVERY, 0L) > now) return false;
+        int level = level(victim);
+        tag.putLong(RECOVERY, now + DisasterBalance.recovery(level, !(victim instanceof Player)));
+        victim.getPersistentData().put(TAG, tag);
+        Mishap chosen = roll(victim, level);
+        if (severe) for (Mishap candidate : Mishap.values())
+            if (candidate.fromLevel <= level && (!(victim instanceof Player) || candidate.ordinal() <= Mishap.CALAMITY.ordinal())) chosen = candidate;
+        befall(victim, chosen);
+        return true;
+    }
+
     /** Makes a mishap befall it now (whatever its level), as if it had rolled it. */
     public static void befall(LivingEntity victim, Mishap mishap) {
         if (!(victim.level() instanceof ServerLevel sl)) return;
         Player source = sourceOf(victim, sl);
-        if (source != null && net.lukario.circleofinevitability.combat.Spells.isFriend(source, victim)) return;
         CompoundTag tag = victim.getPersistentData().getCompoundOrEmpty(TAG);
+        if (source != null && net.lukario.circleofinevitability.combat.Spells.isFriend(source, victim)
+                && !source.getUUID().toString().equals(tag.getStringOr("explicit_source", ""))) return;
         WheelTier tier = Fate.tier(source);
         switch (mishap) {
             case STUMBLE -> {
@@ -315,7 +347,10 @@ public final class Misfortune {
     private static void hurt(ServerLevel sl, LivingEntity victim, Player source, float damage) {
         if (damage <= 0f) return;
         if (source != null) DamageFx.credit(source, victim);
-        victim.hurt(sl.damageSources().magic(), damage);
+        LivingEntity before = mishapDamage;
+        mishapDamage = victim;
+        try { victim.hurt(sl.damageSources().magic(), damage); }
+        finally { mishapDamage = before; }
     }
 
     private static Mishap roll(LivingEntity victim, int level) {

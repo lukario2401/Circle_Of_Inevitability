@@ -44,6 +44,7 @@ public class CircleOfInevitability
         ModDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercuryGameTests.FUNCTIONS.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

@@ -58,6 +58,22 @@ public class FateOddsTest {
             try { FateOdds.outcome((int) invalid[0], invalid[1], invalid[2], invalid[3]); throw new AssertionError("Invalid roll accepted"); }
             catch (IllegalArgumentException expectedError) { }
         }
+        for (int source = -100; source <= 100; source += 5) {
+            for (int target = -100; target <= 100; target += 5) {
+                for (int requested : new int[]{-20,-5,0,5,20}) for (double resistance : new double[]{.5,1}) {
+                    double accepted = LuckBalance.transfer(source, target, requested, resistance);
+                    double from = source - accepted, to = target + accepted;
+                    if (Math.abs(from) > 100 || Math.abs(to) > 100 || Math.abs(accepted) > Math.abs(requested)
+                            || Math.abs(accepted) > Math.abs(source) || from * source < 0
+                            || Math.abs((from + to) - (source + target)) > .0001)
+                        throw new AssertionError("Invalid transfer or lost reserve");
+                    if (Math.signum(source) != Math.signum(requested) && accepted != 0) throw new AssertionError("Fabricated luck sign");
+                }
+            }
+        }
+        close((float) LuckBalance.transfer(30,98,20,1), 2);
+        close((float) LuckBalance.transfer(-30,6,-10,1), -10);
+        close((float) LuckBalance.transfer(30,0,10,.5), 5);
         float[][] multipliers = {{.25f,.25f,.25f,4f},{.5f,.5f,.5f,2f},{.75f,.75f,.75f,1f/.75f},
             {1,1,1,1},{1,1.5f,1.5f,1f/1.25f},{1.25f,2,1.75f,1f/1.5f},{1.5f,3,2,.5f}};
         for (WheelTier tier : WheelTier.values()) {
@@ -82,6 +98,6 @@ public class FateOddsTest {
         close(DisasterBalance.damage(100,10,true,true),93);
         close(DisasterBalance.damage(100,10,true,false),16);
         if (DisasterBalance.chance(10,true) <= DisasterBalance.chance(6,true)) throw new AssertionError("No frequency escalation");
-        System.out.println("PASS: 1,000,000 signed Wheel outcomes, neutral/bias/consumption, passive progression, invalid inputs, tier stats and disaster bounds");
+        System.out.println("PASS: 1,000,000 signed Wheel outcomes, neutral/bias/consumption, passive progression, 16,810 conserved transfers, invalid inputs, tier stats and disaster bounds");
     }
 }

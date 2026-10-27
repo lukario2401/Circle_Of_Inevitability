@@ -64,6 +64,7 @@ public class SKeyPressAbilitySevenUsed {
         KeySeal.pressed(player, 7);
         Casts.keyPressed(player, 7);                 // combat/Casts: told if the press goes off
         try {
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercuryPowers.cycleWheel(player, level, serverLevel, false);
             WormOfTimeAuthority.authority(player, level, serverLevel, false);
 
             wandererCosmicPlague(player,level,serverLevel,false);

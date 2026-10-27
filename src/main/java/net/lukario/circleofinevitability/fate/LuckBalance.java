@@ -12,6 +12,15 @@ public final class LuckBalance {
         if (sequence < 0 || sequence > 9) throw new IllegalArgumentException("Invalid sequence");
         return (10 - sequence) * .1;
     }
+    /** Signed transfer accepted by both reserves; resistance reduces acceptance before the debit. */
+    public static double transfer(double source, double target, double requested, double resistance) {
+        source = bounded(source); target = bounded(target);
+        if (!Double.isFinite(requested) || !Double.isFinite(resistance) || resistance <= 0 || resistance > 1)
+            throw new IllegalArgumentException("Invalid luck transfer");
+        if (requested == 0 || Math.signum(source) != Math.signum(requested)) return 0;
+        double room = requested > 0 ? LIMIT - target : LIMIT + target;
+        return Math.copySign(Math.min(room, Math.min(Math.abs(source), Math.abs(requested)) * resistance), requested);
+    }
     public static double afterRoll(double balance, int tier) {
         if (tier < 0 || tier > 6) throw new IllegalArgumentException("Invalid tier");
         double value = bounded(balance);

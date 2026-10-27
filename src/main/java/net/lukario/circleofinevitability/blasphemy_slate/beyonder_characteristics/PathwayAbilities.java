@@ -79,6 +79,18 @@ public final class PathwayAbilities {
     public static final List<Ability> ALL = List.of(
             new Ability("Snake Of Mercury", 1, "Premonition", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> SnakeOfMercury.premonition(player, level, sl, true)),
+            new Ability("Snake Of Mercury", 2, "Calculation", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> SnakeOfMercuryPowers.calculation(player, level, sl, true)),
+            new Ability("Snake Of Mercury", 3, "Luck", 7, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> SnakeOfMercuryPowers.luck(player, level, sl, true)),
+            new Ability("Snake Of Mercury", 4, "Calamity", 6, SNEAK, STEALABLE,
+                    (player, level, sl) -> SnakeOfMercuryPowers.calamity(player, level, sl, true)),
+            new Ability("Snake Of Mercury", 5, "Misfortune", 5, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> SnakeOfMercuryPowers.misfortuneWheel(player, level, sl, true)),
+            new Ability("Snake Of Mercury", 6, "Chaos and Prophecy", 3, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> SnakeOfMercuryPowers.chaosWheel(player, level, sl, true)),
+            new Ability("Snake Of Mercury", 7, "Cycle", 1, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> SnakeOfMercuryPowers.cycleWheel(player, level, sl, true)),
             // ---- Wanderer ----
             new Ability("Wanderer", 1, "Star Burst", 9, SNEAK, OWN_PATHWAY_ONLY,      // spends the Pathway's stars
                     (player, level, sl) -> Wanderer.wandererStarBurst(player, level, sl, true)),

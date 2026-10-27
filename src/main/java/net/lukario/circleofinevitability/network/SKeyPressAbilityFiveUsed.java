@@ -64,6 +64,7 @@ public class SKeyPressAbilityFiveUsed {
         KeySeal.pressed(player, 5);
         Casts.keyPressed(player, 5);                 // combat/Casts: told if the press goes off
         try {
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercuryPowers.misfortuneWheel(player, level, serverLevel, false);
             WormOfTimePowers.deceit(player, level, serverLevel, false);
 
             wandererTransport(player,level,serverLevel, false);

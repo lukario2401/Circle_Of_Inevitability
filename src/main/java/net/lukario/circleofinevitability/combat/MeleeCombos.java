@@ -28,6 +28,7 @@ public final class MeleeCombos {
     private static final Map<String, MeleeCombo> COMBOS = new HashMap<>();
 
     static {
+        register(SnakeOfMercuryPowers.MELEE_COMBO);
         register(HandOfOrder.MELEE_COMBO);
         register(AttendantOfMysteries.MELEE_COMBO);
         register(Wanderer.MELEE_COMBO);

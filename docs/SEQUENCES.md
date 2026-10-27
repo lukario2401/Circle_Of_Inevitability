@@ -262,6 +262,20 @@ Acting would add a fourth digestion source: call `Digestion.add(player, percent)
 
 ## Snake Of Mercury
 
-Key 1: **Premonition** (Sequence 9), normal Danger Premonition / sneak Spirit Vision.
-The previewed Wheel and aimed-enemy Misfortune counter are described in
-[SNAKE_OF_MERCURY.md](SNAKE_OF_MERCURY.md). Remaining keys are not implemented yet.
+All seven player keys are implemented; native geometry/duration uses the material
+Wheel, which obeys and spends a signed luck reserve.
+
+| Key | Sequence | Normal / sneak |
+| --- | --- | --- |
+| 1 (G) | 9 | Danger Premonition / Spirit Vision |
+| 2 (H) | 8 | Calculation / Machine Mind |
+| 3 (J) | 7 | Signed Bestow Luck menu / Spin the Wheel |
+| 4 (K) | 6 | Calamity Redirection / Calamity Attraction |
+| 5 (L) | 5 | Misfortune wheel / last pick |
+| 6 (N) | 3 | Chaos and Prophecy wheel / last pick |
+| 7 (M) | 1 | Cycle wheel / last pick |
+
+Misfortune Mage (4) unlocks Chain/Form and removes Spin's cooldown; Soothsayer (2)
+adds prophecy entries; Wheel of Fortune (0) adds the capstone and Fate Authority.
+Full controls, costs, signed transfers, passives, limitations and checks:
+[SNAKE_OF_MERCURY.md](SNAKE_OF_MERCURY.md).

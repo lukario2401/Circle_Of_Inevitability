@@ -64,6 +64,7 @@ public class SKeyPressAbilityTwoUsed {
         KeySeal.pressed(player, 2);
         Casts.keyPressed(player, 2);                 // combat/Casts: told if the press goes off
         try {
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercuryPowers.calculation(player, level, serverLevel, false);
 
             wandererDash(player,level,serverLevel, false);
 
