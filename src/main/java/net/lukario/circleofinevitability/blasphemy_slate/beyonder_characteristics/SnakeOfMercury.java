@@ -89,6 +89,7 @@ public final class SnakeOfMercury {
         }
         if (vision) {
             double range = player.getPersistentData().getDoubleOr(VISION_RANGE, 32d);
+            //
             // Same reveal mechanism as Eye of Demon Hunting; no teams or permanent visibility changes.
             for (LivingEntity seen : Spells.livingAround(player, sl, player.position(), range)) {
                 if (seen != player) {
