@@ -56,7 +56,6 @@ public class AbilityMenuScreen extends Screen {
     private int hoveredIndex(double mouseX, double mouseY) {
         for (int i = 0; i < options.size(); i++) {
             COpenAbilityMenuPacket.Option option = options.get(i);
-            if (option.locked()) continue;                      // greyed out: cannot be hovered or picked
             double dx = mouseX - (width / 2.0 + option.x());
             double dy = mouseY - (height / 2.0 + option.y());
             if (Math.abs(dx) <= iconSize / 2.0 && Math.abs(dy) <= iconSize / 2.0) return i;
@@ -76,7 +75,7 @@ public class AbilityMenuScreen extends Screen {
         if (event.button() == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             int index = hoveredIndex(event.x(), event.y());
             if (index >= 0) {
-                choose(index);
+                if (!options.get(index).locked()) choose(index);
             } else {
                 onClose(); // clicked empty space
             }
@@ -161,6 +160,11 @@ public class AbilityMenuScreen extends Screen {
                 guiGraphics.centeredText(font, option.detail(), 0, 0, option.locked() ? LOCKED_COLOR : DETAIL_COLOR);
                 guiGraphics.pose().popMatrix();
             }
+        }
+        if (hovered >= 0 && !options.get(hovered).description().isEmpty()) {
+            guiGraphics.setTooltipForNextFrame(font,
+                    font.split(Component.literal(options.get(hovered).description()), Math.min(260, Math.max(80, width - 24))),
+                    mouseX, mouseY);
         }
     }
 }

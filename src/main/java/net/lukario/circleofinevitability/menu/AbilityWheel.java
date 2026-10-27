@@ -93,6 +93,7 @@ public final class AbilityWheel {
         private Predicate<ServerPlayer> free;
         private CostRule costBy;
         private boolean copyable = true;
+        private String description = "";
 
         private Entry(String key, String icon, String name, int sequence, int cost, int cooldown, Cast cast) {
             this.key = key;
@@ -153,6 +154,12 @@ public final class AbilityWheel {
 
     public AbilityWheel entry(String key, String icon, String name, int sequence, int cost, int cooldownTicks, Cast cast) {
         entries.add(new Entry(key, icon, name, sequence, cost, Math.max(0, cooldownTicks), cast));
+        return this;
+    }
+
+    /** Hover text for the entry added last. */
+    public AbilityWheel description(String text) {
+        if (!entries.isEmpty()) entries.get(entries.size() - 1).description = text;
         return this;
     }
 
@@ -399,6 +406,7 @@ public final class AbilityWheel {
         for (Entry entry : entries) {
             built.option(entry.icon, entry.name, 0, 0, (player, sl) -> cast(player, entry))
                     .details(player -> details(player, entry))
+                    .description(player -> entry.description)
                     .lockedWhen(player -> !unlocked(player, entry));
         }
         menu = built;

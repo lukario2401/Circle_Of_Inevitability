@@ -26,6 +26,7 @@ public final class SnakeOfMercuryGameTests {
         FUNCTIONS.register("snake_ledger", () -> SnakeOfMercuryGameTests::ledger);
         FUNCTIONS.register("snake_reincarnation", () -> SnakeOfMercuryGameTests::reincarnation);
         FUNCTIONS.register("snake_failed_cast", () -> SnakeOfMercuryGameTests::failed);
+        FUNCTIONS.register("snake_sneak_recast", () -> SnakeOfMercuryGameTests::sneakRecast);
         FUNCTIONS.register("snake_sky_pulse", () -> SnakeOfMercuryGameTests::sky);
     }
     private SnakeOfMercuryGameTests() {}
@@ -42,6 +43,46 @@ public final class SnakeOfMercuryGameTests {
         return p;
     }
     private static void equal(GameTestHelper h, double actual, double expected, String label) { h.assertTrue(Math.abs(actual - expected) < .0001, label + ": " + actual + " != " + expected); }
+    private static void sneakRecast(GameTestHelper h) {
+        ServerPlayer p = player(h, 0);
+        var wheels = new AbilityWheel[]{SnakeOfMercuryPowers.MISFORTUNE, SnakeOfMercuryPowers.CHAOS, SnakeOfMercuryPowers.CYCLE};
+        String[] ids = {"snake_of_mercury_misfortune", "snake_of_mercury_chaos", "snake_of_mercury_cycle"};
+        String[] keys = {"gambit", "aura", "loop"};
+        for (int i = 0; i < wheels.length; i++) {
+            var wheel = wheels[i]; var entry = wheel.entry(keys[i]);
+            for (WheelTier tier : WheelTier.values()) {
+                SoulCore.setSpiritualityQuietly(p, Float.MAX_VALUE);
+                Fate.set(p, tier);
+                p.getPersistentData().putString(ids[i] + "_last", keys[i]);
+                long ready = h.getLevel().getGameTime() + entry.cooldown();
+                p.getPersistentData().putLong(ids[i] + "_ready_" + keys[i], ready);
+                h.assertTrue(wheel.cast(p, entry) == AbilityWheel.Result.REFUSED, "Normal cast respects existing cooldown");
+                float before = SoulCore.getSpirituality(p);
+                int multiplier = tier == WheelTier.NETHERITE ? 1 : tier == WheelTier.DIAMOND ? 2 : 3;
+                wheel.quickCast(p);
+                equal(h, before - SoulCore.getSpirituality(p), entry.cost() * multiplier, "Sneak price for " + ids[i] + " / " + tier);
+                if (i != 0) equal(h, p.getPersistentData().getLongOr(ids[i] + "_ready_" + keys[i], 0L), ready, "Sneak cast starts no cooldown");
+                wheel.resetCooldown(p, keys[i]);
+                SoulCore.setSpiritualityQuietly(p, Float.MAX_VALUE);
+                Fate.set(p, tier);
+                wheel.quickCast(p);
+                equal(h, wheel.cooldownLeft(p, entry), 0, "Sneak cast with no existing cooldown stays ready");
+            }
+        }
+        for (WheelTier tier : WheelTier.values()) {
+            SoulCore.setSpiritualityQuietly(p, Float.MAX_VALUE);
+            Fate.set(p, tier);
+            p.setShiftKeyDown(true);
+            p.getPersistentData().putString("snake_of_mercury_chaos_last", "words");
+            net.lukario.circleofinevitability.combat.Cooldowns.start(p, "snake_words", 400);
+            float before = SoulCore.getSpirituality(p);
+            SnakeOfMercuryPowers.CHAOS.quickCast(p);
+            net.lukario.circleofinevitability.menu.AbilityMenu.handleChoice(p, "snake_words", 0);
+            int multiplier = tier == WheelTier.NETHERITE ? 1 : tier == WheelTier.DIAMOND ? 2 : 3;
+            equal(h, before - SoulCore.getSpirituality(p), 12000 * multiplier, "Sneak words bypass cooldown at " + tier);
+        }
+        h.succeed();
+    }
     private static void transfer(GameTestHelper h) {
         var source = h.spawnWithNoFreeWill(EntityTypes.PIG, 1, 1, 1);
         var target = h.spawnWithNoFreeWill(EntityTypes.PIG, 2, 1, 1);

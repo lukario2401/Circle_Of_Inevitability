@@ -37,28 +37,46 @@ public final class SnakeOfMercuryPowers {
         return (p, sl) -> allowed(p, sequence, Casts.isCopying(p)) ? action.cast(p, sl) : AbilityWheel.Result.REFUSED;
     }
     static final AbilityWheel MISFORTUNE = AbilityWheel.create("snake_of_mercury_misfortune", "Misfortune")
+            .quickCastCooldown(false).quickCastCostBy(SnakeOfMercuryPowers::recastCost)
             .entry("bestow", ICON, "Misfortune Bestowal", 5, 3000, 100, checked(5, SnakeOfMercuryPowers::misfortune)).notCopyable()
+            .description("Inflict misfortune and an immediate mishap on an aimed enemy, then transfer negative luck from your reserve. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("gambit", ICON, "Winner's Gambit", 5, 3000, 300, checked(5, SnakeOfMercuryPowers::gambit)).notCopyable()
+            .description("Stake 20% of your health and spin three times. Lucky stops grant healing, area damage and cooldown reduction; three grant a jackpot. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("chain", ICON, "Misfortune Chain", 4, 6000, 160, checked(4, SnakeOfMercuryPowers::chain))
+            .description("Strike an aimed enemy with a chain of increasingly powerful misfortune attacks that jumps to nearby enemies. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("serpent", ICON, "Silver Serpent Form", 4, 6000, 0, checked(4, SnakeOfMercuryPowers::serpent))
+            .description("Become a Silver Serpent. Cast again to dismiss the form for free. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .free(p -> active(p, "serpent")).notCopyable()
             .onCast(SnakeOfMercuryPowers::misfortuneFinished);
     static final AbilityWheel CHAOS = AbilityWheel.create("snake_of_mercury_chaos", "Chaos and Prophecy")
+            .quickCastCooldown(false).quickCastCostBy(SnakeOfMercuryPowers::recastCost)
             .entry("walk", ICON, "Chaos Walk", 3, 9000, 120, checked(3, SnakeOfMercuryPowers::walk))
+            .description("Conceal yourself with Chaos Walk and prepare to evade a projectile. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("aura", ICON, "Aura of Chaos", 3, 9000, 240, checked(3, SnakeOfMercuryPowers::aura))
+            .description("Surround yourself with an aura of chaos that disrupts nearby enemies. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("words", ICON, "Words of Fortune and Misfortune", 2, 0, 0, checked(2, SnakeOfMercuryPowers::wordsMenu)).notCopyable()
+            .description("Choose a blessing or curse to bestow positive or negative luck on your target. Each choice normally costs 12000 spirituality and has a 20-second cooldown. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("conceal", ICON, "Fate Concealment", 2, 12000, 160, checked(2, SnakeOfMercuryPowers::conceal))
+            .description("Hide an aimed ally, or yourself, from notice and arm a substitute to protect them. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("opportunity", ICON, "Arranged Opportunity", 2, 12000, 400, checked(2, SnakeOfMercuryPowers::opportunity)).notCopyable()
+            .description("Arrange an opportunity in the aimed area, helping allies and hindering enemies. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .onCast((p, sl, entry) -> finish(p));
     static final AbilityWheel CYCLE = AbilityWheel.create("snake_of_mercury_cycle", "Cycle")
+            .quickCastCooldown(false).quickCastCostBy(SnakeOfMercuryPowers::recastCost)
             .entry("reboot", ICON, "Reboot", 1, 20000, 2400, checked(1, SnakeOfMercuryCycle::reboot)).notCopyable()
+            .description("Rewind nearby entities to recorded positions and health from 8 seconds ago, or 20 seconds at Sequence 0. Requires recorded history. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("loop", ICON, "Fate Loop", 1, 20000, 400, checked(1, SnakeOfMercuryCycle::loop)).notCopyable()
+            .description("Create a breakable medium at the aimed location that traps nearby enemies in a repeating fate loop. Recasting replaces your previous loop. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("connection", ICON, "Fated Connection", 1, 20000, 0, checked(1, SnakeOfMercuryCycle::connection))
+            .description("Place up to three fated anchors on living targets or locations. Aim at an existing anchor and cast again to swap positions for free. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .free(SnakeOfMercuryCycle::aimingAtAnchor).notCopyable()
             .entry("reincarnation", ICON, "Reincarnation", 1, 20000, 18000, checked(1, SnakeOfMercuryCycle::reincarnation)).notCopyable()
+            .description("Arm a death ward for 10 minutes. On activation, survive at half health, rewind your history, cleanse effects and spin the Wheel. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .entry("wheel", ICON, "The Wheel of Fortune", 0, 40000, 6000, checked(0, SnakeOfMercuryCycle::wheel))
+            .description("Manifest the Wheel of Fortune over a wide area, pulsing every 4 seconds. Cast again to dismiss it for free. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .free(p -> active(p, "sky")).notCopyable()
             .entry("authority", ICON, "Fate Authority", 0, 0, 0, checked(0, SnakeOfMercuryPowers::authority)).notCopyable()
+            .description("Choose the Wheel material allowed by your signed luck reserve and spend luck for that result. Sneak recast: no cooldown; Netherite costs 1x, Diamond 2x, all other materials 3x.")
             .onCast((p, sl, entry) -> finish(p));
 
     static boolean allowed(Player p, int sequence, boolean borrowed) {
@@ -71,6 +89,13 @@ public final class SnakeOfMercuryPowers {
         if (Casts.isCopying(p)) until = Math.max(until, p.getPersistentData().getLongOr(PREFIX + key, 0L));
         p.getPersistentData().putLong(PREFIX + key, until);
         if (ticks < Integer.MAX_VALUE / 2) HudTimer.show(p, PREFIX + key, label, ticks, SILVER);
+    }
+    static double recastCost(Player p) {
+        return switch (material(p)) {
+            case NETHERITE -> 1;
+            case DIAMOND -> 2;
+            default -> 3;
+        };
     }
     static WheelTier material(Player p) { return Casts.isCopying(p) ? WheelTier.GOLD : Fate.tier(p); }
     static int duration(Player p, int ticks) { return Math.max(1, Math.round(ticks * material(p).duration * Echo.strength(p))); }
@@ -119,7 +144,8 @@ public final class SnakeOfMercuryPowers {
         AbilityMenu menu = AbilityMenu.create("snake_bestow").title("Bestow signed luck · aim at a living target").ring(110);
         for (int amount : new int[]{5,10,20,-5,-10,-20}) {
             menu.option(ICON, String.format(Locale.ROOT, "%+d Luck", amount), 0, 0, (player, world) -> bestow(player, world, amount, false))
-                    .details(player -> "1250 spirituality · transfer existing reserve");
+                    .details(player -> "1250 spirituality · transfer existing reserve")
+                    .description(player -> "Transfer this amount of signed luck from your existing reserve to the aimed living target.");
         }
         if (sequence(p) <= 2) {
             for (int amount : new int[]{20,-20}) menu.option(ICON, String.format(Locale.ROOT, "%+d shared Luck", amount), 0, 0,
@@ -238,15 +264,21 @@ public final class SnakeOfMercuryPowers {
         return AbilityWheel.Result.DONE;
     }
     private static AbilityWheel.Result wordsMenu(ServerPlayer p, ServerLevel sl) {
+        boolean sneak = p.isShiftKeyDown();
         AbilityMenu.create("snake_words").title("Words of Fortune and Misfortune").ring(90)
-                .option(ICON, "Bless +30 Luck", 0, 0, (who, world) -> words(who, world, true)).details(who -> "12000 · 20s")
-                .option(ICON, "Curse -30 Luck", 0, 0, (who, world) -> words(who, world, false)).details(who -> "12000 · 20s").open(p);
+                .option(ICON, "Bless +30 Luck", 0, 0, (who, world) -> words(who, world, true, sneak)).details(who -> wordsDetails(who, sneak))
+                .description(who -> "Bless the aimed living target, or yourself, with +30 Luck and a lasting blessing.")
+                .option(ICON, "Curse -30 Luck", 0, 0, (who, world) -> words(who, world, false, sneak)).details(who -> wordsDetails(who, sneak))
+                .description(who -> "Curse the aimed living target, or yourself, with negative luck and misfortune. Bosses resist the curse.").open(p);
         return AbilityWheel.Result.FREE;
     }
-    private static void words(ServerPlayer p, ServerLevel sl, boolean blessing) {
-        if (!allowed(p, 2, false) || !Cooldowns.ready(p, "snake_words", "Words of Fate")) return;
+    private static String wordsDetails(Player p, boolean sneak) {
+        return (int) (12000 * (sneak ? recastCost(p) : 1)) + (sneak ? " · no cooldown" : " · 20s");
+    }
+    private static void words(ServerPlayer p, ServerLevel sl, boolean blessing, boolean sneak) {
+        if (!allowed(p, 2, false) || !sneak && !Cooldowns.ready(p, "snake_words", "Words of Fate")) return;
         LivingEntity t = targetOrSelf(p, sl, 32 * material(p).range);
-        if (!Spells.paySpirituality(p, 12000)) return;
+        if (!Spells.paySpirituality(p, (int) (12000 * (sneak ? recastCost(p) : 1)))) return;
         Luck.bestow(p, t, blessing ? 30 : Spells.isBoss(t) ? -15 : -30);
         if (blessing) t.getPersistentData().putLong(PREFIX + "blessing", sl.getGameTime() + duration(p, 1200));
         else {
@@ -255,7 +287,7 @@ public final class SnakeOfMercuryPowers {
             Misfortune.addDeliberate(t, p, material(p).fortuneLevels(levels, p.getRandom().nextFloat()), 200);
             SnakeOfMercuryEvents.curse(p, t, Spells.isBoss(t) ? duration(p, 100) : duration(p, 200));
         }
-        Cooldowns.start(p, "snake_words", 400);
+        if (!sneak) Cooldowns.start(p, "snake_words", 400);
         finish(p);
     }
     private static AbilityWheel.Result conceal(ServerPlayer p, ServerLevel sl) {
@@ -284,7 +316,8 @@ public final class SnakeOfMercuryPowers {
                     Fate.set(who, tier); Luck.spendRoll(who, tier.ordinal());
                     who.getPersistentData().putInt("snake_wheel_sequence", sequence(who));
                     who.getPersistentData().putLong("snake_of_mercury_next_spin", world.getGameTime() + 160);
-                }).lockedWhen(who -> !permitted(Luck.balance(who), tier));
+                }).description(who -> "Set the Wheel to " + tier.label + ". Positive reserve allows lucky materials; negative reserve allows unlucky materials. Gold is always available.")
+                .lockedWhen(who -> !permitted(Luck.balance(who), tier));
         menu.open(p); return AbilityWheel.Result.FREE;
     }
     private static boolean permitted(double balance, WheelTier tier) { return tier == WheelTier.GOLD || balance > 0 && tier.ordinal() > 3 || balance < 0 && tier.ordinal() < 3; }

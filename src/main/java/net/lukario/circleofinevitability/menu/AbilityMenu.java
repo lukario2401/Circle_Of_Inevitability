@@ -69,6 +69,7 @@ public class AbilityMenu {
         final int y;
         final Action action;
         Details details;
+        Details description;
         Lock lock;
 
         Option(String icon, String label, int x, int y, Action action) {
@@ -132,6 +133,12 @@ public class AbilityMenu {
         return this;
     }
 
+    /** Hover description for the option added last. */
+    public AbilityMenu description(Details description) {
+        if (!options.isEmpty()) options.get(options.size() - 1).description = description;
+        return this;
+    }
+
     /** The option added last is greyed out and cannot be picked while this says true for the player. */
     public AbilityMenu lockedWhen(Lock lock) {
         if (!options.isEmpty()) options.get(options.size() - 1).lock = lock;
@@ -160,7 +167,8 @@ public class AbilityMenu {
             }
             String detail = option.details == null ? "" : option.details.of(serverPlayer);
             sent.add(new COpenAbilityMenuPacket.Option(ScreenImages.texture(option.icon), option.label, x, y,
-                    detail == null ? "" : detail, option.lockedFor(serverPlayer)));
+                    detail == null ? "" : detail, option.lockedFor(serverPlayer),
+                    option.description == null ? "" : option.description.of(serverPlayer)));
         }
 
         OPEN_MENUS.put(serverPlayer.getUUID(), this);

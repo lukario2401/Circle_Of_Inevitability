@@ -15,7 +15,7 @@ import java.util.List;
 public class COpenAbilityMenuPacket {
 
     /** detail: a small second line under the label ("" = none). locked: greyed out, cannot be picked. */
-    public record Option(Identifier icon, String label, int x, int y, String detail, boolean locked) {}
+    public record Option(Identifier icon, String label, int x, int y, String detail, boolean locked, String description) {}
 
     private final String menuId;
     private final String title;
@@ -37,7 +37,7 @@ public class COpenAbilityMenuPacket {
         this.options = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             options.add(new Option(buffer.readIdentifier(), buffer.readUtf(), buffer.readInt(), buffer.readInt(),
-                    buffer.readUtf(), buffer.readBoolean()));
+                    buffer.readUtf(), buffer.readBoolean(), buffer.readUtf()));
         }
     }
 
@@ -53,6 +53,7 @@ public class COpenAbilityMenuPacket {
             buffer.writeInt(option.y());
             buffer.writeUtf(option.detail());
             buffer.writeBoolean(option.locked());
+            buffer.writeUtf(option.description());
         }
     }
 
