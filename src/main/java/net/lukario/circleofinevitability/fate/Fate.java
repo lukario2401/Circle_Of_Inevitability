@@ -2,6 +2,7 @@ package net.lukario.circleofinevitability.fate;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.minecraft.world.entity.LivingEntity;
+import net.lukario.circleofinevitability.status.Luck;
 import net.minecraft.world.entity.player.Player;
 
 /** Server-owned material Wheel. Combat uses the displayed tier; paid native casts reroll after activation. */
@@ -13,9 +14,11 @@ public final class Fate {
         return entity instanceof Player player && !player.level().isClientSide()
                 && PATHWAY.equals(SoulCore.getPathway(player));
     }
-    public static WheelTier outcome(int sequence, int roll) { return WheelTier.values()[FateOdds.outcome(sequence, roll)]; }
     public static void spin(Player player) {
-        set(player, outcome(Math.clamp(SoulCore.getSequence(player), 0, 9), player.getRandom().nextInt(100)));
+        int tier = FateOdds.outcome(Math.clamp(SoulCore.getSequence(player), 0, 9), Luck.balance(player),
+                player.getRandom().nextDouble(), player.getRandom().nextDouble());
+        set(player, WheelTier.values()[tier]);
+        Luck.spendRoll(player, tier);
         player.getPersistentData().putInt("snake_wheel_sequence", SoulCore.getSequence(player));
         player.getPersistentData().putLong(NEXT, player.level().getGameTime() + 160);
     }

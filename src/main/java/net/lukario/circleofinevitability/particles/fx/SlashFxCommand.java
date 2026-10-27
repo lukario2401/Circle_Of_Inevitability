@@ -12,7 +12,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PaleEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.FrenziedMage;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.WormOfTime;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTime;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderFx;
 import net.lukario.circleofinevitability.combat.Later;
 import net.minecraft.commands.CommandSourceStack;

@@ -1,6 +1,8 @@
 package net.lukario.circleofinevitability.fate;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.status.Luck;
 import net.lukario.circleofinevitability.combat.DamageFx;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.status.Decree;
@@ -59,6 +61,7 @@ public final class FateCombat {
     @SubscribeEvent
     public static void tick(LivingEvent.LivingTickEvent event) {
         if (!(event.getEntity() instanceof Player player) || !Fate.applies(player) || !player.isAlive() || player.tickCount % 5 != 0) return;
+        Luck.add(player, LuckBalance.perSecond(Math.clamp(SoulCore.getSequence(player), 0, 9)) / 4);
         WheelTier tier = Fate.peek(player);
         // Short, nonstacking utility effects. Strength/Resistance are deliberately absent: damage is scaled above.
         switch (tier) {

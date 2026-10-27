@@ -1,15 +1,13 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbilities;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbility;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpells;
 import net.lukario.circleofinevitability.combat.Spells;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimeFx;
 import net.lukario.circleofinevitability.status.*;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
 
 /** Combat adaptations for Beyonder mobs: bounded life/distance theft (4), intent/dream theft (5),

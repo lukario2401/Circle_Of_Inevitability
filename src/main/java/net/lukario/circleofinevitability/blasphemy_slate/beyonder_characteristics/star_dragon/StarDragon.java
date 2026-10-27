@@ -359,9 +359,8 @@ public class StarDragon {
 
         /** Quantum Uncertainty: a teleport into the field slips aside. */
         @SubscribeEvent
-        public static boolean onStarDragonTeleport(EntityTeleportEvent event) {
+        public static void onStarDragonTeleport(EntityTeleportEvent event) {
             StarDragonVoid.teleport(event);
-            return false;
         }
 
         /**

@@ -9,6 +9,7 @@ import net.lukario.circleofinevitability.fate.WheelTier;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Misfortune;
+import net.lukario.circleofinevitability.status.Luck;
 import net.lukario.circleofinevitability.status.Substitute;
 import net.minecraft.server.level.ServerLevel;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;
@@ -79,16 +80,21 @@ public final class SnakeOfMercury {
         if (own) {
             WheelTier omen = Fate.peek(player);
             HudCounter.show(player, "snake_wheel", "snake_of_mercury/omen_" + omen.name().toLowerCase(java.util.Locale.ROOT), omen.label + " · " + Math.round(omen.fortune * 100) + "%", (Fate.ticksLeft(player) + 19) / 20, 0, omen.color);
-        } else HudCounter.hide(player, "snake_wheel");
+            double luck = Luck.balance(player);
+            HudCounter.show(player, "snake_luck", "", String.format(java.util.Locale.ROOT, "Luck %+.1f · Bias", luck),
+                    (int) Math.round(Math.abs(luck)), 100, luck > 0 ? 0xF4CE62 : luck < 0 ? 0xE75060 : 0xC9D3E0);
+        } else {
+            HudCounter.hide(player, "snake_wheel");
+            HudCounter.hide(player, "snake_luck");
+        }
         if (vision) {
             double range = player.getPersistentData().getDoubleOr(VISION_RANGE, 32d);
             // Same reveal mechanism as Eye of Demon Hunting; no teams or permanent visibility changes.
             for (LivingEntity seen : Spells.livingAround(player, sl, player.position(), range)) {
                 if (seen != player) {
                     Spells.keepEffect(seen, MobEffects.GLOWING, 0, 10);
-                    int color = Misfortune.level(seen) >= 6 ? 0xFFE75060 : 0xFFC9D3E0;
-                    if (seen instanceof Player other && PATHWAY.equals(SoulCore.getPathway(other)) && Fate.peek(other).fortune > 1f)
-                        color = 0xFFF4CE62;
+                    double luck = Luck.balance(seen);
+                    int color = luck < 0 ? 0xFFE75060 : luck > 0 ? 0xFFF4CE62 : 0xFFC9D3E0;
                     ParticleShapes.burst(sl, SILVER.color(color), seen.position().add(0, seen.getBbHeight() + .2, 0), 2, .12, .02);
                 }
             }
@@ -97,7 +103,7 @@ public final class SnakeOfMercury {
         if (target == null) HudCounter.hide(player, "snake_target");
         else {
             int count = Misfortune.level(target);
-            HudCounter.show(player, "snake_target", "", target.getDisplayName().getString() + " · Misfortune", count, 10,
+            HudCounter.show(player, "snake_target", "", target.getDisplayName().getString() + (vision ? String.format(java.util.Locale.ROOT, " · Luck %+.1f", Luck.balance(target)) : "") + " · Misfortune", count, 10,
                     count >= 6 ? 0xE75060 : 0xC9D3E0);
         }
         if (own && Substitute.isArmed(player)) {
