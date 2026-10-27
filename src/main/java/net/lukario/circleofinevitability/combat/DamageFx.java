@@ -111,6 +111,17 @@ public final class DamageFx {
         CREDITS.put(target, new Credit(player.getUUID(), now + CREDIT_TICKS, now + ABILITY_CREDIT_TICKS));
     }
 
+    /** Explicit ability credit only, for gameplay modifiers. Does not borrow the long-lived visual DoT credit. */
+    public static ServerPlayer abilityDealerOf(LivingEntity victim, DamageSource source, ServerLevel sl) {
+        if (source.getEntity() != null) {
+            Entity attacker = source.getEntity();
+            return attacker instanceof ServerPlayer player ? player : online(sl, Marionette.masterId(attacker));
+        }
+        if (source.getDirectEntity() != null) return null;
+        Credit credit = CREDITS.get(victim);
+        return credit != null && credit.anyUntil() >= sl.getGameTime() ? online(sl, credit.player()) : null;
+    }
+
     // =========================
     // Command
     // =========================

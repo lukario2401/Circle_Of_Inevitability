@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.combat.*;
 import net.lukario.circleofinevitability.fate.Fate;
+import net.lukario.circleofinevitability.fate.WheelTier;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Misfortune;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID)
 public final class SnakeOfMercury {
     public static final String PATHWAY = "Snake Of Mercury";
+    private static final String VISION_RANGE = "snake_vision_range";
     private static final String VISION = "snake_of_mercury_vision", PREMONITION = "snake_of_mercury_premonition";
     static { Cooldowns.addFree(Cooldowns.keysStartingWith("snake_of_mercury_")); }
     private static final ParticleFx SILVER = ParticleFx.of("fx/spark").color(0xFFC9D3E0).glow().size(.08f).lifetime(12, 0);
@@ -34,15 +36,15 @@ public final class SnakeOfMercury {
     public static void premonition(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!bypassClassCheck && !PATHWAY.equals(SoulCore.getPathway(player))) return;
         if (!Beyonder.hasSequence(player, 9)) return;
-        // Like Worm Of Time: no fixed cooldown, full spirituality price must be affordable before Fortune refunds.
+        // Like Worm Of Time: no fixed cooldown; spirituality limits repeated activation.
         if (!player.isShiftKeyDown() && net.lukario.circleofinevitability.status.Decree.violate(player, net.lukario.circleofinevitability.status.Decree.Rule.STAND_INS)) return;
-        float before = SoulCore.getSpirituality(player);
         if (!Spells.paySpirituality(player, 250)) return;
         boolean own = PATHWAY.equals(SoulCore.getPathway(player)) && !Casts.isCopying(player);
-        Fate.Omen omen = own ? Fate.peek(player) : Fate.Omen.EVEN;
-        float power = omen.power;
+        WheelTier omen = own ? Fate.peek(player) : WheelTier.GOLD;
+        float power = omen.duration;
         if (player.isShiftKeyDown()) {
             int ticks = Math.round(300 * power);
+            player.getPersistentData().putDouble(VISION_RANGE, (Beyonder.hasSequence(player, 2) ? 64 : 32) * omen.aoe);
             player.getPersistentData().putLong(VISION, sl.getGameTime() + ticks);
             HudTimer.show(player, VISION, "Spirit Vision", ticks, 0xC9D3E0);
         } else {
@@ -51,7 +53,7 @@ public final class SnakeOfMercury {
                 Vec3 look = Spells.flatLook(saved);
                 Vec3 side = new Vec3(-look.z, 0, look.x);
                 Vec3 destination = Root.has(saved, RootRestriction.TELEPORT) ? null
-                        : Spells.freeSpotNear(saved, world, saved.position(), side, 2);
+                        : Spells.freeSpotNear(saved, world, saved.position(), side, 2 * omen.range);
                 if (destination != null) {
                     saved.teleportTo(destination.x, destination.y, destination.z);
                     saved.fallDistance = 0;
@@ -65,7 +67,7 @@ public final class SnakeOfMercury {
             });
             HudTimer.show(player, PREMONITION, "Premonition", ticks, 0xC9D3E0);
         }
-        if (own) Fate.consume(player, omen, before - SoulCore.getSpirituality(player));
+        if (own) Fate.consume(player);
     }
 
     @SubscribeEvent
@@ -75,23 +77,23 @@ public final class SnakeOfMercury {
         boolean own = PATHWAY.equals(SoulCore.getPathway(player)) && Beyonder.hasSequence(player, 9);
         boolean vision = player.getPersistentData().getLongOr(VISION, 0L) > sl.getGameTime();
         if (own) {
-            Fate.Omen omen = Fate.peek(player);
-            HudCounter.show(player, "snake_wheel", "snake_of_mercury/omen_" + omen.name().toLowerCase(java.util.Locale.ROOT), "Wheel: " + omen.label + " · next spin", (Fate.ticksLeft(player) + 19) / 20, 0, omen.color);
+            WheelTier omen = Fate.peek(player);
+            HudCounter.show(player, "snake_wheel", "snake_of_mercury/omen_" + omen.name().toLowerCase(java.util.Locale.ROOT), omen.label + " · " + Math.round(omen.fortune * 100) + "%", (Fate.ticksLeft(player) + 19) / 20, 0, omen.color);
         } else HudCounter.hide(player, "snake_wheel");
         if (vision) {
-            double range = Beyonder.hasSequence(player, 2) ? 64 : 32;
+            double range = player.getPersistentData().getDoubleOr(VISION_RANGE, 32d);
             // Same reveal mechanism as Eye of Demon Hunting; no teams or permanent visibility changes.
             for (LivingEntity seen : Spells.livingAround(player, sl, player.position(), range)) {
                 if (seen != player) {
                     Spells.keepEffect(seen, MobEffects.GLOWING, 0, 10);
                     int color = Misfortune.level(seen) >= 6 ? 0xFFE75060 : 0xFFC9D3E0;
-                    if (seen instanceof Player other && PATHWAY.equals(SoulCore.getPathway(other)) && Fate.peek(other) == Fate.Omen.FORTUNE)
+                    if (seen instanceof Player other && PATHWAY.equals(SoulCore.getPathway(other)) && Fate.peek(other).fortune > 1f)
                         color = 0xFFF4CE62;
                     ParticleShapes.burst(sl, SILVER.color(color), seen.position().add(0, seen.getBbHeight() + .2, 0), 2, .12, .02);
                 }
             }
         }
-        LivingEntity target = (own || vision) ? Spells.aimEnemy(player, sl, vision && Beyonder.hasSequence(player, 2) ? 64 : 32) : null;
+        LivingEntity target = (own || vision) ? Spells.aimEnemy(player, sl, vision ? player.getPersistentData().getDoubleOr(VISION_RANGE, 32d) : 32 * Fate.tier(player).range) : null;
         if (target == null) HudCounter.hide(player, "snake_target");
         else {
             int count = Misfortune.level(target);
@@ -99,7 +101,7 @@ public final class SnakeOfMercury {
                     count >= 6 ? 0xE75060 : 0xC9D3E0);
         }
         if (own && Substitute.isArmed(player)) {
-            for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), 16)) {
+            for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), 16 * Fate.tier(player).aoe)) {
                 if (enemy instanceof Mob mob && mob.getTarget() == player && Spells.clearLine(player, sl, player.getEyePosition(), enemy.getEyePosition()))
                     ParticleShapes.burst(sl, SILVER.color(0xFFE75060), enemy.getEyePosition(), 3, .15, .02);
             }

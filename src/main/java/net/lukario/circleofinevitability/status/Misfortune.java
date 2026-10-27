@@ -2,6 +2,17 @@ package net.lukario.circleofinevitability.status;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.combat.DamageFx;
+import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.combat.SpellFx;
+import net.lukario.circleofinevitability.combat.Later;
+import net.lukario.circleofinevitability.fate.DisasterBalance;
+import net.lukario.circleofinevitability.fate.Fate;
+import net.lukario.circleofinevitability.fate.WheelTier;
+import net.lukario.circleofinevitability.root.Root;
+import net.lukario.circleofinevitability.root.RootRestriction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -54,7 +65,8 @@ import java.util.function.Predicate;
 public final class Misfortune {
 
     public enum Mishap {
-        STUMBLE(1), FUMBLE(2), BACKFIRE(3), FALLING_STONE(4), CALAMITY(5);
+        STUMBLE(1), FUMBLE(2), BACKFIRE(3), FALLING_STONE(4), CALAMITY(5),
+        GRAVITY_CRUSH(6), WITHERING(6), LIGHTNING(7), METEOR_STORM(8), SEISMIC_BURST(9), DOOM(10);
 
         public final int fromLevel;
 
@@ -100,7 +112,8 @@ public final class Misfortune {
     /** Early Snake casts feed the shared curse without replacing other Pathways' status hooks. */
     public static void add(Player source, LivingEntity target, int levels) {
         if (net.lukario.circleofinevitability.combat.Spells.isFriend(source, target)) return;
-        if (add(target, source, levels, 10, 600) <= 0) return;
+        levels = net.lukario.circleofinevitability.fate.Fate.tier(source).fortuneLevels(levels, source.getRandom().nextFloat());
+        if (levels <= 0 || add(target, source, levels, 10, 600) <= 0) return;
         CompoundTag tag = target.getPersistentData().getCompoundOrEmpty(TAG);
         tag.putLong("snake_decay", target.level().getGameTime() + 100);
         target.getPersistentData().put(TAG, tag);
@@ -134,6 +147,7 @@ public final class Misfortune {
             cap = Math.max(1, cap / 2);
             levels = Math.max(1, levels / 2);
         }
+        ticks = Math.max(1, Math.round(ticks * Fate.tier(source).duration));
         CompoundTag tag = target.getPersistentData().getCompoundOrEmpty(TAG);
         int had = level(target);
         int level = Math.max(had, Math.min(cap, had + levels));
@@ -196,6 +210,7 @@ public final class Misfortune {
         Player source = sourceOf(victim, sl);
         if (source != null && net.lukario.circleofinevitability.combat.Spells.isFriend(source, victim)) return;
         CompoundTag tag = victim.getPersistentData().getCompoundOrEmpty(TAG);
+        WheelTier tier = Fate.tier(source);
         switch (mishap) {
             case STUMBLE -> {
                 victim.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, STUMBLE_TICKS, 3, false, false));
@@ -211,15 +226,61 @@ public final class Misfortune {
             case FALLING_STONE -> hurt(sl, victim, source, Math.min(6f, victim.getMaxHealth() * STONE_SHARE));
             case CALAMITY -> {
                 boolean catastrophe = tag.getBooleanOr(CATASTROPHE, false);
-                hurt(sl, victim, source, Math.min(catastrophe ? 16f : 10f, victim.getMaxHealth() * (catastrophe ? CATASTROPHE_SHARE : CALAMITY_SHARE)));
+                hurt(sl, victim, source, DisasterBalance.damage(victim.getMaxHealth(), level(victim), catastrophe, !(victim instanceof Player)));
+                if (!(victim instanceof Player) && level(victim) >= 7) impactFx(sl, victim, 2 + level(victim) * .4);
                 if (catastrophe && victim.isAlive()) {                // the ground gives way under it: a fall it did not see coming
                     victim.setDeltaMovement(victim.getDeltaMovement().x, 1.1, victim.getDeltaMovement().z);
                     victim.hurtMarked = true;
                     FallGuard.remove(victim);
                 }
             }
+            case GRAVITY_CRUSH -> {
+                Root.apply(victim, Math.round((victim.getMaxHealth() > 150 ? 15 : 30) * tier.duration), RootRestriction.MOVE, RootRestriction.JUMP);
+                victim.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, Math.round(60 * tier.duration), 3));
+                hurt(sl, victim, source, 8 + level(victim) * 2);
+                impactFx(sl, victim, 3 * tier.aoe);
+            }
+            case WITHERING -> {
+                if (source != null) DamageFx.credit(source, victim);
+                victim.addEffect(new MobEffectInstance(MobEffects.WITHER, Math.round(100 * tier.duration), level(victim) >= 9 ? 2 : 1));
+                victim.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, Math.round(100 * tier.duration), 1));
+                sl.sendParticles(ParticleTypes.SMOKE, victim.getX(), victim.getY() + 1, victim.getZ(), 35, .7, .8, .7, .04);
+            }
+            case LIGHTNING -> {
+                // Visual lightning: never lights fires, charges creepers or transforms villagers.
+                for (int y = 0; y < 12; y++)
+                    sl.sendParticles(ParticleTypes.ELECTRIC_SPARK, victim.getX(), victim.getY() + y, victim.getZ(), 5, .2, .4, .2, .1);
+                Spells.sound(sl, victim.position(), SoundEvents.LIGHTNING_BOLT_THUNDER, 1.2f, .8f);
+                hurt(sl, victim, source, DisasterBalance.damage(victim.getMaxHealth(), level(victim), false, !(victim instanceof Player)));
+                Root.apply(victim, Math.round(15 * tier.duration), RootRestriction.ATTACK);
+            }
+            case METEOR_STORM -> {
+                for (int i = 0; i < 3; i++) {
+                    Later.run(sl, i * 12, () -> {
+                        if (!victim.isAlive() || victim.isRemoved() || victim.level() != sl || (source != null && Spells.isFriend(source, victim))) return;
+                        impactFx(sl, victim, 3 * tier.aoe);
+                        hurt(sl, victim, source, victim instanceof Player ? 4 : 12 + level(victim) * 2);
+                    });
+                }
+            }
+            case SEISMIC_BURST -> {
+                impactFx(sl, victim, 6 * tier.aoe);
+                hurt(sl, victim, source, DisasterBalance.damage(victim.getMaxHealth(), level(victim), false, !(victim instanceof Player)));
+                if (source != null) for (LivingEntity enemy : Spells.enemiesAround(source, sl, victim.position(), 6 * tier.aoe)) {
+                    if (enemy == victim || enemy instanceof Player) continue;
+                    hurt(sl, enemy, source, 16 + level(victim));
+                    enemy.setDeltaMovement(enemy.getDeltaMovement().add(0, .8, 0));
+                    enemy.hurtMarked = true;
+                }
+            }
+            case DOOM -> {
+                impactFx(sl, victim, 7 * tier.aoe);
+                hurt(sl, victim, source, DisasterBalance.damage(victim.getMaxHealth(), 10, true, !(victim instanceof Player)));
+                victim.addEffect(new MobEffectInstance(MobEffects.WITHER, Math.round(120 * tier.duration), 2));
+                Root.apply(victim, Math.round((victim.getMaxHealth() > 150 ? 10 : 30) * tier.duration), RootRestriction.ATTACK);
+            }
         }
-        if (!tag.isEmpty()) victim.getPersistentData().put(TAG, tag);
+        if (!tag.isEmpty() && victim.isAlive()) victim.getPersistentData().put(TAG, tag);
         for (Listener listener : LISTENERS) {
             try {
                 listener.befell(victim, mishap, source);
@@ -232,6 +293,14 @@ public final class Misfortune {
     // =========================
     // Internals
     // =========================
+
+    private static void impactFx(ServerLevel sl, LivingEntity victim, double radius) {
+        Vec3 at = victim.position().add(0, .5, 0);
+        sl.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y, at.z, 6, radius * .3, .8, radius * .3, .03);
+        sl.sendParticles(ParticleTypes.SMOKE, at.x, at.y, at.z, 30, radius * .4, 1, radius * .4, .08);
+        SpellFx.shockRing(sl, victim.position(), radius, 0xFFE75060, 12, 0);
+        Spells.sound(sl, at, SoundEvents.GENERIC_EXPLODE.value(), 1.2f, .65f);
+    }
 
     private static boolean halved(LivingEntity entity) {
         for (Predicate<LivingEntity> half : HALF) if (half.test(entity)) return true;
@@ -250,8 +319,14 @@ public final class Misfortune {
     }
 
     private static Mishap roll(LivingEntity victim, int level) {
+        // At severe buildup, prefer disasters instead of mostly rolling mild stumbles.
+        if (!(victim instanceof Player) && level >= 7 && victim.getRandom().nextInt(100) < 75) {
+            List<Mishap> severe = new ArrayList<>();
+            for (Mishap mishap : Mishap.values()) if (mishap.fromLevel >= 5 && mishap.fromLevel <= level) severe.add(mishap);
+            return severe.get(victim.getRandom().nextInt(severe.size()));
+        }
         List<Mishap> allowed = new ArrayList<>();
-        for (Mishap mishap : Mishap.values()) if (mishap.fromLevel <= level) allowed.add(mishap);
+        for (Mishap mishap : Mishap.values()) if (mishap.fromLevel <= level && (!(victim instanceof Player) || mishap.ordinal() <= Mishap.CALAMITY.ordinal())) allowed.add(mishap);
         return allowed.get(victim.getRandom().nextInt(allowed.size()));
     }
 
@@ -262,7 +337,7 @@ public final class Misfortune {
     @SubscribeEvent
     public static void onMisfortuneLivingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity entity = event.getEntity();
-        if (entity.level().isClientSide() || entity.tickCount % ROLL_EVERY != 0 || !entity.getPersistentData().contains(TAG)) return;
+        if (entity.level().isClientSide() || entity.tickCount % 5 != 0 || !entity.getPersistentData().contains(TAG)) return;
         int level = level(entity);
         if (level <= 0) {
             clear(entity);
@@ -279,8 +354,10 @@ public final class Misfortune {
             entity.getPersistentData().put(TAG, tag);
         }
         if (now < tag.getLongOr(RECOVERY, 0L)) return;
-        if (entity.getRandom().nextFloat() < Math.min(.5f, CHANCE_PER_LEVEL * level)) {
-            tag.putLong(RECOVERY, now + 60);
+        tag.putLong(RECOVERY, now + Math.max(5, ROLL_EVERY));
+        entity.getPersistentData().put(TAG, tag);
+        if (entity.getRandom().nextFloat() < DisasterBalance.chance(level, !(entity instanceof Player))) {
+            tag.putLong(RECOVERY, now + DisasterBalance.recovery(level, !(entity instanceof Player)));
             entity.getPersistentData().put(TAG, tag);
             befall(entity, roll(entity, level));
         }

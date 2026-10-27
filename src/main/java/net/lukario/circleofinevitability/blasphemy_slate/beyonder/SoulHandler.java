@@ -19,7 +19,7 @@ public class SoulHandler {
         if (event.player().level().isClientSide()) return;
         Player player = event.player();
 
-            SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + Beyonder.spiritualityRegenPerTick(player));
+            SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + Beyonder.spiritualityRegenPerTick(player) * net.lukario.circleofinevitability.fate.Fate.tier(player).regen);
 
             player.sendOverlayMessage(
                     Component.translatable("hud.circle_of_inevitability.spirituality", String.valueOf(SoulCore.getSpirituality(player)))

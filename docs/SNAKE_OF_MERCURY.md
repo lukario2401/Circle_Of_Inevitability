@@ -1,57 +1,124 @@
-# Snake Of Mercury — first playable slice
+# Snake Of Mercury — material Wheel and Premonition
 
 Select `Snake Of Mercury` using `/sequence` at Sequence 9 or stronger. G casts Danger
 Premonition; sneak-G casts Spirit Vision. Both cost 250 spirituality. Like Worm Of
 Time's regular keys, neither has a fixed cooldown: recasting replaces its duration
 rather than accumulating dodge charges. Future menu wheels still own their entry cooldowns.
 
-The hotbar Wheel shows the next Omen and seconds until its next automatic stop.
-It rerolls every eight seconds and after a successful native cast. Failed payment
-leaves it unchanged. Fortune grants 1.25× duration and refunds half the spirituality
-actually spent; Even grants normal duration; Misfortune grants .75× duration and
-Slowness II for two seconds. Sequence changes immediately refresh the distribution.
-Odds follow the supplied design (15/70/15 at 9–8, 30/60/10 at 7–4, 40/60/0 at 3,
-50/50/0 at 2, 65/35/0 at 1). At Sequence 0 Fortune is the default; an explicit
-Fortune/Even selection control belongs to the later capstone implementation.
+## The material Wheel
 
-Danger Premonition arms one avoided combat hit for eight seconds (three from Sequence
-3). A visible mob targeting you flickers red. On a hit, a collision-checked sidestep
-tries to move you two blocks; teleport restrictions are respected. The attacker
-stumbles and gains one shared Misfortune level. Environmental damage still follows
-the existing Substitute rules: this does not prevent drowning, lava or ordinary falls.
+The hotbar shows the current material tier, Fortune strength and seconds until its
+next roll. The tier remains active until the next roll: automatically every eight
+seconds or immediately after a successful native cast. Payment failure leaves it
+unchanged. A native cast snapshots its tier's duration/range/area before rolling
+again. Combat damage and passive regeneration use the currently displayed tier.
+Changing Sequence refreshes the distribution immediately. Old three-Omen saves
+initialize a material tier on first use.
 
-Spirit Vision lasts 15 seconds and reveals nearby living entities using the existing
-Eye of Demon Hunting glowing-effect mechanism. Its range is 32 blocks, 64 from
-Sequence 2. Silver/red motes indicate ordinary/high misfortune; a Snake player's
-Fortune Omen adds gold motes. These world effects are visible to other nearby players,
-as with the existing glowing-effect implementation. The targeted enemy's actual
-Misfortune level appears beside the hotbar, including zero, and clears when you look
-away. Snake players can always read this counter; borrowed Spirit Vision can read it
-for its duration. No separate permanent above-head counters are added.
+| Tier | Fortune | Damage dealt | Range / AoE / duration | Damage taken | Spirituality regeneration |
+| --- | --- | --- | --- | --- | --- |
+| Netherite | 150% | 3× | 2× | 0.5× | 2× |
+| Diamond | 125% | 2× | 1.75× | 1/1.5× | 1.75× |
+| Emerald | 100% | 1.5× | 1.5× | 1/1.25× | 1.5× |
+| Gold | 100% | 1× | 1× | 1× | 1× |
+| Iron | 75% | 0.75× | 0.75× | 1/0.75× | 0.75× |
+| Stone | 50% | 0.5× | 0.5× | 2× | 0.5× |
+| Wood | 25% | 0.25× | 0.25× | 4× | 0.25× |
 
-The existing shared Misfortune API and listeners remain in use. Its cap is now 10;
-random checks are 5% per level per second, capped at 50%, with three seconds between
-random mishaps. A Snake-applied buildup begins decaying after five seconds, losing
-one level every three seconds. Accidents never increase their own buildup. Fumbles
-weaken the next attack without damaging gear. Falling-stone/calamity damage is capped
-at 6/10 (16 for catastrophe) and respects normal damage invulnerability frames.
-Existing curse callers and explicit forced mishaps retain their entry points.
-These balance changes also affect other pathways using shared Misfortune.
+Fortune is luck strength, not the probability of rolling that material. It scales
+Snake's applied misfortune buildup with unbiased fractional rounding: a one-level
+application at 150% gives one or two levels with equal chances; at 25% it gives one
+level one quarter of the time. Diamond/Netherite also grant Luck I/II; Iron/Stone/Wood
+grant Unluck I/II/III. Emerald and above grant Speed/Haste (II for Netherite).
+Netherite grants Fire Resistance; Stone/Wood grant Slowness I/II. These short utility
+effects fade within half a second of a tier change; existing stronger/longer potion
+effects are preserved. Damage is scaled directly, without stacking Strength or
+Resistance on top. The old Fortune spirituality refund and red-Omen stumble are replaced.
 
-Only the Wheel, Key 1 and shared misfortune improvements are implemented here.
-The PDF's other keys, silver-serpent form, timeline and capstone are future work.
+Damage scaling covers melee, owned projectiles, `Spells.strike` and anonymous ability
+damage explicitly attributed with `DamageFx.credit`. It does not use the extended
+visual-only burn/poison credit to guess who caused unrelated damage. Range, area and
+duration scaling is wired into the implemented Snake Key 1: vision radius and target
+range, the sidestep and the danger-warning radius. Snake-applied curse lifetime, new
+mishap debuff durations and seismic splash radius also scale with the tier. Other
+pathways' geometry is unchanged.
+
+Netherite prevents one lethal hit, restores half maximum health, clears fire and
+provides two seconds of grace. This consumes the tier, setting it to Gold until the
+scheduled next roll. An existing DeathWard gets first use; vanilla totems retain their
+normal behavior. Void, `/kill`, piercing attacks and resurrection-prohibiting Decrees
+are not bypassed. Revival runs before ordinary death listeners.
+
+### Roll percentages
+
+| Sequence | Wood | Stone | Iron | Gold | Emerald | Diamond | Netherite |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 9–8 | 15 | 15 | 20 | 35 | 10 | 4 | 1 |
+| 7–4 | 5 | 10 | 15 | 40 | 20 | 8 | 2 |
+| 3 | 0 | 0 | 0 | 45 | 35 | 15 | 5 |
+| 2 | 0 | 0 | 0 | 30 | 40 | 22 | 8 |
+| 1 | 0 | 0 | 0 | 20 | 35 | 30 | 15 |
+| 0 | 0 | 0 | 0 | 0 | 0 | 35 | 65 |
+
+## Key 1
+
+Danger Premonition arms one avoided combat hit for eight base seconds (three from
+Sequence 3). A visible mob targeting you flickers red. On a hit, a collision-checked
+sidestep attempts to move you two base blocks; teleport restrictions are respected.
+The attacker stumbles and gains one base shared Misfortune level, modified by Fortune.
+Environmental damage still follows Substitute rules: ordinary falls, lava and drowning
+are not avoided.
+
+Spirit Vision lasts 15 base seconds, revealing nearby living entities with the existing
+Eye of Demon Hunting glowing-effect mechanism. Its base area is 32 blocks, 64 from
+Sequence 2, multiplied by the cast tier's AoE. Silver/red motes indicate ordinary/high
+misfortune; above-100% Fortune players have gold motes. These world effects are visible
+to other nearby players. Aimed enemy misfortune appears beside the hotbar, including
+zero, and clears when you look away. Borrowed Spirit Vision also reads it for its duration.
+
+## Violent misfortune
+
+The shared Misfortune cap is 10. Snake-applied buildup starts decaying after five
+seconds without reapplication, losing one level every three seconds. Accidents do
+not add buildup themselves. Existing curse API, immunity, half-level and visual hooks
+remain available; these changes also affect other pathways using shared Misfortune.
+
+At levels 1–6, rolls remain 5% per level each second, with three seconds of recovery.
+Mobs at levels 7/8/9/10 roll with 60/70/80/90% chances and 2.5/2/1.5/1-second recovery;
+75% of their rolls select from the severe effects available at that level. Players
+retain the former capped frequency and mild random table.
+
+- Stumble (1), weakened next strike without equipment loss (2), harmless projectile fizzle (3).
+- Falling stone (4), calamity (5).
+- Gravity crush: heavy impact, movement lock and Slowness IV (6); bosses have shorter locks.
+- Withering: Wither II/III and Weakness II (6).
+- Lightning: thunder, a tall spark bolt, damage and interrupted attacks (7).
+- Meteor storm: three explosions twelve ticks apart; cancelled if the target dies or leaves (8).
+- Seismic burst: damaging shockwave and launch on nearby enemy mobs (9).
+- Doom: catastrophic impact, Wither III and attack interruption (10).
+
+High-level mob calamity damage scales with buildup and maximum health, capped at
+160 before caster multipliers/defenses. On a 100-health mob, level-10 calamity deals
+62 base damage, or 93 for catastrophe/Doom. Meteor storm delivers three 32-damage
+impacts at level 10. Player calamity retains its previous 10/16 damage caps. No real
+explosions, fires, lightning entities, block changes or equipment destruction are
+used. Secondary seismic damage is restricted to enemy mobs, with normal damage
+invulnerability respected. Sounds, particles and delayed impacts have fixed bounds.
+
+Only the Wheel, Key 1 and shared misfortune improvements are implemented. The other
+keys, silver-serpent form, timeline and capstone are future work.
 
 ## Validation
 
-Run `./gradlew build` with Java 25 and the supplied HTTPS proxy/trust configuration.
-The dependency-free distribution test can also run separately:
+Run `./gradlew build` with Java 25 and the environment's HTTPS proxy/trust configuration.
+Run the dependency-free behavioral checks separately:
 
 ```sh
-javac -d /tmp/wheel-tests src/main/java/net/lukario/circleofinevitability/fate/FateOdds.java tools/tests/FateOddsTest.java
+javac -d /tmp/wheel-tests src/main/java/net/lukario/circleofinevitability/fate/{FateOdds,WheelTier,DisasterBalance}.java tools/tests/FateOddsTest.java
 java -cp /tmp/wheel-tests FateOddsTest
 ```
 
-In a development game, select the pathway, aim at a hostile mob, cast G and let it
-attack, then cast sneak-G. Verify one dodge, the counter change and decay, the
-Omen reroll, spirit reveal expiry, and HUD cleanup after changing pathways. Repeat
-at Sequence 3 for three dodge charges and with insufficient spirituality for no reroll.
+In a development game, check each material's damage/defense, vision area, regeneration
+and status expiry; Netherite revival consumption and its exclusions; aimed-counter
+updates and severe enemy-only mishaps. These runtime checks require a Minecraft game;
+the standalone checks validate distribution, multipliers and disaster growth/bounds.
