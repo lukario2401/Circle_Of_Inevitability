@@ -259,3 +259,9 @@ Digestion.requirement = AdvancementRequirement.DIGESTED.and(new DrankPotionRequi
 ```
 
 Acting would add a fourth digestion source: call `Digestion.add(player, percent)` from wherever an acting rule is followed, with its rate in `DigestionRates`.
+
+## Snake Of Mercury
+
+Key 1: **Premonition** (Sequence 9), normal Danger Premonition / sneak Spirit Vision.
+The previewed Wheel and aimed-enemy Misfortune counter are described in
+[SNAKE_OF_MERCURY.md](SNAKE_OF_MERCURY.md). Remaining keys are not implemented yet.

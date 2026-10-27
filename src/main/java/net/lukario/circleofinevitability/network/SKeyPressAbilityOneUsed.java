@@ -84,6 +84,7 @@ public class SKeyPressAbilityOneUsed {
             knowledgeEmperorMysteryPrying(player,level,serverLevel,false);
             illuminatorCompoundFlask(player,level,serverLevel,false);
             starDragonAstronomy(player,level,serverLevel,false);
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercury.premonition(player, level, serverLevel, false);
         } finally {
             Casts.keyDone(player);
         }

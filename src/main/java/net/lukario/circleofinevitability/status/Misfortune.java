@@ -8,12 +8,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
@@ -42,8 +39,8 @@ import java.util.function.Predicate;
  *
  * The mishaps (each needs its level; one is picked at random from those the level allows):
  *   STUMBLE        1  Slowness IV for STUMBLE_TICKS and a little trip
- *   FUMBLE         2  what it holds and wears loses FUMBLE_WEAR durability, and its next blow is FUMBLE_CUT weaker
- *   BACKFIRE       3  the next thing it shoots flies wide (up to BACKFIRE_DEGREES off)
+ *   FUMBLE         2  its next blow is FUMBLE_CUT weaker; equipment is untouched
+ *   BACKFIRE       3  the next projectile fizzles harmlessly instead of hitting a bystander
  *   FALLING_STONE  4  magic damage, STONE_SHARE of its maximum health, from nobody (DamageFx counts it as the source's)
  *   CALAMITY       5  a disaster: CALAMITY_SHARE of its maximum health (CATASTROPHE_SHARE, and it is thrown up, with
  *                     Catastrophe)
@@ -72,13 +69,12 @@ public final class Misfortune {
         void befell(LivingEntity victim, Mishap mishap, Player source);
     }
 
-    public static int MAX_LEVEL = 5;
+    public static int MAX_LEVEL = 10;
     /** Ticks between two rolls. */
     public static int ROLL_EVERY = 20;
-    /** Chance of a mishap at each roll, per level (0.1 = 10% at level 1, 50% at level 5). */
-    public static float CHANCE_PER_LEVEL = 0.10f;
+    /** Chance of a mishap at each roll, per level (0.05 = 5% at level 1, 50% at level 10). */
+    public static float CHANCE_PER_LEVEL = 0.05f;
     public static int STUMBLE_TICKS = 20;
-    public static int FUMBLE_WEAR = 6;
     public static float FUMBLE_CUT = 0.3f;
     public static float BACKFIRE_DEGREES = 30f;
     public static float STONE_SHARE = 0.05f;
@@ -93,14 +89,22 @@ public final class Misfortune {
     private static final String FUMBLED = "fumbled";          // the next blow is weaker
     private static final String BACKFIRES = "backfires";     // the next shot flies wide
 
-    private static final EquipmentSlot[] WORN = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS,
-            EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
 
     private static final List<Predicate<LivingEntity>> IMMUNE = new ArrayList<>();
     private static final List<Predicate<LivingEntity>> HALF = new ArrayList<>();
     private static final List<Listener> LISTENERS = new ArrayList<>();
 
+    private static final String RECOVERY = "next_mishap";
     private Misfortune() {}
+
+    /** Early Snake casts feed the shared curse without replacing other Pathways' status hooks. */
+    public static void add(Player source, LivingEntity target, int levels) {
+        if (net.lukario.circleofinevitability.combat.Spells.isFriend(source, target)) return;
+        if (add(target, source, levels, 10, 600) <= 0) return;
+        CompoundTag tag = target.getPersistentData().getCompoundOrEmpty(TAG);
+        tag.putLong("snake_decay", target.level().getGameTime() + 100);
+        target.getPersistentData().put(TAG, tag);
+    }
 
     // =========================
     // API
@@ -190,6 +194,7 @@ public final class Misfortune {
     public static void befall(LivingEntity victim, Mishap mishap) {
         if (!(victim.level() instanceof ServerLevel sl)) return;
         Player source = sourceOf(victim, sl);
+        if (source != null && net.lukario.circleofinevitability.combat.Spells.isFriend(source, victim)) return;
         CompoundTag tag = victim.getPersistentData().getCompoundOrEmpty(TAG);
         switch (mishap) {
             case STUMBLE -> {
@@ -199,17 +204,14 @@ public final class Misfortune {
                 victim.hurtMarked = true;
             }
             case FUMBLE -> {
-                for (EquipmentSlot slot : WORN) {
-                    ItemStack stack = victim.getItemBySlot(slot);
-                    if (!stack.isEmpty() && stack.isDamageableItem()) stack.hurtAndBreak(FUMBLE_WEAR, victim, slot);
-                }
+                // A fumble spoils the next strike; equipment is never destroyed by a random roll.
                 tag.putBoolean(FUMBLED, true);
             }
             case BACKFIRE -> tag.putBoolean(BACKFIRES, true);
-            case FALLING_STONE -> hurt(sl, victim, source, victim.getMaxHealth() * STONE_SHARE);
+            case FALLING_STONE -> hurt(sl, victim, source, Math.min(6f, victim.getMaxHealth() * STONE_SHARE));
             case CALAMITY -> {
                 boolean catastrophe = tag.getBooleanOr(CATASTROPHE, false);
-                hurt(sl, victim, source, victim.getMaxHealth() * (catastrophe ? CATASTROPHE_SHARE : CALAMITY_SHARE));
+                hurt(sl, victim, source, Math.min(catastrophe ? 16f : 10f, victim.getMaxHealth() * (catastrophe ? CATASTROPHE_SHARE : CALAMITY_SHARE)));
                 if (catastrophe && victim.isAlive()) {                // the ground gives way under it: a fall it did not see coming
                     victim.setDeltaMovement(victim.getDeltaMovement().x, 1.1, victim.getDeltaMovement().z);
                     victim.hurtMarked = true;
@@ -244,7 +246,6 @@ public final class Misfortune {
     private static void hurt(ServerLevel sl, LivingEntity victim, Player source, float damage) {
         if (damage <= 0f) return;
         if (source != null) DamageFx.credit(source, victim);
-        victim.invulnerableTime = 0;
         victim.hurt(sl.damageSources().magic(), damage);
     }
 
@@ -267,7 +268,22 @@ public final class Misfortune {
             clear(entity);
             return;
         }
-        if (entity.getRandom().nextFloat() < CHANCE_PER_LEVEL * level) befall(entity, roll(entity, level));
+        CompoundTag tag = entity.getPersistentData().getCompoundOrEmpty(TAG);
+        long now = entity.level().getGameTime();
+        long decay = tag.getLongOr("snake_decay", 0L);
+        if (decay > 0 && now >= decay) {
+            level--;
+            if (level <= 0) { clear(entity); return; }
+            tag.putInt(LEVEL, level);
+            tag.putLong("snake_decay", now + 60);
+            entity.getPersistentData().put(TAG, tag);
+        }
+        if (now < tag.getLongOr(RECOVERY, 0L)) return;
+        if (entity.getRandom().nextFloat() < Math.min(.5f, CHANCE_PER_LEVEL * level)) {
+            tag.putLong(RECOVERY, now + 60);
+            entity.getPersistentData().put(TAG, tag);
+            befall(entity, roll(entity, level));
+        }
     }
 
     // FUMBLE: its next blow is weaker
@@ -276,26 +292,23 @@ public final class Misfortune {
         if (!(event.getSource().getEntity() instanceof LivingEntity attacker) || attacker.level().isClientSide()) return;
         if (!attacker.getPersistentData().contains(TAG)) return;
         CompoundTag tag = attacker.getPersistentData().getCompoundOrEmpty(TAG);
-        if (!tag.getBooleanOr(FUMBLED, false)) return;
+        if (level(attacker) <= 0 || !tag.getBooleanOr(FUMBLED, false)) return;
         tag.remove(FUMBLED);
         attacker.getPersistentData().put(TAG, tag);
         event.setAmount(event.getAmount() * (1f - FUMBLE_CUT));
     }
 
-    // BACKFIRE: its next shot flies wide
+    // BACKFIRE: its next shot fizzles
     @SubscribeEvent
     public static void onMisfortuneShot(EntityJoinLevelEvent event) {
         if (!(event.getEntity() instanceof Projectile projectile) || event.getLevel().isClientSide()) return;
         if (!(projectile.getOwner() instanceof LivingEntity shooter) || !shooter.getPersistentData().contains(TAG)) return;
         CompoundTag tag = shooter.getPersistentData().getCompoundOrEmpty(TAG);
-        if (!tag.getBooleanOr(BACKFIRES, false)) return;
+        if (level(shooter) <= 0 || !tag.getBooleanOr(BACKFIRES, false)) return;
         tag.remove(BACKFIRES);
         shooter.getPersistentData().put(TAG, tag);
-        Vec3 motion = projectile.getDeltaMovement();
-        double yaw = Math.toRadians((shooter.getRandom().nextFloat() * 2f - 1f) * BACKFIRE_DEGREES);
-        double cos = Math.cos(yaw), sin = Math.sin(yaw);
-        double lift = (shooter.getRandom().nextFloat() - 0.5f) * 0.3 * motion.length();
-        projectile.setDeltaMovement(motion.x * cos - motion.z * sin, motion.y + lift, motion.x * sin + motion.z * cos);
+        // A misfire must not redirect arrows into teammates or ignite terrain.
+        projectile.discard();
     }
 
     @SubscribeEvent

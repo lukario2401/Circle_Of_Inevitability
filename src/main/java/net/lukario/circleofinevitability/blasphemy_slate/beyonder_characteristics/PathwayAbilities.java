@@ -76,6 +76,8 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Snake Of Mercury", 1, "Premonition", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> SnakeOfMercury.premonition(player, level, sl, true)),
             // ---- Wanderer ----
             new Ability("Wanderer", 1, "Star Burst", 9, SNEAK, OWN_PATHWAY_ONLY,      // spends the Pathway's stars
                     (player, level, sl) -> Wanderer.wandererStarBurst(player, level, sl, true)),
