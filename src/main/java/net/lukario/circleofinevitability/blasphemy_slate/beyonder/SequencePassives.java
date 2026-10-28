@@ -62,6 +62,8 @@ public final class SequencePassives {
         effect("Beauty Goddess", 4, MobEffects.REGENERATION, 0);                                // Shaman King: strong regeneration
         custom("Beauty Goddess", 1, BeautyGoddess::hesitate);                                   // Beauty Goddess: mobs hesitate to hunt you
 
+        effect("God Of Decay", 5, MobEffects.REGENERATION, 0);
+
         // ---- Hand Of God (docs/HAND_OF_GOD.md). Also in HandOfGod itself: Weapon Mastery (Sequence 7), Giant's
         // Physique (6), half knockback (5), Tracking and Spiritual Intuition (4), wither does not take (2), Divine Touch (1).
         effect("Hand Of God", 9, MobEffects.STRENGTH, 0);                                       // Warrior: Strength I (Divine Blood)

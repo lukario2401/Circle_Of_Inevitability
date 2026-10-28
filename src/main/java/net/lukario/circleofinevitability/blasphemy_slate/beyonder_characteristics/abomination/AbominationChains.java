@@ -437,7 +437,7 @@ public final class AbominationChains {
                     .onPulse(left -> {
                         AbominationFx.gardenTick(sl, center, GARDEN_RADIUS);
                         // the owner is never inside a zone: the roses look after them here
-                        if (player.position().distanceTo(center) <= GARDEN_RADIUS) rose(sl, player, left);
+                        if (player.position().distanceTo(center) <= GARDEN_RADIUS) rose(player, sl, player, left);
                     })
                     .onEnd(() -> {
                         AbominationFx.thornGardenEnd(sl, center, tag);
@@ -448,14 +448,15 @@ public final class AbominationChains {
                     .lasts(grows)
                     .every(20)
                     .affects(one -> !Spells.isEnemy(player, one))
-                    .onInside((ally, inside) -> rose(sl, ally, inside))
+                    .onInside((ally, inside) -> rose(player, sl, ally, inside))
                     .open(player, sl, GARDEN_ALLIES);
         });
         return AbilityWheel.Result.DONE;
     }
 
     /** The roses tend one ally once a second; the look every other second. */
-    private static void rose(ServerLevel sl, LivingEntity ally, int beat) {
+    private static void rose(LivingEntity player, ServerLevel sl, LivingEntity ally, int beat) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         if (ally.getHealth() < ally.getMaxHealth()) ally.heal(GARDEN_HEAL);
         Spells.keepEffect(ally, MobEffects.ABSORPTION, GARDEN_ABSORPTION, 100);
         if ((beat / 20) % 2 == 0) AbominationFx.roseHeal(sl, ally);

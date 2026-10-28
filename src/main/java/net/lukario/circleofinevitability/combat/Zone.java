@@ -307,6 +307,16 @@ public final class Zone {
         if (zone != null) zone.end();
     }
 
+    /** Advance enemy lifetimes in a weathering field; normal end callbacks run immediately on expiry. */
+    public static void ageNear(ServerLevel level, Vec3 point, double radius, java.util.function.Predicate<LivingEntity> whose, int ticks) {
+        if (ticks <= 0) return;
+        for (Zone zone : new ArrayList<>(OPEN)) {
+            if (zone.closed || zone.level != level || !whose.test(zone.owner) || zone.center().distanceToSqr(point) > radius * radius) continue;
+            zone.age += ticks;
+            if (zone.age >= zone.lasts) zone.end();
+        }
+    }
+
     private static Zone find(LivingEntity owner, String name) {
         for (Zone zone : OPEN) {
             if (!zone.closed && zone.name.equals(name) && zone.owner.getUUID().equals(owner.getUUID())) return zone;

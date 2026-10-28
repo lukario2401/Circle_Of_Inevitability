@@ -285,12 +285,12 @@ public final class KnowledgeEmperorRetellings {
                             Spells.keepEffect(one, MobEffects.SLOWNESS, 1, 40);
                             NoHeal.apply(one, 40);
                         } else {
-                            bless(sl, one, strength);
+                            bless(player, sl, one, strength);
                         }
                     })
                     .onPulse(left -> {
                         KnowledgeEmperorFx.avalonTick(sl, ground, AVALON_RADIUS);
-                        if (player.position().distanceTo(ground) <= AVALON_RADIUS) bless(sl, player, strength);
+                        if (player.position().distanceTo(ground) <= AVALON_RADIUS) bless(player, sl, player, strength);
                     })
                     .onEnd(() -> {
                         KnowledgeEmperorFx.avalonEnd(sl, ground, AVALON_RADIUS, tag);
@@ -301,7 +301,8 @@ public final class KnowledgeEmperorRetellings {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void bless(ServerLevel sl, LivingEntity ally, float strength) {
+    private static void bless(LivingEntity player, ServerLevel sl, LivingEntity ally, float strength) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         Spells.cleanse(ally);
         if (ally.getHealth() < ally.getMaxHealth()) ally.heal(AVALON_HEAL * strength);
         KnowledgeEmperorFx.avalonBlessed(sl, ally);
@@ -374,8 +375,8 @@ public final class KnowledgeEmperorRetellings {
         });
         Later.run(sl, KnowledgeEmperorFx.HOPE_RISES, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
-            hope(sl, player, ticks);
-            for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), BOX_RADIUS)) hope(sl, ally, ticks);
+            hope(player, sl, player, ticks);
+            for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), BOX_RADIUS)) hope(player, sl, ally, ticks);
         });
         return true;
     }
@@ -391,7 +392,8 @@ public final class KnowledgeEmperorRetellings {
         }
     }
 
-    private static void hope(ServerLevel sl, LivingEntity ally, int ticks) {
+    private static void hope(LivingEntity player, ServerLevel sl, LivingEntity ally, int ticks) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         ally.addEffect(new MobEffectInstance(MobEffects.REGENERATION, ticks, 1));
         KnowledgeEmperorFx.hope(sl, ally);
     }

@@ -863,6 +863,7 @@ public class KnightOfMisfortune {
         List<LivingEntity> soothed = new ArrayList<>(Spells.alliesAround(player, sl, player.position(), SOOTHE_RADIUS));
         soothed.add(player);
         for (LivingEntity ally : soothed) {
+            if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) continue;
             Spells.cleanse(ally);
             Fear.end(ally);
             Slumber.wake(ally);

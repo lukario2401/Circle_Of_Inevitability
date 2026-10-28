@@ -92,6 +92,18 @@ public final class DeathWard {
         WARDS.remove(entity.getUUID());
     }
 
+    /** Opaque identity for a curse that honors only wards armed before it was pronounced. */
+    public static Object snapshot(Entity entity) { return isArmed(entity) ? WARDS.get(entity.getUUID()) : null; }
+
+    private static final Map<UUID, Object> ALLOWED_SNAPSHOTS = new HashMap<>();
+
+    /** Only this exact existing ward may survive an otherwise irreversible hit in action. */
+    public static void withSnapshot(LivingEntity entity, Object snapshot, Runnable action) {
+        Object old = ALLOWED_SNAPSHOTS.put(entity.getUUID(), snapshot);
+        try { action.run(); }
+        finally { if (old == null) ALLOWED_SNAPSHOTS.remove(entity.getUUID()); else ALLOWED_SNAPSHOTS.put(entity.getUUID(), old); }
+    }
+
     // =========================
     // Events
     // =========================
@@ -102,8 +114,9 @@ public final class DeathWard {
         LivingEntity entity = event.getEntity();
         if (!(entity.level() instanceof ServerLevel sl)) return false;
         if (!isArmed(entity)) return false;
-        if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;   // the void and /kill still kill
-        if (Spells.isPiercing(entity)) return false;                 // Spells.strikeThrough: no ward saves from it (it stays armed)
+        boolean prior = WARDS.get(entity.getUUID()) == ALLOWED_SNAPSHOTS.get(entity.getUUID());
+        if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && !prior) return false;
+        if (Spells.isPiercing(entity) && !prior) return false;                 // Spells.strikeThrough: no ward saves from it (it stays armed)
         if (Decree.violate(entity, Decree.Rule.RESURRECTION)) {      // a Law: No Return: the ward is void, the dead stay dead
             WARDS.remove(entity.getUUID());
             return false;

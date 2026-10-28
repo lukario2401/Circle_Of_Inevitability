@@ -136,6 +136,7 @@ public final class MobCasting {
         if (mob == null || ability == null || sl == null || mob.level() != sl) return false;
         if (whyNot(mob, ability) != Refusal.NONE || !inReach(mob, ability, target)) return false;
         if (ability.when() != null && !ability.when().test(mob, target, sl)) return false;
+        if (net.lukario.circleofinevitability.combat.HeldActions.defer(mob, () -> tryCast(mob, ability, target, sl))) return true;
         boolean wentOff;
         MobSpirituality.prepaid(mob, ability.cost());                      // the player code it runs may pay for itself
         try {

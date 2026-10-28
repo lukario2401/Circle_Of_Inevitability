@@ -3648,5 +3648,269 @@
         "name": "circle_of_inevitability:key_of_stars/key_turn"
       }
     ]
+  },
+  "god_of_decay.ulcerous_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.ulcerous_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/ulcerous_burst"
+      }
+    ]
+  },
+  "god_of_decay.carriers_touch": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.carriers_touch",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/carriers_touch"
+      }
+    ]
+  },
+  "god_of_decay.red_tape": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.red_tape",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/red_tape"
+      }
+    ]
+  },
+  "god_of_decay.official_capacity": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.official_capacity",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/official_capacity"
+      }
+    ]
+  },
+  "god_of_decay.corruption": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.corruption",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/corruption"
+      }
+    ]
+  },
+  "god_of_decay.hollow_out": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.hollow_out",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/hollow_out"
+      }
+    ]
+  },
+  "god_of_decay.laziness": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.laziness",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/laziness"
+      }
+    ]
+  },
+  "god_of_decay.obesity": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.obesity",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/obesity"
+      }
+    ]
+  },
+  "god_of_decay.degeneration": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.degeneration",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/degeneration"
+      }
+    ]
+  },
+  "god_of_decay.rot": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.rot",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/rot"
+      }
+    ]
+  },
+  "god_of_decay.division": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.division",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/division"
+      }
+    ]
+  },
+  "god_of_decay.pathogen_form": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.pathogen_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/pathogen_form"
+      }
+    ]
+  },
+  "god_of_decay.certain_death": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.certain_death",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/certain_death"
+      }
+    ]
+  },
+  "god_of_decay.sure_hit": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.sure_hit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/sure_hit"
+      }
+    ]
+  },
+  "god_of_decay.decay": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.decay",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/decay"
+      }
+    ]
+  },
+  "god_of_decay.swollen_form": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.swollen_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/swollen_form"
+      }
+    ]
+  },
+  "god_of_decay.left_hand_of_decay": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.left_hand_of_decay",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/left_hand_of_decay"
+      }
+    ]
+  },
+  "god_of_decay.withering_palm": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.withering_palm",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/withering_palm"
+      }
+    ]
+  },
+  "god_of_decay.gravel_shot": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.gravel_shot",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/gravel_shot"
+      }
+    ]
+  },
+  "god_of_decay.slow_time": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.slow_time",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/slow_time"
+      }
+    ]
+  },
+  "god_of_decay.segmented_time": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.segmented_time",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/segmented_time"
+      }
+    ]
+  },
+  "god_of_decay.senescence": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.senescence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/senescence"
+      }
+    ]
+  },
+  "god_of_decay.entropy": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.entropy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/entropy"
+      }
+    ]
+  },
+  "god_of_decay.virus_incarnation": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.virus_incarnation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/virus_incarnation"
+      }
+    ]
+  },
+  "god_of_decay.ragnarok": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.ragnarok",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/ragnarok"
+      }
+    ]
+  },
+  "god_of_decay.outbreak": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.outbreak",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/outbreak"
+      }
+    ]
+  },
+  "god_of_decay.contagion": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.contagion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/contagion"
+      }
+    ]
+  },
+  "god_of_decay.collapse": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.collapse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/collapse"
+      }
+    ]
+  },
+  "god_of_decay.reform": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.reform",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/reform"
+      }
+    ]
+  },
+  "god_of_decay.time_giant": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.time_giant",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/time_giant"
+      }
+    ]
+  },
+  "god_of_decay.ancient_god": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.ancient_god",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/ancient_god"
+      }
+    ]
+  },
+  "god_of_decay.pathogen_pool": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.pathogen_pool",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/pathogen_pool"
+      }
+    ]
+  },
+  "god_of_decay.weathering": {
+    "subtitle": "subtitles.circle_of_inevitability.god_of_decay.weathering",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:god_of_decay/weathering"
+      }
+    ]
   }
 }

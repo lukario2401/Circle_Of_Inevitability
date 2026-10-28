@@ -899,9 +899,13 @@ public final class Spells {
 
     /** A boss: the dragon, the wither, the warden, an elder guardian, or anything with more than BOSS_HEALTH. */
     public static boolean isBoss(LivingEntity one) {
+        return isNaturalBoss(one) || one.getMaxHealth() > BOSS_HEALTH;
+    }
+
+    /** Named vanilla bosses, independent of a spell's configurable execution-health threshold. */
+    public static boolean isNaturalBoss(LivingEntity one) {
         return one.getType() == EntityTypes.ENDER_DRAGON || one.getType() == EntityTypes.WITHER
-                || one.getType() == EntityTypes.WARDEN || one.getType() == EntityTypes.ELDER_GUARDIAN
-                || one.getMaxHealth() > BOSS_HEALTH;
+                || one.getType() == EntityTypes.WARDEN || one.getType() == EntityTypes.ELDER_GUARDIAN;
     }
 
     /**

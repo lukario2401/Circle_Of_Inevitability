@@ -195,6 +195,7 @@ public final class WormOfTimeAuthority {
         List<LivingEntity> friends = new ArrayList<>(Spells.alliesAround(p, sl, p.position(), 12));
         if (!friends.contains(p)) friends.add(p);
         for (LivingEntity ally : friends.stream().limit(24).toList()) {
+            if (net.lukario.circleofinevitability.combat.Support.blocked(p, ally)) continue;
             ally.addEffect(new MobEffectInstance(MobEffects.SPEED, 160, 1));
             ally.addEffect(new MobEffectInstance(MobEffects.HASTE, 160, 1));
         }

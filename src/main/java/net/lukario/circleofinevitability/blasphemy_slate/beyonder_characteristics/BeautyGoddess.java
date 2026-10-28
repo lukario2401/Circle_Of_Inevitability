@@ -359,12 +359,12 @@ public class BeautyGoddess {
                             Spells.keepEffect(entity, MobEffects.POISON, MEDICINE_POISON_LEVEL, 60);
                             if (second) BeautyGoddessFx.medicinePoison(sl, entity);
                         } else {
-                            mend(sl, entity, second);
+                            mend(player, sl, entity, second);
                         }
                     })
                     .onPulse(left -> {
                         BeautyGoddessFx.medicineCloudTick(sl, ground, MEDICINE_RADIUS);
-                        if (inCircle(player, ground, MEDICINE_RADIUS, 3)) mend(sl, player, left % 20 < 10);
+                        if (inCircle(player, ground, MEDICINE_RADIUS, 3)) mend(player, sl, player, left % 20 < 10);
                     })
                     .onEnd(() -> {
                         if (sl.getGameTime() < until - 5) BeautyGoddessFx.medicineCloudEnd(sl, ground, tag);   // ended early
@@ -374,10 +374,11 @@ public class BeautyGoddess {
     }
 
     /** One half second of the medicine on an ally (or the caster): healed and cured of poison. */
-    private static void mend(ServerLevel sl, LivingEntity ally, boolean show) {
+    private static void mend(LivingEntity player, ServerLevel sl, LivingEntity ally, boolean show) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         boolean helped = ally.hasEffect(MobEffects.POISON) || ally.getHealth() < ally.getMaxHealth();
         ally.removeEffect(MobEffects.POISON);
-        if (ally.getHealth() < ally.getMaxHealth()) ally.heal(MEDICINE_HEAL);
+        if (ally.getHealth() < ally.getMaxHealth()) net.lukario.circleofinevitability.combat.Support.heal(player, ally, MEDICINE_HEAL);
         if (helped && show) BeautyGoddessFx.medicineHeal(sl, ally);
     }
 
@@ -806,11 +807,11 @@ public class BeautyGoddess {
                     .affects(BeautyGoddess::isBody)
                     .onInside((entity, inside) -> {
                         if (Spells.isEnemy(player, entity)) Spells.keepEffect(entity, MobEffects.SLOWNESS, MOON_ENEMY_SLOW, 40);
-                        else moonBlessing(entity);
+                        else moonBlessing(player, entity);
                     })
                     .onPulse(left -> {
                         if (left % 40 < 20) BeautyGoddessFx.lunarBattlefieldPulse(sl, center, MOON_RADIUS);
-                        if (inCircle(player, center, MOON_RADIUS, 6)) moonBlessing(player);
+                        if (inCircle(player, center, MOON_RADIUS, 6)) moonBlessing(player, player);
                     })
                     .onEnd(() -> {
                         if (data.getLongOr(MOON_UNTIL, 0L) != until) return;           // a new moon took its place
@@ -822,7 +823,8 @@ public class BeautyGoddess {
         });
     }
 
-    private static void moonBlessing(LivingEntity ally) {
+    private static void moonBlessing(LivingEntity player, LivingEntity ally) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         Spells.keepEffect(ally, MobEffects.SPEED, MOON_ALLY_LEVEL, 40);
         Spells.keepEffect(ally, MobEffects.STRENGTH, MOON_ALLY_LEVEL, 40);
         Spells.keepEffect(ally, MobEffects.REGENERATION, MOON_ALLY_LEVEL, 60);

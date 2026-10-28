@@ -210,6 +210,14 @@ public final class Marionette {
         return tag == null ? 0 : tag.getIntOr(TICKS, 0);
     }
 
+    /** Shortens only summoned bodies, never another player's ordinary controlled mob. */
+    public static void ageSummon(Entity entity, int ticks) {
+        if (!isSummoned(entity) || ticks <= 0) return;
+        CompoundTag tag = marionetteTag(entity);
+        tag.putInt(TICKS, Math.max(0, tag.getIntOr(TICKS, 0) - ticks));
+        if (tag.getIntOr(TICKS, 0) <= 0 && entity instanceof Mob mob) collapse(mob);
+    }
+
     /** The marionettes this player holds that are alive and loaded in the player's dimension. */
     public static List<Mob> of(LivingEntity master) {
         List<Mob> result = new ArrayList<>();

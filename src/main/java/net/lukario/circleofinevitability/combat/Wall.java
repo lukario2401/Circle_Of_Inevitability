@@ -165,6 +165,16 @@ public final class Wall {
         if (wall != null) wall.age = 0;
     }
 
+    /** Advance enemy lifetimes in a weathering field; normal end callbacks run immediately on expiry. */
+    public static void ageNear(ServerLevel level, Vec3 point, double radius, java.util.function.Predicate<LivingEntity> whose, int ticks) {
+        if (ticks <= 0) return;
+        for (Wall wall : new ArrayList<>(RAISED)) {
+            if (wall.closed || wall.level != level || !whose.test(wall.owner) || wall.middle.distanceToSqr(point) > radius * radius) continue;
+            wall.age += ticks;
+            if (wall.age >= wall.lasts) wall.end();
+        }
+    }
+
     private static Wall find(LivingEntity owner, String name) {
         for (Wall wall : RAISED) {
             if (!wall.closed && wall.name.equals(name) && wall.owner.getUUID().equals(owner.getUUID())) return wall;

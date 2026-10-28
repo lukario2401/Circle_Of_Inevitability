@@ -31,6 +31,8 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFallen;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionSovereign;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercury;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryPowers;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTime;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimePowers;
@@ -282,6 +284,22 @@ public final class PathwayAbilities {
                     (player, level, sl) -> KnightOfMisfortuneNightwatcher.knightOfMisfortuneNightwatcher(player, level, sl, true)),
             new Ability("Knight Of Misfortune", 7, "Darkness and Concealment", 3, SNEAK, STEALABLE,   // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> KnightOfMisfortuneDarkness.knightOfMisfortuneDarkness(player, level, sl, true)),
+
+            // ---- God Of Decay ----
+            new Ability("God Of Decay", 1, "Ulcerous Burst", 9, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 1, true)),
+            new Ability("God Of Decay", 2, "Red Tape", 8, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 2, true)),
+            new Ability("God Of Decay", 3, "Corruption", 7, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 3, true)),
+            new Ability("God Of Decay", 4, "Disease", 6, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 4, true)),
+            new Ability("God Of Decay", 5, "Division", 5, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 5, true)),
+            new Ability("God Of Decay", 6, "Doom", 4, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 6, true)),
+            new Ability("God Of Decay", 7, "Time and Entropy", 2, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 7, true)),
 
             // ---- Hand Of God (docs/HAND_OF_GOD.md) ----
             new Ability("Hand Of God", 1, "Warrior's Charge", 9, SNEAK, STEALABLE,

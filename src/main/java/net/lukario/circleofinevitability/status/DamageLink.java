@@ -211,6 +211,7 @@ public final class DamageLink {
 
     @SubscribeEvent
     public static void onDamageLinkDamage(LivingDamageEvent event) {
+        if (event.getSource().is(net.lukario.circleofinevitability.combat.CertainDamage.TYPE)) return;
         if (passing) return;                                    // damage we passed on ourselves stops here
         LivingEntity victim = event.getEntity();
         if (!(victim.level() instanceof ServerLevel sl)) return;
@@ -218,7 +219,7 @@ public final class DamageLink {
         if (amount <= 0f) return;
 
         Redirect redirect = liveRedirect(victim, sl);
-        if (redirect != null) {
+        if (redirect != null && !net.lukario.circleofinevitability.combat.Support.blocked(receiverOf(redirect, sl), victim)) {
             LivingEntity receiver = receiverOf(redirect, sl);
             float moved = amount * redirect.fraction();
             amount -= moved;

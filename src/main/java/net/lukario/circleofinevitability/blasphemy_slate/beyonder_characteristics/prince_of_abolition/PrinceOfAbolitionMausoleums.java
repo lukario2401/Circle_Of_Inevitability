@@ -393,7 +393,7 @@ public final class PrinceOfAbolitionMausoleums {
         for (LivingEntity ally : Spells.alliesAround(player, sl, middle, radius)) {
             anyone = true;
             if (ally.getHealth() < ally.getMaxHealth()) {
-                ally.heal(SANCTUARY_HEAL);
+                net.lukario.circleofinevitability.combat.Support.heal(player, ally, SANCTUARY_HEAL);
                 PrinceOfAbolitionFx.sanctuaryMend(sl, ally);
             }
         }

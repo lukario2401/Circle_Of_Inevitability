@@ -322,6 +322,12 @@ public final class AbilityWheel {
             }
         }
 
+        boolean skipCooldown = ignoreCooldown;
+        if (net.lukario.circleofinevitability.combat.HeldActions.defer(player, () -> {
+            if (!net.lukario.circleofinevitability.root.Root.has(player, net.lukario.circleofinevitability.root.RootRestriction.ABILITIES))
+                cast(player, entry, skipCooldown, costMultiplier);
+        })) return Result.REFUSED;
+
         Result result = entry.cast.cast(player, sl);
         if (result == null || result == Result.REFUSED) return Result.REFUSED;
 
