@@ -957,4 +957,40 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> STARS_QUICK_STUDY = sound("key_of_stars.quick_study");
     /** A Key of Stars turns. */
     public static final RegistryObject<SoundEvent> STARS_KEY_TURN = sound("key_of_stars.key_turn");
+
+    /** Generated God of Decay cues; incubation has no audible cast. */
+    public static final java.util.Map<String, RegistryObject<SoundEvent>> GOD_OF_DECAY = java.util.Map.ofEntries(
+            java.util.Map.entry("ulcerous_burst", sound("god_of_decay.ulcerous_burst")),
+            java.util.Map.entry("carriers_touch", sound("god_of_decay.carriers_touch")),
+            java.util.Map.entry("red_tape", sound("god_of_decay.red_tape")),
+            java.util.Map.entry("official_capacity", sound("god_of_decay.official_capacity")),
+            java.util.Map.entry("corruption", sound("god_of_decay.corruption")),
+            java.util.Map.entry("hollow_out", sound("god_of_decay.hollow_out")),
+            java.util.Map.entry("laziness", sound("god_of_decay.laziness")),
+            java.util.Map.entry("obesity", sound("god_of_decay.obesity")),
+            java.util.Map.entry("degeneration", sound("god_of_decay.degeneration")),
+            java.util.Map.entry("rot", sound("god_of_decay.rot")),
+            java.util.Map.entry("division", sound("god_of_decay.division")),
+            java.util.Map.entry("pathogen_form", sound("god_of_decay.pathogen_form")),
+            java.util.Map.entry("certain_death", sound("god_of_decay.certain_death")),
+            java.util.Map.entry("sure_hit", sound("god_of_decay.sure_hit")),
+            java.util.Map.entry("decay", sound("god_of_decay.decay")),
+            java.util.Map.entry("swollen_form", sound("god_of_decay.swollen_form")),
+            java.util.Map.entry("left_hand_of_decay", sound("god_of_decay.left_hand_of_decay")),
+            java.util.Map.entry("withering_palm", sound("god_of_decay.withering_palm")),
+            java.util.Map.entry("gravel_shot", sound("god_of_decay.gravel_shot")),
+            java.util.Map.entry("slow_time", sound("god_of_decay.slow_time")),
+            java.util.Map.entry("segmented_time", sound("god_of_decay.segmented_time")),
+            java.util.Map.entry("senescence", sound("god_of_decay.senescence")),
+            java.util.Map.entry("entropy", sound("god_of_decay.entropy")),
+            java.util.Map.entry("virus_incarnation", sound("god_of_decay.virus_incarnation")),
+            java.util.Map.entry("ragnarok", sound("god_of_decay.ragnarok")),
+            java.util.Map.entry("outbreak", sound("god_of_decay.outbreak")),
+            java.util.Map.entry("contagion", sound("god_of_decay.contagion")),
+            java.util.Map.entry("collapse", sound("god_of_decay.collapse")),
+            java.util.Map.entry("reform", sound("god_of_decay.reform")),
+            java.util.Map.entry("time_giant", sound("god_of_decay.time_giant")),
+            java.util.Map.entry("ancient_god", sound("god_of_decay.ancient_god")),
+            java.util.Map.entry("pathogen_pool", sound("god_of_decay.pathogen_pool")),
+            java.util.Map.entry("weathering", sound("god_of_decay.weathering")));
 }
