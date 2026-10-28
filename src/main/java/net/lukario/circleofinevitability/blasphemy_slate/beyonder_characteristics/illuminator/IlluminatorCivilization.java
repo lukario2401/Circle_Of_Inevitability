@@ -273,7 +273,7 @@ public final class IlluminatorCivilization {
                     })
                     .onInside((one, inside) -> {
                         if (Spells.isEnemy(player, one)) lift(one);
-                        else weightless(one);
+                        else weightless(player, one);
                     })
                     .onLeave(one -> {
                         if (Gravity.ticksLeft(one, LIFTED) <= 0) return;
@@ -282,7 +282,7 @@ public final class IlluminatorCivilization {
                         if (one instanceof Player shown) IlluminatorFx.statusEnd(shown, Status.LIFTED);
                     })
                     .onPulse(ticksLeft -> {
-                        if (Zone.covers(player, PRINCIPLES, player.position())) weightless(player);
+                        if (Zone.covers(player, PRINCIPLES, player.position())) weightless(player, player);
                         if (beat[0]++ % 2 == 0) IlluminatorFx.principlesTick(sl, center, PRINCIPLES_RADIUS);
                     })
                     .onEnd(() -> {
@@ -304,7 +304,8 @@ public final class IlluminatorCivilization {
         }
     }
 
-    private static void weightless(LivingEntity ally) {
+    private static void weightless(LivingEntity player, LivingEntity ally) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         Spells.keepEffect(ally, MobEffects.SLOW_FALLING, 0, 30);
         Spells.keepEffect(ally, MobEffects.SPEED, 0, 30);
     }
@@ -494,6 +495,7 @@ public final class IlluminatorCivilization {
     }
 
     private static void enlighten(LivingEntity player, ServerLevel sl, LivingEntity ally) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         String tag = "il_enlightened_" + ally.getId();
         ally.addEffect(new MobEffectInstance(MobEffects.HASTE, ENLIGHTENED_TICKS, 1));
         Spells.cleanse(ally);
@@ -555,11 +557,11 @@ public final class IlluminatorCivilization {
                         Spells.keepEffect(one, MobEffects.SLOWNESS, 1, 30);
                         Spells.keepEffect(one, MobEffects.WEAKNESS, 0, 30);
                     } else {
-                        inspired(one);
+                        inspired(player, one);
                     }
                 })
                 .onPulse(ticksLeft -> {
-                    inspired(player);
+                    inspired(player, player);
                     IlluminatorFx.masterworkTick(sl, player, MASTERWORK_RADIUS);
                 })
                 .onEnd(() -> {
@@ -570,7 +572,8 @@ public final class IlluminatorCivilization {
         return AbilityWheel.Result.DONE;
     }
 
-    private static void inspired(LivingEntity ally) {
+    private static void inspired(LivingEntity player, LivingEntity ally) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         Spells.keepEffect(ally, MobEffects.STRENGTH, 0, 30);
         Spells.keepEffect(ally, MobEffects.HASTE, 0, 30);
         Spells.keepEffect(ally, MobEffects.REGENERATION, 0, 60);

@@ -571,5 +571,7 @@
   "subtitles.circle_of_inevitability.god_of_decay.time_giant": "God of Decay: Time giant",
   "subtitles.circle_of_inevitability.god_of_decay.ancient_god": "God of Decay: Ancient god",
   "subtitles.circle_of_inevitability.god_of_decay.pathogen_pool": "God of Decay: Pathogen pool",
-  "subtitles.circle_of_inevitability.god_of_decay.weathering": "God of Decay: Weathering"
+  "subtitles.circle_of_inevitability.god_of_decay.weathering": "God of Decay: Weathering",
+  "death.attack.circle_of_inevitability.inevitable": "%1$s met an inevitable end",
+  "death.attack.circle_of_inevitability.inevitable.player": "%1$s met an inevitable end at the hands of %2$s"
 }

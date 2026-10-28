@@ -328,6 +328,16 @@ public final class Dome {
         return new Raised(owner, name, center, radius, whole);
     }
 
+    /** Advance enemy lifetimes in a weathering field; normal end callbacks run immediately on expiry. */
+    public static void ageNear(ServerLevel level, Vec3 point, double radius, java.util.function.Predicate<LivingEntity> whose, int ticks) {
+        if (ticks <= 0) return;
+        for (Dome dome : new ArrayList<>(RAISED)) {
+            if (dome.closed || dome.level != level || !whose.test(dome.owner) || dome.center.distanceToSqr(point) > radius * radius) continue;
+            dome.age += ticks;
+            if (dome.age >= dome.lasts) dome.end();
+        }
+    }
+
     private static Dome find(LivingEntity owner, String name) {
         for (Dome dome : RAISED) {
             if (!dome.closed && dome.name.equals(name) && dome.owner.getUUID().equals(owner.getUUID())) return dome;
@@ -494,7 +504,7 @@ public final class Dome {
         List<Dome> found = new ArrayList<>();
         for (Dome dome : RAISED) {
             if (dome.closed || dome.level != entity.level()) continue;
-            if (dome.isOutsider(entity) || !dome.contains(entity)) continue;
+            if (dome.isOutsider(entity) || !dome.contains(entity) || Support.blocked(dome.owner, entity)) continue;
             found.add(dome);
         }
         return found;

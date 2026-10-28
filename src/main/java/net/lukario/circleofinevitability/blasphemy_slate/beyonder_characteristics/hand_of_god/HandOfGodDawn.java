@@ -208,7 +208,7 @@ public final class HandOfGodDawn {
         if (Blind.isBlind(one)) Blind.remove(one);
         if (Taunt.isTaunted(one)) Taunt.remove(one);
         Spells.cleanse(one);
-        if (one.getHealth() < one.getMaxHealth()) one.heal(LIGHT_HEAL);
+        if (one.getHealth() < one.getMaxHealth()) net.lukario.circleofinevitability.combat.Support.heal(player, one, LIGHT_HEAL);
         HandOfGodFx.lightOfDawnHeal(sl, one);
     }
 

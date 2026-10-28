@@ -250,7 +250,7 @@ public final class KeyOfStarsSecrets {
         for (LivingEntity ally : inside) {
             Concealment.hide(ally, 15);
             if (player.tickCount % 20 == 0 && ally.getHealth() < ally.getMaxHealth()) {
-                ally.heal(CONCEAL_HEAL);
+                net.lukario.circleofinevitability.combat.Support.heal(player, ally, CONCEAL_HEAL);
                 KeyOfStarsFx.concealedHeal(sl, ally);
             }
         }

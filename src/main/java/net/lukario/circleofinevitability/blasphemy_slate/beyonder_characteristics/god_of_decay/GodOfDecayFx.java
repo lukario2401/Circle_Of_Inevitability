@@ -94,6 +94,8 @@ public final class GodOfDecayFx {
         if (tag == null || tag.isBlank()) return;
         ParticleShapes.clearModels(sl, entity, tag);
         ParticleShapes.clearModels(sl, center, tag);
+        ParticleShapes.clearModels(sl, center, tag+"_cracks");
+        ParticleShapes.clearModels(sl, center, tag+"_sky");
         if (entity instanceof Player player) ScreenImages.hide(player, "decay_" + tag + "_*");
     }
 
@@ -254,12 +256,17 @@ public final class GodOfDecayFx {
         sound(sl, center, sound);
     }
     /** Area accents, called once per second; particle count stays bounded even for a 48-block domain. */
+    public static void moveZone(ServerLevel sl, Vec3 center, String tag, Ability ability) {
+        ParticleShapes.moveModel(sl,tag,center.add(0,.05,0),0,0,0);
+        if(ability==Ability.DECAY)ParticleShapes.moveModel(sl,tag+"_cracks",center.add(0,.03,0),0,0,0);
+        if(ability==Ability.RAGNAROK)ParticleShapes.moveModel(sl,tag+"_sky",center.add(0,24,0),0,0,0);
+    }
     public static void zoneTick(ServerLevel sl, Vec3 center, double radius, int color) {
         ParticleShapes.ring(sl, DUST.color(color), center.add(0, .2, 0), Math.clamp(radius, 0, 48), 48, -.015);
     }
     public static void decay(ServerLevel sl, Vec3 center, double radius, int ticks, String tag, boolean aged) {
         zone(sl, center, radius, ticks, tag, aged ? ASH : PATHWAY_COLOR, "decay");
-        ParticleShapes.model(sl, model("decay_cracks", ticks, tag).scale((float) radius), center.add(0, .03, 0), 0, 0, 0);
+        ParticleShapes.model(sl, model("decay_cracks", ticks, tag+"_cracks").scale((float) radius), center.add(0, .03, 0), 0, 0, 0);
     }
     public static void weathering(ServerLevel sl, Vec3 at) {
         ParticleShapes.burst(sl, DUST, at, 14, .02, .13);
@@ -294,6 +301,10 @@ public final class GodOfDecayFx {
     }
     public static void palmBlock(ServerLevel sl, Vec3 impact) { weathering(sl, impact); sound(sl, impact, "weathering"); }
     /** Call six times at GRAVEL_INTERVAL ticks; one model travels to the snapshot aim in six ticks. */
+    public static void gravelLaunch(ServerLevel sl, LivingEntity caster) {
+        sound(sl,caster.getEyePosition(),"gravel_shot");
+        ParticleShapes.burst(sl,SHARD,caster.getEyePosition().add(caster.getLookAngle()),6,.01,.08);
+    }
     public static void gravelShot(ServerLevel sl, LivingEntity caster, Vec3 target, String tag) {
         Vec3 from = caster.getEyePosition();
         Vec3 delta = target.subtract(from);
@@ -321,7 +332,7 @@ public final class GodOfDecayFx {
     }
     public static void ragnarok(ServerLevel sl, Vec3 center, double radius, int ticks, String tag) {
         zone(sl, center, radius, ticks, tag, ENTROPY, "ragnarok");
-        ParticleShapes.model(sl, model("time_ring", ticks, tag).scale((float)(radius * 2)).color(0xA02A3A2A).spin(-.3f), center.add(0, 24, 0), 0, 0, 0);
+        ParticleShapes.model(sl, model("time_ring", ticks, tag+"_sky").scale((float)(radius * 2)).color(0xA02A3A2A).spin(-.3f), center.add(0, 24, 0), 0, 0, 0);
     }
     /** Refresh only for players inside the domain. A short TTL removes the sky promptly on exit. */
     public static void duskSky(Player viewer, String tag) {

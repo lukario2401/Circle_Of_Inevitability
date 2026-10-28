@@ -618,6 +618,7 @@ public final class KeyOfStarsMobs {
             Later.run(sl, t, () -> {
                 if (!MobSpells.casterStillHere(mob, sl) || !Dome.isRaised(mob, CONCEAL_DOME)) return;
                 for (LivingEntity friend : MobSpells.friendsAround(mob, sl, center, radius)) {
+                    if (net.lukario.circleofinevitability.combat.Support.blocked(mob, friend)) continue;
                     Concealment.hide(friend, 15);
                     if (heal && friend.getHealth() < friend.getMaxHealth()) {
                         friend.heal(KeyOfStarsSecrets.CONCEAL_HEAL);

@@ -105,6 +105,19 @@ public final class Substitute {
         ARMED.remove(entity.getUUID());
     }
 
+    /** Opaque identity of the currently armed substitute, for effects that only honor prior protection. */
+    public static Object snapshot(Entity entity) { return isArmed(entity) ? ARMED.get(entity.getUUID()) : null; }
+
+    public static boolean takeSnapshot(LivingEntity entity, Object snapshot, DamageSource source, float amount) {
+        if (!(entity.level() instanceof ServerLevel sl) || snapshot == null || snapshot != snapshot(entity)) return false;
+        if (Decree.violate(entity, Decree.Rule.STAND_INS)) return false;
+        Armed armed = ARMED.get(entity.getUUID());
+        if (--armed.charges <= 0) ARMED.remove(entity.getUUID());
+        try { armed.escape.run(entity, source, amount, sl); }
+        catch (Exception e) { CircleOfInevitability.LOGGER.error("A substitute's escape failed", e); }
+        return true;
+    }
+
     /** Whether this damage is the kind a substitute steps in for (see the class comment). */
     public static boolean isRealHit(LivingEntity entity, DamageSource source, float amount) {
         if (amount <= 0f) return false;

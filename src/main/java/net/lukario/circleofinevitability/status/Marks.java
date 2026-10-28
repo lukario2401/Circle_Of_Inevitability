@@ -54,6 +54,18 @@ public final class Marks {
     private static final String SINCE = "Since";                // game time of the last add (marks that drop one at a time)
     private static final String EVERY = "Every";                // ticks for one of them to wear off
 
+    /** Advances typed mark timers without changing their count, source or interval. */
+    public static void age(Entity entity, int ticks) {
+        if (ticks <= 0) return;
+        CompoundTag all = entity.getPersistentData().getCompoundOrEmpty(TAG);
+        for (String key : java.util.Set.copyOf(all.keySet())) {
+            CompoundTag mark = all.getCompoundOrEmpty(key);
+            if (mark.contains(UNTIL)) mark.putLong(UNTIL, mark.getLongOr(UNTIL, 0L) - ticks);
+            if (mark.contains(SINCE)) mark.putLong(SINCE, mark.getLongOr(SINCE, 0L) - ticks);
+        }
+        forgetWornOff(entity, all);
+    }
+
     private Marks() {}
 
     // =========================

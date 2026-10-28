@@ -29,6 +29,7 @@ public final class MeleeCombos {
     private static final Map<String, MeleeCombo> COMBOS = new HashMap<>();
 
     static {
+        register(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.COMBO);
         register(SnakeOfMercuryPowers.MELEE_COMBO);
         register(HandOfOrder.MELEE_COMBO);
         register(AttendantOfMysteries.MELEE_COMBO);

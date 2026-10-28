@@ -226,7 +226,7 @@ public final class IlluminatorAstronomy {
                     })
                     .onInside((one, inside) -> {
                         if (Spells.isEnemy(player, one)) press(player, sl, one);
-                        else weightless(sl, one);
+                        else weightless(player, sl, one);
                     })
                     .onLeave(one -> {
                         Gravity.clear(one, PRESSED);
@@ -237,7 +237,7 @@ public final class IlluminatorAstronomy {
                     })
                     .onPulse(ticksLeft -> {
                         IlluminatorFx.blessingTick(sl, center, BLESSING_RADIUS);
-                        if (Zone.covers(player, BLESSING, player.position())) weightless(sl, player);
+                        if (Zone.covers(player, BLESSING, player.position())) weightless(player, sl, player);
                     })
                     .onEnd(() -> IlluminatorFx.blessingEnd(sl, center, BLESSING_RADIUS, tag))
                     .open(player, sl, BLESSING);
@@ -255,7 +255,8 @@ public final class IlluminatorAstronomy {
     }
 
     /** An ally (or the caster) weightless for the next second and a bit. */
-    private static void weightless(ServerLevel sl, LivingEntity ally) {
+    private static void weightless(LivingEntity player, ServerLevel sl, LivingEntity ally) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         Spells.keepEffect(ally, MobEffects.JUMP_BOOST, 1, 40);
         Spells.keepEffect(ally, MobEffects.SLOW_FALLING, 0, 40);
         Spells.keepEffect(ally, MobEffects.SPEED, 0, 40);

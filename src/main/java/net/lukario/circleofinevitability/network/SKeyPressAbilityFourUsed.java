@@ -45,6 +45,10 @@ public class SKeyPressAbilityFourUsed {
         if(player == null)
             return;
 
+        cast(player);
+    }
+
+    public static void cast(ServerPlayer player) {
         Level level = player.level();
 
         if (!(level instanceof ServerLevel serverLevel)) return;
@@ -62,9 +66,11 @@ public class SKeyPressAbilityFourUsed {
         if (Parasite.blocksKey(player, 4)) return;
         // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
         if (KeySeal.blocksKey(player, 4)) return;
+        if (net.lukario.circleofinevitability.combat.HeldActions.defer(player, () -> cast(player))) return;
         KeySeal.pressed(player, 4);
         Casts.keyPressed(player, 4);                 // combat/Casts: told if the press goes off
         try {
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, serverLevel, 4, false);
             SnakeOfMercuryPowers.calamity(player, level, serverLevel, false);
             WormOfTimePowers.insight(player, level, serverLevel, false);
 

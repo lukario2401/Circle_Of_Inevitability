@@ -1,10 +1,10 @@
 # God of Decay effects
 
-The presentation kit for the planned Second Law pathway is implemented in
+The presentation kit for the Second Law pathway is implemented in
 `god_of_decay/GodOfDecayFx.java`. It provides visuals, audio, wheel/status icons,
-owner-only Sickness pips and preview commands. Gameplay abilities, disease storage,
-damage, contagion rules, cooldowns and pathway selection are still planned.
-This kit does not implement those mechanics or modify terrain.
+owner-only Sickness pips and preview commands. Gameplay is integrated; see
+[GOD_OF_DECAY.md](GOD_OF_DECAY.md) for controls, mechanics and reusable APIs.
+The presentation class itself does not apply damage or modify terrain.
 
 ## Preview
 
@@ -80,7 +80,7 @@ passive procs. Passives without visible manifestations need no cast display.
 
 FX do not choose victims, consume spirituality, manipulate equipment durability,
 hide entities, grow their collision boxes, stop projectiles or bypass death wards.
-Those remain responsibilities of the future ability implementation. The curved
+Those are responsibilities of the gameplay implementation. The curved
 Sure Hit beam is a visual path, not an obstacle-routing algorithm.
 
 ## Assets and regeneration

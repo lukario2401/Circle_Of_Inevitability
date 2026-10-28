@@ -45,12 +45,14 @@ public class CircleOfInevitability
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         SnakeOfMercuryGameTests.FUNCTIONS.register(modEventBus);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecayGameTests.FUNCTIONS.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event){
+        event.enqueueWork(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecayEvents::initialize);
 
     }
 

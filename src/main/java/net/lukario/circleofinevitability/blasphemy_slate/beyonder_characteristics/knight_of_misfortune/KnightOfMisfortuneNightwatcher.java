@@ -204,6 +204,7 @@ public final class KnightOfMisfortuneNightwatcher {
         List<LivingEntity> allies = new ArrayList<>(Spells.alliesAround(player, sl, ground, DOMAIN_RADIUS));
         if (player.position().distanceTo(ground) <= DOMAIN_RADIUS + 1) allies.add(player);
         for (LivingEntity ally : allies) {
+            if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) continue;
             boolean spirit = Marionette.isMarionetteOf(ally, player);
             Spells.keepEffect(ally, MobEffects.STRENGTH, spirit ? 1 : 0, 40);
             Spells.keepEffect(ally, MobEffects.RESISTANCE, 0, 40);
@@ -364,7 +365,7 @@ public final class KnightOfMisfortuneNightwatcher {
         if (!bishop) return;
         for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), WOLF_PRAYERS)) {
             if (ally.isShiftKeyDown() && ally.getHealth() < ally.getMaxHealth()) {
-                ally.heal(WOLF_PRAYER_HEAL);
+                net.lukario.circleofinevitability.combat.Support.heal(player, ally, WOLF_PRAYER_HEAL);
                 KnightOfMisfortuneFx.soothed(sl, ally);
             }
         }

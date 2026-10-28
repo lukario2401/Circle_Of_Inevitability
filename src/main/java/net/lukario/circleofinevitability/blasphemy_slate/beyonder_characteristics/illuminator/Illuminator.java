@@ -701,10 +701,10 @@ public class Illuminator {
                     .affects(one -> true)
                     .onInside((one, inside) -> {
                         if (Spells.isEnemy(player, one)) Spells.keepEffect(one, MobEffects.SLOWNESS, 0, 40);
-                        else ritualBlesses(sl, one, beat[0]);
+                        else ritualBlesses(player, sl, one, beat[0]);
                     })
                     .onPulse(ticksLeft -> {
-                        if (Zone.covers(player, RITUAL, player.position())) ritualBlesses(sl, player, beat[0]);
+                        if (Zone.covers(player, RITUAL, player.position())) ritualBlesses(player, sl, player, beat[0]);
                         if (beat[0] % (RITUAL_CLEANSE_EVERY / 20) == 0) IlluminatorFx.ritualPulse(sl, center, radius);
                         beat[0]++;
                     })
@@ -717,7 +717,8 @@ public class Illuminator {
     }
 
     /** An ally in the circle: Regeneration I, and every RITUAL_CLEANSE_EVERY one harmful effect off. */
-    private static void ritualBlesses(ServerLevel sl, LivingEntity ally, int beat) {
+    private static void ritualBlesses(LivingEntity player, ServerLevel sl, LivingEntity ally, int beat) {
+        if (net.lukario.circleofinevitability.combat.Support.blocked(player, ally)) return;
         Spells.keepEffect(ally, MobEffects.REGENERATION, 0, 60);
         if (beat % (RITUAL_CLEANSE_EVERY / 20) != 0) return;
         List<MobEffectInstance> harmful = Spells.harmfulEffects(ally);

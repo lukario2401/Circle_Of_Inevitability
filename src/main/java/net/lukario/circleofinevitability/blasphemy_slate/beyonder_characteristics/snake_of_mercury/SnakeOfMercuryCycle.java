@@ -140,7 +140,7 @@ public final class SnakeOfMercuryCycle {
                 List<LivingEntity> recipients = Spells.livingAround(p, sl, p.position(), p.getPersistentData().getDoubleOr(PREFIX + "sky_radius", 30d));
                 recipients.add(p);
                 for (LivingEntity target : recipients) {
-                if (target == p || Spells.isFriend(p, target)) { Luck.bestow(p, target, 10); target.heal(target.getMaxHealth() * .15f); }
+                if (target == p || Spells.isFriend(p, target)) { Luck.bestow(p, target, 10); net.lukario.circleofinevitability.combat.Support.heal(p, target, target.getMaxHealth() * .15f); }
                 else { Luck.bestow(p, target, -10); Misfortune.add(p, target, 10); SnakeOfMercuryEvents.mishap(target, true); }
                 }
             }
