@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability;
 
 import com.mojang.logging.LogUtils;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryGameTests;
 import net.lukario.circleofinevitability.effects.ModEffects;
 import net.lukario.circleofinevitability.item.ModCreativeTabs;
 import net.lukario.circleofinevitability.item.ModDataComponents;
@@ -8,7 +9,6 @@ import net.lukario.circleofinevitability.item.ModItems;
 import net.lukario.circleofinevitability.particles.ModParticles;
 import net.lukario.circleofinevitability.sounds.ModSounds;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
@@ -44,7 +44,7 @@ public class CircleOfInevitability
         ModDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
-        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercuryGameTests.FUNCTIONS.register(modEventBus);
+        SnakeOfMercuryGameTests.FUNCTIONS.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us
         context.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

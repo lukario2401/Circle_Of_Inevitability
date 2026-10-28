@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
@@ -6,12 +6,10 @@ import net.lukario.circleofinevitability.combat.*;
 import net.lukario.circleofinevitability.fate.*;
 import net.lukario.circleofinevitability.menu.AbilityMenu;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
-import net.lukario.circleofinevitability.root.*;
 import net.lukario.circleofinevitability.status.*;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.player.Player;

@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.combat.*;
@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.listener.*;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
-import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercuryPowers.*;
+import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryPowers.*;
 
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID)
 public final class SnakeOfMercuryEvents {

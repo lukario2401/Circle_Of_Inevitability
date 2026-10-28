@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercury;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.KeySeal;
@@ -84,7 +85,7 @@ public class SKeyPressAbilityOneUsed {
             knowledgeEmperorMysteryPrying(player,level,serverLevel,false);
             illuminatorCompoundFlask(player,level,serverLevel,false);
             starDragonAstronomy(player,level,serverLevel,false);
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercury.premonition(player, level, serverLevel, false);
+            SnakeOfMercury.premonition(player, level, serverLevel, false);
         } finally {
             Casts.keyDone(player);
         }

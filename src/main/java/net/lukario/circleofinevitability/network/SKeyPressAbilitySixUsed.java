@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryPowers;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimePowers;
 import net.lukario.circleofinevitability.status.Decree;
@@ -64,7 +65,7 @@ public class SKeyPressAbilitySixUsed {
         KeySeal.pressed(player, 6);
         Casts.keyPressed(player, 6);                 // combat/Casts: told if the press goes off
         try {
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.SnakeOfMercuryPowers.chaosWheel(player, level, serverLevel, false);
+            SnakeOfMercuryPowers.chaosWheel(player, level, serverLevel, false);
             WormOfTimePowers.destiny(player, level, serverLevel, false);
 
             wandererOrbital(player,level,serverLevel,false);
