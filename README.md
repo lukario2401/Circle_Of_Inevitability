@@ -40,5 +40,13 @@ sneak while pressing a key for the second cast. Soul Essence is shown above the 
 Any player can type `/damagefx` to turn damage numbers on or off for themself: the damage they deal is shown
 in red above the target's head (`docs/DAMAGE_FX.md`).
 
+Ops can use `/targethealth` to toggle Illuminator's target health display for themself on any pathway,
+or `/targethealth on` and `/targethealth off` to set it explicitly (permission level 2 required).
+Look at an enemy within 24 blocks to see its name and current/maximum health beside the hotbar;
+the display updates every five ticks and disappears when you look away or a block obstructs the view.
+It uses the same targeting rules as Appraiser's Eye, excluding allies and targets concealed from abilities.
+The preference survives death, reconnects and server restarts; command-granted access requires OP permission
+while viewing. Turning it off leaves Illuminator's natural Appraiser's Eye passive active.
+
 This is a port of the author's 1.21 mod; `MIGRATION_NOTES.md` records how it was ported and what is
 still to check.

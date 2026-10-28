@@ -14,6 +14,7 @@ import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.MeleeCombo;
 import net.lukario.circleofinevitability.combat.Shot;
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.combat.TargetHealth;
 import net.lukario.circleofinevitability.combat.Zone;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
@@ -868,10 +869,11 @@ public class Illuminator {
     // Passives (the once-a-second ones are lines in SequencePassives)
     // =========================
 
-    /** Appraiser's Eye (7), every few ticks: the health of the enemy looked at, by the hotbar (combat/HudCounter). */
+    /** Appraiser's Eye (7), or the OP's /targethealth: the health of the enemy looked at, by the hotbar. */
     private static void appraisersEye(LivingEntity player, ServerLevel sl) {
         boolean shown = EYE_SHOWN.containsKey(player.getUUID());
-        LivingEntity looked = isIlluminator(player, EYE_SEQUENCE) ? Spells.aimEnemy(player, sl, EYE_RANGE) : null;
+        LivingEntity looked = (isIlluminator(player, EYE_SEQUENCE) || TargetHealth.isOn(player))
+                ? Spells.aimEnemy(player, sl, EYE_RANGE) : null;
         if (looked == null) {
             if (shown) {
                 if (player instanceof Player viewerOfHud) HudCounter.hide(viewerOfHud, EYE);
