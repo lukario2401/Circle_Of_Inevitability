@@ -37,6 +37,10 @@ Ops set a player up with the `/soul` command, for example:
 The seven abilities are on G, H, J, K, L, N and M (category "Circle Of Inevitability" in Controls > Key Binds);
 sneak while pressing a key for the second cast. Soul Essence is shown above the hotbar.
 
+Custom sword swings can be tuned live with `/swinganim`: repeat or hold a preview, edit keyframe numbers,
+timing, easing and global placement, then save local overrides or export Java. See
+[Live sword swing tuning](docs/SWING_TUNING.md) for commands and a walkthrough.
+
 Any player can type `/damagefx` to turn damage numbers on or off for themself: the damage they deal is shown
 in red above the target's head (`docs/DAMAGE_FX.md`).
 

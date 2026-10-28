@@ -5,8 +5,13 @@ that replace vanilla's up-and-down arm swing, in first person and in third perso
 only: damage, cooldowns, attack speed and hit detection are untouched. All code is client-only and
 lives in `src/main/java/net/lukario/circleofinevitability/client/animation/`.
 
-Today one rule uses it: a **Worm Of Time** player holding a sword (`minecraft:swords` item tag)
-cycles through all eight swings (see [The eight swings](#the-eight-swings)).
+**Worm Of Time** cycles through the eight shared presets and **Prince Of Abolition** has twelve dedicated
+swings; both require a sword (`minecraft:swords` item tag). See [CUSTOM_SWING_IMPLEMENTATION.md](CUSTOM_SWING_IMPLEMENTATION.md)
+for the Prince choreography.
+
+For immediate in-game edits, repeat playback, held poses, save/load and Java export, start with
+[Live sword swing tuning](SWING_TUNING.md). The Java definitions below provide the compiled defaults;
+client overrides take precedence until reset.
 
 ## How it works
 
@@ -41,7 +46,8 @@ cycles through all eight swings (see [The eight swings](#the-eight-swings)).
 | File | What it is |
 | --- | --- |
 | `SwingAnimation` | One swing: id, length in ticks, mirror flag, keyframes. Also `Easing` and `Pose`. Pure data. |
-| `SwingAnimations` | The registry, the **global tuning constants** and **every definition**. The one file to edit for new swings and tuning. |
+| `SwingAnimations` | Registry and compiled global defaults/shared presets; Prince definitions live in `PrinceSwordSwings`. |
+| `SwingTuning` / `SwingAnimationEdits` | Client overrides, validated edits, JSON persistence and Java export. |
 | `SwingRule` | Interface: condition on (player, main-hand stack) + sequence of swing ids + reset time. |
 | `SwingRules` | The registered rules (first match wins) and helpers (`hasPathway`, `pathwayOf`). |
 | `SwingPlayer` | Notices swings, cycles sequences, remembers what plays and what it blends from; `poseFor`, `play`, `preview`. |
@@ -143,7 +149,7 @@ the next swing starts during the recovery of the last one; that is what blending
 ## Blending (clicking before a swing has finished)
 
 When a new swing starts while one is still on screen (a click during the cut, hold or recovery, or a
-`/swinganim` while a swing plays), `SwingPlayer` remembers the pose the old swing has at that moment
+   `SwingPlayer.play` while a swing plays), `SwingPlayer` remembers the pose the old swing has at that moment
 and the new swing's **wind-up starts from that pose** instead of from rest
 (`SwingAnimation.sample(progress, from)`). Rules:
 
@@ -294,6 +300,12 @@ A client command, so it needs no op rights and only you see the result:
   your Pathway (F5 for third person). Tab completes every id, including `stab`, `uppercut` and
   `spin_slash`.
 - `/swinganim horizontal 5` plays it five times slower (1 to 20) so you can see each keyframe.
+- `/swinganim loop horizontal 5` repeats a preview; `/swinganim pose horizontal 0.46` holds the impact pose.
+- `/swinganim edit horizontal key 2 item_yaw 95` changes a pose and refreshes the preview immediately.
+- `/swinganim save` saves local overrides; `/swinganim export horizontal` writes a Java expression.
+
+Workbench previews start from rest for repeatable tuning. See [SWING_TUNING.md](SWING_TUNING.md) for all
+fields, globals, reset/load commands and how to make tuned values permanent in source.
 
 A real swing (left click) replaces a preview that is still playing, blending out of it.
 

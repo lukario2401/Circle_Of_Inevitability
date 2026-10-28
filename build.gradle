@@ -73,3 +73,24 @@ tasks.withType(JavaCompile).configureEach {
     // This is done by default in Java 18+, but this ensures it no matter the Java or Gradle version
     options.encoding = 'UTF-8'
 }
+
+// Pure animation data tests; no Minecraft client or server needs to start.
+sourceSets {
+    swingEditTest {
+        java.srcDir 'tools/tests'
+        java.include 'SwingAnimationEditsTest.java'
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
+}
+
+tasks.register('swingAnimationEditsTest', JavaExec) {
+    group = 'verification'
+    description = 'Checks swing edits, validation, JSON round trips and compilable Java exports.'
+    dependsOn tasks.named('swingEditTestClasses')
+    classpath = sourceSets.swingEditTest.runtimeClasspath
+    mainClass = 'net.lukario.circleofinevitability.client.animation.SwingAnimationEditsTest'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
+}
+
+tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest') }

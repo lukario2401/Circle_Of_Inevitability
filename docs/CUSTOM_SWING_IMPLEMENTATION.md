@@ -2,6 +2,14 @@
 
 This describes the existing Java animation system shared by Worm Of Time and Prince Of Abolition. For pose tuning and examples, see [ANIMATIONS.md](ANIMATIONS.md).
 
+For live in-game edits without rebuilding, see [SWING_TUNING.md](SWING_TUNING.md). `/swinganim edit`
+rebuilds immutable keyframe data and refreshes the local preview; `loop` repeats it and `pose` holds a
+sampled pose. `SwingTuning` overlays client-local JSON definitions on the built-in registry and supplies
+runtime global values to first-person rendering and playback. `save` persists edits; `load` validates
+the entire file before replacing state; `export` writes a Java expression for the same animation package.
+Resetting an override reveals its compiled default. Preview state is cleared on a real local attack,
+item-type change or leaving the world. Ordinary pathway rules and server combat are unchanged.
+
 ## Selection and playback
 
 The implementation lives in `src/main/java/net/lukario/circleofinevitability/client/animation/`.

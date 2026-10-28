@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * One custom swing: a list of keyframes (poses at points in time), how long it lasts and whether it is mirrored.
  * Pure data, no rendering: FirstPersonSwing and ThirdPersonSwing read the pose this returns for the current moment.
- * Define new ones in SwingAnimations (the one file to edit), see docs/ANIMATIONS.md.
+ * Define permanent ones in SwingAnimations; tune live with /swinganim (docs/SWING_TUNING.md).
  *
  *   SwingAnimation.of("my_cut", 14)                                         // id, length in ticks (20 ticks = 1 second)
  *           .key(0.00f, Easing.LINEAR, Pose.REST)                           // starts where vanilla holds the item
@@ -124,7 +124,7 @@ public final class SwingAnimation {
             return new Pose(-itemX, itemY, itemZ, itemPitch, -itemYaw, -itemRoll, itemScale, armPitch, -armYaw, -armRoll, -bodyYaw, weight);
         }
 
-        /** Same pose with another weight (only SwingAnimation sets it). */
+        /** Same pose with another blend weight (used by sampling and the live editor). */
         Pose withWeight(float weight) {
             return new Pose(itemX, itemY, itemZ, itemPitch, itemYaw, itemRoll, itemScale, armPitch, armYaw, armRoll, bodyYaw, weight);
         }

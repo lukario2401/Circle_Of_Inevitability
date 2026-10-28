@@ -9,8 +9,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Every swing animation, by id. THE file to edit: to add a swing, write one definition below and register it;
- * to tune one, change its numbers. Nothing in the rendering code needs to change. Preview with /swinganim <id>
+ * Built-in swing animations, by id. To add a permanent swing, write one definition below and register it;
+ * tune live with /swinganim edit and export the result (docs/SWING_TUNING.md). Preview with /swinganim <id>
  * (or /swinganim <id> 4 to watch it four times slower). See docs/ANIMATIONS.md.
  *
  * Every swing has the same four phases (keyframe times are fractions of the swing, so a new length keeps them):
@@ -23,7 +23,7 @@ import java.util.Set;
 public final class SwingAnimations {
 
     // ---------------------------------------------------------------------------------------------------------------
-    // GLOBAL TUNING: these apply to every swing. Nudge them here; no definition below needs to change.
+    // GLOBAL DEFAULTS: /swinganim global overrides these on this client, without changing the definitions.
     // ---------------------------------------------------------------------------------------------------------------
 
     /**
@@ -215,11 +215,15 @@ public final class SwingAnimations {
 
     /** The swing with this id, or null if there is none (null = the caller plays vanilla). */
     public static SwingAnimation get(String id) {
-        return id == null ? null : BY_ID.get(id);
+        if (id == null) return null;
+        SwingAnimation override = SwingTuning.override(id);
+        return override != null ? override : BY_ID.get(id);
     }
 
     /** Every registered id, in registration order. */
     public static Set<String> ids() {
-        return Collections.unmodifiableSet(BY_ID.keySet());
+        Set<String> ids = new java.util.LinkedHashSet<>(BY_ID.keySet());
+        ids.addAll(SwingTuning.ids());
+        return Collections.unmodifiableSet(ids);
     }
 }

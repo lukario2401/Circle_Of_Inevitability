@@ -53,6 +53,10 @@ public final class SwingPlayer {
     private static long clientTicks;
     private static boolean attackClicked;
     private static boolean loggedError;
+    private static String previewId;
+    private static int previewSlow = 1;
+    private static boolean previewLoop;
+    private static Float previewProgress;
 
     private SwingPlayer() {}
 
@@ -64,6 +68,8 @@ public final class SwingPlayer {
         if (player == null) return null;
         Playing playing = PLAYING.get(player.getId());
         if (playing == null || player.getMainHandItem().getItem() != playing.item()) return null;
+        if (player == Minecraft.getInstance().player && !playing.fromSwing() && previewProgress != null)
+            return playing.animation().sample(previewProgress);
         float elapsed = clientTicks - playing.start() + partialTick;
         if (elapsed >= playing.ticks()) {
             // our swing is done but vanilla's (6 ticks, longer with Mining Fatigue) may still be running: hold the rest pose
@@ -74,7 +80,63 @@ public final class SwingPlayer {
 
     /** Plays a swing on the local player now, 'slow' times slower (for /swinganim). False if there is no such id. */
     public static boolean preview(String id, int slow) {
-        return play(Minecraft.getInstance().player, id, slow);
+        if (Minecraft.getInstance().player == null || SwingAnimations.get(id) == null) return false;
+        previewId = id;
+        previewSlow = Math.max(1, slow);
+        previewLoop = false;
+        previewProgress = null;
+        restartPreview();
+        return true;
+    }
+
+    public static boolean loop(String id, int slow) {
+        if (!preview(id, slow)) return false;
+        previewLoop = true;
+        return true;
+    }
+
+    public static boolean hold(String id, float progress) {
+        if (!preview(id, 1)) return false;
+        previewProgress = SwingAnimationEdits.bounded(progress, 0, 1);
+        return true;
+    }
+
+    /** Replays edited data immediately, preserving the selected slowdown, loop or held pose. */
+    public static void edited(String id) {
+        if (!id.equals(previewId)) {
+            preview(id, 1);
+            return;
+        }
+        restartPreview();
+    }
+
+    public static void refreshPreview() {
+        if (previewId != null && SwingAnimations.get(previewId) != null) restartPreview();
+        else stopPreview();
+    }
+
+    private static void restartPreview() {
+        Player player = Minecraft.getInstance().player;
+        if (player == null) return;
+        // Editing should show the definition itself, rather than blend in from an earlier test pose.
+        PLAYING.remove(player.getId());
+        SwingAnimation animation = SwingAnimations.get(previewId);
+        if (animation != null) play(player, animation, previewSlow, false);
+    }
+
+    public static void stopPreview() {
+        Player player = Minecraft.getInstance().player;
+        if (player != null) {
+            Playing playing = PLAYING.get(player.getId());
+            if (playing != null && !playing.fromSwing()) PLAYING.remove(player.getId());
+        }
+        forgetPreview();
+    }
+
+    private static void forgetPreview() {
+        previewId = null;
+        previewLoop = false;
+        previewProgress = null;
     }
 
     /**
@@ -86,13 +148,14 @@ public final class SwingPlayer {
         SwingAnimation animation = SwingAnimations.get(id);
         if (player == null || animation == null) return false;
         play(player, animation, Math.max(1, slow), false);
+        if (player == Minecraft.getInstance().player) forgetPreview();
         return true;
     }
 
     private static void play(Player player, SwingAnimation animation, int slow, boolean fromSwing) {
         // a swing still on screen: the new one winds up from where that one is now instead of snapping to rest
         SwingAnimation.Pose from = poseFor(player, 0f);
-        float speed = SwingAnimations.SPEED > 0f ? SwingAnimations.SPEED : 1f;
+        float speed = SwingTuning.global("speed");
         PLAYING.put(player.getId(), new Playing(animation, animation.ticks() * slow / speed, clientTicks,
                 player.getMainHandItem().getItem(), fromSwing, from));
     }
@@ -105,6 +168,7 @@ public final class SwingPlayer {
         if (rule == null) {
             PLAYING.remove(id);
             CYCLES.remove(id);
+            if (player == Minecraft.getInstance().player) forgetPreview();
             return;
         }
         Cycle cycle = CYCLES.computeIfAbsent(id, k -> new Cycle());
@@ -118,6 +182,7 @@ public final class SwingPlayer {
         SwingAnimation animation = SwingAnimations.get(next);
         if (animation == null) PLAYING.remove(id); // missing definition: vanilla swing
         else play(player, animation, 1, true);
+        if (player == Minecraft.getInstance().player) forgetPreview();
     }
 
     // The local player's attack key (fires before vanilla swings for it)
@@ -132,6 +197,7 @@ public final class SwingPlayer {
         attackClicked = false;
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.level == null) {                      // left the world
+            stopPreview();
             PLAYING.clear();
             CYCLES.clear();
             LAST_SWING_TIME.clear();
@@ -157,14 +223,24 @@ public final class SwingPlayer {
             for (Iterator<Map.Entry<Integer, Playing>> it = PLAYING.entrySet().iterator(); it.hasNext(); ) {
                 Map.Entry<Integer, Playing> entry = it.next();
                 Playing playing = entry.getValue();
+                if (minecraft.player != null && entry.getKey() == minecraft.player.getId() && !playing.fromSwing()
+                        && minecraft.player.getMainHandItem().getItem() != playing.item()) {
+                    forgetPreview();
+                    it.remove();
+                    continue;
+                }
                 boolean over = clientTicks - playing.start() >= playing.ticks();
+                if (minecraft.player != null && entry.getKey() == minecraft.player.getId()
+                        && !playing.fromSwing() && previewProgress != null) over = false;
                 if (!seen.contains(entry.getKey())) it.remove();
                 else if (over && !(playing.fromSwing() && isSwinging(minecraft, entry.getKey()))) it.remove();
             }
+            if (previewLoop && minecraft.player != null && !PLAYING.containsKey(minecraft.player.getId())) restartPreview();
         } catch (RuntimeException e) {
             // never let an animation problem take the game down: forget everything, vanilla swings from here
             PLAYING.clear();
             CYCLES.clear();
+            stopPreview();
             if (!loggedError) {
                 loggedError = true;
                 CircleOfInevitability.LOGGER.error("Swing animations: tick failed, falling back to vanilla swings", e);

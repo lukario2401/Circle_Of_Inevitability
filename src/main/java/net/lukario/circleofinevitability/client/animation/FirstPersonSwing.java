@@ -72,14 +72,14 @@ public final class FirstPersonSwing {
         // vanilla's resting spot for a held item (ItemInHandRenderer.applyItemArmTransform), dip only at rest
         poseStack.translate(side * 0.56F, -0.52F + equipProgress * -0.6F * (1f - weight), -0.72F);
         // the global swing spot, the same for every swing (x mirrored for the left hand)
-        poseStack.translate(side * SwingAnimations.FIRST_PERSON_OFFSET_X * weight,
-                SwingAnimations.FIRST_PERSON_OFFSET_Y * weight, SwingAnimations.FIRST_PERSON_OFFSET_Z * weight);
+        poseStack.translate(side * SwingTuning.global("offset_x") * weight,
+                SwingTuning.global("offset_y") * weight, SwingTuning.global("offset_z") * weight);
         // the swing's own offsets and turns
         poseStack.translate(pose.itemX, pose.itemY, pose.itemZ);
         poseStack.mulPose(Axis.ZP.rotationDegrees(pose.itemRoll));
         poseStack.mulPose(Axis.YP.rotationDegrees(pose.itemYaw));
         poseStack.mulPose(Axis.XP.rotationDegrees(pose.itemPitch));
-        float scale = pose.itemScale * (1f + (SwingAnimations.FIRST_PERSON_SCALE - 1f) * weight);
+        float scale = pose.itemScale * (1f + (SwingTuning.global("scale") - 1f) * weight);
         if (scale != 1f && scale > 0f) poseStack.scale(scale, scale, scale);
     }
 
