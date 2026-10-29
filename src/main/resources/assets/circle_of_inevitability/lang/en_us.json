@@ -584,5 +584,6 @@
   "subtitles.circle_of_inevitability.god_of_decay.pathogen_pool": "God of Decay: Pathogen pool",
   "subtitles.circle_of_inevitability.god_of_decay.weathering": "God of Decay: Weathering",
   "death.attack.circle_of_inevitability.inevitable": "%1$s met an inevitable end",
-  "death.attack.circle_of_inevitability.inevitable.player": "%1$s met an inevitable end at the hands of %2$s"
+  "death.attack.circle_of_inevitability.inevitable.player": "%1$s met an inevitable end at the hands of %2$s",
+  "entity.circle_of_inevitability.star_dragon_boss": "Star Dragon — Radiant Angel"
 }

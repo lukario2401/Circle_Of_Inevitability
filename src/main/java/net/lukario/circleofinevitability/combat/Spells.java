@@ -759,6 +759,8 @@ public final class Spells {
      * The target also becomes "what the caster last hit", which is what marionettes and tamed wolves go after.
      */
     public static void strike(LivingEntity caster, LivingEntity target, float damage) {
+        if (caster instanceof net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.DirectedCaster directed)
+            damage *= directed.abilityDamageMultiplier();
         // a mob's ability numbers are the players', which were made against mobs: a player takes a share of them
         if (!(caster instanceof Player) && target instanceof Player) damage *= BeyonderMobRules.DAMAGE_TO_PLAYERS;
         if (damage <= 0f) return;

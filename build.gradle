@@ -33,7 +33,12 @@ minecraft {
             args '--nogui'
         }
 
-        register('gameTestServer')
+        register('gameTestServer') {
+            // Focus this encounter's regressions without running unrelated pathway suites.
+            if (providers.gradleProperty('starDragonBossTests').isPresent()) {
+                args '--tests', 'circle_of_inevitability:star_dragon_boss_*'
+            }
+        }
 
         register('data') {
             workingDir = layout.projectDirectory.dir('run-data')

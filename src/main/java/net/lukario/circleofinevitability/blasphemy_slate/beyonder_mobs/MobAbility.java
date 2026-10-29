@@ -106,6 +106,14 @@ public final class MobAbility {
 
     public MobAbility cast(Cast cast) { this.cast = cast; return this; }
 
+    /** Independent tuning for one encounter; never changes the shared pathway registry. */
+    public MobAbility copy() {
+        MobAbility out = new MobAbility(pathway, key, sneak).entry(entry).named(name).sequence(sequence)
+                .cost(cost).cooldown(cooldown).range(range).weight(weight).when(when).cast(cast);
+        out.sight = sight;
+        return out;
+    }
+
     // ---------- asking
 
     public String pathway() { return pathway; }

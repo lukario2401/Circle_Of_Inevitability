@@ -324,8 +324,8 @@ public class StarDragon {
             // the single keys have no cooldown (KEY_COOLDOWNS)
             if (!KEY_COOLDOWNS) Cooldowns.addFree(Cooldowns.keysStartingWith("star_dragon_"));
             // Dense Body (4): nothing pulls, pushes or lifts you; Heavybringing and the Neutron Star: nothing moves you
-            Spells.addMoveImmunity(one -> one instanceof Player dense && (isStarDragon(dense, DENSE_SEQUENCE)
-                    || StarDragonGravity.isHeavybringing(dense) || StarDragonGravity.isNeutronStar(dense)));
+            Spells.addMoveImmunity(one -> isStarDragon(one, DENSE_SEQUENCE)
+                    || StarDragonGravity.isHeavybringing(one) || StarDragonGravity.isNeutronStar(one));
             // Gravity Authority (1) and the Neutron Star: no Heaviness takes on you
             Weight.addImmunity(one -> one instanceof Player heavy
                     && (isStarDragon(heavy, AUTHORITY_SEQUENCE) || StarDragonGravity.isNeutronStar(heavy)));
@@ -369,12 +369,13 @@ public class StarDragon {
          */
         @SubscribeEvent
         public static boolean onStarDragonAttacked(LivingAttackEvent event) {
-            if (!(event.getEntity() instanceof Player player) || !(player.level() instanceof ServerLevel sl)) return false;
+            LivingEntity player = event.getEntity();
+            if (!(player.level() instanceof ServerLevel sl)) return false;
             DamageSource source = event.getSource();
             Entity attacker = source.getEntity();
             if (attacker == null || attacker == player || source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return false;
             if (StarDragonTides.parries(player, sl, source)) return true;
-            return glimpseDodges(player, sl, source);
+            return player instanceof Player && glimpseDodges(player, sl, source);
         }
 
         /** Hurt events: Star's Embrace, Dense Body, the luck of Fate Convergence, the void's limit, Scaled Form's blows. */
@@ -670,7 +671,7 @@ public class StarDragon {
     }
 
     /** Once a second, for every player: the hearts and footing of Star's Embrace, Starlight Scales and Dense Body. */
-    private static void bodyTick(LivingEntity player) {
+    static void bodyTick(LivingEntity player) {
         Physique.keep(player, Attributes.MAX_HEALTH, EMBRACE_ID, EMBRACE_HEARTS, AttributeModifier.Operation.ADD_VALUE,
                 isStarDragon(player, EMBRACE_SEQUENCE));
         Physique.keep(player, Attributes.KNOCKBACK_RESISTANCE, SCALES_ID, SCALES_FOOTING, AttributeModifier.Operation.ADD_VALUE,

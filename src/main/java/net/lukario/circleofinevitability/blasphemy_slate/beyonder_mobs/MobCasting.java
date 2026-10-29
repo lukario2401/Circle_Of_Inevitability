@@ -133,12 +133,19 @@ public final class MobCasting {
      * throws is logged, and waits out its cooldown so it does not fail again at once.
      */
     public static boolean tryCast(Mob mob, MobAbility ability, LivingEntity target, ServerLevel sl) {
+        return tryCast(mob, ability, target, sl, BeyonderMobRules.CAST_PAUSE);
+    }
+
+    /** Encounter-specific recovery, while retaining every shared casting check. */
+    public static boolean tryCast(Mob mob, MobAbility ability, LivingEntity target, ServerLevel sl, int recoveryTicks) {
         if (mob == null || ability == null || sl == null || mob.level() != sl) return false;
         if (whyNot(mob, ability) != Refusal.NONE || !inReach(mob, ability, target)) return false;
         if (ability.when() != null && !ability.when().test(mob, target, sl)) return false;
-        if (net.lukario.circleofinevitability.combat.HeldActions.defer(mob, () -> tryCast(mob, ability, target, sl))) return true;
+        if (net.lukario.circleofinevitability.combat.HeldActions.defer(mob, () -> tryCast(mob, ability, target, sl, recoveryTicks))) return true;
         boolean wentOff;
-        MobSpirituality.prepaid(mob, ability.cost());                      // the player code it runs may pay for itself
+        MobAbility registered = MobAbilities.byId(ability.id());
+        float coverage = mob instanceof DirectedCaster && registered != null ? Math.max(registered.cost(), ability.cost()) : ability.cost();
+        MobSpirituality.prepaid(mob, coverage);                      // the player code it runs may pay for itself
         try {
             wentOff = ability.cast().run(mob, target, sl);
         } catch (RuntimeException e) {
@@ -151,7 +158,8 @@ public final class MobCasting {
         if (!wentOff) return false;                                         // refused: nothing spent
         MobSpirituality.spend(mob, ability.cost());
         startCooldown(mob, sl, ability.id(), Math.round(ability.cooldown() * Math.max(0f, BeyonderMobRules.COOLDOWN_SCALE)));
-        startCooldown(mob, sl, PAUSE, BeyonderMobRules.CAST_PAUSE);
+        startCooldown(mob, sl, PAUSE, Math.max(0, recoveryTicks));
+        if (mob instanceof DirectedCaster directed) directed.onAbilityCast(ability);
         if (ability.ability() != null) Casts.mobCast(mob, sl, Casts.madeUpFor(mob, sl, ability.ability(), ability.sneak()));
         return true;
     }
@@ -177,6 +185,7 @@ public final class MobCasting {
             MobSpirituality.endPrepaid(mob);
         }
         if (!wentOff) return null;
+        if (mob instanceof DirectedCaster directed) directed.onAbilityCast(ability);
         if (ability.ability() != null) Casts.mobCast(mob, sl, Casts.madeUpFor(mob, sl, ability.ability(), ability.sneak()));
         return Refusal.NONE;
     }
@@ -197,7 +206,7 @@ public final class MobCasting {
         int every = Math.max(1, BeyonderMobRules.THINK_EVERY);
         if ((mob.tickCount + mob.getId()) % every != 0 || !BeyonderMobs.isBeyonder(mob)) return;
         MobSpirituality.regen(mob, every);
-        if (BeyonderMobRules.MOBS_CAST && !mob.isNoAi()) think(mob, sl);
+        if (BeyonderMobRules.MOBS_CAST && !mob.isNoAi() && !(mob instanceof DirectedCaster)) think(mob, sl);
     }
 
     /** In a fight, maybe one cast: a weighted pick among what it can cast at its target right now. */
