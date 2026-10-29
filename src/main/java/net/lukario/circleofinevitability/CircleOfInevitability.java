@@ -38,6 +38,7 @@ public class CircleOfInevitability
         // Register ourselves for server and other game events we are interested in
         ServerStartingEvent.BUS.addListener(this::onServerStarting);
 
+        net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossRegistry.ENTITIES.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         ModEffects.register(modEventBus);
@@ -46,6 +47,7 @@ public class CircleOfInevitability
         ModCreativeTabs.register(modEventBus);
         net.lukario.circleofinevitability.item.artifacts.SealedArtifactGameTests.FUNCTIONS.register(modEventBus);
         SnakeOfMercuryGameTests.FUNCTIONS.register(modEventBus);
+        net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecayGameTests.FUNCTIONS.register(modEventBus);
 
         // Register our mod's ForgeConfigSpec so that Forge can create and load the config file for us

@@ -40,7 +40,7 @@ import net.minecraft.world.phys.Vec3;
  *   7  Cosmos (2): Fusion Cluster, Radiant Angel Form, Gravitational Time Dilation (1), Planetfall (1), Star Dragon Form
  *      (1: no asteroid circles it), Neutron Star (0), Singularity (0), Quantum Uncertainty (0)
  *
- * Left out: Remote Sight (what it shows is for a player's eyes).
+ * Remote Sight is a sensing buff for mobs; the boss uses it to find targets through walls.
  */
 public final class StarDragonMobs {
 
@@ -55,6 +55,7 @@ public final class StarDragonMobs {
     private static final double PASSAGE_MOB_FAR = 8.0;          // it takes the void to a target further than this
     private static final String SCALES_COAT = "star_dragon_mob_scales";
 
+    private static final String SIGHT_UNTIL = "star_dragon_mob_sight_until";
     private StarDragonMobs() {}
 
     /** MobAbilities calls this once. */
@@ -132,6 +133,18 @@ public final class StarDragonMobs {
                 StarDragonRays.SERIES_COST, StarDragonRays.SERIES_COOLDOWN, StarDragonRays.SERIES_RANGE,
                 StarDragonRays::seriesOfRays);
 
+        MobAbilities.register(MobAbility.of(P, 5, MobAbility.NORMAL).entry("remote_sight").named("Remote Sight")
+                .sequence(StarDragonVoid.SIGHT_SEQUENCE).cost(StarDragonVoid.SIGHT_COST)
+                .cooldown(StarDragonVoid.SIGHT_COOLDOWN).range(StarDragonVoid.SIGHT_RANGE)
+                .when((mob, target, sl) -> !StarDragon.isActive(mob, SIGHT_UNTIL))
+                .cast((mob, target, sl) -> {
+                    mob.getPersistentData().putLong(SIGHT_UNTIL, sl.getGameTime() + StarDragonVoid.SIGHT_TICKS);
+                    String tag = "sd_mob_sight_" + mob.getId();
+                    StarDragonFx.remoteSight(sl, mob, StarDragonVoid.SIGHT_TICKS, tag);
+                    Later.run(sl, StarDragonVoid.SIGHT_TICKS, () -> StarDragonFx.remoteSightEnd(sl, mob, tag));
+                    return true;
+                }));
+
         // ---- key 6: Star Shepherd
         MobAbilities.register(MobAbility.of(P, 6, MobAbility.NORMAL)                // Star Grazing
                 .cost(StarDragonSky.GRAZE_COST).cooldown(Math.max(SKY_MOB_COOLDOWN, StarDragonSky.GRAZE_COOLDOWN))
@@ -180,6 +193,53 @@ public final class StarDragonMobs {
         entry(7, "quantum_uncertainty", "Quantum Uncertainty", StarDragonVoid.QUANTUM_SEQUENCE,
                 StarDragonVoid.QUANTUM_COST, StarDragonVoid.QUANTUM_COOLDOWN, StarDragonVoid.QUANTUM_RADIUS,
                 StarDragonVoid::quantumUncertainty);
+    }
+
+    /** Passives inherited by the Sequence 2 encounter. Shared numbers stay beside the characteristic. */
+    public static void bossPassiveTick(Mob mob, ServerLevel sl) {
+        if (!StarDragon.isStarDragon(mob, 2)) return;
+        if (mob.tickCount % 20 != 0) return;
+        StarDragon.bodyTick(mob);
+        StarDragon.starlightScales(mob);
+        StarDragon.radiance(mob);
+        Vec3 at = mob.position();
+        String here = Math.round(at.x * 4) + "," + Math.round(at.y * 4) + "," + Math.round(at.z * 4);
+        if (!here.equals(mob.getPersistentData().getStringOr(StarDragon.STILL_AT, ""))) {
+            mob.getPersistentData().putString(StarDragon.STILL_AT, here);
+            mob.getPersistentData().putLong(StarDragon.STILL_SINCE, sl.getGameTime());
+        } else if (sl.getGameTime() - mob.getPersistentData().getLongOr(StarDragon.STILL_SINCE, sl.getGameTime()) >= StarDragon.STARGAZING_STILL
+                && sl.canSeeSky(mob.blockPosition().above())) {
+            float share = StarDragon.STARGAZING_REGEN * (sl.isDarkOutside() ? StarDragon.STARGAZING_NIGHT : 1f);
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpirituality.add(mob,
+                    net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpirituality.regenPerTick(mob) * 20 * share);
+            StarDragonFx.stargazing(sl, mob);
+        }
+        // Sense of Passages: perceive nearby hidden enemies. Remote Sight extends perception through walls.
+        double radius = StarDragon.isActive(mob, SIGHT_UNTIL) ? StarDragonVoid.SIGHT_RANGE : StarDragon.PASSAGES_RADIUS;
+        LivingEntity nearest = null;
+        double best = radius * radius;
+        for (LivingEntity one : sl.getEntitiesOfClass(LivingEntity.class, mob.getBoundingBox().inflate(radius))) {
+            if (one == mob || !one.isAlive() || one.isSpectator() || Spells.isFriend(mob, one)
+                    || (one instanceof net.minecraft.world.entity.player.Player p && p.isCreative())) continue;
+            net.lukario.circleofinevitability.status.Unnoticed.end(one);
+            double d = one.distanceToSqr(mob);
+            if (d < best) { nearest = one; best = d; }
+        }
+        if (mob.getTarget() == null && nearest != null) mob.setTarget(nearest);
+    }
+
+    /** Fission Touch comes from actual melee, never from a spell hit (which would recurse). */
+    public static void bossMelee(Mob mob, LivingEntity struck, ServerLevel sl) {
+        LivingEntity next = null; double best = Double.MAX_VALUE;
+        for (LivingEntity enemy : Spells.enemiesAround(mob, sl, struck.position(), StarDragon.TOUCH_REACH)) {
+            if (enemy == struck) continue;
+            double d = enemy.distanceToSqr(struck);
+            if (d < best) { best = d; next = enemy; }
+        }
+        if (next != null) {
+            StarDragonFx.fissionTouch(sl, struck.getBoundingBox().getCenter(), next.getBoundingBox().getCenter());
+            StarDragon.hit(mob, next, (float)mob.getAttributeValue(Attributes.ATTACK_DAMAGE) * StarDragon.TOUCH_SHARE);
+        }
     }
 
     /** One wheel entry written for any caster: the mob faces its target and casts it as a player does. */

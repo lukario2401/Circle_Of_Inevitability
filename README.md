@@ -37,6 +37,9 @@ Ops set a player up with the `/soul` command, for example:
 The seven abilities are on G, H, J, K, L, N and M (category "Circle Of Inevitability" in Controls > Key Binds);
 sneak while pressing a key for the second cast. Soul Essence is shown above the hotbar.
 
+Summon the animated Sequence 2 Star Dragon boss with `/stardragon summon ~ ~ ~8`. Its attacks, windups,
+cooldowns, forms and manual controls are documented in [Star Dragon boss](docs/STAR_DRAGON_BOSS.md).
+
 Custom sword swings can be tuned live with `/swinganim`: repeat or hold a preview, edit keyframe numbers,
 timing, easing and global placement, then save local overrides or export Java. See
 [Live sword swing tuning](docs/SWING_TUNING.md) for commands and a walkthrough.

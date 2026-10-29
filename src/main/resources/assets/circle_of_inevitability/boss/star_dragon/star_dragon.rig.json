@@ -1,0 +1,3097 @@
+{
+  "format_version": 1,
+  "texture_size": [
+    512,
+    512
+  ],
+  "bones": [
+    {
+      "name": "body",
+      "parent": null,
+      "pivot": [
+        0,
+        8,
+        3
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -9,
+            -8,
+            -16
+          ],
+          "size": [
+            18,
+            16,
+            30
+          ],
+          "material": "scale",
+          "uv": [
+            0,
+            0
+          ]
+        },
+        {
+          "origin": [
+            -7,
+            -4,
+            -18
+          ],
+          "size": [
+            14,
+            13,
+            27
+          ],
+          "material": "belly",
+          "uv": [
+            98,
+            0
+          ]
+        },
+        {
+          "origin": [
+            -10,
+            -6,
+            -12
+          ],
+          "size": [
+            2,
+            10,
+            22
+          ],
+          "material": "trim",
+          "uv": [
+            182,
+            0
+          ]
+        },
+        {
+          "origin": [
+            8,
+            -6,
+            -12
+          ],
+          "size": [
+            2,
+            10,
+            22
+          ],
+          "material": "trim",
+          "uv": [
+            232,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "chest",
+      "parent": "body",
+      "pivot": [
+        0,
+        -2,
+        -13
+      ],
+      "rotation": [
+        -12,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -7,
+            -7,
+            -8
+          ],
+          "size": [
+            14,
+            15,
+            12
+          ],
+          "material": "scale",
+          "uv": [
+            282,
+            0
+          ]
+        },
+        {
+          "origin": [
+            -4,
+            -5,
+            -9
+          ],
+          "size": [
+            8,
+            11,
+            1
+          ],
+          "material": "star",
+          "uv": [
+            336,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "neck",
+      "parent": "chest",
+      "pivot": [
+        0,
+        -4,
+        -5
+      ],
+      "rotation": [
+        -16,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -5,
+            -6,
+            -14
+          ],
+          "size": [
+            10,
+            11,
+            17
+          ],
+          "material": "scale",
+          "uv": [
+            356,
+            0
+          ]
+        },
+        {
+          "origin": [
+            -4,
+            3,
+            -13
+          ],
+          "size": [
+            8,
+            3,
+            13
+          ],
+          "material": "belly",
+          "uv": [
+            412,
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "name": "head",
+      "parent": "neck",
+      "pivot": [
+        0,
+        -2,
+        -12
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -7,
+            -6,
+            -11
+          ],
+          "size": [
+            14,
+            11,
+            14
+          ],
+          "material": "scale",
+          "uv": [
+            0,
+            48
+          ]
+        },
+        {
+          "origin": [
+            -5,
+            -1,
+            -22
+          ],
+          "size": [
+            10,
+            5,
+            12
+          ],
+          "material": "scale",
+          "uv": [
+            58,
+            48
+          ]
+        },
+        {
+          "origin": [
+            -5,
+            0,
+            -23
+          ],
+          "size": [
+            10,
+            1,
+            12
+          ],
+          "material": "trim",
+          "uv": [
+            104,
+            48
+          ]
+        },
+        {
+          "origin": [
+            -7.5,
+            -4,
+            -12
+          ],
+          "size": [
+            1,
+            3,
+            7
+          ],
+          "material": "eye",
+          "uv": [
+            150,
+            48
+          ]
+        },
+        {
+          "origin": [
+            6.5,
+            -4,
+            -12
+          ],
+          "size": [
+            1,
+            3,
+            7
+          ],
+          "material": "eye",
+          "uv": [
+            168,
+            48
+          ]
+        },
+        {
+          "origin": [
+            -8,
+            -7,
+            -5
+          ],
+          "size": [
+            16,
+            3,
+            6
+          ],
+          "material": "trim",
+          "uv": [
+            186,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "name": "jaw",
+      "parent": "head",
+      "pivot": [
+        0,
+        3,
+        -5
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -5,
+            0,
+            -17
+          ],
+          "size": [
+            10,
+            3,
+            18
+          ],
+          "material": "belly",
+          "uv": [
+            232,
+            48
+          ]
+        },
+        {
+          "origin": [
+            -5,
+            -1,
+            -17
+          ],
+          "size": [
+            2,
+            2,
+            3
+          ],
+          "material": "horn",
+          "uv": [
+            290,
+            48
+          ]
+        },
+        {
+          "origin": [
+            3,
+            -1,
+            -17
+          ],
+          "size": [
+            2,
+            2,
+            3
+          ],
+          "material": "horn",
+          "uv": [
+            302,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_horn",
+      "parent": "head",
+      "pivot": [
+        -5,
+        -5,
+        -1
+      ],
+      "rotation": [
+        -28,
+        0,
+        -20
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -13,
+            -1
+          ],
+          "size": [
+            2,
+            14,
+            3
+          ],
+          "material": "horn",
+          "uv": [
+            314,
+            48
+          ]
+        },
+        {
+          "origin": [
+            -1,
+            -17,
+            1
+          ],
+          "size": [
+            2,
+            6,
+            3
+          ],
+          "material": "trim",
+          "uv": [
+            326,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_cheek",
+      "parent": "head",
+      "pivot": [
+        -6,
+        0,
+        0
+      ],
+      "rotation": [
+        -10,
+        -25,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -2,
+            0
+          ],
+          "size": [
+            2,
+            4,
+            12
+          ],
+          "material": "horn",
+          "uv": [
+            338,
+            48
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_wing",
+      "parent": "body",
+      "pivot": [
+        -8,
+        -6,
+        -7
+      ],
+      "rotation": [
+        0,
+        -12,
+        12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -2,
+            -3
+          ],
+          "size": [
+            2,
+            4,
+            28
+          ],
+          "material": "horn",
+          "uv": [
+            368,
+            48
+          ]
+        },
+        {
+          "origin": [
+            -27,
+            -1,
+            -2
+          ],
+          "size": [
+            27,
+            2,
+            26
+          ],
+          "material": "wing",
+          "uv": [
+            0,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_wing_tip",
+      "parent": "left_wing",
+      "pivot": [
+        -26,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        18,
+        -8
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -24,
+            -1,
+            -2
+          ],
+          "size": [
+            24,
+            2,
+            36
+          ],
+          "material": "wing",
+          "uv": [
+            108,
+            82
+          ]
+        },
+        {
+          "origin": [
+            -25,
+            -2,
+            -3
+          ],
+          "size": [
+            25,
+            3,
+            3
+          ],
+          "material": "trim",
+          "uv": [
+            230,
+            82
+          ]
+        },
+        {
+          "origin": [
+            -22,
+            -1,
+            12
+          ],
+          "size": [
+            22,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            288,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_wing_finger0",
+      "parent": "left_wing_tip",
+      "pivot": [
+        -7,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        6,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -0.5,
+            -1,
+            -2
+          ],
+          "size": [
+            1,
+            2,
+            32
+          ],
+          "material": "horn",
+          "uv": [
+            338,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_wing_finger1",
+      "parent": "left_wing_tip",
+      "pivot": [
+        -14,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -1,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -0.5,
+            -1,
+            -2
+          ],
+          "size": [
+            1,
+            2,
+            25
+          ],
+          "material": "horn",
+          "uv": [
+            406,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_wing_finger2",
+      "parent": "left_wing_tip",
+      "pivot": [
+        -21,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -8,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -0.5,
+            -1,
+            -2
+          ],
+          "size": [
+            1,
+            2,
+            18
+          ],
+          "material": "horn",
+          "uv": [
+            460,
+            82
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_foreleg",
+      "parent": "body",
+      "pivot": [
+        -8,
+        3,
+        -11
+      ],
+      "rotation": [
+        -12,
+        0,
+        8
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            -2,
+            -4
+          ],
+          "size": [
+            6,
+            11,
+            8
+          ],
+          "material": "scale",
+          "uv": [
+            0,
+            122
+          ]
+        },
+        {
+          "origin": [
+            -3,
+            0,
+            -4
+          ],
+          "size": [
+            6,
+            3,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            30,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_foreleg_foot",
+      "parent": "left_foreleg",
+      "pivot": [
+        0,
+        8,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            0,
+            -6
+          ],
+          "size": [
+            6,
+            6,
+            9
+          ],
+          "material": "belly",
+          "uv": [
+            48,
+            122
+          ]
+        },
+        {
+          "origin": [
+            -2.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            80,
+            122
+          ]
+        },
+        {
+          "origin": [
+            -0.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            94,
+            122
+          ]
+        },
+        {
+          "origin": [
+            1.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            108,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_hindleg",
+      "parent": "body",
+      "pivot": [
+        -8,
+        3,
+        12
+      ],
+      "rotation": [
+        18,
+        0,
+        8
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            -2,
+            -4
+          ],
+          "size": [
+            6,
+            11,
+            8
+          ],
+          "material": "scale",
+          "uv": [
+            122,
+            122
+          ]
+        },
+        {
+          "origin": [
+            -3,
+            0,
+            -4
+          ],
+          "size": [
+            6,
+            3,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            152,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "name": "left_hindleg_foot",
+      "parent": "left_hindleg",
+      "pivot": [
+        0,
+        8,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            0,
+            -6
+          ],
+          "size": [
+            6,
+            6,
+            9
+          ],
+          "material": "belly",
+          "uv": [
+            170,
+            122
+          ]
+        },
+        {
+          "origin": [
+            -2.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            202,
+            122
+          ]
+        },
+        {
+          "origin": [
+            -0.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            216,
+            122
+          ]
+        },
+        {
+          "origin": [
+            1.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            230,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_horn",
+      "parent": "head",
+      "pivot": [
+        5,
+        -5,
+        -1
+      ],
+      "rotation": [
+        -28,
+        0,
+        20
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -13,
+            -1
+          ],
+          "size": [
+            2,
+            14,
+            3
+          ],
+          "material": "horn",
+          "uv": [
+            244,
+            122
+          ]
+        },
+        {
+          "origin": [
+            -1,
+            -17,
+            1
+          ],
+          "size": [
+            2,
+            6,
+            3
+          ],
+          "material": "trim",
+          "uv": [
+            256,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_cheek",
+      "parent": "head",
+      "pivot": [
+        6,
+        0,
+        0
+      ],
+      "rotation": [
+        -10,
+        25,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -2,
+            0
+          ],
+          "size": [
+            2,
+            4,
+            12
+          ],
+          "material": "horn",
+          "uv": [
+            268,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_wing",
+      "parent": "body",
+      "pivot": [
+        8,
+        -6,
+        -7
+      ],
+      "rotation": [
+        0,
+        12,
+        -12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -2,
+            -3
+          ],
+          "size": [
+            2,
+            4,
+            28
+          ],
+          "material": "horn",
+          "uv": [
+            298,
+            122
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -1,
+            -2
+          ],
+          "size": [
+            27,
+            2,
+            26
+          ],
+          "material": "wing",
+          "uv": [
+            360,
+            122
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_wing_tip",
+      "parent": "right_wing",
+      "pivot": [
+        26,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -18,
+        8
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            -2
+          ],
+          "size": [
+            24,
+            2,
+            36
+          ],
+          "material": "wing",
+          "uv": [
+            0,
+            156
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            -3
+          ],
+          "size": [
+            25,
+            3,
+            3
+          ],
+          "material": "trim",
+          "uv": [
+            122,
+            156
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -1,
+            12
+          ],
+          "size": [
+            22,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            180,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_wing_finger0",
+      "parent": "right_wing_tip",
+      "pivot": [
+        7,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -6,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -0.5,
+            -1,
+            -2
+          ],
+          "size": [
+            1,
+            2,
+            32
+          ],
+          "material": "horn",
+          "uv": [
+            230,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_wing_finger1",
+      "parent": "right_wing_tip",
+      "pivot": [
+        14,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        1,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -0.5,
+            -1,
+            -2
+          ],
+          "size": [
+            1,
+            2,
+            25
+          ],
+          "material": "horn",
+          "uv": [
+            298,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_wing_finger2",
+      "parent": "right_wing_tip",
+      "pivot": [
+        21,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        8,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -0.5,
+            -1,
+            -2
+          ],
+          "size": [
+            1,
+            2,
+            18
+          ],
+          "material": "horn",
+          "uv": [
+            352,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_foreleg",
+      "parent": "body",
+      "pivot": [
+        8,
+        3,
+        -11
+      ],
+      "rotation": [
+        -12,
+        0,
+        -8
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            -2,
+            -4
+          ],
+          "size": [
+            6,
+            11,
+            8
+          ],
+          "material": "scale",
+          "uv": [
+            392,
+            156
+          ]
+        },
+        {
+          "origin": [
+            -3,
+            0,
+            -4
+          ],
+          "size": [
+            6,
+            3,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            422,
+            156
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_foreleg_foot",
+      "parent": "right_foreleg",
+      "pivot": [
+        0,
+        8,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            0,
+            -6
+          ],
+          "size": [
+            6,
+            6,
+            9
+          ],
+          "material": "belly",
+          "uv": [
+            440,
+            156
+          ]
+        },
+        {
+          "origin": [
+            -2.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            472,
+            156
+          ]
+        },
+        {
+          "origin": [
+            -0.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            486,
+            156
+          ]
+        },
+        {
+          "origin": [
+            1.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            0,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_hindleg",
+      "parent": "body",
+      "pivot": [
+        8,
+        3,
+        12
+      ],
+      "rotation": [
+        18,
+        0,
+        -8
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            -2,
+            -4
+          ],
+          "size": [
+            6,
+            11,
+            8
+          ],
+          "material": "scale",
+          "uv": [
+            14,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -3,
+            0,
+            -4
+          ],
+          "size": [
+            6,
+            3,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            44,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "right_hindleg_foot",
+      "parent": "right_hindleg",
+      "pivot": [
+        0,
+        8,
+        0
+      ],
+      "rotation": [
+        0,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3,
+            0,
+            -6
+          ],
+          "size": [
+            6,
+            6,
+            9
+          ],
+          "material": "belly",
+          "uv": [
+            62,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -2.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            94,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -0.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            108,
+            196
+          ]
+        },
+        {
+          "origin": [
+            1.5,
+            3,
+            -10
+          ],
+          "size": [
+            1,
+            2,
+            5
+          ],
+          "material": "horn",
+          "uv": [
+            122,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tail0",
+      "parent": "body",
+      "pivot": [
+        0,
+        -1,
+        14
+      ],
+      "rotation": [
+        -7,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -5.0,
+            -5.0,
+            0
+          ],
+          "size": [
+            10,
+            10,
+            19
+          ],
+          "material": "scale",
+          "uv": [
+            136,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -1,
+            -9.0,
+            3
+          ],
+          "size": [
+            2,
+            4,
+            5
+          ],
+          "material": "trim",
+          "uv": [
+            196,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tail1",
+      "parent": "tail0",
+      "pivot": [
+        0,
+        -1,
+        19
+      ],
+      "rotation": [
+        -7,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -3.5,
+            -3.5,
+            0
+          ],
+          "size": [
+            7,
+            7,
+            18
+          ],
+          "material": "scale",
+          "uv": [
+            212,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -1,
+            -7.5,
+            3
+          ],
+          "size": [
+            2,
+            4,
+            5
+          ],
+          "material": "trim",
+          "uv": [
+            264,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tail2",
+      "parent": "tail1",
+      "pivot": [
+        0,
+        -1,
+        18
+      ],
+      "rotation": [
+        -7,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -2.0,
+            -2.0,
+            0
+          ],
+          "size": [
+            4,
+            4,
+            18
+          ],
+          "material": "scale",
+          "uv": [
+            280,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -1,
+            -6.0,
+            3
+          ],
+          "size": [
+            2,
+            4,
+            5
+          ],
+          "material": "trim",
+          "uv": [
+            326,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "tail3",
+      "parent": "tail2",
+      "pivot": [
+        0,
+        -1,
+        18
+      ],
+      "rotation": [
+        -7,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1.0,
+            -1.0,
+            0
+          ],
+          "size": [
+            2,
+            2,
+            14
+          ],
+          "material": "scale",
+          "uv": [
+            342,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -1,
+            -5.0,
+            3
+          ],
+          "size": [
+            2,
+            4,
+            5
+          ],
+          "material": "trim",
+          "uv": [
+            376,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spine0",
+      "parent": "body",
+      "pivot": [
+        0,
+        -8,
+        -12
+      ],
+      "rotation": [
+        -20,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -5,
+            -2
+          ],
+          "size": [
+            2,
+            6,
+            4
+          ],
+          "material": "star",
+          "uv": [
+            392,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spine1",
+      "parent": "body",
+      "pivot": [
+        0,
+        -8,
+        -6
+      ],
+      "rotation": [
+        -20,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -5,
+            -2
+          ],
+          "size": [
+            2,
+            6,
+            4
+          ],
+          "material": "star",
+          "uv": [
+            406,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spine2",
+      "parent": "body",
+      "pivot": [
+        0,
+        -8,
+        0
+      ],
+      "rotation": [
+        -20,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -5,
+            -2
+          ],
+          "size": [
+            2,
+            6,
+            4
+          ],
+          "material": "star",
+          "uv": [
+            420,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spine3",
+      "parent": "body",
+      "pivot": [
+        0,
+        -8,
+        6
+      ],
+      "rotation": [
+        -20,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -5,
+            -2
+          ],
+          "size": [
+            2,
+            6,
+            4
+          ],
+          "material": "star",
+          "uv": [
+            434,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "spine4",
+      "parent": "body",
+      "pivot": [
+        0,
+        -8,
+        12
+      ],
+      "rotation": [
+        -20,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -1,
+            -5,
+            -2
+          ],
+          "size": [
+            2,
+            6,
+            4
+          ],
+          "material": "star",
+          "uv": [
+            448,
+            196
+          ]
+        }
+      ]
+    },
+    {
+      "name": "halo",
+      "parent": "body",
+      "pivot": [
+        0,
+        -20,
+        -18
+      ],
+      "rotation": [
+        22,
+        0,
+        0
+      ],
+      "cubes": [
+        {
+          "origin": [
+            11.0,
+            -1,
+            -1.0
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            462,
+            196
+          ]
+        },
+        {
+          "origin": [
+            9.392304845413264,
+            -1,
+            4.999999999999999
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            472,
+            196
+          ]
+        },
+        {
+          "origin": [
+            5.000000000000002,
+            -1,
+            9.392304845413264
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            482,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -0.9999999999999992,
+            -1,
+            11.0
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            492,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -6.999999999999997,
+            -1,
+            9.392304845413264
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            502,
+            196
+          ]
+        },
+        {
+          "origin": [
+            -11.392304845413264,
+            -1,
+            4.999999999999999
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            0,
+            227
+          ]
+        },
+        {
+          "origin": [
+            -13.0,
+            -1,
+            -0.9999999999999986
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            10,
+            227
+          ]
+        },
+        {
+          "origin": [
+            -11.392304845413266,
+            -1,
+            -6.9999999999999964
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            20,
+            227
+          ]
+        },
+        {
+          "origin": [
+            -7.000000000000005,
+            -1,
+            -11.39230484541326
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            30,
+            227
+          ]
+        },
+        {
+          "origin": [
+            -1.0000000000000022,
+            -1,
+            -13.0
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            40,
+            227
+          ]
+        },
+        {
+          "origin": [
+            5.000000000000002,
+            -1,
+            -11.392304845413264
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            50,
+            227
+          ]
+        },
+        {
+          "origin": [
+            9.39230484541326,
+            -1,
+            -7.000000000000005
+          ],
+          "size": [
+            2,
+            2,
+            2
+          ],
+          "material": "star",
+          "uv": [
+            60,
+            227
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing0",
+      "parent": "body",
+      "pivot": [
+        -6,
+        -9,
+        -5
+      ],
+      "rotation": [
+        -15,
+        35,
+        35
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -27,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            70,
+            227
+          ]
+        },
+        {
+          "origin": [
+            -29,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            144,
+            227
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing0_tip",
+      "parent": "angel_left_wing0",
+      "pivot": [
+        -25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -15,
+        12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -16,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            208,
+            227
+          ]
+        },
+        {
+          "origin": [
+            -18,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            254,
+            227
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing0",
+      "parent": "body",
+      "pivot": [
+        6,
+        -9,
+        -5
+      ],
+      "rotation": [
+        -15,
+        -35,
+        -35
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            296,
+            227
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            370,
+            227
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing0_tip",
+      "parent": "angel_right_wing0",
+      "pivot": [
+        25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        15,
+        -12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            434,
+            227
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            0,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing1",
+      "parent": "body",
+      "pivot": [
+        -6,
+        -11,
+        -2
+      ],
+      "rotation": [
+        -3,
+        19,
+        44
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -27,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            42,
+            240
+          ]
+        },
+        {
+          "origin": [
+            -29,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            116,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing1_tip",
+      "parent": "angel_left_wing1",
+      "pivot": [
+        -25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -15,
+        12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -16,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            180,
+            240
+          ]
+        },
+        {
+          "origin": [
+            -18,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            226,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing1",
+      "parent": "body",
+      "pivot": [
+        6,
+        -11,
+        -2
+      ],
+      "rotation": [
+        -3,
+        -19,
+        -44
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            268,
+            240
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            342,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing1_tip",
+      "parent": "angel_right_wing1",
+      "pivot": [
+        25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        15,
+        -12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            406,
+            240
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            452,
+            240
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing2",
+      "parent": "body",
+      "pivot": [
+        -6,
+        -13,
+        1
+      ],
+      "rotation": [
+        9,
+        3,
+        53
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -27,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            0,
+            253
+          ]
+        },
+        {
+          "origin": [
+            -29,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            74,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing2_tip",
+      "parent": "angel_left_wing2",
+      "pivot": [
+        -25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -15,
+        12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -16,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            138,
+            253
+          ]
+        },
+        {
+          "origin": [
+            -18,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            184,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing2",
+      "parent": "body",
+      "pivot": [
+        6,
+        -13,
+        1
+      ],
+      "rotation": [
+        9,
+        -3,
+        -53
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            226,
+            253
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            300,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing2_tip",
+      "parent": "angel_right_wing2",
+      "pivot": [
+        25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        15,
+        -12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            364,
+            253
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            410,
+            253
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing3",
+      "parent": "body",
+      "pivot": [
+        -6,
+        -15,
+        4
+      ],
+      "rotation": [
+        21,
+        -13,
+        62
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -27,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            0,
+            266
+          ]
+        },
+        {
+          "origin": [
+            -29,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            74,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing3_tip",
+      "parent": "angel_left_wing3",
+      "pivot": [
+        -25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -15,
+        12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -16,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            138,
+            266
+          ]
+        },
+        {
+          "origin": [
+            -18,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            184,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing3",
+      "parent": "body",
+      "pivot": [
+        6,
+        -15,
+        4
+      ],
+      "rotation": [
+        21,
+        13,
+        -62
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            226,
+            266
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            300,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing3_tip",
+      "parent": "angel_right_wing3",
+      "pivot": [
+        25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        15,
+        -12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            364,
+            266
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            410,
+            266
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing4",
+      "parent": "body",
+      "pivot": [
+        -6,
+        -17,
+        7
+      ],
+      "rotation": [
+        33,
+        -29,
+        71
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -27,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            0,
+            279
+          ]
+        },
+        {
+          "origin": [
+            -29,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            74,
+            279
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_left_wing4_tip",
+      "parent": "angel_left_wing4",
+      "pivot": [
+        -25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        -15,
+        12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            -16,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            138,
+            279
+          ]
+        },
+        {
+          "origin": [
+            -18,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            184,
+            279
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing4",
+      "parent": "body",
+      "pivot": [
+        6,
+        -17,
+        7
+      ],
+      "rotation": [
+        33,
+        29,
+        -71
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            27,
+            2,
+            9
+          ],
+          "material": "wing",
+          "uv": [
+            226,
+            279
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            29,
+            2,
+            2
+          ],
+          "material": "trim",
+          "uv": [
+            300,
+            279
+          ]
+        }
+      ]
+    },
+    {
+      "name": "angel_right_wing4_tip",
+      "parent": "angel_right_wing4",
+      "pivot": [
+        25,
+        0,
+        0
+      ],
+      "rotation": [
+        0,
+        15,
+        -12
+      ],
+      "cubes": [
+        {
+          "origin": [
+            0,
+            -1,
+            0
+          ],
+          "size": [
+            16,
+            2,
+            6
+          ],
+          "material": "wing",
+          "uv": [
+            364,
+            279
+          ]
+        },
+        {
+          "origin": [
+            0,
+            -2,
+            0
+          ],
+          "size": [
+            18,
+            2,
+            2
+          ],
+          "material": "horn",
+          "uv": [
+            410,
+            279
+          ]
+        }
+      ]
+    }
+  ]
+}
