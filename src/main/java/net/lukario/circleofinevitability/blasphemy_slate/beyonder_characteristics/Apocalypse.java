@@ -4,7 +4,6 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
-import net.lukario.circleofinevitability.blasphemy_slate.soul_abilities.beyonder_characteristics.DemonessFx;
 import net.lukario.circleofinevitability.combat.Contagion;
 import net.lukario.circleofinevitability.combat.HudTimer;
 import net.lukario.circleofinevitability.combat.Later;
