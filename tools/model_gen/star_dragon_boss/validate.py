@@ -41,4 +41,11 @@ assert len([n for n in names if n.startswith('angel_') and not n.endswith('_tip'
 settings=json.loads((ROOT/'src/main/resources/data/circle_of_inevitability/bosses/star_dragon.json').read_text())
 assert len(settings['attacks'])==20
 assert all(a['animation'] in clips for a in settings['attacks'].values())
-print(f'Validated {len(names)} bones, {len(clips)} clips, non-overlapping UVs and four PNG maps; all 20 attacks have animation clips.')
+condenser=json.loads((ROOT/'src/main/resources/data/circle_of_inevitability/bosses/star_dragon_condenser.json').read_text())
+assert len(condenser['attacks'])==26
+assert settings['attacks'].keys() <= condenser['attacks'].keys()
+for a in condenser['attacks'].values():
+    assert a['animation'] in clips
+    assert all(id in condenser['attacks'] for id in a.get('followups',[]))
+    assert 0<a['windup_ticks']<=32 and 0<=a['recovery_ticks']<=8
+print(f'Validated {len(names)} bones, {len(clips)} clips, non-overlapping UVs and four PNG maps; all 20 Sequence 2 and 26 Sequence 0 attacks have animation clips and valid chains.')

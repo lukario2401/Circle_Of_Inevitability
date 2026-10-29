@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "circle_of_inevitability:star_dragon_boss_condenser_singularity",
+  "max_ticks": 100,
+  "required": true,
+  "setup_ticks": 1,
+  "structure": "circle_of_inevitability:star_dragon_condenser_test_arena"
+}

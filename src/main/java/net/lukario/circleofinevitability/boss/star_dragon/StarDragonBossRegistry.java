@@ -18,11 +18,18 @@ public final class StarDragonBossRegistry {
             () -> EntityType.Builder.of(StarDragonBoss::new, MobCategory.MONSTER).sized(3.2f, 3.4f)
                     .eyeHeight(2.8f).fireImmune().clientTrackingRange(12).updateInterval(1)
                     .build(ResourceKey.create(Registries.ENTITY_TYPE, ID)));
+    public static final RegistryObject<EntityType<StarDragonBoss>> CONDENSER = ENTITIES.register("star_dragon_condenser_boss",
+            () -> EntityType.Builder.of(StarDragonBoss::new, MobCategory.MONSTER).sized(3.2f, 3.4f)
+                    .eyeHeight(2.8f).fireImmune().clientTrackingRange(12).updateInterval(1)
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE,
+                            Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "star_dragon_condenser_boss"))));
     private StarDragonBossRegistry() {}
     @SubscribeEvent
     public static void attributes(EntityAttributeCreationEvent event) {
         event.put(BOSS.get(), StarDragonBoss.createAttributes().build());
+        event.put(CONDENSER.get(), StarDragonBoss.createAttributes().build());
         // Stats belong to this encounter; avoid the generic Beyonder percentage boost on top.
+        BeyonderMobRules.register(CONDENSER.get(), BeyonderMobRules.Rule.chance(1).pathways("Star Dragon").sequence(0, 1, 0, 0));
         BeyonderMobRules.register(BOSS.get(), BeyonderMobRules.Rule.chance(1).pathways("Star Dragon").sequence(2, 1, 0, 0));
     }
 }
