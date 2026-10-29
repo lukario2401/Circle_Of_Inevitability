@@ -1,0 +1,407 @@
+{
+  "health": 1000,
+  "melee_damage": 20,
+  "movement_speed": 0.32,
+  "follow_range": 64,
+  "think_ticks": 2,
+  "recovery_ticks": 6,
+  "enraged_below": 0.5,
+  "enraged_weight_multiplier": 1.8,
+  "passives": true,
+  "attacks": {
+    "Star Dragon/1": {
+      "enabled": true,
+      "weight": 6,
+      "windup_ticks": 10,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 220,
+      "cost": 250,
+      "range": 24.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/2/gravity_abnormality",
+        "Star Dragon/3/sneak"
+      ]
+    },
+    "Star Dragon/1/sneak": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 10,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 275,
+      "cost": 350,
+      "range": 6,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ward"
+    },
+    "Star Dragon/2/gravity_abnormality": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 12,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 132,
+      "cost": 1250,
+      "range": 20.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/6/sneak",
+        "Star Dragon/2/weakening_ray"
+      ]
+    },
+    "Star Dragon/2/electromagnetic_attraction": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 12,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 110,
+      "cost": 1250,
+      "range": 24.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/4",
+        "Star Dragon/3/sneak"
+      ]
+    },
+    "Star Dragon/2/cosmic_void": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 12,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 198,
+      "cost": 1800,
+      "range": 20.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/7/fusion_cluster",
+        "Star Dragon/2/sunlight_ray"
+      ]
+    },
+    "Star Dragon/2/weakening_ray": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 12,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 66,
+      "cost": 1250,
+      "range": 30.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ray",
+      "followups": [
+        "Star Dragon/7/fusion_cluster",
+        "Star Dragon/3/sneak"
+      ]
+    },
+    "Star Dragon/2/sunlight_ray": {
+      "enabled": true,
+      "weight": 12,
+      "windup_ticks": 15,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 110,
+      "cost": 3000,
+      "range": 24.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ray"
+    },
+    "Star Dragon/3": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 10,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 132,
+      "cost": 2450,
+      "range": 24.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ward",
+      "followups": [
+        "Star Dragon/4",
+        "Star Dragon/4/sneak"
+      ]
+    },
+    "Star Dragon/3/sneak": {
+      "enabled": true,
+      "weight": 14,
+      "windup_ticks": 12,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 88,
+      "cost": 2450,
+      "range": 28.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ray",
+      "followups": [
+        "Star Dragon/7/fusion_cluster",
+        "Star Dragon/6/sneak"
+      ]
+    },
+    "Star Dragon/4": {
+      "enabled": true,
+      "weight": 12,
+      "windup_ticks": 12,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 132,
+      "cost": 3000,
+      "range": 8,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "surge",
+      "followups": [
+        "Star Dragon/3/sneak",
+        "Star Dragon/2/weakening_ray"
+      ]
+    },
+    "Star Dragon/4/sneak": {
+      "enabled": true,
+      "weight": 8,
+      "windup_ticks": 18,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 660,
+      "cost": 3000,
+      "range": 8,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "transform"
+    },
+    "Star Dragon/5/heavybringing": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 15,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 275,
+      "cost": 6000,
+      "range": 16,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/7/neutron_star",
+        "Star Dragon/4"
+      ]
+    },
+    "Star Dragon/5/fate_convergence": {
+      "enabled": true,
+      "weight": 8,
+      "windup_ticks": 12,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 440,
+      "cost": 6000,
+      "range": 20.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ward"
+    },
+    "Star Dragon/5/heavy_sphere": {
+      "enabled": true,
+      "weight": 10,
+      "windup_ticks": 18,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 330,
+      "cost": 6000,
+      "range": 24.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/7/fusion_cluster",
+        "Star Dragon/5/series_of_rays"
+      ]
+    },
+    "Star Dragon/5/series_of_rays": {
+      "enabled": true,
+      "weight": 12,
+      "windup_ticks": 18,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 165,
+      "cost": 6000,
+      "range": 30.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ray"
+    },
+    "Star Dragon/5/remote_sight": {
+      "enabled": true,
+      "weight": 6,
+      "windup_ticks": 10,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 220,
+      "cost": 2450,
+      "range": 64.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ward"
+    },
+    "Star Dragon/6": {
+      "enabled": true,
+      "weight": 12,
+      "windup_ticks": 18,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 220,
+      "cost": 12000,
+      "range": 28.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast"
+    },
+    "Star Dragon/6/sneak": {
+      "enabled": true,
+      "weight": 12,
+      "windup_ticks": 18,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 220,
+      "cost": 9000,
+      "range": 24.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/7/planetfall",
+        "Star Dragon/3/sneak"
+      ]
+    },
+    "Star Dragon/7/fusion_cluster": {
+      "enabled": true,
+      "weight": 14,
+      "windup_ticks": 25,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 154,
+      "cost": 12500,
+      "range": 30.0,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast"
+    },
+    "Star Dragon/7/radiant_angel_form": {
+      "enabled": true,
+      "weight": 16,
+      "windup_ticks": 25,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 990,
+      "cost": 25000,
+      "range": 18,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "transform",
+      "followups": [
+        "Star Dragon/7/fusion_cluster",
+        "Star Dragon/6"
+      ]
+    },
+    "Star Dragon/7/time_dilation": {
+      "enabled": true,
+      "weight": 18,
+      "windup_ticks": 20,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 360,
+      "cost": 14000,
+      "range": 30,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ward",
+      "followups": [
+        "Star Dragon/7/planetfall",
+        "Star Dragon/6/sneak"
+      ]
+    },
+    "Star Dragon/7/planetfall": {
+      "enabled": true,
+      "weight": 22,
+      "windup_ticks": 28,
+      "recovery_ticks": 8,
+      "cooldown_ticks": 360,
+      "cost": 18000,
+      "range": 40,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/3/sneak",
+        "Star Dragon/7/fusion_cluster"
+      ]
+    },
+    "Star Dragon/7/star_dragon_form": {
+      "enabled": true,
+      "weight": 24,
+      "windup_ticks": 24,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 1400,
+      "cost": 16000,
+      "range": 24,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "transform",
+      "followups": [
+        "Star Dragon/7/fusion_cluster",
+        "Star Dragon/7/planetfall"
+      ]
+    },
+    "Star Dragon/7/neutron_star": {
+      "enabled": true,
+      "weight": 20,
+      "windup_ticks": 22,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 500,
+      "cost": 18000,
+      "range": 12,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "transform",
+      "followups": [
+        "Star Dragon/3",
+        "Star Dragon/4"
+      ]
+    },
+    "Star Dragon/7/singularity": {
+      "enabled": true,
+      "weight": 28,
+      "windup_ticks": 32,
+      "recovery_ticks": 8,
+      "cooldown_ticks": 600,
+      "cost": 15000,
+      "range": 30,
+      "min_health": 0.08,
+      "max_health": 0.7,
+      "animation": "cast",
+      "followups": [
+        "Star Dragon/7/fusion_cluster",
+        "Star Dragon/3/sneak"
+      ]
+    },
+    "Star Dragon/7/quantum_uncertainty": {
+      "enabled": true,
+      "weight": 16,
+      "windup_ticks": 18,
+      "recovery_ticks": 6,
+      "cooldown_ticks": 600,
+      "cost": 12000,
+      "range": 20,
+      "min_health": 0,
+      "max_health": 1,
+      "animation": "ward",
+      "followups": [
+        "Star Dragon/6/sneak",
+        "Star Dragon/3/sneak"
+      ]
+    }
+  },
+  "ability_damage_multiplier": 0.85,
+  "radiant_flight": true,
+  "hover_height": 3,
+  "enraged_windup_multiplier": 0.7,
+  "enraged_recovery_multiplier": 0.5,
+  "singularity": {
+    "health_cost_fraction": 0.06,
+    "spent_ticks": 6,
+    "damage_cap": 24
+  }
+}

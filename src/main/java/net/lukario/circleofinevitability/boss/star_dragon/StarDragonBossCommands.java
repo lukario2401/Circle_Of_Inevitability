@@ -21,7 +21,7 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid=CircleOfInevitability.MOD_ID)
 public final class StarDragonBossCommands {
     private static final SimpleCommandExceptionType NOT_BOSS=new SimpleCommandExceptionType(Component.literal("Select a Star Dragon boss."));
-    private static final SimpleCommandExceptionType BAD_ABILITY=new SimpleCommandExceptionType(Component.literal("Unknown Star Dragon ability through Sequence 2."));
+    private static final SimpleCommandExceptionType BAD_ABILITY=new SimpleCommandExceptionType(Component.literal("Unknown Star Dragon ability or unavailable at this boss's Sequence."));
     private StarDragonBossCommands() {}
     @SubscribeEvent public static void start(ServerStartingEvent e) {
         try { StarDragonBossSettings.reload(); }
@@ -29,8 +29,10 @@ public final class StarDragonBossCommands {
     }
     @SubscribeEvent public static void register(RegisterCommandsEvent event) {
         var root=Commands.literal("stardragon").requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
-        root.then(Commands.literal("summon").executes(c -> summon(c,c.getSource().getPosition()))
-                .then(Commands.argument("pos",Vec3Argument.vec3()).executes(c -> summon(c,Vec3Argument.getVec3(c,"pos")))));
+        root.then(Commands.literal("summon").executes(c -> summon(c,c.getSource().getPosition(),2))
+                .then(Commands.argument("pos",Vec3Argument.vec3()).executes(c -> summon(c,Vec3Argument.getVec3(c,"pos"),2))));
+        root.then(Commands.literal("summon_condenser").executes(c -> summon(c,c.getSource().getPosition(),0))
+                .then(Commands.argument("pos",Vec3Argument.vec3()).executes(c -> summon(c,Vec3Argument.getVec3(c,"pos"),0))));
         root.then(Commands.literal("reload").executes(c -> {
             try { StarDragonBossSettings.reload(); }
             catch (Exception error) { c.getSource().sendFailure(Component.literal("Config rejected: "+error.getMessage()+". Previous settings remain active."));return 0; }
@@ -73,30 +75,30 @@ public final class StarDragonBossCommands {
             StarDragonBoss boss=boss(c);boss.resetAttacks();MobSpirituality.fill(boss);return success(c,"Reset attack overrides, cooldowns, and spirituality.");
         })));
         root.then(Commands.literal("info").then(Commands.argument("boss",EntityArgument.entity()).executes(c -> {
-            StarDragonBoss b=boss(c);StringBuilder text=new StringBuilder("Sequence 2 Star Dragon | mode="+b.mode()+" | health="+b.getHealth()+"/"+b.getMaxHealth()
+            StarDragonBoss b=boss(c);StringBuilder text=new StringBuilder("Sequence "+b.encounterSequence()+" Star Dragon | enraged="+b.enraged()+" | mode="+b.mode()+" | health="+b.getHealth()+"/"+b.getMaxHealth()
                     +" | spirituality="+Math.round(MobSpirituality.get(b))+"/"+Math.round(MobSpirituality.max(b))+" | animation="+b.animation());
-            for (MobAbility base:MobAbilities.knownBy(b)) {var a=StarDragonBossSettings.get().attack(base);
-                text.append("\n").append(base.id()).append(": ").append(MobCasting.whyNot(b,a.tune(base)).words())
+            for (MobAbility base:MobAbilities.knownBy(b)) {var a=b.settings().attack(base);
+                text.append("\n").append(base.id()).append(": ").append(MobCasting.whyNot(b,b.configuredAbility(base)).words())
                         .append(", enabled=").append(b.attackEnabled(base)).append(", weight=").append(b.attackWeight(base))
-                        .append(", windup=").append(a.windupTicks()).append(", cooldown=").append(a.cooldownTicks()).append(", cost=").append(a.cost());}
+                        .append(", windup=").append(b.windupTicks(a)).append(", cooldown=").append(a.cooldownTicks()).append(", cost=").append(a.cost());}
             c.getSource().sendSuccess(() -> Component.literal(text.toString()),false);return 1;
         })));
         event.getDispatcher().register(root);
     }
     private static com.mojang.brigadier.builder.RequiredArgumentBuilder<CommandSourceStack,String> abilityArg() {
         return Commands.argument("ability",StringArgumentType.string()).suggests((c,b) -> SharedSuggestionProvider.suggest(
-                MobAbilities.of("Star Dragon").stream().filter(a -> a.sequence()>=2).map(a -> "\""+a.id()+"\""),b));
+                MobAbilities.of("Star Dragon").stream().map(a -> "\""+a.id()+"\""),b));
     }
     private static StarDragonBoss boss(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
         if (EntityArgument.getEntity(c,"boss") instanceof StarDragonBoss boss) return boss;throw NOT_BOSS.create();
     }
     private static MobAbility ability(CommandContext<CommandSourceStack> c) throws CommandSyntaxException {
         String id=StringArgumentType.getString(c,"ability");MobAbility a=MobAbilities.byId(id);
-        if (a==null || !a.pathway().equals("Star Dragon") || a.sequence()<2) throw BAD_ABILITY.create();return a;
+        if (a==null || !a.pathway().equals("Star Dragon") || a.sequence()<boss(c).encounterSequence()) throw BAD_ABILITY.create();return a;
     }
-    private static int summon(CommandContext<CommandSourceStack> c,Vec3 at) {
-        LivingEntity boss=BeyonderMobs.summon(c.getSource().getLevel(),StarDragonBossRegistry.BOSS.get(),at,"Star Dragon",2);
-        return boss==null?0:success(c,"Summoned a Sequence 2 Star Dragon boss.");
+    private static int summon(CommandContext<CommandSourceStack> c,Vec3 at,int sequence) {
+        LivingEntity boss=BeyonderMobs.summon(c.getSource().getLevel(),sequence==0?StarDragonBossRegistry.CONDENSER.get():StarDragonBossRegistry.BOSS.get(),at,"Star Dragon",sequence);
+        return boss==null?0:success(c,"Summoned a Sequence "+sequence+" Star Dragon boss.");
     }
     private static int success(CommandContext<CommandSourceStack> c,String text) {c.getSource().sendSuccess(() -> Component.literal(text),false);return 1;}
 }

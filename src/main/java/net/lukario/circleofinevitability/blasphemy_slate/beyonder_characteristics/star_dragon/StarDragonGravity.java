@@ -600,7 +600,6 @@ public final class StarDragonGravity {
     }
 
     private static void openSingularity(LivingEntity player, ServerLevel sl, Vec3 ground, Vec3 center) {
-        String tag = "sd_singularity_" + player.getId();
         if (player instanceof Player payer) SoulCore.setSpiritualityQuietly(payer, 0f);   // the price
         else MobSpirituality.set(player, 0f);
         if (player.getHealth() > SINGULARITY_LEFT) player.setHealth(SINGULARITY_LEFT);
@@ -609,6 +608,23 @@ public final class StarDragonGravity {
         StarDragonFx.spent(sl, player);
         StarDragonFx.formWeakness(sl, player, SINGULARITY_SPENT, "sd_spent_" + player.getId());
         StarDragonFx.status(player, Status.SPENT, SINGULARITY_SPENT);
+        raiseSingularity(player, sl, ground, center, Float.MAX_VALUE);
+    }
+
+    /** Finite encounter version: the animated boss already supplied its interruptible gather windup. */
+    static void encounterSingularity(LivingEntity caster, ServerLevel sl, Vec3 target, double healthCost, int spentTicks, float damageCap) {
+        Vec3 ground = Spells.groundAt(caster, sl, target);
+        caster.setHealth(Math.max(1f, caster.getHealth() - (float)(caster.getMaxHealth() * healthCost)));
+        if (spentTicks > 0) {
+            AbilityLock.apply(caster, spentTicks);
+            Spells.keepEffect(caster, MobEffects.WEAKNESS, 0, spentTicks);
+            StarDragonFx.spent(sl, caster);
+        }
+        raiseSingularity(caster, sl, ground, ground.add(0, SINGULARITY_HANGS, 0), damageCap);
+    }
+
+    private static void raiseSingularity(LivingEntity player, ServerLevel sl, Vec3 ground, Vec3 center, float damageCap) {
+        String tag = "sd_singularity_" + player.getId();
         GravityField.close(player, SINGULARITY);
         StarDragonFx.singularity(sl, center, SINGULARITY_RADIUS, SINGULARITY_TICKS, tag);
         Set<UUID> crushedAt = new HashSet<>();
@@ -622,7 +638,7 @@ public final class StarDragonGravity {
                     double speed = SINGULARITY_PULL * Math.max(0.2, 1.0 - distance / SINGULARITY_RADIUS) * share;
                     Spells.pull(one, center, speed, one.getY() + 0.5 < center.y ? 0.08 : 0.0);
                     if (distance > SINGULARITY_CORE || inside % 20 != 0) return;
-                    StarDragon.hit(player, one, one.getMaxHealth() * SINGULARITY_CRUSH);
+                    StarDragon.hit(player, one, Math.min(damageCap, one.getMaxHealth() * SINGULARITY_CRUSH));
                     if (crushedAt.add(one.getUUID())) StarDragonFx.swallowed(sl, one.position(), center);
                 })
                 .onPulse(ticksLeft -> {

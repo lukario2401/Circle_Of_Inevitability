@@ -636,7 +636,7 @@ public class StarDragon {
     }
 
     /** Star Dragon (1), every other tick: Gravity Authority. Projectiles of the other side near you fly at half speed. */
-    private static void gravityAuthority(LivingEntity player, ServerLevel sl) {
+    static void gravityAuthority(LivingEntity player, ServerLevel sl) {
         for (Projectile shot : Spells.hostileShotsAround(player, sl, player.getBoundingBox().getCenter(), AUTHORITY_RADIUS)) {
             if (shot.getPersistentData().getBooleanOr(AUTHORITY_SLOWED, false)) continue;   // once a projectile
             shot.getPersistentData().putBoolean(AUTHORITY_SLOWED, true);
@@ -647,7 +647,7 @@ public class StarDragon {
     }
 
     /** Condenser (0), every 4 ticks: Weight and Density's steps. Every CONDENSER_STEP blocks walked, the ground shakes. */
-    private static void condenserSteps(LivingEntity player, ServerLevel sl) {
+    static void condenserSteps(LivingEntity player, ServerLevel sl) {
         if (!player.onGround() || player.isSpectator()) return;
         Vec3 at = player.position();
         String last = player.getPersistentData().getStringOr(STEP_AT, "");

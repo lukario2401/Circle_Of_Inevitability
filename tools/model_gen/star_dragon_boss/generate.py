@@ -143,10 +143,11 @@ def nbt_string(value):
     data=value.encode(); return struct.pack('>H',len(data))+data
 def nbt_tag(kind,name,payload):
     return bytes([kind])+nbt_string(name)+payload
-size=nbt_tag(9,'size',bytes([3])+struct.pack('>i3i',3,32,20,32))
 palette=nbt_tag(9,'palette',bytes([10])+struct.pack('>i',1)+nbt_tag(8,'Name',nbt_string('minecraft:air'))+b'\0')
 empty=b''.join(nbt_tag(9,name,b'\x0a'+struct.pack('>i',0)) for name in ('entities','blocks'))
-raw=b'\x0a\x00\x00'+size+palette+empty+nbt_tag(3,'DataVersion',struct.pack('>i',5000))+b'\0'
-test_structure=ROOT/'src/main/resources/data/circle_of_inevitability/structure/star_dragon_test_arena.nbt'
-test_structure.parent.mkdir(parents=True,exist_ok=True)
-test_structure.write_bytes(gzip.compress(raw,mtime=0))
+for name,dimensions in [('star_dragon_test_arena',(32,20,32)),('star_dragon_condenser_test_arena',(64,24,64))]:
+    size=nbt_tag(9,'size',bytes([3])+struct.pack('>i3i',3,*dimensions))
+    raw=b'\x0a\x00\x00'+size+palette+empty+nbt_tag(3,'DataVersion',struct.pack('>i',5000))+b'\0'
+    test_structure=ROOT/f'src/main/resources/data/circle_of_inevitability/structure/{name}.nbt'
+    test_structure.parent.mkdir(parents=True,exist_ok=True)
+    test_structure.write_bytes(gzip.compress(raw,mtime=0))

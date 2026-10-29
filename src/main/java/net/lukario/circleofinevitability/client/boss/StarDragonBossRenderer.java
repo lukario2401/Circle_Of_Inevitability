@@ -41,6 +41,7 @@ public final class StarDragonBossRenderer extends MobRenderer<StarDragonBoss, St
     @Mod.EventBusSubscriber(modid=CircleOfInevitability.MOD_ID,value=Dist.CLIENT)
     public static final class Events {
         @SubscribeEvent public static void layers(EntityRenderersEvent.RegisterLayerDefinitions e) { e.registerLayerDefinition(StarDragonBossModel.LAYER,StarDragonBossModel::createLayer); }
-        @SubscribeEvent public static void renderers(EntityRenderersEvent.RegisterRenderers e) { e.registerEntityRenderer(StarDragonBossRegistry.BOSS.get(),StarDragonBossRenderer::new); }
+        @SubscribeEvent public static void renderers(EntityRenderersEvent.RegisterRenderers e) { e.registerEntityRenderer(StarDragonBossRegistry.BOSS.get(),StarDragonBossRenderer::new);
+            e.registerEntityRenderer(StarDragonBossRegistry.CONDENSER.get(),StarDragonBossRenderer::new); }
     }
 }

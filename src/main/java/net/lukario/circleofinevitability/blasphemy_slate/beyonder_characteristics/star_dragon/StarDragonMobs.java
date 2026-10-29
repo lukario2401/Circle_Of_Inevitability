@@ -195,9 +195,11 @@ public final class StarDragonMobs {
                 StarDragonVoid::quantumUncertainty);
     }
 
-    /** Passives inherited by the Sequence 2 encounter. Shared numbers stay beside the characteristic. */
+    /** Passives inherited by the Sequence 2 and 0 encounters. Shared numbers stay beside the characteristic. */
     public static void bossPassiveTick(Mob mob, ServerLevel sl) {
         if (!StarDragon.isStarDragon(mob, 2)) return;
+        if (StarDragon.isStarDragon(mob, 1) && mob.tickCount % 2 == 0) StarDragon.gravityAuthority(mob, sl);
+        if (StarDragon.isStarDragon(mob, 0) && mob.tickCount % 4 == 0) StarDragon.condenserSteps(mob, sl);
         if (mob.tickCount % 20 != 0) return;
         StarDragon.bodyTick(mob);
         StarDragon.starlightScales(mob);
@@ -226,6 +228,13 @@ public final class StarDragonMobs {
             if (d < best) { nearest = one; best = d; }
         }
         if (mob.getTarget() == null && nearest != null) mob.setTarget(nearest);
+    }
+
+    /** Shared black-hole field with an encounter-specific, finite price. MobCasting charges the configured mana cost. */
+    public static boolean bossSingularity(Mob mob, LivingEntity target, ServerLevel sl, double healthCost, int spentTicks, float damageCap) {
+        MobSpells.face(mob, target);
+        StarDragonGravity.encounterSingularity(mob, sl, target.position(), healthCost, spentTicks, damageCap);
+        return true;
     }
 
     /** Fission Touch comes from actual melee, never from a spell hit (which would recurse). */

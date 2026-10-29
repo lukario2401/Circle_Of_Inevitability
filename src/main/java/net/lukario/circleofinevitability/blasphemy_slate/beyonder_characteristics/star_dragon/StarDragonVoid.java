@@ -406,8 +406,8 @@ public final class StarDragonVoid {
         if (!(event.getEntity() instanceof LivingEntity one) || !(one.level() instanceof ServerLevel sl)) return;
         Vec3 meant = event.getTarget();
         for (UUID id : List.copyOf(QUANTUM_OWNERS)) {
-            Player owner = sl.getPlayerByUUID(id);
-            if (owner == null) continue;                                          // in another world: their field is too
+            var entity = sl.getEntity(id);
+            if (!(entity instanceof LivingEntity owner)) continue;
             if (!Zone.isOpen(owner, QUANTUM)) {
                 QUANTUM_OWNERS.remove(id);
                 continue;
