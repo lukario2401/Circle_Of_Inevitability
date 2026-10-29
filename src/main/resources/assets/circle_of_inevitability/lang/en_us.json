@@ -1,4 +1,13 @@
 {
+  "item.circle_of_inevitability.sun_brooch": "Sun Brooch",
+  "tooltip.circle_of_inevitability.sun_brooch.power": "Right-click: purification (6 blocks), cleanse poison/wither, night vision. Cooldown: 8s.",
+  "tooltip.circle_of_inevitability.sun_brooch.drawback": "Carrying builds heat; each use adds 20. At 60: weakness and exhaustion; at 100: slowness.",
+  "tooltip.circle_of_inevitability.sun_brooch.cooling": "Water/rain cools it. Store it outside your inventory to recover. Multiple copies share heat/cooldown.",
+  "message.circle_of_inevitability.artifact.locked": "You cannot activate a sealed artifact while your abilities or item use are blocked.",
+  "message.circle_of_inevitability.artifact.cooldown": "This sealed artifact is ready again in %s seconds.",
+  "message.circle_of_inevitability.sun_brooch.purify": "Purification! Heat: %s/%s",
+  "message.circle_of_inevitability.sun_brooch.heat": "Sun Brooch heat: %s/%s",
+  "message.circle_of_inevitability.sun_brooch.hot": "The Sun Brooch's heat is unbearable. Cool down in water/rain or put it away.",
   "item.circle_of_inevitability.coin": "Coin",
   "item.circle_of_inevitability.soulcoin": "Soul Coin",
   "item.circle_of_inevitability.shadow_sword": "Shadow Sword",

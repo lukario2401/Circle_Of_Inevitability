@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "circle_of_inevitability:item/sun_brooch"
+  }
+}

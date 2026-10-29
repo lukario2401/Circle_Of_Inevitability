@@ -3,14 +3,16 @@ package net.lukario.circleofinevitability.item;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SequenceCommands;
+import net.lukario.circleofinevitability.item.artifacts.SealedArtifactItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 
-/** The mod's creative tab: a Beyonder Characteristic of every Pathway, Sequence 9 down to 0. */
+/** Characteristics and sealed artifacts, each in their own creative tab. */
 public final class ModCreativeTabs {
 
     public static final DeferredRegister<CreativeModeTab> CREATIVE_TABS =
@@ -27,6 +29,17 @@ public final class ModCreativeTabs {
                                 output.accept(BeyonderCharacteristicItem.of(pathway, sequence));
                             }
                         }
+                    })
+                    .build());
+
+    public static final RegistryObject<CreativeModeTab> SEALED_ARTIFACTS = CREATIVE_TABS.register("sealed_artifacts",
+            () -> CreativeModeTab.builder()
+                    .title(Component.translatable("creativetab.circle_of_inevitability.sealed_artifacts"))
+                    .icon(() -> new ItemStack(ModItems.SUN_BROOCH.get()))
+                    .displayItems((parameters, output) -> {
+                        for (var entry : ModItems.ITEMS.getEntries())
+                            if (entry.get() instanceof SealedArtifactItem)
+                                output.accept(entry.get());
                     })
                     .build());
 

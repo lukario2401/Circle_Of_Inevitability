@@ -41,6 +41,10 @@ Custom sword swings can be tuned live with `/swinganim`: repeat or hold a previe
 timing, easing and global placement, then save local overrides or export Java. See
 [Live sword swing tuning](docs/SWING_TUNING.md) for commands and a walkthrough.
 
+The **Sealed Artifacts** creative tab contains the Sun Brooch: right-click for purification, but manage
+the heat it builds while carried. Obtain it with `/give @s circle_of_inevitability:sun_brooch`.
+Powers, drawbacks and the extension guide live in [Sealed artifacts](docs/SEALED_ARTIFACTS.md).
+
 Any player can type `/damagefx` to turn damage numbers on or off for themself: the damage they deal is shown
 in red above the target's head (`docs/DAMAGE_FX.md`).
 

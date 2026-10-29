@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.item;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.item.artifacts.SunBroochItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -26,6 +27,10 @@ public final class ModItems {
             () -> new BeyonderCharacteristicItem(properties("beyonder_characteristic")
                     .stacksTo(BeyonderCharacteristicItem.STACK_SIZE)
                     .rarity(Rarity.EPIC)));
+
+    public static final RegistryObject<Item> SUN_BROOCH = ITEMS.register("sun_brooch",
+            () -> new SunBroochItem(properties("sun_brooch")
+                    .rarity(Rarity.RARE)));
 
     private ModItems() {}
 
