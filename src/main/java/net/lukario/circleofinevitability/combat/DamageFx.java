@@ -1,6 +1,9 @@
 package net.lukario.circleofinevitability.combat;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.Config;
 import net.lukario.circleofinevitability.particles.fx.DamageNumber;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.minecraft.commands.CommandSourceStack;
@@ -17,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.Priority;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -26,17 +30,19 @@ import java.util.UUID;
 import java.util.WeakHashMap;
 
 /**
- * Damage fx: the damage a player deals, as a red number above the target's head.
+ * Damage fx: red hits and the dealer's gold cumulative damage above the target's head.
  * Every player turns it on or off for themself, no op needed:
  *
  *   /damagefx          switches it
  *   /damagefx on
  *   /damagefx off
+ *   /damagefx reset <seconds>   changes the per-target inactivity timeout (1-3600 seconds)
  *
  * Off until a player turns it on. Saved with the player: it stays through death, relog and a server restart.
  *
- * A number is shown when the player who DEALT the damage has it on. It is shown to that player and to every
+ * A red number is shown when the player who DEALT the damage has it on. It is shown to that player and to every
  * other player within VIEW_RANGE blocks of the target who has it on too (never to the one who was hurt).
+ * The gold cumulative total is private to the dealer and resets after their configured timeout.
  *
  * What counts as a player's damage:
  *   - everything that names them as the attacker: melee, arrows and other projectiles, Spells.strike,
@@ -75,6 +81,7 @@ public final class DamageFx {
 
     /** Inside the part of getPersistentData() that Forge itself carries over to the new player after a death. */
     private static final String KEY = "circle_of_inevitability_damage_fx";
+    private static final String RESET_KEY = KEY + "_reset_seconds";
 
     /** Whose damage the attacker-less damage on an entity is: lingering kinds until 'until', any kind until 'anyUntil' (game time). */
     private record Credit(UUID player, long until, long anyUntil) {}
@@ -82,6 +89,7 @@ public final class DamageFx {
     // server thread only; an entity that is unloaded or dead drops out by itself
     private static final Map<LivingEntity, Credit> CREDITS = new WeakHashMap<>();
     private static final Map<LivingEntity, Float> ABSORPTION_BEFORE = new WeakHashMap<>();
+    private static final Map<LivingEntity, DamageTotals> TOTALS = new WeakHashMap<>();
 
     private DamageFx() {}
 
@@ -94,10 +102,37 @@ public final class DamageFx {
     }
 
     public static void set(LivingEntity player, boolean on) {
+        if (!on) clearTotals(player);
         CompoundTag data = player.getPersistentData();
         CompoundTag kept = data.getCompoundOrEmpty(ServerPlayer.PERSISTED_NBT_TAG);
         kept.putBoolean(KEY, on);
         data.put(ServerPlayer.PERSISTED_NBT_TAG, kept);
+    }
+
+    private static int resetSeconds(LivingEntity player) {
+        return Math.clamp(player.getPersistentData().getCompoundOrEmpty(ServerPlayer.PERSISTED_NBT_TAG)
+                .getIntOr(RESET_KEY, Config.damageFxResetSeconds), 1, 3600);
+    }
+
+    private static void clearTotals(LivingEntity player) {
+        TOTALS.remove(player);
+        if (player instanceof ServerPlayer viewer && player.level() instanceof ServerLevel sl) {
+            // A zero cumulative number with no target tells the client to clear its gold totals immediately.
+            sl.sendParticles(viewer, new DamageNumber(0f, -1, true, 1), true, true,
+                    player.getX(), player.getY(), player.getZ(), 0, 0.0, 0.0, 0.0, 1.0);
+        }
+    }
+
+    private static int configureReset(CommandSourceStack source, Integer seconds) throws CommandSyntaxException {
+        ServerPlayer player = source.getPlayerOrException();
+        CompoundTag data = player.getPersistentData();
+        CompoundTag kept = data.getCompoundOrEmpty(ServerPlayer.PERSISTED_NBT_TAG);
+        if (seconds == null) kept.remove(RESET_KEY);
+        else kept.putInt(RESET_KEY, seconds);
+        data.put(ServerPlayer.PERSISTED_NBT_TAG, kept);
+        clearTotals(player);
+        source.sendSuccess(() -> Component.translatable("message.circle_of_inevitability.damage_fx.reset", resetSeconds(player)), false);
+        return 1;
     }
 
     /**
@@ -137,7 +172,18 @@ public final class DamageFx {
                 .then(Commands.literal("on")
                         .executes(ctx -> turn(ctx.getSource(), ctx.getSource().getPlayerOrException(), true)))
                 .then(Commands.literal("off")
-                        .executes(ctx -> turn(ctx.getSource(), ctx.getSource().getPlayerOrException(), false))));
+                        .executes(ctx -> turn(ctx.getSource(), ctx.getSource().getPlayerOrException(), false)))
+                .then(Commands.literal("reset")
+                        .executes(ctx -> {
+                            ServerPlayer player = ctx.getSource().getPlayerOrException();
+                            ctx.getSource().sendSuccess(() -> Component.translatable(
+                                    "message.circle_of_inevitability.damage_fx.reset", resetSeconds(player)), false);
+                            return 1;
+                        })
+                        .then(Commands.argument("seconds", IntegerArgumentType.integer(1, 3600))
+                                .executes(ctx -> configureReset(ctx.getSource(), IntegerArgumentType.getInteger(ctx, "seconds"))))
+                        .then(Commands.literal("default")
+                                .executes(ctx -> configureReset(ctx.getSource(), null)))));
     }
 
     private static int turn(CommandSourceStack source, LivingEntity player, boolean on) {
@@ -150,6 +196,16 @@ public final class DamageFx {
     // =========================
     // Events
     // =========================
+
+    @SubscribeEvent
+    public static void onDamageFxRespawn(PlayerEvent.PlayerRespawnEvent event) {
+        clearTotals(event.getEntity());
+    }
+
+    @SubscribeEvent
+    public static void onDamageFxLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        TOTALS.remove(event.getEntity());
+    }
 
     // Before armor is counted: remembers the yellow hearts, to see afterwards how much of the hit they took.
     @SubscribeEvent
@@ -174,8 +230,11 @@ public final class DamageFx {
 
         ServerPlayer dealer = dealerOf(victim, event.getSource(), sl);
         if (dealer == null || dealer == victim) return;
-        if (!(amount >= SMALLEST_SHOWN) || !isOn(dealer)) return;
-        show(sl, dealer, victim, amount);
+        if (!Float.isFinite(amount) || amount <= 0f || !isOn(dealer)) return;
+        int resetTicks = resetSeconds(dealer) * 20;
+        float total = TOTALS.computeIfAbsent(dealer, unused -> new DamageTotals()).add(
+                victim.getUUID(), amount, sl.getServer().overworld().getGameTime(), resetTicks);
+        show(sl, dealer, victim, amount, total, resetTicks);
     }
 
     // =========================
@@ -215,8 +274,9 @@ public final class DamageFx {
         return found instanceof ServerPlayer player ? player : null;
     }
 
-    private static void show(ServerLevel sl, ServerPlayer dealer, LivingEntity victim, float amount) {
+    private static void show(ServerLevel sl, ServerPlayer dealer, LivingEntity victim, float amount, float total, int resetTicks) {
         DamageNumber number = new DamageNumber(amount, victim.getId());
+        DamageNumber cumulative = new DamageNumber(total, victim.getId(), true, resetTicks);
         double x = victim.getX();
         double y = victim.getY() + victim.getBbHeight();    // the top of the head; the client lifts it above that
         double z = victim.getZ();
@@ -226,7 +286,11 @@ public final class DamageFx {
             double range = viewer == dealer ? OWN_RANGE : VIEW_RANGE;
             if (viewer.distanceToSqr(x, y, z) > range * range) continue;
             // (as ParticleShapes.spawnFar: sent whatever the viewer's particle setting is; count 0 = exactly here)
-            sl.sendParticles(viewer, number, true, true, x, y, z, 0, 0.0, 0.0, 0.0, 1.0);
+            if (amount >= SMALLEST_SHOWN)
+                sl.sendParticles(viewer, number, true, true, x, y, z, 0, 0.0, 0.0, 0.0, 1.0);
+            // A viewer's gold total only includes their own damage, even when other players hit this target.
+            if (viewer == dealer && total >= SMALLEST_SHOWN)
+                sl.sendParticles(viewer, cumulative, true, true, x, y, z, 0, 0.0, 0.0, 0.0, 1.0);
         }
     }
 }

@@ -82,14 +82,29 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-// Pure animation data tests; no Minecraft client or server needs to start.
+// Standalone data and serialization checks; no Minecraft client or server needs to start.
 sourceSets {
+    damageFxTest {
+        java.srcDir 'tools/tests'
+        java.include 'DamageFxTest.java'
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
     swingEditTest {
         java.srcDir 'tools/tests'
         java.include 'SwingAnimationEditsTest.java'
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
     }
+}
+
+tasks.register('damageFxTest', JavaExec) {
+    group = 'verification'
+    description = 'Checks cumulative damage isolation, inactivity resets and particle serialization.'
+    dependsOn tasks.named('damageFxTestClasses')
+    classpath = sourceSets.damageFxTest.runtimeClasspath
+    mainClass = 'net.lukario.circleofinevitability.combat.DamageFxTest'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
 }
 
 tasks.register('swingAnimationEditsTest', JavaExec) {
@@ -101,4 +116,4 @@ tasks.register('swingAnimationEditsTest', JavaExec) {
     javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
 }
 
-tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest') }
+tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest') }

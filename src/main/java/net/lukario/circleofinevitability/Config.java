@@ -19,6 +19,10 @@ public class Config
 {
     private static final ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
 
+    private static final ForgeConfigSpec.IntValue DAMAGE_FX_RESET_SECONDS = BUILDER
+            .comment("Seconds without damage to a target before its gold cumulative damage resets. Players can override with /damagefx reset <seconds>.")
+            .defineInRange("damageFxResetSeconds", 5, 1, 3600);
+
     private static final ForgeConfigSpec.BooleanValue LOG_DIRT_BLOCK = BUILDER
             .comment("Whether to log the dirt block on common setup")
             .define("logDirtBlock", true);
@@ -39,6 +43,7 @@ public class Config
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean logDirtBlock;
+    public static int damageFxResetSeconds = 5;
     public static int magicNumber;
     public static String magicNumberIntroduction;
     public static Set<Item> items;
@@ -51,6 +56,8 @@ public class Config
     @SubscribeEvent
     static void onLoad(final ModConfigEvent event)
     {
+        if (event.getConfig().getSpec() != SPEC) return;
+        damageFxResetSeconds = DAMAGE_FX_RESET_SECONDS.get();
         logDirtBlock = LOG_DIRT_BLOCK.get();
         magicNumber = MAGIC_NUMBER.get();
         magicNumberIntroduction = MAGIC_NUMBER_INTRODUCTION.get();

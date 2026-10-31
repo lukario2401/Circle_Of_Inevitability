@@ -48,6 +48,8 @@ public final class DamageNumberRenderer {
 
     /** Colour of the number (0xAARRGGBB). */
     public static int COLOR = 0xFFFF2B2B;
+    /** The player's cumulative damage, on a separate line below the red hits. */
+    public static int CUMULATIVE_COLOR = 0xFFFFAA00;
     /** How long a number stays, in ticks (20 = one second). */
     public static int HOLD_TICKS = 20;
     /** How long it takes to go away after that. 0 = gone at once. */
@@ -96,7 +98,7 @@ public final class DamageNumberRenderer {
     private DamageNumberRenderer() {}
 
     /** One number as it is drawn this frame. */
-    private record Shown(String text, Vec3 top, float above, int row, float alpha) {}
+    private record Shown(String text, Vec3 top, float above, int row, float alpha, int color) {}
 
     /**
      * Tells the particle engine how to draw NUMBERS. Called once from ClientParticleHandler; never throws.
@@ -116,6 +118,13 @@ public final class DamageNumberRenderer {
         return registered;
     }
 
+    static void clearTotals() {
+        for (DamageNumberParticle active : ACTIVE) {
+            if (active.cumulative()) active.discard();
+        }
+        ACTIVE.removeIf(active -> !active.isAlive());
+    }
+
     /**
      * The line a new number goes on: the lowest one free above its entity. A number in its last moments does not
      * hold its line any more, so damage that ticks once a second (burning) stays on the lowest line instead of
@@ -123,19 +132,29 @@ public final class DamageNumberRenderer {
      */
     static int claimRow(DamageNumberParticle fresh, ClientLevel level) {
         ACTIVE.removeIf(active -> !active.isAlive() || active.isStale(level));
+        if (fresh.cumulative()) {
+            // Replace this target's previous total in place; gold numbers never take a red hit's row.
+            for (DamageNumberParticle active : ACTIVE) {
+                if (active.cumulative() && active.entityId() == fresh.entityId()) active.discard();
+            }
+            ACTIVE.removeIf(active -> !active.isAlive());
+            ACTIVE.add(fresh);
+            return 0;
+        }
         float leaving = Math.max(1, HOLD_TICKS - LEAVING_TICKS);
         boolean[] taken = new boolean[ROWS];
         DamageNumberParticle oldest = null;
         for (DamageNumberParticle active : ACTIVE) {
-            if (active.entityId() != fresh.entityId() || active.time(0f) >= leaving) continue;
-            taken[active.row()] = true;
+            if (active.cumulative() || active.entityId() != fresh.entityId() || active.time(0f) >= leaving) continue;
+            taken[active.row() - 1] = true;
             if (oldest == null || active.time(0f) > oldest.time(0f)) oldest = active;
         }
         int row = 0;
         while (row < ROWS && taken[row]) row++;
-        if (row == ROWS) row = oldest.row();        // every line is taken: the oldest number makes room
+        if (row == ROWS) row = oldest.row() - 1;    // every line is taken: the oldest number makes room
+        row++;                                   // row zero is reserved for the gold total
         for (DamageNumberParticle active : ACTIVE) {
-            if (active.entityId() == fresh.entityId() && active.row() == row) active.discard();
+            if (!active.cumulative() && active.entityId() == fresh.entityId() && active.row() == row) active.discard();
         }
         ACTIVE.removeIf(active -> !active.isAlive());
         ACTIVE.add(fresh);
@@ -158,12 +177,13 @@ public final class DamageNumberRenderer {
             if (particle.entityId() >= 0 && ClientConcealment.isHidden(particle.entityId())) continue;
 
             float time = particle.time(partialTick);
-            float alpha = FADE_TICKS <= 0 || time <= HOLD_TICKS ? 1f : 1f - (time - HOLD_TICKS) / FADE_TICKS;
+            float alpha = particle.cumulative() || FADE_TICKS <= 0 || time <= particle.holdTicks()
+                    ? 1f : 1f - (time - particle.holdTicks()) / FADE_TICKS;
             if (alpha <= 0.004f) continue;
 
             Vec3 top = particle.top(partialTick);
             shown.add(new Shown(particle.text(), top, particle.named() ? ABOVE_NAME : ABOVE_HEAD, particle.row(),
-                    Math.min(alpha, 1f)));
+                    Math.min(alpha, 1f), particle.cumulative() ? CUMULATIVE_COLOR : COLOR));
         }
         return shown;
     }
@@ -183,7 +203,7 @@ public final class DamageNumberRenderer {
      * Writes one number into the particle buffer. Positions are camera-relative, like every particle's.
      * u0..v1 = where damage_digits.png is in the particle atlas.
      */
-    static void draw(VertexConsumer buffer, String text, Vec3 top, float above, int row, float alpha,
+    static void draw(VertexConsumer buffer, String text, Vec3 top, float above, int row, float alpha, int color,
                      Vec3 cam, float cameraYaw, float u0, float u1, float v0, float v1) {
         // the spot above the head, seen from the camera
         double px = top.x - cam.x;
@@ -220,10 +240,10 @@ public final class DamageNumberRenderer {
 
         float left = -width(text) / 2f;             // centred on the spot
         float bottom = row * ROW_HEIGHT;
-        float red = ((COLOR >> 16) & 0xFF) / 255f;
-        float green = ((COLOR >> 8) & 0xFF) / 255f;
-        float blue = (COLOR & 0xFF) / 255f;
-        float opacity = ((COLOR >>> 24) & 0xFF) / 255f * alpha;
+        float red = ((color >> 16) & 0xFF) / 255f;
+        float green = ((color >> 8) & 0xFF) / 255f;
+        float blue = (color & 0xFF) / 255f;
+        float opacity = ((color >>> 24) & 0xFF) / 255f * alpha;
 
         // the dark copy first, one pixel right and down, then the number on top of it
         for (int pass = 0; pass < 2; pass++) {
@@ -330,7 +350,7 @@ public final class DamageNumberRenderer {
         public void buildLayer(SingleQuadParticle.Layer layer, VertexConsumer buffer) {
             if (layer != LAYER) return;
             for (Shown number : numbers) {
-                draw(buffer, number.text(), number.top(), number.above(), number.row(), number.alpha(),
+                draw(buffer, number.text(), number.top(), number.above(), number.row(), number.alpha(), number.color(),
                         camera, cameraYaw, u0, u1, v0, v1);
             }
         }

@@ -18,6 +18,8 @@ public class DamageNumberParticle extends Particle {
     private final int entityId;
     private final String text;
     private final int row;
+    private final boolean cumulative;
+    private final int holdTicks;
     private long lastTickTime;
     private Vec3 top;           // the top of the head, where it was last seen
     private boolean named;      // a player: the number goes above the name
@@ -27,7 +29,9 @@ public class DamageNumberParticle extends Particle {
         this.clientLevel = level;
         this.entityId = number.entityId();
         this.text = number.text();
-        this.lifetime = DamageNumberRenderer.HOLD_TICKS + DamageNumberRenderer.FADE_TICKS;
+        this.cumulative = number.cumulative();
+        this.holdTicks = cumulative ? number.holdTicks() : DamageNumberRenderer.HOLD_TICKS;
+        this.lifetime = holdTicks + (cumulative ? 0 : DamageNumberRenderer.FADE_TICKS);
         this.gravity = 0f;
         this.hasPhysics = false;
         this.xd = 0;
@@ -44,7 +48,7 @@ public class DamageNumberParticle extends Particle {
         this.yo = this.y;
         this.zo = this.z;
         this.lastTickTime = clientLevel.getGameTime();
-        if (this.age++ >= this.lifetime) this.remove();
+        if (++this.age >= this.lifetime) this.remove();
     }
 
     // (26.2: drawn by the NUMBERS particle group; NO_RENDER only if that group could not be registered)
@@ -59,11 +63,19 @@ public class DamageNumberParticle extends Particle {
         return entityId;
     }
 
+    boolean cumulative() {
+        return cumulative;
+    }
+
+    int holdTicks() {
+        return holdTicks;
+    }
+
     String text() {
         return text;
     }
 
-    /** Which line above the head it is on: 0 = the lowest. It keeps its line for as long as it shows. */
+    /** Which line above the head it is on: 0 = gold, 1–6 = red hits. */
     int row() {
         return row;
     }
@@ -103,6 +115,10 @@ public class DamageNumberParticle extends Particle {
     /** Registered in ClientParticleHandler. */
     public static Particle create(DamageNumber number, ClientLevel level,
                                   double x, double y, double z, double xd, double yd, double zd) {
+        if (number.cumulative() && number.entityId() == -1 && number.amount() == 0f) {
+            DamageNumberRenderer.clearTotals();
+            return null;
+        }
         return new DamageNumberParticle(level, x, y, z, number);
     }
 }

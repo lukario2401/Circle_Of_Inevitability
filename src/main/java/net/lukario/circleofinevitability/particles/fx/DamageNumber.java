@@ -21,15 +21,25 @@ public final class DamageNumber implements ParticleOptions {
 
     private final float amount;
     private final int entityId;
+    private final boolean cumulative;
+    private final int holdTicks;
 
     /** entityId = the entity it stays above (Entity.getId()); -1 = it stays where it was spawned. */
     public DamageNumber(float amount, int entityId) {
+        this(amount, entityId, false, 20);
+    }
+
+    public DamageNumber(float amount, int entityId, boolean cumulative, int holdTicks) {
         this.amount = amount;
         this.entityId = entityId;
+        this.cumulative = cumulative;
+        this.holdTicks = Math.clamp(holdTicks, 1, 72000);
     }
 
     public float amount() { return amount; }
     public int entityId() { return entityId; }
+    public boolean cumulative() { return cumulative; }
+    public int holdTicks() { return holdTicks; }
 
     /**
      * What is written above the head: "7", "12", and one decimal for hits under 100 that are not whole ("7.5").
@@ -51,7 +61,9 @@ public final class DamageNumber implements ParticleOptions {
 
     public static final MapCodec<DamageNumber> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.FLOAT.fieldOf("amount").forGetter(DamageNumber::amount),
-            Codec.INT.optionalFieldOf("entity", -1).forGetter(DamageNumber::entityId)
+            Codec.INT.optionalFieldOf("entity", -1).forGetter(DamageNumber::entityId),
+            Codec.BOOL.optionalFieldOf("cumulative", false).forGetter(DamageNumber::cumulative),
+            Codec.INT.optionalFieldOf("hold_ticks", 20).forGetter(DamageNumber::holdTicks)
     ).apply(instance, DamageNumber::new));
 
     public static final StreamCodec<FriendlyByteBuf, DamageNumber> STREAM_CODEC =
@@ -60,9 +72,11 @@ public final class DamageNumber implements ParticleOptions {
     private void write(FriendlyByteBuf buffer) {
         buffer.writeFloat(amount);
         buffer.writeInt(entityId);
+        buffer.writeBoolean(cumulative);
+        buffer.writeVarInt(holdTicks);
     }
 
     private static DamageNumber read(FriendlyByteBuf buffer) {
-        return new DamageNumber(buffer.readFloat(), buffer.readInt());
+        return new DamageNumber(buffer.readFloat(), buffer.readInt(), buffer.readBoolean(), buffer.readVarInt());
     }
 }

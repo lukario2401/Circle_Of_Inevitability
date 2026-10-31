@@ -1,14 +1,21 @@
-# Damage fx: red numbers above what you hit (/damagefx)
+# Damage fx: red hits and gold cumulative damage (/damagefx)
 
-With damage fx on, the damage you deal is written in red above your target's head. Every player decides for themself; it needs no cheats and no op.
+With damage fx on, each hit is written in red above your target's head and your cumulative damage to that target is written in gold below the red hits. Every player decides for themself; it needs no cheats and no op.
 
 ```
 /damagefx          switches it
 /damagefx on
 /damagefx off
+/damagefx reset             shows your current inactivity timeout
+/damagefx reset 10          resets totals after 10 seconds without damage to that target
+/damagefx reset default     uses the configured default again
 ```
 
 It is off until a player turns it on, and it is saved with the player: it stays on through death, a relog and a server restart.
+
+The default inactivity timeout is **5 seconds**. `/damagefx reset <seconds>` accepts whole seconds from 1 to 3600 and saves your preference through death, relogs and restarts. The server's default is `damageFxResetSeconds` in `config/circle_of_inevitability-common.toml`. Changing your timeout immediately clears existing gold numbers and starts fresh totals on your next hits.
+
+Totals are separate for each target and each player. Every positive hit refreshes that target's timer; after the timeout the gold number disappears and the next hit starts a new total. Tiny hits still contribute even when they are too small to display on their own. Turning damage fx off clears your totals. Totals themselves are temporary and start fresh after death or relog.
 
 ---
 
@@ -16,6 +23,7 @@ It is off until a player turns it on, and it is saved with the player: it stays 
 
 - The number appears above the head, stays there without moving for one second, and is then gone. It follows the head if the target walks.
 - Several hits at once go on lines above each other, the first one lowest, up to six. A seventh takes the place of the oldest.
+- The gold number occupies its own line and updates in place, staying visible until the inactivity timeout.
 - It is what the target really lost: after armor, resistance and everything else in the mod (Vulnerable, DamageLink...), with yellow absorption hearts counted. Whole numbers as they are (`12`), others with one decimal (`7.5`).
 - Damage that was cancelled or came to 0 shows nothing.
 
@@ -27,6 +35,8 @@ A number is shown when the player who **dealt** the damage has damage fx on. It 
 - every other player within 48 blocks of the target who has damage fx on too.
 
 A player with damage fx off never sees numbers and never causes any. The one who is hurt does not get the number above their own head.
+
+Gold totals are shown only to the player who dealt that damage. Nearby viewers still see the individual red hits; their own gold totals never include someone else's damage.
 
 ## What counts as your damage
 
@@ -67,6 +77,7 @@ All at the top of `particles/fx/DamageNumberRenderer.java`:
 | Constant | Now | What it is |
 |---|---|---|
 | `COLOR` | `0xFFFF2B2B` | the colour, as 0xAARRGGBB |
+| `CUMULATIVE_COLOR` | `0xFFFFAA00` | the gold total's colour |
 | `HOLD_TICKS` | `20` | how long a number stays (20 = one second) |
 | `FADE_TICKS` | `3` | how long it takes to go away after that; `0` = gone at once |
 | `PIXEL` | `0.04f` | size: blocks per pixel of a digit (a digit is 7 pixels tall) |
@@ -83,14 +94,15 @@ The digits are `textures/particle/fx/damage_digits.png`: `0123456789.` in white,
 ## How it works
 
 - `combat/DamageFx` (server): the command, the setting, and a listener that runs after every other damage listener, works out whose damage it is and sends the number to the players who should see it.
-- `particles/fx/DamageNumber`: the number on its way to a client. It travels as a particle (`circle_of_inevitability:damage_number`), like `ParticleFx`, `SlashFx` and `ModelFx`, so there is no new packet.
+- `combat/DamageTotals`: each dealer's independent target totals and inactivity timers.
+- `particles/fx/DamageNumber`: the number, cumulative flag and hold duration on their way to a client. It travels as a particle (`circle_of_inevitability:damage_number`), like `ParticleFx`, `SlashFx` and `ModelFx`, so there is no new packet. Client and server must both use the updated mod because the particle wire format changed.
 - `particles/fx/DamageNumberParticle` and `DamageNumberRenderer` (client): keep it above the head and draw the digits.
 
 ## Checking it in the game
 
 `./gradlew runClient`, a world with cheats:
 
-1. Hit a mob: no number. `/damagefx`: chat says "Damage fx on: the damage you deal shows above your target."
+1. Hit a mob: no number. `/damagefx`: chat confirms red hits and gold cumulative damage are enabled.
 2. Hit a pig with your fist: a red `1` above its head for a second (a zombie shows `0.9`: its armor takes a little). With a sword the number is bigger; a critical hit bigger again.
 3. Shoot it with a bow from far away: the number shows, and is still readable.
 4. Hit it with a Fire Aspect sword (or `/enchant`): after the hit, a `1` every second while it burns.
@@ -98,3 +110,8 @@ The digits are `textures/particle/fx/damage_digits.png`: `0123456789.` in white,
 6. Walk around the mob and look at it from above: the number always faces you, upright, not mirrored.
 7. Die, respawn, relog: still on. `/damagefx off`: chat says "Damage fx off.", no more numbers.
 8. With a second player: both on, each sees the other's numbers when near; one off, that one sees none and their hits show to nobody.
+9. Hit the same target twice within five seconds: separate red hits, one gold total equal to their sum. Wait five seconds: gold disappears; another hit starts a fresh total.
+10. `/damagefx reset 2`: repeat with a two-second timeout. `/damagefx reset` reports it; `/damagefx reset default` restores the configured default. Values outside 1–3600 are rejected.
+11. Alternate hits between two targets and then have a second player hit one of them: your gold totals remain separate for each target and include only your damage. Burning and credited abilities also update your total and timer.
+
+`./gradlew damageFxTest` checks accumulation, exact timeout boundaries, target/player isolation, tiny hits and particle JSON/network round trips without launching the game.
