@@ -79,6 +79,16 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Omniscient Eye", 1, "Reading", 9, SNEAK, STEALABLE,
+                    (p, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p, level, sl, 1, true)),
+            new Ability("Omniscient Eye", 2, "Deduction", 8, SNEAK, STEALABLE,
+                    (p, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p, level, sl, 2, true)),
+            new Ability("Omniscient Eye", 3, "Reconstruction", 7, SNEAK, STEALABLE,
+                    (p, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p, level, sl, 3, true)),
+            new Ability("Omniscient Eye", 4, "Replication", 6, SNEAK, OWN_PATHWAY_ONLY,
+                    (p, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p, level, sl, 4, true)),
+            new Ability("Omniscient Eye", 5, "Mystic Arts", 6, SNEAK, OWN_PATHWAY_ONLY,
+                    (p, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p, level, sl, 5, true)),
             new Ability("Snake Of Mercury", 1, "Premonition", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> SnakeOfMercury.premonition(player, level, sl, true)),
             new Ability("Snake Of Mercury", 2, "Calculation", 8, SNEAK, STEALABLE,

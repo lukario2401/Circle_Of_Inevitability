@@ -35,6 +35,9 @@ minecraft {
 
         register('gameTestServer') {
             // Focus this encounter's regressions without running unrelated pathway suites.
+            if (providers.gradleProperty('omniscientEyeTests').isPresent()) {
+                args '--tests', 'circle_of_inevitability:omniscient_*'
+            }
             if (providers.gradleProperty('starDragonBossTests').isPresent()) {
                 args '--tests', 'circle_of_inevitability:star_dragon_boss_*'
             }

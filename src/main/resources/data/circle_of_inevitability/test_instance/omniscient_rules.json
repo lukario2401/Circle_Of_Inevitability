@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "circle_of_inevitability:omniscient_rules",
+  "max_ticks": 100,
+  "required": true,
+  "setup_ticks": 1,
+  "structure": "forge:empty3x3x3"
+}

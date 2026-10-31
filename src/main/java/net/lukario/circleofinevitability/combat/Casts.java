@@ -60,7 +60,7 @@ import java.util.function.Supplier;
 public final class Casts {
 
     /** How long a cast is remembered (ticks). */
-    public static int KEPT = 1200;
+    public static int KEPT = 2400;
 
     /**
      * One cast that went off.
@@ -79,6 +79,12 @@ public final class Casts {
         public String name() {
             if (entry != null) return entry.name();
             if (ability == null) return "an unknown power";
+            if (pathway.equals("Omniscient Eye")) return switch(key) {
+                case 1 -> sneak ? "Ritual Circle" : "Reading";
+                case 2 -> sneak ? "Keen Eye" : "Deduction";
+                case 3 -> sneak ? "Deductive Strike" : "Reconstruction";
+                default -> ability.name();
+            };
             return sneak && ability.sneakForm() ? ability.name() + " (sneak)" : ability.name();
         }
 
@@ -158,6 +164,17 @@ public final class Casts {
         return cast;
     }
 
+    /** Newest first, for reconstruction; history is bounded by KEPT. */
+    public static List<Cast> near(ServerLevel sl, Vec3 at, double radius, int age) {
+        List<Cast> found = new ArrayList<>();
+        for (int i=RECENT.size()-1;i>=0;i--) {
+            Cast c=RECENT.get(i);
+            if(c.isIn(sl) && c.age(sl)<=age && c.at().distanceToSqr(at)<=radius*radius)found.add(c);
+            if(found.size()>=64)break;
+        }
+        return List.copyOf(found);
+    }
+
     /** The newest cast within 'radius' of 'at' in this level, no older than 'maxAge' ticks, that 'which' accepts; or null. */
     public static Cast latestNear(ServerLevel sl, Vec3 at, double radius, int maxAge, Predicate<Cast> which) {
         for (int i = RECENT.size() - 1; i >= 0; i--) {
@@ -212,6 +229,11 @@ public final class Casts {
      * True if it went off. An ability that throws is logged and counts as gone off, so it cannot fail again and again.
      */
     public static boolean recast(ServerPlayer player, Cast cast) {
+        return recastPaid(player, cast, 0f);
+    }
+
+    /** A persistent studied copy: pays the original cost times multiplier, without cooldowns. */
+    public static boolean recastPaid(ServerPlayer player, Cast cast, float multiplier) {
         if (!(player.level() instanceof ServerLevel sl) || cast == null || !cast.copyable()) return false;
         return copied(player, () -> {
             boolean wasSneaking = player.isShiftKeyDown();
@@ -219,10 +241,10 @@ public final class Casts {
             try {
                 if (cast.entry() != null && cast.wheel() != null) {
                     AbilityWheel.Result[] result = {AbilityWheel.Result.REFUSED};
-                    Beyonder.castUnbound(player, () -> result[0] = cast.wheel().cast(player, cast.entry(), true));
+                    Beyonder.castUnbound(player, multiplier, () -> result[0] = cast.wheel().cast(player, cast.entry(), true));
                     return result[0] != AbilityWheel.Result.REFUSED;
                 }
-                return Beyonder.castUnbound(player, () -> cast.ability().cast().run(player, sl, sl));
+                return Beyonder.castUnbound(player, multiplier, () -> cast.ability().cast().run(player, sl, sl));
             } catch (RuntimeException e) {
                 CircleOfInevitability.LOGGER.error("A copied ability failed: {}", cast.name(), e);
                 return true;
@@ -314,6 +336,7 @@ public final class Casts {
     }
 
     private static void tellAnyCaster(LivingEntity caster, ServerLevel sl, Cast cast) {
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.Codex.observe(caster, sl, cast);
         for (AnyCasterListener listener : List.copyOf(ANY_CASTER_LISTENERS)) {
             try {
                 listener.cast(caster, sl, cast);

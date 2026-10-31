@@ -47,6 +47,7 @@ public class CircleOfInevitability
         ModCreativeTabs.register(modEventBus);
         net.lukario.circleofinevitability.item.artifacts.SealedArtifactGameTests.FUNCTIONS.register(modEventBus);
         SnakeOfMercuryGameTests.FUNCTIONS.register(modEventBus);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEyeGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecayGameTests.FUNCTIONS.register(modEventBus);
 

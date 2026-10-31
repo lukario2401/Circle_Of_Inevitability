@@ -1,0 +1,46 @@
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye;
+final class CodexCatalog {
+ private static boolean initialized;
+ static void initialize(){
+ if(initialized)return; initialized=true;
+ for(String name:new String[]{
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationChains",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationCurses",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationWraith",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationZombie",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDawn",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodDemonHunting",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGodTwilight",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderDecrees",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderInterrogation",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderOrder",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderVerdicts",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorAlchemy",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorAstronomy",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorCivilization",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.IlluminatorWorkshop",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsSecrets",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsStarlight",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTravel",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTricks",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneDarkness",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneNightwatcher",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortunePoems",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knight_of_misfortune.KnightOfMisfortuneSpirits",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorKnowledge",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorRetellings",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperorStars",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionBribes",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionFallen",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionSovereign",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryPowers",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimeAuthority",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimePowers"
+})try{Class.forName(name);}catch(ClassNotFoundException e){throw new IllegalStateException(e);}
+ }
+}

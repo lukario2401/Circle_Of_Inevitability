@@ -26,6 +26,7 @@ public class PathwayHudIcon {
     private static final Map<String, Identifier> ICONS = new HashMap<>();
 
     static {
+        ICONS.put("Omniscient Eye", icon("omniscient_eye"));
         ICONS.put("Attendant Of Mysteries", icon("attendant_of_mysteries"));
         ICONS.put("Beauty Goddess", icon("beauty_goddess"));            // shows once the Pathway exists (docs/BEAUTY_GODDESS.md)
         ICONS.put("God Of Decay", icon("god_of_decay"));

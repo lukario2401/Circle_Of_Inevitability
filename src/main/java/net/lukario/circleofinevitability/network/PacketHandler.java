@@ -152,6 +152,12 @@ public class PacketHandler {
                 .decoder(CHudCounterPacket::new)
                 .consumerMainThread(CHudCounterPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(COpenCodexPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(COpenCodexPacket::encode).decoder(COpenCodexPacket::new)
+                .consumerMainThread(COpenCodexPacket::handle).add();
+        INSTANCE.messageBuilder(SCodexChoicePacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SCodexChoicePacket::encode).decoder(SCodexChoicePacket::new)
+                .consumerMainThread(SCodexChoicePacket::handle).add();
     }
 
     public static void sendToServer(Object msg) {

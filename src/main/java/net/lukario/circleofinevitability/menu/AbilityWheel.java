@@ -56,6 +56,10 @@ import java.util.function.ToDoubleFunction;
  * Every pick that went off is told to combat/Casts (Record, Replication and the echoes copy it from there).
  */
 public final class AbilityWheel {
+    private static final java.util.Map<String, AbilityWheel> REGISTRY = new java.util.LinkedHashMap<>();
+    public static java.util.Collection<AbilityWheel> registered() { return java.util.List.copyOf(REGISTRY.values()); }
+    public static AbilityWheel find(String id) { return REGISTRY.get(id); }
+    public String id() { return id; }
 
     public enum Result { DONE, FREE, REFUSED }
 
@@ -106,6 +110,7 @@ public final class AbilityWheel {
         }
 
         public String key() { return key; }
+        public String icon() { return icon; }
         public String name() { return name; }
         public int sequence() { return sequence; }
         public int cost() { return cost; }
@@ -143,7 +148,9 @@ public final class AbilityWheel {
     }
 
     public static AbilityWheel create(String id, String title) {
-        return new AbilityWheel(id, title);
+        AbilityWheel wheel = new AbilityWheel(id, title);
+        REGISTRY.put(id, wheel);
+        return wheel;
     }
 
     /** How far from the middle of the screen the icons sit, in GUI pixels (default 72). */

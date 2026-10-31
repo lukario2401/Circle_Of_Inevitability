@@ -5,9 +5,9 @@ especially its “Looks and pictures” list. The palette is brass `#D1A94B`, ag
 ink `#221B14` and deep violet `#733D9D`. Artwork and synthesized audio are original; no external
 art, recordings or wiki imagery are bundled.
 
-This update supplies resources and registers sound events. The pathway's abilities, targeting,
-Codex persistence, dossier text, UI rendering and effect playback still need gameplay code.
-The PDF's implementation checklist and questions are design context, not additional work performed here.
+This collection supplies resources and registers sound events. The
+[first 13 abilities and stored replication](OMNISCIENT_EYE.md) now use these resources;
+later abilities remain planned. The PDF's implementation checklist and questions are design context.
 
 ![Ability icons, statuses and particle textures](assets/omniscient_eye/preview.png)
 

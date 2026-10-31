@@ -50,7 +50,7 @@ public final class Beyonder {
 
     /** True if the player is at that Sequence or a stronger one (a lower number): hasSequence(p, 6) = "Sequence 6 or better". */
     public static boolean hasSequence(Player player, int sequence) {
-        if (isCastingUnbound(player)) return true;      // a stolen ability: see castUnbound below
+        if (isCastingUnbound(player) && sequenceBoundCaster != player) return true;
         return SoulCore.getSequence(player) <= sequence;
     }
 
@@ -69,6 +69,15 @@ public final class Beyonder {
     // =========================
 
     private static Player unboundCaster;        // set only while castUnbound runs (abilities run on the server thread)
+    private static Player sequenceBoundCaster;
+
+    /** Studied casts borrow a pathway, while retaining the observer's real Sequence gates. */
+    public static boolean atOwnSequence(Player player, java.util.function.BooleanSupplier action) {
+        Player before = sequenceBoundCaster;
+        sequenceBoundCaster = player;
+        try { return action.getAsBoolean(); }
+        finally { sequenceBoundCaster = before; }
+    }
     private static boolean unboundCostWaived;
     private static float unboundCostMultiplier; // 0 = the cast is free; more = it costs that many times its own cost
 
