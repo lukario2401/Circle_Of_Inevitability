@@ -1,6 +1,6 @@
 package net.lukario.circleofinevitability.client;
 import java.util.*;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.Codex.Row;
+import net.lukario.circleofinevitability.combat.AbilityStudy.Row;
 import net.lukario.circleofinevitability.network.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -38,7 +38,7 @@ public final class CodexScreen extends Screen {
         int index=scroll+local/28;
         if(e.x()>=left()+8 && e.x()<left()+panelWidth()-8 && local>=0 && local<visible()*28 && index<rows.size()) {
             boolean favorite=e.x()>=left()+panelWidth()-34;
-            if(!favorite && rows.get(index).sequence()<ClientPathwayData.getSequence())return true;
+            if(!favorite && (rows.get(index).study()<100 || rows.get(index).sequence()<ClientPathwayData.getSequence()))return true;
             PacketHandler.sendToServer(new SCodexChoicePacket(rows.get(index).id(),favorite));
             if(!favorite)onClose();
             return true;
@@ -68,9 +68,11 @@ public final class CodexScreen extends Screen {
             var icon=icon(row);int tx=x+13;
             if(icon.isPresent()) {g.blit(RenderPipelines.GUI_TEXTURED,icon.get(),tx,yy+5,0f,0f,18,18,32,32,32,32);tx+=24;}
             String name=font.plainSubstrByWidth((scroll+n+1)+". "+row.name(),Math.max(20,w-(tx-x)-120));
-            g.text(font,name,tx,yy+5,row.sequence()<ClientPathwayData.getSequence()?0xFF827889:0xFFF4EBD0);
+            int color=row.study()<100?0xFFFF5555:row.sequence()<ClientPathwayData.getSequence()?0xFF827889:0xFFF4EBD0;
+            g.text(font,name,tx,yy+5,color);
             g.text(font,"Seq "+row.sequence(),tx,yy+16,0xFFB4A7BD);
-            g.text(font,String.format(Locale.ROOT,"%.1f%%",row.study()),x+w-92,yy+9,0xFFD1A94B);
+            g.text(font,row.study()<100?String.format(Locale.ROOT,"%.1f%%",Math.floor(row.study()*10)/10):"100%",x+w-92,yy+9,row.study()<100?0xFFFF5555:0xFFD1A94B);
+            if(hover)g.setTooltipForNextFrame(font,font.split(Component.literal(row.name()+(row.study()<100?" — Requires 100% study":"")),Math.min(300,width-24)),mx,my);
             g.text(font,row.favorite()?"★":"☆",x+w-27,yy+9,0xFFFFD577);
         }
         if(rows.isEmpty())g.centeredText(font,"Watch abilities being cast to study them.",width/2,y+50,0xFFF4EBD0);

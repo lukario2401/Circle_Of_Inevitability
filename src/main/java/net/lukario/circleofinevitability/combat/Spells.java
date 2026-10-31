@@ -90,6 +90,15 @@ import java.util.function.Predicate;
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
 public final class Spells {
+    /** Exact hitbox ray selection, optionally through terrain; includes concealed bodies when the caller allows them. */
+    public static LivingEntity aimLiving(LivingEntity caster, ServerLevel sl, double range, boolean throughWalls,
+                                        java.util.function.Predicate<LivingEntity> allowed) {
+        Vec3 from=caster.getEyePosition(),to=from.add(caster.getLookAngle().scale(range));
+        return sl.getEntitiesOfClass(LivingEntity.class,caster.getBoundingBox().inflate(range),
+                e->e!=caster && e.isAlive() && !e.isSpectator() && allowed.test(e)
+                        && (throughWalls || caster.hasLineOfSight(e)) && e.getBoundingBox().inflate(.3).clip(from,to).isPresent())
+                .stream().min(java.util.Comparator.comparingDouble(caster::distanceToSqr)).orElse(null);
+    }
 
     public static final Vec3 UP = new Vec3(0, 1, 0);
 
@@ -1013,6 +1022,7 @@ public final class Spells {
             return false;
         }
         SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) - due);
+        if(cost>0 && due==0)Casts.spent(player); // a one-shot free cast still succeeded
         return true;
     }
 

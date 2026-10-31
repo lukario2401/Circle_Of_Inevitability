@@ -79,6 +79,10 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Omniscient Eye", 6, "Fate and Cognizing", 4, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p,level,sl,6,true)),
+            new Ability("Omniscient Eye", 7, "Omniscience", 2, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p,level,sl,7,true)),
             new Ability("Omniscient Eye", 1, "Reading", 9, SNEAK, STEALABLE,
                     (p, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p, level, sl, 1, true)),
             new Ability("Omniscient Eye", 2, "Deduction", 8, SNEAK, STEALABLE,

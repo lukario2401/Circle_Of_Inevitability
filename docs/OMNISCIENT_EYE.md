@@ -1,95 +1,134 @@
-# Omniscient Eye: first 13 abilities and replication
+# Omniscient Eye
 
-Set up with `/sequence pathway @s "Omniscient Eye"` and `/sequence set @s 6`
-(operators only). Keys use the usual G, H, J, K, L bindings for keys 1–5.
+All 26 active abilities in the supplied White Tower design are implemented. The player's latest replication
+requirements take precedence: a stored power requires **100% study**, uses key 4, and has no replication cooldown.
 
-| Key | Sequence | Normal | Sneak |
+Set up with `/sequence pathway @s "Omniscient Eye"` and `/sequence set @s <0-9>` (operators only).
+The seven keys are G, H, J, K, L, N, M unless rebound.
+
+| Key | Unlock | Normal | Sneak |
 | --- | --- | --- | --- |
-| 1 | 9 | Reading: health, mood, hunted target, effects, Appraisal mark; weakness from Sequence 8 | Ritual Circle: chant, allied protection/cleansing, slowed hostile projectiles and a barrier to summoned constructs |
-| 2 | 8 | Deduction: Appraisal mark, weakness, reduced enemy damage, projectile forecasts | Keen Eye: hidden trap locations, projectile paths, exposes enemies looked at directly |
-| 3 | 7 | Reconstruction: nearby casts and player movement trails replayed as ghosts | Deductive Strike: step and three hits; a marked target takes stronger hits and a fourth hit |
-| 4 | 6 | Replicate the selected stored ability | Open the scrollable studied-ability list |
-| 5 | 6 | Mystic Arts wheel (Analyze at 6; Mirror Curse, Vile Thoughts, Improvise, Living Tome at 5; Golden Armor Art at 4) | Repeat the last wheel pick |
+| 1 | 9 | Reading | Ritual Circle |
+| 2 | 8 | Deduction | Keen Eye |
+| 3 | 7 | Reconstruction | Deductive Strike |
+| 4 | 6 | Replicate the selected fully studied power | Open the stored-ability list |
+| 5 | 6 | Mystic Arts wheel | Repeat its last pick |
+| 6 | 4 | Fate and Cognizing wheel | Repeat its last pick |
+| 7 | 2 | Omniscience wheel | Repeat its last pick |
 
-This implements the plan's first 13 active abilities, with its old Imitate replaced by persistent
-Replication and Analyze moved onto the Mystic Arts wheel. Keys 6–7 and the later 13 abilities remain
-for the next implementation. The asset collection covers those later abilities already.
+## Study and replication
 
-Reading shows a decorative floating information card; the actual inspected values are written in chat.
-Reconstruction uses wireframe proxies for cast locations and recorded player trails, not exact replays
-of every original spell mesh. Deduction forecasts projectile paths; it does not simulate future melee AI.
-Improvise chooses an elemental weakness and applies the corresponding hit/status without changing terrain.
-Living Tome uses an invisible summoned golem with the animated page-and-ink model.
+Visible real casts within 32 blocks and a forward 120-degree field of view add study. A wall blocks observation.
+Player and Beyonder-mob casts both count. Own casts, echoes and replicated casts do not feed recursive study.
 
-## Studying powers
+Study gain, in percentage points, is `min(100, 5 * 2^(abilitySequence - observerSequence) / (10 - abilitySequence))`.
+Lower Sequence numbers mean stronger powers. A power stronger than the observer cannot be studied, selected or
+replicated. At Sequence 0, a Sequence 9 power is fully learned in one observation.
 
-From Sequence 6 onward, observing a real, copyable player or Beyonder-mob cast within **32 blocks**
-adds study. The caster must be in your forward 120-degree field of view, with line of sight.
-Your own casts and replicated/echo casts never generate study. Normal and sneak forms are separate
-records; wheel spells use their individual entry, name, icon and Sequence.
+Every copyable wheel entry has its own stable ID, icon, name, Sequence and study record. Learning a wheel spell
+replays **that exact entry**, never a random pick or the wheel-opening key. Entries marked `notCopyable()` retain
+the shared kit's existing restrictions on powers that require private pathway state (such as Replication itself,
+Open Source and the owner-controlled Tower/form toggles).
 
-You cannot learn, select or replicate a power stronger than your current Sequence. Lower Sequence
-numbers mean stronger powers. Sequence metadata comes from the shared ability catalog; individual
-wheel entries have their own Sequence, while single-key variants use their key's catalog Sequence.
-Powers marked as needing their original pathway's private state are excluded, including Replication itself.
+Sneak + K opens the scrollable list. Under-100% names and percentages are **red** and cannot be selected or cast.
+Even a previously saved selection is checked again by the server. Percentages below 100 are rounded down for display,
+so an incomplete 99.999% record never appears as 100%. Incomplete records can still be favorited.
+Click a row to select; click its star to favorite. Order is favorites first, then study descending, then strongest
+Sequence, then name. Missing icons are omitted. Study, favorites and selection survive death, relogging and restarts.
 
-Study gain per observation, in percentage points:
+K casts the selected fully studied power in its stored normal/sneak form, from the player's current position and aim.
+Replication neither checks nor starts key/wheel cooldowns. Its normal spirituality price is 1.5 times the original;
+inside the caster's Tower it is the original price. Damage is full strength at 100%. The copied code retains the
+observer's real Sequence gates, so it cannot unlock stronger upgrades indirectly. Refused original casts keep their
+usual target/space/cost checks. Opening the menu refreshes its rows.
 
-```text
-min(100, 5 × 2^(abilitySequence - observerSequence) / (10 - abilitySequence))
-```
+OP command (permission level 2): `/codex study <player> <ability-id>`. Tab completion lists IDs.
+For example `/codex study @s key/Wanderer/2/false` or
+`/codex study @s wheel/omniscient_eye_mystic_arts/golden_armor_art`.
+It grants 100% immediately while retaining pathway/Sequence checks.
 
-This makes stronger observers faster and stronger abilities harder. Sequence 6 studying a Sequence 6
-power gains 1.25% per observation; Sequence 0 studying a Sequence 9 power gains 100% immediately.
-Study is capped at 100% and is never spent when casting. There is no slot limit or automatic forgetting.
+## Mystic Arts and lower abilities
 
-Progress, favorites and the selected power are stored in the player's persistent soul NBT, so they
-survive saving, relogging, server restarts and death through the existing SoulCore clone handler.
-Changing pathways preserves the library but disables access. A Sequence downgrade preserves records
-but prevents use of stronger powers.
+Reading reports health, mood, hunted target and effects in chat, with a floating card ornament and an Appraisal mark.
+From Sequence 8 it names weakness; higher Sequences identify Beyonders. First readings of each creature type every
+10 minutes return 10 spirituality and a little experience. Ritual Circle chants at Sequences 9/8 (movement or damage
+cancels it), then protects/cleanses allies, slows hostile projectiles and pushes summoned constructs across its edge.
+The rite becomes instant at 7, wider/longer at 8, and discounts spells from 5.
 
-## Stored-ability menu
+Deduction marks and weakens the target and outlines projectile paths. Keen Eye shows hidden traps, outlines hostile
+projectile paths and exposes enemies looked at directly. Reconstruction shows recent cast locations as ghost proxies
+and player movement trails; it does not replay each original spell mesh. Deductive Strike steps forward, deals three
+hits, and spends an existing mark for stronger hits and a fourth blow.
 
-Sneak + **key 4 / K** opens a vertically scrolling list. Each row shows the ability's name, Sequence,
-study percentage, favorite star and icon when a corresponding texture is available. The selected row
-is highlighted. Click a row to select it and close the menu; click its star to toggle its favorite.
-Use the mouse wheel to scroll. Esc closes the menu.
+| Mystic Arts entry | Sequence | Cost | Cooldown | Behavior |
+| --- | --- | --- | --- | --- |
+| Analyze | 6 | 1500 | none | Focus for 2 seconds (1 from 5), then weakness and a 20-second +15% Appraisal mark |
+| Mirror Curse | 5 | 3500 | 25s | Missing-health damage with a boss cap, followed by bleeding |
+| Vile Thoughts | 5 | 3000 | 20s | Nausea, fear, 50% falter; extra damage against constructs/summons |
+| Improvise | 5 | 4500 | 30s | Weakness-matched elemental hit/status, unmaking, lightning spread or force hit |
+| Living Tome | 5 | 5000 | 45s | Animated page/ink construct, 60 health, 8 damage, 30s; death blinds nearby enemies |
+| Golden Armor Art | 4 | 6000 | 40s | Self or aimed ally: 40% damage cut, 12 absorption and no knockback for 30s |
 
-Order is favorites first, then highest study, then strongest Sequence (lowest number), then name.
-The server validates each choice and handles favorites; clients cannot grant study or request unknown powers.
-Reopen the menu to refresh study gained while it was open.
+Living Tome grows to three simultaneous, larger constructs lasting 120 seconds at Sequence 0.
 
-Normal **key 4 / K** casts the selection in the stored normal/sneak form, aimed using your current position
-and crosshair. Replication has **no cooldown**, including the copied ability's key/wheel cooldown.
-The copied code keeps your real Sequence gates, so a weak stored power cannot unlock upgrades above your Sequence.
-Each successful cast pays **1.5 times the original spirituality cost**. No target or insufficient
-spirituality refuses the original cast as usual. Partial study scales replicated damage from 40% to 100%
-using `0.4 + 0.6 × study / 100`; the shared Echo system carries this into supported delayed hits/projectiles.
-Healing, durations and utility effects retain their original behavior, as with the existing Echo system.
-The pathway's own Mystic Arts retain the planned per-entry cooldowns.
+## Fate and Cognizing
 
-## Operator command
+| Entry | Sequence | Cost / cooldown | Behavior |
+| --- | --- | --- | --- |
+| Prophecy | 4 | 8000 / 40s | 12s predictive projectile aim and ghost warnings; 20s from Sequence 2 |
+| Bookshelf Form | 4 | 9000 / 60s | 30s, 30% less damage, +8 max health, Resistance I; nearby enemies are read and their powers studied |
+| Cognize | 3 | 10000 / 30s | Reveals enemies in a 32-block cone, reads defenses/powers, grants 50 study and a +25% mark |
+| Leverage | 3 | 12000 / 35s | Strips defenses, +30% vulnerability for 8s, heavy for 6s; marked non-bosses are held for 2s |
+| Decipher | 3 | 9000 / 25s | First flips a hostile dome on the aiming ray, else closes a hostile zone/trap, else frees a bound/sealed body |
 
-```mcfunction
-/codex study <player> <ability-id>
-/codex study @s key/Wanderer/2/false
-/codex study @s wheel/omniscient_eye_mystic_arts/golden_armor_art
-```
+Bookshelf Form lasts 40s at Sequence 3. At 2 it becomes a six-block phantom tower, lasts 60s and no longer builds
+Madness. At 1 it becomes the spiral bookshelf with a gaze beam that grants study. Cast the form again to end it
+without cost, even through cooldown. Incomplete forms build Madness (half as fast at 3); replication adds more.
+A Madness break ends the form and weakens the caster. Ordinary form exit does not cause that penalty.
 
-Requires OP permission level 2. Tab completion lists copyable catalog IDs. It immediately grants 100%
-study, while enforcing the target's pathway and Sequence restrictions. Key IDs are
-`key/<exact pathway name>/<1-7>/<true for sneak or false for normal>`; wheel IDs are
-`wheel/<wheel-id>/<entry-key>`. Pathway names can contain spaces; the final argument consumes the rest of the command.
+Prediction solves a constant-velocity intercept, steers supported ModelFx shots and newly launched entity projectiles,
+and shows projectile paths and close attacking mobs as warning proxies. It does not simulate future AI decisions.
 
-## Verification
+## Omniscience
 
-```powershell
-./gradlew build
-./gradlew runGameTestServer -PomniscientEyeTests
-```
+| Entry | Sequence | Cost / cooldown | Behavior |
+| --- | --- | --- | --- |
+| Evade Disaster | 2 | 14000 / 45s | 15s freedom from bindings/effects, wards source-less damage, and conditionally escapes a hit over half max health |
+| Wise Counsel | 2 | 16000 / 60s | 20s allied aura: 30% cheaper casts, prediction, and 20% less damage from the caster's marked enemies |
+| Omniscience | 1 | 20000 / 30s | Inspects through walls to 200 blocks, or the latest connected enemy; location/defenses/powers, 50 study and +35% mark |
+| Exploit | 1 | 22000 / 40s | First applicable flaw: summon, ward, concealment, fire creature, evil/undead, armor, healing, Beyonder power, old wound |
+| Redefine | 1 | 18000 / 50s | Enemy: seal last key for 15s or mob abilities for 6s. Aimed ally: next cast free with 30% stronger damage |
+| Calamity of Knowledge | 0 | 40000 / 90s | Marked enemies within 24 blocks take Madness +5, 25% max-health damage (bosses 8%), and armor durability loss; others get nausea |
+| Open Source | 0 | 25000 / 120s | Lends the last performed copyable key variant/wheel entry to up to three allied players for one use within 60s |
+| Tower of Omniscience | 0 | 60000 / 180s | 60s moving, 40-block kingdom: reveals enemies, strongest marks, instant full study of real casts inside, allied discounts and growing enemy Madness |
 
-The five focused real-server tests exercise study eligibility/rate/order, visible/behind-wall observation,
-NBT-backed storage including the death clone handler, and server-side
-selection checks, paid repeated replication with no cooldown or recursive observation, unfunded casts,
-and the Mystic Arts' own cooldown and refused-target behavior. The menu compiles against the current
-client UI API; its appearance and mouse interaction still benefit from a development-client playtest.
+A recipient uses **`/castgrant`** to release an Open Source loan from any pathway. It costs triple the original price,
+deals half-strength damage, ignores Sequence/cooldown gates and is consumed only after a successful cast. The command
+respects ability roots/locks/decrees/seals. Loans end on death/logout/expiry and are not saved across server restarts.
+A refused cast preserves the loan. A second grant replaces the first. Damage boosts/weakening carry through the existing
+Echo-supported delayed hits; healing, utility effects and durations keep native behavior.
+
+The Tower's own entry can be cast again to end it for free through cooldown. Its attached scenery follows the owner
+and is cleared when it ends. Losing the pathway or Sequence 0 also ends it. Its study bonus still cannot learn powers
+stronger than the observer. The Open Book passive taxes a hostile player's currently cast power by 25% when the nearby
+White Tower has fully studied that exact ID.
+
+## Shared mechanics, passives and validation
+
+Madness is a shared 0..10 counter dropping one level per 5 seconds without additions: nausea from 3, falter from 6,
+fear/friendly-side aggression at 9, a brief stun and 5% max-health hit at 10, then reset to 3. Bookshelf Form listens
+for breaks to apply its own exit behavior. Counters and thresholds use `status/Madness`, not bespoke form logic.
+
+Passives include shortened mind effects and nearby invisible outlines (8), attack speed/reach and Speed I (7),
+rite regeneration (5), +4 max health (4), nearby concealment exposure (3), a major-hit escape rearming after 30s (2),
+sight-based study (1), and Open Book (0). Attributes are removed when the pathway/Sequence no longer qualifies.
+The optional melee combo and flavor-only spare ideas are not additional ability entries.
+
+See [SPELL_KIT.md](SPELL_KIT.md#study-prediction-and-borrowed-powers) for reusable catalog, library, prediction,
+inspection, Madness, conditional protection, one-shot casting modifiers and spell-loan APIs.
+
+Run `./gradlew build` and `./gradlew runGameTestServer -PomniscientEyeTests`.
+The 11 focused real-server tests cover study ordering/eligibility/storage/death cloning, exact wheel observation and
+replay, incomplete/preselected rejection, no-cooldown paid replication, Fate/authority abilities, free toggle cleanup,
+Tower study for keys and wheel entries, borrowed powers, one-shot cost consumption and shared kit rules.
+The menu is compiled against the current client API; its appearance still needs an in-game visual playtest.

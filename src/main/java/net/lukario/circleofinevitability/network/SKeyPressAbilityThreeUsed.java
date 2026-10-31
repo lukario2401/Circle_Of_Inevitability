@@ -70,6 +70,7 @@ public class SKeyPressAbilityThreeUsed {
         KeySeal.pressed(player, 3);
         Casts.keyPressed(player, 3);                 // combat/Casts: told if the press goes off
         try {
+            net.lukario.circleofinevitability.combat.NextCast.run(player, () -> {
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(player, level, serverLevel, 3, false);
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, serverLevel, 3, false);
             SnakeOfMercuryPowers.luck(player, level, serverLevel, false);
@@ -93,6 +94,8 @@ public class SKeyPressAbilityThreeUsed {
             knowledgeEmperorSpells(player,level,serverLevel,false);
             illuminatorAppraise(player,level,serverLevel,false);
             starDragonNavigator(player,level,serverLevel,false);
+            return null;
+            });
         } finally {
             Casts.keyDone(player);
         }

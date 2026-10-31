@@ -139,6 +139,10 @@ public final class Shot {
      * @return how many ticks from now its flight ends
      */
     public int fire(LivingEntity owner, ServerLevel sl, Vec3 from, Vec3 direction) {
+        if(Prediction.active(owner) && direction.normalize().dot(owner.getLookAngle())>.85) {
+            LivingEntity target=Spells.aimEnemy(owner,sl,range);
+            if(target!=null)direction=Prediction.aim(owner,target,from,speed);
+        }
         Vec3 dir = direction.normalize();
         Vec3 far = from.add(dir.scale(range));
         BlockHitResult wall = sl.clip(new ClipContext(from, far, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, owner));

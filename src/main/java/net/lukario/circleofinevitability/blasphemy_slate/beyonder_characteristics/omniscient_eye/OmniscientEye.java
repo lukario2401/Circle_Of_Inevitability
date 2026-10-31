@@ -38,6 +38,7 @@ public final class OmniscientEye {
             .entry("living_tome","ability_menus/omniscient_eye/living_tome","Living Tome",5,5000,900,OmniscientEye::tome)
             .entry("golden_armor_art","ability_menus/omniscient_eye/golden_armor_art","Golden Armor Art",4,6000,800,OmniscientEye::armor);
     static {
+        OmniscientEyeHigher.initialize();
         Spells.addCostScale(p->SoulCore.getPathway(p).equals(PATHWAY) && Beyonder.hasSequence(p,5)
                 && Zone.covers(p,RITE,p.position())?0.75f:1f);
     }
@@ -54,11 +55,12 @@ public final class OmniscientEye {
         return (bypass || SoulCore.getPathway(p).equals(PATHWAY)) && Beyonder.hasSequence(p,seq);
     }
     public static void key(Player p,Level level,ServerLevel sl,int key,boolean bypass) {
-        if(!(p instanceof ServerPlayer sp) || !ready(p,new int[]{9,9,8,7,6,6,0,0}[key],bypass))return;
+        if(!(p instanceof ServerPlayer sp) || !ready(p,new int[]{9,9,8,7,6,6,4,2}[key],bypass))return;
         boolean sneak=p.isShiftKeyDown();
         if(key==4) {if(sneak)Codex.open(sp);else Codex.replicate(sp);return;}
         if(key==5) {if(sneak)ARTS.quickCast(sp);else ARTS.open(sp);return;}
-        if(key>5)return;
+        if(key==6) {if(sneak)OmniscientEyeHigher.FATE.quickCast(sp);else OmniscientEyeHigher.FATE.open(sp);return;}
+        if(key==7) {if(sneak)OmniscientEyeHigher.OMNISCIENCE.quickCast(sp);else OmniscientEyeHigher.OMNISCIENCE.open(sp);return;}
         if(key==1 && sneak) {ritual(sp,sl);return;}
         if(key==2 && sneak) {
             if(!Spells.paySpirituality(p,150))return;
@@ -90,6 +92,11 @@ public final class OmniscientEye {
             p.sendSystemMessage(Component.literal(target.getName().getString()+" | Health "+target.getHealth()+"/"+target.getMaxHealth()+" | "+mood+" | Hunting "+hunting));
             for(var effect:target.getActiveEffects())p.sendSystemMessage(Component.literal(effect.toString()));
             if(Beyonder.hasSequence(p,8))p.sendSystemMessage(Component.literal("Weakness: "+WEAKNESS.of(target)));
+            String learned="omniscient_read_"+target.getType().toString();
+            if(p.getPersistentData().getLongOr(learned,0)<=sl.getGameTime()){
+                p.getPersistentData().putLong(learned,sl.getGameTime()+12000);Spells.giveSpirituality(p,10);sp.giveExperiencePoints(2);
+            }
+            if(Beyonder.hasSequence(p,4))p.sendSystemMessage(Component.literal("Beyonder: "+Beyonders.isBeyonder(target)+(Beyonder.hasSequence(p,3)?" "+Beyonders.describe(target):"")));
             show(sl,target,"info_card",120);sound(sp,"reading");
         } else {
             Enfeebled.apply(target,"omniscient_deduction",.25f,200);
@@ -97,10 +104,12 @@ public final class OmniscientEye {
             p.sendSystemMessage(Component.literal("Weakness: "+WEAKNESS.of(target)));sound(sp,"deduction");
         }
     }
-    private static void mark(Player p,LivingEntity t,int ticks,float bonus) {
+    static void mark(Player p,LivingEntity t,int ticks,float bonus) {
         Appraisal.mark(p,t,WEAKNESS.of(t),ticks,Math.max(bonus,Appraisal.bonus(p,t)));
-        show((ServerLevel)p.level(),t,"reading_eye",ticks);
+        show((ServerLevel)t.level(),t,"reading_eye",ticks);
+        Connection.touch(p,t);
     }
+    public static String weakness(LivingEntity target) { return WEAKNESS.of(target); }
     private static void ritual(ServerPlayer p,ServerLevel sl) {
         if(Countdown.isRunning(p))return;
         if(!Spells.paySpirituality(p,15))return;
@@ -176,11 +185,12 @@ public final class OmniscientEye {
     }
     private static AbilityWheel.Result tome(ServerPlayer p,ServerLevel sl) {
         Vec3 at=Spells.blinkSpot(p,sl,2);if(at==null)return AbilityWheel.Result.REFUSED;
-        Mob made=Construct.of(EntityTypes.IRON_GOLEM).health(60).damage(8).lasts(600).leash(40).limit("omniscient_tome",1)
+        int lifetime=Beyonder.hasSequence(p,0)?2400:600;
+        Mob made=Construct.of(EntityTypes.IRON_GOLEM).health(60).damage(8).lasts(lifetime).scale(Beyonder.hasSequence(p,0)?2:1).leash(40).limit("omniscient_tome",Beyonder.hasSequence(p,0)?3:1)
                 .onEnd((mob,why)->{if(why==Construct.End.DIED)for(var e:Spells.enemiesAround(p,sl,mob.position(),4))Spells.keepEffect(e,MobEffects.BLINDNESS,0,40);})
                 .build(p,sl,at,p.getYRot());
         if(made==null)return AbilityWheel.Result.REFUSED;
-        ParticleShapes.modelOnTurning(sl,model("tome_creature",600).frames(4).smooth(),made,Vec3.ZERO,0,0,0);
+        ParticleShapes.modelOnTurning(sl,model("tome_creature",lifetime).frames(4).smooth().scale(Beyonder.hasSequence(p,0)?2:1),made,Vec3.ZERO,0,0,0);
         ParticleShapes.modelInFront(sl,model("living_tome_open",30),p,1,.3);
         sound(p,"living_tome");return AbilityWheel.Result.DONE;
     }

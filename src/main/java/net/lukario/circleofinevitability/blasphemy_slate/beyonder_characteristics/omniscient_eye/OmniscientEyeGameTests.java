@@ -11,18 +11,24 @@ import net.minecraftforge.registries.DeferredRegister;
 public final class OmniscientEyeGameTests {
     public static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS=DeferredRegister.create(Registries.TEST_FUNCTION,"circle_of_inevitability");
     static {
+        FUNCTIONS.register("omniscient_shared_kit",()->OmniscientEyeHigherTests::sharedKit);
+        FUNCTIONS.register("omniscient_loans",()->OmniscientEyeHigherTests::loans);
+        FUNCTIONS.register("omniscient_tower",()->OmniscientEyeHigherTests::tower);
+        FUNCTIONS.register("omniscient_authorities",()->OmniscientEyeHigherTests::authorities);
+        FUNCTIONS.register("omniscient_fate",()->OmniscientEyeHigherTests::fate);
+        FUNCTIONS.register("omniscient_wheel_study",()->OmniscientEyeHigherTests::wheelStudy);
         FUNCTIONS.register("omniscient_rules",()->OmniscientEyeGameTests::rules);
         FUNCTIONS.register("omniscient_storage",()->OmniscientEyeGameTests::storage);
         FUNCTIONS.register("omniscient_replication",()->OmniscientEyeGameTests::replication);
         FUNCTIONS.register("omniscient_abilities",()->OmniscientEyeGameTests::abilities);
         FUNCTIONS.register("omniscient_observation",()->OmniscientEyeGameTests::observation);
     }
-    private static ServerPlayer player(GameTestHelper h,int seq) {
+    static ServerPlayer player(GameTestHelper h,int seq) {
         ServerPlayer p=h.makeMockServerPlayerInLevel();p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
         p.connection.handleAcceptPlayerLoad(new net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket());
         var at=h.absoluteVec(new net.minecraft.world.phys.Vec3(1.5,1,1.5));p.setPos(at.x,at.y,at.z);
         SoulCore.setPathway(p,"Omniscient Eye");SoulCore.setSequence(p,seq);SoulCore.setSpiritualityQuietly(p,Float.MAX_VALUE);
-        h.addCleanup(ok->p.discard());return p;
+        h.addCleanup(ok->{net.lukario.circleofinevitability.status.Form.end(p);Zone.close(p,OmniscientEyeHigher.KINGDOM);Zone.close(p,"omniscient_counsel");NextCast.used(p);net.lukario.circleofinevitability.status.DamageWard.clear(p);AbilityGrants.clear(p);p.discard();});return p;
     }
     private static void rules(GameTestHelper h) {
         for(int seq=0;seq<=9;seq++)for(int ability=0;ability<=9;ability++) {
@@ -43,13 +49,14 @@ public final class OmniscientEyeGameTests {
         h.assertTrue(!Codex.learn(p,strong,100),"OP learning still respects Sequence");
         Codex.learn(p,weak,20);Codex.learn(p,weak,30);
         h.assertTrue(Codex.study(p,weak.id())==50,"Repeated observations accumulate");
-        Codex.choice(p,weak.id(),false);Codex.data(p).putBoolean("favorite/"+weak.id(),true);
+        Codex.choice(p,weak.id(),false);h.assertTrue(Codex.data(p).getStringOr("selected", "").isEmpty(),"Incomplete study cannot be selected");
+        Codex.learn(p,weak,50);Codex.choice(p,weak.id(),false);Codex.data(p).putBoolean("favorite/"+weak.id(),true);
         var saved=p.getPersistentData().getCompoundOrEmpty("circle_of_inevitability").copy();
         p.getPersistentData().put("circle_of_inevitability",saved);
-        var row=Codex.rows(p).getFirst();h.assertTrue(row.favorite() && row.selected() && row.study()==50,"NBT round trip retains progress, favorite and selection");
+        var row=Codex.rows(p).getFirst();h.assertTrue(row.favorite() && row.selected() && row.study()==100,"NBT round trip retains progress, favorite and selection");
         ServerPlayer clone=player(h,6);
         SoulCore.onPlayerClone(new net.minecraftforge.event.entity.player.PlayerEvent.Clone(clone,p,true));
-        h.assertTrue(Codex.study(clone,weak.id())==50 && Codex.rows(clone).getFirst().favorite(),"Death clone retains library");
+        h.assertTrue(Codex.study(clone,weak.id())==100 && Codex.rows(clone).getFirst().favorite(),"Death clone retains library");
         SoulCore.setSequence(p,9);Codex.choice(p,strong.id(),false);
         h.assertTrue(Codex.data(p).getStringOr("selected","").equals(weak.id()),"Forged selection refused");h.succeed();
     }
@@ -60,7 +67,9 @@ public final class OmniscientEyeGameTests {
                 h.assertTrue(!net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder.hasSequence(who,0),"Copy cannot unlock higher Sequence upgrades");
                 count[0]++;return AbilityWheel.Result.DONE;});
         var power=Codex.catalog().get("wheel/omniscient_test_copy/copy");
-        Codex.learn(p,power,100);Codex.choice(p,power.id(),false);
+        Codex.learn(p,power,99.999);Codex.data(p).putString("selected",power.id());
+        Codex.replicate(p);h.assertTrue(count[0]==0,"Incomplete preselected record cannot cast");
+        Codex.learn(p,power,1);Codex.choice(p,power.id(),false);
         float before=SoulCore.getSpirituality(p);Codex.replicate(p);Codex.replicate(p);
         h.assertTrue(count[0]==2,"Selected power repeats immediately");
         h.assertTrue(Math.abs(before-SoulCore.getSpirituality(p)-60)<.1,"Each copy pays 1.5 times original price");

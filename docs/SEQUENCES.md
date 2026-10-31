@@ -19,10 +19,11 @@ Ability gates read naturally: `if (!Beyonder.hasSequence(player, 6)) return;` me
 
 ## The numbers of every Sequence
 
-The [Omniscient Eye implementation](OMNISCIENT_EYE.md) currently provides Reading/Ritual Circle (9),
+The [Omniscient Eye implementation](OMNISCIENT_EYE.md) provides Reading/Ritual Circle (9),
 Deduction/Keen Eye (8), Reconstruction/Deductive Strike (7), stored Replication and Analyze (6),
 Mirror Curse/Vile Thoughts/Improvise/Living Tome (5), and Golden Armor Art (4). Replication learns
-only powers at the observer's Sequence or weaker; keys 6–7 are reserved for the remaining abilities.
+only fully studied powers at the observer's Sequence or weaker. Fate and Cognizing (key 6, from 4)
+and Omniscience (key 7, from 2) include the remaining abilities through White Tower (0).
 
 One table in `Beyonder` (`SEQUENCES`, one row per Sequence) holds them. To rebalance a Sequence, change its row there and here.
 

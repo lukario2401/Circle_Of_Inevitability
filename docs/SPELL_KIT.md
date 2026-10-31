@@ -6,6 +6,10 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 
 | I want | Use | Lives in |
 |---|---|---|
+| Store study/favorites/selection for key variants and individual wheel spells | [`AbilityCatalog`, `AbilityStudy`](#study-prediction-and-borrowed-powers) | `combat/` |
+| Predict moving targets, inspect an entity or lend a concrete spell | [`Prediction`, `Dossier`, `AbilityGrants`](#study-prediction-and-borrowed-powers) | `combat/` |
+| Modify the next successful cast's cost and damage, with the current spell ID available | [`NextCast`, `CastContext`](#study-prediction-and-borrowed-powers) | `combat/` |
+| Decaying mental strain, source-based damage immunity or shorter effects | [`Madness`, `DamageWard`, `EffectDuration`](#study-prediction-and-borrowed-powers) | `status/` |
 | The enemy under the crosshair, everyone in a circle, the ground I aim at | [`Spells`](#1-spells-aiming-and-enemies) | `combat/` |
 | A model that flies and hits things (dagger, bolt, shell) | [`Shot`](#2-shot-a-model-that-flies-and-hits) | `combat/` |
 | A model with an animation of my own that hits what it reaches | [`AnimatedShot`](#animatedshot-a-model-that-hits-along-its-own-animation) | `combat/` |
@@ -2824,3 +2828,123 @@ If one status must get its say before another, add a priority: `@SubscribeEvent(
 | Something in a `-> { }` of a countdown, zone, substitute or death ward broke | The error is in the game log ("A countdown failed", "A zone failed", ...). The game goes on and that one effect ends |
 
 The code lives in `src/main/java/net/lukario/circleofinevitability/combat/` (`Spells`, `SpellFx`, `Shot`, `AnimatedShot`, `Countdown`, `HudTimer`, `Zone`, `Trap`, `Dome`, `Wall`, `Transit`, `Later`) and `.../status/` (one file per status: `DamageLink`, `Substitute`, `Marionette`, `Concealment`, `DeathWard`, `FallGuard`, `Marks`, `Blind`, `Vulnerable`, `Taunt`, `Burial`, `Flight`, `SupernaturalResistance`, `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor`, `ConjuredWeapon`, `Bleeding`, `Corrosion`, `Cleansing`, `Falter`, `Exile`, `Study`, `Scrolls`, `Dispel`, `Invulnerable`, `Appraisal`, `WeaknessTable`, `Exposed`, `Enfeebled`, `Gravity`, `Unreadable`, `Construct`, `AbilityLock`). `combat/History` remembers where players were, `combat/Cooldowns` keeps single keys' cooldowns, `combat/Residue` where abilities were cast. `combat/Orbit` circles a player with guarding bodies, `combat/Tellings` counts uses. `combat/Fallen` remembers the dead, `combat/Hurled` throws loose things, and `status/Connection` remembers who touched whom. `client/ClientConcealment` and `network/CConcealPacket` are the part of `Concealment` that runs on the players' screens, and `client/HudTimerOverlay` and `network/CHudTimerPacket` are that part of `HudTimer`; you should not need to touch them.
+
+
+## Study, prediction and borrowed powers
+
+These parts are shared by Omniscient Eye and available to any future pathway. None of the APIs below require
+editing an Omniscient Eye class. Server authority and the caller's pathway/Sequence gates remain the caller's job.
+
+### Catalog and saved libraries
+
+`AbilityCatalog.all()` returns stable `Power` records with ID, name, icon, required Sequence and concrete `Casts.Cast`.
+`AbilityCatalog.of(entity)` filters for the entity's pathway/Sequence, including its individual wheel entries.
+`AbilityCatalog.id(cast)` yields `key/<pathway>/<key>/<sneak>` or `wheel/<wheel-id>/<entry-key>`.
+Those IDs persist; a `Cast`'s caster/location/time does not belong in a save file.
+
+New wheels register with the catalog when created. Give them explicit ownership:
+
+```java
+static final AbilityWheel SPELLS = AbilityWheel.create("example_spells", "Spells")
+        .pathway("Example")
+        .entry("spark", "ability_menus/example/spark", "Spark", 7, 100, 40, Example::spark);
+```
+
+Initialize your wheel class during mod setup so it is available to inspectors before its first cast.
+Existing wheel classes are bootstrapped centrally by `AbilityCatalogBootstrap`; new code can initialize its own
+class and does not need to change that legacy list. The entry's own Sequence, copyability and icon are authoritative.
+A wheel-opening key may be `OWN_PATHWAY_ONLY` while its independent entries remain copyable. Mark an entry
+`notCopyable()` only when it needs owner-only state or controls an ongoing effect its borrower cannot operate.
+
+```java
+static final AbilityStudy LIBRARY = new AbilityStudy("example_library");
+LIBRARY.add(player, power.id(), 12.5);       // clamps to 0..100; ignores non-finite additions
+boolean complete = LIBRARY.complete(player, power.id());
+LIBRARY.toggleFavorite(player, power.id()); // only known records
+LIBRARY.select(player, power.id());         // refuses incomplete records
+var rows = LIBRARY.rows(player, AbilityCatalog.all().values());
+```
+
+The library lives under the player's persistent soul tag and inherits `SoulCore.onPlayerClone` death persistence.
+Rows are reusable GUI data, ordered favorite, study descending, strongest Sequence, name. A caller must additionally
+check its learning eligibility, required Sequence, target visibility and which catalog IDs it permits. A library
+never grants casting authority by itself. Recheck `complete` and Sequence on the server at selection AND use.
+
+Use `Casts.addAnyCasterListener` for real player and mob observations; copy events are suppressed. Standard
+`AbilityWheel.cast` tells the hub the exact entry on success. Key handlers use `keyPressed`/`keyDone` and spirituality
+payments to tell the hub. Do not record opening a menu as casting its eventual contents.
+
+`Casts.recastPaid(player, cast, multiplier)` replays an exact entry or native key variant without cooldowns and
+pays the original price times the multiplier. `Beyonder.atOwnSequence(player, () -> ...)` retains the borrower's
+real Sequence upgrade gates; otherwise this shared unbound casting API intentionally bypasses Sequence gates.
+`Casts.lastPerformed(entity)` includes successful borrowed casts without broadcasting them for recursive study;
+`Casts.last(entity)` remains the observation history of real native casts. Both histories are transient.
+
+### Prediction and inspection
+
+```java
+Vec3 point = Prediction.lead(from, target.getEyePosition(), target.getDeltaMovement(), speed);
+Vec3 direction = Prediction.aim(caster, target, from, speed);
+Prediction.grant(caster, 240);
+Dossier.tell(viewer, target, 3);
+```
+
+`lead` solves constant-velocity interception, with a bounded nonnegative lead time and direct-aim fallback when
+interception is impossible. `aim` leads only during an active grant. ModelFx `Shot.fire` and newly launched entity
+projectiles respect active prediction. It is an estimate, not a guarantee against changed velocity or obstacles.
+`Dossier.lines(viewer,target,depth)` returns immutable chat components: body/effects (1), defenses (2), then
+Beyonder identity, powers (including wheel entries) and recent cast information (3). Keep weakness rules in a
+`WeaknessTable` supplied by your pathway.
+
+`Spells.aimLiving(caster, level, range, throughWalls, allowed)` selects the nearest intersected living hitbox.
+Unlike `aimEnemy`, its explicit predicate decides how allies/concealment are handled; `throughWalls=true` is an
+intentional scrying privilege. Ordinary combat should continue to use the existing enemy/line-of-sight helpers.
+
+### Conditional protection and Madness
+
+```java
+Substitute.armWhen(player, 300, 1,
+        (source, amount) -> amount > player.getMaxHealth() * .5f,
+        (saved, source, amount, level) -> escape(saved, level));
+DamageWard.grant(player, "example_ward", 200,
+        (source, amount) -> source.getEntity() == null);
+Madness.add(caster, target, 2);
+Madness.onBreak((source, target) -> endMyFormIfRelevant(target));
+EffectDuration.addRule((entity, effect) -> qualifies(entity, effect) ? .75 : 1);
+```
+
+A conditional substitute preserves its charges for hits that fail the rule, including snapshot-based protection.
+`DamageWard` is transient, named source/amount-based damage immunity, removed on death/logout and expired on access.
+Exclude bypass-invulnerability damage in your predicate if the ward should not block it. `Madness` supplies the
+0..10 threshold ladder, five-second decay, source attribution, `get`, `clear`, immunity rules and break callbacks;
+register a callback once, and filter it to your own effect. Marks are saved with the affected entity; they are not
+part of a player's soul/library death persistence. Form-specific models, aftermath and HUD remain the caller's job.
+`EffectDuration` composes reduction multipliers and re-applies the shorter finite effect one tick later with a
+recursion guard. Rules are registered once, not once per cast.
+
+### One-shot modifiers and spell loans
+
+```java
+NextCast.arm(ally, 1200, 0f, 1.3f); // next successful cast: free, damage x1.3
+AbilityGrants.give(recipient, concreteCast, 1200, 3f, .5f);
+boolean used = AbilityGrants.use(recipient);
+```
+
+All seven key handlers and wheel entry execution already use `NextCast.run(player, supplier)`. It applies an
+Echo-carried damage multiplier once across nested execution. `Spells.paySpirituality` applies the cost rule;
+`Casts` consumes the modifier only after success. Opening/refusing a menu or power leaves it intact. A free key
+payment is still reported as a successful cast even though its spirituality did not decrease. `NextCast.used`
+clears it explicitly; death/logout clear it automatically. Custom casting routes must use the same run/payment/
+notification pattern. Copied code that pays via unbound casting must multiply its unbound price by `NextCast.cost`.
+
+`CastContext.id(player)` identifies the exact spell currently checking its cost, for mechanics such as taxing a
+specific studied spell. Key handlers and wheel casts set this automatically. `CastContext.run` provides a nested
+scope for custom routes and restores the caller even on exceptions. It is not an authorization check.
+
+A loan retains the concrete entry/variant, cost multiplier and damage potency. Recipients of any pathway can use
+`/castgrant`; no operator permission is needed. Use checks ability roots, locks, decrees and key seals, but intentionally
+allows the lent Sequence and skips cooldowns. Insufficient spirituality or a refused original cast preserves the
+loan. A successful use consumes it. One loan per recipient; a later loan replaces it. Loans end on expiry, death,
+logout and server restart. `has`, `clear` and `use` let another UI expose the same mechanic without inventing a new
+storage/casting system. Damage scaling follows Echo's existing support for delayed hits/projectiles; utility,
+healing and durations keep the original ability behavior.

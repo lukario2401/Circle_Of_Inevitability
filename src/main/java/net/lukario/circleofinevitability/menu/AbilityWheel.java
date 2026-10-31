@@ -60,6 +60,17 @@ public final class AbilityWheel {
     public static java.util.Collection<AbilityWheel> registered() { return java.util.List.copyOf(REGISTRY.values()); }
     public static AbilityWheel find(String id) { return REGISTRY.get(id); }
     public String id() { return id; }
+    private String pathway;
+    /** Explicit ownership for inspection/catalogs; existing wheels infer it from their id/icon. */
+    public AbilityWheel pathway(String name) { pathway=name; return this; }
+    public String pathway() {
+        if(pathway!=null)return pathway;
+        for(var a:net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities.ALL) {
+            String slug=a.pathway().toLowerCase(java.util.Locale.ROOT).replace(' ','_');
+            if(id.startsWith(slug+"_") || entries.stream().anyMatch(e->e.icon.contains("/"+slug+"/")))return a.pathway();
+        }
+        return "none";
+    }
 
     public enum Result { DONE, FREE, REFUSED }
 
@@ -309,6 +320,10 @@ public final class AbilityWheel {
 
     /** The same, paying 'costMultiplier' times the entry's cost (a sneak recast with quickCastCost). */
     public Result cast(ServerPlayer player, Entry entry, boolean ignoreCooldown, float costMultiplier) {
+        return net.lukario.circleofinevitability.combat.CastContext.run(player,"wheel/"+id+"/"+entry.key(),
+                ()->castChecked(player,entry,ignoreCooldown,costMultiplier));
+    }
+    private Result castChecked(ServerPlayer player, Entry entry, boolean ignoreCooldown, float costMultiplier) {
         if (!(player.level() instanceof ServerLevel sl)) return Result.REFUSED;
         int cost = entry.costFor(player, costMultiplier);
         if (noCooldowns(player)) ignoreCooldown = true;
@@ -335,11 +350,10 @@ public final class AbilityWheel {
                 cast(player, entry, skipCooldown, costMultiplier);
         })) return Result.REFUSED;
 
-        Result result = entry.cast.cast(player, sl);
+        Result result = net.lukario.circleofinevitability.combat.NextCast.run(player, () -> entry.cast.cast(player, sl));
         if (result == null || result == Result.REFUSED) return Result.REFUSED;
 
         player.getPersistentData().putString(id + "_last", entry.key);
-        Casts.wheelCast(player, this, entry);                            // who cast what (combat/Casts: Record, echoes)
         if (result == Result.DONE) {
             if (!free) {
                 Spells.paySpirituality(player, cost);
@@ -348,6 +362,7 @@ public final class AbilityWheel {
             }
             if (onCast != null) onCast.run(player, sl, entry);
         }
+        Casts.wheelCast(player, this, entry);
         return result;
     }
 

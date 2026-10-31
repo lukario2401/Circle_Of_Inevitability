@@ -6,8 +6,7 @@ ink `#221B14` and deep violet `#733D9D`. Artwork and synthesized audio are origi
 art, recordings or wiki imagery are bundled.
 
 This collection supplies resources and registers sound events. The
-[first 13 abilities and stored replication](OMNISCIENT_EYE.md) now use these resources;
-later abilities remain planned. The PDF's implementation checklist and questions are design context.
+[complete pathway and stored replication](OMNISCIENT_EYE.md) now use these resources. The PDF's implementation checklist and questions are design context.
 
 ![Ability icons, statuses and particle textures](assets/omniscient_eye/preview.png)
 

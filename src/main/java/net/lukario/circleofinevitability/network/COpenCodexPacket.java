@@ -4,7 +4,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 import net.lukario.circleofinevitability.client.CodexScreen;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.Codex.Row;
+import net.lukario.circleofinevitability.combat.AbilityStudy.Row;
 
 public record COpenCodexPacket(List<Row> rows) {
     public COpenCodexPacket(FriendlyByteBuf b) { this(read(b)); }

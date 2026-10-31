@@ -143,6 +143,8 @@ public final class Casts {
     private static Pending pending;
     private static final Map<UUID, Integer> COPYING = new HashMap<>();
     private static final Map<UUID, Cast> LAST = new HashMap<>();
+    private static final Map<UUID, Cast> PERFORMED = new HashMap<>();
+    public static Cast lastPerformed(Entity caster) { return PERFORMED.get(caster.getUUID()); }
     private static final List<Cast> RECENT = new ArrayList<>();
     private static final List<Listener> LISTENERS = new ArrayList<>();
     private static final List<AnyCasterListener> ANY_CASTER_LISTENERS = new ArrayList<>();
@@ -235,7 +237,7 @@ public final class Casts {
     /** A persistent studied copy: pays the original cost times multiplier, without cooldowns. */
     public static boolean recastPaid(ServerPlayer player, Cast cast, float multiplier) {
         if (!(player.level() instanceof ServerLevel sl) || cast == null || !cast.copyable()) return false;
-        return copied(player, () -> {
+        boolean success = CastContext.run(player,AbilityCatalog.id(cast),()->copied(player, () -> {
             boolean wasSneaking = player.isShiftKeyDown();
             player.setShiftKeyDown(cast.sneak());
             try {
@@ -251,7 +253,9 @@ public final class Casts {
             } finally {
                 player.setShiftKeyDown(wasSneaking);
             }
-        });
+        }));
+        if(success) PERFORMED.put(player.getUUID(),new Cast(player.getUUID(),player.getName().getString(),cast.pathway(),cast.key(),cast.sneak(),cast.wheel(),cast.entry(),cast.ability(),sl.dimension().toString(),player.position(),sl.getGameTime()));
+        return success;
     }
 
     /**
@@ -288,10 +292,12 @@ public final class Casts {
     /** An ability key was pressed (before its abilities run). */
     public static void keyPressed(Player player, int key) {
         pending = new Pending(player, key, player.isShiftKeyDown());
+        CastContext.begin(player,"key/"+SoulCore.getPathway(player)+"/"+key+"/"+player.isShiftKeyDown());
     }
 
     /** The key press is handled: if it took spirituality and no wheel pick told it already, it is told now. */
     public static void keyDone(Player player) {
+        CastContext.end(player);
         Pending done = pending;
         pending = null;
         if (done == null || done.player != player || !done.spent || done.told) return;
@@ -325,6 +331,8 @@ public final class Casts {
     private static void tell(ServerPlayer caster, ServerLevel sl, Cast cast) {
         LAST.put(caster.getUUID(), cast);
         RECENT.add(cast);
+        PERFORMED.put(caster.getUUID(),cast);
+        NextCast.used(caster);
         tellAnyCaster(caster, sl, cast);
         for (Listener listener : List.copyOf(LISTENERS)) {
             try {
@@ -363,6 +371,7 @@ public final class Casts {
     @SubscribeEvent
     public static void onCastsLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         LAST.remove(event.getEntity().getUUID());
+        PERFORMED.remove(event.getEntity().getUUID());
         COPYING.remove(event.getEntity().getUUID());
         if (pending != null && pending.player == event.getEntity()) pending = null;
     }

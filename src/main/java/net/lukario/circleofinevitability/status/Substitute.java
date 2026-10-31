@@ -55,6 +55,7 @@ public final class Substitute {
         final long expires;
         final Escape escape;
         int charges;
+        java.util.function.BiPredicate<DamageSource, Float> rule;
 
         Armed(long expires, int charges, Escape escape) {
             this.expires = expires;
@@ -72,11 +73,18 @@ public final class Substitute {
     // =========================
 
     public static void arm(LivingEntity entity, int ticks, int charges, Escape escape) {
+        armWhen(entity,ticks,charges,(source,amount)->true,escape);
+    }
+
+    /** Hits that fail the predicate neither consume protection nor get cancelled. */
+    public static void armWhen(LivingEntity entity,int ticks,int charges,java.util.function.BiPredicate<DamageSource,Float> rule,Escape escape) {
         if (!(entity.level() instanceof ServerLevel sl) || ticks <= 0 || charges <= 0 || escape == null) return;
         if (Decree.violate(entity, Decree.Rule.STAND_INS)) return;       // stand-ins are prohibited here
         long now = sl.getGameTime();
         ARMED.values().removeIf(old -> old.expires < now);         // the ones nobody ever hit
-        ARMED.put(entity.getUUID(), new Armed(now + ticks, charges, escape));
+        Armed armed = new Armed(now + ticks, charges, escape);
+        armed.rule = rule;
+        ARMED.put(entity.getUUID(), armed);
     }
 
     public static boolean isArmed(Entity entity) {
@@ -112,6 +120,7 @@ public final class Substitute {
         if (!(entity.level() instanceof ServerLevel sl) || snapshot == null || snapshot != snapshot(entity)) return false;
         if (Decree.violate(entity, Decree.Rule.STAND_INS)) return false;
         Armed armed = ARMED.get(entity.getUUID());
+        if (!armed.rule.test(source, amount)) return false;
         if (--armed.charges <= 0) ARMED.remove(entity.getUUID());
         try { armed.escape.run(entity, source, amount, sl); }
         catch (Exception e) { CircleOfInevitability.LOGGER.error("A substitute's escape failed", e); }
@@ -146,6 +155,7 @@ public final class Substitute {
         if (Decree.violate(entity, Decree.Rule.STAND_INS)) return false; // armed before, but nothing stands in for it here
 
         Armed armed = ARMED.get(entity.getUUID());
+        if (!armed.rule.test(event.getSource(), event.getAmount())) return false;
         armed.charges--;
         if (armed.charges <= 0) ARMED.remove(entity.getUUID());
 

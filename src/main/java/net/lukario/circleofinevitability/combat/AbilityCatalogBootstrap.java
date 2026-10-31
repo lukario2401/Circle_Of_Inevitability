@@ -1,5 +1,5 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye;
-final class CodexCatalog {
+package net.lukario.circleofinevitability.combat;
+final class AbilityCatalogBootstrap {
  private static boolean initialized;
  static void initialize(){
  if(initialized)return; initialized=true;

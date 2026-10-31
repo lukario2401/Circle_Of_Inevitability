@@ -70,6 +70,8 @@ public class SKeyPressAbilitySevenUsed {
         KeySeal.pressed(player, 7);
         Casts.keyPressed(player, 7);                 // combat/Casts: told if the press goes off
         try {
+            net.lukario.circleofinevitability.combat.NextCast.run(player, () -> {
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(player, level, serverLevel, 7, false);
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, serverLevel, 7, false);
             SnakeOfMercuryPowers.cycleWheel(player, level, serverLevel, false);
             WormOfTimeAuthority.authority(player, level, serverLevel, false);
@@ -92,6 +94,8 @@ public class SKeyPressAbilitySevenUsed {
             knowledgeEmperorKnowledge(player,level,serverLevel,false);
             illuminatorCivilization(player,level,serverLevel,false);
             starDragonCosmos(player,level,serverLevel,false);
+            return null;
+            });
         } finally {
             Casts.keyDone(player);
         }

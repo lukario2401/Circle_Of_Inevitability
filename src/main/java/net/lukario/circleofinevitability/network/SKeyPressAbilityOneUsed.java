@@ -70,6 +70,7 @@ public class SKeyPressAbilityOneUsed {
         KeySeal.pressed(player, 1);
         Casts.keyPressed(player, 1);                 // combat/Casts: told if the press goes off
         try {
+            net.lukario.circleofinevitability.combat.NextCast.run(player, () -> {
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(player, level, serverLevel, 1, false);
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, serverLevel, 1, false);
 
@@ -93,6 +94,8 @@ public class SKeyPressAbilityOneUsed {
             illuminatorCompoundFlask(player,level,serverLevel,false);
             starDragonAstronomy(player,level,serverLevel,false);
             SnakeOfMercury.premonition(player, level, serverLevel, false);
+            return null;
+            });
         } finally {
             Casts.keyDone(player);
         }

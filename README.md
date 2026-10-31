@@ -65,4 +65,4 @@ still to check.
 
 The [Omniscient Eye asset collection](docs/OMNISCIENT_EYE_ASSETS.md) supplies models, textures,
 icons, particles and sound cues for the White Tower pathway design. The
-[first 13 abilities and stored replication](docs/OMNISCIENT_EYE.md) are implemented on keys 1–5.
+[complete Omniscient Eye abilities and fully studied replication](docs/OMNISCIENT_EYE.md) use all seven keys.
