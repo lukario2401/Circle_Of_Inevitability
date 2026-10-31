@@ -62,3 +62,6 @@ while viewing. Turning it off leaves Illuminator's natural Appraiser's Eye passi
 
 This is a port of the author's 1.21 mod; `MIGRATION_NOTES.md` records how it was ported and what is
 still to check.
+
+The [Omniscient Eye asset collection](docs/OMNISCIENT_EYE_ASSETS.md) supplies models, textures,
+icons, particles and sound cues for the White Tower pathway design. Its gameplay is not wired in yet.

@@ -3912,5 +3912,253 @@
         "name": "circle_of_inevitability:god_of_decay/weathering"
       }
     ]
+  },
+  "omniscient_eye.reading": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.reading",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/reading"
+      }
+    ]
+  },
+  "omniscient_eye.ritual_circle": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.ritual_circle",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/ritual_circle"
+      }
+    ]
+  },
+  "omniscient_eye.deduction": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.deduction",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/deduction"
+      }
+    ]
+  },
+  "omniscient_eye.keen_eye": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.keen_eye",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/keen_eye"
+      }
+    ]
+  },
+  "omniscient_eye.reconstruction": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.reconstruction",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/reconstruction"
+      }
+    ]
+  },
+  "omniscient_eye.deductive_strike": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.deductive_strike",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/deductive_strike"
+      }
+    ]
+  },
+  "omniscient_eye.analyze": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.analyze",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/analyze"
+      }
+    ]
+  },
+  "omniscient_eye.imitate": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.imitate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/imitate"
+      }
+    ]
+  },
+  "omniscient_eye.mirror_curse": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.mirror_curse",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/mirror_curse"
+      }
+    ]
+  },
+  "omniscient_eye.vile_thoughts": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.vile_thoughts",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/vile_thoughts"
+      }
+    ]
+  },
+  "omniscient_eye.improvise": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.improvise",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/improvise"
+      }
+    ]
+  },
+  "omniscient_eye.living_tome": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.living_tome",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/living_tome"
+      }
+    ]
+  },
+  "omniscient_eye.golden_armor_art": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.golden_armor_art",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/golden_armor_art"
+      }
+    ]
+  },
+  "omniscient_eye.prophecy": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.prophecy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/prophecy"
+      }
+    ]
+  },
+  "omniscient_eye.bookshelf_form": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.bookshelf_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/bookshelf_form"
+      }
+    ]
+  },
+  "omniscient_eye.cognize": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.cognize",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/cognize"
+      }
+    ]
+  },
+  "omniscient_eye.leverage": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.leverage",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/leverage"
+      }
+    ]
+  },
+  "omniscient_eye.decipher": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.decipher",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/decipher"
+      }
+    ]
+  },
+  "omniscient_eye.evade_disaster": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.evade_disaster",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/evade_disaster"
+      }
+    ]
+  },
+  "omniscient_eye.wise_counsel": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.wise_counsel",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/wise_counsel"
+      }
+    ]
+  },
+  "omniscient_eye.omniscience": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.omniscience",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/omniscience"
+      }
+    ]
+  },
+  "omniscient_eye.exploit": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.exploit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/exploit"
+      }
+    ]
+  },
+  "omniscient_eye.redefine": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.redefine",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/redefine"
+      }
+    ]
+  },
+  "omniscient_eye.calamity_of_knowledge": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.calamity_of_knowledge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/calamity_of_knowledge"
+      }
+    ]
+  },
+  "omniscient_eye.open_source": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.open_source",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/open_source"
+      }
+    ]
+  },
+  "omniscient_eye.tower_of_omniscience": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.tower_of_omniscience",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/tower_of_omniscience"
+      }
+    ]
+  },
+  "omniscient_eye.page_turn": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.page_turn",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/page_turn"
+      }
+    ]
+  },
+  "omniscient_eye.codex_learn": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.codex_learn",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/codex_learn"
+      }
+    ]
+  },
+  "omniscient_eye.tome_break": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.tome_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/tome_break"
+      }
+    ]
+  },
+  "omniscient_eye.madness_break": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.madness_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/madness_break"
+      }
+    ]
+  },
+  "omniscient_eye.tower_end": {
+    "subtitle": "subtitles.circle_of_inevitability.omniscient_eye.tower_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:omniscient_eye/tower_end"
+      }
+    ]
   }
 }

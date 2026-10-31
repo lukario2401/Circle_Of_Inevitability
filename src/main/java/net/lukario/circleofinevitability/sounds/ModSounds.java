@@ -958,6 +958,40 @@ public final class ModSounds {
     /** A Key of Stars turns. */
     public static final RegistryObject<SoundEvent> STARS_KEY_TURN = sound("key_of_stars.key_turn");
 
+    /** Omniscient Eye resource cues; gameplay can select a cue by its asset-manifest key. */
+    public static final java.util.Map<String, RegistryObject<SoundEvent>> OMNISCIENT_EYE = java.util.Map.ofEntries(
+            java.util.Map.entry("reading", sound("omniscient_eye.reading")),
+            java.util.Map.entry("ritual_circle", sound("omniscient_eye.ritual_circle")),
+            java.util.Map.entry("deduction", sound("omniscient_eye.deduction")),
+            java.util.Map.entry("keen_eye", sound("omniscient_eye.keen_eye")),
+            java.util.Map.entry("reconstruction", sound("omniscient_eye.reconstruction")),
+            java.util.Map.entry("deductive_strike", sound("omniscient_eye.deductive_strike")),
+            java.util.Map.entry("analyze", sound("omniscient_eye.analyze")),
+            java.util.Map.entry("imitate", sound("omniscient_eye.imitate")),
+            java.util.Map.entry("mirror_curse", sound("omniscient_eye.mirror_curse")),
+            java.util.Map.entry("vile_thoughts", sound("omniscient_eye.vile_thoughts")),
+            java.util.Map.entry("improvise", sound("omniscient_eye.improvise")),
+            java.util.Map.entry("living_tome", sound("omniscient_eye.living_tome")),
+            java.util.Map.entry("golden_armor_art", sound("omniscient_eye.golden_armor_art")),
+            java.util.Map.entry("prophecy", sound("omniscient_eye.prophecy")),
+            java.util.Map.entry("bookshelf_form", sound("omniscient_eye.bookshelf_form")),
+            java.util.Map.entry("cognize", sound("omniscient_eye.cognize")),
+            java.util.Map.entry("leverage", sound("omniscient_eye.leverage")),
+            java.util.Map.entry("decipher", sound("omniscient_eye.decipher")),
+            java.util.Map.entry("evade_disaster", sound("omniscient_eye.evade_disaster")),
+            java.util.Map.entry("wise_counsel", sound("omniscient_eye.wise_counsel")),
+            java.util.Map.entry("omniscience", sound("omniscient_eye.omniscience")),
+            java.util.Map.entry("exploit", sound("omniscient_eye.exploit")),
+            java.util.Map.entry("redefine", sound("omniscient_eye.redefine")),
+            java.util.Map.entry("calamity_of_knowledge", sound("omniscient_eye.calamity_of_knowledge")),
+            java.util.Map.entry("open_source", sound("omniscient_eye.open_source")),
+            java.util.Map.entry("tower_of_omniscience", sound("omniscient_eye.tower_of_omniscience")),
+            java.util.Map.entry("page_turn", sound("omniscient_eye.page_turn")),
+            java.util.Map.entry("codex_learn", sound("omniscient_eye.codex_learn")),
+            java.util.Map.entry("tome_break", sound("omniscient_eye.tome_break")),
+            java.util.Map.entry("madness_break", sound("omniscient_eye.madness_break")),
+            java.util.Map.entry("tower_end", sound("omniscient_eye.tower_end")));
+
     /** Generated God of Decay cues; incubation has no audible cast. */
     public static final java.util.Map<String, RegistryObject<SoundEvent>> GOD_OF_DECAY = java.util.Map.ofEntries(
             java.util.Map.entry("ulcerous_burst", sound("god_of_decay.ulcerous_burst")),

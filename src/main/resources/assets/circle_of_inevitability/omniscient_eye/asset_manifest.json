@@ -1,0 +1,740 @@
+{
+  "pathway": "Omniscient Eye",
+  "palette": {
+    "brass": "#D1A94B",
+    "cream": "#F4EBD0",
+    "ink": "#221B14",
+    "madness": "#733D9D"
+  },
+  "scope": "Resources only; ability behavior, dynamic dossier text, countdowns and runtime animation playback require gameplay wiring.",
+  "wheels": {
+    "mystic_arts": [
+      "mirror_curse",
+      "vile_thoughts",
+      "improvise",
+      "living_tome",
+      "golden_armor_art"
+    ],
+    "fate": [
+      "prophecy",
+      "bookshelf_form",
+      "cognize",
+      "leverage",
+      "decipher"
+    ],
+    "omniscience": [
+      "evade_disaster",
+      "wise_counsel",
+      "omniscience",
+      "exploit",
+      "redefine",
+      "calamity_of_knowledge",
+      "open_source",
+      "tower_of_omniscience"
+    ]
+  },
+  "abilities": {
+    "reading": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/reading.png",
+      "hud_icon": "textures/gui/omniscient_eye/reading.png",
+      "sound": "circle_of_inevitability:omniscient_eye.reading"
+    },
+    "ritual_circle": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/ritual_circle.png",
+      "hud_icon": "textures/gui/omniscient_eye/ritual_circle.png",
+      "sound": "circle_of_inevitability:omniscient_eye.ritual_circle"
+    },
+    "deduction": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/deduction.png",
+      "hud_icon": "textures/gui/omniscient_eye/deduction.png",
+      "sound": "circle_of_inevitability:omniscient_eye.deduction"
+    },
+    "keen_eye": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/keen_eye.png",
+      "hud_icon": "textures/gui/omniscient_eye/keen_eye.png",
+      "sound": "circle_of_inevitability:omniscient_eye.keen_eye"
+    },
+    "reconstruction": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/reconstruction.png",
+      "hud_icon": "textures/gui/omniscient_eye/reconstruction.png",
+      "sound": "circle_of_inevitability:omniscient_eye.reconstruction"
+    },
+    "deductive_strike": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/deductive_strike.png",
+      "hud_icon": "textures/gui/omniscient_eye/deductive_strike.png",
+      "sound": "circle_of_inevitability:omniscient_eye.deductive_strike"
+    },
+    "analyze": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/analyze.png",
+      "hud_icon": "textures/gui/omniscient_eye/analyze.png",
+      "sound": "circle_of_inevitability:omniscient_eye.analyze"
+    },
+    "imitate": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/imitate.png",
+      "hud_icon": "textures/gui/omniscient_eye/imitate.png",
+      "sound": "circle_of_inevitability:omniscient_eye.imitate"
+    },
+    "mirror_curse": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/mirror_curse.png",
+      "hud_icon": "textures/gui/omniscient_eye/mirror_curse.png",
+      "sound": "circle_of_inevitability:omniscient_eye.mirror_curse"
+    },
+    "vile_thoughts": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/vile_thoughts.png",
+      "hud_icon": "textures/gui/omniscient_eye/vile_thoughts.png",
+      "sound": "circle_of_inevitability:omniscient_eye.vile_thoughts"
+    },
+    "improvise": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/improvise.png",
+      "hud_icon": "textures/gui/omniscient_eye/improvise.png",
+      "sound": "circle_of_inevitability:omniscient_eye.improvise"
+    },
+    "living_tome": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/living_tome.png",
+      "hud_icon": "textures/gui/omniscient_eye/living_tome.png",
+      "sound": "circle_of_inevitability:omniscient_eye.living_tome"
+    },
+    "golden_armor_art": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/golden_armor_art.png",
+      "hud_icon": "textures/gui/omniscient_eye/golden_armor_art.png",
+      "sound": "circle_of_inevitability:omniscient_eye.golden_armor_art"
+    },
+    "prophecy": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/prophecy.png",
+      "hud_icon": "textures/gui/omniscient_eye/prophecy.png",
+      "sound": "circle_of_inevitability:omniscient_eye.prophecy"
+    },
+    "bookshelf_form": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/bookshelf_form.png",
+      "hud_icon": "textures/gui/omniscient_eye/bookshelf_form.png",
+      "sound": "circle_of_inevitability:omniscient_eye.bookshelf_form"
+    },
+    "cognize": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/cognize.png",
+      "hud_icon": "textures/gui/omniscient_eye/cognize.png",
+      "sound": "circle_of_inevitability:omniscient_eye.cognize"
+    },
+    "leverage": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/leverage.png",
+      "hud_icon": "textures/gui/omniscient_eye/leverage.png",
+      "sound": "circle_of_inevitability:omniscient_eye.leverage"
+    },
+    "decipher": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/decipher.png",
+      "hud_icon": "textures/gui/omniscient_eye/decipher.png",
+      "sound": "circle_of_inevitability:omniscient_eye.decipher"
+    },
+    "evade_disaster": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/evade_disaster.png",
+      "hud_icon": "textures/gui/omniscient_eye/evade_disaster.png",
+      "sound": "circle_of_inevitability:omniscient_eye.evade_disaster"
+    },
+    "wise_counsel": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/wise_counsel.png",
+      "hud_icon": "textures/gui/omniscient_eye/wise_counsel.png",
+      "sound": "circle_of_inevitability:omniscient_eye.wise_counsel"
+    },
+    "omniscience": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/omniscience.png",
+      "hud_icon": "textures/gui/omniscient_eye/omniscience.png",
+      "sound": "circle_of_inevitability:omniscient_eye.omniscience"
+    },
+    "exploit": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/exploit.png",
+      "hud_icon": "textures/gui/omniscient_eye/exploit.png",
+      "sound": "circle_of_inevitability:omniscient_eye.exploit"
+    },
+    "redefine": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/redefine.png",
+      "hud_icon": "textures/gui/omniscient_eye/redefine.png",
+      "sound": "circle_of_inevitability:omniscient_eye.redefine"
+    },
+    "calamity_of_knowledge": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/calamity_of_knowledge.png",
+      "hud_icon": "textures/gui/omniscient_eye/calamity_of_knowledge.png",
+      "sound": "circle_of_inevitability:omniscient_eye.calamity_of_knowledge"
+    },
+    "open_source": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/open_source.png",
+      "hud_icon": "textures/gui/omniscient_eye/open_source.png",
+      "sound": "circle_of_inevitability:omniscient_eye.open_source"
+    },
+    "tower_of_omniscience": {
+      "wheel_icon": "textures/gui/ability_menus/omniscient_eye/tower_of_omniscience.png",
+      "hud_icon": "textures/gui/omniscient_eye/tower_of_omniscience.png",
+      "sound": "circle_of_inevitability:omniscient_eye.tower_of_omniscience"
+    }
+  },
+  "models": [
+    {
+      "name": "reading_eye",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/reading_eye",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "render": "glow().unshaded().seeThrough(); no aura",
+      "frames": 1
+    },
+    {
+      "name": "cognize_eye",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/cognize_eye",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "render": "glow().unshaded().seeThrough(); no aura",
+      "frames": 1
+    },
+    {
+      "name": "tower_eye",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/tower_eye",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "render": "glow().unshaded().seeThrough(); no aura",
+      "frames": 1
+    },
+    {
+      "name": "info_card",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/info_card",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "render": "glow().unshaded().seeThrough(); no aura",
+      "frames": 1
+    },
+    {
+      "name": "brass_mirror",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/brass_mirror",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough(); reflective tint, not a live camera",
+      "frames": 1
+    },
+    {
+      "name": "living_tome_closed",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/living_tome_closed",
+      "pivot": [
+        8,
+        3,
+        8
+      ],
+      "render": "glow; solid",
+      "frames": 1
+    },
+    {
+      "name": "living_tome_open",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/living_tome_open",
+      "pivot": [
+        8,
+        3,
+        8
+      ],
+      "render": "glow; solid",
+      "frames": 1
+    },
+    {
+      "name": "tome_creature_0",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/tome_creature_0",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough()",
+      "frames": 4
+    },
+    {
+      "name": "tome_creature_1",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/tome_creature_1",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough()",
+      "frames": 4
+    },
+    {
+      "name": "tome_creature_2",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/tome_creature_2",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough()",
+      "frames": 4
+    },
+    {
+      "name": "tome_creature_3",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/tome_creature_3",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough()",
+      "frames": 4
+    },
+    {
+      "name": "bookshelf_form",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/bookshelf_form",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough(); suggested opacity 0.65",
+      "frames": 1
+    },
+    {
+      "name": "phantom_tower",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/phantom_tower",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough(); suggested opacity 0.65",
+      "frames": 1
+    },
+    {
+      "name": "spiral_tower",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/spiral_tower",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough(); suggested opacity 0.65",
+      "frames": 1
+    },
+    {
+      "name": "kingdom_bookshelf",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/kingdom_bookshelf",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().seeThrough(); suggested opacity 0.65",
+      "frames": 1
+    },
+    {
+      "name": "ritual_sigil",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/ritual_sigil",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().unshaded().seeThrough(); no aura",
+      "frames": 1
+    },
+    {
+      "name": "ghost_outline",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/ghost_outline",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().unshaded().seeThrough(); tint to cast pathway",
+      "frames": 1
+    },
+    {
+      "name": "golden_armor",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/golden_armor",
+      "pivot": [
+        8,
+        12,
+        8
+      ],
+      "render": "glow().seeThrough(); color alpha 0.55",
+      "frames": 1
+    },
+    {
+      "name": "force_spear",
+      "id": "circle_of_inevitability:model_fx/omniscient_eye/force_spear",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "render": "glow().unshaded().seeThrough(); tint per weakness",
+      "frames": 1
+    }
+  ],
+  "particles": {
+    "page_0": "fx/omniscient_eye/page_0",
+    "page_1": "fx/omniscient_eye/page_1",
+    "page_2": "fx/omniscient_eye/page_2",
+    "ink_drop": "fx/omniscient_eye/ink_drop",
+    "eye": "fx/omniscient_eye/eye",
+    "glyph_0": "fx/omniscient_eye/glyph_0",
+    "glyph_1": "fx/omniscient_eye/glyph_1",
+    "glyph_2": "fx/omniscient_eye/glyph_2",
+    "glyph_3": "fx/omniscient_eye/glyph_3",
+    "madness_pip": "fx/omniscient_eye/madness_pip",
+    "ghost_line": "fx/omniscient_eye/ghost_line",
+    "thread": "fx/omniscient_eye/thread",
+    "page_edge": "fx/omniscient_eye/page_edge"
+  },
+  "statuses": [
+    "analysis",
+    "codex",
+    "madness",
+    "rite_focus",
+    "exposed",
+    "foreseen",
+    "creation",
+    "knowledge_addiction",
+    "sharp_mind",
+    "weapon_proficiency",
+    "polymaths_eye",
+    "mystic_mind",
+    "demigods_body",
+    "discernment",
+    "cognizing_sight",
+    "foreseen_shifts",
+    "omniscient_gaze",
+    "open_book"
+  ],
+  "sound_events": [
+    "circle_of_inevitability:omniscient_eye.reading",
+    "circle_of_inevitability:omniscient_eye.ritual_circle",
+    "circle_of_inevitability:omniscient_eye.deduction",
+    "circle_of_inevitability:omniscient_eye.keen_eye",
+    "circle_of_inevitability:omniscient_eye.reconstruction",
+    "circle_of_inevitability:omniscient_eye.deductive_strike",
+    "circle_of_inevitability:omniscient_eye.analyze",
+    "circle_of_inevitability:omniscient_eye.imitate",
+    "circle_of_inevitability:omniscient_eye.mirror_curse",
+    "circle_of_inevitability:omniscient_eye.vile_thoughts",
+    "circle_of_inevitability:omniscient_eye.improvise",
+    "circle_of_inevitability:omniscient_eye.living_tome",
+    "circle_of_inevitability:omniscient_eye.golden_armor_art",
+    "circle_of_inevitability:omniscient_eye.prophecy",
+    "circle_of_inevitability:omniscient_eye.bookshelf_form",
+    "circle_of_inevitability:omniscient_eye.cognize",
+    "circle_of_inevitability:omniscient_eye.leverage",
+    "circle_of_inevitability:omniscient_eye.decipher",
+    "circle_of_inevitability:omniscient_eye.evade_disaster",
+    "circle_of_inevitability:omniscient_eye.wise_counsel",
+    "circle_of_inevitability:omniscient_eye.omniscience",
+    "circle_of_inevitability:omniscient_eye.exploit",
+    "circle_of_inevitability:omniscient_eye.redefine",
+    "circle_of_inevitability:omniscient_eye.calamity_of_knowledge",
+    "circle_of_inevitability:omniscient_eye.open_source",
+    "circle_of_inevitability:omniscient_eye.tower_of_omniscience",
+    "circle_of_inevitability:omniscient_eye.page_turn",
+    "circle_of_inevitability:omniscient_eye.codex_learn",
+    "circle_of_inevitability:omniscient_eye.tome_break",
+    "circle_of_inevitability:omniscient_eye.madness_break",
+    "circle_of_inevitability:omniscient_eye.tower_end"
+  ],
+  "ability_models": {
+    "reading": [
+      "reading_eye",
+      "info_card"
+    ],
+    "ritual_circle": [
+      "ritual_sigil"
+    ],
+    "deduction": [
+      "ghost_outline"
+    ],
+    "keen_eye": [
+      "ghost_outline"
+    ],
+    "reconstruction": [
+      "ghost_outline"
+    ],
+    "deductive_strike": [
+      "cognize_eye"
+    ],
+    "analyze": [
+      "cognize_eye"
+    ],
+    "imitate": [
+      "living_tome_open"
+    ],
+    "mirror_curse": [
+      "brass_mirror"
+    ],
+    "vile_thoughts": [
+      "cognize_eye"
+    ],
+    "improvise": [
+      "force_spear"
+    ],
+    "living_tome": [
+      "living_tome_open",
+      "tome_creature_0"
+    ],
+    "golden_armor_art": [
+      "golden_armor"
+    ],
+    "prophecy": [
+      "ghost_outline"
+    ],
+    "bookshelf_form": [
+      "bookshelf_form",
+      "phantom_tower",
+      "spiral_tower"
+    ],
+    "cognize": [
+      "cognize_eye"
+    ],
+    "leverage": [
+      "ritual_sigil"
+    ],
+    "decipher": [
+      "living_tome_open"
+    ],
+    "evade_disaster": [
+      "ghost_outline"
+    ],
+    "wise_counsel": [
+      "reading_eye"
+    ],
+    "omniscience": [
+      "tower_eye"
+    ],
+    "exploit": [
+      "cognize_eye"
+    ],
+    "redefine": [
+      "living_tome_open"
+    ],
+    "calamity_of_knowledge": [
+      "tower_eye",
+      "kingdom_bookshelf"
+    ],
+    "open_source": [
+      "living_tome_open"
+    ],
+    "tower_of_omniscience": [
+      "spiral_tower",
+      "tower_eye",
+      "kingdom_bookshelf"
+    ]
+  },
+  "animations": {
+    "tome_creature": {
+      "base": "tome_creature",
+      "frames": 4,
+      "smooth": true,
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "suggested_ticks": 12
+    },
+    "ink_pool": {
+      "type": "texture",
+      "frames": 4,
+      "frametime": 3,
+      "interpolate": true
+    },
+    "eye_scan": {
+      "type": "ModelFx keys",
+      "model": "tower_eye",
+      "suggestion": "yaw sweep -45 to 45 degrees, paired with a thread particle tether"
+    },
+    "bookshelf_growth": {
+      "type": "ModelFx keys",
+      "suggestion": "scale 0.1 to 1 over 12 ticks; alpha fade; scale phantom_tower to 3.2 for six blocks"
+    }
+  },
+  "reused_runtime_effects": [
+    "SpellFx.runeCircle",
+    "SpellFx.closingRing",
+    "SpellFx.tether",
+    "SpellFx.overHead",
+    "ParticleShapes.model",
+    "SlashFx"
+  ],
+  "optional_melee": {
+    "particles": [
+      "page_0",
+      "page_1",
+      "page_2",
+      "eye",
+      "ink_drop",
+      "page_edge"
+    ],
+    "head": "#F4EBD0",
+    "middle": "#D1A94B",
+    "tail": "#221B14"
+  },
+  "files": {
+    "models/model_fx/omniscient_eye/bookshelf_form.json": "55df5a53e3baaba95871bc78391bf6509db764ca0c51eae876d11f559156ffc7",
+    "models/model_fx/omniscient_eye/brass_mirror.json": "3a2ddf76377290471b4f6a7a3147e8cf61be10f0764ce3eeaddb27f09f40e830",
+    "models/model_fx/omniscient_eye/cognize_eye.json": "222c4666b3ac6587f3d0176f8285cd267db3de30a4d3c745d4f6a071b219f247",
+    "models/model_fx/omniscient_eye/force_spear.json": "68a1714fcd74fed3808085b619af74bafb50f844abaca33b7fb3a73ec0ee18e1",
+    "models/model_fx/omniscient_eye/ghost_outline.json": "1cab8c6829fdc0d5e359af53aeffd3aa8e029e60a55c55a05a640d96338f28b4",
+    "models/model_fx/omniscient_eye/golden_armor.json": "46e428a3b15e93400aac7a75d17005239704af396fa4b3a5741c3bcc6b0939b3",
+    "models/model_fx/omniscient_eye/info_card.json": "726d024f80aaa2e1a661ecc956be861ae01b9325cbf8dcbc34c42b342a2c3b46",
+    "models/model_fx/omniscient_eye/kingdom_bookshelf.json": "74dc985a942183da8785d6c6aff8ba56227c57423747fbda0679ec96eea8a766",
+    "models/model_fx/omniscient_eye/living_tome_closed.json": "36f10e4fa75efa3ec18c1ba6112f2ea50803b1489025bd49e1e408261426ef6a",
+    "models/model_fx/omniscient_eye/living_tome_open.json": "f74e76f0b5e6134417ef4a7878c6542cd7011fd25ed7fe85e6b81d2d1d54a4a2",
+    "models/model_fx/omniscient_eye/phantom_tower.json": "a9e4c2d685a71f528056692fa1304517d17b4a3f3494fc76831a15b4b67533ac",
+    "models/model_fx/omniscient_eye/reading_eye.json": "ada763bd03ba0de5159c44235b85de0d391fbfe3f4d4d9a42ced95a43e878ad3",
+    "models/model_fx/omniscient_eye/ritual_sigil.json": "a6c716a92f7419ba9ec6f51c4810548bff512dd4c3008e4e1db73b33ff01936e",
+    "models/model_fx/omniscient_eye/spiral_tower.json": "5c284245737c7d71ad0089c72ed26ac24cffca48d8f8009265e2b230a0eb1d79",
+    "models/model_fx/omniscient_eye/tome_creature_0.json": "2bb5c63d93c76e72ada1533cc5a2fc8ebfb4e648c4030f80cbe3cee45d7ea286",
+    "models/model_fx/omniscient_eye/tome_creature_1.json": "6b7519dc48dc9d207934390bb393e5321ca446ee0b11325d0028f10a06fd9b9f",
+    "models/model_fx/omniscient_eye/tome_creature_2.json": "41b89bfcd05cabd1f1562eb34651eecc011e3d451688042d798eaf2180b18949",
+    "models/model_fx/omniscient_eye/tome_creature_3.json": "01ba9599bf5313e8ad7656cd62e9a91fc7699de2c5d382debbde60cb3d44bc1c",
+    "models/model_fx/omniscient_eye/tower_eye.json": "02720109b2a2f218e3d281c892fcb6cb095c620c488a346ef2e15abd4acb47b6",
+    "sounds/omniscient_eye/analyze.ogg": "2416a39cfcf36958bd7553bfa2770e3f5ac05e3a35324713d359e4bd8b8da15b",
+    "sounds/omniscient_eye/bookshelf_form.ogg": "6ba4881f05e9555373aec57f3fd1f03288bcbd6c4d768b0ef881767ff58c6986",
+    "sounds/omniscient_eye/calamity_of_knowledge.ogg": "3f2bbfaa6f8cabafc951bcad182c36929e575ec4a07a32a872dee2c251b328fd",
+    "sounds/omniscient_eye/codex_learn.ogg": "706a470f3af4b13b27f27ea92155baede98bc8413e2a0fa3b9cdc536904f5732",
+    "sounds/omniscient_eye/cognize.ogg": "4a1625e235ae3dc71aeca822a0a5c9dc032516a6fcd9d58494e030659e3b4961",
+    "sounds/omniscient_eye/decipher.ogg": "fb92206ac44385d1b93e52c13f0b5b259fe8e17a6393dc608ab57de8280ecf0d",
+    "sounds/omniscient_eye/deduction.ogg": "316a04db3ff62819a2ed56cef5c4a6219e9d007e8c6f40fbf736e5392cdd4191",
+    "sounds/omniscient_eye/deductive_strike.ogg": "7787c0c43cee4f957c613198002f94dd0da7af2ed2e579118f60314435f51eb0",
+    "sounds/omniscient_eye/evade_disaster.ogg": "4353d9fd9f9c94fc286056cda3e2958199620498815bf9e4cbe27e23059ef43d",
+    "sounds/omniscient_eye/exploit.ogg": "6f120c1cc146692959bc765feb58841d6d67ecd3c539f208bcf3883dccfc8327",
+    "sounds/omniscient_eye/golden_armor_art.ogg": "e6b4de1937485c8c25bda9cd1f7f35002e0f8c6dde3a298fa36a328fe69c9b5b",
+    "sounds/omniscient_eye/imitate.ogg": "3301836f1e93fac8d0615721c72362dd2a4cea265e2dd8777d43f33af6d84acb",
+    "sounds/omniscient_eye/improvise.ogg": "a6fc9f0f5addbc4e52dfcdea5604fb9712ebfbc1f6c60cc80c4dc35c6e54a5b8",
+    "sounds/omniscient_eye/keen_eye.ogg": "b1665a44b85adf35de772a52f04cab41dcb16bf8ef20d452005cdd5398a5d870",
+    "sounds/omniscient_eye/leverage.ogg": "7325863b0388ac4bf6c2490f4e80f80cf146916f6f2807c841871ecafe0f938a",
+    "sounds/omniscient_eye/living_tome.ogg": "453b23d85675e9ac0cab52574de507a9afe1427abc33e70790956759aec0bef0",
+    "sounds/omniscient_eye/madness_break.ogg": "8ac0f1a35907ca829f07fb84d08b5b758b74dd73714fb2d7cdcfd194cd322e20",
+    "sounds/omniscient_eye/mirror_curse.ogg": "fcfdb4d08a6d839c544be40997e7bf0835508307369940eaffa0e00fbba57166",
+    "sounds/omniscient_eye/omniscience.ogg": "a991304217025227703142f2ada5728c65009f5c43db16afcb2b7141fea32131",
+    "sounds/omniscient_eye/open_source.ogg": "0c385e892ad56886ffb144de08ed39f3675d8f8d1291ea03923aead61773aaf9",
+    "sounds/omniscient_eye/page_turn.ogg": "ad9b767a4fe14567373ce6c793b001ae012eab846a0ee49618c07619c7493dd0",
+    "sounds/omniscient_eye/prophecy.ogg": "9ee1675214b12056f33ba580d1bb34c3644c7c60c4c660549208f8a40b55410a",
+    "sounds/omniscient_eye/reading.ogg": "2e0f0a6f6b989d139f82a3c2f2ac5073a76ebaa2bf752d03a74d61379aba3eca",
+    "sounds/omniscient_eye/reconstruction.ogg": "8b47cff3a30f95c94da0ea42f7c6bc02401fd9950589c5203f96abd95bacb7c7",
+    "sounds/omniscient_eye/redefine.ogg": "9d2790aee15d8071b5ca5486bb4c9c7941c2f03a81da91c34662562487c531ec",
+    "sounds/omniscient_eye/ritual_circle.ogg": "2f2e8d51bde4b9ab986a30f00f3c8886a62a09c55a20fddda1b761292508d871",
+    "sounds/omniscient_eye/tome_break.ogg": "c54a698cc42ce02cd108b109e7f9838d0fafd87ca5d731a9a48d1ae4c019b538",
+    "sounds/omniscient_eye/tower_end.ogg": "c7ada904ff85e55ff182f9637e270724b79495f12273d14251ead52dcd974d48",
+    "sounds/omniscient_eye/tower_of_omniscience.ogg": "126c38439bdf3f2bba470fe1eaf1085202a4538b3f6f6839de4a50b8d4b11f85",
+    "sounds/omniscient_eye/vile_thoughts.ogg": "5baa4beeb06944e801c22a3e18696665918777e1794e1b2ed476d64fe380e160",
+    "sounds/omniscient_eye/wise_counsel.ogg": "1bef5318f845f3d54009dcd055487e315c5ca6384b457ff5da265d5e381e79b6",
+    "textures/gui/ability_menus/omniscient_eye/analyze.png": "843fda17999b4ac12e44dd3f07319f8f9280c9cd26e6a7e206739175ff1e7943",
+    "textures/gui/ability_menus/omniscient_eye/bookshelf_form.png": "c167c04e7cdc611b27af1601dd8a356efda1e1bf6265f401365de08b0ed25b47",
+    "textures/gui/ability_menus/omniscient_eye/calamity_of_knowledge.png": "774a66ce3df7dafd6d89beb0f318121e7c64c25a5f78703bf48fbe68399fc070",
+    "textures/gui/ability_menus/omniscient_eye/cognize.png": "ae54115cbfe9c1f2a96ad4a2f173ccdeeb7fdc18a2e92d3baa54a494407fc4b4",
+    "textures/gui/ability_menus/omniscient_eye/decipher.png": "cbc1da39736f9797771cf3d1790282397708e55f4526208a15d6b3b6024c35a7",
+    "textures/gui/ability_menus/omniscient_eye/deduction.png": "b98491a1413b404a8f99896fd5d4fbe17d2aa0c20ca448e06b8290d8120dada2",
+    "textures/gui/ability_menus/omniscient_eye/deductive_strike.png": "9b86502507a78346c7f9468ec1f62d0e91772ca529963b984e4fff5572ea944e",
+    "textures/gui/ability_menus/omniscient_eye/evade_disaster.png": "729b974182d5579aa6832be0382a6687ca7276f048223411feeff2cbc108594a",
+    "textures/gui/ability_menus/omniscient_eye/exploit.png": "68e860f9dcf5be5dbb1897b21c9820b9dab2f84637c12dec39965baec6d4f7a5",
+    "textures/gui/ability_menus/omniscient_eye/golden_armor_art.png": "7ecd4a501759a96abe89994848c053de90d303960e43269c3159275f5d51d759",
+    "textures/gui/ability_menus/omniscient_eye/imitate.png": "5dbf0f8b6e51a5fc0bf2b527637956b26c5533edfe77f652c10dfd02c51327fd",
+    "textures/gui/ability_menus/omniscient_eye/improvise.png": "f7821393a41b328799c57ef4106a364f5af9012d059223de17a9583db5036667",
+    "textures/gui/ability_menus/omniscient_eye/keen_eye.png": "738adb99b7a57328267287840e898159608c8299e6a4ddf22c85739b7134bbbc",
+    "textures/gui/ability_menus/omniscient_eye/leverage.png": "f24c6fdce89878c1f1643f53b2f8aac1323c9618dae2fa8e95c2f570573b64c0",
+    "textures/gui/ability_menus/omniscient_eye/living_tome.png": "edc06ac20ed7f2751252937d83b6a03ffc66f1b69b4cd26907d8eafdf454906b",
+    "textures/gui/ability_menus/omniscient_eye/mirror_curse.png": "8824c6fd7a3c7137fbae502244ce3337aa3168db54713b5e161578520fd5eab1",
+    "textures/gui/ability_menus/omniscient_eye/omniscience.png": "1eff7ad39056c3ac1985f5b3ad85c95e52bd42bd3278102158428e3604312335",
+    "textures/gui/ability_menus/omniscient_eye/open_source.png": "9afff82f975655e645f13bbf475be6c1d14ae72484bf1f910bd4f748000c0f6f",
+    "textures/gui/ability_menus/omniscient_eye/prophecy.png": "e8920d791fd71ecb70c015486989de68ad5cba104df077ad3878faa39ac2fdf4",
+    "textures/gui/ability_menus/omniscient_eye/reading.png": "71f87145b53fc1f593a7374c8136b3808ec44543b13754f7a10a6180dffe9548",
+    "textures/gui/ability_menus/omniscient_eye/reconstruction.png": "6db7f7ca5450c5b14498c866f5a2f07140c3131cda69600d6189dd08b43189e9",
+    "textures/gui/ability_menus/omniscient_eye/redefine.png": "3cef71b22e9c386c5f4cce2326f21a1951bc9175d3bb34afa9f10eab34f1e3d8",
+    "textures/gui/ability_menus/omniscient_eye/ritual_circle.png": "ef1c9d4f3db008b6c149561e50862132dbb48b8d8766c0d32b062d2473303dcc",
+    "textures/gui/ability_menus/omniscient_eye/tower_of_omniscience.png": "51a19a3fd84de095e19c750d1c6fa98ea4cdbd97444a4a36d3faa047a93dfbd7",
+    "textures/gui/ability_menus/omniscient_eye/vile_thoughts.png": "c8bf9ddf7ff95073fc69852d6b32c5e8cb748a912ae6be471404d3dee8d41cf1",
+    "textures/gui/ability_menus/omniscient_eye/wise_counsel.png": "1eff935ee8b75646831a0ec57c0a7e455fbffdba641efb942115b2f1cc3fbb1d",
+    "textures/gui/omniscient_eye/analysis.png": "409e87785539463ab6e4720d979c0a333454729ebea591b39fb9f926f5c7776b",
+    "textures/gui/omniscient_eye/analysis_bar_background.png": "7825ec51627c38dc14f9c547115acc7278df87c74c4281e76906ce2d3a463333",
+    "textures/gui/omniscient_eye/analysis_bar_fill.png": "18f8259594a4bbcf13430d2addc732e80cadd98e816731f8260137643a5cc62b",
+    "textures/gui/omniscient_eye/analyze.png": "409e87785539463ab6e4720d979c0a333454729ebea591b39fb9f926f5c7776b",
+    "textures/gui/omniscient_eye/bookshelf_form.png": "a47fac1762df959308366e194558dbc0d0f0a14686a579176deba81e90da5bd3",
+    "textures/gui/omniscient_eye/calamity_of_knowledge.png": "6b271e5b514c2adf4f1e34c54a7670e3ea15d2e3a3c7eb1ccf9d8a4c49a1ef59",
+    "textures/gui/omniscient_eye/codex.png": "431a9c0635bbb336813dc8cca38917a88d332861ede3528b3294828863abc870",
+    "textures/gui/omniscient_eye/codex_panel.png": "1d204209b8fe3956ca5535ec12d1184fed4f7e7f6d96caceeb39e663361bea79",
+    "textures/gui/omniscient_eye/cognize.png": "6be503194ea47b241f5e7bf2782dc22efe291d7f77b08f03084e3bb46b587fde",
+    "textures/gui/omniscient_eye/cognizing_sight.png": "6be503194ea47b241f5e7bf2782dc22efe291d7f77b08f03084e3bb46b587fde",
+    "textures/gui/omniscient_eye/creation.png": "a67318f88f64a3f345c4431ac36bf8c66b36cbdb0597b919abaf2af3dad2713e",
+    "textures/gui/omniscient_eye/decipher.png": "cf1cfa010225cf599deaa4ba3d5cb40719749a2a52fb9e222aca49be18dfc333",
+    "textures/gui/omniscient_eye/deduction.png": "9bdb9984a650b5266f397d84a9a8fa5d2271c91ff551fc23c6e11326fc6fdb37",
+    "textures/gui/omniscient_eye/deductive_strike.png": "4e8e0227a479921d0bfcae1adffb20691c63455933f71b1c969fbd16fc3346cb",
+    "textures/gui/omniscient_eye/demigods_body.png": "8b4b38d0260aa448b1718b6676bc190cd83212569752e34ec7312cc3201cdafe",
+    "textures/gui/omniscient_eye/discernment.png": "32188fa23f51e02e7694050ee8384f93e700cc1fe3ce016ed209832ba5359f7f",
+    "textures/gui/omniscient_eye/dossier_panel.png": "a1617b5251e44c72376e906ee10c524c06ce773cbe0da65735c8206e96d1ba8b",
+    "textures/gui/omniscient_eye/evade_disaster.png": "8f552a33f97eee5a7f4408fcb1a315e6a71eb8ff2de32e77112d3256c60be385",
+    "textures/gui/omniscient_eye/exploit.png": "eeac90d9ee5fafcb2f9d22e2edab6e00cc53811e5ccc758dbff934ba515f1a18",
+    "textures/gui/omniscient_eye/exposed.png": "3d345854778ce146d657867598828bbd71c9a14b504656d2e2d7c104c2cbe20c",
+    "textures/gui/omniscient_eye/foreseen.png": "39465d1e4822c37c598da7a447721e5fda3a83a04acae9d2763add49634b2b73",
+    "textures/gui/omniscient_eye/foreseen_shifts.png": "d558ee1e50ed19c38dd39f92578e2c74eff388492766cc125e6f7ee05dce147d",
+    "textures/gui/omniscient_eye/golden_armor_art.png": "c1774f12ba5e5cc8a561ae44bc95f44a9fce77aa9300dd8f7c1b3e318f3dfd43",
+    "textures/gui/omniscient_eye/imitate.png": "d65a0864d6e70785703334635c664774d19f4403118aba17d8317f55e35d896c",
+    "textures/gui/omniscient_eye/improvise.png": "d638a71aaebf8ee5c901ff33d2477c9e288521a0d6ee5c80d38cd51dd2418585",
+    "textures/gui/omniscient_eye/keen_eye.png": "cceaf1e6f6bd7c01bb987ba87721c8a912a08c3e0dcc899f3402c1cae403d7a8",
+    "textures/gui/omniscient_eye/knowledge_addiction.png": "43a497f821db4129340543885ebc4bb233c6ae567b98627bff1c075dee5c4d67",
+    "textures/gui/omniscient_eye/leverage.png": "87728842733b59ded1ba6b777ac3ad798cf9fc581b26eb79fc1c7c449365cb3c",
+    "textures/gui/omniscient_eye/living_tome.png": "a67318f88f64a3f345c4431ac36bf8c66b36cbdb0597b919abaf2af3dad2713e",
+    "textures/gui/omniscient_eye/madness.png": "2f60fd9bc40668486f125c8f138db4c542bc154fc3d7dfd4f28a346523ad7415",
+    "textures/gui/omniscient_eye/madness_pip_critical.png": "89caea97874695ff7fc2ed7db25e9eaa4fd7875c5139649c0d5af20f53bcc5e1",
+    "textures/gui/omniscient_eye/madness_pip_empty.png": "584d6c4b6a8c7268f719b2cf0fd1a743f47329b0929e7b144f49c60b615ed850",
+    "textures/gui/omniscient_eye/madness_pip_filled.png": "166dcc75cef542380503425ea09585dfd0862170a453cc4be775e1821a34857e",
+    "textures/gui/omniscient_eye/mirror_curse.png": "40164660f8945500f6dbd7941d3c8ec3920495525e88ab9ec93d39b987a64382",
+    "textures/gui/omniscient_eye/mystic_mind.png": "e85731c3c0ffdbb064b4aa2ce1d807d39ae8f50c53e38652ac8ac6104366b5ed",
+    "textures/gui/omniscient_eye/omniscience.png": "a8b5f8abad79701c8e96270b2de4af9828c892899488151948293afb964218b3",
+    "textures/gui/omniscient_eye/omniscient_gaze.png": "a8b5f8abad79701c8e96270b2de4af9828c892899488151948293afb964218b3",
+    "textures/gui/omniscient_eye/open_book.png": "43a497f821db4129340543885ebc4bb233c6ae567b98627bff1c075dee5c4d67",
+    "textures/gui/omniscient_eye/open_source.png": "2b3642efd325463bd07d6d9a0038dd1b05e7af62b19ae0bf68bbe83b4ef2e4ae",
+    "textures/gui/omniscient_eye/polymaths_eye.png": "512a2a436cd21dafd8de8f3c884b9aef109a1a7fbd1169343b1e1f3f2754f6d3",
+    "textures/gui/omniscient_eye/prophecy.png": "39465d1e4822c37c598da7a447721e5fda3a83a04acae9d2763add49634b2b73",
+    "textures/gui/omniscient_eye/reading.png": "41e1673a8bec4ce7c3eeab8ff856ce627febe10a1746e971840b1a8ef93e9750",
+    "textures/gui/omniscient_eye/reconstruction.png": "f7d48e04cdab1a1085d2a1cd6bea06a61221d276d885fab49fedef67da0ee6a0",
+    "textures/gui/omniscient_eye/redefine.png": "970ad58e1c2083bb44047eab5e1a11be55ffe41560e69e5eda6981925a5abed7",
+    "textures/gui/omniscient_eye/rite_focus.png": "f996f808588cebe6866d34f65b479504ade5385d2e7bc5189f3cf47c21b0fece",
+    "textures/gui/omniscient_eye/ritual_circle.png": "d0aaa304a086bb5d852a35861dd26492182d0b1c087cdca9ba776fbb3a7a2361",
+    "textures/gui/omniscient_eye/sharp_mind.png": "d83013d29de19e6766ce8990221e2ef84ac9514ce2aaa55dc0a4e8779ddc16cc",
+    "textures/gui/omniscient_eye/tower_of_omniscience.png": "a3f1370df1e5f34a5d64ee3b52891bdc873eb70ddb42b059cecfe82dc5ee2e68",
+    "textures/gui/omniscient_eye/vile_thoughts.png": "d1f748541f082f5c128a36089505fd6d33c225d83c6d822dfeabac26e1bb5a8f",
+    "textures/gui/omniscient_eye/weapon_proficiency.png": "2afe82e4875fff56cc02b5d0249be4bed5695e59ae993c8f85405b8863019555",
+    "textures/gui/omniscient_eye/wise_counsel.png": "bd0f9c3c1b1783559773f38556ae8b757363ef9f4fda1d1e2588fdf9abbfa721",
+    "textures/gui/pathway_icons/omniscient_eye.png": "a3f1370df1e5f34a5d64ee3b52891bdc873eb70ddb42b059cecfe82dc5ee2e68",
+    "textures/model_fx/omniscient_eye/brass.png": "859828a90a9c62eaf7eda152d67cd5053557bc873addf1de2d6794bdbe0213f3",
+    "textures/model_fx/omniscient_eye/cognize_eye.png": "777d0515bd76a4b1b40df0f3f58ede687a23dabfb56ff9016c8c31fbafcc4d3b",
+    "textures/model_fx/omniscient_eye/ghost.png": "3c9480e3a18b0f613e6f3ade8a1f58cb9352f9195a55ec4addbe32846f66e762",
+    "textures/model_fx/omniscient_eye/info_card.png": "53d1bfc630f51800f7dd821c34289c136ba2fa9702c6ecf765ec3c5f01228fe4",
+    "textures/model_fx/omniscient_eye/ink_pool.png": "3c20cc9331b37622e25061f2b389b88924f69d181ad21b6d9a1891b072f87f49",
+    "textures/model_fx/omniscient_eye/ink_pool.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/omniscient_eye/leather.png": "1a4de5ec85bafdc41128f5eda16ddca04d5054fccf74b9a4b1dfcb793d3e75c7",
+    "textures/model_fx/omniscient_eye/mirror_glass.png": "efe9c405e113b0924e9b67427e5c9eb84f5e8ec5f01e2e635a4868304266c3c5",
+    "textures/model_fx/omniscient_eye/pages.png": "4c2bd7dfb815d9d5ef79a97622a635b0df775f41d8ca3e5498c3eb45e4f02c0d",
+    "textures/model_fx/omniscient_eye/reading_eye.png": "777d0515bd76a4b1b40df0f3f58ede687a23dabfb56ff9016c8c31fbafcc4d3b",
+    "textures/model_fx/omniscient_eye/ritual_sigil.png": "deafa459908ab05b9a90cf61e04f406fa1eb1b5cef9a607101ae63a44ec5c784",
+    "textures/model_fx/omniscient_eye/spell_light.png": "241a5ad862c1ff924944ba07a905f17cd39fb4c25f1108d3ee4dfdd4fccfdd3d",
+    "textures/model_fx/omniscient_eye/tower_eye.png": "777d0515bd76a4b1b40df0f3f58ede687a23dabfb56ff9016c8c31fbafcc4d3b",
+    "textures/model_fx/omniscient_eye/wood.png": "3e7982dfdbb89589592c28ece4d404156bfb6443a7b0e57314a98485e58c3d1b",
+    "textures/particle/fx/omniscient_eye/eye.png": "b04b92e1f2b72872b09093a89331a7ad958c26de01cae4610a85aa0ec465267b",
+    "textures/particle/fx/omniscient_eye/ghost_line.png": "49dad1cd3dd8f227c8f854509f762963997d4eff65d65491e957f1e23394770a",
+    "textures/particle/fx/omniscient_eye/glyph_0.png": "ab16f9e02cec8851d7357f05aee526dd83e38c85a445b12daa6c209c2869d7c1",
+    "textures/particle/fx/omniscient_eye/glyph_1.png": "64190259773e2178635dcdde41715ec2c156f73b7ed0b0f9c95c279ba7ba918b",
+    "textures/particle/fx/omniscient_eye/glyph_2.png": "805d8d8d68551e951e7a5ef50d777c5d283953075ca91c884e277a7523052f15",
+    "textures/particle/fx/omniscient_eye/glyph_3.png": "5d4cef267608a8ada184e52d7c7e16646d56e0f0a0e139eee7afd5105de9532e",
+    "textures/particle/fx/omniscient_eye/ink_drop.png": "c5c77f343a675d604fc24e7d577cb9170a76fcaf325d613f6d5dcdce6651e70a",
+    "textures/particle/fx/omniscient_eye/madness_pip.png": "cbfc0114301db5510b37188d85f3380bc26321af3d4ff833e0426d3fe7acef5e",
+    "textures/particle/fx/omniscient_eye/page_0.png": "7eef4c394adb78217566ba68cbb90539f1d6b28225fd215ddda5d930527c8741",
+    "textures/particle/fx/omniscient_eye/page_1.png": "edaef86bb47bf23eafc982e906defe23ca8312c799594117d3602d66f1df9655",
+    "textures/particle/fx/omniscient_eye/page_2.png": "74cff58bdddff8a61e29425a71adb243f9f5e68ef89c05d693190a99cd3acdb0",
+    "textures/particle/fx/omniscient_eye/page_edge.png": "8deacd8d359006565216b3df6da6820c0f5036c863ac602822b5a58f8312255c",
+    "textures/particle/fx/omniscient_eye/thread.png": "7e16dae72aacc52acd3d8a1a9c56e7219cdb37a13919f59449253a38a830c637"
+  }
+}
