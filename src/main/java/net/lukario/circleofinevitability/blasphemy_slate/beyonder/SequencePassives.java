@@ -46,6 +46,10 @@ public final class SequencePassives {
     // The passives: one line each
     // =========================
     static {
+        effect("Thunder God", 9, MobEffects.STRENGTH, 0);
+        effect("Thunder God", 9, MobEffects.WATER_BREATHING, 0);
+        effect("Thunder God", 6, MobEffects.NIGHT_VISION, 0);
+        custom("Thunder God", 9, net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodEvents::seaFavor);
         effect(4, MobEffects.SATURATION); // Sequence 4 and stronger: never hungry
 
         // ---- Beauty Goddess (docs/BEAUTY_GODDESS.md). Also in BeautyGoddess itself: afterimages when you sprint

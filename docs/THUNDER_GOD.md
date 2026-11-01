@@ -1,5 +1,7 @@
 # Thunder God: ability design
 
+**Implementation update:** Sequences 9–5 are playable; see [first-half controls, costs and tests](THUNDER_GOD_IMPLEMENTATION.md). The original draft below is preserved, including its starting numbers and deferred questions.
+
 Design only · for the Circle Of Inevitability repo · drafted by Claude, November 1, 2026 · no code written yet
 
 The Thunder God Pathway is the Tyrant Pathway of Lord of the Mysteries, the Hierophant tarot card: Sailor (9), Folk of Rage (8), Seafarer (7), Wind-blessed (6), Ocean Songster (5), Cataclysmic Interrer (4), Sea King (3), Calamity (2), Thunder God (1), Tyrant (0). Above the Sequence: God Almighty. Sefirah: Chaos Sea. Source: the Tyrant Pathway and Tyrant Pathway/Abilities pages of the Lord of the Mysteries wiki. The wiki lists no active ability for the Sailor (9) and almost none for the Sea King (3) beyond authorities, so those are designed from the Pathway's themes. Sequences 1 and 0 are written out in full, because the wiki has plenty for them.

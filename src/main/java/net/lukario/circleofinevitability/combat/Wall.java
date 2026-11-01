@@ -81,6 +81,7 @@ public final class Wall {
     private String name;
     private int age;
     private boolean closed = true;
+    private boolean allowsLivingThrough;
     private final Map<UUID, Boolean> wasInFront = new HashMap<>();
     private final Map<UUID, Integer> lastShown = new HashMap<>();
 
@@ -110,6 +111,9 @@ public final class Wall {
         this.stopsProjectiles = true;
         return this;
     }
+
+    /** A projectile screen that living bodies may cross freely (water curtains, nets). */
+    public Wall allowsLivingThrough() { this.allowsLivingThrough = true; return this; }
 
     /** Who cannot cross, instead of the owner's enemies. The owner always can. */
     public Wall outsiders(Predicate<LivingEntity> who) {
@@ -222,7 +226,7 @@ public final class Wall {
         Set<UUID> seen = new HashSet<>();
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box,
                 e -> e.isAlive() && !e.isSpectator() && !(e instanceof ArmorStand) && !e.isPassenger())) {
-            if (!isOutsider(entity) || (entity instanceof Player player && player.isCreative())) continue;
+            if (allowsLivingThrough || !isOutsider(entity) || (entity instanceof Player player && player.isCreative())) continue;
             UUID id = entity.getUUID();
             seen.add(id);
             Vec3 body = entity.getBoundingBox().getCenter();

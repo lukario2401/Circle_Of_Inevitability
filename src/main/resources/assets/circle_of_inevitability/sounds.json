@@ -4160,5 +4160,599 @@
         "name": "circle_of_inevitability:omniscient_eye/tower_end"
       }
     ]
+  },
+  "thunder_god.harpoon": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.harpoon",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/harpoon",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.illusory_scales": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.illusory_scales",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/illusory_scales",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.raging_blow": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.raging_blow",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/raging_blow",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.wrath": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.wrath",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/wrath",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.water_veil": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.water_veil",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/water_veil",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.sweeping_wave": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.sweeping_wave",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/sweeping_wave",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.tideheal": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.tideheal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/tideheal",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.water_curtain": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.water_curtain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/water_curtain",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.water_sphere": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.water_sphere",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/water_sphere",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.corrosive_rain": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.corrosive_rain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/corrosive_rain",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.sea_master": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.sea_master",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/sea_master",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.maelstrom": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.maelstrom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/maelstrom",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.destructive_droplet": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.destructive_droplet",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/destructive_droplet",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.windblade": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.windblade",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/windblade",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.gale_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.gale_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/gale_burst",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.gale_ride": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.gale_ride",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/gale_ride",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.wind_binding": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.wind_binding",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/wind_binding",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.windblade_legion": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.windblade_legion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/windblade_legion",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.sonic_boom": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.sonic_boom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/sonic_boom",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.cloud_sword": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.cloud_sword",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/cloud_sword",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.incarnation_of_light": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.incarnation_of_light",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/incarnation_of_light",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.starfall": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.starfall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/starfall",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.lightning_strike": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.lightning_strike",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/lightning_strike",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.lightning_bolt_arrow": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.lightning_bolt_arrow",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/lightning_bolt_arrow",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.chain_lightning": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.chain_lightning",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/chain_lightning",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.lightning_storm": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.lightning_storm",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/lightning_storm",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.magnetic_pole_pull": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.magnetic_pole_pull",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/magnetic_pole_pull",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.heavenly_punishment": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.heavenly_punishment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/heavenly_punishment",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.ocean_of_lightning": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.ocean_of_lightning",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/ocean_of_lightning",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.lightning_forest": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.lightning_forest",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/lightning_forest",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.siren_song": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.siren_song",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/siren_song",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.discord": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.discord",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/discord",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.thunderclap": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.thunderclap",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/thunderclap",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.roar": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.roar",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/roar",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.death_dirge": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.death_dirge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/death_dirge",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.sound_of_horror": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.sound_of_horror",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/sound_of_horror",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.requiem": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.requiem",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/requiem",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.roar_of_the_thunder_god": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.roar_of_the_thunder_god",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/roar_of_the_thunder_god",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.tyrants_presence": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.tyrants_presence",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/tyrants_presence",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.hurricane": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.hurricane",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/hurricane",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.tsunami": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.tsunami",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/tsunami",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.wrath_of_the_sea": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.wrath_of_the_sea",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/wrath_of_the_sea",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.storm_incarnation": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.storm_incarnation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/storm_incarnation",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.storm_hell": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.storm_hell",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/storm_hell",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.chasm_of_storms": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.chasm_of_storms",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/chasm_of_storms",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.dreadful_heaven": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.dreadful_heaven",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/dreadful_heaven",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.banish_into_the_storm": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.banish_into_the_storm",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/banish_into_the_storm",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.source_of_wrath": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.source_of_wrath",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/source_of_wrath",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.water_wall": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.water_wall",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/water_wall",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.torrential_downpour": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.torrential_downpour",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/torrential_downpour",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.thunder_strike": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.thunder_strike",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/thunder_strike",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.bolt_crack": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.bolt_crack",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/bolt_crack",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.thunder_roll": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.thunder_roll",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/thunder_roll",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.harpoon_hit": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.harpoon_hit",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/harpoon_hit",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.rope_reel": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.rope_reel",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/rope_reel",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.scales_break": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.scales_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/scales_break",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.wave_break": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.wave_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/wave_break",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.rain_loop": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.rain_loop",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/rain_loop",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.wind_loop": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.wind_loop",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/wind_loop",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.storm_loop": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.storm_loop",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/storm_loop",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.rage_gain": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.rage_gain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/rage_gain",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.rage_full": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.rage_full",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/rage_full",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.wrath_end": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.wrath_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/wrath_end",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.banish_return": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.banish_return",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/banish_return",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.kingdom_end": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.kingdom_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/kingdom_end",
+        "stream": false
+      }
+    ]
+  },
+  "thunder_god.melee_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.thunder_god.melee_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:thunder_god/melee_swing",
+        "stream": false
+      }
+    ]
   }
 }
