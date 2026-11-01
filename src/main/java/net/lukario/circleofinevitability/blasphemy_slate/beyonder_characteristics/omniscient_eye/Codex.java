@@ -30,6 +30,12 @@ public final class Codex {
         return true;
     }
     public static Map<String,AbilityCatalog.Power> catalog() { return AbilityCatalog.all(); }
+    /** Fully learns every currently eligible catalog entry; retains the ordinary Sequence gates. */
+    public static int learnAll(ServerPlayer p){
+        if(!enabled(p))return 0;
+        int count=0;for(var power:catalog().values())if(learn(p,power,100))count++;
+        return count;
+    }
     public static void observe(LivingEntity caster,ServerLevel sl,Casts.Cast cast) {
         if (!cast.copyable()) return;
         for (ServerPlayer p:sl.players()) {

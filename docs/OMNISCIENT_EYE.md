@@ -47,6 +47,18 @@ For example `/codex study @s key/Wanderer/2/false` or
 `/codex study @s wheel/omniscient_eye_mystic_arts/golden_armor_art`.
 It grants 100% immediately while retaining pathway/Sequence checks.
 
+Additional OP commands (permission level 2):
+
+- `/codex studyall <player>` fully studies every currently eligible copyable key variant and wheel entry.
+  It respects the same pathway and Sequence restrictions as individual study; at Sequence 0 it covers the full copyable catalog.
+- `/codex forget <player> <ability-id>` removes one record, its favorite and any selection pointing at it.
+  Tab completion lists studied catalog entries. An exact obsolete ID can also be removed.
+- `/codex forgetall <player>` clears all Codex study, favorites and selection. `/codex forget <player> all` is an alias.
+  Forgetting works even after changing pathways and preserves other soul data and other study libraries.
+
+Reopen the stored-ability menu to refresh it after a command. A forgotten selection is immediately unusable on the server.
+
+
 ## Mystic Arts and lower abilities
 
 Reading reports health, mood, hunted target and effects in chat, with a floating card ornament and an Appraisal mark.
@@ -128,7 +140,7 @@ See [SPELL_KIT.md](SPELL_KIT.md#study-prediction-and-borrowed-powers) for reusab
 inspection, Madness, conditional protection, one-shot casting modifiers and spell-loan APIs.
 
 Run `./gradlew build` and `./gradlew runGameTestServer -PomniscientEyeTests`.
-The 11 focused real-server tests cover study ordering/eligibility/storage/death cloning, exact wheel observation and
+The 12 focused real-server tests cover study ordering/eligibility/storage/death cloning, exact wheel observation and
 replay, incomplete/preselected rejection, no-cooldown paid replication, Fate/authority abilities, free toggle cleanup,
 Tower study for keys and wheel entries, borrowed powers, one-shot cost consumption and shared kit rules.
 The menu is compiled against the current client API; its appearance still needs an in-game visual playtest.
