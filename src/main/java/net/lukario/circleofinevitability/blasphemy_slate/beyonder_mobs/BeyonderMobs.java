@@ -5,7 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SequenceCommands;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.dark_angel.DarkAngel;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.item.BeyonderCharacteristicItem;

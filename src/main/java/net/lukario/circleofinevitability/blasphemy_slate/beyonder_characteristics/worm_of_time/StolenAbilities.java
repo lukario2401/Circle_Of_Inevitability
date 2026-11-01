@@ -1,5 +1,6 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
 import net.lukario.circleofinevitability.combat.HudTimer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;

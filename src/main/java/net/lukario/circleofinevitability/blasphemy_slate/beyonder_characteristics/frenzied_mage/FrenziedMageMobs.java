@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.frenzied_mage;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbilities;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbility;

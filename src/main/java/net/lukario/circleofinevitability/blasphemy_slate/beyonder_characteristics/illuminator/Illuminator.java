@@ -18,7 +18,7 @@ import net.lukario.circleofinevitability.combat.TargetHealth;
 import net.lukario.circleofinevitability.combat.Zone;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.DarkAngel;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.dark_angel.DarkAngel;
 import net.lukario.circleofinevitability.combat.Residue;
 import net.lukario.circleofinevitability.status.AbilityLock;
 import net.lukario.circleofinevitability.status.Appraisal;

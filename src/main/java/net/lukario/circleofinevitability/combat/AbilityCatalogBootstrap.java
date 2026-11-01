@@ -5,8 +5,8 @@ final class AbilityCatalogBootstrap {
  if(initialized)return; initialized=true;
  for(String name:new String[]{
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye",
-"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.Apocalypse",
-"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.apocalypse.Apocalypse",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.beauty_goddess.BeautyGoddess",
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationChains",
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationCurses",
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationWraith",
