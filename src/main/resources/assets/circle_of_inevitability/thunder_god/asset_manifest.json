@@ -1,0 +1,1362 @@
+{
+  "pathway": "Thunder God",
+  "scope": "Assets and cosmetic playback only. Ability rules and balance remain unimplemented.",
+  "palette": {
+    "sea": "#10294A",
+    "lightning": "#D6ECFF",
+    "water": "#1F6F8B",
+    "rage": "#C0392B"
+  },
+  "wheels": {
+    "tides": [
+      "water_veil",
+      "sweeping_wave",
+      "tideheal",
+      "water_curtain",
+      "water_sphere",
+      "corrosive_rain",
+      "sea_master",
+      "maelstrom",
+      "destructive_droplet"
+    ],
+    "sky": [
+      "windblade",
+      "gale_burst",
+      "gale_ride",
+      "wind_binding",
+      "windblade_legion",
+      "sonic_boom",
+      "cloud_sword",
+      "incarnation_of_light",
+      "starfall"
+    ],
+    "thunder": [
+      "lightning_strike",
+      "lightning_bolt_arrow",
+      "chain_lightning",
+      "lightning_storm",
+      "magnetic_pole_pull",
+      "electromagnetic_disruption",
+      "heavenly_punishment",
+      "ocean_of_lightning",
+      "lightning_forest"
+    ],
+    "voice": [
+      "siren_song",
+      "discord",
+      "thunderclap",
+      "roar",
+      "death_dirge",
+      "sound_of_horror",
+      "requiem",
+      "roar_of_the_thunder_god",
+      "tyrants_presence"
+    ],
+    "storm": [
+      "hurricane",
+      "tsunami",
+      "wrath_of_the_sea",
+      "storm_incarnation",
+      "storm_hell",
+      "chasm_of_storms",
+      "dreadful_heaven",
+      "banish_into_the_storm"
+    ]
+  },
+  "basic": [
+    "harpoon",
+    "illusory_scales",
+    "raging_blow",
+    "wrath"
+  ],
+  "upgrades": [
+    "source_of_wrath",
+    "water_wall",
+    "torrential_downpour",
+    "thunder_strike",
+    "dance_of_thunder"
+  ],
+  "statuses": [
+    "rage",
+    "rage_full",
+    "soaked",
+    "shock",
+    "tipsy",
+    "spent",
+    "parched",
+    "fear",
+    "silence",
+    "madness",
+    "corrosion",
+    "spiritual_intuition",
+    "aquatic_affinity",
+    "fear_resistance",
+    "balance",
+    "physical_enhancement",
+    "seas_favor",
+    "wind_blessed",
+    "ocean_songster",
+    "scale_armor",
+    "home_turf",
+    "storm_born",
+    "authority_of_thunder",
+    "tyrants_aura"
+  ],
+  "models": [
+    {
+      "name": "harpoon",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "silver",
+      "description": "Barbed iron harpoon; tip at y=28; rope anchor at y=0.",
+      "render": {
+        "see_through": false,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/harpoon"
+    },
+    {
+      "name": "rope_segment",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "material": "rope",
+      "description": "Thin straight rope section; repeat or use ParticleShapes.line.",
+      "render": {
+        "see_through": false,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/rope_segment"
+    },
+    {
+      "name": "scale_armor",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "scales",
+      "description": "Open torso shell; translucent, worn using modelOnTurning.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/scale_armor"
+    },
+    {
+      "name": "wave_crest_0",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "water",
+      "description": "Four compatible rolling-wave poses; ground pivot. Scale uniformly or tile sideways.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/wave_crest_0"
+    },
+    {
+      "name": "wave_crest_1",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "water",
+      "description": "Four compatible rolling-wave poses; ground pivot. Scale uniformly or tile sideways.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/wave_crest_1"
+    },
+    {
+      "name": "wave_crest_2",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "water",
+      "description": "Four compatible rolling-wave poses; ground pivot. Scale uniformly or tile sideways.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/wave_crest_2"
+    },
+    {
+      "name": "wave_crest_3",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "water",
+      "description": "Four compatible rolling-wave poses; ground pivot. Scale uniformly or tile sideways.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/wave_crest_3"
+    },
+    {
+      "name": "wave_foam",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "foam",
+      "description": "Foam lip for wave_crest; layer above the moving crest.",
+      "render": {
+        "see_through": true,
+        "glow": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/wave_foam"
+    },
+    {
+      "name": "water_film",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "material": "water",
+      "description": "Face-size translucent double-sided water panel.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/water_film"
+    },
+    {
+      "name": "water_curtain",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "water",
+      "description": "One-block water panel; tile and scale for curtain or upgraded wall.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/water_curtain"
+    },
+    {
+      "name": "water_sphere",
+      "pivot": [
+        8,
+        12,
+        8
+      ],
+      "material": "water",
+      "description": "Hollow voxel sphere, 24 units across; scale 3.33 for five blocks.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/water_sphere"
+    },
+    {
+      "name": "droplet",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "material": "water",
+      "description": "Small pointed water projectile with a round lower bulb.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/droplet"
+    },
+    {
+      "name": "whirlpool",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "whirlpool",
+      "description": "Animated whirlpool/flood disc, two blocks wide; tint sea-blue, spin with ModelFx keys.",
+      "render": {
+        "see_through": true,
+        "glow": true,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/whirlpool"
+    },
+    {
+      "name": "warning_ring",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "warning_ring",
+      "description": "High-contrast target warning ring; two-block diameter before scaling; no damage or targeting.",
+      "render": {
+        "see_through": true,
+        "glow": true,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/warning_ring"
+    },
+    {
+      "name": "rain_sheet",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "material": "rain_sheet",
+      "description": "Local rain sheet; repeat within a zone, never change world weather.",
+      "render": {
+        "see_through": true,
+        "glow": false,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/rain_sheet"
+    },
+    {
+      "name": "windblade",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "material": "windblade",
+      "description": "Faint curved windblade shimmer; deliberately low opacity.",
+      "render": {
+        "see_through": true,
+        "glow": true,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/windblade"
+    },
+    {
+      "name": "sound_wave",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "material": "sound_wave",
+      "description": "Expanding concentric voice-wave card; tint silver/blue for songs and roars.",
+      "render": {
+        "see_through": true,
+        "glow": true,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/sound_wave"
+    },
+    {
+      "name": "cloud_face",
+      "pivot": [
+        8,
+        8,
+        8
+      ],
+      "material": "cloud_face",
+      "description": "Angry brows and mouth; layer in front of storm_cloud at a matching scale.",
+      "render": {
+        "see_through": true,
+        "glow": false,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/cloud_face"
+    },
+    {
+      "name": "storm_cloud",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "cloud",
+      "description": "Seven puffs of dark cloud; rain and lightning originate underneath.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/storm_cloud"
+    },
+    {
+      "name": "cloud_sword",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "light_cloud",
+      "description": "Massive pointed cloud sword; upright tip at y=29; animate downward for impact.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/cloud_sword"
+    },
+    {
+      "name": "lightning_arrow",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "lightning",
+      "description": "Silver-white arrow, aligned +Y; point along flight with modelAlong.",
+      "render": {
+        "see_through": true,
+        "glow": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/lightning_arrow"
+    },
+    {
+      "name": "bolt",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "lightning",
+      "description": "Zigzag silver bolt; cosmetic only, never a vanilla LightningBolt.",
+      "render": {
+        "see_through": true,
+        "glow": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/bolt"
+    },
+    {
+      "name": "ball_lightning",
+      "pivot": [
+        8,
+        12,
+        8
+      ],
+      "material": "lightning",
+      "description": "Faceted lightning orb for Starfall and Lightning Storm.",
+      "render": {
+        "see_through": true,
+        "glow": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/ball_lightning"
+    },
+    {
+      "name": "heavenly_pillar",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "cloud",
+      "description": "Segment of the dark sky pillar; repeat vertically above the target.",
+      "render": {
+        "see_through": true,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/heavenly_pillar"
+    },
+    {
+      "name": "kingdom_chasm",
+      "pivot": [
+        8,
+        12,
+        8
+      ],
+      "material": "kingdom_chasm",
+      "description": "Translucent kingdom shell; 24 units wide; scale 20 for a 30-block diameter.",
+      "render": {
+        "see_through": true,
+        "glow": true,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/kingdom_chasm"
+    },
+    {
+      "name": "kingdom_dreadful",
+      "pivot": [
+        8,
+        12,
+        8
+      ],
+      "material": "kingdom_dreadful",
+      "description": "Translucent kingdom shell; 24 units wide; scale 20 for a 30-block diameter.",
+      "render": {
+        "see_through": true,
+        "glow": true,
+        "unshaded": true
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/kingdom_dreadful"
+    },
+    {
+      "name": "tyrant_crown",
+      "pivot": [
+        8,
+        0,
+        8
+      ],
+      "material": "silver",
+      "description": "Five-point silver crown for oppression and the pathway emblem.",
+      "render": {
+        "see_through": false,
+        "glow": false
+      },
+      "id": "circle_of_inevitability:model_fx/thunder_god/tyrant_crown"
+    }
+  ],
+  "particles": {
+    "spark": "fx/thunder_god/spark",
+    "arc_0": "fx/thunder_god/arc_0",
+    "arc_1": "fx/thunder_god/arc_1",
+    "arc_2": "fx/thunder_god/arc_2",
+    "raindrop": "fx/thunder_god/raindrop",
+    "splash": "fx/thunder_god/splash",
+    "foam": "fx/thunder_god/foam",
+    "ripple": "fx/thunder_god/ripple",
+    "wind_streak": "fx/thunder_god/wind_streak",
+    "windblade": "fx/thunder_god/windblade",
+    "scale": "fx/thunder_god/scale",
+    "cloud": "fx/thunder_god/cloud",
+    "rage_ember": "fx/thunder_god/rage_ember",
+    "sound_ring": "fx/thunder_god/sound_ring",
+    "spirit_hand": "fx/thunder_god/spirit_hand",
+    "crown": "fx/thunder_god/crown",
+    "rope": "fx/thunder_god/rope"
+  },
+  "abilities": {
+    "harpoon": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/harpoon.png",
+      "hud_icon": "textures/gui/thunder_god/harpoon.png",
+      "models": [
+        "harpoon",
+        "rope_segment"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.harpoon"
+    },
+    "illusory_scales": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/illusory_scales.png",
+      "hud_icon": "textures/gui/thunder_god/illusory_scales.png",
+      "models": [
+        "scale_armor"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.illusory_scales"
+    },
+    "raging_blow": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/raging_blow.png",
+      "hud_icon": "textures/gui/thunder_god/raging_blow.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.raging_blow"
+    },
+    "wrath": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/wrath.png",
+      "hud_icon": "textures/gui/thunder_god/wrath.png",
+      "models": [
+        "tyrant_crown"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.wrath"
+    },
+    "water_veil": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/water_veil.png",
+      "hud_icon": "textures/gui/thunder_god/water_veil.png",
+      "models": [
+        "water_film"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.water_veil"
+    },
+    "sweeping_wave": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/sweeping_wave.png",
+      "hud_icon": "textures/gui/thunder_god/sweeping_wave.png",
+      "models": [
+        "wave_crest_0",
+        "wave_foam"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.sweeping_wave"
+    },
+    "tideheal": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/tideheal.png",
+      "hud_icon": "textures/gui/thunder_god/tideheal.png",
+      "models": [
+        "droplet"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.tideheal"
+    },
+    "water_curtain": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/water_curtain.png",
+      "hud_icon": "textures/gui/thunder_god/water_curtain.png",
+      "models": [
+        "water_curtain"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.water_curtain"
+    },
+    "water_sphere": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/water_sphere.png",
+      "hud_icon": "textures/gui/thunder_god/water_sphere.png",
+      "models": [
+        "water_sphere"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.water_sphere"
+    },
+    "corrosive_rain": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/corrosive_rain.png",
+      "hud_icon": "textures/gui/thunder_god/corrosive_rain.png",
+      "models": [
+        "storm_cloud",
+        "rain_sheet"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.corrosive_rain"
+    },
+    "sea_master": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/sea_master.png",
+      "hud_icon": "textures/gui/thunder_god/sea_master.png",
+      "models": [
+        "whirlpool"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.sea_master"
+    },
+    "maelstrom": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/maelstrom.png",
+      "hud_icon": "textures/gui/thunder_god/maelstrom.png",
+      "models": [
+        "whirlpool"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.maelstrom"
+    },
+    "destructive_droplet": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/destructive_droplet.png",
+      "hud_icon": "textures/gui/thunder_god/destructive_droplet.png",
+      "models": [
+        "droplet"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.destructive_droplet"
+    },
+    "windblade": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/windblade.png",
+      "hud_icon": "textures/gui/thunder_god/windblade.png",
+      "models": [
+        "windblade"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.windblade"
+    },
+    "gale_burst": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/gale_burst.png",
+      "hud_icon": "textures/gui/thunder_god/gale_burst.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.gale_burst"
+    },
+    "gale_ride": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/gale_ride.png",
+      "hud_icon": "textures/gui/thunder_god/gale_ride.png",
+      "models": [
+        "windblade"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.gale_ride"
+    },
+    "wind_binding": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/wind_binding.png",
+      "hud_icon": "textures/gui/thunder_god/wind_binding.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.wind_binding"
+    },
+    "windblade_legion": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/windblade_legion.png",
+      "hud_icon": "textures/gui/thunder_god/windblade_legion.png",
+      "models": [
+        "windblade"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.windblade_legion"
+    },
+    "sonic_boom": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/sonic_boom.png",
+      "hud_icon": "textures/gui/thunder_god/sonic_boom.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.sonic_boom"
+    },
+    "cloud_sword": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/cloud_sword.png",
+      "hud_icon": "textures/gui/thunder_god/cloud_sword.png",
+      "models": [
+        "cloud_sword"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.cloud_sword"
+    },
+    "incarnation_of_light": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/incarnation_of_light.png",
+      "hud_icon": "textures/gui/thunder_god/incarnation_of_light.png",
+      "models": [
+        "ball_lightning"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.incarnation_of_light"
+    },
+    "starfall": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/starfall.png",
+      "hud_icon": "textures/gui/thunder_god/starfall.png",
+      "models": [
+        "ball_lightning",
+        "warning_ring"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.starfall"
+    },
+    "lightning_strike": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/lightning_strike.png",
+      "hud_icon": "textures/gui/thunder_god/lightning_strike.png",
+      "models": [
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.lightning_strike"
+    },
+    "lightning_bolt_arrow": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/lightning_bolt_arrow.png",
+      "hud_icon": "textures/gui/thunder_god/lightning_bolt_arrow.png",
+      "models": [
+        "lightning_arrow"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.lightning_bolt_arrow"
+    },
+    "chain_lightning": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/chain_lightning.png",
+      "hud_icon": "textures/gui/thunder_god/chain_lightning.png",
+      "models": [
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.chain_lightning"
+    },
+    "lightning_storm": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/lightning_storm.png",
+      "hud_icon": "textures/gui/thunder_god/lightning_storm.png",
+      "models": [
+        "ball_lightning",
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.lightning_storm"
+    },
+    "magnetic_pole_pull": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/magnetic_pole_pull.png",
+      "hud_icon": "textures/gui/thunder_god/magnetic_pole_pull.png",
+      "models": [
+        "whirlpool"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.magnetic_pole_pull"
+    },
+    "electromagnetic_disruption": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/electromagnetic_disruption.png",
+      "hud_icon": "textures/gui/thunder_god/electromagnetic_disruption.png",
+      "models": [],
+      "sound": null
+    },
+    "heavenly_punishment": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/heavenly_punishment.png",
+      "hud_icon": "textures/gui/thunder_god/heavenly_punishment.png",
+      "models": [
+        "heavenly_pillar",
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.heavenly_punishment"
+    },
+    "ocean_of_lightning": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/ocean_of_lightning.png",
+      "hud_icon": "textures/gui/thunder_god/ocean_of_lightning.png",
+      "models": [
+        "whirlpool",
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.ocean_of_lightning"
+    },
+    "lightning_forest": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/lightning_forest.png",
+      "hud_icon": "textures/gui/thunder_god/lightning_forest.png",
+      "models": [
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.lightning_forest"
+    },
+    "siren_song": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/siren_song.png",
+      "hud_icon": "textures/gui/thunder_god/siren_song.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.siren_song"
+    },
+    "discord": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/discord.png",
+      "hud_icon": "textures/gui/thunder_god/discord.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.discord"
+    },
+    "thunderclap": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/thunderclap.png",
+      "hud_icon": "textures/gui/thunder_god/thunderclap.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.thunderclap"
+    },
+    "roar": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/roar.png",
+      "hud_icon": "textures/gui/thunder_god/roar.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.roar"
+    },
+    "death_dirge": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/death_dirge.png",
+      "hud_icon": "textures/gui/thunder_god/death_dirge.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.death_dirge"
+    },
+    "sound_of_horror": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/sound_of_horror.png",
+      "hud_icon": "textures/gui/thunder_god/sound_of_horror.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.sound_of_horror"
+    },
+    "requiem": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/requiem.png",
+      "hud_icon": "textures/gui/thunder_god/requiem.png",
+      "models": [
+        "sound_wave"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.requiem"
+    },
+    "roar_of_the_thunder_god": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/roar_of_the_thunder_god.png",
+      "hud_icon": "textures/gui/thunder_god/roar_of_the_thunder_god.png",
+      "models": [
+        "sound_wave",
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.roar_of_the_thunder_god"
+    },
+    "tyrants_presence": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/tyrants_presence.png",
+      "hud_icon": "textures/gui/thunder_god/tyrants_presence.png",
+      "models": [
+        "tyrant_crown"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.tyrants_presence"
+    },
+    "hurricane": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/hurricane.png",
+      "hud_icon": "textures/gui/thunder_god/hurricane.png",
+      "models": [
+        "whirlpool",
+        "windblade"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.hurricane"
+    },
+    "tsunami": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/tsunami.png",
+      "hud_icon": "textures/gui/thunder_god/tsunami.png",
+      "models": [
+        "wave_crest_0",
+        "wave_foam"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.tsunami"
+    },
+    "wrath_of_the_sea": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/wrath_of_the_sea.png",
+      "hud_icon": "textures/gui/thunder_god/wrath_of_the_sea.png",
+      "models": [
+        "wave_crest_0"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.wrath_of_the_sea"
+    },
+    "storm_incarnation": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/storm_incarnation.png",
+      "hud_icon": "textures/gui/thunder_god/storm_incarnation.png",
+      "models": [
+        "storm_cloud",
+        "cloud_face",
+        "rain_sheet",
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.storm_incarnation"
+    },
+    "storm_hell": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/storm_hell.png",
+      "hud_icon": "textures/gui/thunder_god/storm_hell.png",
+      "models": [
+        "storm_cloud",
+        "rain_sheet",
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.storm_hell"
+    },
+    "chasm_of_storms": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/chasm_of_storms.png",
+      "hud_icon": "textures/gui/thunder_god/chasm_of_storms.png",
+      "models": [
+        "kingdom_chasm"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.chasm_of_storms"
+    },
+    "dreadful_heaven": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/dreadful_heaven.png",
+      "hud_icon": "textures/gui/thunder_god/dreadful_heaven.png",
+      "models": [
+        "kingdom_dreadful"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.dreadful_heaven"
+    },
+    "banish_into_the_storm": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/banish_into_the_storm.png",
+      "hud_icon": "textures/gui/thunder_god/banish_into_the_storm.png",
+      "models": [
+        "whirlpool"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.banish_into_the_storm"
+    },
+    "source_of_wrath": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/source_of_wrath.png",
+      "hud_icon": "textures/gui/thunder_god/source_of_wrath.png",
+      "models": [
+        "tyrant_crown"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.source_of_wrath"
+    },
+    "water_wall": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/water_wall.png",
+      "hud_icon": "textures/gui/thunder_god/water_wall.png",
+      "models": [
+        "water_curtain"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.water_wall"
+    },
+    "torrential_downpour": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/torrential_downpour.png",
+      "hud_icon": "textures/gui/thunder_god/torrential_downpour.png",
+      "models": [
+        "storm_cloud",
+        "rain_sheet"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.torrential_downpour"
+    },
+    "thunder_strike": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/thunder_strike.png",
+      "hud_icon": "textures/gui/thunder_god/thunder_strike.png",
+      "models": [
+        "bolt"
+      ],
+      "sound": "circle_of_inevitability:thunder_god.thunder_strike"
+    },
+    "dance_of_thunder": {
+      "wheel_icon": "textures/gui/ability_menus/thunder_god/dance_of_thunder.png",
+      "hud_icon": "textures/gui/thunder_god/dance_of_thunder.png",
+      "models": [],
+      "sound": null
+    }
+  },
+  "silent_invisible": [
+    "dance_of_thunder",
+    "electromagnetic_disruption"
+  ],
+  "sound_events": {
+    "harpoon": "circle_of_inevitability:thunder_god.harpoon",
+    "illusory_scales": "circle_of_inevitability:thunder_god.illusory_scales",
+    "raging_blow": "circle_of_inevitability:thunder_god.raging_blow",
+    "wrath": "circle_of_inevitability:thunder_god.wrath",
+    "water_veil": "circle_of_inevitability:thunder_god.water_veil",
+    "sweeping_wave": "circle_of_inevitability:thunder_god.sweeping_wave",
+    "tideheal": "circle_of_inevitability:thunder_god.tideheal",
+    "water_curtain": "circle_of_inevitability:thunder_god.water_curtain",
+    "water_sphere": "circle_of_inevitability:thunder_god.water_sphere",
+    "corrosive_rain": "circle_of_inevitability:thunder_god.corrosive_rain",
+    "sea_master": "circle_of_inevitability:thunder_god.sea_master",
+    "maelstrom": "circle_of_inevitability:thunder_god.maelstrom",
+    "destructive_droplet": "circle_of_inevitability:thunder_god.destructive_droplet",
+    "windblade": "circle_of_inevitability:thunder_god.windblade",
+    "gale_burst": "circle_of_inevitability:thunder_god.gale_burst",
+    "gale_ride": "circle_of_inevitability:thunder_god.gale_ride",
+    "wind_binding": "circle_of_inevitability:thunder_god.wind_binding",
+    "windblade_legion": "circle_of_inevitability:thunder_god.windblade_legion",
+    "sonic_boom": "circle_of_inevitability:thunder_god.sonic_boom",
+    "cloud_sword": "circle_of_inevitability:thunder_god.cloud_sword",
+    "incarnation_of_light": "circle_of_inevitability:thunder_god.incarnation_of_light",
+    "starfall": "circle_of_inevitability:thunder_god.starfall",
+    "lightning_strike": "circle_of_inevitability:thunder_god.lightning_strike",
+    "lightning_bolt_arrow": "circle_of_inevitability:thunder_god.lightning_bolt_arrow",
+    "chain_lightning": "circle_of_inevitability:thunder_god.chain_lightning",
+    "lightning_storm": "circle_of_inevitability:thunder_god.lightning_storm",
+    "magnetic_pole_pull": "circle_of_inevitability:thunder_god.magnetic_pole_pull",
+    "heavenly_punishment": "circle_of_inevitability:thunder_god.heavenly_punishment",
+    "ocean_of_lightning": "circle_of_inevitability:thunder_god.ocean_of_lightning",
+    "lightning_forest": "circle_of_inevitability:thunder_god.lightning_forest",
+    "siren_song": "circle_of_inevitability:thunder_god.siren_song",
+    "discord": "circle_of_inevitability:thunder_god.discord",
+    "thunderclap": "circle_of_inevitability:thunder_god.thunderclap",
+    "roar": "circle_of_inevitability:thunder_god.roar",
+    "death_dirge": "circle_of_inevitability:thunder_god.death_dirge",
+    "sound_of_horror": "circle_of_inevitability:thunder_god.sound_of_horror",
+    "requiem": "circle_of_inevitability:thunder_god.requiem",
+    "roar_of_the_thunder_god": "circle_of_inevitability:thunder_god.roar_of_the_thunder_god",
+    "tyrants_presence": "circle_of_inevitability:thunder_god.tyrants_presence",
+    "hurricane": "circle_of_inevitability:thunder_god.hurricane",
+    "tsunami": "circle_of_inevitability:thunder_god.tsunami",
+    "wrath_of_the_sea": "circle_of_inevitability:thunder_god.wrath_of_the_sea",
+    "storm_incarnation": "circle_of_inevitability:thunder_god.storm_incarnation",
+    "storm_hell": "circle_of_inevitability:thunder_god.storm_hell",
+    "chasm_of_storms": "circle_of_inevitability:thunder_god.chasm_of_storms",
+    "dreadful_heaven": "circle_of_inevitability:thunder_god.dreadful_heaven",
+    "banish_into_the_storm": "circle_of_inevitability:thunder_god.banish_into_the_storm",
+    "source_of_wrath": "circle_of_inevitability:thunder_god.source_of_wrath",
+    "water_wall": "circle_of_inevitability:thunder_god.water_wall",
+    "torrential_downpour": "circle_of_inevitability:thunder_god.torrential_downpour",
+    "thunder_strike": "circle_of_inevitability:thunder_god.thunder_strike",
+    "bolt_crack": "circle_of_inevitability:thunder_god.bolt_crack",
+    "thunder_roll": "circle_of_inevitability:thunder_god.thunder_roll",
+    "harpoon_hit": "circle_of_inevitability:thunder_god.harpoon_hit",
+    "rope_reel": "circle_of_inevitability:thunder_god.rope_reel",
+    "scales_break": "circle_of_inevitability:thunder_god.scales_break",
+    "wave_break": "circle_of_inevitability:thunder_god.wave_break",
+    "rain_loop": "circle_of_inevitability:thunder_god.rain_loop",
+    "wind_loop": "circle_of_inevitability:thunder_god.wind_loop",
+    "storm_loop": "circle_of_inevitability:thunder_god.storm_loop",
+    "rage_gain": "circle_of_inevitability:thunder_god.rage_gain",
+    "rage_full": "circle_of_inevitability:thunder_god.rage_full",
+    "wrath_end": "circle_of_inevitability:thunder_god.wrath_end",
+    "banish_return": "circle_of_inevitability:thunder_god.banish_return",
+    "kingdom_end": "circle_of_inevitability:thunder_god.kingdom_end",
+    "melee_swing": "circle_of_inevitability:thunder_god.melee_swing"
+  },
+  "animation": {
+    "wave_crest": {
+      "frames": 4,
+      "smooth": true,
+      "ticks": 12
+    },
+    "texture_frames": 4,
+    "texture_frametime": 3
+  },
+  "optional_melee": {
+    "steps": [
+      "Boarding Cut",
+      "Anchor Swing",
+      "Gale Slash",
+      "Squall Sweep",
+      "Tide Heave",
+      "Thunder Lunge",
+      "Rising Storm",
+      "Final Strike"
+    ],
+    "particles": [
+      "wind_streak",
+      "windblade",
+      "spark",
+      "arc_0",
+      "arc_1",
+      "arc_2"
+    ],
+    "sound": "melee_swing"
+  },
+  "excluded": [
+    "Mythical Creature Form (explicitly deferred in the design)",
+    "Earthquake",
+    "Snow Storm",
+    "new sea-creature models (uses vanilla summons)"
+  ],
+  "files": {
+    "models/model_fx/thunder_god/ball_lightning.json": "cadd351ec1e5846daf107b7b09d29e0eeb0d3c691475f6fa9046bc28036fc6ac",
+    "models/model_fx/thunder_god/bolt.json": "d089dc42857d2e5906810326dc2316237e690ee3c48c31cb2383130d3438a5f6",
+    "models/model_fx/thunder_god/cloud_face.json": "c6a786bd22a62353d3b944a1a0ffffbd971eff855b8b7020d37de41f21ca3fa0",
+    "models/model_fx/thunder_god/cloud_sword.json": "04eb34af88e535a77321aca666e467e9f78130a2c37dbc864047b290c84907ad",
+    "models/model_fx/thunder_god/droplet.json": "7e002040a6164b560aa030d20ac6b931cf65f0cc75124a2b12c2596d7b952e48",
+    "models/model_fx/thunder_god/harpoon.json": "65aa75e92189cd8069c2ea0351061fa3f76558bfbc9c1a9de1b3d17ce9811a44",
+    "models/model_fx/thunder_god/heavenly_pillar.json": "32c94d263459af9ada35f8a7181b61ea808fd463eef720d6db0de60cd3e8e51c",
+    "models/model_fx/thunder_god/kingdom_chasm.json": "b3a6f339a40e09ec61b1ae88c5f6e82bff5c02d2afa23bb094b97d2902395df8",
+    "models/model_fx/thunder_god/kingdom_dreadful.json": "19c2c755fd4a69918b259a39c03e7b28081f2e53bc86c4cfa931aac2e241f18b",
+    "models/model_fx/thunder_god/lightning_arrow.json": "e1f4374acfdee705635627852f6ef1ce715bbb42421c541f94aa900cf16a29fe",
+    "models/model_fx/thunder_god/rain_sheet.json": "28a50e21f6d0247647a2d76fa9b30c2324f4cdb5f2b6d818128921fdea3c9772",
+    "models/model_fx/thunder_god/rope_segment.json": "bc599a298b420e722ee73cbc42632bc6e045c164e588b2437223917a572ee156",
+    "models/model_fx/thunder_god/scale_armor.json": "5657701fedc33d679b41fa32e2f42f66b1a51a03e15bd61ce82cbfcec5c4d97c",
+    "models/model_fx/thunder_god/sound_wave.json": "f3829774462f26e07142e83edab80bafe7aea41842244dff7f1a0f14ec0d7775",
+    "models/model_fx/thunder_god/storm_cloud.json": "b665f1dd921f5412e62f2ce0e684c3fbf388d81274dabd6ead47e830bd042b5a",
+    "models/model_fx/thunder_god/tyrant_crown.json": "4ac841d824d54c0f945f92fa04fc6d46a0c11023a86dc264e22e7c335b65bf93",
+    "models/model_fx/thunder_god/warning_ring.json": "8231c94dc6addfbd0cedd64ab63af50deb2a8ff61389525a8dae2912f50177c8",
+    "models/model_fx/thunder_god/water_curtain.json": "cf8ed3ee9a7de906d8436585d1a16a859628079c198629a2bf7707969e0dc946",
+    "models/model_fx/thunder_god/water_film.json": "1f82fac2e31ecfac2c4894b1e7536dcb01db48a721f61a612a95b80b8ed12e6a",
+    "models/model_fx/thunder_god/water_sphere.json": "c397d1ebab34def4a5f4b68edbd47b97c0d3c364aa21933b14ff506464245c88",
+    "models/model_fx/thunder_god/wave_crest_0.json": "589260b0fc56d5a8a811211494eca2fa6b66aadbf57a25c87b0249aec909a9b2",
+    "models/model_fx/thunder_god/wave_crest_1.json": "fcf4c28d3480d14c93339320871c25354395afdfb2260a768962b6721a91d685",
+    "models/model_fx/thunder_god/wave_crest_2.json": "b9b9131356235cd9fd977d00787366700865a6ad41830b9051f53adf08b9f588",
+    "models/model_fx/thunder_god/wave_crest_3.json": "2ec2490e86962fff3f2c056cf3327033f0b7a159b66299af2aee6f4745e08a26",
+    "models/model_fx/thunder_god/wave_foam.json": "4b160e3a2191a48ea809fc5cd546e387324eae91669af1955543712b3a24c568",
+    "models/model_fx/thunder_god/whirlpool.json": "08ccd9bb222ef8ab49f301d55fa17a40eaed74001746d9e09b2522a5f3337b66",
+    "models/model_fx/thunder_god/windblade.json": "4bd8966931da171cdb2355eea84bb924bfe4f916d389ff36f3c8cca9829e5cf0",
+    "sounds/thunder_god/banish_into_the_storm.ogg": "3001a959a3bb7c4073f759435c27843823597c39e9120c1d5c299ca5b530b2e1",
+    "sounds/thunder_god/banish_return.ogg": "4f3435ffca021445f9d4917e4bacc799489faebbd107a1bd930095cad6792690",
+    "sounds/thunder_god/bolt_crack.ogg": "ce71e91552319acd718aafc31a6629d26b11ca143b7e3d3ff7a309e259183da9",
+    "sounds/thunder_god/chain_lightning.ogg": "6b5c8b6834d521d1e827dce79774c9b69f7de526fe84c6a616ba4e5ac6dad398",
+    "sounds/thunder_god/chasm_of_storms.ogg": "90cd2d7b4a43ec4269acb9c6fa0dc81d8cc7670757a3160fc88db8a8bbb58ad8",
+    "sounds/thunder_god/cloud_sword.ogg": "2e686a66f4482da80071e70bea54d7da68e3c5a36a56685c08dee2890107bf4d",
+    "sounds/thunder_god/corrosive_rain.ogg": "8b6be80e974231618e75abecda15d9064ec85640cd27895e45ad2d1809f7a2a6",
+    "sounds/thunder_god/death_dirge.ogg": "a336cd652fdfd7c3b98fb4e64c2f593d2d4e682beb59367f884feec0d6cb1978",
+    "sounds/thunder_god/destructive_droplet.ogg": "7cf55b042fbd1d910f5a86bcbde75d21c24a3068608ece34c37f2c63630cf1da",
+    "sounds/thunder_god/discord.ogg": "6676f60f6de1bad91c80300ef65bb903b6c2e6c55fe0ecb44bdb147a6defee40",
+    "sounds/thunder_god/dreadful_heaven.ogg": "eb6863d16285c6a11cf73baa51934d0b79d76d9f566a4b374353e827c6f28739",
+    "sounds/thunder_god/gale_burst.ogg": "7ebcf9780c4dfbb417974ad8d32c40d9fa12107c162af3e540170201f42b9e8d",
+    "sounds/thunder_god/gale_ride.ogg": "51b0f3ce4aff0fbbd3d8f2fdae5bb4b0097f8378cb3ae30521342e918544b9a0",
+    "sounds/thunder_god/harpoon.ogg": "217504cae58f2a5430b02b3fddf9066118e1f7aab15f403ee1ecdfe7cfc1068f",
+    "sounds/thunder_god/harpoon_hit.ogg": "f522924682f59c75f63150f082b3c00ed2bd8e9472ed33f04f50cfb1804c9408",
+    "sounds/thunder_god/heavenly_punishment.ogg": "69f989ebee08434775435442c7b8a512d3d79832faf8e9c1b7cc1889ab0bd75b",
+    "sounds/thunder_god/hurricane.ogg": "2b7c84f3fff5a3941f8c0b3acf9d5384a3b4e681623d6a97e5243cdf8621b27e",
+    "sounds/thunder_god/illusory_scales.ogg": "3e4c292df6d02c33021b1f8fc9db587e6ff314a0584699fc1242fa6d69fef44f",
+    "sounds/thunder_god/incarnation_of_light.ogg": "651af30b186232918f29592bced786e439b0d674fad44764fa93e56f0405a56f",
+    "sounds/thunder_god/kingdom_end.ogg": "2f8e1df22af0b63713464554b7e166dbb1592c6b8af77193b65c60a9d8a2f846",
+    "sounds/thunder_god/lightning_bolt_arrow.ogg": "3efa279c356e05377cd38414d5a0c61355f726040642fbbe2a03a001daba69d9",
+    "sounds/thunder_god/lightning_forest.ogg": "cfc0022d7241b7aeee0f0670e8c75a59e9955986715de5a43c7b242ee961ca09",
+    "sounds/thunder_god/lightning_storm.ogg": "e3ca237f204b087a46b29d52f44bbc336f75c817d27658cd210a28d7e5a1316e",
+    "sounds/thunder_god/lightning_strike.ogg": "e7bcea913d5e6a11f98a3d922f95fe5eba66f496ce94884fb15fc8e3cce784e5",
+    "sounds/thunder_god/maelstrom.ogg": "a08ed4010d8b86ed0d083c7ce84eab2c3f3f0d081817a82eff593f30e7bd7352",
+    "sounds/thunder_god/magnetic_pole_pull.ogg": "a814ed11411d289941d56d40f05d0234d9a22875ea8634f1b36c8c025207eab0",
+    "sounds/thunder_god/melee_swing.ogg": "659155f8c666c7f7ce89e20853faec934001cbbe214dd1e02acdbf1361aa4984",
+    "sounds/thunder_god/ocean_of_lightning.ogg": "4c7fc594a05bc4c7cfe5fa4052a423223e4d98afe32275f8051276d1fcb6ddda",
+    "sounds/thunder_god/rage_full.ogg": "e16d2155de6726489072478e01830e33ee14d95a736274e7e87b3e3c6d3647fe",
+    "sounds/thunder_god/rage_gain.ogg": "197084539759ef31c4b2cd9df94159e658b4947f3065ca882b6576bc2ac4d792",
+    "sounds/thunder_god/raging_blow.ogg": "e60f44b784140af9161a1ef172ba7c2ade4a4fb39739866fe96e597bb48b03b4",
+    "sounds/thunder_god/rain_loop.ogg": "e209ece8f0e731adbf0644ef144946c7c1335d6ba5cffcd747519b1e26bd7fc4",
+    "sounds/thunder_god/requiem.ogg": "fd1ab3f1738c267e8f314834c129fdfea0aa114a59a5a0f2d1d1ace98004459c",
+    "sounds/thunder_god/roar.ogg": "95113978ba78d16b6fa2cdf90bf2a6530ae8b5bc87a6efbcdbb7087d65f0fced",
+    "sounds/thunder_god/roar_of_the_thunder_god.ogg": "ee5418aa41e8396a87612f488b6bce391824867db72d4abfd6275a34225eccfc",
+    "sounds/thunder_god/rope_reel.ogg": "c6946cb7f47778df4dac189132d80335c68e894ff3e0bf8124481fbf1a95cc69",
+    "sounds/thunder_god/scales_break.ogg": "ae9ce91d3b7777ec5c04f8c347baa7821cc69004c33d2ada344ed48fb4369805",
+    "sounds/thunder_god/sea_master.ogg": "2b757df9b148ee41c7fe59da67a4f291497b33bd6166c3221b9758f28ce0b2a8",
+    "sounds/thunder_god/siren_song.ogg": "6ab177d1072eb3881d0ed363a38720b647800585919be863a6411fdad7cf94e1",
+    "sounds/thunder_god/sonic_boom.ogg": "de2f133ecf18993be9c53a56692bd97f8fd5cf6e31464803e45447f72181f387",
+    "sounds/thunder_god/sound_of_horror.ogg": "1b8745772698328fa4a022be021483af7346cb8807808213a5938ac88d9d2710",
+    "sounds/thunder_god/source_of_wrath.ogg": "73e119a1c8be2d3464c7fbbdc5532e79ee361e1930a9d1050e458995b942baa8",
+    "sounds/thunder_god/starfall.ogg": "45e417a61db8ffe481a04996e7eaaa9bae4c4dea0e2019b480e0ae464e431b04",
+    "sounds/thunder_god/storm_hell.ogg": "1a3054f115fb960bb3691137536789d756236116f8226e84a218b73695d9c9a0",
+    "sounds/thunder_god/storm_incarnation.ogg": "c396122b91947dcd1514f837ef967be8936d07f59fe1ca0f17c099b7a1669857",
+    "sounds/thunder_god/storm_loop.ogg": "7bd15a1c1db6eb51db9cdd2da306aa79ea72a9f63236193d796257ab2ea3432a",
+    "sounds/thunder_god/sweeping_wave.ogg": "15012dbc3e949595b77afa6342b37e6dece4e2f379edb55bce310ac68a6a844e",
+    "sounds/thunder_god/thunder_roll.ogg": "7b5a7834229301ba31c7b91783223902ba69982dba8c2173f4db2b03d6f2a83c",
+    "sounds/thunder_god/thunder_strike.ogg": "84a7074cbfaed2477d00cc1d448d77265aa29b3214df9e8f49fe30aa7d24139a",
+    "sounds/thunder_god/thunderclap.ogg": "a29e18c569f8fa7d772a4e8a69d5f48ee5d1363476bd9293fec7212d01d8f8dd",
+    "sounds/thunder_god/tideheal.ogg": "243d68657586dda4b0872817c979e1954f28666f0063e55c9d1d54aa09f145b3",
+    "sounds/thunder_god/torrential_downpour.ogg": "9733b79dcd5b1b61c1d9a97c4d1260b8fd5c3a64f4f9d4cb2dea355f0642dcba",
+    "sounds/thunder_god/tsunami.ogg": "28ade52f6379513896e26ab1323a2896731abfe3a90b67dab9752d03e9b54e6b",
+    "sounds/thunder_god/tyrants_presence.ogg": "ec155e3e580790d123be2dcaa91dc37b18104acd3b584c578bebb136fe9f0736",
+    "sounds/thunder_god/water_curtain.ogg": "4bcce7294de64421f5a902722a5fef33cb0eb4a477c32c8d89f26df3b46e6700",
+    "sounds/thunder_god/water_sphere.ogg": "f9d5035b6eefa0c9cccf1a04d61f7965e72d807703aa70765f7dd16c9d86a3a6",
+    "sounds/thunder_god/water_veil.ogg": "4746280fe34b99712c67377646bd27cec388b61bc3248552ae0faf504f25c363",
+    "sounds/thunder_god/water_wall.ogg": "d5677aad142d867258ed376100c3ec91ca576a9916d14e74f136a0dde864ae91",
+    "sounds/thunder_god/wave_break.ogg": "22718343a6c96b7c54c9ece22c9c8c9d34b04e9b271e3ec57a09890bada32a1f",
+    "sounds/thunder_god/wind_binding.ogg": "ed04b3862f80642e80d76a63443396556b7f6cfc5c4c3f7307d1cb53bf619b22",
+    "sounds/thunder_god/wind_loop.ogg": "f787fe50c7ab8316371539dadf69f8dfb7a74d13efe173a7af811eff9f9b6457",
+    "sounds/thunder_god/windblade.ogg": "06db1b267b9357af91237e05f2788642e5c3ffc0843ba00a5be0ac9d3f8cd258",
+    "sounds/thunder_god/windblade_legion.ogg": "f39651fe3620bd0af38c9e668082b0fd0b554ff6a396feabf781541adaae26ff",
+    "sounds/thunder_god/wrath.ogg": "9aeaea4ede30ac1db3898d66af4c406a2e7462c4a78b5d1da4c91b084133592d",
+    "sounds/thunder_god/wrath_end.ogg": "5b5a0db39135b7391e7816c061cbabb2314a2980300655021b4eb4390662044d",
+    "sounds/thunder_god/wrath_of_the_sea.ogg": "69202f9b382b0d82ae3b24aab0fc1523e856d5fdfaa854baff44a6e655f63bb9",
+    "textures/gui/ability_menus/thunder_god/banish_into_the_storm.png": "d1f9bf44d5347b616d6d6d12a3c2974d1c90f9f5b98e9fbce8b49e449df253b7",
+    "textures/gui/ability_menus/thunder_god/chain_lightning.png": "9de028ac674d269aed3d450ead127cc58f00dd07e0a3e1d8923c1c0bbd8582ef",
+    "textures/gui/ability_menus/thunder_god/chasm_of_storms.png": "e8b7a71c4348013f49057e9ba3d8409878b10568618839bafb539e52064f1aab",
+    "textures/gui/ability_menus/thunder_god/cloud_sword.png": "fdd91f0364c124f8edb75bb133cab6aa525fdb3a8dfd5b6f3fa64456ff0462b9",
+    "textures/gui/ability_menus/thunder_god/corrosive_rain.png": "ec73caf529cd70d52f8d8a067b8a111fea6825f2714d4a0a7a9fa1fa8ea193ea",
+    "textures/gui/ability_menus/thunder_god/dance_of_thunder.png": "dcb8b16369a26cecdf9b1e461cb433561fde2e5af08f0bedf51ee98269cdab96",
+    "textures/gui/ability_menus/thunder_god/death_dirge.png": "4aa3a9ada6f16b65ca7bc52bcd90ff64ecf10e594601e3e0154cb55c4d9f3916",
+    "textures/gui/ability_menus/thunder_god/destructive_droplet.png": "4a6470276237475cb8730f1f25d4fbb1989d190a10d9e3df4297a23dc2d938ac",
+    "textures/gui/ability_menus/thunder_god/discord.png": "6c37775b2868933f603b4892e8b03ff42540f324a4c4fd0eef163d293f5cafe1",
+    "textures/gui/ability_menus/thunder_god/dreadful_heaven.png": "1ce92fc9908a7b01d30e34a35158db5ec99da005bb4ae0f4d928246125635409",
+    "textures/gui/ability_menus/thunder_god/electromagnetic_disruption.png": "6033be209f11af22661d78949b2b6107f8217635319a763f38cf569db400a0c4",
+    "textures/gui/ability_menus/thunder_god/gale_burst.png": "ebd0e2049c2250b567da7ba3af773d298f675bbf8e5c4c3c081dcb926e7d8292",
+    "textures/gui/ability_menus/thunder_god/gale_ride.png": "2479e4b87ca5517348c37968b42a5371edd22365a5c8cd97c5362ad1da85543d",
+    "textures/gui/ability_menus/thunder_god/harpoon.png": "66e9db8dc23333c4a0cf483074e4de984786bba821774d3efc0561c9f43d6753",
+    "textures/gui/ability_menus/thunder_god/heavenly_punishment.png": "234498318077ad4cab3ab945a2b831d7588639441fd3facc050a09ad7f761ad4",
+    "textures/gui/ability_menus/thunder_god/hurricane.png": "aea085e05d5571e42232a9e80f83815e5fb4aa09347a801b738bcdee0942ed50",
+    "textures/gui/ability_menus/thunder_god/illusory_scales.png": "5dcbd1b644a025d7e2165849624e0549b808e6b969147ab44574dab5f6849efe",
+    "textures/gui/ability_menus/thunder_god/incarnation_of_light.png": "a0fc97e9354aca72e0672410e5e3d50ac85ec875d3eefedf4e8bf101e917b3d0",
+    "textures/gui/ability_menus/thunder_god/lightning_bolt_arrow.png": "bfb76a09b2bc5273e73b1406cfc8005f6efbfd959678164aaf0a25dfa543111c",
+    "textures/gui/ability_menus/thunder_god/lightning_forest.png": "b8d05455a69af42746328b686bd165371228a4575cfca5ab7c64587fe5447d8d",
+    "textures/gui/ability_menus/thunder_god/lightning_storm.png": "0c9605517b7611bf44c39ee545c73faa198d1a6d26fac65da2424bd231a30406",
+    "textures/gui/ability_menus/thunder_god/lightning_strike.png": "5c1e71f35d06b88dcd52ef4e5ec5b23d610f111c380d8e9eb9167b9cd43fb6dc",
+    "textures/gui/ability_menus/thunder_god/maelstrom.png": "bc8f91c589ae86e05306d90de37ec9c15cf2c6eee38ae83f726d3f1e6232982a",
+    "textures/gui/ability_menus/thunder_god/magnetic_pole_pull.png": "c65ee53f9075106477735504c81fda041786239a6315dead229fdc3bf442e6df",
+    "textures/gui/ability_menus/thunder_god/ocean_of_lightning.png": "f001282511d213bf09aad5f1e83a1474f647ca610c644d572d3390dbae3e42a8",
+    "textures/gui/ability_menus/thunder_god/raging_blow.png": "d956f80b9fb2a41263c19601de46dec6b720ad0101cad0e410c48bc20cdaf652",
+    "textures/gui/ability_menus/thunder_god/requiem.png": "427279f458d2bae2901543e6201cce28676d23e3edcc6c7899ae52e7ceea8064",
+    "textures/gui/ability_menus/thunder_god/roar.png": "8d6911f1d08568554f72c756e14fa9df5d56dd406e4b74f23dc565e93a4b1a32",
+    "textures/gui/ability_menus/thunder_god/roar_of_the_thunder_god.png": "b02fe00b382147c3d055c72a43df82c97f7074ee78aa2d14fde9bb8496f4a3a9",
+    "textures/gui/ability_menus/thunder_god/sea_master.png": "887e224b03a853d8eacea96bcc71711e200048578b604108501fc904838ba7b0",
+    "textures/gui/ability_menus/thunder_god/siren_song.png": "3d03dae3d59a3f8262b12e4d080cae480ed8b1d1caaa48676074a1e5aab5c402",
+    "textures/gui/ability_menus/thunder_god/sonic_boom.png": "accbf9feb7f981aa6ac05ee77ea605eeee1091ea7966357158f4c02d32a8bb6e",
+    "textures/gui/ability_menus/thunder_god/sound_of_horror.png": "f6660714d159655baa9726b1ae4c99f3b95b2f92abf3b2f0a735981d87e11c9b",
+    "textures/gui/ability_menus/thunder_god/source_of_wrath.png": "4f582f1b4723e2fddeb441c42cb7035329ea9f166d838db2c500686bf233ddff",
+    "textures/gui/ability_menus/thunder_god/starfall.png": "dd3fef4ad4b48f45a7164613ce990e91ca48b2489e73eec13153cf41275c4506",
+    "textures/gui/ability_menus/thunder_god/storm_hell.png": "95b1e082486e9e46c1af78a0784e4e352d4e7bed0f332fde03c0b2b84fbe51b1",
+    "textures/gui/ability_menus/thunder_god/storm_incarnation.png": "01d650879e4baf89c76fe4fc90c7f9cf9ca47ad83201a00834fb6ca0449b859a",
+    "textures/gui/ability_menus/thunder_god/sweeping_wave.png": "be5472da5e3bb02e56613820804341799e684d9b578fd538ffda8c21e7e9991e",
+    "textures/gui/ability_menus/thunder_god/thunder_strike.png": "3e02f21f4d9c6f83311bb20218c9e000e392a83571f5240c0d7a5a111227078b",
+    "textures/gui/ability_menus/thunder_god/thunderclap.png": "a37fe2fd8d2d9415f17e4c753249711ce13ff858ad4b872d600a6aedb2fd64c4",
+    "textures/gui/ability_menus/thunder_god/tideheal.png": "ef5158dcea9c72f7d7548b20cadec97daa3d2daa5733e02618369edc3d3deb78",
+    "textures/gui/ability_menus/thunder_god/torrential_downpour.png": "236b089ddcb0897a159913a0f3d469da01b7f03ff6ba9f86ebe3e39c63b752a6",
+    "textures/gui/ability_menus/thunder_god/tsunami.png": "2d777dca3b16ba17ce7b507edbbb19873cbf28b4b1b9f76e73a23f82e81ca058",
+    "textures/gui/ability_menus/thunder_god/tyrants_presence.png": "7feeb8e600be30ff6cefc6be004bc5469f1cd2390bde3a1814302e1a6fa6e809",
+    "textures/gui/ability_menus/thunder_god/water_curtain.png": "df44753879a9f9eb5cc81d670e8048cfdc9ce3f169bb5faee2687606227cbd6f",
+    "textures/gui/ability_menus/thunder_god/water_sphere.png": "f2dba078ac4bf6721f703e773ea0b1f89cdc1b21677c9cfbd6466f793d30c832",
+    "textures/gui/ability_menus/thunder_god/water_veil.png": "17b623cca0e9ad898ea7b47a2d8c84789e184928a4580686a488b57e00e1c6da",
+    "textures/gui/ability_menus/thunder_god/water_wall.png": "a98e375f184f5583f14b00dd53d54923f8c0cbd01681c0f9bbd3915e1c2e085a",
+    "textures/gui/ability_menus/thunder_god/wind_binding.png": "215435cac71e57284b80326a7fe6e5236b236b279d3f67dc8bb228aa408dd359",
+    "textures/gui/ability_menus/thunder_god/windblade.png": "2a9326b8a810e3f6fb6eb1a59c78f59b5c84c86d247866f06e9b4fbe296f573e",
+    "textures/gui/ability_menus/thunder_god/windblade_legion.png": "fee37c5ebb9d365c9b33ece352a3ffe7d7a1bbde36a86a5ad6af6bdf3b850f93",
+    "textures/gui/ability_menus/thunder_god/wrath.png": "1489136d9ca10fbd2aff7aeae9c1e2fa2268745437b965a2b20bba4a9345c2f4",
+    "textures/gui/ability_menus/thunder_god/wrath_of_the_sea.png": "89522060d1ce36d8e7c59560911be4bbd7170dd473f5b4385126c101683184e8",
+    "textures/gui/pathway_icons/thunder_god.png": "d2e630a2c0dd22fc75536a0023ac94b018880e0ca1b58b0be13b2976032301ae",
+    "textures/gui/thunder_god/aquatic_affinity.png": "d2ddea91527806fec9773d29b3c282b99d813fb12e3760730560e1d27e8d63bb",
+    "textures/gui/thunder_god/authority_of_thunder.png": "d2e630a2c0dd22fc75536a0023ac94b018880e0ca1b58b0be13b2976032301ae",
+    "textures/gui/thunder_god/balance.png": "21697689e4e3271914c07b33de86adbf5d693afd3f2699d649744b777457c472",
+    "textures/gui/thunder_god/banish_into_the_storm.png": "3f373154bd984000f7467e06157e31b90ad7380048ed68a633dc2f1b7e7109c8",
+    "textures/gui/thunder_god/chain_lightning.png": "a5845a0b499182666aeb11b88523574a98af724337fd6bd755db31fa0c17765b",
+    "textures/gui/thunder_god/chasm_of_storms.png": "7f0ace73e50641806eed9efdd48d9160dd22c65b48a324868b49c876d5c078b9",
+    "textures/gui/thunder_god/cloud_sword.png": "a9c85e10435db30370842a8cfb0b3b29c1a275b4c139c8291caf115621a0c779",
+    "textures/gui/thunder_god/corrosion.png": "cd2807a05bb82fc6ff28b7163e18e50d853faf917fecb9fa9e80e8b75e77fc68",
+    "textures/gui/thunder_god/corrosive_rain.png": "985d8a526a68b5a9fce7985d98a333a0467b182a0e2ddf28a6115c3f202a5e8c",
+    "textures/gui/thunder_god/dance_of_thunder.png": "8448f3d7e8d4f3754eb9bf332534887582d265e318ac2cc41c4101bbe30a69ee",
+    "textures/gui/thunder_god/death_dirge.png": "88d54e49e2bb3b819a528fe0411c75cd3d39cfc1a79a0c192e4b0cb7c48905a3",
+    "textures/gui/thunder_god/destructive_droplet.png": "c405035b4978655f1b0cbbd09286581f617a0406bfca84517fdeac40b47ba994",
+    "textures/gui/thunder_god/discord.png": "19776d2f050ce96d9fbd34319cf7aa9527f74c7ab97abd723a49f03885360403",
+    "textures/gui/thunder_god/dreadful_heaven.png": "b24b0f9501af3e67745385ca9e67ca996c0551ad67e1d2cee0e9955a075c0953",
+    "textures/gui/thunder_god/electromagnetic_disruption.png": "4d31693a9a10134db5b4f6efe202e705a924fc28de47c73a1a9a115485b43a41",
+    "textures/gui/thunder_god/fear.png": "9fec68a2314632073c6fe1ae2142b02956237f96335018822d8dcda207e426cc",
+    "textures/gui/thunder_god/fear_resistance.png": "2b0958968858214a9ad9b7bb57bffad21ab5fc69f2a47dd238eb9eaca9b1c257",
+    "textures/gui/thunder_god/gale_burst.png": "7f5e57f51d0179488303f9ff0de78e69c5e5d986696752f55c3a882af7bd7dce",
+    "textures/gui/thunder_god/gale_ride.png": "0665fd115b3b5744d38c9cc3f65f09976ad1ddf383645f2f4d5b2df545e5a4f4",
+    "textures/gui/thunder_god/harpoon.png": "caf6b10ce9ef21daba6c397aff4e7b7f190f26681747056ba5c82665890708c5",
+    "textures/gui/thunder_god/heavenly_punishment.png": "f91d6552e376d956fc92257dbb13c059aeb5f03a7c76ef508ebb1a7821c16bee",
+    "textures/gui/thunder_god/home_turf.png": "335afd4667da1243fbeeeb12c512c65d01ba952032c8fec1193a8e51707a0011",
+    "textures/gui/thunder_god/horror_vignette.png": "35a22fa6063f99ea0dfb10f11bdb3947f8bf6a1b456d56e24f6f95f8f89a0fc8",
+    "textures/gui/thunder_god/hurricane.png": "b885d34c829a4dbb66b80f94324512b7eb6422c50fcee0d8a7d354ecf9f1d92b",
+    "textures/gui/thunder_god/illusory_scales.png": "f902408e1ec2da4db624f33caa04fa30a903c7aa1fb1408a78bee701e22f93d2",
+    "textures/gui/thunder_god/incarnation_of_light.png": "39778092296527a95b62c3c54ed66cfee432af3e24ad0fb06efc0e548933a639",
+    "textures/gui/thunder_god/lightning_bolt_arrow.png": "73cedcbfb7f031717345cf0c08efb74b5da09f1898af53b2976fb2f3da786225",
+    "textures/gui/thunder_god/lightning_forest.png": "167011cb44c180621984008742595407ef7631e902a156982531de291828b9ec",
+    "textures/gui/thunder_god/lightning_storm.png": "9d36b64c76c7ebd8b9abaab0ad338ee93be5439a17b399a9487663cfb55feb4f",
+    "textures/gui/thunder_god/lightning_strike.png": "5817c4112586cd193204dbcdc32bfc3405517887b0ec3fa5ef5bf7be924f6259",
+    "textures/gui/thunder_god/madness.png": "55050765b1546521f1e75ed62cd209b7b78860b56bb7980ddd27c8b512d46876",
+    "textures/gui/thunder_god/maelstrom.png": "e8890d3c2aeb4391625de175f637e7e1f7dee7a8960a5b69476ffff256f2f5bf",
+    "textures/gui/thunder_god/magnetic_pole_pull.png": "8daeab5d5c85fffaa58deb45cb02d381ccd6da3f30ae0b01b3b00e8dbcf12d24",
+    "textures/gui/thunder_god/ocean_of_lightning.png": "d4e642c95337affebf54b50cdce5aafbad4f19f6d4035bb94e9539d691e541bb",
+    "textures/gui/thunder_god/ocean_songster.png": "66d660cf8f6382f72862100a15e4f8450bca0206b3a8e4b793d60076860d7c1c",
+    "textures/gui/thunder_god/parched.png": "afefb17d22e5428f046d962ac22e0837fbc508d53bdae80466a09b35e9f2b795",
+    "textures/gui/thunder_god/physical_enhancement.png": "0209d2beba82e34bc56b65375615c9b4010fe1ace0a1551f0fb01f1e81a58393",
+    "textures/gui/thunder_god/rage.png": "9daa40443fd461f586ef31c07c2f5724ce4dfef019c4e7d7e94e0de1352424d4",
+    "textures/gui/thunder_god/rage_full.png": "fe20f80e6dcaf6a47ed1c649ccb205c40388476b59b410a357be61d0b6adcb5d",
+    "textures/gui/thunder_god/rage_pip_critical.png": "c9970f500df49975829a9f81fc7f2f5481e3b69d24123d68e840728cd1f4c32c",
+    "textures/gui/thunder_god/rage_pip_empty.png": "f2dc56fe4b627d8d0260f1cf0eb5e3ebfa07b4ce9156bda7faa6410c1cb204ca",
+    "textures/gui/thunder_god/rage_pip_filled.png": "c98728ab9d5fb65593bceac5864a85d392312b3be225f8428f31e4e138c66ef7",
+    "textures/gui/thunder_god/raging_blow.png": "fc3ff0012e851540d3d616c9ef4bdca2b5017763044cc6651479bb09d545ce49",
+    "textures/gui/thunder_god/requiem.png": "6df02cf0e72c7ba2fbfb6b12b528ca3e9cde9c7492d43a8254fee8b0ac514be6",
+    "textures/gui/thunder_god/roar.png": "7b8dce4b6d3011bb213006a67a67b74e3cfd95b8e5abd6398bbac7c9622475cd",
+    "textures/gui/thunder_god/roar_of_the_thunder_god.png": "c9b3b1fd5191fd97836e9863a5e135ec553ac467b54f0f553f501f6de332e919",
+    "textures/gui/thunder_god/scale_armor.png": "f902408e1ec2da4db624f33caa04fa30a903c7aa1fb1408a78bee701e22f93d2",
+    "textures/gui/thunder_god/sea_master.png": "e33a597621a4b4c9e1b2291111686541388a3723d59eb9cc3f9211e76a0c42e0",
+    "textures/gui/thunder_god/seas_favor.png": "81fc908bb03866f33058dfb5a5bcc54b98c8b9a49f2f527eac985ad613015e8a",
+    "textures/gui/thunder_god/shock.png": "dba9e452716dd1348337fddba569b4c729e75c941b8b71848767fdef2e5a8663",
+    "textures/gui/thunder_god/silence.png": "f0f9e1d7cec9a50a61c706103413475bd1716dd08de41fee9a6d4bb21a1df685",
+    "textures/gui/thunder_god/siren_song.png": "31d62bef43fb11ef1cd62e9d15b6a00517e60b4b83b0c33af87b5399bb2950ff",
+    "textures/gui/thunder_god/soaked.png": "079f2fbb4c68cc6b22685a16b9bcddf9f23f1832c4e8dff8a107118cc772b69d",
+    "textures/gui/thunder_god/soaked_vignette.png": "81dc380f8dd977ba9d4d83437be4967570303880df53e4cd294a77a6ee6d2473",
+    "textures/gui/thunder_god/sonic_boom.png": "f244821471479c2757d2829d9ffae65cb489ac9491532575e9e3d1a9f851aa8b",
+    "textures/gui/thunder_god/sound_of_horror.png": "e2ff7b6db4ead34536438da98911d16b89109af266170c538ee257b2456ecec9",
+    "textures/gui/thunder_god/source_of_wrath.png": "fe20f80e6dcaf6a47ed1c649ccb205c40388476b59b410a357be61d0b6adcb5d",
+    "textures/gui/thunder_god/spent.png": "3e373e3ed71ee4c21522e6d857116f2af7fa20b8b6e6134f2a960e8bea9afaa9",
+    "textures/gui/thunder_god/spiritual_intuition.png": "085476ed6ade324c3235118109a6b9384b5af6b1a2effc55a7b34479da92569e",
+    "textures/gui/thunder_god/starfall.png": "f870ccfc3787af7af6945eef2344f1eee727ffa5f0fb983969bf47d111e782d4",
+    "textures/gui/thunder_god/storm_born.png": "ed1e51ca9f6b6361d3becb5bb6fef15988fdc903b358c41da8c21255e542bd7e",
+    "textures/gui/thunder_god/storm_hell.png": "da4171e323ae717e63c1a60cccbc0b2fcfa2a09e4894f21536ec9af1dfc2bdd6",
+    "textures/gui/thunder_god/storm_incarnation.png": "ae3ccb039a54e7c5e8ab00f8ddab5954fa9e5d779cb075dec5174bbd959049cb",
+    "textures/gui/thunder_god/storm_vignette.png": "405aee0b980f916eb6bc358c386ef4da03ce9a9182c4c5c831cf8019a01aaf54",
+    "textures/gui/thunder_god/sweeping_wave.png": "b561ccee3edd447690cb1f187fbcc2c5f6316b11e25c9fe271a38d96b7c3941a",
+    "textures/gui/thunder_god/thunder_strike.png": "1983dc4b3e1faa091e5f8060a10ac582919b46ba409aea6f40cffb9509f494b2",
+    "textures/gui/thunder_god/thunderclap.png": "75cd05ecd94afdb360a530b7ec827a19a1bbd5cdb6fd4ccad2a705cc869f5474",
+    "textures/gui/thunder_god/tideheal.png": "581ad5f99e0b6ea3ba2cf6abae016c0bfd37b380ccdcf854d91b2ee62f333a44",
+    "textures/gui/thunder_god/tipsy.png": "95f421205821102e98e8cd8bceec9564ce3b8b7e40d3e01536f05055432e0f1c",
+    "textures/gui/thunder_god/torrential_downpour.png": "6edce6d6b42d4ae714a4397a91e95a00ee260f5040c969d41ac743bce30169a0",
+    "textures/gui/thunder_god/tsunami.png": "bfd56e67aa958dcafb1b4c3875850b5a9f77263c185c3cbcad32929effdb9d70",
+    "textures/gui/thunder_god/tyrants_aura.png": "aef0602af65398d79640b51777f322d104aa5779a773d8fb9bbb2308ca2b771c",
+    "textures/gui/thunder_god/tyrants_presence.png": "823e3c95d12f262fc1ec95245d0fd7daac50758804d510d29a1ee64d28e0c119",
+    "textures/gui/thunder_god/water_curtain.png": "529959ba45aca69a6ca4c3db7c1ea5a2ed7d6e53d6be2c61489af6f51fb8079a",
+    "textures/gui/thunder_god/water_sphere.png": "f5fd2eaed284c697d8db1c2a07a240002b6e7af5bb87e26df5b4656e624c4b81",
+    "textures/gui/thunder_god/water_veil.png": "28c69da1ea2e40a349cac82aaa10a7bc2619ed0575287766ea63610a3275b172",
+    "textures/gui/thunder_god/water_wall.png": "62dd85d470ac3d2c8a93b4b7615004429f5d62ebed2aeefb392fe820bed6e431",
+    "textures/gui/thunder_god/wind_binding.png": "56227f20df62ce0b3aa227c42076e92c62e1f15adf888eac682767862528e5d5",
+    "textures/gui/thunder_god/wind_blessed.png": "d255aa699c912b3a6b694ae264218d2fe466798a8b793587c0841b4416bf6fa0",
+    "textures/gui/thunder_god/windblade.png": "b59139ddba19fbfbd9d07b926cc7b6fdaa38656c79205bf08500174bcc846313",
+    "textures/gui/thunder_god/windblade_legion.png": "258f6a80ced77294573d9fdebc8aef93f6e083f7e349972e963c1b8f80d316a4",
+    "textures/gui/thunder_god/wrath.png": "6dd62335ec4b036df0ee7a6465dadf5b336b71d38f43e32c2fa888663a8f4635",
+    "textures/gui/thunder_god/wrath_eyes.png": "cee3b97680c8bfe334fec00de538d95afae713a09adb253d6ba3b5052a96a3e9",
+    "textures/gui/thunder_god/wrath_of_the_sea.png": "9ba541c472c0636c520d7b3f52275b880d1ef8403543107e959baf2885c9cfba",
+    "textures/model_fx/thunder_god/cloud.png": "3da3f16c2eb70da0186e48ebf86e35e0aeeb1fd27b10f56ec00a1b06334e343e",
+    "textures/model_fx/thunder_god/cloud.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/cloud_face.png": "f51a92d9433884c8b83dc2e9d06a0195275a6459aa5993134e69e588d0a3d2f9",
+    "textures/model_fx/thunder_god/foam.png": "42c219b7fb458c601de2d5d8711d10edef4f368d1e9e2a202b7f8d7f374827d0",
+    "textures/model_fx/thunder_god/foam.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/kingdom_chasm.png": "af575646bdb22368fae4e4cd71f6531a483b47e34347fb33e9ff68df7d84e5fa",
+    "textures/model_fx/thunder_god/kingdom_chasm.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/kingdom_dreadful.png": "f3f69bda87a1eac9508bef03804858f8636759dd04b0c0d75e2594701cc84d36",
+    "textures/model_fx/thunder_god/kingdom_dreadful.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/light_cloud.png": "25ef1b949a736b6bdb25eae2bcb5b8d79a2fded0e84d85526528b2761d45f567",
+    "textures/model_fx/thunder_god/light_cloud.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/lightning.png": "b1133fd24c5c6ab1c62aef6a8cc30630d5071d86d31fc0b8a4e1606aa813075b",
+    "textures/model_fx/thunder_god/lightning.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/rain_sheet.png": "e35ae2cd419e99cb46ed95ec631cef830acacb199e55ad57faa80317f55bd64c",
+    "textures/model_fx/thunder_god/rain_sheet.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/rope.png": "bb4145f4c3a6d01cf2eb2eb306daf10052310a2f6e1fef01e53b365b5f312ed4",
+    "textures/model_fx/thunder_god/scales.png": "31f55a66e4272b8247e1f07ab5729b756c5face270a1e47c7d3a2a65712fba25",
+    "textures/model_fx/thunder_god/silver.png": "f7b1fb555c306203a122083e66f7ef2dd2211f798ce510d2684c49580737a716",
+    "textures/model_fx/thunder_god/sound_wave.png": "5cd69a127b92a4769fe7691557e80c1a8002ab245c6b8d34e7161c993bd1971c",
+    "textures/model_fx/thunder_god/sound_wave.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/warning_ring.png": "74a5278b2d139e8b8aff50fff0cc3f92cda4aea756c61feb53896b59e54ac45d",
+    "textures/model_fx/thunder_god/water.png": "060e271dc050eda81397c20303b09c3403c5ee53169e21ebe4c46dd0bc3926f5",
+    "textures/model_fx/thunder_god/water.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/whirlpool.png": "6259061ced0472e0afef59718212b708552baa32310335aa7e8d9645563b6d91",
+    "textures/model_fx/thunder_god/whirlpool.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/model_fx/thunder_god/windblade.png": "ec00d42cd2bf6ccd2ec244757173650679fcc25661f736d45ba14d71b3f1c7d4",
+    "textures/model_fx/thunder_god/windblade.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/particle/fx/thunder_god/arc_0.png": "7711808fb902f6bfc7470421fc63a297bcdf3bfa3b580eaeb7ea2d70c0935dba",
+    "textures/particle/fx/thunder_god/arc_1.png": "2bbcfb6668d54a1b137d822c5e249ac65c8182e0d07fc8e0f445dd1c4d9b0cd2",
+    "textures/particle/fx/thunder_god/arc_2.png": "6aae07fa3281da4fc1c1fe79d5569df278a231065e4e070add8e78e2cb18b582",
+    "textures/particle/fx/thunder_god/cloud.png": "f1afc1e33342e820a52aa9c94f4219fcbe019362b6ee9c2a77e2fe21cdcce3ae",
+    "textures/particle/fx/thunder_god/crown.png": "dd180a74f7d06ce5b55654f583d4d113e87c0ed81d450e2b4bf61990aeb92b71",
+    "textures/particle/fx/thunder_god/foam.png": "9b288d6a94e877075f4d2e233bfc004fad62a16f2cbd1a71806db0ee1cfbab81",
+    "textures/particle/fx/thunder_god/rage_ember.png": "e504238b7145ed5799976464da238945f1baa43f0833140649f6da2c9ff7599c",
+    "textures/particle/fx/thunder_god/raindrop.png": "11c4ac4bd058ada06d403fdf6019a96db7164af14ba8f43aea4dc3894f767df4",
+    "textures/particle/fx/thunder_god/ripple.png": "fdc4f25033505f4d74add4d39471c2de6589fba36c77141c3a3185a8eca98410",
+    "textures/particle/fx/thunder_god/rope.png": "600e2e13f890324a9d1b2d0f2aefefc97cba43f9ec15bd7e65ab6f5b21b934ab",
+    "textures/particle/fx/thunder_god/scale.png": "2eafed58bc725fc725d5fa775d54d3abe7e9f4e01f8861fe0d7df02f5e3ff39b",
+    "textures/particle/fx/thunder_god/sound_ring.png": "ce6e9b09abe6c80617b50d9aa375d1f4b06c060471b05a6d406416734ccb3f71",
+    "textures/particle/fx/thunder_god/spark.png": "4cd970ebc5e2f44e394bb154380057e6bb87a80b4afdea3237602e134be2592e",
+    "textures/particle/fx/thunder_god/spirit_hand.png": "720024ffa368b9799763e593a5510f05dd6c2e42d397908c848d408ccacdd5ed",
+    "textures/particle/fx/thunder_god/splash.png": "9095b5b80992e2071aa51e9ea4e14aa13ede034198b696ab8f0eb877e8e94601",
+    "textures/particle/fx/thunder_god/wind_streak.png": "e467898a93f7fe02495d45f4a89e059261594d1b9e5cc68f7a6f381176e179ed",
+    "textures/particle/fx/thunder_god/windblade.png": "dd0001961eee54c1b1339c60a71cad8e5d8a19c5f85a2819e6427345ad4d5b7e"
+  }
+}
