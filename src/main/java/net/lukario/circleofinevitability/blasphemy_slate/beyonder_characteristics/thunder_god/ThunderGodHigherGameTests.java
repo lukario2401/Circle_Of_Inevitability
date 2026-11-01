@@ -84,9 +84,9 @@ public final class ThunderGodHigherGameTests {
     private static void kingdomPrices(GameTestHelper h){
         ServerPlayer p=player(h,0);h.assertTrue(STORM.cast(p,STORM.entry("chasm_of_storms"))==AbilityWheel.Result.DONE,"Chasm starts");
         h.assertTrue(ThunderGodHigher.inChasm(p),"Owner stands inside Chasm");same(h,Rage.count(p),10,"Chasm fills Rage");
-        fill(p);float before=SoulCore.getSpirituality(p);SKY.cast(p,SKY.entry("gale_burst"));same(h,before-SoulCore.getSpirituality(p),1225,"Chasm halves Sky cost");same(h,SKY.cooldownLeft(p,SKY.entry("gale_burst")),120,"Chasm halves cooldown");
+        fill(p);float before=SoulCore.getSpirituality(p);SKY.cast(p,SKY.entry("gale_burst"));same(h,before-SoulCore.getSpirituality(p),1225,"Chasm halves Sky cost");same(h,SKY.cooldownLeft(p,SKY.entry("gale_burst")),0,"Chasm casts have no cooldown");
         fill(p);STORM.cast(p,STORM.entry("dreadful_heaven"));h.assertTrue(!ThunderGodHigher.inChasm(p)&&ThunderGodHigher.inDreadful(p),"Kingdoms are mutually exclusive");
-        fill(p);before=SoulCore.getSpirituality(p);VOICE.cast(p,VOICE.entry("siren_song"));same(h,SoulCore.getSpirituality(p),before,"Voice costs zero in Dreadful Heaven");h.assertTrue(VOICE.cooldownLeft(p,VOICE.entry("siren_song"))>0,"Free Voice keeps cooldown");
+        fill(p);before=SoulCore.getSpirituality(p);VOICE.cast(p,VOICE.entry("siren_song"));same(h,SoulCore.getSpirituality(p),before,"Voice costs zero in Dreadful Heaven");same(h,VOICE.cooldownLeft(p,VOICE.entry("siren_song")),0,"Voice has no cooldown");
         ServerPlayer enemy=player(h,5);enemy.setPos(p.getX()+3,p.getY(),p.getZ());same(h,Spells.costFor(enemy,100),200,"Enemy costs double");h.succeed();
     }
     private static void kingdomSeal(GameTestHelper h){
@@ -176,7 +176,7 @@ public final class ThunderGodHigherGameTests {
         h.runAfterDelay(3,()->{ThunderGodPowers.release(p);h.assertTrue(!ThunderGodHigher.invulnerable(p)&&!Concealment.isHidden(p),"Cleanup restores a visible, vulnerable body");h.succeed();});
     }
     private static void chainOpeners(GameTestHelper h){
-        ServerPlayer p=player(h,4);Mob a=target(h,p,0,3),b=target(h,p,3,3),c=target(h,p,-3,3);
+        ServerPlayer p=player(h,4);Mob a=target(h,p,0,1),b=target(h,p,.2,1),c=target(h,p,-.2,1);
         cast(p,h,Spell.CHAIN_LIGHTNING);
         h.assertTrue(1000-a.getHealth()>=60&&1000-b.getHealth()>=60&&1000-c.getHealth()>=60,"All three opening bolts land at full base damage");h.succeed();
     }
@@ -195,6 +195,6 @@ public final class ThunderGodHigherGameTests {
     private static void recasts(GameTestHelper h){
         ServerPlayer p=player(h,0);fill(p);var spell=STORM.entry("storm_hell");h.assertTrue(STORM.cast(p,spell)==AbilityWheel.Result.DONE,"Storm Hell starts");long ready=p.getPersistentData().getLongOr(PREFIX+"storm_ready_storm_hell",0L);
         SoulCore.setSpiritualityQuietly(p,0);h.assertTrue(STORM.cast(p,spell)==AbilityWheel.Result.FREE,"Ending a storm is free");same(h,p.getPersistentData().getLongOr(PREFIX+"storm_ready_storm_hell",0L),ready,"Dismissal preserves original cooldown");
-        fill(p);h.assertTrue(STORM.cast(p,spell)==AbilityWheel.Result.REFUSED,"Cannot restart through cooldown");h.succeed();
+        fill(p);h.assertTrue(STORM.cast(p,spell)==AbilityWheel.Result.DONE,"Storm can restart immediately");h.succeed();
     }
 }

@@ -17,7 +17,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 
-/** Complete Thunder God pathway: Sailor (9) through Tyrant (0), with full-price wheel recasts. */
+/** Complete Thunder God pathway: Sailor (9) through Tyrant (0), with full-price, cooldown-free wheel recasts. */
 public final class ThunderGod {
     public static final String PATHWAY = "Thunder God", PREFIX = "thunder_god_";
     public static final String SCALES = PREFIX + "scales", WRATH = PREFIX + "wrath", SOURCE = PREFIX + "source";
@@ -96,9 +96,8 @@ public final class ThunderGod {
         return combo;
     }
     private static AbilityWheel wheel(String id, String title, Spell... spells) {
-        AbilityWheel wheel=AbilityWheel.create(PREFIX+id,title).pathway(PATHWAY).quickCastCooldown(true).quickCastCost(1).sequenceBy(ThunderGod::sequence)
-                .cooldownBy((p,ticks)->ThunderGodHigher.inChasm(p)&&!id.equals("voice")&&!id.equals("tides")?ticks/2:ticks);
-        for (Spell spell:spells) wheel.entry(spell.id(),"ability_menus/thunder_god/"+spell.id(),spell.label(),spell.sequence,spell.cost,spell.cooldown,
+        AbilityWheel wheel=AbilityWheel.create(PREFIX+id,title).pathway(PATHWAY).noCooldownsWhen(p->true).quickCastCooldown(false).quickCastCost(1).sequenceBy(ThunderGod::sequence);
+        for (Spell spell:spells) wheel.entry(spell.id(),"ability_menus/thunder_god/"+spell.id(),spell.label(),spell.sequence,spell.cost,0,
                 (p,sl)->ready(p,spell.sequence,Casts.isCopying(p)||Beyonder.isCastingUnbound(p))
                         ? ThunderGodPowers.cast(p,sl,spell) : AbilityWheel.Result.REFUSED).description(spell.description)
                 .costBy((p,cost)->ThunderGodHigher.inDreadful(p)&&id.equals("voice")?0:ThunderGodHigher.inChasm(p)&&!id.equals("voice")&&!id.equals("tides")?cost/2:cost)

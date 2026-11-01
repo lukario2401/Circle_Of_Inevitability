@@ -90,12 +90,13 @@ public final class ThunderGodGameTests {
     private static void wheelRecast(GameTestHelper h){
         ServerPlayer p=player(h,5);var wheel=TIDES;var entry=wheel.entry("tideheal");
         float before=SoulCore.getSpirituality(p);h.assertTrue(wheel.cast(p,entry)==AbilityWheel.Result.DONE,"Initial cast succeeds");
-        same(h,before-SoulCore.getSpirituality(p),1500,"Normal price");int wait=wheel.cooldownLeft(p,entry);
-        before=SoulCore.getSpirituality(p);wheel.quickCast(p);same(h,SoulCore.getSpirituality(p),before,"Recast cannot bypass cooldown");
-        same(h,wheel.cooldownLeft(p,entry),wait,"Refused recast preserves deadline");wheel.resetCooldown(p,"tideheal");
-        wheel.quickCast(p);same(h,before-SoulCore.getSpirituality(p),1500,"Ready recast pays full price");
-        h.assertTrue(wheel.cooldownLeft(p,entry)>0,"Recast starts its cooldown");h.succeed();
+        same(h,before-SoulCore.getSpirituality(p),1500,"Normal price");
+        p.getPersistentData().putLong(PREFIX+"tides_ready_tideheal",p.level().getGameTime()+280);
+        before=SoulCore.getSpirituality(p);wheel.quickCast(p);
+        same(h,before-SoulCore.getSpirituality(p),1500,"Immediate recast pays full price despite an old saved cooldown");
+        h.assertTrue(wheel.noCooldowns(p)&&entry.cooldown()==0,"Wheel cooldowns disabled");h.succeed();
     }
+
     private static void refused(GameTestHelper h){
         ServerPlayer p=player(h,7);float before=SoulCore.getSpirituality(p);
         h.assertTrue(TIDES.cast(p,TIDES.entry("water_sphere"))==AbilityWheel.Result.REFUSED,"Sequence gate");

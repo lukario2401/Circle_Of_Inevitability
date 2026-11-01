@@ -16,11 +16,12 @@ wheels and two normal/sneak keys, plus Source of Wrath. See the preserved
 | N / 6 | 5 | Repeat last Voice cast | Open Voice |
 | M / 7 | 4 | Repeat last Storm cast | Open Storm |
 
-With no saved selection, a normal wheel key opens the wheel. Selection and cooldowns survive
-logout. Every wheel cast and recast pays its listed cost and observes its cooldown. Missing
-targets, locked entries and Bolt Arrow without a bow refuse without payment or a new cooldown.
+With no saved selection, a normal wheel key opens the wheel. Selection survives logout.
+Every wheel cast and recast pays its listed cost with no cooldown.
+Cooldowns saved by older versions are ignored. Missing
+targets, locked entries and Bolt Arrow without a bow refuse without payment.
 Voice casts respect Silence. Active Incarnation of Light, Storm Hell and kingdoms can be
-ended freely through their entry, including while its cooldown is running.
+ended freely through their entry, without waiting.
 
 Instant casts do not display ability icons over the crosshair. Timed Scales, Wrath and Source
 indicators sit beside the hotbar; Rage remains there as a counter. Ability icons appear in
@@ -41,14 +42,13 @@ the wheel when choosing a power.
 | 1 | Incarnation of Light, Heavenly Punishment, Ocean of Lightning, Roar of the Thunder God, Storm Hell; Dance of Thunder upgrade |
 | 0 | Starfall, Lightning Forest, Tyrant's Presence, Chasm of Storms, Dreadful Heaven, Banish into the Storm |
 
-The five wheels hold 9 Tides, 9 Sky, 9 Thunder, 9 Voice and 8 Storm entries. Costs and
-cooldowns follow the [design's starting-number table](THUNDER_GOD.md#starting-numbers), except
+The five wheels hold 9 Tides, 9 Sky, 9 Thunder, 9 Voice and 8 Storm entries. Costs follow the [design's starting-number table](THUNDER_GOD.md#starting-numbers), except
 Harpoon/Scales cost **10** each and Raging Blow/Wrath cost **200** each. The draft's 250/600
 cannot be paid at their unlocks: Sailor's whole bar is 20, Folk of Rage's is 400. Those four
 costs use half their unlock-level bar. Single keys have no extra cooldown.
 
-Chasm of Storms halves the owner's Sky, Thunder and Storm costs and cooldowns while inside.
-Dreadful Heaven makes the owner's Voice casts free while retaining their cooldowns, and
+Chasm of Storms halves the owner's Sky, Thunder and Storm costs while inside.
+Dreadful Heaven makes the owner's Voice casts free with no cooldown, and
 doubles enemy ability costs. Kingdoms are mutually exclusive sealed spheres, including the
 owner, allies and projectiles; attacks and targeting cannot cross the boundary.
 
@@ -152,7 +152,7 @@ Thunder God is immune to lightning and gains Rage near landed bolts. Tyrant gain
 
 Timed world effects, summons, delayed hits, temporary Sequence boosts and viewer-only
 outlines stop when their caster dies, logs out, changes dimension or loses the pathway.
-Logout preserves saved Rage and wheel deadlines. Attribute passives are removed after a
+Logout preserves saved Rage and wheel selections. Attribute passives are removed after a
 pathway/Sequence loss. No ability places/breaks real blocks or changes global weather.
 
 Minecraft has no water-pressure damage or petrification system to modify. The design's
@@ -175,7 +175,7 @@ keys. To test progression, set a weaker Sequence and check that higher wheel ent
 ./gradlew runGameTestServer -PthunderGodTests
 ```
 
-Forty real-server GameTests cover unlocks, costs, cooldowns, refusals, water/lightning
+Forty real-server GameTests cover unlocks, costs, immediate recasts, refusals, water/lightning
 interactions and ally safety, Rage, cleansing, local rain, lifecycle cleanup, Source gates
 and aftermath, kingdom sealing and discounts, information disruption, artifact-specific
 locks, summons, banishment, light travel, warning delays, Chain Lightning opening bolts,
