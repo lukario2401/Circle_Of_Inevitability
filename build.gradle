@@ -34,6 +34,9 @@ minecraft {
         }
 
         register('gameTestServer') {
+            if (providers.gradleProperty('friendTests').isPresent()) {
+                args '--tests', 'circle_of_inevitability:friend_*'
+            }
             // Focus this encounter's regressions without running unrelated pathway suites.
             if (providers.gradleProperty('omniscientEyeTests').isPresent()) {
                 args '--tests', 'circle_of_inevitability:omniscient_*'

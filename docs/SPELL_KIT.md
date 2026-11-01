@@ -276,7 +276,7 @@ for (LivingEntity enemy : Spells.enemiesAround(player, sl, spot, 4)) {
 | `yawOf(direction)`, `flatLook(player)`, `rightOf(player)`, `turned(direction, degrees)`, `UP` | Directions. `turned` is how you make a fan of projectiles |
 | `turnToward(from, to, maxDegrees)` | `from` turned toward `to` by at most that many degrees, up and down too. Call it every tick to steer something that cannot turn on the spot: `heading = Spells.turnToward(heading, player.getLookAngle(), 12)` |
 
-**Who is an enemy.** Anything alive except: the caster, what the caster rides or owns (pets, tamed horses), the caster's marionettes, team mates, armor stands, spectators and whoever is concealed.
+**Who is an enemy.** Anything alive except: the caster, what the caster rides or owns (pets, tamed horses), the caster's marionettes, team mates, personal friends added with `/friend add <player-name|mob-uuid>`, armor stands, spectators and whoever is concealed. Personal friendship is one-way and saved by UUID across death and reloads; `Spells.isFriend`, enemy targeting and support helpers respect it. Marionettes also spare their master's friends. Adding a mob does not change its own AI or allegiance.
 
 If a new Pathway has summons of its own, teach the rule about them once (for example in a `static { }` block of its class), and every spell built on `Spells` leaves them alone:
 

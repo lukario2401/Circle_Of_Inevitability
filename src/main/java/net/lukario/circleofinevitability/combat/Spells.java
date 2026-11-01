@@ -135,8 +135,8 @@ public final class Spells {
 
     /**
      * On the caster's side: the caster themself (also their new body after respawning), what they ride or own, their
-     * marionettes, team mates and every addAllyCheck rule. Unlike !isEnemy, a concealed body is judged as if it were
-     * seen: for a wall that must keep hidden enemies out too (Hand Of God's Protection from Sequence 1).
+     * marionettes, team mates, personal friends and every addAllyCheck rule. Unlike !isEnemy, a concealed body is
+     * judged as if it were seen: for a wall that must keep hidden enemies out too (Hand Of God's Protection from Sequence 1).
      */
     public static boolean isFriend(LivingEntity caster, LivingEntity other) {
         // the UUID check also covers the caster's new body after dying and respawning while a spell is still running
@@ -146,6 +146,7 @@ public final class Spells {
         if (Marionette.isMarionetteOf(other, caster)) return true;
         if (caster.isAlliedTo(other)) return true;                // same scoreboard team
         if (!(caster instanceof Player player)) return caster instanceof Mob mob && MobSpells.isFriend(mob, other);
+        if (Friends.contains(player, other)) return true;
         for (AllyCheck check : ALLY_CHECKS) {
             if (check.isAlly(player, other)) return true;
         }

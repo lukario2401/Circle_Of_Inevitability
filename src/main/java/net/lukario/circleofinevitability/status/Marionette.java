@@ -4,6 +4,7 @@ import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.particles.ParticleTypes;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpells;
+import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.particles.fx.ModelFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
@@ -313,7 +314,7 @@ public final class Marionette {
         if (target == null || target == mob || target == master || !target.isAlive() || target.isSpectator()) return false;
         if (target.level() != mob.level() || isMarionetteOf(target, master) || Concealment.isHidden(target)) return false;
         if (target instanceof Player player && player.getAbilities().invulnerable) return false;   // creative
-        if (master.isAlliedTo(target)) return false;                                               // same team
+        if (Spells.isFriend(master, target)) return false;                                        // the master's side
         return mob.distanceToSqr(target) <= (SEEK_RANGE * 1.5) * (SEEK_RANGE * 1.5);
     }
 
@@ -416,7 +417,11 @@ public final class Marionette {
         if (victim.level().isClientSide()) return false;
         UUID holder = masterId(event.getSource().getEntity());
         if (holder == null) return false;
-        return holder.equals(victim.getUUID()) || holder.equals(masterId(victim));
+        if (holder.equals(victim.getUUID()) || holder.equals(masterId(victim))) return true;
+        if (!(victim.level() instanceof ServerLevel sl)) return false;
+        Entity master = sl.getServer().getPlayerList().getPlayer(holder);
+        if (master == null) master = sl.getEntity(holder);
+        return master instanceof LivingEntity living && Spells.isFriend(living, victim);
     }
 
     @SubscribeEvent

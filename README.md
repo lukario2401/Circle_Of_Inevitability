@@ -52,6 +52,20 @@ Powers, drawbacks and the extension guide live in [Sealed artifacts](docs/SEALED
 Any player can type `/damagefx` to turn damage numbers on or off for themself: the damage they deal is shown
 in red above the target's head (`docs/DAMAGE_FX.md`).
 
+Any player can manage personal allies with `/friend add kilangos`, `/friend add <mob-uuid>`,
+`/friend remove <name-or-uuid>` and `/friend list` (or just `/friend`). Look at a mob within 32 blocks
+and press Tab after `/friend add ` to fill its UUID; blocks obstruct this completion. Player names
+also autocomplete. Names resolve to UUIDs, so a name change does not break friendship. Offline names
+use the server's profile resolver; an explicit mob UUID also works while its chunk is unloaded.
+Removal completes saved player names and UUIDs, including offline friends.
+
+Friends are personal and one-way: your friend-aware powers spare them and can include them in support
+effects; your marionettes also avoid targeting or hurting them. They must add you separately for their
+powers to do the same. Friendship does not tame mobs or prevent their attacks. It extends existing team,
+pet and marionette protections; removing a friend does not remove those other protections. Deliberately
+targeted powers that already allow affecting allies still do so. The list survives death, reconnects and
+server restarts. Run `./gradlew runGameTestServer -PfriendTests` for the friendship regressions.
+
 Ops can use `/targethealth` to toggle Illuminator's target health display for themself on any pathway,
 or `/targethealth on` and `/targethealth off` to set it explicitly (permission level 2 required).
 Look at an enemy within 24 blocks to see its name and current/maximum health beside the hotbar;
