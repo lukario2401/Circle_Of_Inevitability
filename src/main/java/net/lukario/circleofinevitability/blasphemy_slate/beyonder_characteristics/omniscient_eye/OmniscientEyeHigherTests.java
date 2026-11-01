@@ -32,6 +32,11 @@ public final class OmniscientEyeHigherTests {
         h.assertTrue(Codex.study(observer,id)>0,"Real wheelCast notification gains study");
         var power=AbilityCatalog.all().get(id);
         h.assertTrue(power!=null && power.cast().entry()==wheel.entry("entry") && power.icon().contains("blink"),"Exact wheel entry and icon survive catalog lookup");
+        h.assertTrue(power.name().equals("Wanderer: Observed entry"),"Wheel label includes pathway and exact entry name");
+        h.assertTrue(Codex.rows(observer).stream().anyMatch(row->row.id().equals(id)&&row.fromWheel()),"Wheel-origin badge metadata reaches stored rows");
+        var key=AbilityCatalog.all().values().stream().filter(a->a.id().startsWith("key/")&&a.sequence()>=6).findFirst().orElseThrow();
+        Codex.learn(observer,key,100);
+        h.assertTrue(Codex.rows(observer).stream().anyMatch(row->row.id().equals(key.id())&&!row.fromWheel()),"Regular key abilities have no wheel badge");
         Codex.choice(observer,id,false);h.assertTrue(!Codex.data(observer).getStringOr("selected","").equals(id),"Incomplete wheel entry cannot be selected");
         Codex.learn(observer,power,100);Codex.choice(observer,id,false);Codex.replicate(observer);
         h.assertTrue(Casts.lastPerformed(observer).entry()==power.cast().entry(),"Replication casts selected entry, not a random wheel pick");h.succeed();

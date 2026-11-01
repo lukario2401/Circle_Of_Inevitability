@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.beauty_goddess;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpells;
 import net.lukario.circleofinevitability.CircleOfInevitability;
@@ -27,7 +27,6 @@ import net.lukario.circleofinevitability.status.Vulnerable;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;

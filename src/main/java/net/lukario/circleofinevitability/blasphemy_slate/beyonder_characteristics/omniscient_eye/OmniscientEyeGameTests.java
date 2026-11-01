@@ -11,6 +11,7 @@ import net.minecraftforge.registries.DeferredRegister;
 public final class OmniscientEyeGameTests {
     public static final DeferredRegister<Consumer<GameTestHelper>> FUNCTIONS=DeferredRegister.create(Registries.TEST_FUNCTION,"circle_of_inevitability");
     static {
+        FUNCTIONS.register("omniscient_commands",()->OmniscientEyeGameTests::commands);
         FUNCTIONS.register("omniscient_shared_kit",()->OmniscientEyeHigherTests::sharedKit);
         FUNCTIONS.register("omniscient_loans",()->OmniscientEyeHigherTests::loans);
         FUNCTIONS.register("omniscient_tower",()->OmniscientEyeHigherTests::tower);
@@ -29,6 +30,44 @@ public final class OmniscientEyeGameTests {
         var at=h.absoluteVec(new net.minecraft.world.phys.Vec3(1.5,1,1.5));p.setPos(at.x,at.y,at.z);
         SoulCore.setPathway(p,"Omniscient Eye");SoulCore.setSequence(p,seq);SoulCore.setSpiritualityQuietly(p,Float.MAX_VALUE);
         h.addCleanup(ok->{net.lukario.circleofinevitability.status.Form.end(p);Zone.close(p,OmniscientEyeHigher.KINGDOM);Zone.close(p,"omniscient_counsel");NextCast.used(p);net.lukario.circleofinevitability.status.DamageWard.clear(p);AbilityGrants.clear(p);p.discard();});return p;
+    }
+    private static void commands(GameTestHelper h) {
+        var p=player(h,6);
+        var dispatcher=new com.mojang.brigadier.CommandDispatcher<net.minecraft.commands.CommandSourceStack>();
+        CodexCommands.register(dispatcher);
+        var source=p.createCommandSourceStack().withPermission(net.minecraft.server.permissions.PermissionSet.ALL_PERMISSIONS).withSuppressedOutput();
+        var unprivileged=source.withPermission(net.minecraft.server.permissions.PermissionSet.NO_PERMISSIONS);
+        var powers=Codex.catalog();
+        try {
+            for(String command:java.util.List.of("codex studyall @s","codex forgetall @s","codex forget @s all")) {
+                boolean denied=false;
+                try {dispatcher.execute(command,unprivileged);}catch(com.mojang.brigadier.exceptions.CommandSyntaxException expected){denied=true;}
+                h.assertTrue(denied,"Bulk commands require OP: "+command);
+            }
+            int count=dispatcher.execute("codex studyall @s",source);
+            long eligible=powers.values().stream().filter(power->power.sequence()>=6).count();
+            h.assertTrue(count==eligible && count>0,"Study-all reports every eligible key variant and wheel entry");
+            for(var power:powers.values())h.assertTrue(Codex.study(p,power.id())==(power.sequence()>=6?100:0),"Study-all respects Sequence: "+power.id());
+            var selected=powers.values().stream().filter(power->power.sequence()>=6).findFirst().orElseThrow();
+            var other=powers.values().stream().filter(power->power.sequence()>=6&&!power.id().equals(selected.id())).findFirst().orElseThrow();
+            Codex.LIBRARY.select(p,selected.id());Codex.LIBRARY.toggleFavorite(p,selected.id());
+            h.assertTrue(dispatcher.execute("codex forget @s "+selected.id(),source)==1,"Individual forgetting accepts stable IDs with spaces");
+            h.assertTrue(Codex.study(p,selected.id())==0&&!Codex.LIBRARY.favorite(p,selected.id())&&Codex.LIBRARY.selected(p).isEmpty(),"Forgetting clears progress, favorite and selection");
+            h.assertTrue(Codex.study(p,other.id())==100,"Other powers remain studied");
+            h.assertTrue(dispatcher.execute("codex forget @s missing-power",source)==0,"Missing record is refused");
+            h.assertTrue(dispatcher.execute("codex study @s "+selected.id(),source)==1,"Existing single-study command still works");
+            var separate=new AbilityStudy("command_test_other_library");separate.add(p,"other",42);
+            SoulCore.setPathway(p,"Wanderer");
+            h.assertTrue(dispatcher.execute("codex studyall @s",source)==0,"Study-all refuses another pathway");
+            h.assertTrue(dispatcher.execute("codex forgetall @s",source)==1,"Dormant Codex can be cleared on another pathway");
+            h.assertTrue(Codex.data(p).isEmpty()&&separate.progress(p,"other")==42&&SoulCore.getPathway(p).equals("Wanderer"),"Forget-all preserves other libraries and soul data");
+            SoulCore.setPathway(p,"Omniscient Eye");SoulCore.setSequence(p,0);
+            h.assertTrue(dispatcher.execute("codex studyall @s",source)==Codex.catalog().size(),"Sequence zero can study the complete copyable catalog");
+            h.assertTrue(dispatcher.execute("codex forget @s all",source)==1&&Codex.data(p).isEmpty(),"Forget all alias clears the complete library");
+            Codex.LIBRARY.add(p,"removed/power",100);Codex.LIBRARY.select(p,"removed/power");Codex.LIBRARY.toggleFavorite(p,"removed/power");
+            h.assertTrue(dispatcher.execute("codex forget @s removed/power",source)==1&&Codex.data(p).isEmpty(),"Obsolete catalog records can also be forgotten");
+            h.succeed();
+        } catch(com.mojang.brigadier.exceptions.CommandSyntaxException e) {throw new AssertionError("Codex command regression",e);}
     }
     private static void rules(GameTestHelper h) {
         for(int seq=0;seq<=9;seq++)for(int ability=0;ability<=9;ability++) {

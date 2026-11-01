@@ -2865,6 +2865,10 @@ LIBRARY.select(player, power.id());         // refuses incomplete records
 var rows = LIBRARY.rows(player, AbilityCatalog.all().values());
 ```
 
+`LIBRARY.forget(player, id)` removes study, favorite and selection for one record, including obsolete IDs.
+`LIBRARY.forgetAll(player)` removes only this named library and returns the number of studied records removed;
+it leaves other soul data/libraries intact. Callers must authorize administrative resets themselves.
+
 The library lives under the player's persistent soul tag and inherits `SoulCore.onPlayerClone` death persistence.
 Rows are reusable GUI data, ordered favorite, study descending, strongest Sequence, name. A caller must additionally
 check its learning eligibility, required Sequence, target visibility and which catalog IDs it permits. A library

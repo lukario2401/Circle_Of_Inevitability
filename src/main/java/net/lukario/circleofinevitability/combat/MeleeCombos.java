@@ -1,13 +1,17 @@
 package net.lukario.circleofinevitability.combat;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.attendant_of_mysteries.AttendantOfMysteries;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.conqueror.Conqueror;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.frenzied_mage.FrenziedMage;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.pale_emperor.PaleEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolition;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryPowers;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.wanderer.Wanderer;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTime;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.LivingEntity;

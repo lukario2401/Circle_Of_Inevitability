@@ -1,6 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.BeautyGoddess;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.beauty_goddess.BeautyGoddess;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;

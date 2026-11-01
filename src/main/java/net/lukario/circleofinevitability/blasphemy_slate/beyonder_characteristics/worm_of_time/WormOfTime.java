@@ -2,7 +2,6 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
 import net.lukario.circleofinevitability.combat.Cooldowns;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.status.Exposed;

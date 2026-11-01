@@ -1,4 +1,4 @@
-package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
+package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.wanderer;
 
 import net.minecraft.core.UUIDUtil;
 import net.lukario.circleofinevitability.CircleOfInevitability;

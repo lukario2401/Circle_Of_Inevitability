@@ -1,7 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.*;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.StolenAbilities;
 import net.lukario.circleofinevitability.combat.*;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.root.*;
