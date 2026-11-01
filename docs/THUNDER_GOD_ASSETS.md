@@ -5,7 +5,7 @@ Original pixel art, ModelFx geometry, animated materials and synthesized audio f
 all 44 wheel entries, both single-key normal/sneak pairs, five upgrade variants, statuses,
 passives and the optional melee vocabulary. The supplied design remains a design document:
 its questions are not implementation instructions or decisions made by this asset pack.
-Ability registration, damage, Rage rules, Soaked/Shock, summons and balance remain future work.
+Sequences 9–5 now use these resources in the [playable first half](THUNDER_GOD_IMPLEMENTATION.md). Higher-sequence abilities and summons remain future work.
 
 ![All ability icons and status glyphs](assets/thunder_god/icons.png)
 

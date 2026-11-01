@@ -52,6 +52,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 
 | Pathway | G (1) | H (2) | J (3) | K (4) | L (5) | N (6) | M (7) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| Thunder God | Harpoon 9 (sneak: Illusory Scales) | Raging Blow 8 (sneak: Wrath) | Tides 7 (Veil, Wave, Tideheal at 7; Curtain, Sphere, Rain at 5) | Sky 6 (Windblade, Gale Burst, Gale Ride at 6; Wind Binding at 5) | Thunder 5 (Lightning Strike, Bolt Arrow) | Voice 5 (Siren Song, Discord, Thunderclap) | Storm: not implemented yet |
 | Wanderer | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
 | Key Of Stars | Door Opening 9 (sneak: Slip Free) | Tricks 8 (wheel: Flash, Black Screen, Loud Noise, Frost Ray, Gale, Tumble, Escape Trick, all at 8) | Star Divination 7 (sneak: Interference) | Record 6 (sneak: Replay) | Travel 5 (wheel: Traveler's Door, Blink, Invisible Hand, Star Anchor at 5, Wandering 3) | Secrets and Space 4 (wheel: Space Concealment, Transfiguration, Exile, Pocket Space at 4, Space Tearing 3) | Starlight 2 (wheel: Toy Box, Replication at 2, Space Fragmentation, Starlight Seal, Space-Time Labyrinth at 1, Alternate World, Omnipresence, Close the Door at 0) |
 | Worm Of Time | Marauder Theft 9 (Life/Distance Theft 4) | Power Theft 6 | Parasite 4 | Observation 9 / Decryption 7 | Thought and Deceit 8 | Parasite and Destiny 4 | Time and Error 2 |
@@ -72,6 +73,8 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 | Prince Of Abolition | Verdict 9 (sneak: Brainwash) | Brute Force 8 (sneak: Iron Will) | Bribe 7 (wheel: Weaken, Charm, Arrogance, Connect, Coin Shot, all at 7) | Distort 6 (sneak: Seal; a gate where you look from 4; flips an enemy's shell from 2) | Paces 5 (sneak: Disorder) | The Fallen 8 (wheel: Raise Mausoleum 8, Corrosion 6, Step 6, Majesty 5, Bestowment 4, Exploit 4, Magnify 4, Mausoleum Salvo 4, Mausoleum Blast 4) | Sovereign 6 (wheel: Ruin 6, Frenzy 3, Entropy 2, Abolition 1, Exile 1, Inversion 0, Coronation 0, Decree 0) |
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md). So do Knight Of Misfortune's four wheels (H, L, N, M); its Nightmare (J) becomes Dream Invasion while the soul is out of the body; see [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md). Abomination's four wheels (K, L, N, M) work the same way; a Possession is left with the Wraith key (L) again, and Abomination Form is ended by picking it again (free); see [ABOMINATION.md](ABOMINATION.md). The Prince Of Abolition's three wheels (J, N, M) are the other way round: sneak opens the wheel and a plain press recasts the last pick with no cooldown, for 3 times its cost at Sequences 9 to 7, twice at 6 and once from 5; from Sequence 4 no entry has a cooldown at all; see [PRINCE_OF_ABOLITION.md](PRINCE_OF_ABOLITION.md). Knowledge Emperor's three wheels (L, N, M) work like Hand Of God's; every cast of them and of its keys can be made free by the Whisper of the Hidden Sage or the Law of Three, costs half in its Divine Kingdom, and an Indoctrination shortens the wheels' cooldowns; see [KNOWLEDGE_EMPEROR.md](KNOWLEDGE_EMPEROR.md). The Hand Of Order's four wheels (J, K, L, M) work like Hand Of God's (picking the Court of Judgment again while it sits adjourns it, free); its single keys (G, H, N) have no cooldown and its wheels' sneak recast costs 3 times as much, and every cast costs 20% less while it stands in its own Jurisdiction; see [HAND_OF_ORDER.md](HAND_OF_ORDER.md). The Illuminator's four wheels (K, L, N, M) work like Hand Of God's too (picking the Mechanical Body, the Colossus or Mechanical Heaven again while it lasts is free: off, the Fusion Beam, or the end of the Kingdom); its single keys (G, H, J) have no cooldown and its wheels' sneak recast costs 3 times as much (the Fusion Beam keeps its own), every cast costs 10% less when the same ability was cast within the last 20 seconds (Quick Study), and Workshop casts from inside its own Ritual Circle cost 20% less and last 50% longer; see [ILLUMINATOR.md](ILLUMINATOR.md). The Star Dragon's three wheels (H, L, M) work like Hand Of God's too; its single keys (G, J, K, N) have no cooldown and its wheels' sneak recast costs 3 times as much, Scaled Form and the two Mythical Creature Forms are ended by casting them again (free), the Sunlight Ray costs half in daylight under the open sky, and the Condenser's Fusion Cluster costs half; see [STAR_DRAGON.md](STAR_DRAGON.md).
+
+Thunder God currently implements Sequences 9–5. Its four wheels use **sneak to open and normal to repeat**, retaining the full cost and cooldown on every cast; see [THUNDER_GOD_IMPLEMENTATION.md](THUNDER_GOD_IMPLEMENTATION.md). Storm and the second-half upgrades remain unavailable.
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
@@ -203,6 +206,16 @@ How they behave:
 - A stronger or longer effect of the same kind from somewhere else (a potion, an ability) is left alone.
 - When the player no longer has the Sequence or the Pathway (only commands can do that), the effect runs out on its own within `EFFECT_TICKS`. A `custom` action just stops, so use it for things that need no undoing.
 - A misspelt Pathway name stops the game with a message that lists the valid names, instead of a passive that silently never works.
+
+Thunder God passives through Ocean Songster:
+
+| Passive | Pathway | From Sequence |
+| --- | --- | --- |
+| Strength I, Water Breathing, water movement efficiency, half-duration fear | Thunder God | 9 |
+| Physical Enhancement: two extra hearts | Thunder God | 8 |
+| Sea’s Favor: wet damage/defense and regeneration; Navigation | Thunder God | 7 |
+| Night Vision and half fall damage | Thunder God | 6 |
+| Aquatic followers and hostile aquatic hesitation | Thunder God | 5 |
 
 ## Digestion
 

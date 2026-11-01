@@ -56,6 +56,11 @@ public final class Fear {
 
     private static final List<Predicate<LivingEntity>> IMMUNE = new ArrayList<>();
 
+    private static final List<java.util.function.ToDoubleFunction<LivingEntity>> DURATION = new ArrayList<>();
+
+    /** Composable duration rules for fear resistance; immunity still takes priority. */
+    public static void addDurationScale(java.util.function.ToDoubleFunction<LivingEntity> rule) { DURATION.add(rule); }
+
     private Fear() {}
 
     // =========================
@@ -68,6 +73,7 @@ public final class Fear {
         if (victim instanceof Player player && (player.isCreative() || player.isSpectator())) return false;
         for (Predicate<LivingEntity> immune : IMMUNE) if (immune.test(victim)) return false;
 
+        for (var rule : DURATION) ticks = Math.max(1, (int) Math.round(ticks * Math.max(0, rule.applyAsDouble(victim))));
         long now = victim.level().getGameTime();
         CompoundTag old = victim.getPersistentData().getCompoundOrEmpty(TAG);
         long until = Math.max(now + ticks, old.getLongOr(UNTIL, 0L));

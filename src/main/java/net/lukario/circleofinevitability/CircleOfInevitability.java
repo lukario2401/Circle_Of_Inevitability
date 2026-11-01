@@ -39,6 +39,7 @@ public class CircleOfInevitability
         ServerStartingEvent.BUS.addListener(this::onServerStarting);
 
         net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossRegistry.ENTITIES.register(modEventBus);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodGameTests.FUNCTIONS.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         ModEffects.register(modEventBus);
@@ -57,6 +58,7 @@ public class CircleOfInevitability
     }
 
     private void commonSetup(final FMLCommonSetupEvent event){
+        event.enqueueWork(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodEvents::initialize);
         event.enqueueWork(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecayEvents::initialize);
 
     }

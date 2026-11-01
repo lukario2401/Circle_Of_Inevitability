@@ -79,6 +79,18 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Thunder God", 1, "Sailor's Kit", 9, SNEAK, STEALABLE,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,1,true)),
+            new Ability("Thunder God", 2, "Rage", 8, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,2,true)),
+            new Ability("Thunder God", 3, "Tides", 7, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,3,true)),
+            new Ability("Thunder God", 4, "Sky", 6, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,4,true)),
+            new Ability("Thunder God", 5, "Thunder", 5, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,5,true)),
+            new Ability("Thunder God", 6, "Voice", 5, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,6,true)),
             new Ability("Omniscient Eye", 6, "Fate and Cognizing", 4, SNEAK, OWN_PATHWAY_ONLY,
                     (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(p,level,sl,6,true)),
             new Ability("Omniscient Eye", 7, "Omniscience", 2, SNEAK, OWN_PATHWAY_ONLY,
