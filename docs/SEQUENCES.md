@@ -40,7 +40,7 @@ One table in `Beyonder` (`SEQUENCES`, one row per Sequence) holds them. To rebal
 | 1 | 8 | 7 | 78400 | refills at once |
 | 0 | 8 | 7 | 78400 | refills at once |
 
-Sequences 1 and 0 have no numbers of their own yet and repeat Sequence 2; they also unlock no new abilities yet. "Refills at once" is a full bar every tick.
+Sequences 1 and 0 have no numbers of their own yet and repeat Sequence 2; Thunder God has new wheel entries at both Sequences; other pathways may share earlier unlocks. "Refills at once" is a full bar every tick.
 
 Where the numbers come from: the old ascension stage ran 1..8. Sequence 9 has the numbers of old stage 1, Sequence 8 of stage 2, down to Sequence 2 with stage 8 (changed on 2026-10-11; before that Sequence 9 and 8 shared the stage 1 numbers). The ability gates did not move with them: a gate `stage >= N` is still `Beyonder.hasSequence(player, 9 - N)`.
 
@@ -52,7 +52,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 
 | Pathway | G (1) | H (2) | J (3) | K (4) | L (5) | N (6) | M (7) |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| Thunder God | Harpoon 9 (sneak: Illusory Scales) | Raging Blow 8 (sneak: Wrath) | Tides 7 (Veil, Wave, Tideheal at 7; Curtain, Sphere, Rain at 5) | Sky 6 (Windblade, Gale Burst, Gale Ride at 6; Wind Binding at 5) | Thunder 5 (Lightning Strike, Bolt Arrow) | Voice 5 (Siren Song, Discord, Thunderclap) | Storm: not implemented yet |
+| Thunder God | Harpoon 9 (sneak: Illusory Scales) | Raging Blow 8 (sneak: Wrath; Source of Wrath at 2 with full Rage) | Tides 7 (entries through 3) | Sky 6 (entries through 0) | Thunder 5 (entries through 0) | Voice 5 (entries through 0) | Storm 4 (entries through 0) |
 | Wanderer | Star Burst 9 | Dash 8 | Buff 7 | Seal 7 | Transport 7 | Orbital 5 | Cosmic Plague 3 |
 | Key Of Stars | Door Opening 9 (sneak: Slip Free) | Tricks 8 (wheel: Flash, Black Screen, Loud Noise, Frost Ray, Gale, Tumble, Escape Trick, all at 8) | Star Divination 7 (sneak: Interference) | Record 6 (sneak: Replay) | Travel 5 (wheel: Traveler's Door, Blink, Invisible Hand, Star Anchor at 5, Wandering 3) | Secrets and Space 4 (wheel: Space Concealment, Transfiguration, Exile, Pocket Space at 4, Space Tearing 3) | Starlight 2 (wheel: Toy Box, Replication at 2, Space Fragmentation, Starlight Seal, Space-Time Labyrinth at 1, Alternate World, Omnipresence, Close the Door at 0) |
 | Worm Of Time | Marauder Theft 9 (Life/Distance Theft 4) | Power Theft 6 | Parasite 4 | Observation 9 / Decryption 7 | Thought and Deceit 8 | Parasite and Destiny 4 | Time and Error 2 |
@@ -74,7 +74,7 @@ Keys: G = ability 1, H = 2, J = 3, K = 4, L = 5, N = 6, M = 7 (default bindings)
 
 The number is the weakest Sequence that can use it (that Sequence and every stronger one). Beauty Goddess's two wheels (K, M): sneak recasts the last pick with no cooldown, for twice its cost; see [BEAUTY_GODDESS.md](BEAUTY_GODDESS.md). Hand Of God's three wheels (K, N, M) work the same way; its Protection (L) becomes a Cage at Sequence 2 and gains more at Sequence 1; see [HAND_OF_GOD.md](HAND_OF_GOD.md). So do Knight Of Misfortune's four wheels (H, L, N, M); its Nightmare (J) becomes Dream Invasion while the soul is out of the body; see [KNIGHT_OF_MISFORTUNE.md](KNIGHT_OF_MISFORTUNE.md). Abomination's four wheels (K, L, N, M) work the same way; a Possession is left with the Wraith key (L) again, and Abomination Form is ended by picking it again (free); see [ABOMINATION.md](ABOMINATION.md). The Prince Of Abolition's three wheels (J, N, M) are the other way round: sneak opens the wheel and a plain press recasts the last pick with no cooldown, for 3 times its cost at Sequences 9 to 7, twice at 6 and once from 5; from Sequence 4 no entry has a cooldown at all; see [PRINCE_OF_ABOLITION.md](PRINCE_OF_ABOLITION.md). Knowledge Emperor's three wheels (L, N, M) work like Hand Of God's; every cast of them and of its keys can be made free by the Whisper of the Hidden Sage or the Law of Three, costs half in its Divine Kingdom, and an Indoctrination shortens the wheels' cooldowns; see [KNOWLEDGE_EMPEROR.md](KNOWLEDGE_EMPEROR.md). The Hand Of Order's four wheels (J, K, L, M) work like Hand Of God's (picking the Court of Judgment again while it sits adjourns it, free); its single keys (G, H, N) have no cooldown and its wheels' sneak recast costs 3 times as much, and every cast costs 20% less while it stands in its own Jurisdiction; see [HAND_OF_ORDER.md](HAND_OF_ORDER.md). The Illuminator's four wheels (K, L, N, M) work like Hand Of God's too (picking the Mechanical Body, the Colossus or Mechanical Heaven again while it lasts is free: off, the Fusion Beam, or the end of the Kingdom); its single keys (G, H, J) have no cooldown and its wheels' sneak recast costs 3 times as much (the Fusion Beam keeps its own), every cast costs 10% less when the same ability was cast within the last 20 seconds (Quick Study), and Workshop casts from inside its own Ritual Circle cost 20% less and last 50% longer; see [ILLUMINATOR.md](ILLUMINATOR.md). The Star Dragon's three wheels (H, L, M) work like Hand Of God's too; its single keys (G, J, K, N) have no cooldown and its wheels' sneak recast costs 3 times as much, Scaled Form and the two Mythical Creature Forms are ended by casting them again (free), the Sunlight Ray costs half in daylight under the open sky, and the Condenser's Fusion Cluster costs half; see [STAR_DRAGON.md](STAR_DRAGON.md).
 
-Thunder God currently implements Sequences 9–5. Its four wheels use **sneak to open and normal to repeat**, retaining the full cost and cooldown on every cast; see [THUNDER_GOD_IMPLEMENTATION.md](THUNDER_GOD_IMPLEMENTATION.md). Storm and the second-half upgrades remain unavailable.
+Thunder God implements Sequences 9–0. Its five wheels use **sneak to open and normal to repeat**, retaining the full cost and cooldown on every cast except the explicit kingdom discounts. Source of Wrath temporarily improves casting Sequence. See [THUNDER_GOD_IMPLEMENTATION.md](THUNDER_GOD_IMPLEMENTATION.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.
 
@@ -207,7 +207,7 @@ How they behave:
 - When the player no longer has the Sequence or the Pathway (only commands can do that), the effect runs out on its own within `EFFECT_TICKS`. A `custom` action just stops, so use it for things that need no undoing.
 - A misspelt Pathway name stops the game with a message that lists the valid names, instead of a passive that silently never works.
 
-Thunder God passives through Ocean Songster:
+Thunder God passives:
 
 | Passive | Pathway | From Sequence |
 | --- | --- | --- |
@@ -216,6 +216,11 @@ Thunder God passives through Ocean Songster:
 | Sea’s Favor: wet damage/defense and regeneration; Navigation | Thunder God | 7 |
 | Night Vision and half fall damage | Thunder God | 6 |
 | Aquatic followers and hostile aquatic hesitation | Thunder God | 5 |
+| Spiritual Intuition warning and additional 10% damage reduction | Thunder God | 4 |
+| Home Turf: wet damage/defense bonuses improve to 25% | Thunder God | 3 |
+| Storm-born: damage with no attacker falls to 40% | Thunder God | 2 |
+| Authority of Thunder: lightning immunity and Rage near landed bolts | Thunder God | 1 |
+| Tyrant: fear immunity and threatening aura | Thunder God | 0 |
 
 ## Digestion
 

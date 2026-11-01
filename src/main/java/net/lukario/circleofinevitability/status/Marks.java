@@ -66,6 +66,11 @@ public final class Marks {
         forgetWornOff(entity, all);
     }
 
+    /** Remove counters attributed to this source while preserving everyone else's marks. */
+    public static void clearFrom(LivingEntity target,Entity source){
+        CompoundTag all=target.getPersistentData().getCompoundOrEmpty(TAG);
+        for(String key:Set.copyOf(all.keySet()))if(key.endsWith("@"+source.getUUID()))all.remove(key);
+    }
     private Marks() {}
 
     // =========================

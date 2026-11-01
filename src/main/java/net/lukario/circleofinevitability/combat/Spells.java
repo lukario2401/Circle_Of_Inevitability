@@ -126,7 +126,11 @@ public final class Spells {
      * what it is really fighting, as blasphemy_slate/beyonder_mobs/MobSpells.isEnemy says, so a zombie's wave does
      * not hurt the other zombies, nor the cows standing by.
      */
+    private static final java.util.List<java.util.function.BiPredicate<LivingEntity,LivingEntity>> SEPARATIONS=new java.util.ArrayList<>();
+    /** Sealed spaces make bodies inaccessible without treating enemies as allies. */
+    public static void addSeparationCheck(java.util.function.BiPredicate<LivingEntity,LivingEntity> check){SEPARATIONS.add(check);}
     public static boolean isEnemy(LivingEntity caster, LivingEntity other) {
+        if(caster!=null)for(var check:SEPARATIONS)if(check.test(caster,other))return false;
         if (!other.isAlive() || other.isSpectator() || other instanceof ArmorStand) return false;
         if (Concealment.isHidden(other)) return false;
         if (!(caster instanceof Player)) return caster instanceof Mob mob && MobSpells.isEnemy(mob, other);

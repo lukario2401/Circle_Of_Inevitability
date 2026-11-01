@@ -46,7 +46,7 @@ public final class ThunderGodGameTests {
         FUNCTIONS.register("thunder_wind_wave",()->ThunderGodGameTests::waveWind);
     }
     private ThunderGodGameTests(){}
-    private static ServerPlayer player(GameTestHelper h,int sequence){
+    static ServerPlayer player(GameTestHelper h,int sequence){
         var profile=new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(),"thunder_"+nextArena);
         var cookie=net.minecraft.server.network.CommonListenerCookie.createInitial(profile,false);
         ServerPlayer p=new ServerPlayer(h.getLevel().getServer(),h.getLevel(),profile,cookie.clientInformation());
@@ -55,19 +55,19 @@ public final class ThunderGodGameTests {
         h.getLevel().getServer().getPlayerList().placeNewPlayer(connection,p,cookie);
         p.setGameMode(GameType.SURVIVAL);p.getFoodData().setFoodLevel(10);
         p.connection.handleAcceptPlayerLoad(new net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket());
-        Vec3 at=h.absoluteVec(new Vec3(1.5,40+(nextArena++%16)*32,1.5));p.setPos(at.x,at.y,at.z);
+        Vec3 at=h.absoluteVec(new Vec3(1.5,40+nextArena++*512,1.5));p.setPos(at.x,at.y,at.z);
         p.setNoGravity(true);p.setYRot(0);p.setXRot(0);
         SoulCore.setPathway(p,PATHWAY);SoulCore.setSequence(p,sequence);SoulCore.setSpiritualityQuietly(p,Float.MAX_VALUE);
         ThunderGodEvents.initialize();
         h.addCleanup(ok->{clear(p);h.getLevel().getServer().getPlayerList().remove(p);});return p;
     }
-    private static Mob target(GameTestHelper h,ServerPlayer p,double x,double z){
+    static Mob target(GameTestHelper h,ServerPlayer p,double x,double z){
         Mob t=h.spawn(EntityTypes.COW,new BlockPos(1,1,2));t.setNoAi(true);t.setNoGravity(true);
         t.setPos(p.getX()+x,p.getY(),p.getZ()+z);t.getAttribute(Attributes.MAX_HEALTH).setBaseValue(1000);t.setHealth(1000);
         h.addCleanup(ok->{cleanse(t);t.discard();});return t;
     }
-    private static void same(GameTestHelper h,double got,double want,String why){h.assertTrue(Math.abs(got-want)<.05,why+": got "+got+", want "+want);}
-    private static void friend(GameTestHelper h,ServerPlayer p,Mob t){
+    static void same(GameTestHelper h,double got,double want,String why){h.assertTrue(Math.abs(got-want)<.05,why+": got "+got+", want "+want);}
+    static void friend(GameTestHelper h,ServerPlayer p,Mob t){
         var board=h.getLevel().getScoreboard();var team=board.addPlayerTeam("thunder_"+p.getId());
         board.addPlayerToTeam(p.getScoreboardName(),team);board.addPlayerToTeam(t.getScoreboardName(),team);h.addCleanup(ok->board.removePlayerTeam(team));
     }

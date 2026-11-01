@@ -135,6 +135,7 @@ public final class Study {
 
     /** What this caster knows of it, 0..100. */
     public static int get(LivingEntity caster, Entity target) {
+        if (net.lukario.circleofinevitability.combat.Information.blocked(caster,target)) return 0;
         if (caster == null || target == null) return 0;
         Gauge gauge = gauge(caster, target, false);
         return gauge == null ? 0 : gauge.value(target.level().getGameTime());
@@ -166,6 +167,7 @@ public final class Study {
 
     /** Everything this caster knows something about right now (alive, in the caster's world), most known first. */
     public static List<Known> knownBy(LivingEntity caster) {
+        if (net.lukario.circleofinevitability.combat.Information.blocked(caster)) return List.of();
         List<Known> found = new ArrayList<>();
         long now = caster.level().getGameTime();
         for (Map<UUID, Gauge> byCaster : KNOWN.values()) {
@@ -208,6 +210,7 @@ public final class Study {
      * it is a power over that one entity, not study.
      */
     public static void hold(LivingEntity caster, LivingEntity target, int percent, int ticks) {
+        if (net.lukario.circleofinevitability.combat.Information.blocked(caster,target)) return;
         if (caster == null || target == null || caster == target) return;
         Gauge gauge = gauge(caster, target, true);
         long now = target.level().getGameTime();
@@ -265,6 +268,7 @@ public final class Study {
     // =========================
 
     private static boolean canStudy(LivingEntity caster, LivingEntity target) {
+        if (net.lukario.circleofinevitability.combat.Information.blocked(caster,target)) return false;
         if (caster == null || target == null || target.level().isClientSide()) return false;
         if (caster == target || caster.getUUID().equals(target.getUUID()) || !target.isAlive()) return false;
         return !isImmune(target);

@@ -1,6 +1,6 @@
 # Thunder God: ability design
 
-**Implementation update:** Sequences 9–5 are playable; see [first-half controls, costs and tests](THUNDER_GOD_IMPLEMENTATION.md). The original draft below is preserved, including its starting numbers and deferred questions.
+**Implementation update:** Sequences 9–0, all five wheels and Source of Wrath are playable; see [controls, costs and tests](THUNDER_GOD_IMPLEMENTATION.md). The original draft below is preserved, including its starting numbers and deferred questions.
 
 Design only · for the Circle Of Inevitability repo · drafted by Claude, November 1, 2026 · no code written yet
 

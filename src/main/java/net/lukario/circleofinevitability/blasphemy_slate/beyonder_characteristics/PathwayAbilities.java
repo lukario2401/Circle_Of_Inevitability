@@ -87,6 +87,8 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Thunder God", 7, "Storm", 4, SNEAK, OWN_PATHWAY_ONLY,
+                    (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,7,true)),
             new Ability("Thunder God", 1, "Sailor's Kit", 9, SNEAK, STEALABLE,
                     (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,1,true)),
             new Ability("Thunder God", 2, "Rage", 8, SNEAK, OWN_PATHWAY_ONLY,

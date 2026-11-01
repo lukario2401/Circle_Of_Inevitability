@@ -114,6 +114,7 @@ public final class Dome {
     private int age;
     private int weakUntil;
     private boolean closed = true;
+    private boolean allProjectiles;
     private final Map<UUID, Boolean> wasInside = new HashMap<>();
     private final Map<UUID, Integer> lastShown = new HashMap<>();
 
@@ -151,6 +152,9 @@ public final class Dome {
         this.keepsIn = true;
         return this;
     }
+
+    /** Seal both sides against every projectile, including the owner's. */
+    public Dome sealsProjectiles() { this.allProjectiles=true; this.stopsProjectiles=true; return this; }
 
     /** Projectiles of outsiders (or of nobody) end at the shell. */
     public Dome stopsProjectiles() {
@@ -444,8 +448,8 @@ public final class Dome {
     private void stopProjectiles(AABB box) {
         for (Projectile projectile : level.getEntitiesOfClass(Projectile.class, box, Entity::isAlive)) {
             Entity shooter = projectile.getOwner();
-            if (shooter != null && isOwner(shooter) && !flipped) continue;
-            if (shooter != null && !isOwner(shooter) && shooter instanceof LivingEntity living && !isOutsider(living)) continue;
+            if (!allProjectiles && shooter != null && isOwner(shooter) && !flipped) continue;
+            if (!allProjectiles && shooter != null && !isOwner(shooter) && shooter instanceof LivingEntity living && !isOutsider(living)) continue;
             Vec3 now = projectile.position();
             Vec3 next = now.add(projectile.getDeltaMovement());
             boolean in = contains(now), willBeIn = contains(next);

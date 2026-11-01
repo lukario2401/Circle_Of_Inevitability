@@ -34,11 +34,24 @@ public final class ThunderGodEvents {
     public static void initialize() {
         if(initialized)return;initialized=true;
         Fear.addDurationScale(e->is(e,9)?.5:1);
-        Fear.addImmunity(e->e instanceof Player p&&Form.isIn(p,WRATH));
+        Fear.addImmunity(e->is(e,0)||e instanceof Player p&&(Form.isIn(p,WRATH)||ThunderGodHigher.source(p)));
         Cleansing.addListener(ThunderGodPowers::cleanse);
+        Cleansing.addListener(ArtifactLock::clear);
+        Spells.addSeparationCheck(ThunderGodHigher::separated);
+        Information.addBlocker(ThunderGodHigher::blockedInformation);
+        Shock.addImmunity(e->is(e,1));
+        Shock.addLandingListener(ThunderGodHigher::lightningLanded);
+        ProjectileTempo.addRule(ThunderGodHigher::projectileFactor);
+        Substitute.addSuppression(ThunderGodHigher::suppressedSubstitute);
+        Parasite.addHostImmunity(ThunderGodHigher::possessionBlocked);
+        Spells.addCostScale(p->ThunderGodHigher.doubleCost(p)?2:1);
+        Spells.addUnchoosableCheck((chooser,target)->chooser!=null&&(ThunderGodHigher.blockedAim(chooser,target)||rainBlocks(chooser,target)));
+        Zone.addShelter(ThunderGodHigher::separated);
+        Zone.addShelter((zoneOwner,target)->target instanceof Player p&&ThunderGodHigher.hasField(p,Spell.HURRICANE)
+                &&Spells.isEnemy(p,zoneOwner)&&p.distanceToSqr(zoneOwner)>9);
         Root.addHold((e,restriction)->
                 afflicted(e,Affliction.VEIL)&&(restriction==RootRestriction.ABILITIES||restriction==RootRestriction.ATTACK&&e instanceof Mob)
-                ||afflicted(e,Affliction.SPHERE)&&RootRestriction.MOVEMENT.contains(restriction));
+                ||afflicted(e,Affliction.SPHERE)&&RootRestriction.MOVEMENT.contains(restriction) || ThunderGodHigher.held(e,restriction));
         Spells.addUnchoosableCheck((chooser,target)->chooser!=null&&afflicted(chooser,Affliction.VEIL));
         Soaked.addWetCheck(ThunderGodPowers::wet);
     }
@@ -52,7 +65,7 @@ public final class ThunderGodEvents {
         if(is(p,7)) {
             if(Soaked.isWet(p))Spells.giveSpirituality(p,Beyonder.spiritualityRegenPerTick(SoulCore.getSequence(p))*20*.25f);
             Vec3 rain=nearestRain(p);
-            String weather=p.level().isRainingAt(p.blockPosition())?"rain here":rain==null?"clear":String.format(java.util.Locale.ROOT,"rain %.0fm at %d, %d",p.position().distanceTo(rain),(int)rain.x,(int)rain.z);
+            String weather=p.level().isThundering()?"thunder overhead":p.level().isRaining()?"rain overhead":rain==null?"clear":String.format(java.util.Locale.ROOT,"weather %.0fm at %d, %d",p.position().distanceTo(rain),(int)rain.x,(int)rain.z);
             p.sendOverlayMessage(Component.literal("Navigation: "+p.getBlockX()+", "+p.getBlockY()+", "+p.getBlockZ()+" · "+weather));
         }
         if(is(p,5))for(Mob animal:sl.getEntitiesOfClass(Mob.class,p.getBoundingBox().inflate(12),ThunderGodEvents::aquaticAnimal)) {
@@ -69,11 +82,13 @@ public final class ThunderGodEvents {
         if(p.getPersistentData().getBooleanOr(PREFIX+"was_mine",false)&&!mine)clear(p);
         p.getPersistentData().putBoolean(PREFIX+"was_mine",mine);
         if(p.tickCount%20==0)body(p);
+        if(p instanceof net.minecraft.server.level.ServerPlayer viewer)EntitySight.tick(viewer);
         if(p.isAlive()&&ConjuredArmor.isWorn(p,SCALES))scalesTick(p,sl);
         if(!mine||!p.isAlive())return;
         galeTick(p);
+        if(p.tickCount%20==0)ThunderGodHigher.passive(p,sl);
         if(p.tickCount%20==0){if(is(p,8))ThunderGodFx.rage(p,Rage.count(p));else Rage.clear(p);}
-        if(Rage.count(p)==10||Form.isIn(p,WRATH)) {
+        if(Rage.count(p)==10||Form.isIn(p,WRATH)||ThunderGodHigher.source(p)) {
             if(p.tickCount%4==0) {
                 Vec3 front=p.getLookAngle().multiply(1,0,1).normalize().scale(.28);
                 Vec3 side=new Vec3(front.z,0,-front.x).normalize().scale(.1);
@@ -83,11 +98,11 @@ public final class ThunderGodEvents {
         }
     }
     @SubscribeEvent public static void levelTick(TickEvent.LevelTickEvent.Post event){
-        if(event.level() instanceof ServerLevel sl&&sl.getGameTime()%20==0)prune(sl);
+        if(event.level() instanceof ServerLevel sl){ThunderGodHigher.tick(sl);if(sl.getGameTime()%20==0)prune(sl);}
     }
     @SubscribeEvent public static void livingTick(LivingEvent.LivingTickEvent event) {
         LivingEntity target=event.getEntity();if(!(target.level() instanceof ServerLevel sl))return;
-        tickTarget(target,sl);slowInCurtain(target);
+        tickTarget(target,sl);slowInCurtain(target);ThunderGodHigher.targetTick(target);
     }
     @SubscribeEvent public static void hurt(LivingHurtEvent event) {
         LivingEntity target=event.getEntity();if(!(target.level() instanceof ServerLevel sl))return;
@@ -95,6 +110,8 @@ public final class ThunderGodEvents {
         if(event.getSource().getEntity() instanceof LivingEntity attacker&&is(attacker,9)) {
             amount*=1+.02f*(is(attacker,8)?Rage.count(attacker):0);
             if(is(attacker,7)&&Soaked.isWet(attacker))amount*=1.1f;
+            if(is(attacker,3)&&Soaked.isWet(attacker))amount*=1.25f;
+            if(ThunderGodHigher.source(attacker))amount*=SoulCore.getSequence((Player)attacker)==1?1.5f:1.25f;
         }
         if(target instanceof Player p) {
             if(ConjuredArmor.isWorn(p,SCALES)){
@@ -103,8 +120,12 @@ public final class ThunderGodEvents {
             }
             if(Form.isIn(p,WRATH))amount*=.85f;
             if(is(p,7)&&Soaked.isWet(p))amount*=.9f;
+            if(is(p,4))amount*=.9f;
+            if(is(p,3)&&Soaked.isWet(p))amount*=.75f;
+            if(is(p,2)&&event.getSource().getEntity()==null)amount*=.4f;
         }
         if((event.getSource().is(DamageTypeTags.IS_FIRE)||event.getSource().is(DamageTypeTags.IS_EXPLOSION))&&inCurtain(target))amount*=.5f;
+        amount*=1-ThunderGodHigher.wardCut(target);
         event.setAmount(amount);
         if(amount>0&&is(target,8)&&sl.getGameTime()>=target.getPersistentData().getLongOr(PREFIX+"hit_ready",0L)){
             target.getPersistentData().putLong(PREFIX+"hit_ready",sl.getGameTime()+10);Rage.add(target,1);
@@ -115,15 +136,26 @@ public final class ThunderGodEvents {
         if(event.getSource().getEntity() instanceof LivingEntity attacker&&is(attacker,8)){
             boolean spell=Spells.isSpellHit(target),melee=event.getSource().getDirectEntity()==attacker&&!spell;
             Rage.landed(attacker,target,spell,melee);
+            if(spell&&ThunderGodHigher.presence(attacker)&&Rage.stormHit(attacker))Fear.apply(target,attacker,40);
             if(melee&&attacker instanceof Player p)meleeArc(p,target,sl);
         }
     }
     @SubscribeEvent public static void drink(LivingEntityUseItemEvent.Finish event){
         if(!event.getEntity().level().isClientSide()&&is(event.getEntity(),8)&&(event.getItem().is(Items.POTION)||event.getItem().is(Items.HONEY_BOTTLE)))Rage.drink(event.getEntity());
     }
+    @SubscribeEvent public static boolean immune(LivingAttackEvent event){
+        LivingEntity e=event.getEntity();if(e.level().isClientSide())return false;
+        if(ThunderGodHigher.invulnerable(e))return true;
+        if(event.getSource().getEntity() instanceof LivingEntity dealer&&ThunderGodHigher.separated(dealer,e))return true;
+        boolean lightning=event.getSource().is(net.minecraft.world.damagesource.DamageTypes.LIGHTNING_BOLT);
+        if(lightning&&is(e,1)){if(e.level() instanceof ServerLevel sl)ThunderGodHigher.lightningLanded(sl,e.position());return true;}
+        if(event.getSource().getEntity() instanceof LivingEntity attacker&&ThunderGodHigher.wardBlocks(attacker,e)&&!Spells.isSpellHit(e)&&attacker.distanceToSqr(e)<=16)return true;
+        return false;
+    }
     @SubscribeEvent public static void fall(LivingFallEvent event){if(!event.getEntity().level().isClientSide()&&is(event.getEntity(),6))event.setDamageMultiplier(event.getDamageMultiplier()*.5f);}
     @SubscribeEvent public static boolean aquaticTarget(LivingChangeTargetEvent event){
         if(event.getEntity().level().isClientSide()||!(event.getNewTarget() instanceof Player p)||!is(p,5))return false;
+        if(is(p,0)&&event.getEntity().getMaxHealth()<=60&&event.getEntity().distanceToSqr(p)<=64&&p.getRandom().nextBoolean())return true;
         var type=event.getEntity().getType();return (type==EntityTypes.GUARDIAN||type==EntityTypes.ELDER_GUARDIAN||type==EntityTypes.DROWNED)&&p.getRandom().nextBoolean();
     }
     @SubscribeEvent public static void death(LivingDeathEvent event){

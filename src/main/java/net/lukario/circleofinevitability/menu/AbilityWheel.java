@@ -62,6 +62,9 @@ public final class AbilityWheel {
     public String id() { return id; }
     public String title() { return title; }
     private String pathway;
+    private java.util.function.ToIntFunction<Player> sequenceBy;
+    /** Temporary casting gates, without modifying the player's real Sequence or passives. */
+    public AbilityWheel sequenceBy(java.util.function.ToIntFunction<Player> rule) { sequenceBy=rule; return this; }
     /** Explicit ownership for inspection/catalogs; existing wheels infer it from their id/icon. */
     public AbilityWheel pathway(String name) { pathway=name; return this; }
     public String pathway() {
@@ -398,7 +401,7 @@ public final class AbilityWheel {
     }
 
     public boolean unlocked(Player player, Entry entry) {
-        return Beyonder.hasSequence(player, entry.sequence);
+        return Beyonder.hasSequence(player, entry.sequence) || sequenceBy != null && sequenceBy.applyAsInt(player) <= entry.sequence;
     }
 
     /** Ticks until the entry can be cast again (0 = ready). */

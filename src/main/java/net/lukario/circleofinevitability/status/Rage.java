@@ -38,13 +38,19 @@ public final class Rage {
         }
         add(owner, 1 + (melee && owner instanceof Player p && Form.isIn(p, ThunderGod.WRATH) ? 1 : 0));
     }
+    public static boolean stormHit(LivingEntity owner){return current!=null&&current.owner==owner&&(current.origin.contains("_sky/")||current.origin.contains("_thunder/")||current.origin.contains("_storm/"));}
     public static Cast cast(LivingEntity owner) { return new Cast(owner, false); }
     public static Cast blow(LivingEntity owner) { return new Cast(owner, true); }
     public static final class Cast {
         private final LivingEntity owner;
         private final boolean blow;
+        private final String origin;
         private final Set<UUID> hits = new HashSet<>();
-        private Cast(LivingEntity owner, boolean blow) { this.owner = owner; this.blow = blow; }
+        private Cast(LivingEntity owner, boolean blow) { this.owner = owner; this.blow = blow; this.origin=owner instanceof Player p?net.lukario.circleofinevitability.combat.CastContext.id(p):""; }
+        public void strikeTrue(LivingEntity target, float damage) {
+            Cast before = current; current = this;
+            try { DamageFx.credit(owner,target); Spells.strikeTrue(owner,target,damage); } finally { current=before; }
+        }
         public void strike(LivingEntity target, float damage) {
             Cast before = current; current = this;
             try { DamageFx.credit(owner, target); Spells.strike(owner, target, damage); }

@@ -69,6 +69,7 @@ public final class Connection {
 
     /** Connects 'owner' to 'target' now (or renews it). */
     public static void touch(Player owner, LivingEntity target) {
+        if (net.lukario.circleofinevitability.combat.Information.blocked(owner,target)) return;
         if (owner == null || target == null || owner == target || !(owner.level() instanceof ServerLevel sl)) return;
         long now = now(sl.getServer());
         LinkedHashMap<UUID, Long> mine = CONNECTIONS.computeIfAbsent(owner.getUUID(), id -> new LinkedHashMap<>());
@@ -93,6 +94,7 @@ public final class Connection {
 
     /** Ticks since 'owner' last touched 'target', or -1 if never (or forgotten). */
     public static long ticksSince(Player owner, Entity target) {
+        if (net.lukario.circleofinevitability.combat.Information.blocked(owner,target)) return -1;
         if (owner == null || target == null || !(owner.level() instanceof ServerLevel sl)) return -1;
         LinkedHashMap<UUID, Long> mine = CONNECTIONS.get(owner.getUUID());
         Long at = mine == null ? null : mine.get(target.getUUID());
@@ -104,6 +106,7 @@ public final class Connection {
     /** Every connection touched within 'withinTicks' that is alive somewhere on the server, newest first. */
     public static List<LivingEntity> all(Player owner, int withinTicks) {
         List<LivingEntity> found = new ArrayList<>();
+        if (net.lukario.circleofinevitability.combat.Information.blocked(owner)) return found;
         if (owner == null || !(owner.level() instanceof ServerLevel sl)) return found;
         LinkedHashMap<UUID, Long> mine = CONNECTIONS.get(owner.getUUID());
         if (mine == null) return found;
@@ -113,7 +116,7 @@ public final class Connection {
         for (UUID id : newestFirst) {
             if (now - mine.get(id) > withinTicks) break;          // the rest are older still
             LivingEntity living = find(sl.getServer(), id);
-            if (living != null) found.add(living);
+            if (living != null && !net.lukario.circleofinevitability.combat.Information.blocked(living)) found.add(living);
         }
         return found;
     }

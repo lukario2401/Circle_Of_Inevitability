@@ -9,6 +9,7 @@ import net.minecraft.world.entity.*;
 public final class Dossier {
     public static List<Component> lines(ServerPlayer viewer,LivingEntity target,int depth){
         List<Component> out=new ArrayList<>();
+        if(Information.blocked(viewer,target))return List.of();
         String mood=Fear.isAfraid(target)?"afraid":target instanceof Mob mob && mob.getTarget()!=null?"furious":"calm";
         out.add(Component.literal(target.getName().getString()+" | "+target.getHealth()+"/"+target.getMaxHealth()+" HP | "+mood));
         for(var effect:target.getActiveEffects())out.add(Component.literal(effect.toString()));

@@ -10,6 +10,7 @@ import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.*;
 import net.lukario.circleofinevitability.screen.ScreenImages;
+import net.lukario.circleofinevitability.screen.ScreenAnchor;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,6 +38,7 @@ public final class ThunderGodPowers {
     private static final String SIREN_BONUS = PREFIX+"siren_bonus", GALE = PREFIX+"gale", SCALES_BURST = PREFIX+"scales_burst";
     private static final Identifier SPHERE_MOVE=Physique.id(PREFIX+"sphere_move"), VEIL_SLOW=Physique.id(PREFIX+"veil_slow");
     private static final Map<UUID,EnumMap<Affliction,Effect>> EFFECTS = new HashMap<>();
+    private static final Map<UUID,Rage.Cast> GALE_HITS=new HashMap<>();
     private static final Map<UUID,Rain> RAINS = new HashMap<>();
     private static final Map<UUID,Curtain> CURTAINS = new HashMap<>();
     public enum Affliction { VEIL, SPHERE, DISCORD }
@@ -50,20 +52,25 @@ public final class ThunderGodPowers {
         Effect(Player caster,int ticks,Rage.Cast cast){this.caster=caster;this.level=(ServerLevel)caster.level();this.until=caster.level().getGameTime()+ticks;this.pulse=caster.level().getGameTime()+10;this.cast=cast;}
     }
     private record Rain(Player owner,ServerLevel level,Vec3 center) {}
-    private record Curtain(Player owner,ServerLevel level,Vec3 center,Vec3 normal,Vec3 side) {
+    private record Curtain(Player owner,ServerLevel level,Vec3 center,Vec3 normal,Vec3 side,double width,double height,boolean upgraded,Rage.Cast damage) {
         boolean covers(Vec3 at) {
             Vec3 delta=at.subtract(center);
-            return Math.abs(delta.dot(normal))<=.8 && Math.abs(delta.dot(side))<=4.3 && delta.y>=-.3 && delta.y<=4.3;
+            return Math.abs(delta.dot(normal))<=.8 && Math.abs(delta.dot(side))<=width/2+.3 && delta.y>=-.3 && delta.y<=height+.3;
         }
     }
     private ThunderGodPowers() {}
-    private static void image(Player p,Spell s,int ticks) { ScreenImages.show(p,PREFIX+s.id(),"thunder_god/"+s.id(),24,ticks); }
+    private static void image(Player p,Spell s,int ticks) {
+        if(s!=Spell.ILLUSORY_SCALES&&s!=Spell.WRATH&&s!=Spell.SOURCE_OF_WRATH)return;
+        int x=s==Spell.ILLUSORY_SCALES?112:132;
+        ScreenImages.show(p,PREFIX+s.id(),"thunder_god/"+s.id(),ScreenAnchor.BOTTOM,x,-3,16,ticks);
+    }
     private static boolean here(Player p,ServerLevel sl){return Spells.casterStillHere(p,sl);}
-    private static long generation(Player p){return p.getPersistentData().getLongOr(PREFIX+"generation",0L);}
-    private static boolean here(Player p,ServerLevel sl,long generation){return here(p,sl)&&generation(p)==generation;}
+    static long generation(Player p){return p.getPersistentData().getLongOr(PREFIX+"generation",0L);}
+    static boolean live(Player p,ServerLevel sl,long generation){return here(p,sl)&&generation(p)==generation;}
     private static void tell(Player p,String text){p.sendOverlayMessage(net.minecraft.network.chat.Component.literal(text));}
     public static Result cast(ServerPlayer p,ServerLevel sl,Spell spell) {
         if(!here(p,sl)||Root.has(p,RootRestriction.ABILITIES))return Result.REFUSED;
+        if(ThunderGodHigher.calmRefused(p,sl,spell)){tell(p,"Your wrath leaves no room for that calm power.");return Result.REFUSED;}
         Rage.Cast cast=Rage.cast(p);
         Result result=switch(spell){
             case HARPOON -> harpoon(p,sl,cast);
@@ -85,14 +92,15 @@ public final class ThunderGodPowers {
             case SIREN_SONG -> siren(p,sl);
             case DISCORD -> discord(p,sl,cast);
             case THUNDERCLAP -> thunderclap(p,sl,cast);
+            default -> ThunderGodHigher.cast(p,sl,spell);
         };
-        if(result==Result.DONE){ThunderGodFx.cue(sl,p.position(),spell.id());image(p,spell,40);}
+        if(result==Result.DONE){ThunderGodFx.cue(sl,p.position(),spell.id());image(p,spell,spell==Spell.SOURCE_OF_WRATH?400:spell==Spell.WRATH?(sequence(p)<=3?400:200):spell==Spell.ILLUSORY_SCALES?200:40);}
         return result;
     }
 
     private static Result harpoon(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
         long generation=generation(p);
-        Vec3 from=p.getEyePosition(),direction=p.getLookAngle();
+        Vec3 from=p.getEyePosition(),direction=look(p);
         if(Beyonder.hasSequence(p,7)) {
             LivingEntity assisted=Spells.enemiesInSight(p,sl,24,15).stream()
                     .filter(t->Spells.clearLine(p,sl,from,t.getBoundingBox().getCenter()))
@@ -109,15 +117,15 @@ public final class ThunderGodPowers {
         ParticleShapes.modelAlong(sl,ThunderGodFx.model("harpoon",flight+42).scale(.6f).tag(tag)
                 .key(flight,ModelFx.pose().up((float)from.distanceTo(end))),from,end.subtract(from));
         for(int t=0;t<=flight;t+=2){final int tick=t;Later.run(sl,t,()->{
-            if(here(p,sl,generation))ParticleShapes.line(sl,rope(),p.getEyePosition(),from.lerp(end,(double)tick/flight),2);
+            if(live(p,sl,generation))ParticleShapes.line(sl,rope(),p.getEyePosition(),from.lerp(end,(double)tick/flight),2);
         });}
         Later.run(sl,flight,()->{
-            if(!here(p,sl,generation)){ParticleShapes.clearModels(sl,end,tag);return;}
+            if(!live(p,sl,generation)){ParticleShapes.clearModels(sl,end,tag);return;}
             if(victim!=null&&victim.isAlive()&&victim.level()==sl&&Spells.distanceToBody(victim,end)<2.4&&Spells.isEnemy(p,victim)){
                 cast.strike(victim,30);
                 Vec3 toward=p.position().subtract(victim.position());
                 Vec3 anchor=victim.position().add(toward.normalize().scale(Math.min(5,Math.max(0,toward.length()-1.2))));
-                Reel.in(victim,()->here(p,sl,generation)?anchor:null).speed(1).lasts(20)
+                Reel.in(victim,()->live(p,sl,generation)?anchor:null).speed(1).lasts(20)
                         .onEnd(()->ParticleShapes.clearModels(sl,end,tag)).start(sl);
                 ropeFor(p,sl,()->victim.isAlive()?victim.getBoundingBox().getCenter():null,20);
                 ThunderGodFx.cue(sl,end,"harpoon_hit");
@@ -130,16 +138,16 @@ public final class ThunderGodPowers {
         });
         return Result.DONE;
     }
-    private static double directionDot(Player p,LivingEntity t){return -p.getLookAngle().dot(t.getBoundingBox().getCenter().subtract(p.getEyePosition()).normalize());}
+    private static double directionDot(Player p,LivingEntity t){return -look(p).dot(t.getBoundingBox().getCenter().subtract(p.getEyePosition()).normalize());}
     private static ParticleFx rope(){return ParticleFx.of("fx/thunder_god/rope").color(0xFF9C8465).size(.025f).lifetime(3,0);}
     private static void ropeFor(Player p,ServerLevel sl,java.util.function.Supplier<Vec3> anchor,int ticks){
         long generation=generation(p);
-        for(int t=0;t<ticks;t+=2)Later.run(sl,t,()->{Vec3 at=anchor.get();if(here(p,sl,generation)&&at!=null)ParticleShapes.line(sl,rope(),p.getEyePosition(),at,2);});
+        for(int t=0;t<ticks;t+=2)Later.run(sl,t,()->{Vec3 at=anchor.get();if(live(p,sl,generation)&&at!=null)ParticleShapes.line(sl,rope(),p.getEyePosition(),at,2);});
     }
 
     private static Result scales(ServerPlayer p,ServerLevel sl) {
         if(ConjuredArmor.isWorn(p,SCALES)){ConjuredArmor.takeOff(p,SCALES);return Result.FREE;}
-        int advancements=Math.max(0,9-SoulCore.getSequence(p));
+        int advancements=Math.max(0,9-sequence(p));
         p.getPersistentData().putBoolean(SCALES_BURST,false);
         ConjuredArmor.of(SCALES).lasts(200).absorption(6+2*advancements)
                 .onEnd(e->{ParticleShapes.clearModels(sl,p,SCALES);ScreenImages.hide(p,PREFIX+"illusory_scales");}).wear(p);
@@ -148,20 +156,21 @@ public final class ThunderGodPowers {
     }
     private static Result ragingBlow(ServerPlayer p,ServerLevel sl) {
         if(Rage.count(p)<3){tell(p,"Not angry enough — Raging Blow needs 3 Rage.");return Result.REFUSED;}
-        LivingEntity target=Spells.aimEnemy(p,sl,4);
+        LivingEntity target=aimEnemy(p,sl,4);
         if(target==null){tell(p,"No enemy in reach.");return Result.REFUSED;}
-        int rage=Rage.spend(p),perRage=8+2*Math.max(0,8-SoulCore.getSequence(p));
+        int rage=Rage.spend(p),perRage=8+2*Math.max(0,8-sequence(p));
         float damage=20+perRage*rage;
         if(Marks.take(p,SIREN_BONUS)>0)damage*=1.3f;
         Rage.Cast cast=Rage.blow(p);cast.strike(target,damage);Spells.push(target,p.position(),1.6,.3);
-        for(LivingEntity other:Spells.enemiesAround(p,sl,target.position(),2.5))if(other!=target){cast.strike(other,damage*.5f);Spells.push(other,target.position(),1,.2);}
+        for(LivingEntity other:around(p,sl,target.position(),2.5))if(other!=target){cast.strike(other,damage*.5f);Spells.push(other,target.position(),1,.2);}
         if(rage==10){target.stopUsingItem();Root.apply(target,100,RootRestriction.USE_ITEMS);Root.apply(target,20,RootRestriction.MOVE,RootRestriction.JUMP);}
+        if(sequence(p)<=3)ParticleShapes.ring(sl,ParticleFx.of("fx/thunder_god/arc_0").color(ThunderGodFx.SILVER).size(.25f).lifetime(8).glow(),target.position().add(0,.2,0),2.5,30,0);
         ParticleShapes.model(sl,ThunderGodFx.model("sound_wave",12).scale(.1f).key(10,ModelFx.pose().scale(2.5f).alpha(0)),target.position().add(0,1,0),p.getYRot(),0,0);
         ThunderGodFx.rage(p,Rage.count(p));return Result.DONE;
     }
     private static Result wrath(ServerPlayer p,ServerLevel sl) {
         if(Form.isIn(p,WRATH)){Form.end(p);return Result.FREE;}
-        Form.of(WRATH).lasts(200).keepWhile(q->is(q,8))
+        Form.of(WRATH).lasts(sequence(p)<=3?400:200).keepWhile(q->is(q,8))
                 .effect(MobEffects.STRENGTH,1).effect(MobEffects.SPEED,0)
                 .attribute(Attributes.ATTACK_SPEED,.3,AttributeModifier.Operation.ADD_MULTIPLIED_BASE)
                 .onEnd((q,why)->{
@@ -177,7 +186,7 @@ public final class ThunderGodPowers {
         return effect!=null&&e.level()==effect.caster.level()&&e.level().getGameTime()<effect.until;
     }
     private static Result waterHold(ServerPlayer p,ServerLevel sl,Affliction kind,Rage.Cast cast) {
-        LivingEntity target=Spells.aimEnemy(p,sl,20);
+        LivingEntity target=aimEnemy(p,sl,20);
         if(target==null)return Result.REFUSED;
         int ticks=kind==Affliction.VEIL?120:100;if(Spells.isBoss(target))ticks/=2;
         afflict(p,target,kind,ticks,cast);Soaked.apply(target,200);
@@ -237,13 +246,13 @@ public final class ThunderGodPowers {
         Vec3 start=p.position(),forward=Spells.flatLook(p),side=new Vec3(forward.z,0,-forward.x);
         Set<UUID> hit=new HashSet<>();ThunderGodFx.wave(sl,start,p.getYRot(),3.4f,18,30);
         for(int t=1;t<=30;t++){final double distance=18.0*t/30;Later.run(sl,t,()->{
-            if(!here(p,sl,generation))return;
+            if(!live(p,sl,generation))return;
             Vec3 front=start.add(forward.scale(distance));
             for(LivingEntity target:sl.getEntitiesOfClass(LivingEntity.class,new AABB(front,front).inflate(4,3,4),LivingEntity::isAlive)){
                 Vec3 d=target.position().subtract(front);
                 if(Math.abs(d.dot(side))>3+target.getBbWidth()/2||Math.abs(d.dot(forward))>1||d.y< -1||d.y>3)continue;
                 target.clearFire();
-                if(Spells.isEnemy(p,target)&&hit.add(target.getUUID())){Soaked.apply(target,200);cast.strike(target,45);Spells.push(target,start,1.6,.25);}
+                if(targets(p,target)&&hit.add(target.getUUID())){Soaked.apply(target,200);cast.strike(target,45);Spells.push(target,start,1.6,.25);}
             }
         });}
         return Result.DONE;
@@ -253,35 +262,51 @@ public final class ThunderGodPowers {
         LivingEntity looked=Spells.aimAlly(p,sl,24),target=looked==null?p:looked;
         Spells.cleanse(target);target.clearFire();
         for(int t=20;t<=120;t+=20)Later.run(sl,t,()->{
-            if(here(p,sl,generation)&&target.isAlive()&&target.level()==sl)Support.heal(p,target,2);
+            if(live(p,sl,generation)&&target.isAlive()&&target.level()==sl)Support.heal(p,target,sequence(p)<=3&&(Soaked.isWet(p)||Soaked.isWet(target))?4:2);
         });
         ParticleShapes.modelOn(sl,ThunderGodFx.model("droplet",120).scale(.3f),target,new Vec3(0,2,0),0,0,0);
         return Result.DONE;
     }
     private static Result curtain(ServerPlayer p,ServerLevel sl) {
         Vec3 middle=p.position().add(Spells.flatLook(p).scale(2)),normal=Spells.flatLook(p),side=new Vec3(normal.z,0,-normal.x);
-        Curtain curtain=new Curtain(p,sl,middle,normal,side);
-        Wall.at(middle,p.getYRot(),8,4).lasts(120).stopsProjectiles().allowsLivingThrough()
+        boolean upgraded=sequence(p)<=4;int ticks=upgraded?240:120;double width=upgraded?14:8,height=upgraded?6:4;
+        Curtain curtain=new Curtain(p,sl,middle,normal,side,width,height,upgraded,Rage.cast(p));
+        Wall.at(middle,p.getYRot(),width,height).lasts(ticks).stopsProjectiles().allowsLivingThrough()
                 .onBlock(at->ParticleShapes.burst(sl,ParticleFx.of("fx/thunder_god/splash").color(ThunderGodFx.SILVER).lifetime(8),at,4,.02,.06))
                 .onEnd(()->{CURTAINS.remove(p.getUUID(),curtain);ParticleShapes.clearModels(sl,middle,CURTAIN);})
                 .raise(p,sl,CURTAIN);
         CURTAINS.put(p.getUUID(),curtain);
-        ParticleShapes.model(sl,ThunderGodFx.model("water_curtain",120).scale(8,4,1).tag(CURTAIN),middle,p.getYRot(),0,0);
+        ParticleShapes.model(sl,ThunderGodFx.model("water_curtain",ticks).scale((float)width,(float)height,1).tag(CURTAIN),middle,p.getYRot(),0,0);
         return Result.DONE;
     }
     public static boolean inCurtain(LivingEntity e){return CURTAINS.values().stream().anyMatch(c->c.level==e.level()&&c.covers(e.getBoundingBox().getCenter()));}
     public static void slowInCurtain(LivingEntity e){
-        boolean inside=CURTAINS.values().stream().anyMatch(c->c.level==e.level()&&Spells.isEnemy(c.owner,e)&&c.covers(e.getBoundingBox().getCenter()));
+        boolean inside=CURTAINS.values().stream().anyMatch(c->c.level==e.level()&&targets(c.owner,e)&&c.covers(e.getBoundingBox().getCenter()));
+        if(e.tickCount%20==0)for(Curtain curtain:CURTAINS.values())if(curtain.upgraded&&curtain.level==e.level()&&targets(curtain.owner,e)&&curtain.covers(e.getBoundingBox().getCenter()))curtain.damage.strike(e,15);
         Physique.keep(e,Attributes.MOVEMENT_SPEED,Physique.id(PREFIX+"curtain_slow"),-.6,AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,inside);
     }
+    public static boolean rainBlocks(LivingEntity chooser,LivingEntity target){
+        for(Rain rain:RAINS.values())if(rain.level==chooser.level()&&sequence(rain.owner)<=4){
+            boolean a=Zone.covers(rain.owner,RAIN,chooser.position()),b=Zone.covers(rain.owner,RAIN,target.position());
+            if(a&&!Spells.isFriend(rain.owner,chooser)&&chooser.distanceToSqr(target)>36)return true;
+            if(b&&!a&&!Spells.isFriend(rain.owner,target)&&!(chooser==rain.owner&&sequence(rain.owner)<=3))return true;
+        }return false;
+    }
     public static boolean wet(LivingEntity e){return inCurtain(e)||RAINS.values().stream().anyMatch(r->r.level==e.level()&&Zone.covers(r.owner,RAIN,e.position()));}
-    public static Vec3 nearestRain(Player p){return RAINS.values().stream().filter(r->r.level==p.level()).map(Rain::center).min(Comparator.comparingDouble(p.position()::distanceToSqr)).orElse(null);}
+    public static Vec3 nearestRain(Player p){
+        Vec3 rain=RAINS.values().stream().filter(r->r.level==p.level()).map(Rain::center).min(Comparator.comparingDouble(p.position()::distanceToSqr)).orElse(null);
+        Vec3 storm=ThunderGodHigher.nearestWeather(p);
+        return rain==null?storm:storm==null?rain:p.position().distanceToSqr(rain)<p.position().distanceToSqr(storm)?rain:storm;
+    }
     private static Result rain(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
+        boolean downpour=sequence(p)<=4;int ticks=downpour?400:200;double radius=downpour?11:3.5;
         Vec3 ground=Spells.aimGround(p,sl,12);Rain rain=new Rain(p,sl,ground);
-        Zone.at(ground,3.5).height(8).lasts(200).every(10)
-                .affects(e->Spells.isEnemy(p,e)).onEnter(e->Soaked.apply(e,200))
+        Zone.at(ground,radius).height(12).lasts(ticks).every(10)
+                .affects(e->targets(p,e)).onEnter(e->Soaked.apply(e,200))
                 .onInside((e,inside)->{
                     Soaked.apply(e,200);cast.strike(e,3);
+                    if(downpour){Blind.apply(e,15,6);Spells.keepEffect(e,MobEffects.DARKNESS,0,15);}
+                    if(sequence(p)<=3&&p.tickCount%20==0)EntitySight.show(p,e,30);
                     // Equipment wear uses normal item break handling and never edits terrain.
                     for(var slot:new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.HEAD,net.minecraft.world.entity.EquipmentSlot.CHEST,net.minecraft.world.entity.EquipmentSlot.LEGS,net.minecraft.world.entity.EquipmentSlot.FEET}){
                         var stack=e.getItemBySlot(slot);if(stack.isDamageableItem())stack.hurtAndBreak(1,e,slot);
@@ -290,22 +315,22 @@ public final class ThunderGodPowers {
                 }).onEnd(()->{RAINS.remove(p.getUUID(),rain);ParticleShapes.clearModels(sl,ground,RAIN);})
                 .open(p,sl,RAIN);
         RAINS.put(p.getUUID(),rain);
-        ParticleShapes.model(sl,ThunderGodFx.model("storm_cloud",200).scale(3.2f).tag(RAIN),ground.add(0,6,0),0,0,0);
+        ParticleShapes.model(sl,ThunderGodFx.model("storm_cloud",ticks).scale(downpour?10:3.2f).tag(RAIN),ground.add(0,6,0),0,0,0);
         for(int x=-2;x<=2;x+=2)for(int z=-2;z<=2;z+=2)
-            ParticleShapes.model(sl,ThunderGodFx.model("rain_sheet",200).scale(2,3,1).tag(RAIN),ground.add(x,3,z),0,0,0);
+            ParticleShapes.model(sl,ThunderGodFx.model("rain_sheet",ticks).scale(downpour?7:2,4,1).tag(RAIN),ground.add(x,3,z),0,0,0);
         return Result.DONE;
     }
 
     private static Result windblade(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
         for(int angle:new int[]{-12,0,12}){
-            Vec3 direction=Spells.turned(p.getLookAngle(),angle);int[] hits={0};
+            Vec3 direction=Spells.turned(look(p),angle);int[] hits={0};
             Ray.from(p.getEyePosition(),direction).range(24).width(.25).pierces()
                     .onFire((from,to)->ParticleShapes.slashBetween(sl,SlashFx.line("slash/streaks").color(0x55D6ECFF).width(.15f).lifetime(7),from,to))
                     .onHit((target,at)->{if(hits[0]++<2)cast.strike(target,22);}).fire(p,sl);
         }return Result.DONE;
     }
     private static Result galeBurst(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
-        for(LivingEntity target:Spells.enemiesAround(p,sl,p.position(),8)){cast.strike(target,20);Spells.push(target,p.position(),1.5,.4);}
+        for(LivingEntity target:around(p,sl,p.position(),8)){cast.strike(target,20);Spells.push(target,p.position(),1.5,.4);}
         Set<Entity> deflected=new HashSet<>(Spells.hostileShotsAround(p,sl,p.position(),8));
         for(Entity shot:deflected){
             Vec3 away=shot.position().subtract(p.position()).normalize();shot.setDeltaMovement(away.scale(Math.max(.8,shot.getDeltaMovement().length())));shot.hurtMarked=true;
@@ -317,7 +342,8 @@ public final class ThunderGodPowers {
         voiceWave(p,sl,8);return Result.DONE;
     }
     private static Result galeRide(ServerPlayer p,ServerLevel sl) {
-        int ticks=p.onGround()?160:Beyonder.hasSequence(p,5)?240:120;
+        GALE_HITS.put(p.getUUID(),Rage.cast(p));
+        int ticks=p.onGround()?160:flightTicks(p);
         p.getPersistentData().putLong(GALE,sl.getGameTime()+ticks);
         FallGuard.protect(p,ticks+200);
         if(p.onGround())p.getPersistentData().putBoolean(GALE+"_ground",true);
@@ -330,43 +356,50 @@ public final class ThunderGodPowers {
         }
         return Result.DONE;
     }
+    private static int flightTicks(Player p){return sequence(p)<=4?500:sequence(p)<=5?240:120;}
     public static boolean gale(Player p){return p.getPersistentData().getLongOr(GALE,0L)>p.level().getGameTime();}
     public static void galeTick(Player p){
         if(gale(p)&&p.getPersistentData().getBooleanOr(GALE+"_ground",false)&&!p.onGround()&&p.getDeltaMovement().y>.05
                 &&!Decree.forbids(p,Decree.Rule.PASSAGE)){
-            int ticks=Beyonder.hasSequence(p,5)?240:120;
+            int ticks=flightTicks(p);
             p.getPersistentData().putBoolean(GALE+"_ground",false);
             p.getPersistentData().putLong(GALE,p.level().getGameTime()+ticks);
             Flight.grant(p,ticks);
         }
+        if(!gale(p))GALE_HITS.remove(p.getUUID());
         boolean grounded=gale(p)&&p.getPersistentData().getBooleanOr(GALE+"_ground",false);
         Physique.keep(p,Attributes.MOVEMENT_SPEED,Physique.id(GALE),1,AttributeModifier.Operation.ADD_MULTIPLIED_BASE,grounded);
+        if(gale(p)&&!grounded&&Flight.has(p)&&!p.isShiftKeyDown()&&sequence(p)<=4){
+            double speed=sequence(p)<=2?3:sequence(p)<=3?2:1.5;
+            p.setDeltaMovement(look(p).scale(speed));p.hurtMarked=true;
+            if(sequence(p)<=3&&p.tickCount%10==0)for(LivingEntity e:around(p,(ServerLevel)p.level(),p.position(),2)){GALE_HITS.computeIfAbsent(p.getUUID(),k->Rage.cast(p)).strike(e,20);Spells.push(e,p.position(),.6,.2);}
+        }
         if(gale(p)&&!grounded&&Flight.has(p)&&p.isShiftKeyDown()){p.setDeltaMovement(Vec3.ZERO);p.hurtMarked=true;}
     }
     private static Result windBinding(ServerPlayer p,ServerLevel sl) {
-        LivingEntity target=Spells.aimEnemy(p,sl,20);if(target==null)return Result.REFUSED;
+        LivingEntity target=aimEnemy(p,sl,20);if(target==null)return Result.REFUSED;
         Root.apply(target,60,RootRestriction.MOVEMENT);
-        for(LivingEntity other:Spells.enemiesAround(p,sl,target.position(),3))if(other!=target){Spells.pull(other,target.position(),.4,.03);Root.apply(other,30,RootRestriction.MOVEMENT);}
+        for(LivingEntity other:around(p,sl,target.position(),3))if(other!=target){Spells.pull(other,target.position(),.4,.03);Root.apply(other,30,RootRestriction.MOVEMENT);}
         ParticleShapes.modelOn(sl,ThunderGodFx.model("sound_wave",60).scale(1.8f).key(60,ModelFx.pose().spin(720)),target,new Vec3(0,1,0),0,0,0);
         return Result.DONE;
     }
     private static Result lightning(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
-        LivingEntity target=Spells.aimEnemy(p,sl,40);
+        LivingEntity target=aimEnemy(p,sl,40);
         if(target==null){
-            WeaponCoat.arm(p,COAT,6,200,(owner,victim,amount,level)->{Shock.strike(owner,victim,15,6,Rage.cast(owner));return amount;});
+            WeaponCoat.arm(p,COAT,6,200,(owner,victim,amount,level)->{Shock.strike(owner,victim,15,6,Rage.cast(owner),ThunderGodHigher.source(owner));return amount;});
             return Result.DONE;
         }
         ThunderGodFx.bolt(sl,target.position().add(0,18,0),target.getBoundingBox().getCenter(),.14f,8);
-        Shock.strike(p,target,55,10,cast);return Result.DONE;
+        Shock.strike(p,target,sequence(p)<=4?90:55,sequence(p)<=4?20:10,cast,ThunderGodHigher.source(p));return Result.DONE;
     }
     private static boolean bow(Player p){return p.getMainHandItem().is(Items.BOW)||p.getMainHandItem().is(Items.CROSSBOW)||p.getOffhandItem().is(Items.BOW)||p.getOffhandItem().is(Items.CROSSBOW);}
     private static Result boltArrow(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
         long generation=generation(p);
         if(!bow(p)){tell(p,"Lightning Bolt Arrow needs a bow or crossbow in either hand.");return Result.REFUSED;}
         Later.run(sl,20,()->{
-            if(!here(p,sl,generation)||!bow(p)||Silence.isSilenced(p)||Root.has(p,RootRestriction.USE_ITEMS))return;
+            if(!live(p,sl,generation)||!bow(p)||Silence.isSilenced(p)||Root.has(p,RootRestriction.USE_ITEMS))return;
             int[] hits={0};
-            Ray.from(p.getEyePosition(),p.getLookAngle()).range(60).width(.3).pierces()
+            Ray.from(p.getEyePosition(),look(p)).range(60).width(.3).pierces()
                     .onFire((from,to)->ThunderGodFx.bolt(sl,from,to,.09f,8))
                     .onHit((target,at)->{if(hits[0]++<2)Shock.strike(p,target,95,10,cast);}).fire(p,sl);
         });
@@ -378,22 +411,24 @@ public final class ThunderGodPowers {
     }
     private static Result siren(ServerPlayer p,ServerLevel sl) {
         if(Silence.isSilenced(p))return Result.REFUSED;
-        for(LivingEntity target:Spells.enemiesAround(p,sl,p.position(),14))Slumber.put(target,120,Slumber.Kind.SLEEP);
+        for(LivingEntity target:around(p,sl,p.position(),14))Slumber.put(target,120,Slumber.Kind.SLEEP);
         Marks.add(p,SIREN_BONUS,1,200);voiceWave(p,sl,14);return Result.DONE;
     }
     private static Result discord(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
         if(Silence.isSilenced(p))return Result.REFUSED;
-        for(LivingEntity target:Spells.enemiesAround(p,sl,p.position(),14)){
+        for(LivingEntity target:around(p,sl,p.position(),14)){
             afflict(p,target,Affliction.DISCORD,160,cast);if(target instanceof Player)Falter.apply(target,PREFIX+"discord",.4f,160);
         }
         voiceWave(p,sl,14);return Result.DONE;
     }
     private static Result thunderclap(ServerPlayer p,ServerLevel sl,Rage.Cast cast) {
         if(Silence.isSilenced(p))return Result.REFUSED;
-        for(LivingEntity target:Spells.enemiesAround(p,sl,p.position(),10)){
+        double radius=sequence(p)<=3?24:10;
+        if(sequence(p)<=3)for(LivingEntity hidden:sl.getEntitiesOfClass(LivingEntity.class,p.getBoundingBox().inflate(radius),e->e!=p&&!Spells.isFriend(p,e))){Concealment.reveal(hidden);Unnoticed.end(hidden);}
+        for(LivingEntity target:around(p,sl,p.position(),radius)){
             cast.strike(target,25);Root.apply(target,30,RootRestriction.MOVE,RootRestriction.JUMP);Fear.apply(target,p,60);
         }
-        voiceWave(p,sl,10);return Result.DONE;
+        voiceWave(p,sl,(float)radius);return Result.DONE;
     }
     public static void melee(Player p,LivingEntity target,ServerLevel sl,int step) {
         ParticleShapes.slash(sl,SlashFx.arc("slash/streaks").color(0x99D6ECFF).radius(1.5f+step*.08f).arc(110+step*10)
@@ -401,19 +436,20 @@ public final class ThunderGodPowers {
     }
     public static void meleeArc(Player p,LivingEntity primary,ServerLevel sl){
         if(!is(p,5))return;
-        LivingEntity next=Spells.enemiesAround(p,sl,primary.position(),5).stream().filter(e->e!=primary)
+        LivingEntity next=around(p,sl,primary.position(),5).stream().filter(e->e!=primary)
                 .min(Comparator.comparingDouble(primary::distanceToSqr)).orElse(null);
-        if(next!=null){ThunderGodFx.bolt(sl,primary.getBoundingBox().getCenter(),next.getBoundingBox().getCenter(),.035f,4);Shock.strike(p,next,5);}
+        if(next!=null){ThunderGodFx.bolt(sl,primary.getBoundingBox().getCenter(),next.getBoundingBox().getCenter(),.035f,4);Shock.strike(p,next,5,10,Rage.cast(p),ThunderGodHigher.source(p));}
     }
     public static void scalesTick(Player p,ServerLevel sl){
-        if(ConjuredArmor.isWorn(p,SCALES)&&SoulCore.getSequence(p)<=5&&p.getAbsorptionAmount()<=0&&!p.getPersistentData().getBooleanOr(SCALES_BURST,false)){
+        if(ConjuredArmor.isWorn(p,SCALES)&&sequence(p)<=5&&p.getAbsorptionAmount()<=0&&!p.getPersistentData().getBooleanOr(SCALES_BURST,false)){
             p.getPersistentData().putBoolean(SCALES_BURST,true);Rage.Cast cast=Rage.cast(p);
-            for(LivingEntity target:Spells.enemiesAround(p,sl,p.position(),4)){cast.strike(target,30);Spells.push(target,p.position(),1.2,.3);}
+            for(LivingEntity target:around(p,sl,p.position(),4)){cast.strike(target,30);Spells.push(target,p.position(),1.2,.3);}
             ThunderGodFx.cue(sl,p.position(),"scales_break");
         }
     }
     public static void release(Player p){
         p.getPersistentData().putLong(PREFIX+"generation",generation(p)+1);
+        ThunderGodHigher.clear(p);EntitySight.clear(p);
         if(p.level() instanceof ServerLevel sl){
             Zone.close(p,RAIN);RAINS.remove(p.getUUID());Wall.close(p,CURTAIN);CURTAINS.remove(p.getUUID());
             for(var entry:new ArrayList<>(EFFECTS.entrySet())){
@@ -424,7 +460,7 @@ public final class ThunderGodPowers {
         cleanse(p);ConjuredArmor.takeOff(p,SCALES);if(Form.isIn(p,WRATH))Form.end(p);
         WeaponCoat.disarm(p,COAT);
         if(gale(p)&&!p.getPersistentData().getBooleanOr(GALE+"_ground",false))Flight.end(p);
-        p.getPersistentData().remove(GALE);galeTick(p);
+        p.getPersistentData().remove(GALE);GALE_HITS.remove(p.getUUID());galeTick(p);
         ThunderGodFx.rageEnd(p);
     }
     public static void prune(ServerLevel level){
@@ -439,6 +475,6 @@ public final class ThunderGodPowers {
         }
     }
     public static void clear(Player p){
-        release(p);TIDES.reset(p);SKY.reset(p);THUNDER.reset(p);VOICE.reset(p);Rage.clear(p);
+        release(p);TIDES.reset(p);SKY.reset(p);THUNDER.reset(p);VOICE.reset(p);STORM.reset(p);Rage.clear(p);
     }
 }

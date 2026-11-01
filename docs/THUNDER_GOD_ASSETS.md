@@ -5,7 +5,7 @@ Original pixel art, ModelFx geometry, animated materials and synthesized audio f
 all 44 wheel entries, both single-key normal/sneak pairs, five upgrade variants, statuses,
 passives and the optional melee vocabulary. The supplied design remains a design document:
 its questions are not implementation instructions or decisions made by this asset pack.
-Sequences 9–5 now use these resources in the [playable first half](THUNDER_GOD_IMPLEMENTATION.md). Higher-sequence abilities and summons remain future work.
+Sequences 9–0 now use these resources in the [complete playable pathway](THUNDER_GOD_IMPLEMENTATION.md), including higher abilities and summons. Instant casts do not show center-screen icons; timed indicators sit beside the hotbar.
 
 ![All ability icons and status glyphs](assets/thunder_god/icons.png)
 
@@ -97,12 +97,12 @@ The `PathwayHudIcon` mapping is registered under the exact pathway name `Thunder
 `ParticleFx` sprite IDs are `fx/thunder_god/<name>`: spark, three arcs, raindrop, splash, foam,
 ripple, wind streak, windblade, scale, cloud, rage ember, sound ring, spirit hand, crown and rope.
 Tint white sprites using the palette. The optional eight-hit melee combo uses these trails,
-`SlashFx` and `melee_swing`; its gameplay and animations are not registered here.
+`SlashFx` and `melee_swing`; its gameplay and animations are registered by the pathway.
 
 Sound events are `circle_of_inevitability:thunder_god.<cue>`, available via
 `ModSounds.THUNDER_GOD.get("<cue>")`. Songs and roars are short synthesized musical/air cues,
 not spoken dialogue. `rain_loop`, `wind_loop` and `storm_loop` have a circular crossfade;
-the future zone code must schedule or loop playback and stop it when the zone ends.
+gameplay zones schedule ambient cues during their lifetime.
 Do not play impact and ambient sounds every tick. Electromagnetic Disruption and Dance of
 Thunder have menu/HUD art but deliberately have **no sound or world model**.
 

@@ -153,7 +153,11 @@ public final class Parasite {
      * body of its own (is not a spectator, is in no host), and the host is no spectator and carries no parasite.
      * It does not look at distance, line of sight or who is stronger: that is for the ability to decide.
      */
+    private static final java.util.List<java.util.function.Predicate<LivingEntity>> HOST_IMMUNITIES = new java.util.ArrayList<>();
+    public static void addHostImmunity(java.util.function.Predicate<LivingEntity> rule) { HOST_IMMUNITIES.add(rule); }
+
     public static boolean canEnter(Player parasite, LivingEntity host) {
+        if (host != null) for (var immune : HOST_IMMUNITIES) if (immune.test(host)) return false;
         if (parasite == null || host == null || host == parasite) return false;
         if (parasite.level().isClientSide() || parasite.level() != host.level()) return false;
         if (!parasite.isAlive() || parasite.isSpectator() || isInside(parasite)) return false;

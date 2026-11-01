@@ -4,8 +4,9 @@ import net.minecraft.world.phys.Vec3;
 /** Intercept moving targets without hard-coding a pathway or projectile. Guides expire in entity game time. */
 @net.minecraftforge.fml.common.Mod.EventBusSubscriber(modid="circle_of_inevitability")
 public final class Prediction {
-    public static void grant(LivingEntity e,int ticks){e.getPersistentData().putLong("spellkit_prediction",e.level().getGameTime()+ticks);}
-    public static boolean active(Entity e){return e.getPersistentData().getLongOr("spellkit_prediction",0)>e.level().getGameTime();}
+    public static void end(Entity e){e.getPersistentData().remove("spellkit_prediction");}
+    public static void grant(LivingEntity e,int ticks){if(Information.blocked(e))return;e.getPersistentData().putLong("spellkit_prediction",e.level().getGameTime()+ticks);}
+    public static boolean active(Entity e){return !Information.blocked(e)&&e.getPersistentData().getLongOr("spellkit_prediction",0)>e.level().getGameTime();}
     public static Vec3 lead(Vec3 from,Vec3 target,Vec3 velocity,double speed){
         if(speed<=0)return target;
         Vec3 d=target.subtract(from);double a=velocity.lengthSqr()-speed*speed,b=2*d.dot(velocity),c=d.lengthSqr(),t=0;
@@ -14,7 +15,7 @@ public final class Prediction {
         return target.add(velocity.scale(Math.clamp(t,0,100)));
     }
     public static Vec3 aim(LivingEntity caster,LivingEntity target,Vec3 from,double speed){
-        Vec3 at=target.getEyePosition();return (active(caster)?lead(from,at,target.getDeltaMovement(),speed):at).subtract(from).normalize();
+        Vec3 at=target.getEyePosition();return (active(caster)&&!Information.blocked(target)?lead(from,at,target.getDeltaMovement(),speed):at).subtract(from).normalize();
     }
     @net.minecraftforge.eventbus.api.listener.SubscribeEvent public static void projectile(net.minecraftforge.event.entity.EntityJoinLevelEvent event){
         if(!(event.getLevel() instanceof net.minecraft.server.level.ServerLevel sl)

@@ -87,7 +87,10 @@ public final class Substitute {
         ARMED.put(entity.getUUID(), armed);
     }
 
+    private static final java.util.List<java.util.function.Predicate<Entity>> SUPPRESSED = new java.util.ArrayList<>();
+    public static void addSuppression(java.util.function.Predicate<Entity> rule) { SUPPRESSED.add(rule); }
     public static boolean isArmed(Entity entity) {
+        for (var rule : SUPPRESSED) if (rule.test(entity)) return false;
         return charges(entity) > 0;
     }
 

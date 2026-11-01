@@ -141,10 +141,13 @@ public final class ThunderGodFx {
 
     /** Four matching geometry poses, rolling forward; adds the separate foam crest. */
     public static void wave(ServerLevel level, Vec3 ground, float yaw, float scale, float distance, int ticks) {
-        ModelFx water = model("wave_crest", ticks).frames(4).smooth().scale(scale)
+        wave(level,ground,yaw,scale,scale,distance,ticks);
+    }
+    public static void wave(ServerLevel level, Vec3 ground, float yaw, float scale, float heightScale, float distance, int ticks) {
+        ModelFx water = model("wave_crest", ticks).frames(4).smooth().scale(scale,heightScale,scale)
                 .key(ticks, ModelFx.pose().forward(distance).frame(3).alpha(0));
         ParticleShapes.model(level, water, ground, yaw, 0, 0);
-        ParticleShapes.model(level, model("wave_foam", ticks).scale(scale)
+        ParticleShapes.model(level, model("wave_foam", ticks).scale(scale,heightScale,scale)
                 .key(ticks, ModelFx.pose().forward(distance).alpha(0)), ground, yaw, 0, 0);
     }
 
@@ -188,7 +191,7 @@ public final class ThunderGodFx {
         List<String> parts = ABILITY_MODELS.get(name);
         // Disruption and Dance have a menu/HUD icon, but no world visuals or sound.
         if (parts == null) return;
-        ScreenImages.show(player, "thunderfx_preview", "thunder_god/" + name, 32, 35);
+        ScreenImages.show(player, "thunderfx_preview", "thunder_god/" + name, net.lukario.circleofinevitability.screen.ScreenAnchor.BOTTOM, 112, -3, 16, 35);
         cue(level, spot, name);
         for (int i = 0; i < parts.size(); i++) {
             String part = parts.get(i);

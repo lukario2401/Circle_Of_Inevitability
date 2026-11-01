@@ -52,7 +52,7 @@ public abstract class SealedArtifactItem extends Item {
     public final InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!(level instanceof ServerLevel server) || !(player instanceof ServerPlayer user)) return InteractionResult.SUCCESS;
         if (player.isSpectator() || !player.isAlive()) return InteractionResult.FAIL;
-        if (AbilityLock.isLocked(player) || Root.has(player, RootRestriction.ABILITIES) || Root.has(player, RootRestriction.USE_ITEMS)) {
+        if (net.lukario.circleofinevitability.status.ArtifactLock.has(player) || AbilityLock.isLocked(player) || Root.has(player, RootRestriction.ABILITIES) || Root.has(player, RootRestriction.USE_ITEMS)) {
             player.sendSystemMessage(Component.translatable("message.circle_of_inevitability.artifact.locked"));
             return InteractionResult.FAIL;
         }
