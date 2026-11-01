@@ -35,6 +35,8 @@ Even a previously saved selection is checked again by the server. Percentages be
 so an incomplete 99.999% record never appears as 100%. Incomplete records can still be favorited.
 Click a row to select; click its star to favorite. Order is favorites first, then study descending, then strongest
 Sequence, then name. Missing icons are omitted. Study, favorites and selection survive death, relogging and restarts.
+Wheel spells, including decrees, show `Pathway: Ability` like regular powers and a small **Wheel** badge beside
+their Sequence. When a wheel has no pathway ownership metadata, its menu title supplies the name prefix instead.
 
 K casts the selected fully studied power in its stored normal/sneak form, from the player's current position and aim.
 Replication neither checks nor starts key/wheel cooldowns. Its normal spirituality price is 1.5 times the original;

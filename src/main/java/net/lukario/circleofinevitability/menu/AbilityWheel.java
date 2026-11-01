@@ -60,6 +60,7 @@ public final class AbilityWheel {
     public static java.util.Collection<AbilityWheel> registered() { return java.util.List.copyOf(REGISTRY.values()); }
     public static AbilityWheel find(String id) { return REGISTRY.get(id); }
     public String id() { return id; }
+    public String title() { return title; }
     private String pathway;
     /** Explicit ownership for inspection/catalogs; existing wheels infer it from their id/icon. */
     public AbilityWheel pathway(String name) { pathway=name; return this; }

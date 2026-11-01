@@ -71,8 +71,13 @@ public final class CodexScreen extends Screen {
             int color=row.study()<100?0xFFFF5555:row.sequence()<ClientPathwayData.getSequence()?0xFF827889:0xFFF4EBD0;
             g.text(font,name,tx,yy+5,color);
             g.text(font,"Seq "+row.sequence(),tx,yy+16,0xFFB4A7BD);
+            if(row.fromWheel()) {
+                int badgeX=tx+font.width("Seq "+row.sequence())+7;
+                g.fill(badgeX,yy+15,badgeX+font.width("Wheel")+6,yy+26,0xFF443A29);
+                g.text(font,"Wheel",badgeX+3,yy+16,0xFFD1A94B);
+            }
             g.text(font,row.study()<100?String.format(Locale.ROOT,"%.1f%%",Math.floor(row.study()*10)/10):"100%",x+w-92,yy+9,row.study()<100?0xFFFF5555:0xFFD1A94B);
-            if(hover)g.setTooltipForNextFrame(font,font.split(Component.literal(row.name()+(row.study()<100?" — Requires 100% study":"")),Math.min(300,width-24)),mx,my);
+            if(hover)g.setTooltipForNextFrame(font,font.split(Component.literal(row.name()+(row.fromWheel()?" — Wheel ability":"")+(row.study()<100?" — Requires 100% study":"")),Math.min(300,width-24)),mx,my);
             g.text(font,row.favorite()?"★":"☆",x+w-27,yy+9,0xFFFFD577);
         }
         if(rows.isEmpty())g.centeredText(font,"Watch abilities being cast to study them.",width/2,y+50,0xFFF4EBD0);

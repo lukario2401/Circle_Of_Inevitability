@@ -28,7 +28,9 @@ public final class AbilityCatalog {
         }
         for (var wheel:AbilityWheel.registered()) for (var e:wheel.entries()) if (e.copyable()) {
             var cast=new Casts.Cast(nobody,"",wheel.pathway(),0,false,wheel,e,null,"",Vec3.ZERO,0);
-            result.put(id(cast),new Power(id(cast),e.name(),e.icon(),e.sequence(),cast));
+            String owner=wheel.pathway();
+            String label=(owner.equals("none")?wheel.title():owner)+": "+e.name();
+            result.put(id(cast),new Power(id(cast),label,e.icon(),e.sequence(),cast));
         }
         return result;
     }

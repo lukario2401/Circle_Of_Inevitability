@@ -3,7 +3,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 /** A reusable saved study library. Store under the soul tag to inherit SoulCore's death cloning. */
 public final class AbilityStudy {
-    public record Row(String id,String name,String icon,int sequence,double study,boolean favorite,boolean selected) {}
+    public record Row(String id,String name,String icon,int sequence,double study,boolean favorite,boolean selected) {
+        /** Derived from the stable identity so it survives saves and existing packet formats. */
+        public boolean fromWheel(){return id.startsWith("wheel/");}
+    }
     private final String name;
     public AbilityStudy(String name) { this.name=name; }
     public CompoundTag data(Player p) {
