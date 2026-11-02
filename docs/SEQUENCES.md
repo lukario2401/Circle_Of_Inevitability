@@ -304,6 +304,6 @@ adds prophecy entries; Wheel of Fortune (0) adds the capstone and Fate Authority
 Full controls, costs, signed transfers, passives, limitations and checks:
 [SNAKE_OF_MERCURY.md](SNAKE_OF_MERCURY.md).
 
-## White Angel initial implementation
+## White Angel
 
-[White Angel](WHITE_ANGEL.md) currently implements fifteen abilities on keys 1–5, from Bard (9) to Unshadowed (4). See the linked table for unlocks, consent, costs and the remaining draft refinements.
+[White Angel](WHITE_ANGEL.md) implements all 29 abilities on keys 1–7, from Bard (9) through Sun (0). See the linked tables for unlocks, costs, Justice principles, pact consent and passives.

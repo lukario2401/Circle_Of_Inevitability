@@ -20,6 +20,7 @@ public final class AbilityGrants {
         GRANTS.put(recipient.getUUID(),new Grant(cast,recipient.level().getGameTime()+ticks,Math.max(0,cost),Math.max(0,potency)));
         HudTimer.show(recipient,"spellkit_grant",cast.name()+" — /castgrant",ticks,0xD1A94B);return true;
     }
+    public static int sequence(ServerPlayer p){return has(p)?GRANTS.get(p.getUUID()).cast.sequence():9;}
     public static boolean has(ServerPlayer p){var g=GRANTS.get(p.getUUID());if(g==null)return false;if(g.until<=p.level().getGameTime()){clear(p);return false;}return true;}
     public static void clear(ServerPlayer p){GRANTS.remove(p.getUUID());HudTimer.hide(p,"spellkit_grant");}
     public static boolean use(ServerPlayer p){

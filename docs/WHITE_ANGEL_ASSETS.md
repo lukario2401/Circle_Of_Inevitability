@@ -4,9 +4,9 @@ This collection covers all 29 abilities in the supplied `WHITE_ANGEL.md` design 
 casts and five wheels containing 5, 4, 6, 4 and 6 entries. Gold, pure white, solar fire and feather motifs
 carry Light, Order and Faith through the collection. The design's wheel IDs are preserved.
 
-The collection provides resources and registers their sound events. The [first fifteen abilities](WHITE_ANGEL.md) now use these resources through `WhiteAngelFx`.
-The remaining fourteen abilities, a `/whitefx` command and dedicated HUD counters still need implementation.
-The draft's cooldown, cost, consent and balance proposals are not implemented by these assets.
+The collection provides resources and registers their sound events. [All 29 abilities](WHITE_ANGEL.md) use
+these resources through `WhiteAngelFx`, with `/whitefx` previews and Pact/Believer HUD counters.
+Gameplay costs, consent and passives live in the Java implementation.
 
 ## Inspect the assets
 
@@ -84,7 +84,7 @@ its center and Sunbird forms turn around the body. Numeric `pivot_pixels` entrie
 recommendation per model. Cube bounds are recorded before element rotations.
 
 ```java
-// Animation resources exist; these examples belong in the future WhiteAngelFx class.
+// Runtime placement and animated poses are wired through WhiteAngelFx.
 ModelFx sunbird = ModelFx.of("white_angel/sunbird")
         .frames(4).smooth().pivot(8, 8, 8).glow().unshaded();
 ModelFx incomplete = ModelFx.of("white_angel/sunbird_incomplete")

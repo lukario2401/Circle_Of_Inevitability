@@ -66,6 +66,17 @@ public final class Enclosure {
     private double height = 6.0;
     private int lasts = 200;
     private int every = 20;
+    private static final List<Predicate<LivingEntity>> IMMUNITIES = new ArrayList<>();
+    public static void addImmunity(Predicate<LivingEntity> rule) { IMMUNITIES.add(rule); }
+    private static boolean immune(LivingEntity entity) { return IMMUNITIES.stream().anyMatch(rule -> rule.test(entity)); }
+    public static int closeNear(ServerLevel level, Vec3 point, double radius, Predicate<LivingEntity> whose) {
+        int count=0;
+        for (Enclosure open : new ArrayList<>(OPEN)) {
+            if (!open.closed && open.level==level && open.center.distanceToSqr(point)<=radius*radius && whose.test(open.owner)) { open.end(); count++; }
+        }
+        return count;
+    }
+
     private Predicate<LivingEntity> keeps;
     private Consumer<LivingEntity> onInside;
     private Loop onLoop;
@@ -128,7 +139,7 @@ public final class Enclosure {
 
     /** True while some enclosure keeps this entity inside. */
     public static boolean holds(LivingEntity entity) {
-        for (Enclosure open : OPEN) if (!open.closed && open.inside.contains(entity.getUUID())) return true;
+        for (Enclosure open : OPEN) if (!immune(entity) && !open.closed && open.inside.contains(entity.getUUID())) return true;
         return false;
     }
 
@@ -158,7 +169,7 @@ public final class Enclosure {
     }
 
     private boolean isKept(LivingEntity entity) {
-        if (!entity.isAlive() || entity == owner) return false;
+        if (!entity.isAlive() || entity == owner || immune(entity)) return false;
         return keeps != null ? keeps.test(entity) : Spells.isEnemy(owner, entity);
     }
 

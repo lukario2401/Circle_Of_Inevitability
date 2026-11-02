@@ -164,6 +164,8 @@ public final class Root {
 
     public static boolean has(Entity entity, RootRestriction restriction) {
         if (entity == null) return false;
+        // A newly acquired immunity also defeats an existing root or an external hold immediately.
+        if (entity instanceof LivingEntity living && isImmune(living, restriction)) return false;
         CompoundTag tag = rootTag(entity, false);
         if (tag != null && tag.getIntOr(restriction.name(), 0) > 0) return true;
         for (BiPredicate<Entity, RootRestriction> hold : HOLDS) {
