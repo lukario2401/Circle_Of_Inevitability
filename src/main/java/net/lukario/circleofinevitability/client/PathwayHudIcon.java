@@ -27,6 +27,7 @@ public class PathwayHudIcon {
 
     static {
         ICONS.put("Thunder God", icon("thunder_god"));
+        ICONS.put("White Angel", icon("white_angel"));
         ICONS.put("Omniscient Eye", icon("omniscient_eye"));
         ICONS.put("Attendant Of Mysteries", icon("attendant_of_mysteries"));
         ICONS.put("Beauty Goddess", icon("beauty_goddess"));            // shows once the Pathway exists (docs/BEAUTY_GODDESS.md)

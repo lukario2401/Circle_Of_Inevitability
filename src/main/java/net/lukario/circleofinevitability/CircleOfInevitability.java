@@ -41,6 +41,7 @@ public class CircleOfInevitability
         net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossRegistry.ENTITIES.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodHigherGameTests.FUNCTIONS.register(modEventBus);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngelGameTests.FUNCTIONS.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);
         ModEffects.register(modEventBus);

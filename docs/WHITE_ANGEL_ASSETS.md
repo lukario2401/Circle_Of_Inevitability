@@ -4,8 +4,8 @@ This collection covers all 29 abilities in the supplied `WHITE_ANGEL.md` design 
 casts and five wheels containing 5, 4, 6, 4 and 6 entries. Gold, pure white, solar fire and feather motifs
 carry Light, Order and Faith through the collection. The design's wheel IDs are preserved.
 
-The collection provides resources and registers their sound events. White Angel abilities, passives,
-`WhiteAngelFx`, a `/whitefx` command, HUD logic and gameplay rules still need implementation.
+The collection provides resources and registers their sound events. The [first fifteen abilities](WHITE_ANGEL.md) now use these resources through `WhiteAngelFx`.
+The remaining fourteen abilities, a `/whitefx` command and dedicated HUD counters still need implementation.
 The draft's cooldown, cost, consent and balance proposals are not implemented by these assets.
 
 ## Inspect the assets

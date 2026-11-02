@@ -46,6 +46,9 @@ public final class SequencePassives {
     // The passives: one line each
     // =========================
     static {
+        effect("White Angel",8,MobEffects.NIGHT_VISION,0);
+        effect("White Angel",7,MobEffects.FIRE_RESISTANCE,0);
+        effect("White Angel",6,MobEffects.HERO_OF_THE_VILLAGE,0);
         effect("Thunder God", 9, MobEffects.STRENGTH, 0);
         effect("Thunder God", 9, MobEffects.WATER_BREATHING, 0);
         effect("Thunder God", 6, MobEffects.NIGHT_VISION, 0);
