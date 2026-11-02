@@ -43,13 +43,16 @@ public final class Blind {
     // API
     // =========================
 
+    private static final java.util.List<java.util.function.Predicate<LivingEntity>> IMMUNITIES = new java.util.ArrayList<>();
+    public static void addImmunity(java.util.function.Predicate<LivingEntity> rule) { IMMUNITIES.add(rule); }
+
     public static void apply(LivingEntity target, int ticks) {
         apply(target, ticks, MOB_SEES);
     }
 
     /** Blinds it for 'ticks' ticks. Blinding something that is blind already only makes it last longer. */
     public static void apply(LivingEntity target, int ticks, double mobSees) {
-        if (target.level().isClientSide() || ticks <= 0) return;
+        if (target.level().isClientSide() || ticks <= 0 || IMMUNITIES.stream().anyMatch(rule -> rule.test(target))) return;
 
         target.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, ticks, 0));
 

@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "circle_of_inevitability:white_angel_believer",
+  "max_ticks": 160,
+  "required": true,
+  "setup_ticks": 1,
+  "structure": "forge:empty3x3x3"
+}

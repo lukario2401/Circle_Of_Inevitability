@@ -80,3 +80,6 @@ still to check.
 The [Omniscient Eye asset collection](docs/OMNISCIENT_EYE_ASSETS.md) supplies models, textures,
 icons, particles and sound cues for the White Tower pathway design. The
 [complete Omniscient Eye abilities and fully studied replication](docs/OMNISCIENT_EYE.md) use all seven keys.
+
+The [White Angel asset collection](docs/WHITE_ANGEL_ASSETS.md) supplies icons, models, animated
+Sunbird forms, particles and registered sound cues for the Sun pathway design, with generators and previews.

@@ -231,6 +231,9 @@ public final class KeyOfStarsRecord {
         return SLOTS;
     }
 
+    /** A read-only snapshot for inspectors; recording/replay keeps its internal live list. */
+    public static List<Recorded> recorded(Player player) { return List.copyOf(pages(player)); }
+
     /** The Recorded Powers, oldest first (a live list). */
     static List<Recorded> pages(Player player) {
         return PAGES.getOrDefault(player.getUUID(), new ArrayList<>());

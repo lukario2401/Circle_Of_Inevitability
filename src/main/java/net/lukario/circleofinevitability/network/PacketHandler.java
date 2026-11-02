@@ -67,6 +67,9 @@ public class PacketHandler {
                 .consumerMainThread(SKeyPressAbilitySevenUsed::handle)
                 .add();
 
+        INSTANCE.messageBuilder(CWhiteAngelLabelPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CWhiteAngelLabelPacket::encode).decoder(CWhiteAngelLabelPacket::new)
+                .consumerMainThread(CWhiteAngelLabelPacket::handle).add();
         // Server -> Client
         INSTANCE.messageBuilder(CShowHudOverlayPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(CShowHudOverlayPacket::encode)

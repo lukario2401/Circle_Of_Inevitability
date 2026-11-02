@@ -145,6 +145,8 @@ public final class Decree {
     private int lasts = 300;
     private final EnumSet<Rule> rules = EnumSet.noneOf(Rule.class);
     private Predicate<LivingEntity> binds;
+    private static final List<java.util.function.BiConsumer<LivingEntity,Rule>> VIOLATION_LISTENERS=new ArrayList<>();
+    public static void addViolationListener(java.util.function.BiConsumer<LivingEntity,Rule> listener){VIOLATION_LISTENERS.add(listener);}
     private Violation onViolation;
     private Consumer<LivingEntity> onEnter;
     private int pulseEvery = 20;
@@ -398,6 +400,7 @@ public final class Decree {
         if (last != null && now - last < VIOLATION_GAP) return;
         lastBroken.put(key, now);
         int count = counts.merge(entity.getUUID(), 1, Integer::sum);
+        for(var listener:VIOLATION_LISTENERS)listener.accept(entity,rule);
         if (onViolation == null) return;
         try {
             onViolation.run(entity, rule, count, level);

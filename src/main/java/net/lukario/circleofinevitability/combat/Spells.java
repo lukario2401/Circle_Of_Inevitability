@@ -640,7 +640,7 @@ public final class Spells {
 
     /** True by day for a spot under the open sky (sunlight counts as a light source). */
     public static boolean inDaylight(ServerLevel sl, BlockPos pos) {
-        return !sl.isDarkOutside() && sl.canSeeSky(pos);
+        return net.lukario.circleofinevitability.status.Nocturnality.isForcedDay(sl,Vec3.atCenterOf(pos)) || (!sl.isDarkOutside() && sl.canSeeSky(pos));
     }
 
     // =========================

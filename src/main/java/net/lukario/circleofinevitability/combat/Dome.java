@@ -247,6 +247,15 @@ public final class Dome {
     }
 
     /** For 'ticks': projectiles are not stopped and the shield is halved. */
+    /** Close hostile shells whose volumes overlap the clearing blast. */
+    public static int closeNear(ServerLevel level, Vec3 point, double radius, Predicate<LivingEntity> whose) {
+        int count=0;
+        for (Dome dome : new ArrayList<>(RAISED)) {
+            if (!dome.closed && dome.level==level && dome.center.distanceToSqr(point)<=(radius+dome.radius)*(radius+dome.radius) && whose.test(dome.owner)) { dome.end(); count++; }
+        }
+        return count;
+    }
+
     public static void weaken(LivingEntity owner, String name, int ticks) {
         Dome dome = find(owner, name);
         if (dome != null) dome.weakUntil = Math.max(dome.weakUntil, dome.age + ticks);

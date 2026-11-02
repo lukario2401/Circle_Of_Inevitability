@@ -13,6 +13,7 @@ public final class DamageWard {
     private record Ward(long until,BiPredicate<DamageSource,Float> rule){}
     private static final Map<UUID,Map<String,Ward>> WARDS=new HashMap<>();
     public static void grant(LivingEntity e,String name,int ticks,BiPredicate<DamageSource,Float> rule){WARDS.computeIfAbsent(e.getUUID(),k->new HashMap<>()).put(name,new Ward(e.level().getGameTime()+ticks,rule));}
+    public static void end(LivingEntity e,String name){var wards=WARDS.get(e.getUUID());if(wards!=null){wards.remove(name);if(wards.isEmpty())WARDS.remove(e.getUUID());}}
     public static void clear(LivingEntity e){WARDS.remove(e.getUUID());}
     public static boolean blocks(LivingEntity e,DamageSource source,float amount){
         var wards=WARDS.get(e.getUUID());if(wards==null)return false;

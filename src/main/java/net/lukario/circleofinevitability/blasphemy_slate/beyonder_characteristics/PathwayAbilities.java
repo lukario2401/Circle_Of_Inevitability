@@ -87,6 +87,14 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("White Angel", 1, "Hymn", 9, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,1,true)),
+            new Ability("White Angel", 2, "Light", 8, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,2,true)),
+            new Ability("White Angel", 3, "Theurgy", 7, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,3,true)),
+            new Ability("White Angel", 4, "Notarization", 6, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,4,true)),
+            new Ability("White Angel", 5, "Radiance", 4, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,5,true)),
+            new Ability("White Angel", 6, "Justice", 3, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,6,true)),
+            new Ability("White Angel", 7, "Sun", 2, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,7,true)),
+
             new Ability("Thunder God", 7, "Storm", 4, SNEAK, OWN_PATHWAY_ONLY,
                     (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(p,level,sl,7,true)),
             new Ability("Thunder God", 1, "Sailor's Kit", 9, SNEAK, STEALABLE,

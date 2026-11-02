@@ -45,6 +45,9 @@ public final class Nocturnality {
     private record Night(ServerLevel level, Vec3 center, double radius, long until) {}
 
     private static final List<Night> NIGHTS = new ArrayList<>();
+    private static final List<Night> DAYS = new ArrayList<>();
+    public static void forceDay(ServerLevel sl, Vec3 at, double radius, int ticks) { DAYS.add(new Night(sl,at,radius,sl.getGameTime()+ticks)); }
+    public static boolean isForcedDay(ServerLevel sl, Vec3 at) { DAYS.removeIf(d->d.until()<=d.level().getGameTime()); return DAYS.stream().anyMatch(d->d.level()==sl && d.center().distanceToSqr(at)<=d.radius()*d.radius()); }
 
     private Nocturnality() {}
 
@@ -54,6 +57,7 @@ public final class Nocturnality {
 
     /** 0 (full light) to 1 (pitch black), where the entity stands; 1 inside forced night. */
     public static float darkness(Entity entity) {
+        if (entity.level() instanceof ServerLevel sl && isForcedDay(sl,entity.position())) return 0f;
         if (isForcedNight(entity)) return 1f;
         Level level = entity.level();
         BlockPos pos = entity.blockPosition();
@@ -100,6 +104,7 @@ public final class Nocturnality {
 
     /** The bright sun of day on it under the open sky, and no forced night. */
     public static boolean inDaySun(Entity entity) {
+        if (entity.level() instanceof ServerLevel sl && isForcedDay(sl,entity.position())) return true;
         Level level = entity.level();
         BlockPos above = entity.blockPosition().above();
         if (level.isDarkOutside() || !level.canSeeSky(above)) return false;
@@ -113,11 +118,13 @@ public final class Nocturnality {
     @SubscribeEvent
     public static void onNocturnalityLevelUnload(LevelEvent.Unload event) {
         NIGHTS.removeIf(night -> night.level() == event.getLevel());
+        DAYS.removeIf(day -> day.level() == event.getLevel());
     }
 
     /** Forgets the nights that are over, every 5 seconds. */
     @SubscribeEvent
     public static void onNocturnalityLevelTick(TickEvent.LevelTickEvent.Post event) {
+        DAYS.removeIf(day -> day.until() <= day.level().getGameTime());
         if (NIGHTS.isEmpty() || !(event.level() instanceof ServerLevel sl) || sl.getGameTime() % 100 != 0) return;
         long now = sl.getGameTime();
         NIGHTS.removeIf(night -> night.level() == sl && night.until() <= now);

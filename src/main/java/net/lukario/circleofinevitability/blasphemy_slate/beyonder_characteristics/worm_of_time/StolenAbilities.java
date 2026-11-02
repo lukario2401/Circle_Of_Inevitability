@@ -86,6 +86,11 @@ public final class StolenAbilities {
         return held;
     }
 
+    /** A read-only snapshot of unexpired stored abilities for inspection/sealing. */
+    public static List<Held> held(Player holder) {
+        return HELD.getOrDefault(holder.getUUID(), List.of()).stream().filter(h -> h.until()>holder.level().getGameTime()).toList();
+    }
+
     public static int count(Player holder) {
         List<Held> list = HELD.get(holder.getUUID());
         return list == null ? 0 : list.size();

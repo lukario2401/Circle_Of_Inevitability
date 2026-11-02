@@ -29,6 +29,48 @@ public final class ModSounds {
 
     private ModSounds() {}
 
+    /** White Angel asset cues. Ability wiring can select a cue by its stable draft ID. */
+    public static final java.util.Map<String, RegistryObject<SoundEvent>> WHITE_ANGEL = java.util.Map.ofEntries(
+            java.util.Map.entry("hymn_of_valor", sound("white_angel.hymn_of_valor")),
+            java.util.Map.entry("hymn_of_renewal", sound("white_angel.hymn_of_renewal")),
+            java.util.Map.entry("sunshine", sound("white_angel.sunshine")),
+            java.util.Map.entry("daytime", sound("white_angel.daytime")),
+            java.util.Map.entry("holy_light", sound("white_angel.holy_light")),
+            java.util.Map.entry("sun_halo", sound("white_angel.sun_halo")),
+            java.util.Map.entry("holy_oath", sound("white_angel.holy_oath")),
+            java.util.Map.entry("cleave", sound("white_angel.cleave")),
+            java.util.Map.entry("fire_of_light", sound("white_angel.fire_of_light")),
+            java.util.Map.entry("contract", sound("white_angel.contract")),
+            java.util.Map.entry("authenticate", sound("white_angel.authenticate")),
+            java.util.Map.entry("amplify", sound("white_angel.amplify")),
+            java.util.Map.entry("nullify", sound("white_angel.nullify")),
+            java.util.Map.entry("purification", sound("white_angel.purification")),
+            java.util.Map.entry("domain", sound("white_angel.domain")),
+            java.util.Map.entry("flaring_sun", sound("white_angel.flaring_sun")),
+            java.util.Map.entry("spear", sound("white_angel.spear")),
+            java.util.Map.entry("white_ray", sound("white_angel.white_ray")),
+            java.util.Map.entry("holy_equipment", sound("white_angel.holy_equipment")),
+            java.util.Map.entry("define_justice", sound("white_angel.define_justice")),
+            java.util.Map.entry("justice_halo", sound("white_angel.justice_halo")),
+            java.util.Map.entry("judgment", sound("white_angel.judgment")),
+            java.util.Map.entry("faith_appraisal", sound("white_angel.faith_appraisal")),
+            java.util.Map.entry("solar_envoy", sound("white_angel.solar_envoy")),
+            java.util.Map.entry("praise_the_sun", sound("white_angel.praise_the_sun")),
+            java.util.Map.entry("holy_kingdom", sound("white_angel.holy_kingdom")),
+            java.util.Map.entry("servant_of_faith", sound("white_angel.servant_of_faith")),
+            java.util.Map.entry("pure_white_light", sound("white_angel.pure_white_light")),
+            java.util.Map.entry("sun", sound("white_angel.sun")),
+            java.util.Map.entry("warning", sound("white_angel.warning")),
+            java.util.Map.entry("countdown", sound("white_angel.countdown")),
+            java.util.Map.entry("pact_breach", sound("white_angel.pact_breach")),
+            java.util.Map.entry("believer_convert", sound("white_angel.believer_convert")),
+            java.util.Map.entry("intuition", sound("white_angel.intuition")),
+            java.util.Map.entry("wingbeat", sound("white_angel.wingbeat")),
+            java.util.Map.entry("field_end", sound("white_angel.field_end")),
+            java.util.Map.entry("inextinguishable_light", sound("white_angel.inextinguishable_light")),
+            java.util.Map.entry("melee_swing", sound("white_angel.melee_swing")),
+            java.util.Map.entry("melee_impact", sound("white_angel.melee_impact")));
+
     private static RegistryObject<SoundEvent> sound(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(
                 Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, name)));

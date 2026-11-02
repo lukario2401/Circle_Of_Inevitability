@@ -4754,5 +4754,317 @@
         "stream": false
       }
     ]
+  },
+  "white_angel.hymn_of_valor": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.hymn_of_valor",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/hymn_of_valor"
+      }
+    ]
+  },
+  "white_angel.hymn_of_renewal": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.hymn_of_renewal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/hymn_of_renewal"
+      }
+    ]
+  },
+  "white_angel.sunshine": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.sunshine",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/sunshine"
+      }
+    ]
+  },
+  "white_angel.daytime": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.daytime",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/daytime"
+      }
+    ]
+  },
+  "white_angel.holy_light": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.holy_light",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/holy_light"
+      }
+    ]
+  },
+  "white_angel.sun_halo": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.sun_halo",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/sun_halo"
+      }
+    ]
+  },
+  "white_angel.holy_oath": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.holy_oath",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/holy_oath"
+      }
+    ]
+  },
+  "white_angel.cleave": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.cleave",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/cleave"
+      }
+    ]
+  },
+  "white_angel.fire_of_light": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.fire_of_light",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/fire_of_light"
+      }
+    ]
+  },
+  "white_angel.contract": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.contract",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/contract"
+      }
+    ]
+  },
+  "white_angel.authenticate": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.authenticate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/authenticate"
+      }
+    ]
+  },
+  "white_angel.amplify": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.amplify",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/amplify"
+      }
+    ]
+  },
+  "white_angel.nullify": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.nullify",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/nullify"
+      }
+    ]
+  },
+  "white_angel.purification": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.purification",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/purification"
+      }
+    ]
+  },
+  "white_angel.domain": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.domain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/domain"
+      }
+    ]
+  },
+  "white_angel.flaring_sun": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.flaring_sun",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/flaring_sun"
+      }
+    ]
+  },
+  "white_angel.spear": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.spear",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/spear"
+      }
+    ]
+  },
+  "white_angel.white_ray": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.white_ray",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/white_ray"
+      }
+    ]
+  },
+  "white_angel.holy_equipment": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.holy_equipment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/holy_equipment"
+      }
+    ]
+  },
+  "white_angel.define_justice": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.define_justice",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/define_justice"
+      }
+    ]
+  },
+  "white_angel.justice_halo": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.justice_halo",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/justice_halo"
+      }
+    ]
+  },
+  "white_angel.judgment": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.judgment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/judgment"
+      }
+    ]
+  },
+  "white_angel.faith_appraisal": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.faith_appraisal",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/faith_appraisal"
+      }
+    ]
+  },
+  "white_angel.solar_envoy": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.solar_envoy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/solar_envoy"
+      }
+    ]
+  },
+  "white_angel.praise_the_sun": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.praise_the_sun",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/praise_the_sun"
+      }
+    ]
+  },
+  "white_angel.holy_kingdom": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.holy_kingdom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/holy_kingdom"
+      }
+    ]
+  },
+  "white_angel.servant_of_faith": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.servant_of_faith",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/servant_of_faith"
+      }
+    ]
+  },
+  "white_angel.pure_white_light": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.pure_white_light",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/pure_white_light"
+      }
+    ]
+  },
+  "white_angel.sun": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.sun",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/sun"
+      }
+    ]
+  },
+  "white_angel.warning": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.warning",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/warning"
+      }
+    ]
+  },
+  "white_angel.countdown": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.countdown",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/countdown"
+      }
+    ]
+  },
+  "white_angel.pact_breach": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.pact_breach",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/pact_breach"
+      }
+    ]
+  },
+  "white_angel.believer_convert": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.believer_convert",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/believer_convert"
+      }
+    ]
+  },
+  "white_angel.intuition": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.intuition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/intuition"
+      }
+    ]
+  },
+  "white_angel.wingbeat": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.wingbeat",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/wingbeat"
+      }
+    ]
+  },
+  "white_angel.field_end": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.field_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/field_end"
+      }
+    ]
+  },
+  "white_angel.inextinguishable_light": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.inextinguishable_light",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/inextinguishable_light"
+      }
+    ]
+  },
+  "white_angel.melee_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.melee_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/melee_swing"
+      }
+    ]
+  },
+  "white_angel.melee_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.white_angel.melee_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:white_angel/melee_impact"
+      }
+    ]
   }
 }

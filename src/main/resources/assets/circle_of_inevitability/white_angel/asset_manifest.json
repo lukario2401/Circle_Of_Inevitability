@@ -1,0 +1,1445 @@
+{
+  "schema_version": 1,
+  "namespace": "circle_of_inevitability",
+  "pathway": "White Angel",
+  "source": "WHITE_ANGEL.md design draft",
+  "scope": "Assets and sound event registration; abilities and WhiteAngelFx are not implemented here.",
+  "abilities": [
+    "hymn_of_valor",
+    "hymn_of_renewal",
+    "sunshine",
+    "daytime",
+    "holy_light",
+    "sun_halo",
+    "holy_oath",
+    "cleave",
+    "fire_of_light",
+    "contract",
+    "authenticate",
+    "amplify",
+    "nullify",
+    "purification",
+    "domain",
+    "flaring_sun",
+    "spear",
+    "white_ray",
+    "holy_equipment",
+    "define_justice",
+    "justice_halo",
+    "judgment",
+    "faith_appraisal",
+    "solar_envoy",
+    "praise_the_sun",
+    "holy_kingdom",
+    "servant_of_faith",
+    "pure_white_light",
+    "sun"
+  ],
+  "plain_key_abilities": [
+    "hymn_of_valor",
+    "hymn_of_renewal",
+    "sunshine",
+    "daytime"
+  ],
+  "wheels": {
+    "white_angel_theurgy": [
+      "holy_light",
+      "sun_halo",
+      "holy_oath",
+      "cleave",
+      "fire_of_light"
+    ],
+    "white_angel_notary": [
+      "contract",
+      "authenticate",
+      "amplify",
+      "nullify"
+    ],
+    "white_angel_radiance": [
+      "purification",
+      "domain",
+      "flaring_sun",
+      "spear",
+      "white_ray",
+      "holy_equipment"
+    ],
+    "white_angel_justice": [
+      "define_justice",
+      "justice_halo",
+      "judgment",
+      "faith_appraisal"
+    ],
+    "white_angel_sun": [
+      "solar_envoy",
+      "praise_the_sun",
+      "holy_kingdom",
+      "servant_of_faith",
+      "pure_white_light",
+      "sun"
+    ]
+  },
+  "key_icons": {
+    "1": "hymn",
+    "2": "light",
+    "3": "theurgy",
+    "4": "notarization",
+    "5": "radiance",
+    "6": "justice",
+    "7": "sun"
+  },
+  "upgrade_icons": [
+    "light_of_holiness",
+    "purification_halo",
+    "solar_oath",
+    "holy_contract",
+    "spear_of_light",
+    "justice_trial"
+  ],
+  "principle_icons": [
+    "mercy",
+    "retribution",
+    "purity",
+    "order"
+  ],
+  "status_icons": [
+    "pacts",
+    "believers",
+    "blessing",
+    "courage",
+    "oath",
+    "fervor",
+    "guilt",
+    "condemned",
+    "appraised",
+    "amplified",
+    "holy_equipment",
+    "sunlight",
+    "night_vision",
+    "evil_detection",
+    "horror_immunity",
+    "fortune",
+    "nemesis",
+    "purified_body",
+    "holy_eye",
+    "spiritual_intuition",
+    "light_body",
+    "incarnation_of_order",
+    "inextinguishable_light",
+    "anchored",
+    "pact_breach"
+  ],
+  "particles": [
+    "note_0",
+    "note_1",
+    "sun_mote",
+    "golden_flame",
+    "feather",
+    "seal",
+    "oath_glyph",
+    "eye",
+    "ray_streak",
+    "light_crescent",
+    "purify_spark",
+    "guilt_mark",
+    "white_ring"
+  ],
+  "sounds": [
+    "hymn_of_valor",
+    "hymn_of_renewal",
+    "sunshine",
+    "daytime",
+    "holy_light",
+    "sun_halo",
+    "holy_oath",
+    "cleave",
+    "fire_of_light",
+    "contract",
+    "authenticate",
+    "amplify",
+    "nullify",
+    "purification",
+    "domain",
+    "flaring_sun",
+    "spear",
+    "white_ray",
+    "holy_equipment",
+    "define_justice",
+    "justice_halo",
+    "judgment",
+    "faith_appraisal",
+    "solar_envoy",
+    "praise_the_sun",
+    "holy_kingdom",
+    "servant_of_faith",
+    "pure_white_light",
+    "sun",
+    "warning",
+    "countdown",
+    "pact_breach",
+    "believer_convert",
+    "intuition",
+    "wingbeat",
+    "field_end",
+    "inextinguishable_light",
+    "melee_swing",
+    "melee_impact"
+  ],
+  "ability_models": {
+    "hymn_of_valor": [
+      "hymn_note"
+    ],
+    "hymn_of_renewal": [
+      "hymn_note"
+    ],
+    "sunshine": [
+      "sun"
+    ],
+    "daytime": [
+      "sun_halo"
+    ],
+    "holy_light": [
+      "blade_of_light",
+      "warning_sigil"
+    ],
+    "sun_halo": [
+      "sun_halo"
+    ],
+    "holy_oath": [
+      "oath_sigil"
+    ],
+    "cleave": [
+      "blade_of_light"
+    ],
+    "fire_of_light": [
+      "flame_plume"
+    ],
+    "contract": [
+      "contract_scroll"
+    ],
+    "authenticate": [
+      "holy_eye"
+    ],
+    "amplify": [
+      "notary_seal"
+    ],
+    "nullify": [
+      "notary_seal"
+    ],
+    "purification": [
+      "purification_ring"
+    ],
+    "domain": [
+      "domain_boundary"
+    ],
+    "flaring_sun": [
+      "sun",
+      "warning_sigil",
+      "flame_plume"
+    ],
+    "spear": [
+      "spear_of_light"
+    ],
+    "white_ray": [
+      "ray_core"
+    ],
+    "holy_equipment": [
+      "holy_armor",
+      "holy_mace"
+    ],
+    "define_justice": [
+      "golden_scales"
+    ],
+    "justice_halo": [
+      "justice_halo"
+    ],
+    "judgment": [
+      "golden_scales",
+      "blade_of_light"
+    ],
+    "faith_appraisal": [
+      "holy_eye"
+    ],
+    "solar_envoy": [
+      "sunbird"
+    ],
+    "praise_the_sun": [
+      "ray_core"
+    ],
+    "holy_kingdom": [
+      "kingdom_gate",
+      "domain_boundary"
+    ],
+    "servant_of_faith": [
+      "believer_sun"
+    ],
+    "pure_white_light": [
+      "purification_ring",
+      "warning_sigil"
+    ],
+    "sun": [
+      "sun"
+    ]
+  },
+  "models": [
+    {
+      "name": "sun_halo",
+      "elements": 16,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          0.6,
+          8,
+          0.6
+        ],
+        [
+          15.4,
+          8.6,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "holy_mace",
+      "elements": 12,
+      "pivot": "grip at (8,0,8); top points +Y",
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          3,
+          -1,
+          3
+        ],
+        [
+          13,
+          24,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "spear_of_light",
+      "elements": 11,
+      "pivot": "shaft center (8,8,8); tip +Y",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Use modelAlong for travel.",
+      "bounds": [
+        [
+          2.7,
+          -8,
+          7.3
+        ],
+        [
+          13.3,
+          30,
+          8.7
+        ]
+      ]
+    },
+    {
+      "name": "golden_scales",
+      "elements": 14,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          -4,
+          0,
+          4
+        ],
+        [
+          20,
+          20,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "blade_of_light",
+      "elements": 6,
+      "pivot": "grip (8,0,8); blade +Y",
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          1,
+          -2,
+          6.5
+        ],
+        [
+          15,
+          30,
+          9.5
+        ]
+      ]
+    },
+    {
+      "name": "sun",
+      "elements": 107,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Scale in world; animated sunfire material. Diameter 14/16 blocks.",
+      "bounds": [
+        [
+          -0.8,
+          1.5833,
+          -0.8
+        ],
+        [
+          16.8,
+          14.4167,
+          16.8
+        ]
+      ]
+    },
+    {
+      "name": "hymn_note",
+      "elements": 5,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          2,
+          2,
+          7
+        ],
+        [
+          14,
+          19,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "sunbird",
+      "elements": 51,
+      "pivot": "body center (8,8,8); front -Z",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          -12.9,
+          0,
+          0.5
+        ],
+        [
+          28.9,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_0",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird\").frames(4).smooth().",
+      "bounds": [
+        [
+          -12.9,
+          0,
+          0.5
+        ],
+        [
+          28.9,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_1",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird\").frames(4).smooth().",
+      "bounds": [
+        [
+          -12.9,
+          0,
+          0.5
+        ],
+        [
+          28.9,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_2",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird\").frames(4).smooth().",
+      "bounds": [
+        [
+          -12.9,
+          0,
+          0.5
+        ],
+        [
+          28.9,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_3",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird\").frames(4).smooth().",
+      "bounds": [
+        [
+          -12.9,
+          0,
+          0.5
+        ],
+        [
+          28.9,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_incomplete",
+      "elements": 51,
+      "pivot": "body center (8,8,8); front -Z",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          -5.772,
+          0,
+          0.5
+        ],
+        [
+          21.772,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_incomplete_0",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird_incomplete\").frames(4).smooth().",
+      "bounds": [
+        [
+          -5.772,
+          0,
+          0.5
+        ],
+        [
+          21.772,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_incomplete_1",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird_incomplete\").frames(4).smooth().",
+      "bounds": [
+        [
+          -5.772,
+          0,
+          0.5
+        ],
+        [
+          21.772,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_incomplete_2",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird_incomplete\").frames(4).smooth().",
+      "bounds": [
+        [
+          -5.772,
+          0,
+          0.5
+        ],
+        [
+          21.772,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "sunbird_incomplete_3",
+      "elements": 51,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Matching topology for ModelFx.of(\"white_angel/sunbird_incomplete\").frames(4).smooth().",
+      "bounds": [
+        [
+          -5.772,
+          0,
+          0.5
+        ],
+        [
+          21.772,
+          22.6,
+          22
+        ]
+      ]
+    },
+    {
+      "name": "holy_armor",
+      "elements": 19,
+      "pivot": "feet (8,0,8)",
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "notes": "Attach at feet. Separate pieces available; final limb tracking belongs to ability code.",
+      "bounds": [
+        [
+          1.3,
+          3,
+          3.6
+        ],
+        [
+          14.7,
+          32,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "holy_armor_chest",
+      "elements": 8,
+      "pivot": "feet (8,0,8)",
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "notes": "Attach at feet. Separate pieces available; final limb tracking belongs to ability code.",
+      "bounds": [
+        [
+          1.3,
+          12,
+          4.7
+        ],
+        [
+          14.7,
+          24.5,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "holy_armor_head",
+      "elements": 5,
+      "pivot": "feet (8,0,8)",
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "notes": "Attach at feet. Separate pieces available; final limb tracking belongs to ability code.",
+      "bounds": [
+        [
+          3.6,
+          24,
+          3.6
+        ],
+        [
+          12.4,
+          32,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "holy_armor_legs",
+      "elements": 6,
+      "pivot": "feet (8,0,8)",
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "notes": "Attach at feet. Separate pieces available; final limb tracking belongs to ability code.",
+      "bounds": [
+        [
+          3.6,
+          3,
+          4.8
+        ],
+        [
+          12.4,
+          11.8,
+          10.8
+        ]
+      ]
+    },
+    {
+      "name": "contract_scroll",
+      "elements": 7,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          2,
+          0,
+          7
+        ],
+        [
+          14,
+          18,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "warning_sigil",
+      "elements": 40,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Horizontal ring; place on ground or above head, then scale by radius.",
+      "bounds": [
+        [
+          -3.4,
+          8,
+          -3.4
+        ],
+        [
+          19.4,
+          8.9,
+          19.4
+        ]
+      ]
+    },
+    {
+      "name": "purification_ring",
+      "elements": 40,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Horizontal ring; place on ground or above head, then scale by radius.",
+      "bounds": [
+        [
+          -2.4,
+          8,
+          -2.4
+        ],
+        [
+          18.4,
+          8.9,
+          18.4
+        ]
+      ]
+    },
+    {
+      "name": "domain_boundary",
+      "elements": 40,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Horizontal ring; place on ground or above head, then scale by radius.",
+      "bounds": [
+        [
+          -6.4,
+          8,
+          -6.4
+        ],
+        [
+          22.4,
+          8.9,
+          22.4
+        ]
+      ]
+    },
+    {
+      "name": "justice_halo",
+      "elements": 40,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Horizontal ring; place on ground or above head, then scale by radius.",
+      "bounds": [
+        [
+          -1.4,
+          8,
+          -1.4
+        ],
+        [
+          17.4,
+          8.9,
+          17.4
+        ]
+      ]
+    },
+    {
+      "name": "oath_sigil",
+      "elements": 40,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Horizontal ring; place on ground or above head, then scale by radius.",
+      "bounds": [
+        [
+          2.6,
+          8,
+          2.6
+        ],
+        [
+          13.4,
+          8.9,
+          13.4
+        ]
+      ]
+    },
+    {
+      "name": "kingdom_gate",
+      "elements": 14,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Illusory repeated prop; scale/placement supplied by Holy Kingdom.",
+      "bounds": [
+        [
+          -1,
+          0,
+          5.5
+        ],
+        [
+          17,
+          31,
+          10.5
+        ]
+      ]
+    },
+    {
+      "name": "holy_eye",
+      "elements": 5,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          0,
+          5,
+          7
+        ],
+        [
+          16,
+          11,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "notary_seal",
+      "elements": 17,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          1.6,
+          8,
+          1.6
+        ],
+        [
+          14.4,
+          8.7,
+          14.4
+        ]
+      ]
+    },
+    {
+      "name": "ray_core",
+      "elements": 2,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Unit beam aligned +Y; scale length to aim, glow/unshaded at runtime.",
+      "bounds": [
+        [
+          7.3,
+          0,
+          7.3
+        ],
+        [
+          8.7,
+          16,
+          8.7
+        ]
+      ]
+    },
+    {
+      "name": "believer_sun",
+      "elements": 107,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "Small overhead marker; attach above Believers.",
+      "bounds": [
+        [
+          3.2,
+          5.25,
+          3.2
+        ],
+        [
+          12.8,
+          10.75,
+          12.8
+        ]
+      ]
+    },
+    {
+      "name": "flame_plume",
+      "elements": 8,
+      "pivot": "center (8,8,8)",
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "notes": "",
+      "bounds": [
+        [
+          5.1476,
+          0,
+          4.9627
+        ],
+        [
+          11.1,
+          17,
+          11.0373
+        ]
+      ]
+    }
+  ],
+  "animations": {
+    "sunbird": {
+      "frames": [
+        "sunbird_0",
+        "sunbird_1",
+        "sunbird_2",
+        "sunbird_3"
+      ],
+      "rest": "sunbird",
+      "axis": "wings change height"
+    },
+    "sunbird_incomplete": {
+      "frames": [
+        "sunbird_incomplete_0",
+        "sunbird_incomplete_1",
+        "sunbird_incomplete_2",
+        "sunbird_incomplete_3"
+      ],
+      "rest": "sunbird_incomplete",
+      "axis": "wings change height"
+    }
+  },
+  "texture_animations": {
+    "sunfire_atlas": {
+      "frames": 4,
+      "size": [
+        64,
+        64
+      ],
+      "frametime": 3
+    }
+  },
+  "rendering": {
+    "model_space": "16 pixels = 1 block; ModelFx centers X/Z at 8",
+    "material": "solid opaque ivory, gold, feather and sunfire; enable glow/unshaded at runtime",
+    "particle_ids": "circle_of_inevitability:fx/white_angel/<name>",
+    "model_ids": "circle_of_inevitability:model_fx/white_angel/<name>",
+    "sound_ids": "circle_of_inevitability:white_angel.<name>"
+  },
+  "shared_files": {
+    "sounds.json": [
+      "white_angel.hymn_of_valor",
+      "white_angel.hymn_of_renewal",
+      "white_angel.sunshine",
+      "white_angel.daytime",
+      "white_angel.holy_light",
+      "white_angel.sun_halo",
+      "white_angel.holy_oath",
+      "white_angel.cleave",
+      "white_angel.fire_of_light",
+      "white_angel.contract",
+      "white_angel.authenticate",
+      "white_angel.amplify",
+      "white_angel.nullify",
+      "white_angel.purification",
+      "white_angel.domain",
+      "white_angel.flaring_sun",
+      "white_angel.spear",
+      "white_angel.white_ray",
+      "white_angel.holy_equipment",
+      "white_angel.define_justice",
+      "white_angel.justice_halo",
+      "white_angel.judgment",
+      "white_angel.faith_appraisal",
+      "white_angel.solar_envoy",
+      "white_angel.praise_the_sun",
+      "white_angel.holy_kingdom",
+      "white_angel.servant_of_faith",
+      "white_angel.pure_white_light",
+      "white_angel.sun",
+      "white_angel.warning",
+      "white_angel.countdown",
+      "white_angel.pact_breach",
+      "white_angel.believer_convert",
+      "white_angel.intuition",
+      "white_angel.wingbeat",
+      "white_angel.field_end",
+      "white_angel.inextinguishable_light",
+      "white_angel.melee_swing",
+      "white_angel.melee_impact"
+    ],
+    "lang/en_us.json": [
+      "subtitles.circle_of_inevitability.white_angel.hymn_of_valor",
+      "subtitles.circle_of_inevitability.white_angel.hymn_of_renewal",
+      "subtitles.circle_of_inevitability.white_angel.sunshine",
+      "subtitles.circle_of_inevitability.white_angel.daytime",
+      "subtitles.circle_of_inevitability.white_angel.holy_light",
+      "subtitles.circle_of_inevitability.white_angel.sun_halo",
+      "subtitles.circle_of_inevitability.white_angel.holy_oath",
+      "subtitles.circle_of_inevitability.white_angel.cleave",
+      "subtitles.circle_of_inevitability.white_angel.fire_of_light",
+      "subtitles.circle_of_inevitability.white_angel.contract",
+      "subtitles.circle_of_inevitability.white_angel.authenticate",
+      "subtitles.circle_of_inevitability.white_angel.amplify",
+      "subtitles.circle_of_inevitability.white_angel.nullify",
+      "subtitles.circle_of_inevitability.white_angel.purification",
+      "subtitles.circle_of_inevitability.white_angel.domain",
+      "subtitles.circle_of_inevitability.white_angel.flaring_sun",
+      "subtitles.circle_of_inevitability.white_angel.spear",
+      "subtitles.circle_of_inevitability.white_angel.white_ray",
+      "subtitles.circle_of_inevitability.white_angel.holy_equipment",
+      "subtitles.circle_of_inevitability.white_angel.define_justice",
+      "subtitles.circle_of_inevitability.white_angel.justice_halo",
+      "subtitles.circle_of_inevitability.white_angel.judgment",
+      "subtitles.circle_of_inevitability.white_angel.faith_appraisal",
+      "subtitles.circle_of_inevitability.white_angel.solar_envoy",
+      "subtitles.circle_of_inevitability.white_angel.praise_the_sun",
+      "subtitles.circle_of_inevitability.white_angel.holy_kingdom",
+      "subtitles.circle_of_inevitability.white_angel.servant_of_faith",
+      "subtitles.circle_of_inevitability.white_angel.pure_white_light",
+      "subtitles.circle_of_inevitability.white_angel.sun",
+      "subtitles.circle_of_inevitability.white_angel.warning",
+      "subtitles.circle_of_inevitability.white_angel.countdown",
+      "subtitles.circle_of_inevitability.white_angel.pact_breach",
+      "subtitles.circle_of_inevitability.white_angel.believer_convert",
+      "subtitles.circle_of_inevitability.white_angel.intuition",
+      "subtitles.circle_of_inevitability.white_angel.wingbeat",
+      "subtitles.circle_of_inevitability.white_angel.field_end",
+      "subtitles.circle_of_inevitability.white_angel.inextinguishable_light",
+      "subtitles.circle_of_inevitability.white_angel.melee_swing",
+      "subtitles.circle_of_inevitability.white_angel.melee_impact",
+      "ability.circle_of_inevitability.white_angel.hymn_of_valor",
+      "ability.circle_of_inevitability.white_angel.hymn_of_renewal",
+      "ability.circle_of_inevitability.white_angel.sunshine",
+      "ability.circle_of_inevitability.white_angel.daytime",
+      "ability.circle_of_inevitability.white_angel.holy_light",
+      "ability.circle_of_inevitability.white_angel.sun_halo",
+      "ability.circle_of_inevitability.white_angel.holy_oath",
+      "ability.circle_of_inevitability.white_angel.cleave",
+      "ability.circle_of_inevitability.white_angel.fire_of_light",
+      "ability.circle_of_inevitability.white_angel.contract",
+      "ability.circle_of_inevitability.white_angel.authenticate",
+      "ability.circle_of_inevitability.white_angel.amplify",
+      "ability.circle_of_inevitability.white_angel.nullify",
+      "ability.circle_of_inevitability.white_angel.purification",
+      "ability.circle_of_inevitability.white_angel.domain",
+      "ability.circle_of_inevitability.white_angel.flaring_sun",
+      "ability.circle_of_inevitability.white_angel.spear",
+      "ability.circle_of_inevitability.white_angel.white_ray",
+      "ability.circle_of_inevitability.white_angel.holy_equipment",
+      "ability.circle_of_inevitability.white_angel.define_justice",
+      "ability.circle_of_inevitability.white_angel.justice_halo",
+      "ability.circle_of_inevitability.white_angel.judgment",
+      "ability.circle_of_inevitability.white_angel.faith_appraisal",
+      "ability.circle_of_inevitability.white_angel.solar_envoy",
+      "ability.circle_of_inevitability.white_angel.praise_the_sun",
+      "ability.circle_of_inevitability.white_angel.holy_kingdom",
+      "ability.circle_of_inevitability.white_angel.servant_of_faith",
+      "ability.circle_of_inevitability.white_angel.pure_white_light",
+      "ability.circle_of_inevitability.white_angel.sun",
+      "ability.circle_of_inevitability.white_angel.hymn",
+      "ability.circle_of_inevitability.white_angel.light",
+      "ability.circle_of_inevitability.white_angel.theurgy",
+      "ability.circle_of_inevitability.white_angel.notarization",
+      "ability.circle_of_inevitability.white_angel.radiance",
+      "ability.circle_of_inevitability.white_angel.justice",
+      "ability.circle_of_inevitability.white_angel.light_of_holiness",
+      "ability.circle_of_inevitability.white_angel.purification_halo",
+      "ability.circle_of_inevitability.white_angel.solar_oath",
+      "ability.circle_of_inevitability.white_angel.holy_contract",
+      "ability.circle_of_inevitability.white_angel.spear_of_light",
+      "ability.circle_of_inevitability.white_angel.justice_trial",
+      "ability.circle_of_inevitability.white_angel.mercy",
+      "ability.circle_of_inevitability.white_angel.retribution",
+      "ability.circle_of_inevitability.white_angel.purity",
+      "ability.circle_of_inevitability.white_angel.order",
+      "ability.circle_of_inevitability.white_angel.pacts",
+      "ability.circle_of_inevitability.white_angel.believers",
+      "ability.circle_of_inevitability.white_angel.blessing",
+      "ability.circle_of_inevitability.white_angel.courage",
+      "ability.circle_of_inevitability.white_angel.oath",
+      "ability.circle_of_inevitability.white_angel.fervor",
+      "ability.circle_of_inevitability.white_angel.guilt",
+      "ability.circle_of_inevitability.white_angel.condemned",
+      "ability.circle_of_inevitability.white_angel.appraised",
+      "ability.circle_of_inevitability.white_angel.amplified",
+      "ability.circle_of_inevitability.white_angel.sunlight",
+      "ability.circle_of_inevitability.white_angel.night_vision",
+      "ability.circle_of_inevitability.white_angel.evil_detection",
+      "ability.circle_of_inevitability.white_angel.horror_immunity",
+      "ability.circle_of_inevitability.white_angel.fortune",
+      "ability.circle_of_inevitability.white_angel.nemesis",
+      "ability.circle_of_inevitability.white_angel.purified_body",
+      "ability.circle_of_inevitability.white_angel.holy_eye",
+      "ability.circle_of_inevitability.white_angel.spiritual_intuition",
+      "ability.circle_of_inevitability.white_angel.light_body",
+      "ability.circle_of_inevitability.white_angel.incarnation_of_order",
+      "ability.circle_of_inevitability.white_angel.inextinguishable_light",
+      "ability.circle_of_inevitability.white_angel.anchored",
+      "ability.circle_of_inevitability.white_angel.pact_breach",
+      "hud.circle_of_inevitability.white_angel.pacts",
+      "hud.circle_of_inevitability.white_angel.believers",
+      "hud.circle_of_inevitability.white_angel.guilt",
+      "pathway.circle_of_inevitability.white_angel"
+    ]
+  },
+  "files": {
+    "models/model_fx/white_angel/believer_sun.json": "4ea8558b595ed17a86e8207c3503e2c607dc193f481d84abfef7322236bfe804",
+    "models/model_fx/white_angel/blade_of_light.json": "79c0fb4477552d7026c773fbbc1ac8709502869df88f86f4b3ed97f40d51f015",
+    "models/model_fx/white_angel/contract_scroll.json": "9de02c26e352496fe4b757d1051c5acaaea0bca2ac349c183b1012cda6d7377b",
+    "models/model_fx/white_angel/domain_boundary.json": "07fb14a294e3bc877996debb8c4024585d810f869b4c6e11b51ffff831048437",
+    "models/model_fx/white_angel/flame_plume.json": "fb7fafbcf223bab7ffcef1d7b20681c0f3adf77042f7c4b720526d031716d098",
+    "models/model_fx/white_angel/golden_scales.json": "3c33189750897fa5cdb394b446472e4ecd386ba86f858b1650467d87ab2e4cc1",
+    "models/model_fx/white_angel/holy_armor.json": "2d2dfd0f2d65aadb2249c3ec56d9298a98c4abf6aa3d2734f9c0d4100bc5e319",
+    "models/model_fx/white_angel/holy_armor_chest.json": "fa1bea35f8aa0fe84f5258641aad852d2c8265f5e7bb8d4df86954b32d63bc2a",
+    "models/model_fx/white_angel/holy_armor_head.json": "7489acfd51cbf2ae822523ccee421148a1bf6c5041a8eaded15f991af95e34c8",
+    "models/model_fx/white_angel/holy_armor_legs.json": "7ce65b26d9a413a2e83cc439fd4b4d3d6552e31a1e2d60e160585bae0db95a79",
+    "models/model_fx/white_angel/holy_eye.json": "d1425855005fb95de8d71d7419d54b1bcd96d08ab09dbe3e40c39ad81316217b",
+    "models/model_fx/white_angel/holy_mace.json": "66fe891955db30e5172d60f49f5339724a8633b9ef91db4aef2c25b483f4a74d",
+    "models/model_fx/white_angel/hymn_note.json": "3f149d1c40f3a80cdc4d0fd925730e826b1b7f2845cbec503b1dc49688b5224f",
+    "models/model_fx/white_angel/justice_halo.json": "f09067b7002c79486c7bedc9e8566f50d9b5ca4cd0007d678a7f7fc9f01375e7",
+    "models/model_fx/white_angel/kingdom_gate.json": "f6ed55b00315d554a0f3961176d8ed38cfdd04e6a16a34e86a918c9d75e62f61",
+    "models/model_fx/white_angel/notary_seal.json": "1870343de640a66ddf139c40922707aa9c02ebf8f64e56de145c5d1b11a16d1c",
+    "models/model_fx/white_angel/oath_sigil.json": "f9780be3eca94cb9d2f68bb1c840933641164ab0fa5114700a04880d740e4a29",
+    "models/model_fx/white_angel/purification_ring.json": "9e8a4b2f2758b2396ffb657b72173c77194c0cedea4c8035cce2baf955a16c8d",
+    "models/model_fx/white_angel/ray_core.json": "3ee307fc8096e7a3d0e24ebd5c17bd62a3a03d2c99c9f29d02d258bb34517af4",
+    "models/model_fx/white_angel/spear_of_light.json": "bf99f2e9440d70dfe37f2a2c9d512c20803cf8ed7917305c0a95c54e9a0b76c2",
+    "models/model_fx/white_angel/sun.json": "c698489985b35994553127aa0bc0f64aa01a9c5d8c741be14fcd068080c11909",
+    "models/model_fx/white_angel/sun_halo.json": "68c192e0f88691368920b8d2adb55e1f65fd20d37949d08bf56daab78674bcf4",
+    "models/model_fx/white_angel/sunbird.json": "3b5bdae48d9882f45b481563ac21c23ff7aee522ffb2b6f991ca540c25cc0573",
+    "models/model_fx/white_angel/sunbird_0.json": "3b5bdae48d9882f45b481563ac21c23ff7aee522ffb2b6f991ca540c25cc0573",
+    "models/model_fx/white_angel/sunbird_1.json": "9ab409389005706cf3be7ea34357751cb1ac6ef611baf8fc6aa2f700aad53af1",
+    "models/model_fx/white_angel/sunbird_2.json": "3b5bdae48d9882f45b481563ac21c23ff7aee522ffb2b6f991ca540c25cc0573",
+    "models/model_fx/white_angel/sunbird_3.json": "14a791099a29688b8b9bfb66becd4aa93a538f8b736305c48096cfa0d975030d",
+    "models/model_fx/white_angel/sunbird_incomplete.json": "8b3d8e6ffe6eeedd447120a2c144cfd4b44465cabc34fd5b9f9dfb96d03d53be",
+    "models/model_fx/white_angel/sunbird_incomplete_0.json": "8b3d8e6ffe6eeedd447120a2c144cfd4b44465cabc34fd5b9f9dfb96d03d53be",
+    "models/model_fx/white_angel/sunbird_incomplete_1.json": "645fb7b4580237447ae2ef3aa1dce9630ea35f9c0b8bb4fde018b46d45fe8e89",
+    "models/model_fx/white_angel/sunbird_incomplete_2.json": "8b3d8e6ffe6eeedd447120a2c144cfd4b44465cabc34fd5b9f9dfb96d03d53be",
+    "models/model_fx/white_angel/sunbird_incomplete_3.json": "1a72eef19ab43cc90c7100613592a9913df5798258713621e843e4f945725eaf",
+    "models/model_fx/white_angel/warning_sigil.json": "6cd46f19995e50a981db2e153fd6e189f0a21e80d0af672c5ee3b93ee5a0deb1",
+    "sounds/white_angel/amplify.ogg": "d136cbb2cb7826fa0fc97583ba0f776795fc93e737eb7847da45e9645a8b8c3b",
+    "sounds/white_angel/authenticate.ogg": "c5f1350ab3de3d80ec2ae0522bb776a2908e7fe425f76001ea52960868c1440b",
+    "sounds/white_angel/believer_convert.ogg": "908317d9c8ee50cce455098204faae78f7e500d03f095897d36ecb99076ad270",
+    "sounds/white_angel/cleave.ogg": "f14358b1bd2822dbe2a2bd7adaccfa791120f9fd376dfdfc07ce86ae32c6bdef",
+    "sounds/white_angel/contract.ogg": "c6aa5f7674cc7367540bc42ed306dd3c62e1943bcfddc238695331241b9e45c5",
+    "sounds/white_angel/countdown.ogg": "f2ae9630a62afdbe5ead7ed5b548cec0f50649605935572274a4d85898acf629",
+    "sounds/white_angel/daytime.ogg": "9e26adf02ff32026d1c68aca7a3939291f86cde0349c15afa786d5d3b37fa266",
+    "sounds/white_angel/define_justice.ogg": "cdf7b5fdbb48f59b83b8ee057db8bcbffd861ff847447b39a9c5c56f85f7b5d2",
+    "sounds/white_angel/domain.ogg": "0ccb17670b9269b335ac643c89f5fd029e7e98b600cddeeb56419c6ea627b080",
+    "sounds/white_angel/faith_appraisal.ogg": "415b1157105ff67b8e25ed98a37c080f9b1f4f821f7da860675c985ee002bc1d",
+    "sounds/white_angel/field_end.ogg": "7db2f9435d6fbcbca26a75ef62811aaf10858314c3786b184057dc257546c126",
+    "sounds/white_angel/fire_of_light.ogg": "bd477ff033767b8661291df271ab57c86ea2f63e71d995595f49c67d5126bc34",
+    "sounds/white_angel/flaring_sun.ogg": "b7a9e91e5394befbbe207cd18dfdb6be8b5aa2b12822825a055fcf1f7d4532e6",
+    "sounds/white_angel/holy_equipment.ogg": "a4af7b8dc309fb760f96121161baac2021e891f7c6db50c39ea749cc91b434a9",
+    "sounds/white_angel/holy_kingdom.ogg": "310bcc289b898115a8580adbb7209c56150c3189bd5a9f054d0a667d34a34371",
+    "sounds/white_angel/holy_light.ogg": "f7e149f2fcf91cdbc9f9ae49ccd16836d1f7738bfa840b648bf087cc010748c1",
+    "sounds/white_angel/holy_oath.ogg": "0932d3a711bad44ca36bddf95314ffa3d9cc971f79a714eb678f5e6b7267134e",
+    "sounds/white_angel/hymn_of_renewal.ogg": "64b9e7e35d8f538eb2e99d84ea431592b6cfb5887719ef88ffc876e40f4e3257",
+    "sounds/white_angel/hymn_of_valor.ogg": "1cd93067c2d369ec77215a077dc428e98b5cdb77ff0cb5002c790e11a9f31a77",
+    "sounds/white_angel/inextinguishable_light.ogg": "73298fa44972d0a4b3b75488259fbc360e180519d57f044b24d6cc8bd39cb8d8",
+    "sounds/white_angel/intuition.ogg": "6b89208f24e418856bc4a783121f1326b36b35f10a4ab648b8e288c5f5c30bb4",
+    "sounds/white_angel/judgment.ogg": "fa411aba8702fe124cdb39bedd2d860c4256831b1ca81df14ebcc23ddde38d69",
+    "sounds/white_angel/justice_halo.ogg": "bde0b12822f01144a9226ac8e67825919d0f47ab499962de5723924092c0d220",
+    "sounds/white_angel/melee_impact.ogg": "5c3d80dd5d09953de49146023170fec40567a87fcff0eee7130e7649b693428d",
+    "sounds/white_angel/melee_swing.ogg": "ca5c9d894d6ba56494d21bbbe6db51e5cce5795537455b4fc99b37131b13c556",
+    "sounds/white_angel/nullify.ogg": "cb5c7918c75921825365f4f3af8054a091860669d2c5d60dd005fd11b9c7934a",
+    "sounds/white_angel/pact_breach.ogg": "aa34b80059c3c5a8511ef98e350d209a208230ceaac70581663e47ad1b61d16b",
+    "sounds/white_angel/praise_the_sun.ogg": "787653a3ecbaae94815cab319c2cf53ad06cbeb8c392e91ddd003f8df4bc6dfb",
+    "sounds/white_angel/pure_white_light.ogg": "b03388187505d9beba9648b69edbe7fa300813dea36f3bc78e163cfdab3915bb",
+    "sounds/white_angel/purification.ogg": "90495af4a3bd70a014809ed6332f780a866cdcf3bb60c016a817daa59b247ced",
+    "sounds/white_angel/servant_of_faith.ogg": "50810dae18f654c27df733343bbe00396ebfb17cb05a66f8ad15ac1234d5a4c4",
+    "sounds/white_angel/solar_envoy.ogg": "40e97051692da3d4d45befb7cf124d9e9346c2cb6c3185d5698adddfdcb56284",
+    "sounds/white_angel/spear.ogg": "af674414db905b7bd27cb79c8d728880df59033cfe75905c0fba7d8a0fe3fba7",
+    "sounds/white_angel/sun.ogg": "72cdb92d88f0a88eaf5551295a140b8a587e95d00974c08637e742c2740e630c",
+    "sounds/white_angel/sun_halo.ogg": "34ef6efa18cf71366826df133f08f47ced472eb6c92c05a0eb3c200a8fdb7338",
+    "sounds/white_angel/sunshine.ogg": "3442fe2af75ba688815eedacc0af7611b37b09b39d0191f9c614cbd2e940a301",
+    "sounds/white_angel/warning.ogg": "ed08b5a6e3bd57342b07a02f0957e299664686d0346780e153febc7ed305a706",
+    "sounds/white_angel/white_ray.ogg": "18cc9d83cb21401b641eed3ce8e152a14abd03cffb254f135cc6b3858fe12dd4",
+    "sounds/white_angel/wingbeat.ogg": "fa5d0dd01274fb3dd5026275fc923e55e0e24dec43a4caa8f71112b8f434f218",
+    "textures/gui/ability_menus/white_angel/amplify.png": "063d2254f6f05867c229b2772bf3bafb7b4b4a1fcff975535f70b60b48853497",
+    "textures/gui/ability_menus/white_angel/authenticate.png": "7acfcae90c4a294ffa0cb3659484256fece931714d2fd8ddb5911e40590fc454",
+    "textures/gui/ability_menus/white_angel/cleave.png": "c90a52c0517ecdcfb63c5ba0c5bcbe17242e5323eaba627ce872a85da071ff7c",
+    "textures/gui/ability_menus/white_angel/contract.png": "a581d2038dbf370eb3913003b77a691e4f1cb7bfd98d5c601399c64287a0a64f",
+    "textures/gui/ability_menus/white_angel/daytime.png": "b2430ada84510b28c25cb5874c36d383f4449a76b29565136335dc0c5e02fc68",
+    "textures/gui/ability_menus/white_angel/define_justice.png": "1ce66b742eb1bf08de88d05ef6a664b36402732deab2b1ab73691f67df9fe8f1",
+    "textures/gui/ability_menus/white_angel/domain.png": "d726b863c21e56413e827a273f67d01c4bf7dfbf68e9a526f8debc61ffa14e5f",
+    "textures/gui/ability_menus/white_angel/faith_appraisal.png": "bf2ff535c006a04208bff09ea667d51cf3073452436f0ec072fbd951a8aa1d56",
+    "textures/gui/ability_menus/white_angel/fire_of_light.png": "30f744a58857e36be2ccefbe7c8197cd59de8b2e1162aaaa986ee55ef4d82ef5",
+    "textures/gui/ability_menus/white_angel/flaring_sun.png": "720272a9cf9c5e1231fdef7b11001d23441f328b3456347fc6d30c974be63034",
+    "textures/gui/ability_menus/white_angel/holy_contract.png": "8edbcef9ec1406dadf5cb4cacabeacceec86c978c689bd358e5373fdbdaa8d69",
+    "textures/gui/ability_menus/white_angel/holy_equipment.png": "83d571b9c5eec4e5b1378a12a9ddb515facca93eb7ee73725da10791639a1202",
+    "textures/gui/ability_menus/white_angel/holy_kingdom.png": "bc5710a570477422caab5686ba8c06b2f680e6be5df68c12f4ded00c3c35eb80",
+    "textures/gui/ability_menus/white_angel/holy_light.png": "939260453d20302be5c2027e6fea3e5066d6f0b2f2434cab98b5782ac1630d3a",
+    "textures/gui/ability_menus/white_angel/holy_oath.png": "00f7fc199954f9d1eb879aba82dd7b29ad1e9538f432ed66cb89f7e9929df014",
+    "textures/gui/ability_menus/white_angel/hymn.png": "4b482ea602c21da031c85f012c6ae6a99a67d93469e78d6e3aba295838f6739f",
+    "textures/gui/ability_menus/white_angel/hymn_of_renewal.png": "fb8779afa7bd5857d130f3f58ac2e57633f34e58d905f518afc594e33b1b401a",
+    "textures/gui/ability_menus/white_angel/hymn_of_valor.png": "4b482ea602c21da031c85f012c6ae6a99a67d93469e78d6e3aba295838f6739f",
+    "textures/gui/ability_menus/white_angel/judgment.png": "c09726b5bed352e53ad931f2337838be8fed49f707aeb82f944988b15d45a89d",
+    "textures/gui/ability_menus/white_angel/justice.png": "1ce66b742eb1bf08de88d05ef6a664b36402732deab2b1ab73691f67df9fe8f1",
+    "textures/gui/ability_menus/white_angel/justice_halo.png": "da864993726d45727388aa80bf0042dfaf8ebfa929ae28c4c2134351674d51dc",
+    "textures/gui/ability_menus/white_angel/justice_trial.png": "606332bb4b9ac9f796b484f4f190c6a5e30070a6c21b210444803020bc2e0000",
+    "textures/gui/ability_menus/white_angel/light.png": "5d7afc94f636c9ce8209a50b90e3bce0706e7e1b619fd5df42470ac9983647e7",
+    "textures/gui/ability_menus/white_angel/light_of_holiness.png": "7dc7037c563cac32516ba833b6d25712988542f5334671cc6120e1b1bf651f94",
+    "textures/gui/ability_menus/white_angel/notarization.png": "a581d2038dbf370eb3913003b77a691e4f1cb7bfd98d5c601399c64287a0a64f",
+    "textures/gui/ability_menus/white_angel/nullify.png": "395fdf479c94daaad531e281e863134833c49c13437920740ae36a6bc0a9d893",
+    "textures/gui/ability_menus/white_angel/praise_the_sun.png": "1c703a42156a7aaad62648c4331e4f29c5a13247153e41be65b17cf8a007ea60",
+    "textures/gui/ability_menus/white_angel/principle_mercy.png": "67a8ec6fb2a41583a132b4af344a9902e9ee439f9d67868c95e7c5c41a64bbc5",
+    "textures/gui/ability_menus/white_angel/principle_order.png": "a581d2038dbf370eb3913003b77a691e4f1cb7bfd98d5c601399c64287a0a64f",
+    "textures/gui/ability_menus/white_angel/principle_purity.png": "e76282d1049ee18920f6277c66146528111a7c690f9960729cf979346b2b1d0c",
+    "textures/gui/ability_menus/white_angel/principle_retribution.png": "c90a52c0517ecdcfb63c5ba0c5bcbe17242e5323eaba627ce872a85da071ff7c",
+    "textures/gui/ability_menus/white_angel/pure_white_light.png": "a088e74be47669f69a6fa5d4481b4b367265e4fb132cf2d9b1c153550caad71d",
+    "textures/gui/ability_menus/white_angel/purification.png": "e76282d1049ee18920f6277c66146528111a7c690f9960729cf979346b2b1d0c",
+    "textures/gui/ability_menus/white_angel/purification_halo.png": "ac8c5dae9fab489dd3db10cca2a6402628495b02e4a0699a485b2c490a4a7570",
+    "textures/gui/ability_menus/white_angel/radiance.png": "b2430ada84510b28c25cb5874c36d383f4449a76b29565136335dc0c5e02fc68",
+    "textures/gui/ability_menus/white_angel/servant_of_faith.png": "5b4a8f899c99c8b59911281711edf3781570f9eb2cf3383441c64a214be7b69c",
+    "textures/gui/ability_menus/white_angel/solar_envoy.png": "ccc03bc3ca26e577cb56d68daea082fea71412845ae7957966333056611319c8",
+    "textures/gui/ability_menus/white_angel/solar_oath.png": "5542db569ccc5d910390b5dec6b725d0f19ddae2a2c79d2e20e9e48233991590",
+    "textures/gui/ability_menus/white_angel/spear.png": "0b9c9d0b93083612c36420da4c3bb761bf209d7c3c5be45d816416db4073acfb",
+    "textures/gui/ability_menus/white_angel/spear_of_light.png": "30d8f651df2e56b92ad3307b273f15ff1ac96124e6234b140587f7947e0faf95",
+    "textures/gui/ability_menus/white_angel/sun.png": "f71e437ac244413ee2016778a363f6a458ea1ed8d81b994b59ad96f015c2cc7a",
+    "textures/gui/ability_menus/white_angel/sun_halo.png": "6fa479cc70bd064048f3d56d8e4fb256f13a5643431fb3c6ead943f65aa3b6d6",
+    "textures/gui/ability_menus/white_angel/sunshine.png": "9514134ad22f9b9b77fe862fd57b1784254c45a8a6db9d542a03fde0355019ce",
+    "textures/gui/ability_menus/white_angel/theurgy.png": "939260453d20302be5c2027e6fea3e5066d6f0b2f2434cab98b5782ac1630d3a",
+    "textures/gui/ability_menus/white_angel/white_ray.png": "54f68b210e721496e5705ad6e5903985d906c114929e6da4e852087389f33700",
+    "textures/gui/pathway_icons/white_angel.png": "5dd6921187f8733441bca74eb11b800b1d42c1a37069469540026004e97829d5",
+    "textures/gui/white_angel/amplified.png": "f10ba18daf1fe450964f4a4eb8ca75ed8124866dee4235a73a97055b592a583a",
+    "textures/gui/white_angel/amplify.png": "f10ba18daf1fe450964f4a4eb8ca75ed8124866dee4235a73a97055b592a583a",
+    "textures/gui/white_angel/anchored.png": "57414064b3b761b67ce6a70f427092f53db09449d387aaa79a90aac2209abf87",
+    "textures/gui/white_angel/appraised.png": "1b9eaa2f8061b605218e47b22646ee3bf77e0ef6c4f2b95a79b26da3eb705168",
+    "textures/gui/white_angel/authenticate.png": "8e72606b209449a01a5881de85362efe23d0863e319802c4cbbd538601c0da1c",
+    "textures/gui/white_angel/believers.png": "aeb82059d61de28b06375d53e5ac487088346995237a8c0b451bd7d36bc199fd",
+    "textures/gui/white_angel/blessing.png": "987d52c3b8ceb75d6ed1c5421f4a08c60ea99b063f18de98e6e5c9f984b8844c",
+    "textures/gui/white_angel/cleave.png": "278248dd818fd11ec017b7daf88d7ab4451fc350ea59272c874d667a4395595f",
+    "textures/gui/white_angel/condemned.png": "bb2bb5a146d30187c5d67f1e352a4d71cb0a9850acbf10be81a10789cb4de14c",
+    "textures/gui/white_angel/contract.png": "206c254d401b07914b16413c7e0918f7cdafc17136c8f6e02b10810e6e2ffe93",
+    "textures/gui/white_angel/courage.png": "9102797c77203f2408df572596bf8795162493dbf312c95558ccffe42209e7c0",
+    "textures/gui/white_angel/daytime.png": "06e90434f395d5f12a914a203ea048123a441c548a0df15dc777a876fe5a3d63",
+    "textures/gui/white_angel/define_justice.png": "0dbbfd8a7f056fc6d951f499e879245ff6adcb5412538631e88b1aa779c38470",
+    "textures/gui/white_angel/domain.png": "17c4d591be9a84929dfaca3b2ca7e8a61c5407845cf0dfbcababad59064f25f4",
+    "textures/gui/white_angel/evil_detection.png": "0910f13e35f95e938f9d28375cda07ba4fdb7cca536bd31c359f1186b616fcc4",
+    "textures/gui/white_angel/faith_appraisal.png": "1b9eaa2f8061b605218e47b22646ee3bf77e0ef6c4f2b95a79b26da3eb705168",
+    "textures/gui/white_angel/fervor.png": "b66e12cb686e5ded259c6c031aadc3ab9eacd1f67b0c354463f40b17e8886cd2",
+    "textures/gui/white_angel/fire_of_light.png": "3210d347931d55444087630e9b56d1e74b560be4b83afe645ddaab1f92cbef18",
+    "textures/gui/white_angel/flaring_sun.png": "ec88c895b155a627b6fafff0e5dfb131ec7d334ca98a1f2d72560250555b62a2",
+    "textures/gui/white_angel/fortune.png": "f26d6577c50cb901647a7616fc990fb9065468e91bd12fde982fd424cf8256fb",
+    "textures/gui/white_angel/guilt.png": "0dbbfd8a7f056fc6d951f499e879245ff6adcb5412538631e88b1aa779c38470",
+    "textures/gui/white_angel/guilt_0.png": "0e7d904bdb3fa8a29671a954005144899489563465967354838541c7cdad9837",
+    "textures/gui/white_angel/guilt_1.png": "5be4a042d2948e3f5f9be2d602533ee357a48fae6dc8f2b55c31f05e68dd3987",
+    "textures/gui/white_angel/guilt_2.png": "7d49ee56b8fe196ca6bf00ebe0a62d4d838096b16e155cf061b7c85098cda21f",
+    "textures/gui/white_angel/guilt_3.png": "90a18eab3c27590bd1798dc78ce301fefcc7fa081b1ee837415a951629fc64de",
+    "textures/gui/white_angel/guilt_4.png": "b3b05568f83b2c59fc94abb4c32804c53a6b4dd5dd215eb9fee88cd110d7bb1d",
+    "textures/gui/white_angel/guilt_5.png": "577390f292e4c172a20dbf2ee03a5ae820bc797a2f0862efc460e18b8d31fbad",
+    "textures/gui/white_angel/holy_contract.png": "27a5b0924269f2e250d917aa4ee7149bafe35eeb3fcbaec01f65c36bb111448a",
+    "textures/gui/white_angel/holy_equipment.png": "333780803f56aa3ad714287d34013bb08913f5d7333a338aef3187dde1a8d768",
+    "textures/gui/white_angel/holy_eye.png": "0910f13e35f95e938f9d28375cda07ba4fdb7cca536bd31c359f1186b616fcc4",
+    "textures/gui/white_angel/holy_kingdom.png": "ea285e16a722ba0a30291c0eca1c52a963707edd970f33b5bfd2a79d6e420a20",
+    "textures/gui/white_angel/holy_light.png": "83e75ca04c9bb37201bf226c740843d4e0bda7e2be726248b5fb9e05230361b0",
+    "textures/gui/white_angel/holy_oath.png": "6428c5180917b2f7cde4aae8245feb1c9cb10edcf78d7b172e1416258945e55b",
+    "textures/gui/white_angel/horror_immunity.png": "987d52c3b8ceb75d6ed1c5421f4a08c60ea99b063f18de98e6e5c9f984b8844c",
+    "textures/gui/white_angel/hymn_of_renewal.png": "874f8f083d5c8233220c18741f4236cf8d6cfe29c91f351121a5259a53120797",
+    "textures/gui/white_angel/hymn_of_valor.png": "9102797c77203f2408df572596bf8795162493dbf312c95558ccffe42209e7c0",
+    "textures/gui/white_angel/incarnation_of_order.png": "0dbbfd8a7f056fc6d951f499e879245ff6adcb5412538631e88b1aa779c38470",
+    "textures/gui/white_angel/inextinguishable_light.png": "f7503cf2a257fdc1ebeb133c293318e5d697e8d05846326ba6543da9cbbb6205",
+    "textures/gui/white_angel/judgment.png": "fcd8c9e0774dc6c06c650721c25f42107eb636cd501b9fdd8955dc8e7cac79a0",
+    "textures/gui/white_angel/justice_halo.png": "8a65aecbf505a953bddfe3b9403b3ae12c0c4a50901d07b1c850ccbde882e8e9",
+    "textures/gui/white_angel/justice_trial.png": "eb995c9a25bad55a24f7bedec8a8f5987f502176d6782d15eb804b18b9ec2979",
+    "textures/gui/white_angel/light_body.png": "5dd6921187f8733441bca74eb11b800b1d42c1a37069469540026004e97829d5",
+    "textures/gui/white_angel/light_of_holiness.png": "f2671b311687b3babb9b1409efa39ec6b65c9f53ab3ffc7fea2000732bd92dc9",
+    "textures/gui/white_angel/mercy.png": "2ab5eabc90e6baa4896fd5544609f0611ae994742403a95457ec629f6b644fd7",
+    "textures/gui/white_angel/nemesis.png": "3210d347931d55444087630e9b56d1e74b560be4b83afe645ddaab1f92cbef18",
+    "textures/gui/white_angel/night_vision.png": "4f1a973c3a09919d428192ac8cf2c81c889cac7b17653caa588253aab185e6f3",
+    "textures/gui/white_angel/nullify.png": "79bae93607b80d8a96865870afd77a0ada6079b27bc2b3b127aad812a35ff912",
+    "textures/gui/white_angel/oath.png": "6428c5180917b2f7cde4aae8245feb1c9cb10edcf78d7b172e1416258945e55b",
+    "textures/gui/white_angel/order.png": "206c254d401b07914b16413c7e0918f7cdafc17136c8f6e02b10810e6e2ffe93",
+    "textures/gui/white_angel/pact_breach.png": "e1505d458fd36a97907beede1cc5c259af1a816cece1277ae160c22cd4e2afed",
+    "textures/gui/white_angel/pacts.png": "dd3e9ca0a5ba77c38cf4c6b1cf3c5acae5ac829804a259eb533d11f9065c8ace",
+    "textures/gui/white_angel/praise_the_sun.png": "18bb3148a259b0fd22d5f6f08b69aabaf6a14d5ba71573bd9b05ad6a92be1ec8",
+    "textures/gui/white_angel/pure_white_light.png": "44d6242b8e14b6874222b7a20ec03bf25db1f89702b347254099a3f2157cf565",
+    "textures/gui/white_angel/purification.png": "44a0d45bbb1db2a99054a3ed5c8ff54da6cb52bb3a1d8e7f2e5467725937cb68",
+    "textures/gui/white_angel/purification_halo.png": "daffcc7f5914db5ca9f3910b96f720f7eecdf95b4c3e4453ff3f530ea60bd6ab",
+    "textures/gui/white_angel/purified_body.png": "44a0d45bbb1db2a99054a3ed5c8ff54da6cb52bb3a1d8e7f2e5467725937cb68",
+    "textures/gui/white_angel/purity.png": "44a0d45bbb1db2a99054a3ed5c8ff54da6cb52bb3a1d8e7f2e5467725937cb68",
+    "textures/gui/white_angel/retribution.png": "278248dd818fd11ec017b7daf88d7ab4451fc350ea59272c874d667a4395595f",
+    "textures/gui/white_angel/servant_of_faith.png": "b4d5aaaedaccdb59280df07a181121a3eb4f50358a7b5adf6a8b6be3c45f46e4",
+    "textures/gui/white_angel/solar_envoy.png": "5dd6921187f8733441bca74eb11b800b1d42c1a37069469540026004e97829d5",
+    "textures/gui/white_angel/solar_oath.png": "e8029fc668e882c9c2073a5ab40aa0d0bd61e9506c40ed7ca10d6b6d61438510",
+    "textures/gui/white_angel/spear.png": "e5e9960cbda1f96dba0cd0dfeaa191b94a2dd8b07670a48adbaa335ec0395d77",
+    "textures/gui/white_angel/spear_of_light.png": "ec9a180b58924783ec152a64c7235a6fdf13d7458b5835a6d524d1c64b67d1e9",
+    "textures/gui/white_angel/spiritual_intuition.png": "f2813f4371921dd8b9d630fc2566dd07851c5956c1cb35e7f49e44499d816811",
+    "textures/gui/white_angel/sun.png": "cf3f079a8d04ee66c31a49f8372ae6d527c51462bac8b732c7351c5876161676",
+    "textures/gui/white_angel/sun_halo.png": "987d52c3b8ceb75d6ed1c5421f4a08c60ea99b063f18de98e6e5c9f984b8844c",
+    "textures/gui/white_angel/sunlight.png": "4f1a973c3a09919d428192ac8cf2c81c889cac7b17653caa588253aab185e6f3",
+    "textures/gui/white_angel/sunshine.png": "8a4a530f88118a705a74b9dc48e8c13757b02447759a258646ceb471fbf79738",
+    "textures/gui/white_angel/white_ray.png": "0006960521b0000b8ba288f875c275ea34c11a82e1db7e273c5ddd1630c53dc9",
+    "textures/model_fx/white_angel/divine_atlas.png": "e04ddc029f869adcd58660b9281b8c567e923f24c032d101bb7d758b296b544f",
+    "textures/model_fx/white_angel/sunfire_atlas.png": "6efd4a578a4aaed27e4fd427b57ad48be9cce29c4da7fb8cc748c647e7e34c1d",
+    "textures/model_fx/white_angel/sunfire_atlas.png.mcmeta": "0476a5c396e06e18f6268c70cad7b2dd46d1cafa946d33590da7b5562d0ffda7",
+    "textures/particle/fx/white_angel/eye.png": "4cbe828e3ef409b9a804fbdd1b8ace61c0a545ce9776d12bf075c5e52585a6f6",
+    "textures/particle/fx/white_angel/feather.png": "b7e06f056c8c50a982d086e54a7f52aab7415d6262aa9f97343609828eae561a",
+    "textures/particle/fx/white_angel/golden_flame.png": "25996537c81ee59e270c67f087830b8fea918901bd844694e168dcf48accc562",
+    "textures/particle/fx/white_angel/guilt_mark.png": "ffad9df7d6a40d4731346c24ee70b09837515955088961eb0e0b87b30190fefa",
+    "textures/particle/fx/white_angel/light_crescent.png": "504c7fe719667ffd68db3ab97161de9b23cc4b1735dcd9e939f2639cbb24bf39",
+    "textures/particle/fx/white_angel/note_0.png": "03b4f9c2d26d16ef7021b01e6c86521177de25fba054514af9aaa9c152efedbd",
+    "textures/particle/fx/white_angel/note_1.png": "07bf01c18dd83d8662aed5476d4576b92f901455fa32db8ef752028a13c2e15b",
+    "textures/particle/fx/white_angel/oath_glyph.png": "0b933d908cd12818b23dfbbf406022e51bb6ac2e9c81fc9973d4a38d562f81b4",
+    "textures/particle/fx/white_angel/purify_spark.png": "8bc5ce0b10a66c6b923949396a882b4363c3459a25ae74d08fc0bfe3e84b040c",
+    "textures/particle/fx/white_angel/ray_streak.png": "b4d44c3f1e9bbdeb8a64a67094b5be2ea4bd1bb178aaa7a21c76dbd44d222812",
+    "textures/particle/fx/white_angel/seal.png": "402d5678fb4f4cc1a4518894cf40098ef73b06af2618e86fe6602fd92cf54ca3",
+    "textures/particle/fx/white_angel/sun_mote.png": "07d2569c051fd0ee60d472f19906a2c6e51062c87e728c1897721c67d9532b21",
+    "textures/particle/fx/white_angel/white_ring.png": "111d0832d49d9383aa8d3d1d3c111aa3e62966395a5748efed310639725a5bfc"
+  }
+}
