@@ -29,6 +29,43 @@ public final class ModSounds {
 
     private ModSounds() {}
 
+    /** Author (Spectator) asset cues; gameplay is designed in docs/AUTHOR.md. */
+    public static final java.util.Map<String, RegistryObject<SoundEvent>> AUTHOR = java.util.Map.ofEntries(
+            java.util.Map.entry("observe", sound("author.observe")),
+            java.util.Map.entry("spectator_state", sound("author.spectator_state")),
+            java.util.Map.entry("awe", sound("author.awe")),
+            java.util.Map.entry("frenzy", sound("author.frenzy")),
+            java.util.Map.entry("psychoanalysis", sound("author.psychoanalysis")),
+            java.util.Map.entry("placate", sound("author.placate")),
+            java.util.Map.entry("suggestion", sound("author.suggestion")),
+            java.util.Map.entry("sleep", sound("author.sleep")),
+            java.util.Map.entry("psychological_invisibility", sound("author.psychological_invisibility")),
+            java.util.Map.entry("battle_hypnosis", sound("author.battle_hypnosis")),
+            java.util.Map.entry("dream_entry", sound("author.dream_entry")),
+            java.util.Map.entry("nightmare", sound("author.nightmare")),
+            java.util.Map.entry("dream_maze", sound("author.dream_maze")),
+            java.util.Map.entry("dream_anchor", sound("author.dream_anchor")),
+            java.util.Map.entry("dragon_form", sound("author.dragon_form")),
+            java.util.Map.entry("mind_storm", sound("author.mind_storm")),
+            java.util.Map.entry("manipulate", sound("author.manipulate")),
+            java.util.Map.entry("virtual_persona", sound("author.virtual_persona")),
+            java.util.Map.entry("mind_walk", sound("author.mind_walk")),
+            java.util.Map.entry("discern", sound("author.discern")),
+            java.util.Map.entry("foreshadow", sound("author.foreshadow")),
+            java.util.Map.entry("plot_twist", sound("author.plot_twist")),
+            java.util.Map.entry("fate_script", sound("author.fate_script")),
+            java.util.Map.entry("envision", sound("author.envision")),
+            java.util.Map.entry("life_creation", sound("author.life_creation")),
+            java.util.Map.entry("sea_of_minds", sound("author.sea_of_minds")),
+            java.util.Map.entry("insight_gain", sound("author.insight_gain")),
+            java.util.Map.entry("insight_spent", sound("author.insight_spent")),
+            java.util.Map.entry("resist", sound("author.resist")),
+            java.util.Map.entry("wake", sound("author.wake")),
+            java.util.Map.entry("warning", sound("author.warning")),
+            java.util.Map.entry("wingbeat", sound("author.wingbeat")),
+            java.util.Map.entry("script_trigger", sound("author.script_trigger")),
+            java.util.Map.entry("field_end", sound("author.field_end")));
+
     /** White Angel asset cues. Ability wiring can select a cue by its stable draft ID. */
     public static final java.util.Map<String, RegistryObject<SoundEvent>> WHITE_ANGEL = java.util.Map.ofEntries(
             java.util.Map.entry("hymn_of_valor", sound("white_angel.hymn_of_valor")),

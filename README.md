@@ -83,3 +83,7 @@ icons, particles and sound cues for the White Tower pathway design. The
 
 The [White Angel asset collection](docs/WHITE_ANGEL_ASSETS.md) supplies icons, models, animated
 Sunbird forms, particles and registered sound cues for the Sun pathway design, with generators and previews.
+
+The [Author / Spectator pathway design](docs/AUTHOR.md) covers all ten sequences and 26 abilities.
+Its [asset collection](docs/AUTHOR_ASSETS.md) includes icons, animated Mind Dragons, dream and authorship
+models, particles, sound cues and previews. This is a design and asset pack; playable Author abilities are pending.

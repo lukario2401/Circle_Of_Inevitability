@@ -5066,5 +5066,277 @@
         "name": "circle_of_inevitability:white_angel/melee_impact"
       }
     ]
+  },
+  "author.observe": {
+    "subtitle": "subtitles.circle_of_inevitability.author.observe",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/observe"
+      }
+    ]
+  },
+  "author.spectator_state": {
+    "subtitle": "subtitles.circle_of_inevitability.author.spectator_state",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/spectator_state"
+      }
+    ]
+  },
+  "author.awe": {
+    "subtitle": "subtitles.circle_of_inevitability.author.awe",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/awe"
+      }
+    ]
+  },
+  "author.frenzy": {
+    "subtitle": "subtitles.circle_of_inevitability.author.frenzy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/frenzy"
+      }
+    ]
+  },
+  "author.psychoanalysis": {
+    "subtitle": "subtitles.circle_of_inevitability.author.psychoanalysis",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/psychoanalysis"
+      }
+    ]
+  },
+  "author.placate": {
+    "subtitle": "subtitles.circle_of_inevitability.author.placate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/placate"
+      }
+    ]
+  },
+  "author.suggestion": {
+    "subtitle": "subtitles.circle_of_inevitability.author.suggestion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/suggestion"
+      }
+    ]
+  },
+  "author.sleep": {
+    "subtitle": "subtitles.circle_of_inevitability.author.sleep",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/sleep"
+      }
+    ]
+  },
+  "author.psychological_invisibility": {
+    "subtitle": "subtitles.circle_of_inevitability.author.psychological_invisibility",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/psychological_invisibility"
+      }
+    ]
+  },
+  "author.battle_hypnosis": {
+    "subtitle": "subtitles.circle_of_inevitability.author.battle_hypnosis",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/battle_hypnosis"
+      }
+    ]
+  },
+  "author.dream_entry": {
+    "subtitle": "subtitles.circle_of_inevitability.author.dream_entry",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/dream_entry"
+      }
+    ]
+  },
+  "author.nightmare": {
+    "subtitle": "subtitles.circle_of_inevitability.author.nightmare",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/nightmare"
+      }
+    ]
+  },
+  "author.dream_maze": {
+    "subtitle": "subtitles.circle_of_inevitability.author.dream_maze",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/dream_maze"
+      }
+    ]
+  },
+  "author.dream_anchor": {
+    "subtitle": "subtitles.circle_of_inevitability.author.dream_anchor",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/dream_anchor"
+      }
+    ]
+  },
+  "author.dragon_form": {
+    "subtitle": "subtitles.circle_of_inevitability.author.dragon_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/dragon_form"
+      }
+    ]
+  },
+  "author.mind_storm": {
+    "subtitle": "subtitles.circle_of_inevitability.author.mind_storm",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/mind_storm"
+      }
+    ]
+  },
+  "author.manipulate": {
+    "subtitle": "subtitles.circle_of_inevitability.author.manipulate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/manipulate"
+      }
+    ]
+  },
+  "author.virtual_persona": {
+    "subtitle": "subtitles.circle_of_inevitability.author.virtual_persona",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/virtual_persona"
+      }
+    ]
+  },
+  "author.mind_walk": {
+    "subtitle": "subtitles.circle_of_inevitability.author.mind_walk",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/mind_walk"
+      }
+    ]
+  },
+  "author.discern": {
+    "subtitle": "subtitles.circle_of_inevitability.author.discern",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/discern"
+      }
+    ]
+  },
+  "author.foreshadow": {
+    "subtitle": "subtitles.circle_of_inevitability.author.foreshadow",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/foreshadow"
+      }
+    ]
+  },
+  "author.plot_twist": {
+    "subtitle": "subtitles.circle_of_inevitability.author.plot_twist",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/plot_twist"
+      }
+    ]
+  },
+  "author.fate_script": {
+    "subtitle": "subtitles.circle_of_inevitability.author.fate_script",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/fate_script"
+      }
+    ]
+  },
+  "author.envision": {
+    "subtitle": "subtitles.circle_of_inevitability.author.envision",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/envision"
+      }
+    ]
+  },
+  "author.life_creation": {
+    "subtitle": "subtitles.circle_of_inevitability.author.life_creation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/life_creation"
+      }
+    ]
+  },
+  "author.sea_of_minds": {
+    "subtitle": "subtitles.circle_of_inevitability.author.sea_of_minds",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/sea_of_minds"
+      }
+    ]
+  },
+  "author.insight_gain": {
+    "subtitle": "subtitles.circle_of_inevitability.author.insight_gain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/insight_gain"
+      }
+    ]
+  },
+  "author.insight_spent": {
+    "subtitle": "subtitles.circle_of_inevitability.author.insight_spent",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/insight_spent"
+      }
+    ]
+  },
+  "author.resist": {
+    "subtitle": "subtitles.circle_of_inevitability.author.resist",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/resist"
+      }
+    ]
+  },
+  "author.wake": {
+    "subtitle": "subtitles.circle_of_inevitability.author.wake",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/wake"
+      }
+    ]
+  },
+  "author.warning": {
+    "subtitle": "subtitles.circle_of_inevitability.author.warning",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/warning"
+      }
+    ]
+  },
+  "author.wingbeat": {
+    "subtitle": "subtitles.circle_of_inevitability.author.wingbeat",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/wingbeat"
+      }
+    ]
+  },
+  "author.script_trigger": {
+    "subtitle": "subtitles.circle_of_inevitability.author.script_trigger",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/script_trigger"
+      }
+    ]
+  },
+  "author.field_end": {
+    "subtitle": "subtitles.circle_of_inevitability.author.field_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:author/field_end"
+      }
+    ]
   }
 }

@@ -1,0 +1,1334 @@
+{
+  "schema_version": 1,
+  "namespace": "circle_of_inevitability",
+  "pathway": "Author",
+  "source_design": "docs/AUTHOR.md",
+  "scope": "Design and assets with sound registration. No playable Author abilities or pathway registration.",
+  "abilities": [
+    "observe",
+    "spectator_state",
+    "awe",
+    "frenzy",
+    "psychoanalysis",
+    "placate",
+    "suggestion",
+    "sleep",
+    "psychological_invisibility",
+    "battle_hypnosis",
+    "dream_entry",
+    "nightmare",
+    "dream_maze",
+    "dream_anchor",
+    "dragon_form",
+    "mind_storm",
+    "manipulate",
+    "virtual_persona",
+    "mind_walk",
+    "discern",
+    "foreshadow",
+    "plot_twist",
+    "fate_script",
+    "envision",
+    "life_creation",
+    "sea_of_minds"
+  ],
+  "sequences": {
+    "observe": 9,
+    "spectator_state": 9,
+    "awe": 8,
+    "frenzy": 8,
+    "psychoanalysis": 7,
+    "placate": 7,
+    "suggestion": 6,
+    "sleep": 6,
+    "psychological_invisibility": 6,
+    "battle_hypnosis": 6,
+    "dream_entry": 5,
+    "nightmare": 5,
+    "dream_maze": 5,
+    "dream_anchor": 5,
+    "dragon_form": 4,
+    "mind_storm": 4,
+    "manipulate": 4,
+    "virtual_persona": 4,
+    "mind_walk": 3,
+    "discern": 2,
+    "foreshadow": 1,
+    "plot_twist": 1,
+    "fate_script": 1,
+    "envision": 0,
+    "life_creation": 0,
+    "sea_of_minds": 0
+  },
+  "basic": [
+    "observe",
+    "spectator_state",
+    "awe",
+    "frenzy",
+    "psychoanalysis",
+    "placate"
+  ],
+  "wheels": {
+    "author_hypnosis": [
+      "suggestion",
+      "sleep",
+      "psychological_invisibility",
+      "battle_hypnosis"
+    ],
+    "author_dreams": [
+      "dream_entry",
+      "nightmare",
+      "dream_maze",
+      "dream_anchor"
+    ],
+    "author_mind": [
+      "dragon_form",
+      "mind_storm",
+      "manipulate",
+      "virtual_persona",
+      "mind_walk",
+      "discern"
+    ],
+    "author_authorship": [
+      "foreshadow",
+      "plot_twist",
+      "fate_script",
+      "envision",
+      "life_creation",
+      "sea_of_minds"
+    ]
+  },
+  "key_icons": {
+    "1": "observation",
+    "2": "emotions",
+    "3": "therapy",
+    "4": "hypnosis",
+    "5": "dreams",
+    "6": "mind",
+    "7": "authorship"
+  },
+  "status_icons": [
+    "insight",
+    "exposed",
+    "suggestion",
+    "sleep",
+    "fear",
+    "frenzy",
+    "lucidity",
+    "strain",
+    "persona",
+    "scripted",
+    "resistance"
+  ],
+  "particles": [
+    "eye",
+    "ripple",
+    "scale",
+    "thought",
+    "thread",
+    "ink",
+    "page",
+    "dream_shard",
+    "spiral",
+    "quill_star"
+  ],
+  "sounds": [
+    "observe",
+    "spectator_state",
+    "awe",
+    "frenzy",
+    "psychoanalysis",
+    "placate",
+    "suggestion",
+    "sleep",
+    "psychological_invisibility",
+    "battle_hypnosis",
+    "dream_entry",
+    "nightmare",
+    "dream_maze",
+    "dream_anchor",
+    "dragon_form",
+    "mind_storm",
+    "manipulate",
+    "virtual_persona",
+    "mind_walk",
+    "discern",
+    "foreshadow",
+    "plot_twist",
+    "fate_script",
+    "envision",
+    "life_creation",
+    "sea_of_minds",
+    "insight_gain",
+    "insight_spent",
+    "resist",
+    "wake",
+    "warning",
+    "wingbeat",
+    "script_trigger",
+    "field_end"
+  ],
+  "ability_models": {
+    "observe": [
+      "mind_eye"
+    ],
+    "spectator_state": [
+      "observer_mask"
+    ],
+    "awe": [
+      "terror_eye",
+      "mind_ripple"
+    ],
+    "frenzy": [
+      "fractured_mask"
+    ],
+    "psychoanalysis": [
+      "mind_eye",
+      "thought_shard"
+    ],
+    "placate": [
+      "lotus",
+      "mind_ripple"
+    ],
+    "suggestion": [
+      "pendulum"
+    ],
+    "sleep": [
+      "dream_lantern"
+    ],
+    "psychological_invisibility": [
+      "observer_mask"
+    ],
+    "battle_hypnosis": [
+      "pendulum",
+      "thought_cage"
+    ],
+    "dream_entry": [
+      "dream_gate"
+    ],
+    "nightmare": [
+      "terror_eye",
+      "dream_shard"
+    ],
+    "dream_maze": [
+      "thought_cage",
+      "dream_gate"
+    ],
+    "dream_anchor": [
+      "dream_lantern",
+      "lotus"
+    ],
+    "dragon_form": [
+      "mind_dragon",
+      "mind_dragon_incomplete"
+    ],
+    "mind_storm": [
+      "mind_ripple",
+      "thought_shard"
+    ],
+    "manipulate": [
+      "mind_crown",
+      "thought_thread"
+    ],
+    "virtual_persona": [
+      "persona"
+    ],
+    "mind_walk": [
+      "dream_gate",
+      "thought_thread"
+    ],
+    "discern": [
+      "mind_eye",
+      "mind_crown"
+    ],
+    "foreshadow": [
+      "open_book",
+      "quill"
+    ],
+    "plot_twist": [
+      "quill",
+      "dream_shard"
+    ],
+    "fate_script": [
+      "open_book",
+      "script_seal"
+    ],
+    "envision": [
+      "envisioned_blade",
+      "thought_shard"
+    ],
+    "life_creation": [
+      "imagined_drake",
+      "script_seal"
+    ],
+    "sea_of_minds": [
+      "sea_arch",
+      "mind_ripple"
+    ]
+  },
+  "models": [
+    {
+      "name": "mind_eye",
+      "elements": 12,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          1.0,
+          3.6,
+          6
+        ],
+        [
+          14.5,
+          12.4,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "terror_eye",
+      "elements": 15,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          1.0,
+          0,
+          6
+        ],
+        [
+          14.5,
+          12.4,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "observer_mask",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          1,
+          6.6
+        ],
+        [
+          13,
+          16,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "fractured_mask",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          1,
+          6.5
+        ],
+        [
+          13,
+          16,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "mind_ripple",
+      "elements": 48,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          -2.4,
+          7.7,
+          -2.4
+        ],
+        [
+          18.4,
+          8.3,
+          18.4
+        ]
+      ]
+    },
+    {
+      "name": "lotus",
+      "elements": 25,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          4.7,
+          0.6
+        ],
+        [
+          15.4,
+          11,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "pendulum",
+      "elements": 18,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          2.7,
+          0.6
+        ],
+        [
+          15.4,
+          24,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "dream_lantern",
+      "elements": 23,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          1,
+          3
+        ],
+        [
+          13,
+          17.3,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "dream_gate",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          0,
+          5
+        ],
+        [
+          17,
+          25.0,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "sea_arch",
+      "elements": 91,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -5.4,
+          -1.3,
+          -5.4
+        ],
+        [
+          21.4,
+          25.0,
+          21.4
+        ]
+      ]
+    },
+    {
+      "name": "thought_cage",
+      "elements": 40,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.7,
+          0.6
+        ],
+        [
+          15.4,
+          15.3,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "dream_shard",
+      "elements": 2,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          6,
+          2,
+          5.7
+        ],
+        [
+          10,
+          14,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "thought_shard",
+      "elements": 2,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          6,
+          2,
+          5.7
+        ],
+        [
+          10,
+          14,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "mind_crown",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          1.5,
+          6.7,
+          1.5
+        ],
+        [
+          14.5,
+          14,
+          14.5
+        ]
+      ]
+    },
+    {
+      "name": "thought_thread",
+      "elements": 12,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          6.3058,
+          -4,
+          7.8
+        ],
+        [
+          9.6608,
+          20,
+          8.2
+        ]
+      ]
+    },
+    {
+      "name": "persona",
+      "elements": 25,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          -1.4,
+          -4,
+          -1.4
+        ],
+        [
+          17.4,
+          16,
+          17.4
+        ]
+      ]
+    },
+    {
+      "name": "open_book",
+      "elements": 10,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          2.8,
+          2
+        ],
+        [
+          16,
+          12,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "quill",
+      "elements": 8,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3.6,
+          0,
+          7.5
+        ],
+        [
+          11.2,
+          22,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "script_seal",
+      "elements": 33,
+      "pivot_pixels": [
+        8,
+        8,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          7.7,
+          -0.5
+        ],
+        [
+          15.4,
+          8.5,
+          16.5
+        ]
+      ]
+    },
+    {
+      "name": "envisioned_blade",
+      "elements": 5,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          7
+        ],
+        [
+          13,
+          28,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.95,
+          -0.3,
+          -5
+        ],
+        [
+          27.95,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_0",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.95,
+          -0.3,
+          -5
+        ],
+        [
+          27.95,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_1",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.95,
+          -0.3,
+          -5
+        ],
+        [
+          27.95,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_2",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.95,
+          -0.3,
+          -5
+        ],
+        [
+          27.95,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_3",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.95,
+          -0.3,
+          -5
+        ],
+        [
+          27.95,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_incomplete",
+      "elements": 50,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.03,
+          -0.3,
+          -5
+        ],
+        [
+          22.03,
+          24,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_incomplete_0",
+      "elements": 50,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.03,
+          -0.3,
+          -5
+        ],
+        [
+          22.03,
+          24,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_incomplete_1",
+      "elements": 50,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.03,
+          -0.3,
+          -5
+        ],
+        [
+          22.03,
+          24,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_incomplete_2",
+      "elements": 50,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.03,
+          -0.3,
+          -5
+        ],
+        [
+          22.03,
+          24,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "mind_dragon_incomplete_3",
+      "elements": 50,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.03,
+          -0.3,
+          -5
+        ],
+        [
+          22.03,
+          24,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "imagined_drake",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -7.325,
+          -0.3,
+          -5
+        ],
+        [
+          23.325,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "imagined_drake_0",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -7.325,
+          -0.3,
+          -5
+        ],
+        [
+          23.325,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "imagined_drake_1",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -7.325,
+          -0.3,
+          -5
+        ],
+        [
+          23.325,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "imagined_drake_2",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -7.325,
+          -0.3,
+          -5
+        ],
+        [
+          23.325,
+          25.3,
+          28.2
+        ]
+      ]
+    },
+    {
+      "name": "imagined_drake_3",
+      "elements": 66,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -7.325,
+          -0.3,
+          -5
+        ],
+        [
+          23.325,
+          25.3,
+          28.2
+        ]
+      ]
+    }
+  ],
+  "animations": {
+    "mind_dragon": {
+      "frames": [
+        "mind_dragon_0",
+        "mind_dragon_1",
+        "mind_dragon_2",
+        "mind_dragon_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "mind_dragon_incomplete": {
+      "frames": [
+        "mind_dragon_incomplete_0",
+        "mind_dragon_incomplete_1",
+        "mind_dragon_incomplete_2",
+        "mind_dragon_incomplete_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "imagined_drake": {
+      "frames": [
+        "imagined_drake_0",
+        "imagined_drake_1",
+        "imagined_drake_2",
+        "imagined_drake_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    }
+  },
+  "texture_animations": {
+    "dream_atlas": {
+      "frames": 4,
+      "size": [
+        64,
+        64
+      ],
+      "frametime": 4
+    }
+  },
+  "shared_files": {
+    "sounds.json": [
+      "author.observe",
+      "author.spectator_state",
+      "author.awe",
+      "author.frenzy",
+      "author.psychoanalysis",
+      "author.placate",
+      "author.suggestion",
+      "author.sleep",
+      "author.psychological_invisibility",
+      "author.battle_hypnosis",
+      "author.dream_entry",
+      "author.nightmare",
+      "author.dream_maze",
+      "author.dream_anchor",
+      "author.dragon_form",
+      "author.mind_storm",
+      "author.manipulate",
+      "author.virtual_persona",
+      "author.mind_walk",
+      "author.discern",
+      "author.foreshadow",
+      "author.plot_twist",
+      "author.fate_script",
+      "author.envision",
+      "author.life_creation",
+      "author.sea_of_minds",
+      "author.insight_gain",
+      "author.insight_spent",
+      "author.resist",
+      "author.wake",
+      "author.warning",
+      "author.wingbeat",
+      "author.script_trigger",
+      "author.field_end"
+    ],
+    "lang/en_us.json": [
+      "ability.circle_of_inevitability.author.observe",
+      "ability.circle_of_inevitability.author.spectator_state",
+      "ability.circle_of_inevitability.author.awe",
+      "ability.circle_of_inevitability.author.frenzy",
+      "ability.circle_of_inevitability.author.psychoanalysis",
+      "ability.circle_of_inevitability.author.placate",
+      "ability.circle_of_inevitability.author.suggestion",
+      "ability.circle_of_inevitability.author.sleep",
+      "ability.circle_of_inevitability.author.psychological_invisibility",
+      "ability.circle_of_inevitability.author.battle_hypnosis",
+      "ability.circle_of_inevitability.author.dream_entry",
+      "ability.circle_of_inevitability.author.nightmare",
+      "ability.circle_of_inevitability.author.dream_maze",
+      "ability.circle_of_inevitability.author.dream_anchor",
+      "ability.circle_of_inevitability.author.dragon_form",
+      "ability.circle_of_inevitability.author.mind_storm",
+      "ability.circle_of_inevitability.author.manipulate",
+      "ability.circle_of_inevitability.author.virtual_persona",
+      "ability.circle_of_inevitability.author.mind_walk",
+      "ability.circle_of_inevitability.author.discern",
+      "ability.circle_of_inevitability.author.foreshadow",
+      "ability.circle_of_inevitability.author.plot_twist",
+      "ability.circle_of_inevitability.author.fate_script",
+      "ability.circle_of_inevitability.author.envision",
+      "ability.circle_of_inevitability.author.life_creation",
+      "ability.circle_of_inevitability.author.sea_of_minds",
+      "ability.circle_of_inevitability.author.observation",
+      "ability.circle_of_inevitability.author.emotions",
+      "ability.circle_of_inevitability.author.therapy",
+      "ability.circle_of_inevitability.author.hypnosis",
+      "ability.circle_of_inevitability.author.dreams",
+      "ability.circle_of_inevitability.author.mind",
+      "ability.circle_of_inevitability.author.authorship",
+      "ability.circle_of_inevitability.author.insight",
+      "ability.circle_of_inevitability.author.exposed",
+      "ability.circle_of_inevitability.author.fear",
+      "ability.circle_of_inevitability.author.lucidity",
+      "ability.circle_of_inevitability.author.strain",
+      "ability.circle_of_inevitability.author.persona",
+      "ability.circle_of_inevitability.author.scripted",
+      "ability.circle_of_inevitability.author.resistance",
+      "subtitles.circle_of_inevitability.author.observe",
+      "subtitles.circle_of_inevitability.author.spectator_state",
+      "subtitles.circle_of_inevitability.author.awe",
+      "subtitles.circle_of_inevitability.author.frenzy",
+      "subtitles.circle_of_inevitability.author.psychoanalysis",
+      "subtitles.circle_of_inevitability.author.placate",
+      "subtitles.circle_of_inevitability.author.suggestion",
+      "subtitles.circle_of_inevitability.author.sleep",
+      "subtitles.circle_of_inevitability.author.psychological_invisibility",
+      "subtitles.circle_of_inevitability.author.battle_hypnosis",
+      "subtitles.circle_of_inevitability.author.dream_entry",
+      "subtitles.circle_of_inevitability.author.nightmare",
+      "subtitles.circle_of_inevitability.author.dream_maze",
+      "subtitles.circle_of_inevitability.author.dream_anchor",
+      "subtitles.circle_of_inevitability.author.dragon_form",
+      "subtitles.circle_of_inevitability.author.mind_storm",
+      "subtitles.circle_of_inevitability.author.manipulate",
+      "subtitles.circle_of_inevitability.author.virtual_persona",
+      "subtitles.circle_of_inevitability.author.mind_walk",
+      "subtitles.circle_of_inevitability.author.discern",
+      "subtitles.circle_of_inevitability.author.foreshadow",
+      "subtitles.circle_of_inevitability.author.plot_twist",
+      "subtitles.circle_of_inevitability.author.fate_script",
+      "subtitles.circle_of_inevitability.author.envision",
+      "subtitles.circle_of_inevitability.author.life_creation",
+      "subtitles.circle_of_inevitability.author.sea_of_minds",
+      "subtitles.circle_of_inevitability.author.insight_gain",
+      "subtitles.circle_of_inevitability.author.insight_spent",
+      "subtitles.circle_of_inevitability.author.resist",
+      "subtitles.circle_of_inevitability.author.wake",
+      "subtitles.circle_of_inevitability.author.warning",
+      "subtitles.circle_of_inevitability.author.wingbeat",
+      "subtitles.circle_of_inevitability.author.script_trigger",
+      "subtitles.circle_of_inevitability.author.field_end",
+      "pathway.circle_of_inevitability.author",
+      "hud.circle_of_inevitability.author.insight",
+      "hud.circle_of_inevitability.author.strain",
+      "hud.circle_of_inevitability.author.resolve"
+    ]
+  },
+  "files": {
+    "models/model_fx/author/dream_gate.json": "3eae937026558db0679625efeb278b8095763066cf45473bfb07d8c87eb00196",
+    "models/model_fx/author/dream_lantern.json": "114deb3674dc2cea5e7a31239279b6f42e25e2997c1fbb767ef7722572c733e5",
+    "models/model_fx/author/dream_shard.json": "8cac7dc25c612d1bdbf0f149d1019d9ef54606a4f7c5f119c521417cba8e5a03",
+    "models/model_fx/author/envisioned_blade.json": "e8048a2b02d408df9dfed675a7eaac47b2271d5802c8860716512ec7d18afd5a",
+    "models/model_fx/author/fractured_mask.json": "f28650b3aa8b0225bbd8de8205f5371a74472b4850507dcb2c1a3f668c5db9e2",
+    "models/model_fx/author/imagined_drake.json": "4de7bdd4032f1819cc196421a975ad28a0db9beb4c7b609e81ec650b614cb4f4",
+    "models/model_fx/author/imagined_drake_0.json": "4de7bdd4032f1819cc196421a975ad28a0db9beb4c7b609e81ec650b614cb4f4",
+    "models/model_fx/author/imagined_drake_1.json": "cc328363952c8af364f62aa9576a0aa84d0f6ce5d35885503553645d0cd0ecd6",
+    "models/model_fx/author/imagined_drake_2.json": "4de7bdd4032f1819cc196421a975ad28a0db9beb4c7b609e81ec650b614cb4f4",
+    "models/model_fx/author/imagined_drake_3.json": "9c196e94b947352dd161df1b1d1b1f6a1b8dd0b918206183e9c8f284b9b4e438",
+    "models/model_fx/author/lotus.json": "caae427d4723ac8c414305564205842a73b81f24691f0f763200313d4519072a",
+    "models/model_fx/author/mind_crown.json": "15f7fa61371900ffeb77337751f3e464f9fbdea745f94b6951abf2b3f8ce78a2",
+    "models/model_fx/author/mind_dragon.json": "ef50cb8fac120787fe002244dabb0dfad9706a1d1610f036d35fc6cce23ad494",
+    "models/model_fx/author/mind_dragon_0.json": "ef50cb8fac120787fe002244dabb0dfad9706a1d1610f036d35fc6cce23ad494",
+    "models/model_fx/author/mind_dragon_1.json": "50363c906815c2c00bd84dd35f4104536731a8a3b3a52d035408f07156595fca",
+    "models/model_fx/author/mind_dragon_2.json": "ef50cb8fac120787fe002244dabb0dfad9706a1d1610f036d35fc6cce23ad494",
+    "models/model_fx/author/mind_dragon_3.json": "e665272ec8872fc209829c765f85b55be7a9f86e89e3bbb67f688cb59fc9ec2e",
+    "models/model_fx/author/mind_dragon_incomplete.json": "e82dfc2f772c49bfce0edeab5b2d901804d40e2772213ed6037079394ee8afaa",
+    "models/model_fx/author/mind_dragon_incomplete_0.json": "e82dfc2f772c49bfce0edeab5b2d901804d40e2772213ed6037079394ee8afaa",
+    "models/model_fx/author/mind_dragon_incomplete_1.json": "437e228ec562da246d326f5e19619a2373d1950fada66f73c8a1246aca09df26",
+    "models/model_fx/author/mind_dragon_incomplete_2.json": "e82dfc2f772c49bfce0edeab5b2d901804d40e2772213ed6037079394ee8afaa",
+    "models/model_fx/author/mind_dragon_incomplete_3.json": "e96a910c45303f6459359b2713db91c944c7d63624d5196ba1a753da81e0f01c",
+    "models/model_fx/author/mind_eye.json": "846a1ad64cea9d051a2628456b75fffa6dba67caa17879da3838050c185ef08b",
+    "models/model_fx/author/mind_ripple.json": "5824258a00265a9cb429594723eaad2baf5aa181ac6aa00bde69bc2778474bf5",
+    "models/model_fx/author/observer_mask.json": "dbcb646230175613eb97a04d4d9f764bd5354083924b6ed42fefe08195035d0b",
+    "models/model_fx/author/open_book.json": "97b2f6c9948743c1d7efbe622582a30641b4828d256f1352827ac063989dcdaa",
+    "models/model_fx/author/pendulum.json": "d4a4404edb4a08e83861f0234470a3d95be5d93379c0ad26abf64a0590c88f4b",
+    "models/model_fx/author/persona.json": "368a630b5718cf613bd4c67990e62f87e5b7b1258eda017da74be1885ab30d67",
+    "models/model_fx/author/quill.json": "75361c0cdc4a4f19c74201663c110ca1727ed849b8a14149fd27288a62f5674e",
+    "models/model_fx/author/script_seal.json": "6446e8da5a04ebce20c6bf5e3e70a08fef7c50b553b83c25fdbb6a76add53032",
+    "models/model_fx/author/sea_arch.json": "3b00c11558804790df331894f87db8695f7eefd8df59cdc0e68e6c8dc247f175",
+    "models/model_fx/author/terror_eye.json": "006aa2875d57f138e45c56e9642a79abfd402ef4e642c37291650eb5c3a997bc",
+    "models/model_fx/author/thought_cage.json": "e449e013be58960e8992c4efd989fb7308216ace6b50415b5908d6feed653866",
+    "models/model_fx/author/thought_shard.json": "af4f5cf214eb4ee37d5d6da504f50aef13b65470aefb2f5f6dee5296c35d99c9",
+    "models/model_fx/author/thought_thread.json": "4bbe1be2e249db55fc7df027f3845329f5406633986ab2d9e5571a8a64b586b5",
+    "sounds/author/awe.ogg": "74cb82f5a773097aa294d85559c824121733c1acd5cca305c8f5dff0825184a0",
+    "sounds/author/battle_hypnosis.ogg": "cf3a4743fb366340b66712a0c42d508306835784b7d58bc1476f99552a9cc040",
+    "sounds/author/discern.ogg": "6b0f82ee5271d30d7ab074b03adcf0df58c75efc5bbd5e1d048a54501690eeb3",
+    "sounds/author/dragon_form.ogg": "5cac791f7bc1bd5ec1fc84a82b9276f69e869b4576eb16aa16d16d8d4dbeb663",
+    "sounds/author/dream_anchor.ogg": "cb32f02cf336f0a99da19fb4675cfb339f3179e05b79e6e4272312fce7911520",
+    "sounds/author/dream_entry.ogg": "f6c403d37298a346c02055c11ea85be9724e3115c2460f51bd2309eb720400e5",
+    "sounds/author/dream_maze.ogg": "d0463772a9a6692c0be8be96bf26eee83df031a35f3da6ff9d84ad81e104aee8",
+    "sounds/author/envision.ogg": "8cd2bf9d60cf81ae6aa28dd450a34ebd4fc7f9a8f8d24da2ba1abd774dedafea",
+    "sounds/author/fate_script.ogg": "7ad6080c1bc403d6852cd034a3ecb5e927a6b1abf9f5bce6f7ffa322de034b76",
+    "sounds/author/field_end.ogg": "2420f8db9ca7248d94df0b2f61db8e44957227b80fa8cf0d7befefc53ca37ea5",
+    "sounds/author/foreshadow.ogg": "43dd30c20026d94262a9284c2a8165375f2336edb961e8bff122f9bee0824b71",
+    "sounds/author/frenzy.ogg": "618abd154044b7cb27f3e446148963c55ee6c8fcdc3a8f187f4cb6346849f7d2",
+    "sounds/author/insight_gain.ogg": "bb8122a7c76b3b9e1e1974057b2b951034eee531ea9dda8e64162469c39ca2ca",
+    "sounds/author/insight_spent.ogg": "31c80f51185077ddf6a994e27d99beb5b474d7b29ab1b786741f8fc58178fb8d",
+    "sounds/author/life_creation.ogg": "cdc02abe372c757389a0504365b387bc588b62698e64aef4b9139031c5ba4d36",
+    "sounds/author/manipulate.ogg": "2ff7fa5960d5aca1e30bb18fac26b4f804e84bd5b6b94adf12087984a64cc938",
+    "sounds/author/mind_storm.ogg": "3241333d57e5e71fec26599de1d1f47985b2f73af3fa609b2f1e6b88bf4bbf4e",
+    "sounds/author/mind_walk.ogg": "5776c39b6af0a12fdce9ab7db2048f80032b7fed1faa9d9ab265f33605c83189",
+    "sounds/author/nightmare.ogg": "2b124e035d88e5b72d512f02c87fd0850b31aae50368614de496c3aa72406771",
+    "sounds/author/observe.ogg": "591329bcdbf70c92e6084ffb461d5ef29066bb8a537645e0f616d8470dee54c4",
+    "sounds/author/placate.ogg": "d7cfde3ba50d23d0d9e16ffa71b0bdbb3a4af7e2cb97418a8dff48679e96e866",
+    "sounds/author/plot_twist.ogg": "86906a56b5d8d6760c2722a39ca684f04ecdf645f10b7fcb05207a6f5c9b5473",
+    "sounds/author/psychoanalysis.ogg": "d16dad0cb877c5ba3cd8534b4eafb9b87d1f63e6d829ddb212814124b32fd26b",
+    "sounds/author/psychological_invisibility.ogg": "5ef2f78e0c7f218968e2399ba59f5a5fbb6dce545d62b8d862f53d59d92d05ca",
+    "sounds/author/resist.ogg": "1f859fa175b3693b37ddc8ba38e3686c68e0a453c25769a9b92e377e743b1f89",
+    "sounds/author/script_trigger.ogg": "9ec0565c9ed21d4e49687d0bfad18af438d1f090749613825ba6820e285baf39",
+    "sounds/author/sea_of_minds.ogg": "455226333c8f7fb793d68e96a6f59c7098a8edec68fe21ef585a928b980f06fe",
+    "sounds/author/sleep.ogg": "0b97af92774afdce84cb85cd9850b08235f134fc0c6ec9ddcb1b177719f201da",
+    "sounds/author/spectator_state.ogg": "a39e8de8c81e191c40d8c0921440f91462d7f986ae5b3e26fa31f08a895052c5",
+    "sounds/author/suggestion.ogg": "f8cd26d6f60b02ba54bf3b337ae9fb2b16d38b6be8919187ba1163c35d8d4043",
+    "sounds/author/virtual_persona.ogg": "d339b0b5001736796aa3b350a4574b1891563eb2cb21b1aab76a100d171179ec",
+    "sounds/author/wake.ogg": "e78f9df3ce28d3b88fcfd6c9aefa62fed52ad5ff026b3824948ac2f87ee18348",
+    "sounds/author/warning.ogg": "812a7ef2bb7350b587b3798e8546d4259e6e564c7afa3c9f2363db4ed7d8da5e",
+    "sounds/author/wingbeat.ogg": "0f42abe45bbfb58848d1142c1bd8fc4939b4ebfa65fa2aec81c67ec04e407cd3",
+    "textures/gui/ability_menus/author/authorship.png": "4ecb5471a4d703774310145ac26c67078c5df65b0b13d6230ccca08dc636b013",
+    "textures/gui/ability_menus/author/awe.png": "2e7261bbad68ec8e1827618f279fc535e9de51b662a938114fbf62a86cfb0593",
+    "textures/gui/ability_menus/author/battle_hypnosis.png": "ae434b51962f76eb4dfc3aa4d219b5057ae6a85481bd6cbef143f547a562cf62",
+    "textures/gui/ability_menus/author/discern.png": "207a2e5b0c4b64412c82a2a9afbaaf5ae0fff9986ed6d7213af6af96f2cda6d9",
+    "textures/gui/ability_menus/author/dragon_form.png": "78e22d8c0f9c32f299e2ed89ace45dfe8bfc17006749234ef1a7535838f2b0e3",
+    "textures/gui/ability_menus/author/dream_anchor.png": "a67efe8df6169b267da9125a211dfee8c9125b415b5304bff60317e89a1d3226",
+    "textures/gui/ability_menus/author/dream_entry.png": "61b0749e25f8381a6498ea4f3f227d446d32bf96d33950c0a81c5cd5215a47d9",
+    "textures/gui/ability_menus/author/dream_maze.png": "96d9cb14207737f8896a7b8a0f86eb5071cfdf74b4d80787dafcddbc8018a559",
+    "textures/gui/ability_menus/author/dreams.png": "da770f21efc5c1c1ae0a9468601b1086c39f8aa9a05d1e7dcb9374a96b6ddf6f",
+    "textures/gui/ability_menus/author/emotions.png": "2e7261bbad68ec8e1827618f279fc535e9de51b662a938114fbf62a86cfb0593",
+    "textures/gui/ability_menus/author/envision.png": "77a6d31a33adcbc3a587f41feca1f4c0b9d8cacfa9e7e41fdd5a8335e1b5317c",
+    "textures/gui/ability_menus/author/fate_script.png": "35699f73a810c2b5958b4fd93e25ae9c7bc2ad43c9f0f873f16bad625dd4d664",
+    "textures/gui/ability_menus/author/foreshadow.png": "b597dc4e97e080d83d87f6403357ff7009b6d01457f49224608b85bc6ae99227",
+    "textures/gui/ability_menus/author/frenzy.png": "a8bc095097c0bc6ec271c81e09b3eac7dd354b3f1efeaafbe5f00bcb3506f233",
+    "textures/gui/ability_menus/author/hypnosis.png": "a0e9c96883bc27615afedf7913bc7aa195f003a7c0c4c2b7052e10df23ca7079",
+    "textures/gui/ability_menus/author/life_creation.png": "9175b1f9bff3b1d782db4f6c6783a4d231bc73479baed215f450b30dcc15f662",
+    "textures/gui/ability_menus/author/manipulate.png": "82bc35f900f77ef0329156b18f747d7a7a5b8d16a1481f953c35e7f58b5c36ae",
+    "textures/gui/ability_menus/author/mind.png": "8f1db7982856c958111632343e72d7c53879d14ae90f69faea24b94b2e99a792",
+    "textures/gui/ability_menus/author/mind_storm.png": "2677fe09d82e2ac93041d8fbef627e2fd729f3e0713233dd882467236f8baf05",
+    "textures/gui/ability_menus/author/mind_walk.png": "1e18870c5fec41d198990ca856165e18167977ca5a903237cb8ad883b4e17766",
+    "textures/gui/ability_menus/author/nightmare.png": "594a21da5a2b21105aee133c2371a0909a9f58a784616ff25aeba21abfa8fa36",
+    "textures/gui/ability_menus/author/observation.png": "a3f90108643db86e888a148537879ff127f32a172c3ba2669cdd7623e6bdad15",
+    "textures/gui/ability_menus/author/observe.png": "c1d17ef10732cca4c663eb8e425c5571a7664343502eaeed38678daf1c8aef66",
+    "textures/gui/ability_menus/author/placate.png": "df74aaca31464a860441167525c98c3149c2166609cc1c79c370fe6a4ee41a56",
+    "textures/gui/ability_menus/author/plot_twist.png": "0e5a41de48f579b39c64c2d638bfab6165c2c7344538991d887da0041aeac60f",
+    "textures/gui/ability_menus/author/psychoanalysis.png": "df2982265dcdc40e946ecf9dbb42f604deb358a8395858f3e404fe7b63d53a6a",
+    "textures/gui/ability_menus/author/psychological_invisibility.png": "c1adae83d0ba2c1235ac6832ff89f4408405ab85f83ed5a5ffd31697ad720ef8",
+    "textures/gui/ability_menus/author/sea_of_minds.png": "3320d1a5c8d21393a5ed6720732d48e6d8a6fd12fdccb5b76960f9a1d929ba2b",
+    "textures/gui/ability_menus/author/sleep.png": "092dd20bbb3c0623653fd7aac634125e3dc8205797e10d2d5b80402cafb28743",
+    "textures/gui/ability_menus/author/spectator_state.png": "2c9d5557881a43aa3e34838b72bf29afaa31c0096a83ea547686696ccde8a6c4",
+    "textures/gui/ability_menus/author/suggestion.png": "5349634d406fd84996f52619b0982081e85f342e50fd3e2bbc3e956565a25c00",
+    "textures/gui/ability_menus/author/therapy.png": "9b6a6a590a07d2153ee231da49145e357dc5025b2cc758a025812d5e873a31c1",
+    "textures/gui/ability_menus/author/virtual_persona.png": "147fb33875f801158d7956db1ec5453af4a21d6117e565e63c5d241ff6a4dc96",
+    "textures/gui/author/awe.png": "fc8b47407f93238237ca7374481166d05fe2ca3d4483b4d770a24f7e653565ac",
+    "textures/gui/author/battle_hypnosis.png": "f7edd978a3c7b934d65c543898850b136b584614120292a1bab654b7e6c40d9a",
+    "textures/gui/author/discern.png": "68c01f0d0fbf0472ca9afd3eabf1a34b99309fa6a49e8acbb8fa621630c42e4c",
+    "textures/gui/author/dragon_form.png": "04b64ba9e1c89d3d1ad8fd94869b39372667a81b80dd0494391504a7cc2091d2",
+    "textures/gui/author/dream_anchor.png": "b7cc91f9729ea70bf3b7be4abfd0c4387657eb08eb20f4158f900b210fd480d1",
+    "textures/gui/author/dream_entry.png": "3b21c20b90402b29eeec523d226592d466a0a1028e79d8fdcb1e3fa20e0d82dd",
+    "textures/gui/author/dream_maze.png": "240c19eb7dd1c87aee6e4a74df9c07dc630d7d85ed224d4662b8db3ad85b9c78",
+    "textures/gui/author/envision.png": "9799cd6788e0be8e4f0f616981a346743160881f998ae1ae885b361d6efc933c",
+    "textures/gui/author/exposed.png": "d93366d032d43166e92e16b17a87e3ca482259d8825f4504327b5ab18111c1ac",
+    "textures/gui/author/fate_script.png": "86a50de571755fc2e89ab891497b94c39db18f4ccaf9115691c141573149a90c",
+    "textures/gui/author/fear.png": "fc8b47407f93238237ca7374481166d05fe2ca3d4483b4d770a24f7e653565ac",
+    "textures/gui/author/foreshadow.png": "42fbbdc888136b30203f1b07c039c223a1e2b9ab10a2f8e18ff1d2039ba1bc85",
+    "textures/gui/author/frenzy.png": "8fb12e005401882ddce2a06cc56ae3d68e7c6eb1c988504a11911a9baf3950d9",
+    "textures/gui/author/insight.png": "68c01f0d0fbf0472ca9afd3eabf1a34b99309fa6a49e8acbb8fa621630c42e4c",
+    "textures/gui/author/insight_0.png": "e65ebfaade4697654939bc77c102822bef703ee82f0a56f8831ee01899770d3e",
+    "textures/gui/author/insight_1.png": "e65799c6b84f68ab0c601908677e756d99a0807290c67a4cdd641f47a8214d72",
+    "textures/gui/author/insight_2.png": "df5305829f4efe4bd3a0f7c6ab3c7c1d4a4cabc02d288d98e09f1602ab61d3fe",
+    "textures/gui/author/insight_3.png": "e6f07ed833625b5866128d47ac6882b86354ae0e05ce2e0ac5ebd8a23ebea48d",
+    "textures/gui/author/insight_4.png": "17357fa675a03546cd5a4118d0ef53f05244e5fe2c368151a5bf4e00dc0c8985",
+    "textures/gui/author/insight_5.png": "921a454a9c238f37b72dc2d3aecd12317c2ed4ae3811c96d4d5dd827c9a48a49",
+    "textures/gui/author/life_creation.png": "0597afb2e9435903ddeb49e9a56f4fff1a73e43ca2c6e46a0d8b2b8b67d2fea5",
+    "textures/gui/author/lucidity.png": "62bfa33a01faf61f5feff1f1d6fe3d2b200cd1d78cd4ca9e183688a1b0e5e507",
+    "textures/gui/author/manipulate.png": "3bcebde02996481854658ddb8736aaae957a42a34cb0fe802419b79c7c7f741f",
+    "textures/gui/author/mind_storm.png": "17af59cb3732ce956ac30184fe06b504a5f52373c827ceefea13cc065bcb7806",
+    "textures/gui/author/mind_walk.png": "0d649c3b84634ef3c0b2c21b9c578dccc9056840975b7fd65844497542a25b53",
+    "textures/gui/author/nightmare.png": "22dd0702f41a77619da28018b452ea095edf39a560482a819cf4aab66ff7d14e",
+    "textures/gui/author/observe.png": "9feab6555318b4db2db76ce5deabaa29e45b9e05c2112a616c23768d67bf3b71",
+    "textures/gui/author/persona.png": "84230b4f48705a2c39e49cf84cf3709071a3a6fe301e5c27fa7d9f2deab46f7e",
+    "textures/gui/author/placate.png": "b290aa175f1452632a538a75a642d7a27c940cd5f32caeb983ffe8325f14b4e9",
+    "textures/gui/author/plot_twist.png": "2c4cfcb677cab137ca073867ce92b1d6adb97135dc99439672d3c25a0a945190",
+    "textures/gui/author/psychoanalysis.png": "3b6f92bc213e977297bd3f67de94298d8bafc44151ea3ab1e3a269b57bf145cc",
+    "textures/gui/author/psychological_invisibility.png": "32b442da658039ecb8de78645e80049f7ad43009adfb75a7e6ac49913a6e25ff",
+    "textures/gui/author/resistance.png": "dcd9a6b11458c34305e9b7e72c1fe638edcb7a0369b4dbec93a7eeb8ae525c9d",
+    "textures/gui/author/scripted.png": "6a6be52835ed2a5ef92ea698dc1f7f3838fc73e1954b8a2a22f557dfaa0fff16",
+    "textures/gui/author/sea_of_minds.png": "82e3689c02f184519571fc66de516f24110343e09eb4be5c5200503fbc0c056a",
+    "textures/gui/author/sleep.png": "84bb0a3f78be881f30d094c68a988b372c59b06eecafaa71c12dcf126a301827",
+    "textures/gui/author/spectator_state.png": "e0001e3f7def7de3df95f5049a2bc8d3649bc86c24968b316e8c47f67416179b",
+    "textures/gui/author/strain.png": "9f483e639644c72cbee032f05a5ac5a8185c9c6f1451ed167a5a320efb5936c8",
+    "textures/gui/author/suggestion.png": "4df32a3c56c66907a7cc30c1014061d2c97e9d2a6f766c0f95076462c174b727",
+    "textures/gui/author/virtual_persona.png": "84230b4f48705a2c39e49cf84cf3709071a3a6fe301e5c27fa7d9f2deab46f7e",
+    "textures/gui/pathway_icons/author.png": "9feab6555318b4db2db76ce5deabaa29e45b9e05c2112a616c23768d67bf3b71",
+    "textures/model_fx/author/dream_atlas.png": "db72446a5b0c42b8a1ecce3bef172bb755b8ee0ccd4a8e485b7d9f226c95a01b",
+    "textures/model_fx/author/dream_atlas.png.mcmeta": "8709c2cb977c449f9f4ce93b0d0f96afa75d8c9d7dae4b2ca57a9e11eb3f68f6",
+    "textures/model_fx/author/mind_atlas.png": "500692f94c741910d922d049df8125614b4e0b536e859b23ce4531fdb04792dd",
+    "textures/particle/fx/author/dream_shard.png": "74e9b5720b7bc738024cd08700ac5baf02bec97640648bcad555e1e31006fa06",
+    "textures/particle/fx/author/eye.png": "a1ff0740e14930a92d08be1580de84d5182754233f7774f6623cf9da814b46a4",
+    "textures/particle/fx/author/ink.png": "fa8656ac37d6c1b2fffc632f4747e7bb9d0ecaee065d73a122a1f4f4326ccb84",
+    "textures/particle/fx/author/page.png": "1ff285baf1a6d7bc96477205e7f34d8b2cfce46f2b72f40310d6ddab9e2b46d4",
+    "textures/particle/fx/author/quill_star.png": "6281c1471e4c4553c90c979253fadf509ae8c83a9e91e35910bcb4cf316c1b23",
+    "textures/particle/fx/author/ripple.png": "f9ae2aab848f9c888b99d2907f31cfa200f05f301450a3efaa2991478c5f2b09",
+    "textures/particle/fx/author/scale.png": "bbcdf50666e4d727e08253d41582068094406e4ccbe992f385949c5904211bc5",
+    "textures/particle/fx/author/spiral.png": "b1834fe3452ff1cf0f5a873ee967f58a7fef0dfee88efebeb180914d95d47bea",
+    "textures/particle/fx/author/thought.png": "fe13d818b43ac3d08822d6e5f13e10ddc16b97fce0e1f496568fc69386c01eb8",
+    "textures/particle/fx/author/thread.png": "97dc010685eed74e83d991941c290ae89f8e6a3f12d1d2ff7bba616d5d6dd862"
+  }
+}
