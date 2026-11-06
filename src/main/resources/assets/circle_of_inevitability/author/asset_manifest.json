@@ -3,7 +3,7 @@
   "namespace": "circle_of_inevitability",
   "pathway": "Author",
   "source_design": "docs/AUTHOR.md",
-  "scope": "Design and assets with sound registration. No playable Author abilities or pathway registration.",
+  "scope": "Registered Author pathway with all 26 playable abilities, connected visual assets and sounds.",
   "abilities": [
     "observe",
     "spectator_state",

@@ -87,6 +87,13 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Author", 1, "Observation", 9, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,1,false)),
+            new Ability("Author", 2, "Emotions", 8, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,2,false)),
+            new Ability("Author", 3, "Therapy", 7, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,3,false)),
+            new Ability("Author", 4, "Hypnosis", 6, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,4,false)),
+            new Ability("Author", 5, "Dreams", 5, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,5,false)),
+            new Ability("Author", 6, "Mind", 4, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,6,false)),
+            new Ability("Author", 7, "Authorship", 1, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,7,false)),
             new Ability("White Angel", 1, "Hymn", 9, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,1,true)),
             new Ability("White Angel", 2, "Light", 8, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,2,true)),
             new Ability("White Angel", 3, "Theurgy", 7, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(p,level,sl,3,true)),

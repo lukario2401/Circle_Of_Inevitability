@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.entity.living.LivingChangeTargetEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
-import net.minecraftforge.event.entity.living.LivingHurtEvent;
+import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
@@ -40,8 +40,8 @@ import java.util.function.Predicate;
  * a player's screen goes dark (status/Blind) and a mob forgets what it was hunting and picks no one.
  * Limp (LIMP): it cannot attack or use abilities, jump or sprint, and moves very slowly; it is not woken by blows.
  *
- * Putting something to sleep again never makes it shorter; a new kind replaces the old one. The root part is
- * root/Root's, so wake(...) also lifts a root of the same kinds that something else put on it at the same time.
+ * Putting something to sleep again never makes it shorter; a new kind replaces the old one. Its named root
+ * lease is removed on waking without releasing another ability's restrictions.
  * Saved with the entity (the root too).
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
@@ -64,15 +64,25 @@ public final class Slumber {
 
     private Slumber() {}
 
+    public static boolean isImmune(LivingEntity target) {
+        if (!target.isAlive() || target instanceof Player p && (p.isCreative() || p.isSpectator())) return true;
+        for (var rule : IMMUNE) if (rule.test(target)) return true;
+        return false;
+    }
+
     // =========================
     // API
     // =========================
 
     /** False (and nothing happens) when it cannot be put to sleep: dead, a creative player, or immune. */
     public static boolean put(LivingEntity target, int ticks, Kind kind) {
+        return putOwned(target, ticks, kind, "");
+    }
+
+    /** Optional ownership token lets a caller end only the sleep it placed. */
+    public static boolean putOwned(LivingEntity target, int ticks, Kind kind, String owner) {
         if (target.level().isClientSide() || ticks <= 0 || !target.isAlive()) return false;
-        if (target instanceof Player player && (player.isCreative() || player.isSpectator())) return false;
-        for (Predicate<LivingEntity> immune : IMMUNE) if (immune.test(target)) return false;
+        if (isImmune(target)) return false;
 
         long now = target.level().getGameTime();
         CompoundTag tag = target.getPersistentData().getCompoundOrEmpty(TAG);
@@ -80,16 +90,19 @@ public final class Slumber {
         tag.putLong(UNTIL, until);
         tag.putString(KIND, kind.name());
         tag.putInt(HITS, 0);
+        tag.putString("owner", owner);
         target.getPersistentData().put(TAG, tag);
 
         int left = (int) (until - now);
         if (kind == Kind.LIMP) {
-            Root.apply(target, left, RootRestriction.ATTACK, RootRestriction.ABILITIES, RootRestriction.JUMP,
-                    RootRestriction.USE_ITEMS);
+            Root.removeOwned(target, TAG);
+            Root.applyOwned(target, TAG, left, java.util.EnumSet.of(RootRestriction.ATTACK,
+                    RootRestriction.ABILITIES, RootRestriction.JUMP, RootRestriction.USE_ITEMS));
             target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, left, 3, false, false));
             target.setSprinting(false);
         } else {
-            Root.apply(target, left, RootRestriction.EVERYTHING);
+            Root.removeOwned(target, TAG);
+            Root.applyOwned(target, TAG, left, RootRestriction.EVERYTHING);
             if (target instanceof Player) Blind.apply(target, left);
             if (target instanceof Mob mob) {
                 mob.setTarget(null);
@@ -98,6 +111,10 @@ public final class Slumber {
             }
         }
         return true;
+    }
+
+    public static String owner(Entity target) {
+        return target.getPersistentData().getCompoundOrEmpty(TAG).getStringOr("owner", "");
     }
 
     /** Asleep: SLEEP, DEEP or ETERNAL. */
@@ -152,11 +169,10 @@ public final class Slumber {
     // =========================
 
     private static void lift(LivingEntity target, Kind kind) {
+        Root.removeOwned(target, TAG);
         if (kind == Kind.LIMP) {
-            Root.remove(target, RootRestriction.ATTACK, RootRestriction.ABILITIES, RootRestriction.JUMP, RootRestriction.USE_ITEMS);
             target.removeEffect(MobEffects.SLOWNESS);
         } else {
-            Root.remove(target, RootRestriction.EVERYTHING.toArray(new RootRestriction[0]));
             if (target instanceof Player) Blind.remove(target);
         }
     }
@@ -188,12 +204,13 @@ public final class Slumber {
             kind = Kind.SLEEP;
         }
         entity.getPersistentData().remove(TAG);                           // its time is up (the root ran out with it)
+        lift(entity, kind);
         woke(entity, kind);
     }
 
     // a blow wakes a light sleeper, and a deep one after DEEP_HITS
     @SubscribeEvent
-    public static void onSlumberHurt(LivingHurtEvent event) {
+    public static void onSlumberHurt(LivingDamageEvent event) {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide() || event.getAmount() <= 0f) return;
         Kind kind = kind(entity);

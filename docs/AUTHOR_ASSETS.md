@@ -1,8 +1,8 @@
 # Author / Spectator asset collection
 
 The [ability design](AUTHOR.md) covers Spectator (9) through Visionary (0), with **Author** as the
-Sequence 1 class title. This change supplies that design and its resources, plus registered sound events.
-It does **not** register a selectable pathway or implement the 26 playable abilities.
+Sequence 1 class title. All 26 abilities are now playable through the registered Author pathway,
+with these resources connected through `AuthorFx` and registered sound events.
 
 ## Review
 
@@ -13,7 +13,7 @@ It does **not** register a selectable pathway or implement the 26 playable abili
 
 These are software renders of the shipped geometry. Model scales are fitted independently in the preview.
 Client-side glow, final placement, player/model fit, flight motion, animation timing and sound mixing need
-an in-game review when the gameplay FX class is connected. The dragons are ModelFx cube props with
+an in-game review with the connected gameplay FX class. The dragons are ModelFx cube props with
 interpolatable wing poses, not living entity rigs or a replacement player renderer.
 
 ## Inventory
@@ -62,7 +62,7 @@ The complete dragon has a halo and larger wings; the incomplete form has shorter
 The imagined drake has reduced wing span; use a smaller runtime scale for the summoned creature.
 
 ```java
-// Integration examples for the later AuthorFx implementation.
+// ModelFx integration patterns used by AuthorFx.
 ModelFx dragon = ModelFx.of("author/mind_dragon")
         .frames(4).smooth().pivot(8, 0, 8).glow().unshaded();
 ModelFx incomplete = ModelFx.of("author/mind_dragon_incomplete")

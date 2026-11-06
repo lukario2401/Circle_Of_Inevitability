@@ -33,7 +33,7 @@ def generate(root,skip_audio=False):
         files.extend(p for p in (root/folder).rglob('*') if p.is_file())
     files.append(root/'textures/gui/pathway_icons/author.png')
     manifest={'schema_version':1,'namespace':NS,'pathway':'Author','source_design':'docs/AUTHOR.md',
-              'scope':'Design and assets with sound registration. No playable Author abilities or pathway registration.',
+              'scope':'Registered Author pathway with all 26 playable abilities, connected visual assets and sounds.',
               'abilities':ABILITIES,'sequences':SEQUENCES,'basic':BASIC,
               'wheels':{'author_'+k:v for k,v in WHEELS.items()},
               'key_icons':dict(enumerate(KEYS,1)),'status_icons':STATUSES,'particles':PARTICLES,

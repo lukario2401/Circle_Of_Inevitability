@@ -27,6 +27,7 @@ public class PathwayHudIcon {
 
     static {
         ICONS.put("Thunder God", icon("thunder_god"));
+        ICONS.put("Author", icon("author"));
         ICONS.put("White Angel", icon("white_angel"));
         ICONS.put("Omniscient Eye", icon("omniscient_eye"));
         ICONS.put("Attendant Of Mysteries", icon("attendant_of_mysteries"));

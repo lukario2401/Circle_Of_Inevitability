@@ -27,7 +27,7 @@ def package(output):
     start=java.index('    /** Author (Spectator)');end=java.index('    /** White Angel',start)
     entries['integration/ModSounds_AUTHOR.txt']=java[start:end].encode()
     entries['README.txt']=(
-        'Author / Spectator design and assets. No playable abilities are implemented.\n'
+        'Author / Spectator asset handoff. All 26 abilities are implemented in the repository; Java gameplay is not included in this archive.\n'
         'Copy owned assets into src/main/resources/assets/circle_of_inevitability/.\n'
         'MERGE sounds.json and lang/en_us.json; do not replace the project files.\n'
         'Register sound events using integration/ModSounds_AUTHOR.txt in ModSounds.\n'

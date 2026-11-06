@@ -73,6 +73,7 @@ public final class Root {
     public static boolean SHOW_PARTICLES = true;
 
     private static final String TAG = "circle_of_inevitability_root"; // restriction name -> ticks left
+    private static final String OWNED = "circle_of_inevitability_owned_roots";
     private static final Identifier MOVE_MODIFIER = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "root_move");
     private static final Identifier JUMP_MODIFIER = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "root_jump");
 
@@ -151,12 +152,46 @@ public final class Root {
 
     public static void remove(LivingEntity target) {
         target.getPersistentData().remove(TAG);
+        target.getPersistentData().remove(OWNED);
+        updateModifiers(target);
+    }
+
+    /** A restriction lease whose cleanup cannot release another spell's restrictions. */
+    public static void applyOwned(LivingEntity target, String source, int ticks, Set<RootRestriction> restrictions) {
+        if (target.level().isClientSide() || ticks <= 0) return;
+        CompoundTag sources = target.getPersistentData().getCompoundOrEmpty(OWNED);
+        CompoundTag lease = sources.getCompoundOrEmpty(source);
+        for (var restriction : restrictions) if (!isImmune(target, restriction)) {
+            String key = restriction.name();
+            lease.putInt(key, Math.max(lease.getIntOr(key, 0), scaledTicks(target, restriction, ticks)));
+        }
+        if (lease.isEmpty()) return;
+        sources.put(source, lease);
+        target.getPersistentData().put(OWNED, sources);
+        updateModifiers(target);
+        if (has(target, RootRestriction.MOVE)) holdInPlace(target);
+    }
+
+    public static void removeOwned(LivingEntity target, String source) {
+        CompoundTag sources = target.getPersistentData().getCompoundOrEmpty(OWNED);
+        sources.remove(source);
+        if (sources.isEmpty()) target.getPersistentData().remove(OWNED);
+        else target.getPersistentData().put(OWNED, sources);
         updateModifiers(target);
     }
 
     public static void remove(LivingEntity target, RootRestriction... restrictions) {
+        CompoundTag sources = target.getPersistentData().getCompoundOrEmpty(OWNED);
+        for (String source : Set.copyOf(sources.keySet())) {
+            CompoundTag lease = sources.getCompoundOrEmpty(source);
+            for (var restriction : restrictions) lease.remove(restriction.name());
+            if (lease.isEmpty()) sources.remove(source);
+            else sources.put(source, lease);
+        }
+        if (sources.isEmpty()) target.getPersistentData().remove(OWNED);
+        else target.getPersistentData().put(OWNED, sources);
         CompoundTag tag = rootTag(target, false);
-        if (tag == null) return;
+        if (tag == null) { updateModifiers(target); return; }
         for (RootRestriction restriction : restrictions) tag.remove(restriction.name());
         if (tag.isEmpty()) target.getPersistentData().remove(TAG);
         updateModifiers(target);
@@ -168,6 +203,9 @@ public final class Root {
         if (entity instanceof LivingEntity living && isImmune(living, restriction)) return false;
         CompoundTag tag = rootTag(entity, false);
         if (tag != null && tag.getIntOr(restriction.name(), 0) > 0) return true;
+        CompoundTag sources = entity.getPersistentData().getCompoundOrEmpty(OWNED);
+        for (String source : sources.keySet())
+            if (sources.getCompoundOrEmpty(source).getIntOr(restriction.name(), 0) > 0) return true;
         for (BiPredicate<Entity, RootRestriction> hold : HOLDS) {
             if (hold.test(entity, restriction)) return true;
         }
@@ -177,13 +215,17 @@ public final class Root {
     public static boolean isRooted(Entity entity) {
         if (entity == null) return false;
         CompoundTag tag = rootTag(entity, false);
-        return tag != null && !tag.isEmpty();
+        return tag != null && !tag.isEmpty() || !entity.getPersistentData().getCompoundOrEmpty(OWNED).isEmpty();
     }
 
     /** Ticks left for one restriction (0 = not restricted). */
     public static int ticksLeft(Entity entity, RootRestriction restriction) {
         CompoundTag tag = rootTag(entity, false);
-        return tag == null ? 0 : tag.getIntOr(restriction.name(), 0);
+        int left = tag == null ? 0 : tag.getIntOr(restriction.name(), 0);
+        CompoundTag sources = entity.getPersistentData().getCompoundOrEmpty(OWNED);
+        for (String source : sources.keySet()) left = Math.max(left,
+                sources.getCompoundOrEmpty(source).getIntOr(restriction.name(), 0));
+        return left;
     }
 
     // =========================
@@ -255,7 +297,22 @@ public final class Root {
         LivingEntity entity = event.getEntity();
         if (entity.level().isClientSide()) return;
         CompoundTag tag = rootTag(entity, false);
-        if (tag == null) return;
+        CompoundTag sources = entity.getPersistentData().getCompoundOrEmpty(OWNED);
+        if (tag == null && sources.isEmpty()) return;
+
+        for (String source : Set.copyOf(sources.keySet())) {
+            CompoundTag lease = sources.getCompoundOrEmpty(source);
+            for (String key : Set.copyOf(lease.keySet())) {
+                int left = lease.getIntOr(key, 0) - 1;
+                if (left <= 0 || immuneTo(entity, key)) lease.remove(key);
+                else lease.putInt(key, left);
+            }
+            if (lease.isEmpty()) sources.remove(source);
+            else sources.put(source, lease);
+        }
+        if (sources.isEmpty()) entity.getPersistentData().remove(OWNED);
+        else entity.getPersistentData().put(OWNED, sources);
+        if (tag == null) tag = new CompoundTag();
 
         for (String key : Set.copyOf(tag.keySet())) {
             int left = tag.getIntOr(key, 0) - 1;

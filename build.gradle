@@ -34,6 +34,7 @@ minecraft {
         }
 
         register('gameTestServer') {
+            if (providers.gradleProperty('authorTests').isPresent()) { args '--tests', 'circle_of_inevitability:author_*' }
             if (providers.gradleProperty('whiteAngelTests').isPresent()) { args '--tests', 'circle_of_inevitability:white_angel_*' }
             if (providers.gradleProperty('thunderGodTests').isPresent()) {
                 args '--tests', 'circle_of_inevitability:thunder_*'

@@ -1,7 +1,7 @@
 # Author — the Spectator pathway
 
-**Status: ability and mechanic design, with generated assets. Playable Java abilities are not implemented.**
-The pathway identifier proposed for gameplay is `"Author"`, resource prefix `author`.
+**Status: all 26 abilities implemented, with server gameplay, progression, HUD and generated assets.**
+The registered gameplay pathway identifier is `"Author"`, resource prefix `author`.
 Sequence titles: Spectator (9), Telepathist (8), Psychiatrist (7), Hypnotist (6), Dreamwalker (5),
 Manipulator (4), Dream Weaver (3), Discerner (2), Author (1), Visionary (0).
 These titles and the mind, dream, dragon and envisioning themes follow Lord of the Mysteries;
@@ -46,7 +46,7 @@ The last three refill every tick, so their costs are descriptive; cooldowns, slo
 after each uninterrupted second of looking at that target, up to three per cast. Range is 24 blocks;
 blocks, concealment, changing target or taking damage interrupt the channel. Moving is allowed.
 No automatic attack, chat, inventory or private player information is revealed. The HUD shows health,
-active combat statuses, mob aggression and the caster's own five Insight pips for the aimed target only.
+sleep/Resolve indicators, mob aggression and the caster's own five Insight pips for the aimed target only.
 
 At three pips the target is Exposed to this caster. Selected powers require and consume pips as listed.
 Insight grants no universal damage multiplier. Twelve seconds without a gain starts decay of one pip
@@ -54,8 +54,8 @@ every four seconds. Maximum eight target records per caster; evict the least rec
 checks `Spells` targetability and friendship. Higher sequence does not bypass concealment. Insight cannot
 be transferred, farmed from allies, or shared by another Author.
 
-**Resistance:** ordinary hostile mobs receive the listed control duration. Bosses (boss tag, boss encounter
-entity, or maximum health above 150) and players never become puppets. Their sleep/hold is at most 1.5 s,
+**Resistance:** ordinary hostile mobs receive the listed control duration. Bosses (vanilla dragon, wither, warden, elder guardian,
+or maximum health above 150) and players never become puppets. Their sleep/hold is at most 1.5 s,
 fear at most 2 s, and control-based attack reduction at most 20%. A stronger Beyonder halves these durations
 again. Existing immunity hooks always win. Mental damage still uses normal damage/resistance handling.
 Do not use true damage merely because an attack is mental.
@@ -128,7 +128,7 @@ cooldowns and cannot trigger from reflected, scripted, environmental or self dam
 | `plot_twist` Plot Twist | 1 | 14,000 / 40 s | Self script: the next direct hostile hit is reduced by 50%, then you step up to 6 blocks backward to a safe grounded point. No destination means reduction only. Does not restore health, resurrect or bypass teleport wards. |
 | `fate_script` Fate Script | 1 | 16,000 / 45 s | Spend 5 Insight, 24-block enemy. The next direct hit you land within 10 s adds 50 mental damage and consumes the script. No execute threshold or unavoidable hit; shields, range, concealment and defenses still apply. |
 | `envision` Envision | 0 | 18,000 / 25 s | Imagine a jade/gold blade for 12 s: ordinary melee hits add 20 damage at most once/0.5 s. Each third landed hit emits a 6-block, 24-damage forward thought slash. One weapon; no real item/drops, no automatic recasts. |
-| `life_creation` Life Creation | 0 | 22,000 / 50 s | One imagined drake for 20 s, 80 health, attacks for 14 every 1.5 s. Non-breeding, no drops/XP, cannot be captured, leashed or recursively summoned. Despawns outside 32 blocks or on owner cleanup. Asset is a ModelFx shell; later implementation needs server summon AI and ownership. |
+| `life_creation` Life Creation | 0 | 22,000 / 50 s | One imagined drake for 20 s, 80 health, attacks for 14 every 1.5 s. Non-breeding, no drops/XP, cannot be captured, leashed or recursively summoned. Despawns outside 32 blocks or on owner cleanup. Uses an invisible, owned Husk body with a ModelFx drake shell and server-driven movement/attacks. |
 | `sea_of_minds` Sea of Collective Subconscious | 0 | 30,000 / 90 s | 1.5 s warning, then 12-block stationary domain for 12 s. Every 2 s, gain 1 Insight on visible enemies and restore 4 health to allies. At 5 Insight, next pulse spends all 5 for 36 mental damage, at most once per target per domain. One domain; does not repeatedly sleep/possess targets. |
 
 ## Passives and growth
@@ -140,39 +140,50 @@ cooldowns and cannot trigger from reflected, scripted, environmental or self dam
 | 7 | Self-therapy: Author fear/frenzy durations on you are halved, before Resolve. Does not grant general damage resistance. |
 | 6 | Lucid Mind: Author sleep durations on you are halved; Psychoanalysis consumes 2 instead of 3 Insight. |
 | 5 | Dream Recall: your Dream Link persists for 2 s of broken sight instead of 1 s, still bounded by dimension and distance. |
-| 4 | Mental Fortress: 15% less damage from attacks explicitly tagged mental; not all magic. |
+| 4 | Mental Fortress: 15% less damage from Author mental attacks; unrelated magic is unaffected. |
 | 3 | Dream Weaver: complete dragon form; Dream Maze radius 8 and Anchor duration 12 s. |
 | 2 | Discernment: Insight decay begins after 20 s instead of 12 s. Target limit remains eight. |
 | 1 | Narrative Economy: a successfully triggered script refunds 2 Insight to its target record if it still exists; cannot exceed 5. Plot Twist grants none. |
 | 0 | Visionary: successful domain payoff extends your active Envision by 1 s, capped at 4 extra seconds per cast. |
 
-Native claws remain the only proposed melee change; basic untransformed attacks use the existing weapon
+Dragon claws and the active Envision blade enhance direct melee attacks; other attacks use the existing weapon
 system. None of these passives changes another pathway's globals or grants immunity to unrelated controls.
 
 ## Implementation map and lifecycle
 
-Suggested classes: `author/Author` (G/H/J, dispatch, passives); `AuthorMind` (Insight, Resolve, marks);
-`AuthorHypnosis`, `AuthorDreams`, `AuthorManipulation`, `AuthorAuthorship` (four wheels);
-`AuthorFx` (all models, particles, sounds, HUD and preview command). This separation mirrors the reference classes.
-Connect through `Beyonders`, sequence names, `PathwayAbilities`, `AbilityWheel`, key requirements, pathway icon
-and `SequencePassives` only when gameplay exists; this asset change must not advertise an empty selectable class.
+Implemented classes: `author/Author` (basic abilities, wheels, dispatch and lifecycle), `AuthorMind`
+(Insight, Resolve and owned marks), `AuthorAdvanced` (dragon, scripts, fields and summons), and
+`AuthorFx` (models, particles, sounds and HUD). Registration connects characteristic items, sequence commands,
+all seven key handlers, ability menus, the catalog and the pathway HUD icon. State-dependent entries are
+not copyable: they require the caster's Author Insight store and lifecycle.
 
-Reuse `Spells` for target selection/allies, damage and payment; `Fear`, `Slumber`, `Falter`, `Unnoticed`,
-`Form`, `ConjuredWeapon`, `Marionette`, `Zone`, `Later`, `Physique` and `Cleansing` where contracts match.
-Audit their actual behavior: `Slumber.wake` currently clears restriction kinds that can overlap another source,
-so source-owned sleep/root cleanup is a prerequisite, not something to ignore. Use a dedicated Insight store:
-`Study` automatically amplifies all damage and therefore is not interchangeable with Insight.
+Shared `Root` now supports source-owned restriction leases; `Slumber` uses its own lease so waking does
+not erase unrelated roots. Wake-on-damage runs after damage defenses. Existing `Fear`, `Slumber`, `Falter`,
+`Unnoticed`, `Form`, `Marionette`, `Teleport` and `Cleansing` APIs handle their respective effects. Insight
+is independent of `Study`, which would otherwise amplify all damage.
 
 All gameplay is server authoritative. Index temporary records by caster UUID, target UUID and dimension;
-use the server game clock, per-cast generation IDs, bounded maps and expiration checks. Delayed closures
-re-resolve UUIDs and reject stale generation IDs. A player death, logout, dimension change, pathway change
+use the server game clock, bounded maps and expiration checks. Pending work belongs to the current
+caster state and re-resolves UUIDs before execution. A player death, logout, dimension change, pathway change
 or server stop removes owned fields, links, scripts, models and summons; target death/unload removes its
 records. Do not force-load targets. Sequence loss immediately clears effects whose gate is no longer met.
 Cooldown/Strain remainder is saved as remaining ticks across logout so reconnecting cannot reset them;
 owned effects themselves end. On death keep cooldowns/Strain but end all controls/forms. No static
 Entity/Level references survive server stop. Client receives only its relevant HUD state.
 
-## Gameplay acceptance checks for the later implementation
+## Verification
+
+Run `./gradlew build runGameTestServer -PauthorTests`. Ten dedicated-server scenarios exercise all 26
+abilities, sequence/resource gates, independent Insight, sleep/root ownership, delayed friendship checks,
+cleanse and pathway cleanup, dragon Strain/flight, scripts, grounded travel, puppets and imagined life.
+Test fixtures are isolated vertically and disable random Beyonder mob rolls. Damage fixtures have zero
+armor so numeric assertions check ability amounts; normal gameplay still honors armor and resistance.
+
+The generated assets are connected to gameplay. Client review is still needed for dragon fit, menu readability,
+particle density, subtitles and sound mixing; server tests cannot verify how these render or sound.
+Dragon flight uses the existing Form system and visual shell, without replacing the player's collision box.
+
+## Gameplay acceptance checklist
 
 1. Sequence 9 can afford both G casts; every wheel rejects locked entries without payment; each sequence
    has the listed unlock/passive, and both normal/sneak bindings work.

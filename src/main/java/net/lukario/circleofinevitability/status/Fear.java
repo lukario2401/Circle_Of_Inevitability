@@ -63,6 +63,12 @@ public final class Fear {
 
     private Fear() {}
 
+    public static boolean isImmune(LivingEntity victim) {
+        if (!victim.isAlive() || victim instanceof Player p && (p.isCreative() || p.isSpectator())) return true;
+        for (var rule : IMMUNE) if (rule.test(victim)) return true;
+        return false;
+    }
+
     // =========================
     // API
     // =========================
@@ -70,8 +76,7 @@ public final class Fear {
     /** False (and nothing happens) when it cannot be frightened: dead, itself, a creative player, or immune. */
     public static boolean apply(LivingEntity victim, LivingEntity source, int ticks) {
         if (victim.level().isClientSide() || ticks <= 0 || !victim.isAlive() || source == null || source == victim) return false;
-        if (victim instanceof Player player && (player.isCreative() || player.isSpectator())) return false;
-        for (Predicate<LivingEntity> immune : IMMUNE) if (immune.test(victim)) return false;
+        if (isImmune(victim)) return false;
 
         for (var rule : DURATION) ticks = Math.max(1, (int) Math.round(ticks * Math.max(0, rule.applyAsDouble(victim))));
         long now = victim.level().getGameTime();

@@ -1473,7 +1473,7 @@ Slumber.addWakeListener((entity, kind) -> ...);     // it woke (hurt, time up or
 ```
 
 - Asleep (SLEEP, DEEP, ETERNAL) it is held completely (`Root` EVERYTHING); a player's screen goes dark (`Blind`), a mob forgets what it hunted and picks no one. `put` returns `false` for a creative player, the dead and the immune.
-- Putting it to sleep again never makes it shorter; a new kind replaces the old one. `wake` lifts the root kinds it set, also one that something else set at the same time.
+- Putting it to sleep again never makes it shorter; a new kind replaces the old one. `wake` removes only Slumber's owned root lease; unrelated restrictions remain. Only positive damage after defenses counts as a waking blow. `putOwned(..., owner)` and `owner(entity)` let a pathway identify its own sleep.
 - The look is yours (`KnightOfMisfortuneFx.slumber` and `wake`). Saved with the entity. Used by the Knight Of Misfortune's poems, Dream Invasion, Requiem and Command Spirits.
 
 ### Fear
@@ -2293,6 +2293,12 @@ To add to what Worm Of Time's parasite does, go to "Parasite: what it does" in `
 These were already there and go well with the rest: `Root.apply(target, 80, RootRestriction.EVERYTHING)` holds something in place (see `root/Root.java` for the single restrictions), `Freeze.apply(target, 80)` puts it in ice.
 
 `Root.addHold((entity, restriction) -> ...)`, once in a static block, holds entities as a root would while it says `true`, with no timer and no ring: `Root.has` then answers `true`, so every check of it refuses (the ability keys, teleports, Flaming Jump). `isRooted`, `remove` and `ticksLeft` only know real roots. A `Decree`'s PASSAGE is one.
+
+For independently removable restrictions, use `Root.applyOwned(target, source, ticks, restrictions)`
+with a stable source string and a `Set<RootRestriction>`. `Root.removeOwned(target, source)` ends only
+that source's lease. Immunities, duration scaling and normal root queries include these leases.
+An explicit `Root.remove(target)` clears every timed source; its restriction overload clears those
+restriction kinds across sources.
 
 ### Physique: a Beyonder's body
 

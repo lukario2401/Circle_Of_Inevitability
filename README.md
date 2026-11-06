@@ -86,4 +86,5 @@ Sunbird forms, particles and registered sound cues for the Sun pathway design, w
 
 The [Author / Spectator pathway design](docs/AUTHOR.md) covers all ten sequences and 26 abilities.
 Its [asset collection](docs/AUTHOR_ASSETS.md) includes icons, animated Mind Dragons, dream and authorship
-models, particles, sound cues and previews. This is a design and asset pack; playable Author abilities are pending.
+models, particles, sound cues and previews. All 26 abilities are playable, with Insight, hypnosis, dream fields, Mind Dragon form and authored outcomes.
+Run the dedicated server checks with `./gradlew runGameTestServer -PauthorTests`.
