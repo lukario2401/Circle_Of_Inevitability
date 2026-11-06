@@ -2573,7 +2573,7 @@ Every tool has a worked example in `AttendantOfMysteries.java`:
 | `SpellFx.tether`, `SpellFx.closingRing`, a model that circles over a head (a pivot away from its middle, and `.spin`) | `theftShows`, `flyInto` in `WormOfTime.java` |
 | `Parasite` with `HudTimer`, an upkeep paid once a second | `parasitize`, `parasiteEntered`, `parasiteTick`, `parasiteLeft` in `WormOfTime.java` |
 | `Contagion` (a plague that jumps on, stronger each time) | `plague` in `Apocalypse.java` |
-| `AbilityWheel` (two wheels of spells, a last pick that the fifth stack reuses) | `SILKS`, `CATASTROPHES`, `lastCatastrophe` in `Apocalypse.java` |
+| `AbilityWheel` (silk and catastrophe selection, with nearby mirror charge feeding the chosen catastrophe) | `SILKS`, `CATASTROPHES`, `castDisaster` in `Apocalypse.java`; `feedCatastrophe` in `ApocalypseMechanics.java` |
 | `Zone` that holds once then slows (a snare), that gets worse every second until frozen, one whose size grows with every victim | `laySnare`, `iceAge`, `blackDeath` in `Apocalypse.java` |
 | A line between two points that springs on the first enemy through it, tied with two casts | `tripWeb`, `watchTripLine` in `Apocalypse.java` |
 | `Reel` (a grappling line, a pull to the middle), `DamageLink.share` growing as the web catches more | `webSwing`, `tangle`, `drawInFate` in `Apocalypse.java` |

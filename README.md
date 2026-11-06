@@ -37,6 +37,10 @@ Ops set a player up with the `/soul` command, for example:
 The seven abilities are on G, H, J, K, L, N and M (category "Circle Of Inevitability" in Controls > Key Binds);
 sneak while pressing a key for the second cast. Soul Essence is shown above the hotbar.
 
+Apocalypse now weaves flame, silk and plague into Despair, harvests it with backstabs, prepares mirror
+ambushes and spends mirror charge on chosen catastrophes. See [Apocalypse mechanics](docs/APOCALYPSE.md)
+for timings, combos and the focused server tests.
+
 Summon the animated Sequence 2 Star Dragon boss with `/stardragon summon ~ ~ ~8`, or the hard Sequence 0
 Condenser with `/stardragon summon_condenser ~ ~ ~8`. Their attacks, chains, windups, cooldowns, forms and
 manual controls are documented in [Star Dragon bosses](docs/STAR_DRAGON_BOSS.md).

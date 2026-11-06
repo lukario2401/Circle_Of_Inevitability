@@ -6,7 +6,6 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderM
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbilities;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbility;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpells;
-import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Substitute;
@@ -23,9 +22,8 @@ import net.minecraftforge.fml.common.Mod;
  *
  * Apocalypse's keys are written for any caster (its caster a LivingEntity, its aim the caster's facing, its sneak
  * form read from isShiftKeyDown), so a mob runs the very key a player presses through MobSpells.key, and each entry of
- * its two wheels as an ability of its own (MobSpells.aimedEntry, then the wheels' own afterword: out of the mirror,
- * one more stack). Its stacks are counted as a player's; the fifth calls down a catastrophe its Sequence reaches, at
- * random. ApocalypseMobs.Events runs its mirror world and charges its shards as a player's tick does.
+ * its two wheels as an ability of its own. Affliction weaving, ambushes and mirror-fed catastrophes use the same
+ * rules as players. ApocalypseMobs.Events runs its mirror world and charges its shards as a player's tick does.
  *
  *   1  Fatal Step (9: behind its target; its next blow a backstab), Mirror Shard (9, sneak)
  *   2  Black Flame (8), Mirror Substitute (8, sneak)
@@ -101,7 +99,7 @@ public final class ApocalypseMobs {
         for (Apocalypse.Disaster disaster : Apocalypse.DISASTERS) {
             entry(7, disaster.key(), disaster.name(), disaster.sequence(), disaster.cost(), disaster.cooldown(),
                     Apocalypse.DISASTER_RANGE, true, (mob, sl) -> {
-                        disaster.cast().cast(mob, sl, Spells.aimGround(mob, sl, Apocalypse.DISASTER_RANGE), 1f);
+                        Apocalypse.castDisaster(mob, sl, disaster);
                         return AbilityWheel.Result.DONE;
                     }, (mob, target, sl) -> mob.distanceTo(target) > 6.0);              // not on itself
         }
@@ -122,7 +120,7 @@ public final class ApocalypseMobs {
         MobAbilities.register(ability);
     }
 
-    /** One wheel entry as an ability of its own; once it went off, the wheels' afterword (out of the mirror, a stack). */
+    /** One wheel entry as an ability of its own; once it went off, leave the mirror world. */
     private static void entry(int key, String entry, String name, int sequence, int cost, int cooldown, double range,
                               boolean sight, MobSpells.Entry cast, MobAbility.When when) {
         MobAbility.Cast aimed = MobSpells.aimedEntry(cast);
@@ -131,7 +129,6 @@ public final class ApocalypseMobs {
                 .cast((mob, target, sl) -> {
                     if (!aimed.run(mob, target, sl)) return false;
                     Apocalypse.leaveMirrorWorld(mob, sl);
-                    Apocalypse.addStack(mob, sl);
                     return true;
                 });
         if (sight) ability.sight();
@@ -152,6 +149,7 @@ public final class ApocalypseMobs {
             if (!(event.getEntity() instanceof Mob mob) || !(mob.level() instanceof ServerLevel sl)) return;
             if (!P.equals(Beyonders.pathwayOf(mob))) return;
             Apocalypse.mirrorWorldTick(mob, sl);
+            ApocalypseMechanics.tick(mob, sl);
             if (mob.tickCount % 20 == 0) Apocalypse.chargeShards(mob, sl);
         }
     }

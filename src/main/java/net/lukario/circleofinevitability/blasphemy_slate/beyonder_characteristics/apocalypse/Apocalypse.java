@@ -3,7 +3,6 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.combat.Contagion;
 import net.lukario.circleofinevitability.combat.HudTimer;
 import net.lukario.circleofinevitability.combat.Later;
@@ -17,8 +16,6 @@ import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.root.Freeze;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
-import net.lukario.circleofinevitability.screen.ScreenAnchor;
-import net.lukario.circleofinevitability.screen.ScreenImages;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.DamageLink;
 import net.lukario.circleofinevitability.status.DeathWard;
@@ -46,6 +43,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -76,8 +74,9 @@ import java.util.function.Supplier;
  *
  * Mirror shards (key 1 sneak) charge while enemies stand in front of them: the longer they stand there, the worse
  * it gets for them, and the bigger the shard's blast when key 6 (sneak) sets them all off.
- * Every ability you cast adds a stack (the pictures next to the hotbar); the fifth calls down your last
- * catastrophe around you, 35% harder (below Sequence 3, with none unlocked, a black flame burst: see unleashStacks).
+ * Flame, silk and plague on the same enemy weave Despair. Fatal Step's backstab harvests it to mend you and
+ * charge nearby mirrors. Leaving Mirror World after two seconds prepares a brief melee ambush. Catastrophes
+ * drain nearby shards for extra power, competing with Shatter for their charge. See docs/APOCALYPSE.md.
  * The two wheels are AbilityWheel (menu/): every entry its own Sequence, cost and cooldown, shown on the wheel.
  *
  * The look of every ability is in DemonessFx (see /demonessfx). What is reusable lives outside this class,
@@ -96,18 +95,6 @@ public class Apocalypse {
     // =========================
     // Ability settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks)
     // =========================
-
-    // Stacks: every ability used adds one picture next to the hotbar, the 5th one calls down a catastrophe
-    static final int MAX_STACKS = 20;
-    static final float STACK_CATASTROPHE_POWER = 1.35f;  // how strong the 5th stack's catastrophe is (1 = as cast)
-    static final float STACK_BURST_DAMAGE = 40f;         // no catastrophe unlocked yet: a black flame burst
-    static final double STACK_BURST_RADIUS = 8.0;
-    static final int STACK_BURN_TICKS = 80;
-    // Pictures for the stacks, from assets/circle_of_inevitability/textures/gui/ (without .png). One is picked at random.
-    // (The Attendant's orb until the Demoness has a picture of her own.)
-    static final List<String> STACK_IMAGES = List.of(
-            "attendant_stack_orb"
-    );
 
     // Ability 1 - Fatal Step (Sequence 9)
     static final int STEP_COST = 250;
@@ -243,7 +230,7 @@ public class Apocalypse {
     static final int SHATTER_COST = 6000;
 
     // Ability 7 - Catastrophe (Sequence 3): a wheel of seven disasters, each cast where you aim (sneak: the last one
-    // again). The fifth stack calls the last one down around you, STACK_CATASTROPHE_POWER times as hard.
+    // again). Nearby charged mirrors can feed the chosen catastrophe.
     static final int DISASTER_MEDIUM_COST = 12000;
     static final int DISASTER_HIGH_COST = 20000;
     static final int DISASTER_VERY_HIGH_COST = 30000;
@@ -304,9 +291,6 @@ public class Apocalypse {
     // =========================
     // Saved on the player
     // =========================
-    static final String STACKS = "apocalypse_stacks";
-    static final String STACK_IMAGE_KEY = "apocalypse_stack_image_";      // + slot number
-    static final String STACK_IMAGE_ID = "apo_stack_";                    // screen image ids
     static final String MIRROR_LEFT = "apocalypse_mirror_ticks";          // > 0 while inside the mirror world
     static final String MIRROR_X = "apocalypse_mirror_x";                 // where you went in
     static final String MIRROR_Y = "apocalypse_mirror_y";
@@ -421,26 +405,30 @@ public class Apocalypse {
 
             // the mirror world runs out even if the pathway is taken away in the meantime
             mirrorWorldTick(player, sl);
+            ApocalypseMechanics.tick(player, sl);
             // the shards charge once a second
             if (player.tickCount % 20 == 0) chargeShards(player, sl);
         }
 
-        // pictures on screen don't survive relogging/respawning, so redraw them from the saved stack count
+        // Combat preparations never survive reconnects or respawns.
         @SubscribeEvent
         public static void onApocalypseLogin(PlayerEvent.PlayerLoggedInEvent event) {
-            refreshStackImages(event.getEntity());
+            ApocalypseMechanics.clear(event.getEntity());
+            ApocalypseMechanics.removeLegacyStacks(event.getEntity());
             event.getEntity().getPersistentData().remove(MIRROR_LEFT);     // the concealment wears off by itself
         }
 
         @SubscribeEvent
         public static void onApocalypseRespawn(PlayerEvent.PlayerRespawnEvent event) {
-            refreshStackImages(event.getEntity());
+            ApocalypseMechanics.clear(event.getEntity());
+            ApocalypseMechanics.removeLegacyStacks(event.getEntity());
             event.getEntity().getPersistentData().remove(MIRROR_LEFT);
         }
 
         @SubscribeEvent
         public static void onApocalypseLevelUnload(LevelEvent.Unload event) {
             if (!(event.getLevel() instanceof ServerLevel)) return;     // (the players' side unloads its own copy too)
+            ApocalypseMechanics.clearLevel((ServerLevel) event.getLevel());
             SHARDS.removeIf(shard -> shard.level == event.getLevel());
             TRIP_LINES.removeIf(line -> line.level == event.getLevel());
             TRIP_KNOTS.values().removeIf(knot -> knot.level() == event.getLevel());
@@ -448,7 +436,18 @@ public class Apocalypse {
         }
 
         @SubscribeEvent
+        public static void onApocalypseDeath(LivingDeathEvent event) {
+            ApocalypseMechanics.clear(event.getEntity());
+        }
+
+        @SubscribeEvent
+        public static void onApocalypseDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+            ApocalypseMechanics.clear(event.getEntity());
+        }
+
+        @SubscribeEvent
         public static void onApocalypseLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+            ApocalypseMechanics.clear(event.getEntity());
             TRIP_KNOTS.remove(event.getEntity().getUUID());
             FATES.remove(event.getEntity().getUUID());                  // its zone closes by itself
         }
@@ -483,8 +482,6 @@ public class Apocalypse {
             leaveMirrorWorld(player, sl);
             fatalStep(player, sl, target, behind);
         }
-
-        addStack(player, sl);
     }
 
     /** Where to stand right behind the target's back, or null if there is no room there or near it. */
@@ -515,8 +512,10 @@ public class Apocalypse {
         Spells.sound(sl, behind, SoundEvents.ILLUSIONER_CAST_SPELL, 0.6f, 1.6f);
 
         EmpoweredHit.armAny(player, BACKSTAB, BACKSTAB_WINDOW, (attacker, victim, amount, level) -> {
+            if (!Spells.isEnemy(attacker, victim)) return amount;
             backstabLook(level, attacker, victim);
-            return amount * BACKSTAB_CRIT + BACKSTAB_BONUS;
+            return amount * BACKSTAB_CRIT + BACKSTAB_BONUS
+                    + ApocalypseMechanics.harvest(attacker, level, victim);
         });
     }
 
@@ -556,7 +555,7 @@ public class Apocalypse {
     }
 
     /** The player's shards in this level that are still standing, oldest first. */
-    private static List<Shard> shardsOf(LivingEntity player, ServerLevel sl) {
+    static List<Shard> shardsOf(LivingEntity player, ServerLevel sl) {
         List<Shard> mine = new ArrayList<>();
         long now = sl.getGameTime();
         for (Shard shard : SHARDS) {
@@ -619,8 +618,6 @@ public class Apocalypse {
             leaveMirrorWorld(player, sl);
             blackFlame(player, sl);
         }
-
-        addStack(player, sl);
     }
 
     // Normal: a bolt of black flame at the enemy you look at (or where you aim). What it hits burns cold:
@@ -659,6 +656,7 @@ public class Apocalypse {
      */
     private static void burnBlack(LivingEntity player, ServerLevel sl, LivingEntity target, int ticks, float power) {
         if (!target.isAlive()) return;
+        ApocalypseMechanics.afflict(player, sl, target, ApocalypseMechanics.Affliction.FLAME);
         DemonessFx.burn(sl, target, ticks, BURN_TAG);
         long until = sl.getGameTime() + ticks;
         target.getPersistentData().putLong(BURN_TAG, until);    // a newer burn takes over from this one
@@ -755,7 +753,6 @@ public class Apocalypse {
 
         if (!Spells.paySpirituality(player, MIRROR_COST)) return;
         enterMirrorWorld(player, sl);
-        addStack(player, sl);
     }
 
     // You step into a mirror: hidden and fast for MIRROR_TICKS. Press the key again to come out where you aim,
@@ -821,6 +818,10 @@ public class Apocalypse {
 
     /** The mirror world is over: seen again, normal speed. */
     private static void endMirrorWorld(LivingEntity player) {
+        if (player.level() instanceof ServerLevel sl) {
+            ApocalypseMechanics.prepareAmbush(player, sl,
+                    MIRROR_TICKS - player.getPersistentData().getIntOr(MIRROR_LEFT, MIRROR_TICKS));
+        }
         player.getPersistentData().remove(MIRROR_LEFT);
         if (Concealment.isHidden(player)) Concealment.reveal(player);
         removeMirrorSpeed(player);
@@ -875,10 +876,7 @@ public class Apocalypse {
             .entry("fate", "ability_menus/apocalypse/web_of_fate", "Web of Fate", 3,
                     SILK_VERY_HIGH_COST, SILK_VERY_HIGH_COOLDOWN, Apocalypse::webOfFate)
             .free(Apocalypse::fateHangs)                         // the recast that draws it in is free
-            .onCast((player, sl, entry) -> {
-                leaveMirrorWorld(player, sl);
-                addStack(player, sl);
-            });
+            .onCast((player, sl, entry) -> leaveMirrorWorld(player, sl));
 
     // Normal: the silk wheel. Sneak: the last silk again (no last silk yet: the wheel).
     // Each silk checks and pays for itself when it is picked (see AbilityWheel), so opening the wheel is free.
@@ -920,6 +918,7 @@ public class Apocalypse {
                 .every(5)
                 .onEnter(victim -> {
                     if (!held.add(victim.getUUID())) return;            // held once; after that only slowed
+                    ApocalypseMechanics.afflict(player, sl, victim, ApocalypseMechanics.Affliction.SILK);
                     Root.apply(victim, SNARE_ROOT_TICKS, RootRestriction.MOVEMENT);
                     DemonessFx.snareCatch(sl, victim, SNARE_HOLD_TAG);
                     Spells.sound(sl, victim.position(), SoundEvents.SPIDER_AMBIENT, 0.8f, 0.8f);
@@ -1083,6 +1082,7 @@ public class Apocalypse {
             line.snapped = true;
             TRIP_LINES.remove(line);
             DemonessFx.tripSnap(sl, line.a, line.b, line.tag);
+            ApocalypseMechanics.afflict(line.owner, sl, victim, ApocalypseMechanics.Affliction.SILK);
             Spells.strike(line.owner, victim, TRIP_DAMAGE);
             // down it goes: dropped to the ground and held there
             Vec3 motion = victim.getDeltaMovement();
@@ -1101,6 +1101,7 @@ public class Apocalypse {
     static AbilityWheel.Result cocoon(LivingEntity player, ServerLevel sl) {
         LivingEntity target = Spells.aimEnemy(player, sl, COCOON_RANGE);
         if (target != null) {
+            ApocalypseMechanics.afflict(player, sl, target, ApocalypseMechanics.Affliction.SILK);
             DemonessFx.cocoon(sl, target, COCOON_HOLD_TICKS, false, COCOON_TAG);
             Root.apply(target, COCOON_HOLD_TICKS, RootRestriction.EVERYTHING);
             Spells.sound(sl, target.position(), SoundEvents.SPIDER_AMBIENT, 1f, 0.7f);
@@ -1230,6 +1231,7 @@ public class Apocalypse {
         int left = (int) Math.max(1, fate.expires - sl.getGameTime());
         LivingEntity before = fate.tangled.isEmpty() ? null : fate.tangled.get(fate.tangled.size() - 1);
         fate.tangled.add(victim);
+        ApocalypseMechanics.afflict(player, sl, victim, ApocalypseMechanics.Affliction.SILK);
 
         DemonessFx.fateTangle(sl, victim, left, FATE_MARK_TAG);
         victim.addEffect(new MobEffectInstance(MobEffects.GLOWING, left, 0));              // seen through walls
@@ -1288,8 +1290,6 @@ public class Apocalypse {
 
         if (sneak) curse(player, sl, target);
         else plague(player, sl, target);
-
-        addStack(player, sl);
     }
 
     // Normal: the target carries the plague for PLAGUE_TICKS, sickening every second. Then (or when it dies)
@@ -1304,6 +1304,7 @@ public class Apocalypse {
                 .maxVictims(PLAGUE_MAX_VICTIMS)
                 .travel(DemonessFx.PLAGUE_JUMP_TICKS)
                 .onCatch((victim, stage) -> {
+                    ApocalypseMechanics.afflict(player, sl, victim, ApocalypseMechanics.Affliction.PLAGUE);
                     DemonessFx.plagueMark(sl, victim, PLAGUE_TICKS, stage, PLAGUE_TAG);
                     Spells.sound(sl, victim.position(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 0.5f, 1.4f + stage * 0.1f);
                 })
@@ -1355,8 +1356,6 @@ public class Apocalypse {
             leaveMirrorWorld(player, sl);
             unaging(player, sl);
         }
-
-        addStack(player, sl);
     }
 
     // Normal: for UNAGING_TICKS your next death is cancelled. You come back with half your health, unseen for a moment.
@@ -1401,16 +1400,15 @@ public class Apocalypse {
     // =========================
 
     /**
-     * A disaster called down on 'ground' at 'power' (1 = as strong as when cast from the wheel). The fifth stack
-     * casts the last one around the player with STACK_CATASTROPHE_POWER.
+     * A disaster called down on 'ground' at 'power' (1 = base power, increased by nearby mirror charge).
      */
     @FunctionalInterface
-    public interface StackCatastrophe {
+    public interface CatastropheCast {
         void cast(LivingEntity player, ServerLevel sl, Vec3 ground, float power);
     }
 
     /** One entry of the catastrophe wheel. A new disaster is one more line here and a method. */
-    record Disaster(String key, String name, int sequence, int cost, int cooldown, StackCatastrophe cast) {}
+    record Disaster(String key, String name, int sequence, int cost, int cooldown, CatastropheCast cast) {}
 
     static final List<Disaster> DISASTERS = List.of(
             new Disaster("earthquake", "Earthquake", 3, DISASTER_MEDIUM_COST, DISASTER_MEDIUM_COOLDOWN, Apocalypse::earthquake),
@@ -1431,14 +1429,11 @@ public class Apocalypse {
         for (Disaster disaster : DISASTERS) {
             wheel.entry(disaster.key(), "ability_menus/apocalypse/" + disaster.key(), disaster.name(), disaster.sequence(),
                     disaster.cost(), disaster.cooldown(), (player, sl) -> {
-                        disaster.cast().cast(player, sl, Spells.aimGround(player, sl, DISASTER_RANGE), 1f);
+                        castDisaster(player, sl, disaster);
                         return AbilityWheel.Result.DONE;
-                    });
+                    }).description("Drains your mirrors within 12 blocks of impact: +15% power per full shard, up to +45%.");
         }
-        return wheel.onCast((player, sl, entry) -> {
-            leaveMirrorWorld(player, sl);
-            addStack(player, sl);
-        });
+        return wheel.onCast((player, sl, entry) -> leaveMirrorWorld(player, sl));
     }
 
     // Normal: the catastrophe wheel; the pick falls where you aim. Sneak: the last one again.
@@ -1448,26 +1443,11 @@ public class Apocalypse {
         else CATASTROPHES.open(player);
     }
 
-    /**
-     * The catastrophe the fifth stack calls down: the player's last Catastrophe pick, else a random one they have
-     * unlocked, else null (below Sequence 3: see unleashStacks).
-     */
-    private static StackCatastrophe lastCatastrophe(LivingEntity caster) {
-        if (!(caster instanceof Player player)) {                      // a Beyonder mob: one its Sequence reaches, at random
-            List<Disaster> open = new ArrayList<>();
-            for (Disaster disaster : DISASTERS) if (Beyonder.hasSequence(caster, disaster.sequence())) open.add(disaster);
-            return open.isEmpty() ? null : open.get(caster.getRandom().nextInt(open.size())).cast();
-        }
-        AbilityWheel.Entry entry = CATASTROPHES.lastPick(player);
-        if (entry == null || !CATASTROPHES.unlocked(player, entry)) {
-            List<AbilityWheel.Entry> open = CATASTROPHES.unlocked(player);
-            if (open.isEmpty()) return null;
-            entry = open.get(player.getRandom().nextInt(open.size()));
-        }
-        for (Disaster disaster : DISASTERS) {
-            if (disaster.key().equals(entry.key())) return disaster.cast();
-        }
-        return null;
+    /** Called after cost and cooldown checks pass, for players and Beyonder mobs alike. */
+    static void castDisaster(LivingEntity player, ServerLevel sl, Disaster disaster) {
+        Vec3 ground = Spells.aimGround(player, sl, DISASTER_RANGE);
+        float power = ApocalypseMechanics.feedCatastrophe(player, sl, ground);
+        disaster.cast().cast(player, sl, ground, power);
     }
 
     // ---------- Earthquake ----------
@@ -1734,68 +1714,6 @@ public class Apocalypse {
             spot = ground.add(Math.cos(angle) * far, 0, Math.sin(angle) * far);
         }
         return Spells.groundAt(player, sl, spot.add(0, 2.0, 0));
-    }
-
-    // =========================
-    // Stacks
-    // =========================
-
-    static void addStack(LivingEntity player, ServerLevel sl) {
-        int slot = player.getPersistentData().getIntOr(STACKS, 0); // 0..4
-        String image = STACK_IMAGES.get(player.getRandom().nextInt(STACK_IMAGES.size()));
-        player.getPersistentData().putString(STACK_IMAGE_KEY + slot, image);
-        showStackImage(player, slot, image);
-
-        int stacks = slot + 1;
-        if (stacks >= MAX_STACKS) {
-            unleashStacks(player, sl);
-            if (player instanceof Player viewerOfHud) ScreenImages.hide(viewerOfHud, STACK_IMAGE_ID + "*", 10); // let the 5th show for a moment, then all fade
-            stacks = 0;
-        }
-        player.getPersistentData().putInt(STACKS, stacks);
-    }
-
-    // Runs when the 5th stack is added: the last catastrophe (or a random unlocked one), around you, at
-    // STACK_CATASTROPHE_POWER. Below Sequence 3 there is none: black flame bursts out of you and burns every enemy around.
-    private static void unleashStacks(LivingEntity player, ServerLevel sl) {
-        Vec3 feet = player.position();
-        StackCatastrophe catastrophe = lastCatastrophe(player);
-        if (catastrophe != null) {
-            catastrophe.cast(player, sl, feet, STACK_CATASTROPHE_POWER);
-            return;
-        }
-
-        Vec3 center = feet.add(0, 1.0, 0);
-        for (LivingEntity target : Spells.enemiesAround(player, sl, center, STACK_BURST_RADIUS)) {
-            Spells.strike(player, target, STACK_BURST_DAMAGE);
-            burnBlack(player, sl, target, STACK_BURN_TICKS, 1f);
-        }
-        DemonessFx.blackFlameHit(sl, center);
-        SpellFx.shockRing(sl, feet, STACK_BURST_RADIUS, 0xF0B050FF, 9, 0);
-        SpellFx.shockRing(sl, feet, STACK_BURST_RADIUS * 0.7, 0xD0E0203A, 12, 2);
-        SpellFx.runeCircle(sl, feet, STACK_BURST_RADIUS * 0.5, 0xB0B050FF, 14, 8f);
-        ParticleShapes.burst(sl, DemonessFx.EMBER_BLACK, center, 70, 0.15, 0.75);
-        ParticleShapes.burst(sl, DemonessFx.SHADOW_SMOKE, center, 20, 0.05, 0.3);
-        Spells.sound(sl, feet, SoundEvents.GENERIC_EXPLODE.value(), 1.5f, 0.6f);
-    }
-
-    // Stacks sit to the right of the hotbar, 18px apart like hotbar slots
-    private static void showStackImage(LivingEntity player, int slot, String image) {
-        if (player instanceof Player viewerOfHud) ScreenImages.show(viewerOfHud, STACK_IMAGE_ID + slot, image,
-                ScreenAnchor.BOTTOM, 103 + slot * 18, -3, 16, ScreenImages.FOREVER);
-    }
-
-    private static void refreshStackImages(Player player) {
-        if (!SoulCore.getPathway(player).equals(PATHWAY)) return;   // the Attendant draws its own stacks in the same place
-        int stacks = player.getPersistentData().getIntOr(STACKS, 0);
-        for (int slot = 0; slot < MAX_STACKS; slot++) {
-            if (slot < stacks) {
-                String image = player.getPersistentData().getStringOr(STACK_IMAGE_KEY + slot, "");
-                showStackImage(player, slot, image.isEmpty() ? STACK_IMAGES.get(0) : image);
-            } else {
-                ScreenImages.hide(player, STACK_IMAGE_ID + slot);
-            }
-        }
     }
 
     // =========================
