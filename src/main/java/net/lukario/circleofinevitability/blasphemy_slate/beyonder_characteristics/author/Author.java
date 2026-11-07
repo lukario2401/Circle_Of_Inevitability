@@ -6,7 +6,6 @@ import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.root.*;
 import net.lukario.circleofinevitability.status.*;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.*;
 import net.minecraft.world.effect.MobEffects;
@@ -30,7 +29,6 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class Author {
     public static final String PATHWAY = "Author";
-    private static final String SAVED = "author_saved_cooldowns";
     public static final AbilityWheel BASIC = wheel("basic", "Observation and Therapy");
     public static final AbilityWheel HYPNOSIS = wheel("hypnosis", "Hypnosis");
     public static final AbilityWheel DREAMS = wheel("dreams", "Dreams");
@@ -40,42 +38,42 @@ public final class Author {
     private static boolean initialized;
 
     static {
-        entry(BASIC, "observe", "Observe", 9, 4, 80);
-        entry(BASIC, "spectator_state", "Spectator State", 9, 6, 240);
-        entry(BASIC, "awe", "Awe", 8, 80, 160);
-        entry(BASIC, "frenzy", "Frenzy", 8, 100, 200);
-        entry(BASIC, "psychoanalysis", "Psychoanalysis", 7, 350, 240);
-        entry(BASIC, "placate", "Placate", 7, 400, 280);
-        entry(HYPNOSIS, "suggestion", "Suggestion", 6, 900, 240);
-        entry(HYPNOSIS, "sleep", "Sleep", 6, 1000, 320);
-        entry(HYPNOSIS, "psychological_invisibility", "Psychological Invisibility", 6, 1200, 440);
-        entry(HYPNOSIS, "battle_hypnosis", "Battle Hypnosis", 6, 1400, 360);
-        entry(DREAMS, "dream_entry", "Dream Entry", 5, 2200, 360);
-        entry(DREAMS, "nightmare", "Nightmare", 5, 2800, 240);
-        entry(DREAMS, "dream_maze", "Dream Maze", 5, 3200, 560);
-        entry(DREAMS, "dream_anchor", "Dream Anchor", 5, 2600, 480);
-        entry(MIND, "dragon_form", "Mind Dragon", 4, 6000, 900);
-        entry(MIND, "mind_storm", "Mind Storm", 4, 5000, 360);
-        entry(MIND, "manipulate", "Manipulate", 4, 6500, 600);
-        entry(MIND, "virtual_persona", "Virtual Persona", 4, 4500, 600);
-        entry(MIND, "mind_walk", "Mind Walk", 3, 8000, 480);
-        entry(MIND, "discern", "Discerner's Gaze", 2, 10000, 600);
-        entry(AUTHORSHIP, "foreshadow", "Foreshadow", 1, 12000, 600);
-        entry(AUTHORSHIP, "plot_twist", "Plot Twist", 1, 14000, 800);
-        entry(AUTHORSHIP, "fate_script", "Fate Script", 1, 16000, 900);
-        entry(AUTHORSHIP, "envision", "Envision", 0, 18000, 500);
-        entry(AUTHORSHIP, "life_creation", "Life Creation", 0, 22000, 1000);
-        entry(AUTHORSHIP, "sea_of_minds", "Sea of Collective Subconscious", 0, 30000, 1800);
+        entry(BASIC, "observe", "Observe", 9, 4);
+        entry(BASIC, "spectator_state", "Spectator State", 9, 6);
+        entry(BASIC, "awe", "Awe", 8, 80);
+        entry(BASIC, "frenzy", "Frenzy", 8, 100);
+        entry(BASIC, "psychoanalysis", "Psychoanalysis", 7, 350);
+        entry(BASIC, "placate", "Placate", 7, 400);
+        entry(HYPNOSIS, "suggestion", "Suggestion", 6, 900);
+        entry(HYPNOSIS, "sleep", "Sleep", 6, 1000);
+        entry(HYPNOSIS, "psychological_invisibility", "Psychological Invisibility", 6, 1200);
+        entry(HYPNOSIS, "battle_hypnosis", "Battle Hypnosis", 6, 1400);
+        entry(DREAMS, "dream_entry", "Dream Entry", 5, 2200);
+        entry(DREAMS, "nightmare", "Nightmare", 5, 2800);
+        entry(DREAMS, "dream_maze", "Dream Maze", 5, 3200);
+        entry(DREAMS, "dream_anchor", "Dream Anchor", 5, 2600);
+        entry(MIND, "dragon_form", "Mind Dragon", 4, 6000);
+        entry(MIND, "mind_storm", "Mind Storm", 4, 5000);
+        entry(MIND, "manipulate", "Manipulate", 4, 6500);
+        entry(MIND, "virtual_persona", "Virtual Persona", 4, 4500);
+        entry(MIND, "mind_walk", "Mind Walk", 3, 8000);
+        entry(MIND, "discern", "Discerner's Gaze", 2, 10000);
+        entry(AUTHORSHIP, "foreshadow", "Foreshadow", 1, 12000);
+        entry(AUTHORSHIP, "plot_twist", "Plot Twist", 1, 14000);
+        entry(AUTHORSHIP, "fate_script", "Fate Script", 1, 16000);
+        entry(AUTHORSHIP, "envision", "Envision", 0, 18000);
+        entry(AUTHORSHIP, "life_creation", "Life Creation", 0, 22000);
+        entry(AUTHORSHIP, "sea_of_minds", "Sea of Collective Subconscious", 0, 30000);
     }
 
     private Author() {}
 
     private static AbilityWheel wheel(String id, String title) {
-        return AbilityWheel.create("author_" + id, title).pathway(PATHWAY).quickCastCooldown(true).quickCastCost(1f);
+        return AbilityWheel.create("author_" + id, title).pathway(PATHWAY).noCooldownsWhen(p -> true);
     }
 
-    private static void entry(AbilityWheel wheel, String id, String name, int sequence, int cost, int cooldown) {
-        wheel.entry(id, "ability_menus/author/" + id, name, sequence, cost, cooldown,
+    private static void entry(AbilityWheel wheel, String id, String name, int sequence, int cost) {
+        wheel.entry(id, "ability_menus/author/" + id, name, sequence, cost, 0,
                 (p, sl) -> perform(p, sl, id)).notCopyable();
     }
 
@@ -390,26 +388,12 @@ public final class Author {
     public static void logout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
         AuthorMind.cleanse(p); AuthorMind.clear(p);
-        CompoundTag saved = new CompoundTag(); long now = p.level().getGameTime();
-        for (var wheel : WHEELS) for (var entry : wheel.entries()) {
-            String key = wheel.id() + "_ready_" + entry.key();
-            saved.putLong(key, Math.max(0, p.getPersistentData().getLongOr(key, 0L) - now));
-        }
-        p.getPersistentData().put(SAVED, saved);
-    }
-
-    @SubscribeEvent
-    public static void login(PlayerEvent.PlayerLoggedInEvent event) {
-        if (!(event.getEntity() instanceof ServerPlayer p)) return;
-        CompoundTag saved = p.getPersistentData().getCompoundOrEmpty(SAVED);
-        for (String key : saved.keySet()) p.getPersistentData().putLong(key, p.level().getGameTime() + saved.getLongOr(key, 0L));
-        p.getPersistentData().remove(SAVED);
     }
 
     @SubscribeEvent
     public static void clonePlayer(PlayerEvent.Clone event) {
         for (String key : event.getOriginal().getPersistentData().keySet())
-            if (key.startsWith("author_") && (key.contains("_ready_") || key.endsWith("_last") || key.equals(SAVED)))
+            if (key.startsWith("author_") && key.endsWith("_last"))
                 event.getEntity().getPersistentData().put(key, event.getOriginal().getPersistentData().get(key).copy());
         event.getEntity().getPersistentData().putFloat("author_strain", event.getOriginal().getPersistentData().getFloatOr("author_strain", 0f));
     }

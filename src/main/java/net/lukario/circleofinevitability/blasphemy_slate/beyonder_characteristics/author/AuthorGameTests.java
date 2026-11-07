@@ -176,10 +176,15 @@ public final class AuthorGameTests {
         h.assertTrue(Author.aim(p, 24) == t, "Target can be aimed at");
         Author.key(p, p.level(), p.level(), 1, false);
         h.assertTrue(SoulCore.getSpirituality(p) == 16 && AuthorMind.insight(p, t) == 1, "G costs four and starts observation");
-        h.assertTrue(cast(p, "observe") == AbilityWheel.Result.REFUSED && SoulCore.getSpirituality(p) == 16, "Observe cooldown cannot be spammed");
+        String legacyCooldown = Author.BASIC.id() + "_ready_observe";
+        h.assertTrue(!p.getPersistentData().contains(legacyCooldown), "Observe saves no cooldown");
+        p.getPersistentData().putLong(legacyCooldown, p.level().getGameTime() + 10);
+        Author.key(p, p.level(), p.level(), 1, false);
+        h.assertTrue(SoulCore.getSpirituality(p) == 12 && AuthorMind.insight(p, t) == 2,
+                "G immediately recasts Observe even with a legacy cooldown");
         p.setShiftKeyDown(true); Author.key(p, p.level(), p.level(), 1, false); p.setShiftKeyDown(false);
-        h.assertTrue(SoulCore.getSpirituality(p) == 10, "Sneak G is affordable and distinct");
-        h.assertTrue(cast(p, "suggestion") == AbilityWheel.Result.REFUSED && SoulCore.getSpirituality(p) == 10, "Sequence gate is free");
+        h.assertTrue(SoulCore.getSpirituality(p) == 6, "Sneak G is affordable and distinct");
+        h.assertTrue(cast(p, "suggestion") == AbilityWheel.Result.REFUSED && SoulCore.getSpirituality(p) == 6, "Sequence gate is free");
         SoulCore.setSequence(p, 6); SoulCore.setSpiritualityQuietly(p, 6400); AuthorMind.state(p);
         h.assertTrue(cast(p, "suggestion") == AbilityWheel.Result.REFUSED && SoulCore.getSpirituality(p) == 6400, "Missing Insight is free");
         AuthorMind.add(p, t, 3); SoulCore.setSpiritualityQuietly(p, 0);
@@ -237,7 +242,16 @@ public final class AuthorGameTests {
         h.assertTrue(cast(p, "nightmare") == AbilityWheel.Result.DONE && t.getHealth() == 150, "Nightmare leaves a dodge warning");
         h.runAfterDelay(18, () -> {
             h.assertTrue(t.getHealth() < 150 && AuthorMind.state(p).link == null, "Nightmare: health="+t.getHealth()+" tick="+p.tickCount+" pending="+AuthorMind.state(p).pending+" eligible="+Author.eligible(p,t,24,true));
-            h.assertTrue(cast(p, "dream_entry") == AbilityWheel.Result.REFUSED, "Dream cooldown survives link consumption");
+            h.assertTrue(cast(p, "dream_entry") == AbilityWheel.Result.REFUSED, "Dream Entry still requires Insight");
+            AuthorMind.add(p, t, 5);
+            h.assertTrue(cast(p, "dream_entry") == AbilityWheel.Result.DONE, "Dream Entry can recast after link consumption");
+            float before = SoulCore.getSpirituality(p);
+            AuthorMind.add(p, t, 3);
+            p.setShiftKeyDown(true);
+            Author.key(p, p.level(), p.level(), 5, false);
+            p.setShiftKeyDown(false);
+            h.assertTrue(SoulCore.getSpirituality(p) == before - 2200 && AuthorMind.insight(p, t) == 2,
+                    "Sneak L immediately recasts Dream Entry at its normal cost");
             // A second player tests a link that becomes invalid before resolution.
             AuthorMind.add(q, other, 3); cast(q, "dream_entry"); cast(q, "nightmare");
             Friends.add(q, other.getUUID(), "new ally", false);
