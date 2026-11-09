@@ -1,17 +1,20 @@
-# Damage fx: red hits and gold cumulative damage (/damagefx)
+# Damage effects (`/damage fx`)
 
-With damage fx on, each hit is written in red above your target's head and your cumulative damage to that target is written in gold below the red hits. Every player decides for themself; it needs no cheats and no op.
+Damage effects can show individual hits in red and your cumulative damage to a target in gold. Each player chooses their own display mode without cheats or operator permissions.
 
 ```
-/damagefx          switches it
-/damagefx on
-/damagefx off
-/damagefx reset             shows your current inactivity timeout
-/damagefx reset 10          resets totals after 10 seconds without damage to that target
-/damagefx reset default     uses the configured default again
+/damage fx                  toggles the display
+/damage fx on               enables your saved mode
+/damage fx off              disables the display
+/damage fx mode hits        shows only individual hits
+/damage fx mode both        shows individual hits and cumulative damage
+/damage fx mode cumulative  shows only cumulative damage
+/damage fx reset            shows your current inactivity timeout
+/damage fx reset 10         resets totals after 10 seconds without damage to that target
+/damage fx reset default    uses the configured default again
 ```
 
-It is off until a player turns it on, and it is saved with the player: it stays on through death, a relog and a server restart.
+`/damagefx` also accepts all of the same options. Damage effects start off and default to `both` when first enabled. Choosing a mode also enables the display. Both settings persist through death, relogs and server restarts. Switching to `hits` immediately clears gold totals, so switching back starts a fresh total on the next hit.
 
 The default inactivity timeout is **5 seconds**. `/damagefx reset <seconds>` accepts whole seconds from 1 to 3600 and saves your preference through death, relogs and restarts. The server's default is `damageFxResetSeconds` in `config/circle_of_inevitability-common.toml`. Changing your timeout immediately clears existing gold numbers and starts fresh totals on your next hits.
 
@@ -36,7 +39,7 @@ A number is shown when the player who **dealt** the damage has damage fx on. It 
 
 A player with damage fx off never sees numbers and never causes any. The one who is hurt does not get the number above their own head.
 
-Gold totals are shown only to the player who dealt that damage. Nearby viewers still see the individual red hits; their own gold totals never include someone else's damage.
+Gold totals are private to the player who dealt the damage. Nearby viewers with `hits` or `both` selected can see individual red hits from any dealer with damage effects enabled.
 
 ## What counts as your damage
 
@@ -113,5 +116,6 @@ The digits are `textures/particle/fx/damage_digits.png`: `0123456789.` in white,
 9. Hit the same target twice within five seconds: separate red hits, one gold total equal to their sum. Wait five seconds: gold disappears; another hit starts a fresh total.
 10. `/damagefx reset 2`: repeat with a two-second timeout. `/damagefx reset` reports it; `/damagefx reset default` restores the configured default. Values outside 1–3600 are rejected.
 11. Alternate hits between two targets and then have a second player hit one of them: your gold totals remain separate for each target and include only your damage. Burning and credited abilities also update your total and timer.
+12. Run `/damage fx mode hits` while a gold total is visible. It clears immediately and new hits show red only. Run `/damagefx mode cumulative` and hit again. The gold total starts fresh and no new red number appears for you, even when the other player hits the target. Turn damage fx off and on again to check that it remembers your mode.
 
 `./gradlew damageFxTest` checks accumulation, exact timeout boundaries, target/player isolation, tiny hits and particle JSON/network round trips without launching the game.
