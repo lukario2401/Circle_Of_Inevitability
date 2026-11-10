@@ -1,0 +1,50 @@
+[
+  {
+    "cue": "thorn_seed",
+    "start_seconds": 0
+  },
+  {
+    "cue": "growth_bloom",
+    "start_seconds": 1.7
+  },
+  {
+    "cue": "treatment",
+    "start_seconds": 3.4
+  },
+  {
+    "cue": "reap",
+    "start_seconds": 5.1
+  },
+  {
+    "cue": "toxin_bloom",
+    "start_seconds": 6.8
+  },
+  {
+    "cue": "stone_golem",
+    "start_seconds": 8.5
+  },
+  {
+    "cue": "stone_bird",
+    "start_seconds": 10.2
+  },
+  {
+    "cue": "mutate",
+    "start_seconds": 11.9
+  },
+  {
+    "cue": "root_eruption",
+    "start_seconds": 13.6
+  },
+  {
+    "cue": "evil_spirits",
+    "start_seconds": 15.3
+  },
+  {
+    "cue": "rebirth_bloom",
+    "start_seconds": 17.0
+  },
+  {
+    "cue": "bountiful_earth",
+    "start_seconds": 18.7
+  }
+]

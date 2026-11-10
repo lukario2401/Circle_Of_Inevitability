@@ -5338,5 +5338,477 @@
         "name": "circle_of_inevitability:author/field_end"
       }
     ]
+  },
+  "nature_walker.thorn_seed": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.thorn_seed",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/thorn_seed"
+      }
+    ]
+  },
+  "nature_walker.heartfruit_seed": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.heartfruit_seed",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/heartfruit_seed"
+      }
+    ]
+  },
+  "nature_walker.treatment": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.treatment",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/treatment"
+      }
+    ]
+  },
+  "nature_walker.soul_suture": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.soul_suture",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/soul_suture"
+      }
+    ]
+  },
+  "nature_walker.cross_breed": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.cross_breed",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/cross_breed"
+      }
+    ]
+  },
+  "nature_walker.toxin_bloom": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.toxin_bloom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/toxin_bloom"
+      }
+    ]
+  },
+  "nature_walker.seed_catalyzation": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.seed_catalyzation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/seed_catalyzation"
+      }
+    ]
+  },
+  "nature_walker.quicken_life": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.quicken_life",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/quicken_life"
+      }
+    ]
+  },
+  "nature_walker.command_flora": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.command_flora",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/command_flora"
+      }
+    ]
+  },
+  "nature_walker.weather_ritual": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.weather_ritual",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/weather_ritual"
+      }
+    ]
+  },
+  "nature_walker.reap": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.reap",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/reap"
+      }
+    ]
+  },
+  "nature_walker.blossoming_land": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.blossoming_land",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/blossoming_land"
+      }
+    ]
+  },
+  "nature_walker.barren_land": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.barren_land",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/barren_land"
+      }
+    ]
+  },
+  "nature_walker.great_harvest": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.great_harvest",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/great_harvest"
+      }
+    ]
+  },
+  "nature_walker.underground_travel": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.underground_travel",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/underground_travel"
+      }
+    ]
+  },
+  "nature_walker.swamp": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.swamp",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/swamp"
+      }
+    ]
+  },
+  "nature_walker.wrath_of_nature": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.wrath_of_nature",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/wrath_of_nature"
+      }
+    ]
+  },
+  "nature_walker.child_of_the_oak": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.child_of_the_oak",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/child_of_the_oak"
+      }
+    ]
+  },
+  "nature_walker.stone_golem": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.stone_golem",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/stone_golem"
+      }
+    ]
+  },
+  "nature_walker.bear_form": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.bear_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/bear_form"
+      }
+    ]
+  },
+  "nature_walker.verdant_barrier": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.verdant_barrier",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/verdant_barrier"
+      }
+    ]
+  },
+  "nature_walker.world_of_nature": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.world_of_nature",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/world_of_nature"
+      }
+    ]
+  },
+  "nature_walker.earthquake": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.earthquake",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/earthquake"
+      }
+    ]
+  },
+  "nature_walker.stone_bird": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.stone_bird",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/stone_bird"
+      }
+    ]
+  },
+  "nature_walker.mud_golem": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.mud_golem",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/mud_golem"
+      }
+    ]
+  },
+  "nature_walker.steel_golem": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.steel_golem",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/steel_golem"
+      }
+    ]
+  },
+  "nature_walker.life_aura": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.life_aura",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/life_aura"
+      }
+    ]
+  },
+  "nature_walker.mutate": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.mutate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/mutate"
+      }
+    ]
+  },
+  "nature_walker.brood_form": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.brood_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/brood_form"
+      }
+    ]
+  },
+  "nature_walker.seed_of_rebirth": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.seed_of_rebirth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/seed_of_rebirth"
+      }
+    ]
+  },
+  "nature_walker.awaken": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.awaken",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/awaken"
+      }
+    ]
+  },
+  "nature_walker.evil_spirits": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.evil_spirits",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/evil_spirits"
+      }
+    ]
+  },
+  "nature_walker.descent_of_death": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.descent_of_death",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/descent_of_death"
+      }
+    ]
+  },
+  "nature_walker.return_to_earth": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.return_to_earth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/return_to_earth"
+      }
+    ]
+  },
+  "nature_walker.maternal_embrace": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.maternal_embrace",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/maternal_embrace"
+      }
+    ]
+  },
+  "nature_walker.desolation": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.desolation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/desolation"
+      }
+    ]
+  },
+  "nature_walker.root_eruption": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.root_eruption",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/root_eruption"
+      }
+    ]
+  },
+  "nature_walker.embrace_of_the_earth": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.embrace_of_the_earth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/embrace_of_the_earth"
+      }
+    ]
+  },
+  "nature_walker.bountiful_earth": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.bountiful_earth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/bountiful_earth"
+      }
+    ]
+  },
+  "nature_walker.growth_sprout": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.growth_sprout",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/growth_sprout"
+      }
+    ]
+  },
+  "nature_walker.growth_bloom": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.growth_bloom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/growth_bloom"
+      }
+    ]
+  },
+  "nature_walker.growth_wither": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.growth_wither",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/growth_wither"
+      }
+    ]
+  },
+  "nature_walker.heartfruit_eat": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.heartfruit_eat",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/heartfruit_eat"
+      }
+    ]
+  },
+  "nature_walker.cross_pollinate": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.cross_pollinate",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/cross_pollinate"
+      }
+    ]
+  },
+  "nature_walker.mutation_roll": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.mutation_roll",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/mutation_roll"
+      }
+    ]
+  },
+  "nature_walker.mutation_bloom": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.mutation_bloom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/mutation_bloom"
+      }
+    ]
+  },
+  "nature_walker.rebirth_trigger": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.rebirth_trigger",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/rebirth_trigger"
+      }
+    ]
+  },
+  "nature_walker.rebirth_bloom": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.rebirth_bloom",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/rebirth_bloom"
+      }
+    ]
+  },
+  "nature_walker.warning": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.warning",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/warning"
+      }
+    ]
+  },
+  "nature_walker.root_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.root_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/root_impact"
+      }
+    ]
+  },
+  "nature_walker.construct_step": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.construct_step",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/construct_step"
+      }
+    ]
+  },
+  "nature_walker.bird_wingbeat": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.bird_wingbeat",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/bird_wingbeat"
+      }
+    ]
+  },
+  "nature_walker.melee_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.melee_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/melee_swing"
+      }
+    ]
+  },
+  "nature_walker.melee_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.melee_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/melee_impact"
+      }
+    ]
+  },
+  "nature_walker.field_end": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.field_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/field_end"
+      }
+    ]
+  },
+  "nature_walker.weather_clear": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.weather_clear",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/weather_clear"
+      }
+    ]
+  },
+  "nature_walker.weather_storm": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.weather_storm",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/weather_storm"
+      }
+    ]
+  },
+  "nature_walker.nature_walk": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.nature_walk",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/nature_walk"
+      }
+    ]
+  },
+  "nature_walker.brood_form_complete": {
+    "subtitle": "subtitles.circle_of_inevitability.nature_walker.brood_form_complete",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:nature_walker/brood_form_complete"
+      }
+    ]
   }
 }

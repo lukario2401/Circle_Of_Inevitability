@@ -92,3 +92,8 @@ The [Author / Spectator pathway design](docs/AUTHOR.md) covers all ten sequences
 Its [asset collection](docs/AUTHOR_ASSETS.md) includes icons, animated Mind Dragons, dream and authorship
 models, particles, sound cues and previews. All 26 abilities are playable, with Insight, hypnosis, dream fields, Mind Dragon form and authored outcomes.
 Run the dedicated server checks with `./gradlew runGameTestServer -PauthorTests`.
+
+The [Nature Walker asset collection](docs/NATURE_WALKER_ASSETS.md) covers all 39 abilities in the
+[Mother pathway design](docs/NATURE_WALKER.md), with staged Growths, animated constructs and forms,
+icons, particles and 59 original sound cues. Operators can inspect the presentation with `/naturefx`.
+The assets and FX helpers are ready for gameplay integration; Nature Walker is not yet a playable pathway.

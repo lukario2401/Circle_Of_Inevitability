@@ -1,0 +1,3167 @@
+{
+  "schema_version": 1,
+  "namespace": "circle_of_inevitability",
+  "pathway": "Nature Walker",
+  "source_design": "docs/NATURE_WALKER.md",
+  "scope": "Presentation assets and preview FX only; gameplay and balance are not implemented.",
+  "abilities": [
+    "thorn_seed",
+    "heartfruit_seed",
+    "treatment",
+    "soul_suture",
+    "cross_breed",
+    "toxin_bloom",
+    "seed_catalyzation",
+    "quicken_life",
+    "command_flora",
+    "weather_ritual",
+    "reap",
+    "blossoming_land",
+    "barren_land",
+    "great_harvest",
+    "underground_travel",
+    "swamp",
+    "wrath_of_nature",
+    "child_of_the_oak",
+    "stone_golem",
+    "bear_form",
+    "verdant_barrier",
+    "world_of_nature",
+    "earthquake",
+    "stone_bird",
+    "mud_golem",
+    "steel_golem",
+    "life_aura",
+    "mutate",
+    "brood_form",
+    "seed_of_rebirth",
+    "awaken",
+    "evil_spirits",
+    "descent_of_death",
+    "return_to_earth",
+    "maternal_embrace",
+    "desolation",
+    "root_eruption",
+    "embrace_of_the_earth",
+    "bountiful_earth"
+  ],
+  "sequences": {
+    "thorn_seed": 9,
+    "heartfruit_seed": 9,
+    "treatment": 8,
+    "soul_suture": 8,
+    "cross_breed": 6,
+    "toxin_bloom": 6,
+    "seed_catalyzation": 7,
+    "quicken_life": 7,
+    "command_flora": 7,
+    "weather_ritual": 7,
+    "reap": 7,
+    "blossoming_land": 2,
+    "barren_land": 2,
+    "great_harvest": 0,
+    "underground_travel": 5,
+    "swamp": 5,
+    "wrath_of_nature": 5,
+    "child_of_the_oak": 5,
+    "stone_golem": 5,
+    "bear_form": 5,
+    "verdant_barrier": 1,
+    "world_of_nature": 1,
+    "earthquake": 0,
+    "stone_bird": 4,
+    "mud_golem": 4,
+    "steel_golem": 4,
+    "life_aura": 4,
+    "mutate": 4,
+    "brood_form": 4,
+    "seed_of_rebirth": 2,
+    "awaken": 0,
+    "evil_spirits": 3,
+    "descent_of_death": 3,
+    "return_to_earth": 3,
+    "maternal_embrace": 3,
+    "desolation": 2,
+    "root_eruption": 2,
+    "embrace_of_the_earth": 0,
+    "bountiful_earth": 0
+  },
+  "basic": [
+    "thorn_seed",
+    "heartfruit_seed",
+    "treatment",
+    "soul_suture",
+    "cross_breed",
+    "toxin_bloom"
+  ],
+  "wheels": {
+    "nature_walker_harvest": [
+      "seed_catalyzation",
+      "quicken_life",
+      "command_flora",
+      "weather_ritual",
+      "reap",
+      "blossoming_land",
+      "barren_land",
+      "great_harvest"
+    ],
+    "nature_walker_earth": [
+      "underground_travel",
+      "swamp",
+      "wrath_of_nature",
+      "child_of_the_oak",
+      "stone_golem",
+      "bear_form",
+      "verdant_barrier",
+      "world_of_nature",
+      "earthquake"
+    ],
+    "nature_walker_alchemy": [
+      "stone_bird",
+      "mud_golem",
+      "steel_golem",
+      "life_aura",
+      "mutate",
+      "brood_form",
+      "seed_of_rebirth",
+      "awaken"
+    ],
+    "nature_walker_return": [
+      "evil_spirits",
+      "descent_of_death",
+      "return_to_earth",
+      "maternal_embrace",
+      "desolation",
+      "root_eruption",
+      "embrace_of_the_earth",
+      "bountiful_earth"
+    ]
+  },
+  "key_icons": {
+    "1": "sow",
+    "2": "treatment",
+    "3": "harvest",
+    "4": "biology",
+    "5": "earth",
+    "6": "alchemy",
+    "7": "return"
+  },
+  "upgrade_icons": [
+    "nature_walk",
+    "brood_form_complete",
+    "given_life",
+    "weather_clear",
+    "weather_storm"
+  ],
+  "status_icons": [
+    "growths",
+    "brood_constructs",
+    "brood_hybrids",
+    "brood_spirits",
+    "verdancy",
+    "reaped",
+    "rebirth_ward",
+    "mutation_organs",
+    "mutation_fungus",
+    "mutation_wheat",
+    "mutation_vines",
+    "mutagen",
+    "madness",
+    "life_sense",
+    "grave_sight",
+    "weather_forecast",
+    "nourished_by_earth",
+    "mothers_domain"
+  ],
+  "particles": [
+    "petal",
+    "spore",
+    "pollen",
+    "soil_crumb",
+    "green_ring",
+    "brown_ring",
+    "leaf",
+    "thorn",
+    "root_splinter",
+    "soul_thread",
+    "healing_spark",
+    "rain_drop",
+    "wheat_grain",
+    "grave_mote",
+    "mutation_cell"
+  ],
+  "sounds": [
+    "thorn_seed",
+    "heartfruit_seed",
+    "treatment",
+    "soul_suture",
+    "cross_breed",
+    "toxin_bloom",
+    "seed_catalyzation",
+    "quicken_life",
+    "command_flora",
+    "weather_ritual",
+    "reap",
+    "blossoming_land",
+    "barren_land",
+    "great_harvest",
+    "underground_travel",
+    "swamp",
+    "wrath_of_nature",
+    "child_of_the_oak",
+    "stone_golem",
+    "bear_form",
+    "verdant_barrier",
+    "world_of_nature",
+    "earthquake",
+    "stone_bird",
+    "mud_golem",
+    "steel_golem",
+    "life_aura",
+    "mutate",
+    "brood_form",
+    "seed_of_rebirth",
+    "awaken",
+    "evil_spirits",
+    "descent_of_death",
+    "return_to_earth",
+    "maternal_embrace",
+    "desolation",
+    "root_eruption",
+    "embrace_of_the_earth",
+    "bountiful_earth",
+    "growth_sprout",
+    "growth_bloom",
+    "growth_wither",
+    "heartfruit_eat",
+    "cross_pollinate",
+    "mutation_roll",
+    "mutation_bloom",
+    "rebirth_trigger",
+    "rebirth_bloom",
+    "warning",
+    "root_impact",
+    "construct_step",
+    "bird_wingbeat",
+    "melee_swing",
+    "melee_impact",
+    "field_end",
+    "weather_clear",
+    "weather_storm",
+    "nature_walk",
+    "brood_form_complete"
+  ],
+  "ability_models": {
+    "thorn_seed": [
+      "seed",
+      "thornling_bloom"
+    ],
+    "heartfruit_seed": [
+      "seed",
+      "heartfruit_sprout",
+      "heartfruit_ripe"
+    ],
+    "treatment": [
+      "healing_blossom"
+    ],
+    "soul_suture": [
+      "soul_suture"
+    ],
+    "cross_breed": [
+      "hybrid_crown"
+    ],
+    "toxin_bloom": [
+      "sporebed_bloom"
+    ],
+    "seed_catalyzation": [
+      "vine_burst"
+    ],
+    "quicken_life": [
+      "life_ring"
+    ],
+    "command_flora": [
+      "flora_sigil"
+    ],
+    "weather_ritual": [
+      "rain_cloud",
+      "sun_disc",
+      "storm_cloud"
+    ],
+    "reap": [
+      "harvest_scythe"
+    ],
+    "blossoming_land": [
+      "heartfruit_bloom",
+      "life_ring"
+    ],
+    "barren_land": [
+      "wither_ring"
+    ],
+    "great_harvest": [
+      "harvest_scythe",
+      "harvest_crown"
+    ],
+    "underground_travel": [
+      "earth_portal",
+      "nature_portal"
+    ],
+    "swamp": [
+      "mire_disc"
+    ],
+    "wrath_of_nature": [
+      "vine_burst",
+      "falling_stone",
+      "undertow",
+      "lightning"
+    ],
+    "child_of_the_oak": [
+      "bark_skin_wood",
+      "bark_skin_stone"
+    ],
+    "stone_golem": [
+      "stone_golem"
+    ],
+    "bear_form": [
+      "bear_form"
+    ],
+    "verdant_barrier": [
+      "verdant_barrier"
+    ],
+    "world_of_nature": [
+      "world_of_nature_tile"
+    ],
+    "earthquake": [
+      "rift"
+    ],
+    "stone_bird": [
+      "stone_bird"
+    ],
+    "mud_golem": [
+      "mud_golem"
+    ],
+    "steel_golem": [
+      "steel_golem"
+    ],
+    "life_aura": [
+      "life_ring"
+    ],
+    "mutate": [
+      "mutation_organs",
+      "mutation_fungus",
+      "mutation_wheat",
+      "mutation_vines"
+    ],
+    "brood_form": [
+      "brood_form",
+      "brood_form_complete"
+    ],
+    "seed_of_rebirth": [
+      "rebirth_seed"
+    ],
+    "awaken": [
+      "mother_tree_ripe",
+      "awaken_sigil"
+    ],
+    "evil_spirits": [
+      "evil_spirit",
+      "grave_mark"
+    ],
+    "descent_of_death": [
+      "death_canopy"
+    ],
+    "return_to_earth": [
+      "root_burst"
+    ],
+    "maternal_embrace": [
+      "coffin"
+    ],
+    "desolation": [
+      "wither_ring"
+    ],
+    "root_eruption": [
+      "root_eruption",
+      "warning_ring"
+    ],
+    "embrace_of_the_earth": [
+      "earth_lance"
+    ],
+    "bountiful_earth": [
+      "bountiful_earth_tile"
+    ]
+  },
+  "models": [
+    {
+      "name": "thornling_seed",
+      "elements": 3,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          3
+        ],
+        [
+          13,
+          3.6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "thornling_sprout",
+      "elements": 8,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.5,
+          0,
+          3
+        ],
+        [
+          13,
+          6.0333,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "thornling_bloom",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.5,
+          0,
+          3
+        ],
+        [
+          13,
+          14.0333,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "thornling_withered",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.5,
+          0,
+          3
+        ],
+        [
+          13,
+          14.0333,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "heartfruit_seed",
+      "elements": 3,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          3
+        ],
+        [
+          13,
+          3.6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "heartfruit_sprout",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.5,
+          0,
+          3
+        ],
+        [
+          13,
+          6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "heartfruit_bloom",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          13,
+          14.6,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "heartfruit_ripe",
+      "elements": 23,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          13,
+          14.6,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "heartfruit_withered",
+      "elements": 17,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          13,
+          14,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "briar_orchard_seed",
+      "elements": 3,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          3
+        ],
+        [
+          13,
+          3.6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "briar_orchard_sprout",
+      "elements": 22,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0,
+          0.4
+        ],
+        [
+          15.6,
+          8.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "briar_orchard_bloom",
+      "elements": 39,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0,
+          0.4
+        ],
+        [
+          15.6,
+          14.6,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "briar_orchard_withered",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0,
+          0.4
+        ],
+        [
+          15.6,
+          14,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "sporebed_seed",
+      "elements": 3,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          3
+        ],
+        [
+          13,
+          3.6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "sporebed_sprout",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          2
+        ],
+        [
+          13,
+          5.6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "sporebed_bloom",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          2
+        ],
+        [
+          13,
+          7.7,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "sporebed_withered",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          2
+        ],
+        [
+          13,
+          7.7,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "mother_tree_seed",
+      "elements": 3,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          3
+        ],
+        [
+          13,
+          3.6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "mother_tree_sprout",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.5,
+          0,
+          3
+        ],
+        [
+          13,
+          6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "mother_tree_bloom",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          13,
+          23.6,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "mother_tree_ripe",
+      "elements": 23,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          13,
+          23.6,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "mother_tree_withered",
+      "elements": 17,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          0,
+          2
+        ],
+        [
+          13,
+          23,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "seed",
+      "elements": 3,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          3
+        ],
+        [
+          13,
+          3.6,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "heartfruit",
+      "elements": 5,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          4.5,
+          2,
+          5
+        ],
+        [
+          12,
+          12,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "vine_burst",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0.0,
+          0.4
+        ],
+        [
+          15.6,
+          11.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "root_burst",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0.0,
+          0.4
+        ],
+        [
+          15.6,
+          14.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "root_eruption",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0.0,
+          0.4
+        ],
+        [
+          15.6,
+          24.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "mire_disc",
+      "elements": 57,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.0,
+          0,
+          0.0
+        ],
+        [
+          15.4,
+          0.8,
+          16.0
+        ]
+      ]
+    },
+    {
+      "name": "coffin",
+      "elements": 10,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1.8,
+          0,
+          1.7
+        ],
+        [
+          14.2,
+          23.5,
+          14
+        ]
+      ]
+    },
+    {
+      "name": "rift",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3.4381,
+          0,
+          -8
+        ],
+        [
+          12.5477,
+          2.3,
+          22.5
+        ]
+      ]
+    },
+    {
+      "name": "grave_mark",
+      "elements": 19,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.6,
+          0,
+          2.6
+        ],
+        [
+          13.4,
+          11,
+          13.4
+        ]
+      ]
+    },
+    {
+      "name": "bark_skin_wood",
+      "elements": 10,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          7,
+          3.8
+        ],
+        [
+          17,
+          21,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "bark_skin_stone",
+      "elements": 10,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          7,
+          3.8
+        ],
+        [
+          17,
+          21,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "stone_bird",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.2,
+          3,
+          -2
+        ],
+        [
+          22.2,
+          16,
+          20
+        ]
+      ]
+    },
+    {
+      "name": "stone_bird_0",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.2,
+          3,
+          -2
+        ],
+        [
+          22.2,
+          16,
+          20
+        ]
+      ]
+    },
+    {
+      "name": "stone_bird_1",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.2,
+          3,
+          -2
+        ],
+        [
+          22.2,
+          16,
+          20
+        ]
+      ]
+    },
+    {
+      "name": "stone_bird_2",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.2,
+          3,
+          -2
+        ],
+        [
+          22.2,
+          16,
+          20
+        ]
+      ]
+    },
+    {
+      "name": "stone_bird_3",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -6.2,
+          3,
+          -2
+        ],
+        [
+          22.2,
+          16,
+          20
+        ]
+      ]
+    },
+    {
+      "name": "stone_golem",
+      "elements": 16,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "stone_golem_0",
+      "elements": 16,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "stone_golem_1",
+      "elements": 16,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          2.6
+        ],
+        [
+          18.6,
+          27,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "stone_golem_2",
+      "elements": 16,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "stone_golem_3",
+      "elements": 16,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          2.6
+        ],
+        [
+          18.6,
+          27,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "mud_golem",
+      "elements": 15,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "mud_golem_0",
+      "elements": 15,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "mud_golem_1",
+      "elements": 15,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          2.6
+        ],
+        [
+          18.6,
+          27,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "mud_golem_2",
+      "elements": 15,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "mud_golem_3",
+      "elements": 15,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          2.6
+        ],
+        [
+          18.6,
+          27,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "steel_golem",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12.2
+        ]
+      ]
+    },
+    {
+      "name": "steel_golem_0",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12.2
+        ]
+      ]
+    },
+    {
+      "name": "steel_golem_1",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          2.6
+        ],
+        [
+          18.6,
+          27,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "steel_golem_2",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          3.5
+        ],
+        [
+          18.6,
+          27,
+          12.2
+        ]
+      ]
+    },
+    {
+      "name": "steel_golem_3",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.6,
+          0,
+          2.6
+        ],
+        [
+          18.6,
+          27,
+          12.4
+        ]
+      ]
+    },
+    {
+      "name": "bear_form",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2,
+          0,
+          -5.4
+        ],
+        [
+          14,
+          24,
+          21
+        ]
+      ]
+    },
+    {
+      "name": "bear_form_0",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2,
+          0,
+          -5.4
+        ],
+        [
+          14,
+          24,
+          21
+        ]
+      ]
+    },
+    {
+      "name": "bear_form_1",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2,
+          0,
+          -5.4
+        ],
+        [
+          14,
+          24,
+          22.5
+        ]
+      ]
+    },
+    {
+      "name": "bear_form_2",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2,
+          0,
+          -5.4
+        ],
+        [
+          14,
+          24,
+          21
+        ]
+      ]
+    },
+    {
+      "name": "bear_form_3",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2,
+          0,
+          -5.4
+        ],
+        [
+          14,
+          24,
+          22.5
+        ]
+      ]
+    },
+    {
+      "name": "brood_form",
+      "elements": 47,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.0,
+          0,
+          0.0
+        ],
+        [
+          16.0,
+          22,
+          16.0
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_0",
+      "elements": 47,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.0,
+          0,
+          0.0
+        ],
+        [
+          16.0,
+          22,
+          16.0
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_1",
+      "elements": 47,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.0,
+          0,
+          0.0
+        ],
+        [
+          16.0,
+          22,
+          16.0
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_2",
+      "elements": 47,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.0,
+          0,
+          0.0
+        ],
+        [
+          16.0,
+          22,
+          16.0
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_3",
+      "elements": 47,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.0,
+          0,
+          0.0
+        ],
+        [
+          16.0,
+          22,
+          16.0
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_complete",
+      "elements": 70,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.4,
+          0,
+          -2.4
+        ],
+        [
+          18.4,
+          29,
+          18.4
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_complete_0",
+      "elements": 70,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.4,
+          0,
+          -2.4
+        ],
+        [
+          18.4,
+          29,
+          18.4
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_complete_1",
+      "elements": 70,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.4,
+          0,
+          -2.4
+        ],
+        [
+          18.4,
+          29,
+          18.4
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_complete_2",
+      "elements": 70,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.4,
+          0,
+          -2.4
+        ],
+        [
+          18.4,
+          29,
+          18.4
+        ]
+      ]
+    },
+    {
+      "name": "brood_form_complete_3",
+      "elements": 70,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.4,
+          0,
+          -2.4
+        ],
+        [
+          18.4,
+          29,
+          18.4
+        ]
+      ]
+    },
+    {
+      "name": "evil_spirit",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          1,
+          4.6
+        ],
+        [
+          16,
+          19,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "evil_spirit_0",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          1,
+          4.6
+        ],
+        [
+          16,
+          19,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "evil_spirit_1",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          2,
+          4.6
+        ],
+        [
+          16,
+          20,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "evil_spirit_2",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          1,
+          4.6
+        ],
+        [
+          16,
+          19,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "evil_spirit_3",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          0,
+          4.6
+        ],
+        [
+          16,
+          18,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "world_of_nature_tile",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          0,
+          6.5
+        ],
+        [
+          16,
+          16,
+          9.5
+        ]
+      ]
+    },
+    {
+      "name": "bountiful_earth_tile",
+      "elements": 12,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          0,
+          6.5
+        ],
+        [
+          16,
+          16,
+          9.5
+        ]
+      ]
+    },
+    {
+      "name": "verdant_barrier",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          0,
+          2
+        ],
+        [
+          16,
+          16,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "life_ring",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.2,
+          0.6
+        ],
+        [
+          15.4,
+          2.5,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "wither_ring",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.2,
+          0.6
+        ],
+        [
+          15.4,
+          2.5,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "warning_ring",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.2,
+          0.6
+        ],
+        [
+          15.4,
+          2.5,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "earth_portal",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.2,
+          0.6
+        ],
+        [
+          15.4,
+          2.5,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "nature_portal",
+      "elements": 52,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0.0,
+          0.4
+        ],
+        [
+          15.6,
+          8.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "awaken_sigil",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.2,
+          0.6
+        ],
+        [
+          15.4,
+          2.5,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "flora_sigil",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.2,
+          0.6
+        ],
+        [
+          15.4,
+          2.5,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "harvest_crown",
+      "elements": 52,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0.0,
+          0.4
+        ],
+        [
+          15.6,
+          8.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "healing_blossom",
+      "elements": 9,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.3,
+          3,
+          2.3
+        ],
+        [
+          13.7,
+          6,
+          13.7
+        ]
+      ]
+    },
+    {
+      "name": "soul_suture",
+      "elements": 15,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          4.7115,
+          0.0,
+          7.6
+        ],
+        [
+          11.2987,
+          16.2,
+          8.4
+        ]
+      ]
+    },
+    {
+      "name": "hybrid_crown",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0.0,
+          0.4
+        ],
+        [
+          15.6,
+          15.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "rain_cloud",
+      "elements": 10,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          3,
+          4
+        ],
+        [
+          15,
+          20,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "storm_cloud",
+      "elements": 10,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          3,
+          4
+        ],
+        [
+          15,
+          20,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "sun_disc",
+      "elements": 17,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1.6,
+          7,
+          1.6
+        ],
+        [
+          14.4,
+          9,
+          14.4
+        ]
+      ]
+    },
+    {
+      "name": "harvest_scythe",
+      "elements": 8,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          7,
+          0,
+          7
+        ],
+        [
+          21,
+          26.0,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "falling_stone",
+      "elements": 1,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          2,
+          3
+        ],
+        [
+          13,
+          14,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "undertow",
+      "elements": 48,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          -0.3,
+          0.6
+        ],
+        [
+          15.4,
+          6.3,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "lightning",
+      "elements": 5,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          7,
+          0,
+          7.5
+        ],
+        [
+          11,
+          21,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "mutation_organs",
+      "elements": 5,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          2,
+          5
+        ],
+        [
+          14,
+          11,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "mutation_fungus",
+      "elements": 13,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          0,
+          2
+        ],
+        [
+          13,
+          7.7,
+          13
+        ]
+      ]
+    },
+    {
+      "name": "mutation_wheat",
+      "elements": 25,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2.2,
+          0,
+          6.5
+        ],
+        [
+          14.2,
+          14,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "mutation_vines",
+      "elements": 16,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.4,
+          0.0,
+          0.4
+        ],
+        [
+          15.6,
+          12.5,
+          15.6
+        ]
+      ]
+    },
+    {
+      "name": "rebirth_seed",
+      "elements": 21,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.6,
+          0.7,
+          0.6
+        ],
+        [
+          15.4,
+          12,
+          15.4
+        ]
+      ]
+    },
+    {
+      "name": "death_canopy",
+      "elements": 40,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1.4,
+          0.0,
+          -1.4
+        ],
+        [
+          17.4,
+          22.5,
+          17.4
+        ]
+      ]
+    },
+    {
+      "name": "earth_lance",
+      "elements": 14,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3.9,
+          0,
+          1.3378
+        ],
+        [
+          15.6,
+          29,
+          14.6622
+        ]
+      ]
+    }
+  ],
+  "growths": {
+    "thornling": {
+      "seed": "thornling_seed",
+      "sprout": "thornling_sprout",
+      "bloom": "thornling_bloom",
+      "withered": "thornling_withered"
+    },
+    "heartfruit": {
+      "seed": "heartfruit_seed",
+      "sprout": "heartfruit_sprout",
+      "bloom": "heartfruit_bloom",
+      "ripe": "heartfruit_ripe",
+      "withered": "heartfruit_withered"
+    },
+    "briar_orchard": {
+      "seed": "briar_orchard_seed",
+      "sprout": "briar_orchard_sprout",
+      "bloom": "briar_orchard_bloom",
+      "withered": "briar_orchard_withered"
+    },
+    "sporebed": {
+      "seed": "sporebed_seed",
+      "sprout": "sporebed_sprout",
+      "bloom": "sporebed_bloom",
+      "withered": "sporebed_withered"
+    },
+    "mother_tree": {
+      "seed": "mother_tree_seed",
+      "sprout": "mother_tree_sprout",
+      "bloom": "mother_tree_bloom",
+      "ripe": "mother_tree_ripe",
+      "withered": "mother_tree_withered"
+    }
+  },
+  "animations": {
+    "stone_bird": {
+      "frames": [
+        "stone_bird_0",
+        "stone_bird_1",
+        "stone_bird_2",
+        "stone_bird_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "stone_golem": {
+      "frames": [
+        "stone_golem_0",
+        "stone_golem_1",
+        "stone_golem_2",
+        "stone_golem_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "mud_golem": {
+      "frames": [
+        "mud_golem_0",
+        "mud_golem_1",
+        "mud_golem_2",
+        "mud_golem_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "steel_golem": {
+      "frames": [
+        "steel_golem_0",
+        "steel_golem_1",
+        "steel_golem_2",
+        "steel_golem_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "bear_form": {
+      "frames": [
+        "bear_form_0",
+        "bear_form_1",
+        "bear_form_2",
+        "bear_form_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "brood_form": {
+      "frames": [
+        "brood_form_0",
+        "brood_form_1",
+        "brood_form_2",
+        "brood_form_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "brood_form_complete": {
+      "frames": [
+        "brood_form_complete_0",
+        "brood_form_complete_1",
+        "brood_form_complete_2",
+        "brood_form_complete_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "evil_spirit": {
+      "frames": [
+        "evil_spirit_0",
+        "evil_spirit_1",
+        "evil_spirit_2",
+        "evil_spirit_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    }
+  },
+  "texture_animations": {
+    "cycle_atlas": {
+      "frames": 4,
+      "size": [
+        64,
+        64
+      ],
+      "frametime": 4
+    }
+  },
+  "shared_files": {
+    "sounds.json": [
+      "nature_walker.thorn_seed",
+      "nature_walker.heartfruit_seed",
+      "nature_walker.treatment",
+      "nature_walker.soul_suture",
+      "nature_walker.cross_breed",
+      "nature_walker.toxin_bloom",
+      "nature_walker.seed_catalyzation",
+      "nature_walker.quicken_life",
+      "nature_walker.command_flora",
+      "nature_walker.weather_ritual",
+      "nature_walker.reap",
+      "nature_walker.blossoming_land",
+      "nature_walker.barren_land",
+      "nature_walker.great_harvest",
+      "nature_walker.underground_travel",
+      "nature_walker.swamp",
+      "nature_walker.wrath_of_nature",
+      "nature_walker.child_of_the_oak",
+      "nature_walker.stone_golem",
+      "nature_walker.bear_form",
+      "nature_walker.verdant_barrier",
+      "nature_walker.world_of_nature",
+      "nature_walker.earthquake",
+      "nature_walker.stone_bird",
+      "nature_walker.mud_golem",
+      "nature_walker.steel_golem",
+      "nature_walker.life_aura",
+      "nature_walker.mutate",
+      "nature_walker.brood_form",
+      "nature_walker.seed_of_rebirth",
+      "nature_walker.awaken",
+      "nature_walker.evil_spirits",
+      "nature_walker.descent_of_death",
+      "nature_walker.return_to_earth",
+      "nature_walker.maternal_embrace",
+      "nature_walker.desolation",
+      "nature_walker.root_eruption",
+      "nature_walker.embrace_of_the_earth",
+      "nature_walker.bountiful_earth",
+      "nature_walker.growth_sprout",
+      "nature_walker.growth_bloom",
+      "nature_walker.growth_wither",
+      "nature_walker.heartfruit_eat",
+      "nature_walker.cross_pollinate",
+      "nature_walker.mutation_roll",
+      "nature_walker.mutation_bloom",
+      "nature_walker.rebirth_trigger",
+      "nature_walker.rebirth_bloom",
+      "nature_walker.warning",
+      "nature_walker.root_impact",
+      "nature_walker.construct_step",
+      "nature_walker.bird_wingbeat",
+      "nature_walker.melee_swing",
+      "nature_walker.melee_impact",
+      "nature_walker.field_end",
+      "nature_walker.weather_clear",
+      "nature_walker.weather_storm",
+      "nature_walker.nature_walk",
+      "nature_walker.brood_form_complete"
+    ],
+    "lang/en_us.json": [
+      "ability.circle_of_inevitability.nature_walker.thorn_seed",
+      "ability.circle_of_inevitability.nature_walker.heartfruit_seed",
+      "ability.circle_of_inevitability.nature_walker.treatment",
+      "ability.circle_of_inevitability.nature_walker.soul_suture",
+      "ability.circle_of_inevitability.nature_walker.cross_breed",
+      "ability.circle_of_inevitability.nature_walker.toxin_bloom",
+      "ability.circle_of_inevitability.nature_walker.seed_catalyzation",
+      "ability.circle_of_inevitability.nature_walker.quicken_life",
+      "ability.circle_of_inevitability.nature_walker.command_flora",
+      "ability.circle_of_inevitability.nature_walker.weather_ritual",
+      "ability.circle_of_inevitability.nature_walker.reap",
+      "ability.circle_of_inevitability.nature_walker.blossoming_land",
+      "ability.circle_of_inevitability.nature_walker.barren_land",
+      "ability.circle_of_inevitability.nature_walker.great_harvest",
+      "ability.circle_of_inevitability.nature_walker.underground_travel",
+      "ability.circle_of_inevitability.nature_walker.swamp",
+      "ability.circle_of_inevitability.nature_walker.wrath_of_nature",
+      "ability.circle_of_inevitability.nature_walker.child_of_the_oak",
+      "ability.circle_of_inevitability.nature_walker.stone_golem",
+      "ability.circle_of_inevitability.nature_walker.bear_form",
+      "ability.circle_of_inevitability.nature_walker.verdant_barrier",
+      "ability.circle_of_inevitability.nature_walker.world_of_nature",
+      "ability.circle_of_inevitability.nature_walker.earthquake",
+      "ability.circle_of_inevitability.nature_walker.stone_bird",
+      "ability.circle_of_inevitability.nature_walker.mud_golem",
+      "ability.circle_of_inevitability.nature_walker.steel_golem",
+      "ability.circle_of_inevitability.nature_walker.life_aura",
+      "ability.circle_of_inevitability.nature_walker.mutate",
+      "ability.circle_of_inevitability.nature_walker.brood_form",
+      "ability.circle_of_inevitability.nature_walker.seed_of_rebirth",
+      "ability.circle_of_inevitability.nature_walker.awaken",
+      "ability.circle_of_inevitability.nature_walker.evil_spirits",
+      "ability.circle_of_inevitability.nature_walker.descent_of_death",
+      "ability.circle_of_inevitability.nature_walker.return_to_earth",
+      "ability.circle_of_inevitability.nature_walker.maternal_embrace",
+      "ability.circle_of_inevitability.nature_walker.desolation",
+      "ability.circle_of_inevitability.nature_walker.root_eruption",
+      "ability.circle_of_inevitability.nature_walker.embrace_of_the_earth",
+      "ability.circle_of_inevitability.nature_walker.bountiful_earth",
+      "ability.circle_of_inevitability.nature_walker.sow",
+      "ability.circle_of_inevitability.nature_walker.harvest",
+      "ability.circle_of_inevitability.nature_walker.biology",
+      "ability.circle_of_inevitability.nature_walker.earth",
+      "ability.circle_of_inevitability.nature_walker.alchemy",
+      "ability.circle_of_inevitability.nature_walker.return",
+      "ability.circle_of_inevitability.nature_walker.nature_walk",
+      "ability.circle_of_inevitability.nature_walker.brood_form_complete",
+      "ability.circle_of_inevitability.nature_walker.given_life",
+      "ability.circle_of_inevitability.nature_walker.weather_clear",
+      "ability.circle_of_inevitability.nature_walker.weather_storm",
+      "ability.circle_of_inevitability.nature_walker.growths",
+      "ability.circle_of_inevitability.nature_walker.brood_constructs",
+      "ability.circle_of_inevitability.nature_walker.brood_hybrids",
+      "ability.circle_of_inevitability.nature_walker.brood_spirits",
+      "ability.circle_of_inevitability.nature_walker.verdancy",
+      "ability.circle_of_inevitability.nature_walker.reaped",
+      "ability.circle_of_inevitability.nature_walker.rebirth_ward",
+      "ability.circle_of_inevitability.nature_walker.mutation_organs",
+      "ability.circle_of_inevitability.nature_walker.mutation_fungus",
+      "ability.circle_of_inevitability.nature_walker.mutation_wheat",
+      "ability.circle_of_inevitability.nature_walker.mutation_vines",
+      "ability.circle_of_inevitability.nature_walker.mutagen",
+      "ability.circle_of_inevitability.nature_walker.madness",
+      "ability.circle_of_inevitability.nature_walker.life_sense",
+      "ability.circle_of_inevitability.nature_walker.grave_sight",
+      "ability.circle_of_inevitability.nature_walker.weather_forecast",
+      "ability.circle_of_inevitability.nature_walker.nourished_by_earth",
+      "ability.circle_of_inevitability.nature_walker.mothers_domain",
+      "subtitles.circle_of_inevitability.nature_walker.thorn_seed",
+      "subtitles.circle_of_inevitability.nature_walker.heartfruit_seed",
+      "subtitles.circle_of_inevitability.nature_walker.treatment",
+      "subtitles.circle_of_inevitability.nature_walker.soul_suture",
+      "subtitles.circle_of_inevitability.nature_walker.cross_breed",
+      "subtitles.circle_of_inevitability.nature_walker.toxin_bloom",
+      "subtitles.circle_of_inevitability.nature_walker.seed_catalyzation",
+      "subtitles.circle_of_inevitability.nature_walker.quicken_life",
+      "subtitles.circle_of_inevitability.nature_walker.command_flora",
+      "subtitles.circle_of_inevitability.nature_walker.weather_ritual",
+      "subtitles.circle_of_inevitability.nature_walker.reap",
+      "subtitles.circle_of_inevitability.nature_walker.blossoming_land",
+      "subtitles.circle_of_inevitability.nature_walker.barren_land",
+      "subtitles.circle_of_inevitability.nature_walker.great_harvest",
+      "subtitles.circle_of_inevitability.nature_walker.underground_travel",
+      "subtitles.circle_of_inevitability.nature_walker.swamp",
+      "subtitles.circle_of_inevitability.nature_walker.wrath_of_nature",
+      "subtitles.circle_of_inevitability.nature_walker.child_of_the_oak",
+      "subtitles.circle_of_inevitability.nature_walker.stone_golem",
+      "subtitles.circle_of_inevitability.nature_walker.bear_form",
+      "subtitles.circle_of_inevitability.nature_walker.verdant_barrier",
+      "subtitles.circle_of_inevitability.nature_walker.world_of_nature",
+      "subtitles.circle_of_inevitability.nature_walker.earthquake",
+      "subtitles.circle_of_inevitability.nature_walker.stone_bird",
+      "subtitles.circle_of_inevitability.nature_walker.mud_golem",
+      "subtitles.circle_of_inevitability.nature_walker.steel_golem",
+      "subtitles.circle_of_inevitability.nature_walker.life_aura",
+      "subtitles.circle_of_inevitability.nature_walker.mutate",
+      "subtitles.circle_of_inevitability.nature_walker.brood_form",
+      "subtitles.circle_of_inevitability.nature_walker.seed_of_rebirth",
+      "subtitles.circle_of_inevitability.nature_walker.awaken",
+      "subtitles.circle_of_inevitability.nature_walker.evil_spirits",
+      "subtitles.circle_of_inevitability.nature_walker.descent_of_death",
+      "subtitles.circle_of_inevitability.nature_walker.return_to_earth",
+      "subtitles.circle_of_inevitability.nature_walker.maternal_embrace",
+      "subtitles.circle_of_inevitability.nature_walker.desolation",
+      "subtitles.circle_of_inevitability.nature_walker.root_eruption",
+      "subtitles.circle_of_inevitability.nature_walker.embrace_of_the_earth",
+      "subtitles.circle_of_inevitability.nature_walker.bountiful_earth",
+      "subtitles.circle_of_inevitability.nature_walker.growth_sprout",
+      "subtitles.circle_of_inevitability.nature_walker.growth_bloom",
+      "subtitles.circle_of_inevitability.nature_walker.growth_wither",
+      "subtitles.circle_of_inevitability.nature_walker.heartfruit_eat",
+      "subtitles.circle_of_inevitability.nature_walker.cross_pollinate",
+      "subtitles.circle_of_inevitability.nature_walker.mutation_roll",
+      "subtitles.circle_of_inevitability.nature_walker.mutation_bloom",
+      "subtitles.circle_of_inevitability.nature_walker.rebirth_trigger",
+      "subtitles.circle_of_inevitability.nature_walker.rebirth_bloom",
+      "subtitles.circle_of_inevitability.nature_walker.warning",
+      "subtitles.circle_of_inevitability.nature_walker.root_impact",
+      "subtitles.circle_of_inevitability.nature_walker.construct_step",
+      "subtitles.circle_of_inevitability.nature_walker.bird_wingbeat",
+      "subtitles.circle_of_inevitability.nature_walker.melee_swing",
+      "subtitles.circle_of_inevitability.nature_walker.melee_impact",
+      "subtitles.circle_of_inevitability.nature_walker.field_end",
+      "subtitles.circle_of_inevitability.nature_walker.weather_clear",
+      "subtitles.circle_of_inevitability.nature_walker.weather_storm",
+      "subtitles.circle_of_inevitability.nature_walker.nature_walk",
+      "subtitles.circle_of_inevitability.nature_walker.brood_form_complete",
+      "pathway.circle_of_inevitability.nature_walker",
+      "hud.circle_of_inevitability.nature_walker.growths",
+      "hud.circle_of_inevitability.nature_walker.brood",
+      "hud.circle_of_inevitability.nature_walker.rebirth",
+      "hud.circle_of_inevitability.nature_walker.mutation"
+    ]
+  },
+  "files": {
+    "models/model_fx/nature_walker/awaken_sigil.json": "c10f37a229391b1a2af179c8ff5a286d96d7b1239c3df90f1bca58edb7e77da7",
+    "models/model_fx/nature_walker/bark_skin_stone.json": "c8f2a818deea46a5ae40ffba3c872b59bbea89ace3d9ec37fa8288f1bdffb775",
+    "models/model_fx/nature_walker/bark_skin_wood.json": "277bf3141f6018210fa295939261a0ffc09a0a6e181c968f0fe270deadc0df0e",
+    "models/model_fx/nature_walker/bear_form.json": "d974989ed23b8e23a7ba15480f81f29c0b42887ba0b39de0e802c75b59e4395a",
+    "models/model_fx/nature_walker/bear_form_0.json": "d974989ed23b8e23a7ba15480f81f29c0b42887ba0b39de0e802c75b59e4395a",
+    "models/model_fx/nature_walker/bear_form_1.json": "58789092d8bcb4130901dce9ab8f938347f5e7410e13a2de34ce67974dbd3ac6",
+    "models/model_fx/nature_walker/bear_form_2.json": "d974989ed23b8e23a7ba15480f81f29c0b42887ba0b39de0e802c75b59e4395a",
+    "models/model_fx/nature_walker/bear_form_3.json": "e1b004a2e5254d038579b18a9afee0f26d37e26c2d55b0621c239e355138cb7f",
+    "models/model_fx/nature_walker/bountiful_earth_tile.json": "80eed1bf847830cfd3487ec9c7391a7635b0fcd4eefa29ae854533cad2834885",
+    "models/model_fx/nature_walker/briar_orchard_bloom.json": "c025550a6f2a33b2a1ac8f3566e487eb8fdc6c826ffbc6a029278be7cd7652c2",
+    "models/model_fx/nature_walker/briar_orchard_seed.json": "bf898349424a1f777756a6a98078f886a5424bb7cf8bf42cff55a9a31e136b66",
+    "models/model_fx/nature_walker/briar_orchard_sprout.json": "6f47782f3b66eb856aaf05bdbc5dd839e31d71398a8dcc5e383367a98636e874",
+    "models/model_fx/nature_walker/briar_orchard_withered.json": "4e351e36df75881d12ff7fd436e5aa460cfbe9afd399b1d613bbb3e345775505",
+    "models/model_fx/nature_walker/brood_form.json": "0b179e8dddc2483f1f8fbaf6335856281a0c60af87448c1e1b3d3b5d788a2f28",
+    "models/model_fx/nature_walker/brood_form_0.json": "0b179e8dddc2483f1f8fbaf6335856281a0c60af87448c1e1b3d3b5d788a2f28",
+    "models/model_fx/nature_walker/brood_form_1.json": "934808ff59207f63da79ae536465e809b2d3a79e500d6b42b9be9606c9fe022c",
+    "models/model_fx/nature_walker/brood_form_2.json": "0b179e8dddc2483f1f8fbaf6335856281a0c60af87448c1e1b3d3b5d788a2f28",
+    "models/model_fx/nature_walker/brood_form_3.json": "b686d9264f1d88fa23ae75a641298eab061dd951cc9d4def932abbb0f059b1b2",
+    "models/model_fx/nature_walker/brood_form_complete.json": "b50d0181469074cb6cfa6ab1b6a2d839736de1009eb72fb7ff9338dbcad59cf1",
+    "models/model_fx/nature_walker/brood_form_complete_0.json": "b50d0181469074cb6cfa6ab1b6a2d839736de1009eb72fb7ff9338dbcad59cf1",
+    "models/model_fx/nature_walker/brood_form_complete_1.json": "23478475c585eb30204a09d576efd43d2d62f2078dd2e48cef7fc660f671f637",
+    "models/model_fx/nature_walker/brood_form_complete_2.json": "b50d0181469074cb6cfa6ab1b6a2d839736de1009eb72fb7ff9338dbcad59cf1",
+    "models/model_fx/nature_walker/brood_form_complete_3.json": "fc1db7525a857d1724fa667a1f50833ad8998898ca6733a6536c725bba9a0c4b",
+    "models/model_fx/nature_walker/coffin.json": "b14bb9e8f3a740c256dde3241631b11f94dfaf98ad1bd12c2c92ec5d5a8ac029",
+    "models/model_fx/nature_walker/death_canopy.json": "2f67e2fc3a7873cefbccf2fe0448c68a9f19421e386790ea211d77b0a8213519",
+    "models/model_fx/nature_walker/earth_lance.json": "06900fbd88e0c0b7e3e1f85031af0e5dab020c95bd0e7f3f6c8b0c00868e7194",
+    "models/model_fx/nature_walker/earth_portal.json": "849790680a5fc8123ed8e7b4054f73bf39a43ecfdb43ab68fb73648528f0c5ce",
+    "models/model_fx/nature_walker/evil_spirit.json": "e59f38981f7c202019fa340593166e20f2d70cd3780b93a3a87effba24191b60",
+    "models/model_fx/nature_walker/evil_spirit_0.json": "e59f38981f7c202019fa340593166e20f2d70cd3780b93a3a87effba24191b60",
+    "models/model_fx/nature_walker/evil_spirit_1.json": "f9f2c0241f193c057f7f39247e09cdf8cdb0aca12d73fb822e03eba38ce57375",
+    "models/model_fx/nature_walker/evil_spirit_2.json": "e59f38981f7c202019fa340593166e20f2d70cd3780b93a3a87effba24191b60",
+    "models/model_fx/nature_walker/evil_spirit_3.json": "67141fa93ec1c127ca7f4fe0067bbdf714bc130ed60efbb0c21d6e229ac004b6",
+    "models/model_fx/nature_walker/falling_stone.json": "4d39adcf0b62ab408c6634195d608bd39dca344a1f2f5e0070fd5e5a0419719e",
+    "models/model_fx/nature_walker/flora_sigil.json": "9f3dc02a7701c64cdc11691cc48b615f17afa26298a5cb51328febf7bcbf6440",
+    "models/model_fx/nature_walker/grave_mark.json": "1c6bfc2fffcadc743b7692cd76030436ddf20d0a3e3aa94108b1025b254219e5",
+    "models/model_fx/nature_walker/harvest_crown.json": "6df9bcaad0715e04f9356da71f8fdd24898157a2f28bffcb3c9432f8d07e7f83",
+    "models/model_fx/nature_walker/harvest_scythe.json": "ee19fb5cde3569ba60b271acf08dda575292651c8f0d5cf5103c02d24861ef1f",
+    "models/model_fx/nature_walker/healing_blossom.json": "7e415b5aa211b56faa3b2a397a1ab917ee9e7e007aa2b6aaac043aa62566ad50",
+    "models/model_fx/nature_walker/heartfruit.json": "429adc335e18649a30e0d0973dd571b22299e839d2bd0222b171fc06b760c74c",
+    "models/model_fx/nature_walker/heartfruit_bloom.json": "dd0ef3cf1597a59752db60b0618135a971447085b4b1e5258539cfe7bc8b1e28",
+    "models/model_fx/nature_walker/heartfruit_ripe.json": "e58c6b733e5cf49bc77acc11600c022007c127bc35b6e5c108b93f6ec15e3e3c",
+    "models/model_fx/nature_walker/heartfruit_seed.json": "b72cbb2e4a3a514ef34720f23234019c2178c19c86247a066238e0fbb42bb235",
+    "models/model_fx/nature_walker/heartfruit_sprout.json": "3393ecb36777253b56f14cd758121327666de4e478f63796a98b7df5e4d08499",
+    "models/model_fx/nature_walker/heartfruit_withered.json": "758372733c0f17e204c2ad90d8a47bd227d00e5647904627ada2522e87ea5361",
+    "models/model_fx/nature_walker/hybrid_crown.json": "e699d2de4b6a63bdc929220f72e51a0a50026dfdae5cd48d7d551928221fc1ce",
+    "models/model_fx/nature_walker/life_ring.json": "ad3fab2a2b20103c77e1c14be1851611db966769bae6a2e8d5e42f9185c68c2b",
+    "models/model_fx/nature_walker/lightning.json": "c83b58b215d50dde9c67cb17731c004ff83e030c958e30ded933aa48bff3fffa",
+    "models/model_fx/nature_walker/mire_disc.json": "93b7b10a3a93522b757276d94938da40d6670154181684632d7c76438f2b93b1",
+    "models/model_fx/nature_walker/mother_tree_bloom.json": "c77e7d729353445506a70ba995ff505ac5eec48238fab17b2602fa48069570e7",
+    "models/model_fx/nature_walker/mother_tree_ripe.json": "cf2e0a2b06929313c022851a6a2745aad34628816aa7addcc8f609bf04628f24",
+    "models/model_fx/nature_walker/mother_tree_seed.json": "bf898349424a1f777756a6a98078f886a5424bb7cf8bf42cff55a9a31e136b66",
+    "models/model_fx/nature_walker/mother_tree_sprout.json": "3393ecb36777253b56f14cd758121327666de4e478f63796a98b7df5e4d08499",
+    "models/model_fx/nature_walker/mother_tree_withered.json": "af658cfd805a5ae986ce09a799a496547e1ae97ace8ac8eec3a359a1ab94c774",
+    "models/model_fx/nature_walker/mud_golem.json": "3829e8c7b721ee3ff6f5871937cfa3b4fac165c613d0e753d2ab072b9361edbb",
+    "models/model_fx/nature_walker/mud_golem_0.json": "3829e8c7b721ee3ff6f5871937cfa3b4fac165c613d0e753d2ab072b9361edbb",
+    "models/model_fx/nature_walker/mud_golem_1.json": "2a35995f6c335bc198273f72d0d22b66b5704eb56d4ab6c547e4976082a175d7",
+    "models/model_fx/nature_walker/mud_golem_2.json": "3829e8c7b721ee3ff6f5871937cfa3b4fac165c613d0e753d2ab072b9361edbb",
+    "models/model_fx/nature_walker/mud_golem_3.json": "29a0e5ae165e8fd79315c1519036109a3471d892395ac61ccbf3d6d6533e3f31",
+    "models/model_fx/nature_walker/mutation_fungus.json": "9e976c85fafd05374918d2ef7ae26e92836ac55347378f1fe88deee9f0daa5c9",
+    "models/model_fx/nature_walker/mutation_organs.json": "8a6747ac5cc00113d0247d8df72cc020e93272c8b8fd5070feca01241a1513de",
+    "models/model_fx/nature_walker/mutation_vines.json": "1d6074e662adddb90d2faf78895644d40c6537756e38f389c4a8ff8167835721",
+    "models/model_fx/nature_walker/mutation_wheat.json": "19d3633b4d7dc812432f4a616edff1ec675c51d44e4786d9d23e5805f42e78f2",
+    "models/model_fx/nature_walker/nature_portal.json": "c326c5c07914da2bd93014957b92a7074a8e70e384316db744a293fff28fed59",
+    "models/model_fx/nature_walker/rain_cloud.json": "6da9a70c320786d15afacc8e43a423d760d84d65d3c9616030bcdda98cc88c90",
+    "models/model_fx/nature_walker/rebirth_seed.json": "c6890a537db96d3dd44b8c5a2534695a9b8e05e72b21df69447ecd7d2298457d",
+    "models/model_fx/nature_walker/rift.json": "3bb3fbeeb3e6346384b034ace560862cd0c2df0b5f3b6fb145b416e8a77db25c",
+    "models/model_fx/nature_walker/root_burst.json": "6942b68d1475dd8b7db1926b6e33036c02d87dbd528eb407f07f07e100b72129",
+    "models/model_fx/nature_walker/root_eruption.json": "17918f70d4e042e78352c62cd5c5f5f2d71abb77f165d7734f7ef8cb5f5357df",
+    "models/model_fx/nature_walker/seed.json": "bf898349424a1f777756a6a98078f886a5424bb7cf8bf42cff55a9a31e136b66",
+    "models/model_fx/nature_walker/soul_suture.json": "5861abb0c85dd6e6e330cf45626d678e21eaf3862f7835feec898f967bafbd7d",
+    "models/model_fx/nature_walker/sporebed_bloom.json": "9e976c85fafd05374918d2ef7ae26e92836ac55347378f1fe88deee9f0daa5c9",
+    "models/model_fx/nature_walker/sporebed_seed.json": "bf898349424a1f777756a6a98078f886a5424bb7cf8bf42cff55a9a31e136b66",
+    "models/model_fx/nature_walker/sporebed_sprout.json": "593b3a85d3b35cc6b8339dd1bd01812ee9f9fc454cc141eb44c9bfd473451044",
+    "models/model_fx/nature_walker/sporebed_withered.json": "e33610721fc7db7a084ecb39f376363ba15d1e2c6f24a28c056565d238176df9",
+    "models/model_fx/nature_walker/steel_golem.json": "cf6e083878a5ae322f7b7b6cc624b47f4669e92ab88954f775d6f1bc107a1638",
+    "models/model_fx/nature_walker/steel_golem_0.json": "cf6e083878a5ae322f7b7b6cc624b47f4669e92ab88954f775d6f1bc107a1638",
+    "models/model_fx/nature_walker/steel_golem_1.json": "5e6821618336f3b0e82e916354dfb08e568fd83c9deff6263c49db1b8fbb4072",
+    "models/model_fx/nature_walker/steel_golem_2.json": "cf6e083878a5ae322f7b7b6cc624b47f4669e92ab88954f775d6f1bc107a1638",
+    "models/model_fx/nature_walker/steel_golem_3.json": "37715447cfba129cb5255879929798e55c11f2967571224e5a894f0ce5eb3a41",
+    "models/model_fx/nature_walker/stone_bird.json": "d6d066c59241ee40c93c8f34adde833992d36b7b6abe2d8346418d84c31e220f",
+    "models/model_fx/nature_walker/stone_bird_0.json": "d6d066c59241ee40c93c8f34adde833992d36b7b6abe2d8346418d84c31e220f",
+    "models/model_fx/nature_walker/stone_bird_1.json": "9a54d4a1a9872ea84ec25064c458ae909ea282daa2c2ba2a60029ceec469e0e9",
+    "models/model_fx/nature_walker/stone_bird_2.json": "d6d066c59241ee40c93c8f34adde833992d36b7b6abe2d8346418d84c31e220f",
+    "models/model_fx/nature_walker/stone_bird_3.json": "fe08975c2370626d10ceb8077637384c0a96496a0ef74c53fc1ef8cc14a1a21d",
+    "models/model_fx/nature_walker/stone_golem.json": "b02d471883139e29680152f0d2776fd284bf7c9649bb6cbe1883d8739ced44f4",
+    "models/model_fx/nature_walker/stone_golem_0.json": "b02d471883139e29680152f0d2776fd284bf7c9649bb6cbe1883d8739ced44f4",
+    "models/model_fx/nature_walker/stone_golem_1.json": "3fd7c433fa09d199973a79e051ffd8bae791e09aa48b0751b2d6aea7fb68cc48",
+    "models/model_fx/nature_walker/stone_golem_2.json": "b02d471883139e29680152f0d2776fd284bf7c9649bb6cbe1883d8739ced44f4",
+    "models/model_fx/nature_walker/stone_golem_3.json": "7f8b4bdd7e2636fd561ae342dc942a43e51adb1d77aeb112dde217b5ac25d080",
+    "models/model_fx/nature_walker/storm_cloud.json": "e8e0121614fac6a57599d99c756b8266d9b4ceb3b7dd36dc347fc17c72e7cd47",
+    "models/model_fx/nature_walker/sun_disc.json": "21f2948851a6268f22a80907ed6013ecc418e4a493d0f3df4776d37d0833410d",
+    "models/model_fx/nature_walker/thornling_bloom.json": "5ef36772ca475b9a8ef51f281dbcb59a652748549dfe9aca27d758d050e2d49a",
+    "models/model_fx/nature_walker/thornling_seed.json": "bf898349424a1f777756a6a98078f886a5424bb7cf8bf42cff55a9a31e136b66",
+    "models/model_fx/nature_walker/thornling_sprout.json": "c0b0c69bbfcd1601ae4b63888ddf9b512fb31bb787b7766ff17f9ffdbeeccb28",
+    "models/model_fx/nature_walker/thornling_withered.json": "0673eebf035a4e5e13349c7e81e854d222f2f8faf21987618664bf82c3fb2ad6",
+    "models/model_fx/nature_walker/undertow.json": "c04616c8679e13e72df40398cf3181f9d0a403a8fb1eac0d490e2eb19516713c",
+    "models/model_fx/nature_walker/verdant_barrier.json": "49a78e1a07e9384ee2cbe792fc03cdf51084fba3432f5721c6412c1486c6fd62",
+    "models/model_fx/nature_walker/vine_burst.json": "457eb8ffbf7ceb6d660ada01261c47e64c5d6358e0911b94a60518274d9195e1",
+    "models/model_fx/nature_walker/warning_ring.json": "c10f37a229391b1a2af179c8ff5a286d96d7b1239c3df90f1bca58edb7e77da7",
+    "models/model_fx/nature_walker/wither_ring.json": "9ff744f040890e821cca35ba79e2430c1deca573d19988cf71b75967efdc3ed4",
+    "models/model_fx/nature_walker/world_of_nature_tile.json": "09815d37d37899d2445dd0bf762a70de7a7f1915c718f631b75a5b05712ac17d",
+    "sounds/nature_walker/awaken.ogg": "1deb1b20a0e61dd346d7782463b4fe1128003f8ec70f306b34aa6c81f7e807f1",
+    "sounds/nature_walker/barren_land.ogg": "9b451ae7f932e915497c07b8f4902a76766657d7b0905ccde918b715a28f8e4c",
+    "sounds/nature_walker/bear_form.ogg": "4554d64e936818b158053258c11ca3be677072e9fcd672bdb7fb28d2e55efd87",
+    "sounds/nature_walker/bird_wingbeat.ogg": "3e5d2cebeba31b1a5f78a7ceb53f769c58ac7ba6ec116b9ff52127a14ac9fa1b",
+    "sounds/nature_walker/blossoming_land.ogg": "fe3c157766fdf80553786b6878762fafcaf5e85fe6104ff957f14939b58c59f0",
+    "sounds/nature_walker/bountiful_earth.ogg": "10fff5e528ba12914148fbcb7156801c68481d2963f019f6d93ed0f4ae780815",
+    "sounds/nature_walker/brood_form.ogg": "7028fb27079e846f05945b9327e9157c134363869c20e1ab2db5f6e8bdcfe40a",
+    "sounds/nature_walker/brood_form_complete.ogg": "fcff1eae3c9cbcdca769f316232b956fdb0216c0382508a4af4ee0c016622522",
+    "sounds/nature_walker/child_of_the_oak.ogg": "c43c9a8f83450c24bfea062ccd8af7de5cfba328e85934c603829ee2bcd9f124",
+    "sounds/nature_walker/command_flora.ogg": "d39c95a242d64ba2ac008cf3dc232f2f061ebee3fc2edc7fff966270c3da6148",
+    "sounds/nature_walker/construct_step.ogg": "f96af9eef17b0f36371a09ad08dbc48d0de2f5cff137cb228f70f5ebd9f94172",
+    "sounds/nature_walker/cross_breed.ogg": "611ddb7f2587f58ffd73475d64836c0b2831cd01ea5fd6aa7d4067b9fd936d29",
+    "sounds/nature_walker/cross_pollinate.ogg": "d0a17d7e3bd76540191e796617b2246cf2db3fedae5611f606d2d5832c4db36e",
+    "sounds/nature_walker/descent_of_death.ogg": "9c93e84bf8e98d22f41c8e0bddb2739ece32c60ebb9429a0eb08c9a6b9ac1848",
+    "sounds/nature_walker/desolation.ogg": "8a0777628bae3490489fca14a03dba880863d4a2d7b8d8f830d1cb8c7bc56fd5",
+    "sounds/nature_walker/earthquake.ogg": "3afbb60734829902f2ab957be9504928eff774a2727769c51a250b9358971399",
+    "sounds/nature_walker/embrace_of_the_earth.ogg": "a777f98086bdc2a379697a580d91bb0e7a96486b1b49997dc8eb44f27f4feb55",
+    "sounds/nature_walker/evil_spirits.ogg": "36a84b0c65159d14cbe437142ed9302f06776a52a2bbbce64dfc1c54bdf6659f",
+    "sounds/nature_walker/field_end.ogg": "f233ba1c1bfc10eb5c0eb3e8842e2c256713b56770cd0e7cb0c0e58f7d402a90",
+    "sounds/nature_walker/great_harvest.ogg": "6f767183e35b35cac9411ff7aef50154447ff25b5bd2aec0d88de2cfca711082",
+    "sounds/nature_walker/growth_bloom.ogg": "8d4de3e3239075d4b4f553362e203df31b776280f026c5aa76dbe28e92ae4647",
+    "sounds/nature_walker/growth_sprout.ogg": "f4f4ae800c6513617dc653634a9cd1fdcae0c58082324af133bb543067a7f29d",
+    "sounds/nature_walker/growth_wither.ogg": "e25d882fb73627c5420d2f3facf753205fcdb2d6552d91d868fcbd225bf54ba3",
+    "sounds/nature_walker/heartfruit_eat.ogg": "37b4a5007a030fa1de42ee5cd4dd35e0977a1f9b24c821ecd7127a522d4ddce9",
+    "sounds/nature_walker/heartfruit_seed.ogg": "e29708577e9bde2663890f6d3ea97e820bb94bb85fa53ab5b6f159e3092c7550",
+    "sounds/nature_walker/life_aura.ogg": "dabf4a5ae427843e5aea5bf0edf50022cf766ba03527e019d24e9f21e9664b40",
+    "sounds/nature_walker/maternal_embrace.ogg": "66123a0c8055e49b2dba1c8bf7b45c203eb5b80f6ad769b46f8e4043125f035e",
+    "sounds/nature_walker/melee_impact.ogg": "a6f0bf2d5c4fad6e46dcf17daf23cc4047e4a66ecb232b3f1fbd14e7c5cc2448",
+    "sounds/nature_walker/melee_swing.ogg": "dd8644ce2afc6eab18d530375a7b49e7b4939489310428085dbbc74bc1b08e03",
+    "sounds/nature_walker/mud_golem.ogg": "3d290a83b8ca374262797787623a612f6fd5ddd11efbdc0375a07e45cb5a9ff0",
+    "sounds/nature_walker/mutate.ogg": "3a3b7dc5bd28857cd8dd675fb5e0f1e8f0e7d8aa6a1c96f97bacdf6dfdb16e24",
+    "sounds/nature_walker/mutation_bloom.ogg": "294b6b4f05f83af5146eceb7a6a7d1a1e516b26aa15175160ad22ea27ba98d63",
+    "sounds/nature_walker/mutation_roll.ogg": "2753f9b987b63153bc74329e3168626e9130be9ca09c140f76d1da06b099a794",
+    "sounds/nature_walker/nature_walk.ogg": "b1ab0adf9ce806b147e551967a2a07c9ab864c1bbef00b40f373bec13b8a5068",
+    "sounds/nature_walker/quicken_life.ogg": "86411f7588cfd609144cbaf5a8ae162aecf3eb892134fc32ba7a036aa7d51cf2",
+    "sounds/nature_walker/reap.ogg": "d40c476588a83280eb4726bea181d98206baf35544055ba5176ec6d721dcfd86",
+    "sounds/nature_walker/rebirth_bloom.ogg": "a38b77822f83ef4e156c291638753c2a8498feda319386d8c319a6c269570f1e",
+    "sounds/nature_walker/rebirth_trigger.ogg": "cadfcd45aa28fcd1387ac964eaf9b379e83b9c7680b4eed5a27eeaf298ea7a26",
+    "sounds/nature_walker/return_to_earth.ogg": "5c228a14550dee31bddb9750fa19000582f118b55cf680185c81547ec715648a",
+    "sounds/nature_walker/root_eruption.ogg": "971d2e6416cb503dd66c7a67cee7f124c60aeab30acc07cda0983a8241b0e8c6",
+    "sounds/nature_walker/root_impact.ogg": "6bc78fd22b001061b74a3c7fcf4bfe4a5c227a1c5ae4e6a761cfee0d918a71b7",
+    "sounds/nature_walker/seed_catalyzation.ogg": "cb16fc99d6442f3f1997948c80de1e9295b3e8dd071a1805564c8f6ad3c02a5b",
+    "sounds/nature_walker/seed_of_rebirth.ogg": "ddcec7001fa5befcf2720a8cd215988c9b0e2d44cdcc6907f0e1336625c558ec",
+    "sounds/nature_walker/soul_suture.ogg": "e8c590cc792d650aa18c3e89a80f4caebaaaa330acd020d1075c6a3d62a6a847",
+    "sounds/nature_walker/steel_golem.ogg": "853671af5631fc65f9410ec9e4a3393f6cd8afe88103e174689bdab557563087",
+    "sounds/nature_walker/stone_bird.ogg": "3987797e54911e452de7fe6fc1df29d2465b7ce1eb34332bd195d2f6d0dd9a92",
+    "sounds/nature_walker/stone_golem.ogg": "ec3bd29b76b137767d017eea2eafcce57e6de52e1e920ec04447dbb006900402",
+    "sounds/nature_walker/swamp.ogg": "d46205398f85fba178ec8df7e49c0cfebc82594e978c2d3542f7e92db87fb64a",
+    "sounds/nature_walker/thorn_seed.ogg": "23f62402ef0f040497ad6066436e8f6d7fd06ebef26c393e5ab2d0a5c9e28dc5",
+    "sounds/nature_walker/toxin_bloom.ogg": "17f28857393229e6431950bb492db60d9847ac8b0080f2fcae81e05fcffa9e26",
+    "sounds/nature_walker/treatment.ogg": "599f2f8bc33b8f055ab6a1aff24a9c2756c0ab45d1e761310a3ed4dfc5d989a9",
+    "sounds/nature_walker/underground_travel.ogg": "5d7d4a04c63b7e9a5a6f1faf88d9bc5cd33ce3df8c2df501072756601fdab81d",
+    "sounds/nature_walker/verdant_barrier.ogg": "a2306d4428ddf92ef136fdb8741daf81c4e243ce0cef3d9230ecb9466b2ad93b",
+    "sounds/nature_walker/warning.ogg": "8be8bf100d582dc5a92edff485eec22d903ea5f6512f55dfb0028445416cecd6",
+    "sounds/nature_walker/weather_clear.ogg": "6e87e8e83ab80dccf6df9bb7e312b9c9fc9d8412b3486f11ab0f76f0d6161858",
+    "sounds/nature_walker/weather_ritual.ogg": "1a7787c1fe9bd843f391bd0101f8666fbf5d1e2b6a0b7d19511a8e0eaad448ac",
+    "sounds/nature_walker/weather_storm.ogg": "464a1333710ed4b0061668224004f65c0e13a1ad884659182f6e77f98944af0c",
+    "sounds/nature_walker/world_of_nature.ogg": "9a03b7109544bd71eddd0c098e616ad60383fd88095ded4edecd110cf3c2f7fd",
+    "sounds/nature_walker/wrath_of_nature.ogg": "40a80161d61c5c109c388e7b95906307ed686c0b543f7031b2d8db87168607bc",
+    "textures/gui/ability_menus/nature_walker/alchemy.png": "74109421caaca5fe71cb12c2436e47663aacbabb7d71928b7dd75d6935265d8f",
+    "textures/gui/ability_menus/nature_walker/awaken.png": "8a0cab404e13a8708c6318dc44993024193eb046bcf89443a8f27e76399b2238",
+    "textures/gui/ability_menus/nature_walker/barren_land.png": "f2721ceddb1266ee98b7c4015f7c076e8e0f4f055a05be5e060bae0187851776",
+    "textures/gui/ability_menus/nature_walker/bear_form.png": "7acdb7a59ba0858331f2ee6324b6e96d9d9964f4ce53d9d2d307ba028ddd6a74",
+    "textures/gui/ability_menus/nature_walker/biology.png": "8bf0eea20e8a41f35b371f8341a021f733e874a5d6a0c071f79f067a4a4c86ca",
+    "textures/gui/ability_menus/nature_walker/blossoming_land.png": "077798582248b2903793c8795973f7539261d3850447d3746411438d1b8cb05b",
+    "textures/gui/ability_menus/nature_walker/bountiful_earth.png": "4522eca5e5898f6d80eef74701a89ff77e879fa0413cccdd45ffe8a7c5602965",
+    "textures/gui/ability_menus/nature_walker/brood_form.png": "4c327eb6895d8ba30b7220ff0f443ef1df9be31859b06181f08b3910d93d6d51",
+    "textures/gui/ability_menus/nature_walker/brood_form_complete.png": "5c77545561096c6c2f50a325c004efbd036f21d4a2aa3bc821988373cd94ee6c",
+    "textures/gui/ability_menus/nature_walker/child_of_the_oak.png": "751fc9f28ddf59300e11355c276a9a447a71708697e664d5561289f5b2a5c57f",
+    "textures/gui/ability_menus/nature_walker/command_flora.png": "16cfaa88ba7237605a5e8ee4ee0db9328ea6e0c24e0e70b0e863a26078918574",
+    "textures/gui/ability_menus/nature_walker/cross_breed.png": "8bf0eea20e8a41f35b371f8341a021f733e874a5d6a0c071f79f067a4a4c86ca",
+    "textures/gui/ability_menus/nature_walker/descent_of_death.png": "cb5d0c1bbc35b9f0440551a46e1e68ca1fa7c230be773836c5aa5a2ce62392a8",
+    "textures/gui/ability_menus/nature_walker/desolation.png": "8b943ce366fcd894d3f972686d2cbef827463da5dcdd4145da25621b7b79eee8",
+    "textures/gui/ability_menus/nature_walker/earth.png": "a243f42e905157cbc0ff3b58d24dfebe6bc53630a611f88000f01dea590a294c",
+    "textures/gui/ability_menus/nature_walker/earthquake.png": "ad454a49b97187dfe15a87c187e956aede0027ed1ede1b6fed93168a5c262714",
+    "textures/gui/ability_menus/nature_walker/embrace_of_the_earth.png": "3c8f5ea369c147450fe44d4c73131878caa6680a4299ee5f9a6dd0511f8b6a66",
+    "textures/gui/ability_menus/nature_walker/evil_spirits.png": "9034704af77b0b00e87ac1011937024e4a3c78578686d5499bc53e49b8454660",
+    "textures/gui/ability_menus/nature_walker/given_life.png": "94e77c123cc1957e890d895417822ef4748fba135d40139061ba48ee7c7de3b6",
+    "textures/gui/ability_menus/nature_walker/great_harvest.png": "5eb322f40dc54d27741f9081bef5e7f231dbf50dce464ab974edfc297d713c46",
+    "textures/gui/ability_menus/nature_walker/harvest.png": "866c4782b8aa690b9fb42edb20a9198133da612c9c724bb6d63b34b10de327e5",
+    "textures/gui/ability_menus/nature_walker/heartfruit_seed.png": "6da6a769f7ea50ae137174ce6d3cb36abc4b09264eba021439c353644729ecbb",
+    "textures/gui/ability_menus/nature_walker/life_aura.png": "4af2c0db8c83f9132697cc2334c7172eb3292735d1c0c5266c32d324e35aa8bc",
+    "textures/gui/ability_menus/nature_walker/maternal_embrace.png": "a2fbc01db8a4800a9f2ed8ce2a3c494238a4f588da64426ded6a9a0040de599d",
+    "textures/gui/ability_menus/nature_walker/mud_golem.png": "92892f3d236fc9b9e7b8907d299260dead0ae795f78ae88f547b8ebf01bdff2a",
+    "textures/gui/ability_menus/nature_walker/mutate.png": "74109421caaca5fe71cb12c2436e47663aacbabb7d71928b7dd75d6935265d8f",
+    "textures/gui/ability_menus/nature_walker/nature_walk.png": "296f7234a152b4106b66b86b5782535dc5b572a02aab1f401cd718d69c90827d",
+    "textures/gui/ability_menus/nature_walker/quicken_life.png": "34b2a5cc7f0fc1a74ac785f869c77706eb16f4b9f2fd1e3676f1aaca877feb4f",
+    "textures/gui/ability_menus/nature_walker/reap.png": "866c4782b8aa690b9fb42edb20a9198133da612c9c724bb6d63b34b10de327e5",
+    "textures/gui/ability_menus/nature_walker/return.png": "9034704af77b0b00e87ac1011937024e4a3c78578686d5499bc53e49b8454660",
+    "textures/gui/ability_menus/nature_walker/return_to_earth.png": "0402a74fc0857b17268b50160a37b1dcb4094e7d445a80fdaaf3e11feb0a61d3",
+    "textures/gui/ability_menus/nature_walker/root_eruption.png": "dd892f85fabd89aed190969d88b6ad318492af4a477757536975150192863a9b",
+    "textures/gui/ability_menus/nature_walker/seed_catalyzation.png": "4add32a6d7a84c882283459376107811fe3000fa9426f5bf1680573ccabd9482",
+    "textures/gui/ability_menus/nature_walker/seed_of_rebirth.png": "bc7f8ff67c6a9ec75f5ecdd625e146595c33ebb4d24b829c9045656e405332b2",
+    "textures/gui/ability_menus/nature_walker/soul_suture.png": "a9a50b8fb584cfebf402207e2fa1679cbb4bf568df1ad433cee328561b59b616",
+    "textures/gui/ability_menus/nature_walker/sow.png": "a2e1abfbae2c2308b80cf68a9e2ae31e16883b3a11a1807147713e57637de23d",
+    "textures/gui/ability_menus/nature_walker/steel_golem.png": "42bf4c8d2dd886a843672b1f91287d036a3b1457c280b7905de65dbacb144941",
+    "textures/gui/ability_menus/nature_walker/stone_bird.png": "f478d96f93389983e68782f813b64c091ceeb01d50d280e0233fd1eab57db117",
+    "textures/gui/ability_menus/nature_walker/stone_golem.png": "670d5f73984a3bf14ceebfb45a67ed0baa3149be5e7ccc99266601b92287c292",
+    "textures/gui/ability_menus/nature_walker/swamp.png": "a36e6c85e1ddd43a2ecbf7238495cee353eb645796aaf9b9ecbc988b9aac59fd",
+    "textures/gui/ability_menus/nature_walker/thorn_seed.png": "a2e1abfbae2c2308b80cf68a9e2ae31e16883b3a11a1807147713e57637de23d",
+    "textures/gui/ability_menus/nature_walker/toxin_bloom.png": "91ca55a9c474e80a05c939958c4d8c281a9774a03ceb6928acd3edb08d69547a",
+    "textures/gui/ability_menus/nature_walker/treatment.png": "823417830f6472ce41bfa8bdbd047253e1e7769618383701a032abf9bfb805e6",
+    "textures/gui/ability_menus/nature_walker/underground_travel.png": "a243f42e905157cbc0ff3b58d24dfebe6bc53630a611f88000f01dea590a294c",
+    "textures/gui/ability_menus/nature_walker/verdant_barrier.png": "85bd5b97d748cdf4ac9f234696c9a8f513cdf69745a2386ac0781c8ca11d68a2",
+    "textures/gui/ability_menus/nature_walker/weather_clear.png": "e2eef6ee1e85cb21ffb7d46b82c846a21851e70d84ffad1cd4305f0c2f7489dc",
+    "textures/gui/ability_menus/nature_walker/weather_ritual.png": "4fdbd8b7747233bbd5722275a4b7ad3a0f13ef3d3e30d8aa030f056beb053b19",
+    "textures/gui/ability_menus/nature_walker/weather_storm.png": "5517883359a793e00be94c2c8eecc824376c04bc9171061cbf0047cf769e7f5b",
+    "textures/gui/ability_menus/nature_walker/world_of_nature.png": "736fb37b653ec4944911313d1d72fa527421aebf9ac9c5dfb2567cac388f42e4",
+    "textures/gui/ability_menus/nature_walker/wrath_of_nature.png": "0d5f13ee0fad50cb345114ab7d75ed98426d2c1832ac1bcba46c5978df2392f0",
+    "textures/gui/nature_walker/awaken.png": "cd233b3619ec703930a7aaa9f3edcfb81c7b048cac5688876a096d77bd718e2a",
+    "textures/gui/nature_walker/barren_land.png": "9ecf309f4df4be8d63bff0b9e788454c19948c7adedc49b63fad8d8ce64a01ca",
+    "textures/gui/nature_walker/bear_form.png": "8b4496246a648770f8c557316f1248f64dbe7bde33fd12dd896f5703a3ac351e",
+    "textures/gui/nature_walker/blossoming_land.png": "0ee3dba48ec81a8d666e9cf17a67bba1152f7b51fa8c6ea89e4640ba11ecf18d",
+    "textures/gui/nature_walker/bountiful_earth.png": "62c9ef4e4925bdd10958cec4d84790d912a756402946f96c54b85248f4f859bc",
+    "textures/gui/nature_walker/brood_constructs.png": "0cb99e1e143602d39e323a0fa292f80e9cac75228b5705207774e6f0a10a5125",
+    "textures/gui/nature_walker/brood_form.png": "cceb7ae11b4cb1df6effd0292975f4c14532ddb17fd06636ba6417670d5bd0ab",
+    "textures/gui/nature_walker/brood_form_complete.png": "42bcadcf3e7818dc824628e873ae0217f65f2f4e5a8142c2c8b04aa61f970bc0",
+    "textures/gui/nature_walker/brood_hybrids.png": "8d610b631fe4550bfd9c6362d36277b891654cf0fb3a1c3019d7f55608f47d97",
+    "textures/gui/nature_walker/brood_spirits.png": "0c8cd78e1a308cc3904c68b098ed8f38174e6bac745d3fc0ab25a9edb0e79f2f",
+    "textures/gui/nature_walker/child_of_the_oak.png": "4f3dadf9068b4ce265d086c0a5645e961394479594c9bfb3ba462c78030edda8",
+    "textures/gui/nature_walker/command_flora.png": "6f335bef5b07e08d1ceed565a86d444a7284ad26b037610ed30f216818ab74a1",
+    "textures/gui/nature_walker/cross_breed.png": "87796022a706b42ebc02e2ce97426dfe5ce2ee15440d0222af034e5b527d289a",
+    "textures/gui/nature_walker/descent_of_death.png": "507447f99637db44c1bd06e82fd7d77dd1f6b42c56de65813281fc47909ee0c7",
+    "textures/gui/nature_walker/desolation.png": "c291653786a4adc946b293335ff4ef2a637f1891fcae55d986f9cabfd0f5bc6a",
+    "textures/gui/nature_walker/earthquake.png": "e14bda77dcef287d78421a697b3003bb66f2463aefc423afe869a7fefeeab468",
+    "textures/gui/nature_walker/embrace_of_the_earth.png": "8771817e398b6649560274b6cfb0b6637f01784fc048aa8b3fcd283408b8ee98",
+    "textures/gui/nature_walker/evil_spirits.png": "df62d6b7d3956070f5dc608c3b4ef3f22db69c9f54d53d72e8ac1f1c756a2e00",
+    "textures/gui/nature_walker/given_life.png": "99c0a366447aa8181636bbbae636a103984d4f1ce7fdb845e11540f95980ed9c",
+    "textures/gui/nature_walker/grave_sight.png": "49c964c8505810fd6e7d043625abfe69f8b354b1fdc00b75f1c134119566b051",
+    "textures/gui/nature_walker/great_harvest.png": "1d23a5966cd49a7508ea1b8b3b8876b32e20d2019222cef6b8326dd690674bc1",
+    "textures/gui/nature_walker/growths.png": "024edb911ce5db83722c933fc484434af7912874e53b31185fac061ec0eb794b",
+    "textures/gui/nature_walker/heartfruit_seed.png": "a3254a00bafa3cbce50cca2f0fb395a2ae9a86b47f1d9a2a4853913c51a72b49",
+    "textures/gui/nature_walker/life_aura.png": "0f4a8da39212ceaea7c869ce2693c811d9dbb3493e42914ca85e079933851026",
+    "textures/gui/nature_walker/life_sense.png": "b94b5ceefed3b26236f431b40d0c13e9e90ae4e9c68efba8ac6b718c2193115b",
+    "textures/gui/nature_walker/madness.png": "9f0879df59755dc2c6c2af545ae811744d33dc8e9a906308c4b6b00ea5756279",
+    "textures/gui/nature_walker/maternal_embrace.png": "9c01d9f3c21da053dddde10bc2030a5d4e296be4d23cb890c331dad3ac8ef91a",
+    "textures/gui/nature_walker/mothers_domain.png": "f0fe725ac26b6fb7d876b52fc0645d7bf2a9346fff56bad555506425baeff8c9",
+    "textures/gui/nature_walker/mud_golem.png": "689d79d48a43ee74fb2176fa9d5a7e7fa2d8a9815012c482e668e3e99e2b5182",
+    "textures/gui/nature_walker/mutagen.png": "7fa0de3d7498912b3283d48d084f254bcb440ca5201178c40af320eab9bdcb42",
+    "textures/gui/nature_walker/mutate.png": "11c00deaae2bd7e8c4c78c59bef06ee472fb1d7abcb38ad43d36701be25eebbe",
+    "textures/gui/nature_walker/mutation_fungus.png": "691037dedda99cc16de295be8885992358979a20384703fed054a658cdc68f41",
+    "textures/gui/nature_walker/mutation_fungus_1.png": "2af4e0e87a474860c575a687e5a56e5f03ef05d4d1a68b097e55075c92cddce1",
+    "textures/gui/nature_walker/mutation_fungus_2.png": "e4583d2019d2b10ed518558b417086a731bbc41cf4aeae9077640bc1daf155d6",
+    "textures/gui/nature_walker/mutation_fungus_3.png": "7c766fe416e6fd2cd669a33c3bce9dbd4ddfbf48c1424f71624218ebbf3c6343",
+    "textures/gui/nature_walker/mutation_organs.png": "cf2f2d423c565ce1b0c1d3931b9d0015da5e4787f0008aa6c984fa70c9f95eff",
+    "textures/gui/nature_walker/mutation_organs_1.png": "fa8d468ee1046cc5e215ee4d1b0d92a9a223e1be8505656e3109254fab6dcdfc",
+    "textures/gui/nature_walker/mutation_organs_2.png": "cb2ed1b0281c5e49f0f249abd304c62b936c82de24e90e9836c80c343618f368",
+    "textures/gui/nature_walker/mutation_organs_3.png": "db6716a3f98eb6cf7763241271e008b138e4614ef06d4ebb87583cbfc54a2264",
+    "textures/gui/nature_walker/mutation_vines.png": "a49a6933ffd3f9e32bfd4b13df66b527ca00977d7b610c4c99dd24098ae215fc",
+    "textures/gui/nature_walker/mutation_vines_1.png": "134fa429c109f7ea2c3c2178a4cf3c23ada7243d71f26e4a3189d93902ff8134",
+    "textures/gui/nature_walker/mutation_vines_2.png": "27b2ad1e8345ded95a17343fd0114930c5e42f2899bdd9bb149f69c3a0758d70",
+    "textures/gui/nature_walker/mutation_vines_3.png": "9570f86435add271b769467526937cfd21b6004d402862e0771a02897932fcaa",
+    "textures/gui/nature_walker/mutation_wheat.png": "c20aeb23f0d3ddae5a9a46cdb1cbc41ca24964654ac814630699997587f2a88f",
+    "textures/gui/nature_walker/mutation_wheat_1.png": "3ac7ee2705ecac5b7531b96c1d54156928bfcb34cfdfe88c0898b428805ebcd2",
+    "textures/gui/nature_walker/mutation_wheat_2.png": "e9dd7ede72f81512e50953bace33a9304a19a1683d49a23ad8ce8d9611e12fcb",
+    "textures/gui/nature_walker/mutation_wheat_3.png": "306df724c9a07b8a04ad700d97abe5542e7b39c9816b81bb23ec9a021cf19285",
+    "textures/gui/nature_walker/nature_walk.png": "d2adfeae4bb144a9f66d9b4db472acc0b86fb75f2a5ab5ec5dd4c7b60901dd12",
+    "textures/gui/nature_walker/nourished_by_earth.png": "024edb911ce5db83722c933fc484434af7912874e53b31185fac061ec0eb794b",
+    "textures/gui/nature_walker/quicken_life.png": "25fa2785fbd95e25208a8239d32527bb36a9d2f36261d9420734ce64c119e33d",
+    "textures/gui/nature_walker/reap.png": "f1e1270700cb229d218ae8d6555bbd0cbda4e6af5a79cad95c92631ed9d95721",
+    "textures/gui/nature_walker/reaped.png": "44c2403097c7dc66dfa03eae5d71baded5fd86ff1f44752df7f48d3054141597",
+    "textures/gui/nature_walker/rebirth_ward.png": "5e38fe0571f54cf4738d6e8b0736511a4fce147e4050959380d565bab6a4b5c5",
+    "textures/gui/nature_walker/return_to_earth.png": "515387d8104c5abfed9b5a8b20e6e44064c02eb3cfeac83e1c44f30b15df7b43",
+    "textures/gui/nature_walker/root_eruption.png": "5cbe86af8fc0c5be7fe6d51062dfff534355b9ad3dfe02a4fc854ce8d4740358",
+    "textures/gui/nature_walker/seed_catalyzation.png": "e0e39aabddccad933a1ebdc2de49e55d8d11ce47dd78cd95ba710055d327ed4d",
+    "textures/gui/nature_walker/seed_of_rebirth.png": "9353653d4b1f8964abf9946115fab36fa900c7fbd39d46f0aeacb6978298b20e",
+    "textures/gui/nature_walker/soul_suture.png": "6920c6f8ba2bbea4c8a2dcfba4d3113dee1fc47bd402375ff41dbc6cf8a78d11",
+    "textures/gui/nature_walker/steel_golem.png": "5ba90abb0f25cabd0c1bcdd6bbe14d6641a2790132b6794bb4ba1c62ffe978e5",
+    "textures/gui/nature_walker/stone_bird.png": "8075912c517c36eadd31b8053acd8fc49001f7cb486ca4195dd87b85df9dde0c",
+    "textures/gui/nature_walker/stone_golem.png": "0cb99e1e143602d39e323a0fa292f80e9cac75228b5705207774e6f0a10a5125",
+    "textures/gui/nature_walker/swamp.png": "6769fc09e8f3111b9c371a66e3ade67cf80aaccc4b80224e7686cd60ecab6a08",
+    "textures/gui/nature_walker/thorn_seed.png": "1b23e635261677192d2b0103cb6d01237739ca25e096648fbc635d4088a9a8be",
+    "textures/gui/nature_walker/toxin_bloom.png": "8ca9dd26f4db78034afa76e73bb3c165271263bb6f69b104385041e9a7b88ff6",
+    "textures/gui/nature_walker/treatment.png": "a226e35c557d034c161261f25a3816765ba7c0c8327a637e79863857e40f10a0",
+    "textures/gui/nature_walker/underground_travel.png": "82fae6728ed6702b61c4e42f32f345fd3341e6af78c600d105a76fc760301533",
+    "textures/gui/nature_walker/verdancy.png": "91c002b4f92f8eaca0e7d95b000a4d203343e84cb36b567ffcbe0f9871ff27d2",
+    "textures/gui/nature_walker/verdant_barrier.png": "5124125837b908dd14bf9575358c9f54e788d9fb7b16a2d9bff09bfb12a24b04",
+    "textures/gui/nature_walker/weather_clear.png": "25c564bcebb20888cd368a476ab45d297f3b007e0eefb4bc0a3e8aaf4fbf50bd",
+    "textures/gui/nature_walker/weather_forecast.png": "904853916a17875ec64483cb73763ac90ce3ed053085241a1024495e760bdf1e",
+    "textures/gui/nature_walker/weather_ritual.png": "4ca9ed5491340f79b780d0caa90cc020d064a2e4283fe4d7ef9ea6b3ba6221bc",
+    "textures/gui/nature_walker/weather_storm.png": "22a4bb1c4b81baf43596919db6fbf561d1b90bbbc7039f3b5b6b9b81f07e42aa",
+    "textures/gui/nature_walker/world_of_nature.png": "6159268742242195ce7896a627b2964e0475ae225cae425c2ecd1f02f0942c7f",
+    "textures/gui/nature_walker/wrath_of_nature.png": "25aff2a7a94372fbfdb2890e6a9eb8c85493c2499545c671685fe0c2f51f14f1",
+    "textures/gui/pathway_icons/nature_walker.png": "62c9ef4e4925bdd10958cec4d84790d912a756402946f96c54b85248f4f859bc",
+    "textures/model_fx/nature_walker/cycle_atlas.png": "dcd1b3e658ff68937f16531a5129e02613514709ea6824880e53ebc3880c77d9",
+    "textures/model_fx/nature_walker/cycle_atlas.png.mcmeta": "8709c2cb977c449f9f4ce93b0d0f96afa75d8c9d7dae4b2ca57a9e11eb3f68f6",
+    "textures/model_fx/nature_walker/earth_atlas.png": "ba9d89c4f88e4b9339cd93d06f310fbbb6689fc3d6ed0e5d8066954d640b6c13",
+    "textures/particle/fx/nature_walker/brown_ring.png": "ce6e9b09abe6c80617b50d9aa375d1f4b06c060471b05a6d406416734ccb3f71",
+    "textures/particle/fx/nature_walker/grave_mote.png": "298e5cebfe6d1f5960afbe0bd844a1a225b679f8cc6f6525ee29cc149fbf47dd",
+    "textures/particle/fx/nature_walker/green_ring.png": "111d0832d49d9383aa8d3d1d3c111aa3e62966395a5748efed310639725a5bfc",
+    "textures/particle/fx/nature_walker/healing_spark.png": "f20ef087fea2bf73e376154fff16ad323ac8402ba6940ae9df1f652f96cb3728",
+    "textures/particle/fx/nature_walker/leaf.png": "a2d927b6bc4626f995f6fbe3c1433ec07ed29cf36e2cbedbd25df78537e93dd9",
+    "textures/particle/fx/nature_walker/mutation_cell.png": "4b0bdbac1a6d504fb91754ac642a8e2673073dbfbb610094ff93f2d8c377fd0d",
+    "textures/particle/fx/nature_walker/petal.png": "a2d927b6bc4626f995f6fbe3c1433ec07ed29cf36e2cbedbd25df78537e93dd9",
+    "textures/particle/fx/nature_walker/pollen.png": "40ba878c24e8e3a9c886330e5cfae763718e6ec491daae9f22cd1c0d5ad22cfe",
+    "textures/particle/fx/nature_walker/rain_drop.png": "5b42b32834ac7a4ee0664485e6746591629ea78185a8c5d2af634e669825ba2b",
+    "textures/particle/fx/nature_walker/root_splinter.png": "e72e7f39649ccda608600c49ee816d7bba037515698d78df2263d28255fcc3ff",
+    "textures/particle/fx/nature_walker/soil_crumb.png": "289753fd609ef9c1bfc9bdaf95e29f6108997f9ad85f341ac288a9a28d23580a",
+    "textures/particle/fx/nature_walker/soul_thread.png": "a2348a88c6450f9fec50da7e5c6b8bb24f89ffc6cb8dd7bac55718dd79d0ab4d",
+    "textures/particle/fx/nature_walker/spore.png": "bd7b8667f546835af78d5b2ea88af5af6ba1cc817e0902d4cdee9fc24641e417",
+    "textures/particle/fx/nature_walker/thorn.png": "e72e7f39649ccda608600c49ee816d7bba037515698d78df2263d28255fcc3ff",
+    "textures/particle/fx/nature_walker/wheat_grain.png": "0d85e67fd75ba4aa42c1f4ffe7241587ae55fe764e770a86f7d9075c75dddfe6"
+  }
+}
