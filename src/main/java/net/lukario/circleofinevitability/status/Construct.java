@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -99,7 +99,7 @@ public final class Construct {
         }
     }
 
-    private static final Map<UUID, Built> BUILT = new HashMap<>();
+    private static final Map<UUID, Built> BUILT = new LinkedHashMap<>();
 
     // ---------- what it is made as ----------
 
@@ -217,7 +217,7 @@ public final class Construct {
         for (Built built : BUILT.values()) {
             if (built.owner.equals(owner.getUUID()) && (group == null || built.group.equals(group)) && built.mob.isAlive()) found.add(built);
         }
-        found.sort((a, b) -> Integer.compare(b.mob.tickCount, a.mob.tickCount));      // the longest alive first
+        // Insertion order also distinguishes constructs built during the same tick.
         List<Mob> mobs = new ArrayList<>();
         for (Built built : found) mobs.add(built.mob);
         return mobs;

@@ -33,7 +33,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -159,18 +159,38 @@ public final class Marionette {
         return tag != null && tag.getBooleanOr(SUMMONED, false);
     }
 
+    /** Independently capped control for a pathway's companions; ordinary marionette slots are untouched.
+     * The group is saved on the controlled mob. Release has normal control semantics (no summon discard).
+     */
+    public static boolean controlInGroup(Mob mob, LivingEntity master, int ticks, String group, int cap) {
+        if (group == null || group.isBlank() || cap < 1) return false;
+        if (Decree.violate(master, Decree.Rule.MARIONETTES)) return false;
+        UUID holder = masterId(mob);
+        if (holder != null && (!holder.equals(master.getUUID()) || !group.equals(groupOf(mob)))) return false;
+        return take(mob, master, ticks, false, group, cap);
+    }
+
+    public static String groupOf(Entity entity) {
+        CompoundTag data = entity == null ? null : marionetteTag(entity);
+        return data == null ? "" : data.getStringOr("ControlGroup", "");
+    }
+
     private static boolean take(Mob mob, LivingEntity master, int ticks, boolean summoned) {
+        return take(mob, master, ticks, summoned, "", MAX_PER_MASTER);
+    }
+
+    private static boolean take(Mob mob, LivingEntity master, int ticks, boolean summoned, String group, int cap) {
         if (ticks <= 0 || !mob.isAlive() || !(mob.level() instanceof ServerLevel sl) || master.level() != sl) return false;
         UUID holder = masterId(mob);
         if (holder != null && !holder.equals(master.getUUID())) return false;
 
         if (holder == null && !summoned) {
             List<Mob> held = of(master);
-            held.removeIf(Marionette::isSummoned);              // the summoned do not count
-            while (held.size() >= Math.max(1, MAX_PER_MASTER)) {        // make room: the one closest to its end goes
+            held.removeIf(e -> isSummoned(e) || !group.equals(groupOf(e)));              // the summoned do not count
+            while (held.size() >= Math.max(1, cap)) {        // make room: the one closest to its end goes
                 Mob oldest = held.get(0);
                 for (Mob other : held) {
-                    if (ticksLeft(other) < ticksLeft(oldest)) oldest = other;
+                    if (group.isEmpty() && ticksLeft(other) < ticksLeft(oldest)) oldest = other;
                 }
                 release(oldest);
                 held.remove(oldest);
@@ -180,9 +200,10 @@ public final class Marionette {
         CompoundTag tag = new CompoundTag();
         tag.store(MASTER, UUIDUtil.CODEC, master.getUUID());
         tag.putInt(TICKS, ticks);
+        if (!group.isEmpty()) tag.putString("ControlGroup", group);
         if (summoned) tag.putBoolean(SUMMONED, true);
         mob.getPersistentData().put(TAG, tag);
-        HELD.computeIfAbsent(master.getUUID(), id -> new HashSet<>()).add(mob.getUUID());
+        HELD.computeIfAbsent(master.getUUID(), id -> new LinkedHashSet<>()).add(mob.getUUID());
 
         aim(mob, null);                                     // it forgets whoever it was hunting (often its new master)
         ParticleShapes.clearModels(sl, mob, MODEL_TAG);     // taken again: one control bar, not two
@@ -383,7 +404,7 @@ public final class Marionette {
             return;
         }
         UUID holder = tag.read(MASTER, UUIDUtil.CODEC).orElseThrow();
-        HELD.computeIfAbsent(holder, id -> new HashSet<>()).add(mob.getUUID());   // (again after a reload)
+        HELD.computeIfAbsent(holder, id -> new LinkedHashSet<>()).add(mob.getUUID());   // (again after a reload)
 
         int left = tag.getIntOr(TICKS, 0) - 1;
         if (left <= 0) {

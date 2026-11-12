@@ -32,7 +32,7 @@ def package(output):
         'Copy NatureWalkerFx.java into the matching package; it requires this repository’s ModelFx, ParticleFx and combat helpers.\n'
         'Merge integration/ModSounds_NATURE_WALKER.txt into ModSounds.java.\n'
         'See docs/NATURE_WALKER_ASSETS.md for contracts, regeneration and /naturefx previews.\n'
-        'Presentation only: no playable pathway, AI, balance or gameplay is supplied.\n'
+        'This asset ZIP excludes gameplay code. The repository implements the first 20 abilities.\n'
         'This is not a standalone mod or resource pack.\n').encode()
     output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as archive:

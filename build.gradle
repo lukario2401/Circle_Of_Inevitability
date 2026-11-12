@@ -34,6 +34,7 @@ minecraft {
         }
 
         register('gameTestServer') {
+            if (providers.gradleProperty('natureWalkerTests').isPresent()) { args '--tests', 'circle_of_inevitability:nature_walker_*' }
             if (providers.gradleProperty('apocalypseTests').isPresent()) {
                 args '--tests', 'circle_of_inevitability:apocalypse_*'
             }

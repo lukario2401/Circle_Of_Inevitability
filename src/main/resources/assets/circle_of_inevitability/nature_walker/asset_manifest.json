@@ -3,7 +3,7 @@
   "namespace": "circle_of_inevitability",
   "pathway": "Nature Walker",
   "source_design": "docs/NATURE_WALKER.md",
-  "scope": "Presentation assets and preview FX only; gameplay and balance are not implemented.",
+  "scope": "Complete presentation collection; first 20 abilities have gameplay integration documented in docs/NATURE_WALKER_GAMEPLAY.md.",
   "abilities": [
     "thorn_seed",
     "heartfruit_seed",

@@ -44,6 +44,7 @@ public final class MobAbilities {
     private static final Map<String, Float> CHEAPEST = new HashMap<>(); // cheapestCost, by "Pathway/sequence"
 
     static {
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.registerMobs();
         HandOfOrderMobs.register();
         KeyOfStarsMobs.register();
         StarDragonMobs.register();

@@ -3,8 +3,8 @@
 This collection supplies presentation resources for all **39 abilities** in the supplied
 [Nature Walker design](NATURE_WALKER.md). The uploaded design is preserved verbatim for reference.
 The collection adds icons, models, particles, sound registrations, reusable `NatureWalkerFx` helpers
-and an operator-only `/naturefx` preview command. It does **not** register a playable pathway,
-change balance, implement healing or summons, or decide the design's open questions.
+and an operator-only `/naturefx` preview command. [Gameplay integration](NATURE_WALKER_GAMEPLAY.md)
+now makes the first 20 abilities playable; the preview command itself only displays FX.
 
 ## Preview
 
@@ -18,7 +18,7 @@ change balance, implement healing or summons, or decide the design's open questi
 The contact sheets use independent scales. The software renderer is useful for geometry and texture
 review; it does not certify Minecraft lighting, player fit, visibility, sound balance or performance.
 Models are cube props for the existing ModelFx renderer, not entity rigs. Summon AI, collision and
-hiding the underlying entity belong to future gameplay code.
+hiding the underlying entity are owned by gameplay code, separate from these preview helpers.
 
 ## Inventory
 
@@ -44,7 +44,7 @@ tones. These are short one-shot cues, not recorded Foley, speech or seamless amb
 ## Ability coverage
 
 Each ID below has a menu icon, HUD icon, subtitle, registered sound event and Java cast preview.
-Sequence values are gates from the reference, not new gameplay registrations.
+Sequence values describe the complete reference; only the first 20 abilities have gameplay registrations.
 
 | Input | IDs |
 | --- | --- |
@@ -60,7 +60,7 @@ The wheel groups retain the reference's 8 / 9 / 8 / 8 entries. `nature_walk`, `b
 `given_life`, `weather_clear` and `weather_storm` are extra visual variants, not additional wheel entries.
 `ability.circle_of_inevitability.nature_walker.<id>` supplies English labels. HUD localization includes
 `growths` and `brood` with two arguments, `rebirth` with one argument, and `mutation` with two arguments.
-Numbers and timers are rendered by the eventual gameplay integration, not baked into icons.
+Numbers and timers are rendered by gameplay HUD helpers, not baked into icons.
 
 ## Growths, creatures and supporting models
 

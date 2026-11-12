@@ -96,4 +96,4 @@ Run the dedicated server checks with `./gradlew runGameTestServer -PauthorTests`
 The [Nature Walker asset collection](docs/NATURE_WALKER_ASSETS.md) covers all 39 abilities in the
 [Mother pathway design](docs/NATURE_WALKER.md), with staged Growths, animated constructs and forms,
 icons, particles and 59 original sound cues. Operators can inspect the presentation with `/naturefx`.
-The assets and FX helpers are ready for gameplay integration; Nature Walker is not yet a playable pathway.
+[The first 20 abilities are playable](docs/NATURE_WALKER_GAMEPLAY.md), from Thorn Seed through Steel Golem, with growths, companions, local weather, terrain effects and forms. The remaining 19 retain preview assets only.
