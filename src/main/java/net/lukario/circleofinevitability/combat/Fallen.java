@@ -48,7 +48,7 @@ public final class Fallen {
     public static float MAX_HEALTH = 150f;
 
     /** One that fell: what it was ('type'), where and which way ('where', 'yaw'), and at which game time. */
-    public record Body(UUID id, EntityType<?> type, ResourceKey<Level> dimension, Vec3 where, float yaw, long tick, boolean baby) {
+    public record Body(UUID id, EntityType<?> type, ResourceKey<Level> dimension, Vec3 where, float yaw, long tick, boolean baby, float maxHealth) {
         public long age(ServerLevel sl) {
             return sl.getGameTime() - tick;
         }
@@ -137,7 +137,7 @@ public final class Fallen {
         try {
             forgetOld(sl);
             BODIES.add(new Body(entity.getUUID(), entity.getType(), sl.dimension(), entity.position(), entity.getYRot(),
-                    sl.getGameTime(), entity.isBaby()));
+                    sl.getGameTime(), entity.isBaby(), entity.getMaxHealth()));
         } catch (Exception e) {
             CircleOfInevitability.LOGGER.error("Fallen could not write down a death", e);
         }

@@ -44,6 +44,7 @@ public class CircleOfInevitability
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngelGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.AuthorGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalkerGameTests.FUNCTIONS.register(modEventBus);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalkerHigherGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.apocalypse.ApocalypseGameTests.FUNCTIONS.register(modEventBus);
         ModParticles.PARTICLES.register(modEventBus);
         ModSounds.SOUNDS.register(modEventBus);

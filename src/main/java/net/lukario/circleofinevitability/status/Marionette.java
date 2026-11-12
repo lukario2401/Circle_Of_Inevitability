@@ -232,6 +232,13 @@ public final class Marionette {
         return tag == null ? 0 : tag.getIntOr(TICKS, 0);
     }
 
+    /** Extends only summoned bodies; does not change ownership or ordinary control. */
+    public static void extendSummon(Entity entity, int ticks) {
+        if (!isSummoned(entity) || ticks <= 0) return;
+        CompoundTag tag = marionetteTag(entity);
+        tag.putInt(TICKS, (int) Math.min(Integer.MAX_VALUE, (long) tag.getIntOr(TICKS, 0) + ticks));
+    }
+
     /** Shortens only summoned bodies, never another player's ordinary controlled mob. */
     public static void ageSummon(Entity entity, int ticks) {
         if (!isSummoned(entity) || ticks <= 0) return;

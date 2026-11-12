@@ -17,17 +17,26 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 final class NatureWalkerEarth {
     static final String SWAMP=PREFIX+"swamp", OAK=PREFIX+"oak", BEAR=PREFIX+"bear";
     static final class Journey {
-        final Vec3 direction;final long priorHiddenUntil,started;int age,hops;
-        Journey(State s) { direction=Spells.flatLook(s.owner);started=s.level.getGameTime();priorHiddenUntil=s.level.getGameTime()+Concealment.ticksLeft(s.owner); }
+        final Vec3 direction;final long priorHiddenUntil,started;int age,hops;final int hiddenTicks;double remaining;
+        Journey(State s) { direction=Spells.flatLook(s.owner);hiddenTicks=s.sequence<=1?75:45;remaining=s.sequence<=1?60:24;started=s.level.getGameTime();priorHiddenUntil=s.level.getGameTime()+Concealment.ticksLeft(s.owner); }
     }
     static boolean cast(State s,String id) {
         long now=s.level.getGameTime();
         switch(id) {
             case "underground_travel" -> {
-                if(!Teleport.canGo(s.owner)||!Terrain.supported(s.level,s.owner.position()))return false;
-                s.journey=new Journey(s);Concealment.hide(s.owner,45);
+                if(!Teleport.canGo(s.owner)||!exit(s,s.owner.position()))return false;
+                if(s.sequence<=1&&!NatureWalkerGrowths.near(s,s.owner.position(),3).isEmpty()) {
+                    var destination=NatureWalkerGrowths.near(s,s.owner.position(),100).stream()
+                            .filter(p->p.at.distanceToSqr(s.owner.position())>9&&p.at.subtract(s.owner.position()).normalize().dot(Spells.flatLook(s.owner))>.98)
+                            .filter(p->exit(s,p.at)&&Teleport.fits(s.owner,s.level,p.at))
+                            .min(Comparator.comparingDouble(p->p.at.distanceToSqr(s.owner.position()))).orElse(null);
+                    if(destination!=null&&Teleport.of(s.owner).fallGuard(60).go(s.level,destination.at)) {
+                        effect(s,"nature_portal",destination.at,30,3);return true;
+                    }
+                }
+                s.journey=new Journey(s);Concealment.hide(s.owner,s.journey.hiddenTicks);
                 if(!Concealment.isHidden(s.owner)) { s.journey=null;return false; }
-                Root.applyOwned(s.owner,tag(s,"journey"),45,EnumSet.of(RootRestriction.MOVE,RootRestriction.JUMP));
+                Root.applyOwned(s.owner,tag(s,"journey"),s.journey.hiddenTicks,EnumSet.of(RootRestriction.MOVE,RootRestriction.JUMP));
                 effect(s,"earth_portal",s.owner.position(),25,2);
             }
             case "swamp" -> {
@@ -62,7 +71,7 @@ final class NatureWalkerEarth {
         Root.removeOwned(s.owner,tag(s,"journey"));
         long now=s.level.getGameTime();
         // Preserve concealment supplied by another ability before or during the journey.
-        if(Concealment.ticksLeft(s.owner)<=Math.max(0,journey.started+45-now)+1) {
+        if(Concealment.ticksLeft(s.owner)<=Math.max(0,journey.started+journey.hiddenTicks-now)+1) {
             Concealment.reveal(s.owner);
             int prior=(int)(journey.priorHiddenUntil-now);if(prior>0)Concealment.hide(s.owner,prior);
         }
@@ -72,17 +81,23 @@ final class NatureWalkerEarth {
             effect(s,"earth_portal",s.owner.position(),20,2);sound(s,"root_impact");
         }
     }
+    private static boolean exit(State s,Vec3 at) {
+        var pos=net.minecraft.core.BlockPos.containing(at);
+        if(!s.level.hasChunkAt(pos)||!s.level.getWorldBorder().isWithinBounds(pos))return false;
+        return Terrain.supported(s.level,at)||s.sequence<=1&&Terrain.at(s.level,pos)==Terrain.Kind.WATER;
+    }
     private static void travel(State s) {
         Journey j=s.journey;if(j==null)return;
         if(!Teleport.canGo(s.owner)||!Concealment.isHidden(s.owner)) { surface(s,true);return; }
         j.age++;if(j.age<20||j.age%2!=0)return;
-        Vec3 next=s.owner.position().add(j.direction.scale(2.4));Vec3 safe=null;
+        double step=Math.min(j.remaining,s.sequence<=1&&s.owner.isInWater()?4.8:2.4);
+        Vec3 next=s.owner.position().add(j.direction.scale(step));Vec3 safe=null;
         for(int dy:new int[]{0,1,-1}) {
             Vec3 candidate=next.add(0,dy,0);
-            if(Terrain.supported(s.level,candidate)&&Teleport.fits(s.owner,s.level,candidate)) { safe=candidate;break; }
+            if(exit(s,candidate)&&Teleport.fits(s.owner,s.level,candidate)) { safe=candidate;break; }
         }
         if(safe==null||!Teleport.of(s.owner).go(s.level,safe)) { surface(s,true);return; }
-        if(++j.hops>=10)surface(s,true);
+        j.hops++;j.remaining-=step;if(j.remaining<.01)surface(s,true);
     }
     private static void oak(State s) {
         boolean stone=Terrain.under(s.owner)==Terrain.Kind.STONE;

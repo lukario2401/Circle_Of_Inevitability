@@ -39,7 +39,7 @@ def generate(root,skip_audio=False):
         files.extend(p for p in (root/folder/'nature_walker').rglob('*') if p.is_file())
     files.append(root/'textures/gui/pathway_icons/nature_walker.png')
     manifest={'schema_version':1,'namespace':NS,'pathway':'Nature Walker','source_design':'docs/NATURE_WALKER.md',
-              'scope':'Complete presentation collection; first 20 abilities have gameplay integration documented in docs/NATURE_WALKER_GAMEPLAY.md.',
+              'scope':'Complete presentation collection; all 39 ability entries have gameplay integration documented in docs/NATURE_WALKER_GAMEPLAY.md.',
               'abilities':ABILITIES,'sequences':SEQUENCES,'basic':BASIC,
               'wheels':{'nature_walker_'+k:v for k,v in WHEELS.items()},
               'key_icons':dict(enumerate(KEYS,1)),'upgrade_icons':UPGRADES,'status_icons':STATUSES,

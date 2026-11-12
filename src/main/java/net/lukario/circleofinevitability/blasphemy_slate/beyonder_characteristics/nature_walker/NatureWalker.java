@@ -24,7 +24,7 @@ import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-/** First twenty Nature Walker abilities, shared by players and Beyonder mobs. */
+/** Nature Walker abilities, shared by players and Beyonder mobs. */
 @Mod.EventBusSubscriber(modid="circle_of_inevitability")
 public final class NatureWalker {
     public static final String PATHWAY="Nature Walker", PREFIX="nature_walker_";
@@ -39,12 +39,22 @@ public final class NatureWalker {
         new Spell("swamp",5,5,3000,400), new Spell("wrath_of_nature",5,5,3000,600),
         new Spell("child_of_the_oak",5,5,2450,400), new Spell("stone_golem",5,5,3500,600),
         new Spell("bear_form",5,5,3000,800), new Spell("stone_bird",6,4,4500,400),
-        new Spell("mud_golem",6,4,6000,800), new Spell("steel_golem",6,4,7500,1200));
+        new Spell("mud_golem",6,4,6000,800), new Spell("steel_golem",6,4,7500,1200),
+        new Spell("life_aura",6,4,6000,800),new Spell("mutate",6,4,3000,160),new Spell("brood_form",6,4,6000,3600),
+        new Spell("evil_spirits",7,3,8000,600),new Spell("descent_of_death",7,3,10000,900),
+        new Spell("return_to_earth",7,3,6000,600),new Spell("maternal_embrace",7,3,9000,800),
+        new Spell("blossoming_land",3,2,10000,1800),new Spell("barren_land",3,2,10000,1800),
+        new Spell("desolation",7,2,15000,1200),new Spell("root_eruption",7,2,12000,400),
+        new Spell("seed_of_rebirth",6,2,12000,1200),new Spell("world_of_nature",5,1,25000,6000),
+        new Spell("verdant_barrier",5,1,9000,1200),new Spell("great_harvest",3,0,20000,1200),
+        new Spell("awaken",6,0,20000,1800),new Spell("earthquake",5,0,30000,3600),
+        new Spell("embrace_of_the_earth",7,0,15000,1200),new Spell("bountiful_earth",7,0,60000,6000));
     public static final AbilityWheel BASIC=wheel("basic","Sow, Treatment and Biology");
     public static final AbilityWheel HARVEST=wheel("harvest","Harvest");
     public static final AbilityWheel EARTH=wheel("earth","Earth");
     public static final AbilityWheel ALCHEMY=wheel("alchemy","Alchemy");
-    public static final List<AbilityWheel> WHEELS=List.of(BASIC,HARVEST,EARTH,ALCHEMY);
+    public static final AbilityWheel RETURN=wheel("return","Return");
+    public static final List<AbilityWheel> WHEELS=List.of(BASIC,HARVEST,EARTH,ALCHEMY,RETURN);
     static final Map<UUID,State> STATES=new HashMap<>();
     private static boolean initialized;
 
@@ -63,7 +73,9 @@ public final class NatureWalker {
         NatureWalkerEarth.Journey journey;
         UUID observed;
         int observedTicks;
+        int lastFood=-1;double foodCredit;
         final Map<UUID,Long> dossierReady=new HashMap<>();
+        final NatureWalkerAdvanced.Board advanced=new NatureWalkerAdvanced.Board();
         State(LivingEntity owner) { this.owner=owner;level=(ServerLevel)owner.level();sequence=sequence(owner); }
     }
 
@@ -75,14 +87,15 @@ public final class NatureWalker {
                     // These casts own live boards, companions or pathway-only lifecycle state.
                     .notCopyable();
             if (spell.id().equals("quicken_life")) wheel.free(p -> quickening(p));
-            if (spell.id().equals("underground_travel")) wheel.free(p -> travelling(p));
+            if (spell.id().equals("underground_travel")) wheel.free(p -> travelling(p)).costBy((p,c)->sequence(p)<=1?c*2:c);
         }
     }
+    static { ALCHEMY.cooldownBy((p,t)->t==3600&&sequence(p)>2?1800:t); }
     private NatureWalker() {}
     private static AbilityWheel wheel(String id,String title) {
         return AbilityWheel.create(PREFIX+id,title).pathway(PATHWAY).quickCastCooldown(false).quickCastCost(2f);
     }
-    public static AbilityWheel wheelFor(int key) { return key==3?HARVEST:key==5?EARTH:key==6?ALCHEMY:BASIC; }
+    public static AbilityWheel wheelFor(int key) { return key==3?HARVEST:key==5?EARTH:key==6?ALCHEMY:key==7?RETURN:BASIC; }
     public static String label(String id) {
         StringBuilder text=new StringBuilder();
         for(String word:id.split("_")) { if(!text.isEmpty())text.append(' ');text.append(Character.toUpperCase(word.charAt(0))).append(word.substring(1)); }
@@ -90,6 +103,7 @@ public final class NatureWalker {
     }
     public static void initialize() {
         if(initialized)return;initialized=true;
+        NatureWalkerAdvanced.initialize();
         EffectDuration.addRule((e,effect)->own(e)&&sequence(e)<=8
                 &&(effect.is(MobEffects.POISON)||effect.is(MobEffects.HUNGER))?.5:1);
     }
@@ -130,7 +144,9 @@ public final class NatureWalker {
     static void strike(State s,LivingEntity target,float damage,boolean brood) {
         if(!valid(s)||!enemy(s.owner,target))return;
         float bonus=brood&&s.reaped.getOrDefault(target.getUUID(),0L)>s.level.getGameTime()?1.15f:1;
-        Spells.strike(s.owner,target,damage*bonus);
+        Mutation.Kind before=NatureWalkerPassives.HIT_KIND.get();
+        NatureWalkerPassives.HIT_KIND.set(brood?Mutation.Kind.VINES:Mutation.Kind.ORGANS);
+        try { Spells.strike(s.owner,target,damage*bonus); }finally { NatureWalkerPassives.HIT_KIND.set(before); }
     }
     static void effect(State s,String model,Vec3 at,int ticks,float scale) {
         ParticleShapes.model(s.level,NatureWalkerFx.model(model,ticks,tag(s,model)).scale(scale),at,0,0,0);
@@ -142,8 +158,7 @@ public final class NatureWalker {
 
     public static void key(Player player,Level level,ServerLevel sl,int key,boolean bypass) {
         if(!(player instanceof ServerPlayer p)||!own(p)||!p.isAlive())return;
-        if(key==7) { p.sendOverlayMessage(Component.literal("Return abilities are not implemented yet."));return; }
-        if(key<1||key>6||!Beyonder.hasSequence(p,10-key))return;
+        if(key<1||key>7||!Beyonder.hasSequence(p,10-key))return;
         // Cancelling the two channels does not depend on the current wheel selection or available resource.
         if(key==3&&quickening(p)) { HARVEST.cast(p,HARVEST.entry("quicken_life"));return; }
         if(key==5&&travelling(p)) { EARTH.cast(p,EARTH.entry("underground_travel"));return; }
@@ -205,12 +220,18 @@ public final class NatureWalker {
                 s.weatherUntil=now+duration(caster,s.raining?800:600);
             }
             case "reap" -> {
+                List<Vec3> wheatSpots=new ArrayList<>();
                 for(var e:Spells.enemiesInCone(caster,s.level,caster.position(),caster.getLookAngle(),5,60))
-                    if(enemy(caster,e)) { strike(s,e,30,false);s.reaped.put(e.getUUID(),now+160); }
+                    if(enemy(caster,e)) {
+                        boolean wheat=Mutation.kind(caster,e)==Mutation.Kind.WHEAT;
+                        strike(s,e,30,false);s.reaped.put(e.getUUID(),now+160);
+                        if(wheat)wheatSpots.add(Spells.groundAt(caster,s.level,e.position()));
+                    }
                 int harvested=0;
                 for(var plant:new ArrayList<>(s.plants)) if(inCone(caster,plant.at,5,120)) {
                     NatureWalkerGrowths.harvest(s,plant);harvested++;
                 }
+                for(var at:wheatSpots)NatureWalkerGrowths.plant(s,NatureWalkerGrowths.Kind.HEARTFRUIT,at);
                 // Refund runs after the wheel's payment; state identity cancels stale delayed work.
                 int refund=Math.min(500,harvested*100);
                 if(refund>0)Later.run(s.level,1,()->{if(valid(s))Spells.giveSpirituality(caster,refund);});
@@ -222,7 +243,7 @@ public final class NatureWalker {
             case "cross_breed" -> { if(!NatureWalkerBrood.hybrid(s))return AbilityWheel.Result.REFUSED; }
             case "toxin_bloom" -> {
                 for(var e:Spells.enemiesInCone(caster,s.level,caster.getEyePosition(),caster.getLookAngle(),7,45))
-                    if(enemy(caster,e)) { Spells.keepEffect(e,MobEffects.POISON,1,120);Spells.keepEffect(e,MobEffects.WEAKNESS,0,120); }
+                    if(enemy(caster,e)) { Spells.keepEffect(e,MobEffects.POISON,1,120);Spells.keepEffect(e,MobEffects.WEAKNESS,0,120);if(s.sequence<=4)Mutation.hit(caster,e,Mutation.Kind.FUNGUS,1); }
                 Vec3 at=Spells.aimGround(caster,s.level,7);
                 if(s.sequence<=5&&NatureWalkerGrowths.canPlant(s,at))NatureWalkerGrowths.plant(s,NatureWalkerGrowths.Kind.SPOREBED,at);
                 ParticleShapes.burst(s.level,NatureWalkerFx.particle("spore",NatureWalkerFx.MUTATION),caster.getEyePosition(),28,.03,.2);
@@ -233,7 +254,7 @@ public final class NatureWalker {
             case "stone_golem","stone_bird","mud_golem","steel_golem" -> {
                 if(!NatureWalkerBrood.construct(s,id))return AbilityWheel.Result.REFUSED;
             }
-            default -> { return AbilityWheel.Result.REFUSED; }
+            default -> { if(!NatureWalkerAdvanced.cast(s,id))return AbilityWheel.Result.REFUSED; }
         }
         sound(s,id);return AbilityWheel.Result.DONE;
     }
@@ -246,7 +267,7 @@ public final class NatureWalker {
         boolean critical=target.getHealth()<target.getMaxHealth()*.3f;
         if(s.sequence<=4) { NoHeal.remove(target);Decay.cure(target); }
         float fraction=s.sequence<=4?(critical?1:.6f):(critical?.6f:.3f);
-        Healing.apply(target,target.getMaxHealth()*fraction*verdancy(s.owner));
+        Healing.apply(s.owner,target,target.getMaxHealth()*fraction*verdancy(s.owner));
         Spells.cleanse(target);
         if(critical) {
             Spells.keepEffect(target,MobEffects.RESISTANCE,0,100);
@@ -257,7 +278,7 @@ public final class NatureWalker {
     }
     private static void suture(State s) {
         LivingEntity target=aimed(s,6,false);
-        if(target!=null) { Silence.apply(target,Spells.isBoss(target)?30:60);Dispel.boons(target); }
+        if(target!=null) { Silence.apply(target,Spells.isBoss(target)?30:60);Dispel.boons(target);if(s.sequence<=4)Mutation.hit(s.owner,target,Mutation.Kind.WHEAT,1); }
         else {
             target=aimed(s,12,true);if(target==null)target=s.owner;
             Cleansing.cleanseStatuses(target);Fear.end(target);Slumber.wake(target);Silence.lift(target);
@@ -272,7 +293,7 @@ public final class NatureWalker {
         long now=s.level.getGameTime();
         if(s.quickenUntil>now&&now%20==0) {
             double radius=12*verdancy(s.owner);
-            for(var plant:NatureWalkerGrowths.near(s,s.owner.position(),radius))plant.age+=40;
+            for(var plant:NatureWalkerGrowths.near(s,s.owner.position(),radius))plant.clock.advance(40);
             for(var e:friends(s,s.owner.position(),radius))Spells.keepEffect(e,MobEffects.REGENERATION,0,30);
             for(var e:enemies(s,s.owner.position(),radius))Spells.keepEffect(e,MobEffects.SLOWNESS,0,30);
             Spells.growPlants(s.owner,s.level,s.owner.position(),radius,6);
@@ -284,20 +305,24 @@ public final class NatureWalker {
                 if(s.raining) { e.clearFire();Spells.keepEffect(e,MobEffects.REGENERATION,0,30); }
                 else { Blind.remove(e);e.removeEffect(MobEffects.DARKNESS);Spells.keepEffect(e,MobEffects.SPEED,0,30); }
             }
+            if(s.raining&&s.sequence<=1&&now%40==0) {
+                var foes=enemies(s,s.weatherAt,radius);
+                if(!foes.isEmpty()) { strike(s,foes.getFirst(),30,false);effect(s,"lightning",foes.getFirst().position(),15,2); }
+            }
             if(s.raining)for(var e:Spells.livingAround(s.owner,s.level,s.weatherAt,radius))e.clearFire();
             NatureWalkerFx.weather(s.level,s.weatherAt,s.raining?"rain":"clear",22,tag(s,"weather"));
         }
         NatureWalkerGrowths.tick(s);NatureWalkerBrood.tick(s);NatureWalkerEarth.tick(s);
-        NatureWalkerPassives.tick(s);
+        NatureWalkerPassives.tick(s);NatureWalkerAdvanced.tick(s);
         s.reaped.values().removeIf(until->until<=now);
         if(s.owner instanceof ServerPlayer p&&now%20==0) {
-            HudCounter.show(p,PREFIX+"growths","nature_walker/growths","Growths",s.plants.size(),NatureWalkerGrowths.cap(s),0xA3CA6F);
+            HudCounter.show(p,PREFIX+"growths","nature_walker/growths","Growths",(int)s.plants.stream().filter(g->!g.temporary).count(),NatureWalkerGrowths.cap(s),0xA3CA6F);
             EntitySight.tick(p);
         }
     }
     static void clear(LivingEntity owner) {
         State s=STATES.remove(owner.getUUID());if(s==null)return;
-        endQuicken(s);NatureWalkerEarth.clear(s);NatureWalkerBrood.clear(s);NatureWalkerGrowths.clear(s);
+        endQuicken(s);NatureWalkerAdvanced.clear(s);Mutation.clearSource(s.owner);NatureWalkerEarth.clear(s);NatureWalkerBrood.clear(s);NatureWalkerGrowths.clear(s);
         if(owner instanceof Player p) {
             HudCounter.hide(p,PREFIX+"growths");HudTimer.hide(p,PREFIX+"weather");EntitySight.clear(p);
         }
@@ -328,6 +353,8 @@ public final class NatureWalker {
     public static void registerMobs() {
         for(Spell spell:SPELLS)MobAbilities.register(MobAbility.of(PATHWAY,spell.key(),false).entry(spell.id())
                 .named(label(spell.id())).sequence(spell.sequence()).cost(spell.cost()).cooldown(spell.cooldown())
+                .costBy(mob->spell.cost()*(spell.id().equals("underground_travel")&&sequence(mob)<=1?2:1))
+                .cooldownBy(mob->spell.id().equals("brood_form")&&sequence(mob)>2?1800:spell.cooldown())
                 .range(24).sight().cast((mob,target,sl)->{
                     if(target!=null)MobSpells.face(mob,target);
                     return perform(mob,spell.id())==AbilityWheel.Result.DONE;

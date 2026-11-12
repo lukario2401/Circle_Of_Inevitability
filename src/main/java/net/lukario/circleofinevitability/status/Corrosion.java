@@ -42,6 +42,13 @@ import java.util.function.Predicate;
 public final class Corrosion {
 
     /** Why a corrosion ended (for Listener.ended). */
+    @FunctionalInterface public interface BiteListener {
+        void bit(LivingEntity victim,LivingEntity source,float healthLost);
+    }
+    private static final List<BiteListener> BITES=new ArrayList<>();
+    /** Actual health lost by a bite, with player or mob attribution. Register once at setup. */
+    public static void onBite(BiteListener listener) { BITES.add(java.util.Objects.requireNonNull(listener)); }
+
     public enum End { CLEANSED, TIME, DIED, REMOVED }
 
     /** Its look and sound. Every method is optional. 'source' may be null (gone, or nobody). */
@@ -82,13 +89,13 @@ public final class Corrosion {
     // =========================
 
     /** Corrodes 'perSecond' a second, 'growth' more each second, until cleansed. False if it cannot. */
-    /** The same from anyone: a Beyonder mob's corrosion has no player to credit (its source is left empty). */
+    /** The same from anyone: player and mob sources retain their attribution. */
     public static boolean apply(LivingEntity target, LivingEntity source, float perSecond, float growth) {
-        return apply(target, source instanceof Player player ? player : null, perSecond, growth);
+        return applyFrom(target, source, perSecond, growth, 0);
     }
 
     public static boolean apply(LivingEntity target, LivingEntity source, float perSecond, float growth, int ticks) {
-        return apply(target, source instanceof Player player ? player : null, perSecond, growth, ticks);
+        return applyFrom(target, source, perSecond, growth, ticks);
     }
 
     public static boolean apply(LivingEntity target, Player source, float perSecond, float growth) {
@@ -97,6 +104,9 @@ public final class Corrosion {
 
     /** The same, and it wears off by itself after 'ticks' (0 = never). Applying again only ever makes that later. */
     public static boolean apply(LivingEntity target, Player source, float perSecond, float growth, int ticks) {
+        return applyFrom(target,source,perSecond,growth,ticks);
+    }
+    private static boolean applyFrom(LivingEntity target,LivingEntity source,float perSecond,float growth,int ticks) {
         if (target.level().isClientSide() || perSecond <= 0f || !target.isAlive()) return false;
         if (target instanceof Player player && (player.isCreative() || player.isSpectator())) return false;
         if (isImmune(target)) return false;
@@ -112,7 +122,7 @@ public final class Corrosion {
         tag.putFloat(GROWTH, Math.max(Math.max(0f, growth), tag.getFloatOr(GROWTH, 0f)));
         if (source != null) tag.store(SOURCE, UUIDUtil.CODEC, source.getUUID());
         target.getPersistentData().put(TAG, tag);
-        if (fresh) for (Listener listener : LISTENERS) safely(() -> listener.started(target, source));
+        if (fresh) for (Listener listener : LISTENERS) safely(() -> listener.started(target, source instanceof Player player?player:null));
         return true;
     }
 
@@ -202,11 +212,14 @@ public final class Corrosion {
         tag.putFloat(BITE, Math.min(MAX_PER_SECOND, bite + tag.getFloatOr(GROWTH, 0f) * EVERY / 20f));
         entity.getPersistentData().put(TAG, tag);
         UUID id = tag.read(SOURCE, UUIDUtil.CODEC).orElse(null);
-        Player source = id == null ? null : sl.getPlayerByUUID(id);
-        if (source != null) DamageFx.credit(source, entity);
-        entity.invulnerableTime = 0;
-        entity.hurt(sl.damageSources().magic(), amount);
-        for (Listener listener : LISTENERS) safely(() -> listener.bit(entity, amount, source));
+        LivingEntity source = id!=null&&sl.getEntity(id) instanceof LivingEntity living?living:null;
+        if (source instanceof Player player) DamageFx.credit(player, entity);
+        float before=entity.getHealth();entity.invulnerableTime = 0;
+        if(source!=null)net.lukario.circleofinevitability.combat.Spells.strike(source,entity,amount);
+        else entity.hurt(sl.damageSources().magic(), amount);
+        float lost=Math.max(0,before-entity.getHealth());
+        for (Listener listener : LISTENERS) safely(() -> listener.bit(entity, amount, source instanceof Player player?player:null));
+        for (BiteListener listener : BITES) safely(() -> listener.bit(entity, source, lost));
     }
 
     @SubscribeEvent

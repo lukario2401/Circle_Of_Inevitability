@@ -40,7 +40,7 @@ public final class NatureWalkerGameTests {
     private static final Map<GameTestHelper, Integer> HEIGHTS = new WeakHashMap<>();
     private static int nextHeight;
 
-    private static ServerPlayer player(GameTestHelper h, int sequence, double x) {
+    static ServerPlayer player(GameTestHelper h, int sequence, double x) {
         var cookie = net.minecraft.server.network.CommonListenerCookie.createInitial(
                 new com.mojang.authlib.GameProfile(UUID.randomUUID(), "nature" + UUID.randomUUID().toString().substring(0, 6)), false);
         var p = new ServerPlayer(h.getLevel().getServer(), h.getLevel(), cookie.gameProfile(), cookie.clientInformation());
@@ -60,10 +60,10 @@ public final class NatureWalkerGameTests {
         return p;
     }
 
-    private static Mob target(GameTestHelper h, ServerPlayer p, double z, float health) {
+    static Mob target(GameTestHelper h, ServerPlayer p, double z, float health) {
         return target(h,p,z,health,EntityTypes.HUSK);
     }
-    private static Mob target(GameTestHelper h,ServerPlayer p,double z,float health,EntityType<? extends Mob> type) {
+    static Mob target(GameTestHelper h,ServerPlayer p,double z,float health,EntityType<? extends Mob> type) {
         Mob mob = type.create(h.getLevel(), EntitySpawnReason.MOB_SUMMONED);
         Vec3 at = p.position().add(0, 0, z); mob.setPos(at.x, at.y, at.z);
         mob.setNoAi(true); mob.setNoGravity(true);
@@ -73,13 +73,13 @@ public final class NatureWalkerGameTests {
         h.getLevel().addFreshEntity(mob); h.addCleanup(ok -> mob.discard()); return mob;
     }
 
-    private static AbilityWheel.Result cast(ServerPlayer p, String id) {
+    static AbilityWheel.Result cast(ServerPlayer p, String id) {
         for (var w : NatureWalker.WHEELS)
             if (w.entry(id) != null) return w.cast(p, w.entry(id));
         throw new IllegalArgumentException(id);
     }
 
-    private static void floor(GameTestHelper h, ServerPlayer p) {
+    static void floor(GameTestHelper h, ServerPlayer p) {
         for (int x = -4; x <= 4; x++) for (int z = -7; z <= 28; z++) {
             var pos = net.minecraft.core.BlockPos.containing(p.position().add(x, -1, z));
             var before = h.getLevel().getBlockState(pos);
@@ -88,10 +88,10 @@ public final class NatureWalkerGameTests {
         }
     }
 
-    private static void ready(ServerPlayer p) { SoulCore.setSpiritualityQuietly(p,Beyonder.maxSpirituality(p)); }
+    static void ready(ServerPlayer p) { SoulCore.setSpiritualityQuietly(p,Beyonder.maxSpirituality(p)); }
     private static void costs(GameTestHelper h) {
         var p=player(h,9,1.5);floor(h,p);p.setXRot(45);
-        h.assertTrue(SPELLS.size()==20,"Exactly twenty playable entries");
+        h.assertTrue(SPELLS.size()==39,"Exactly thirty-nine playable entries");
         h.assertTrue(cast(p,"treatment")==AbilityWheel.Result.REFUSED,"Sequence gate rejects locked casts");
         float before=Spells.spiritualityOf(p);
         h.assertTrue(cast(p,"heartfruit_seed")==AbilityWheel.Result.DONE,"Starting spirituality can buy a seed");
@@ -133,7 +133,7 @@ public final class NatureWalkerGameTests {
     private static void harvest(GameTestHelper h) {
         var p=player(h,7,1.5);floor(h,p);p.setXRot(45);var s=state(p);
         h.assertTrue(cast(p,"seed_catalyzation")==AbilityWheel.Result.DONE&&s.plants.size()==1,"Catalyzation creates a growth on an empty board");
-        h.assertTrue(s.plants.getFirst().age>=60,"Catalyzation ripens immediately");ready(p);
+        h.assertTrue(s.plants.getFirst().clock.age()>=60,"Catalyzation ripens immediately");ready(p);
         h.assertTrue(cast(p,"quicken_life")==AbilityWheel.Result.DONE&&Root.has(p,RootRestriction.MOVE),"Quicken channels");
         Root.applyOwned(p,"test_foreign_root",100,EnumSet.of(RootRestriction.JUMP));
         SoulCore.setSpiritualityQuietly(p,0);
@@ -234,7 +234,7 @@ public final class NatureWalkerGameTests {
         var p=player(h,5,1.5);floor(h,p);var mob=target(h,p,4,40);
         h.assertTrue(BeyonderMobs.make(mob,PATHWAY,5),"Mobs can take the pathway");
         long registered=MobAbilities.all().stream().filter(a->PATHWAY.equals(a.pathway())).count();
-        h.assertTrue(registered==20,"Every active entry has mob casting metadata");
+        h.assertTrue(registered==39,"Every active entry has mob casting metadata");
         h.assertTrue(perform(mob,"child_of_the_oak")==AbilityWheel.Result.DONE&&ConjuredArmor.isWorn(mob,NatureWalkerEarth.OAK),"Mob casts shared armor implementation");
         h.assertTrue(perform(mob,"bear_form")==AbilityWheel.Result.DONE&&MobForm.isIn(mob,NatureWalkerEarth.BEAR),"Mob casts shared bear form");
         NatureWalker.clear(mob);h.assertTrue(!MobForm.isIn(mob,NatureWalkerEarth.BEAR),"Mob form cleans up");h.succeed();

@@ -92,6 +92,11 @@ public final class DeathWard {
         WARDS.remove(entity.getUUID());
     }
 
+    /** Remove only the caller's ward, preserving a later replacement from another spell. */
+    public static boolean disarmIf(Entity entity,Object token) {
+        return token!=null && WARDS.remove(entity.getUUID(),token);
+    }
+
     /** Opaque identity for a curse that honors only wards armed before it was pronounced. */
     public static Object snapshot(Entity entity) { return isArmed(entity) ? WARDS.get(entity.getUUID()) : null; }
 

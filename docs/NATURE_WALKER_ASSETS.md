@@ -4,7 +4,7 @@ This collection supplies presentation resources for all **39 abilities** in the 
 [Nature Walker design](NATURE_WALKER.md). The uploaded design is preserved verbatim for reference.
 The collection adds icons, models, particles, sound registrations, reusable `NatureWalkerFx` helpers
 and an operator-only `/naturefx` preview command. [Gameplay integration](NATURE_WALKER_GAMEPLAY.md)
-now makes the first 20 abilities playable; the preview command itself only displays FX.
+now makes all 39 ability entries playable; the preview command itself only displays FX.
 
 ## Preview
 
@@ -44,7 +44,7 @@ tones. These are short one-shot cues, not recorded Foley, speech or seamless amb
 ## Ability coverage
 
 Each ID below has a menu icon, HUD icon, subtitle, registered sound event and Java cast preview.
-Sequence values describe the complete reference; only the first 20 abilities have gameplay registrations.
+Sequence values describe the complete reference; all 39 entries have gameplay registrations.
 
 | Input | IDs |
 | --- | --- |

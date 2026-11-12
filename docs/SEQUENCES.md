@@ -308,8 +308,9 @@ Full controls, costs, signed transfers, passives, limitations and checks:
 
 [White Angel](WHITE_ANGEL.md) implements all 29 abilities on keys 1–7, from Bard (9) through Sun (0). See the linked tables for unlocks, costs, Justice principles, pact consent and passives.
 
-## Nature Walker (first installment)
+## Nature Walker
 
-The [playable catalog](NATURE_WALKER_GAMEPLAY.md) contains 20 active abilities: two at Sequence 9,
-two at 8, five at 7, two at 6, six at 5 and three at 4. Later active entries and
-advanced passives remain deferred. The existing spirituality and advancement formulas apply.
+The [playable catalog](NATURE_WALKER_GAMEPLAY.md) contains all 39 active entries and
+higher-sequence upgrades, with combat passives through Mother. Existing spirituality
+and advancement formulas apply. See the [extension guide](NATURE_WALKER_EXTENSION_GUIDE.md)
+for reusable spell-kit APIs and registration steps.
