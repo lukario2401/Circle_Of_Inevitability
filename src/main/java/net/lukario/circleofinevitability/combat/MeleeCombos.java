@@ -33,6 +33,7 @@ public final class MeleeCombos {
     private static final Map<String, MeleeCombo> COMBOS = new HashMap<>();
 
     static {
+        register(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.COMBO);
         register(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.COMBO);
         register(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.COMBO);
         register(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.COMBO);

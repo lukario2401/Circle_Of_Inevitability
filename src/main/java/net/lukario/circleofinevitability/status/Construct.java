@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -87,19 +87,21 @@ public final class Construct {
         final String group;
         long until;
         final double leash;
+        final boolean hidden;
         final Ended onEnd;
 
-        Built(Mob mob, UUID owner, String group, long until, double leash, Ended onEnd) {
+        Built(Mob mob, UUID owner, String group, long until, double leash, boolean hidden, Ended onEnd) {
             this.mob = mob;
             this.owner = owner;
             this.group = group;
             this.until = until;
             this.leash = leash;
+            this.hidden = hidden;
             this.onEnd = onEnd;
         }
     }
 
-    private static final Map<UUID, Built> BUILT = new HashMap<>();
+    private static final Map<UUID, Built> BUILT = new LinkedHashMap<>();
 
     // ---------- what it is made as ----------
 
@@ -173,7 +175,7 @@ public final class Construct {
                 finish(oldest, End.REPLACED);
             }
         }
-        BUILT.put(mob.getUUID(), new Built(mob, owner.getUUID(), group, until, leash, onEnd));
+        BUILT.put(mob.getUUID(), new Built(mob, owner.getUUID(), group, until, leash, !shown, onEnd));
         return mob;
     }
 
@@ -217,7 +219,7 @@ public final class Construct {
         for (Built built : BUILT.values()) {
             if (built.owner.equals(owner.getUUID()) && (group == null || built.group.equals(group)) && built.mob.isAlive()) found.add(built);
         }
-        found.sort((a, b) -> Integer.compare(b.mob.tickCount, a.mob.tickCount));      // the longest alive first
+        // Insertion order also distinguishes constructs built during the same tick.
         List<Mob> mobs = new ArrayList<>();
         for (Built built : found) mobs.add(built.mob);
         return mobs;
@@ -228,13 +230,17 @@ public final class Construct {
         Built built = entity == null ? null : BUILT.get(entity.getUUID());
         if (built == null) return 0;
         if (built.until == Long.MAX_VALUE) return Integer.MAX_VALUE;
-        return (int) Math.max(0, built.until - entity.level().getGameTime());
+        return (int) Math.min(Integer.MAX_VALUE, Math.max(0, built.until - entity.level().getGameTime()));
     }
 
     /** It stands 'ticks' longer (a Divine Kingdom where made things do not run out). */
     public static void extend(Entity entity, int ticks) {
         Built built = entity == null ? null : BUILT.get(entity.getUUID());
-        if (built != null && built.until != Long.MAX_VALUE) built.until += ticks;
+        if (built == null || ticks <= 0) return;
+        if (built.until != Long.MAX_VALUE) built.until += ticks;
+        Marionette.extendSummon(entity, ticks);
+        if (built.hidden) built.mob.addEffect(new MobEffectInstance(MobEffects.INVISIBILITY,
+                Marionette.ticksLeft(entity), 0, false, false));
     }
 
     /** Ends it now (ENDED): its onEnd runs, then it is gone without drops. */

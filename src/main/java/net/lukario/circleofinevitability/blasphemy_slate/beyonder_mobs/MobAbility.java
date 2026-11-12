@@ -46,6 +46,8 @@ public final class MobAbility {
     private String name;
     private int sequence;
     private float cost;
+    private java.util.function.ToDoubleFunction<Mob> costRule;
+    private java.util.function.ToIntFunction<Mob> cooldownRule;
     private int cooldown = 100;
     private double range = 16.0;                        // 0 = any range (a cast on itself)
     private boolean sight;
@@ -84,6 +86,12 @@ public final class MobAbility {
     /** The weakest Sequence that casts it (default: the player ability's). */
     public MobAbility sequence(int sequence) { this.sequence = sequence; return this; }
 
+    /** Optional per-caster tuning; copies preserve these rules. Register once, never mutate during a cast. */
+    public MobAbility costBy(java.util.function.ToDoubleFunction<Mob> rule) { costRule=rule;return this; }
+    public MobAbility cooldownBy(java.util.function.ToIntFunction<Mob> rule) { cooldownRule=rule;return this; }
+    public float cost(Mob mob) { double value=costRule==null?cost:costRule.applyAsDouble(mob);return Double.isFinite(value)?(float)Math.max(0,value):Float.MAX_VALUE; }
+    public int cooldown(Mob mob) { return Math.max(0,cooldownRule==null?cooldown:cooldownRule.applyAsInt(mob)); }
+
     /** Spirituality it costs (use the player ability's constant). */
     public MobAbility cost(float cost) { this.cost = Math.max(0f, cost); return this; }
 
@@ -110,7 +118,7 @@ public final class MobAbility {
     public MobAbility copy() {
         MobAbility out = new MobAbility(pathway, key, sneak).entry(entry).named(name).sequence(sequence)
                 .cost(cost).cooldown(cooldown).range(range).weight(weight).when(when).cast(cast);
-        out.sight = sight;
+        out.sight = sight;out.costRule=costRule;out.cooldownRule=cooldownRule;
         return out;
     }
 

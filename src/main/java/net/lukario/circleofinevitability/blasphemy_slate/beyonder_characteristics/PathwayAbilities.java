@@ -87,6 +87,13 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Nature Walker", 1, "Sow", 9, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,1,false)),
+            new Ability("Nature Walker", 2, "Treatment", 8, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,2,false)),
+            new Ability("Nature Walker", 3, "Harvest", 7, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,3,false)),
+            new Ability("Nature Walker", 4, "Biology", 6, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,4,false)),
+            new Ability("Nature Walker", 5, "Earth", 5, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,5,false)),
+            new Ability("Nature Walker", 6, "Alchemy", 4, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,6,false)),
+            new Ability("Nature Walker", 7, "Return", 3, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,7,false)),
             new Ability("Author", 1, "Observation", 9, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,1,false)),
             new Ability("Author", 2, "Emotions", 8, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,2,false)),
             new Ability("Author", 3, "Therapy", 7, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(p,level,sl,3,false)),

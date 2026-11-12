@@ -18,6 +18,13 @@ public final class Madness {
     private static final List<BiConsumer<LivingEntity,LivingEntity>> BREAKS=new ArrayList<>();
     public static int get(LivingEntity e){return Marks.count(e,e,NAME);}
     public static void clear(LivingEntity e){Marks.clear(e,e,NAME);Falter.remove(e,NAME);}
+    /** Removes strain without triggering a break or changing its attributed source. */
+    public static int reduce(LivingEntity target,int amount){
+        if(amount<=0||target.level().isClientSide())return get(target);
+        int remaining=Marks.add(target,target,NAME,-amount,10,100);
+        if(remaining<6)Falter.remove(target,NAME);
+        return remaining;
+    }
     public static void addImmunity(Predicate<LivingEntity> rule){IMMUNE.add(rule);}
     public static void onBreak(BiConsumer<LivingEntity,LivingEntity> rule){BREAKS.add(rule);}
     public static int add(LivingEntity source,LivingEntity target,int amount){

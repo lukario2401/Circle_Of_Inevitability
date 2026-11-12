@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "circle_of_inevitability:nature_walker_high_rebirth",
+  "max_ticks": 260,
+  "required": true,
+  "setup_ticks": 1,
+  "structure": "forge:empty3x3x3"
+}

@@ -75,6 +75,7 @@ public class SKeyPressAbilityFiveUsed {
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(player, level, serverLevel, 5, false);
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(player, level, serverLevel, 5, false);
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(player, level, serverLevel, 5, false);
+            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(player, level, serverLevel, 5, false);
             net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, serverLevel, 5, false);
             SnakeOfMercuryPowers.misfortuneWheel(player, level, serverLevel, false);
             WormOfTimePowers.deceit(player, level, serverLevel, false);

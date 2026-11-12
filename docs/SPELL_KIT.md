@@ -2958,3 +2958,10 @@ loan. A successful use consumes it. One loan per recipient; a later loan replace
 logout and server restart. `has`, `clear` and `use` let another UI expose the same mechanic without inventing a new
 storage/casting system. Damage scaling follows Echo's existing support for delayed hits/projectiles; utility,
 healing and durations keep the original ability behavior.
+
+## Growths, mutations and owned wards
+
+See [Nature Walker's extension guide](NATURE_WALKER_EXTENSION_GUIDE.md) for renderer-independent
+`Growth` clocks, source-owned `Mutation`, `Healing.addScale`, attributed `Corrosion.onBite`,
+independently capped marionette groups, ward snapshot cleanup, and dynamic mob costs/cooldowns.
+These public helpers can be used without registering the Nature Walker pathway.
