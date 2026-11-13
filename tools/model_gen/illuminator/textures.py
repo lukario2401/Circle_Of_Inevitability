@@ -5,7 +5,7 @@ Same layout as tools/model_gen/knowledge_emperor/textures.py: every model textur
 part of its material's cell that matches its size, so the texel density stays even; a face listed in a cube's
 'full' (or given another material through faces={...}) shows its whole cell, stretched (a gauge, a lens, a page).
 
-The palette (docs/ILLUMINATOR.md, "Theme"): brass and copper for crafting and machines, blueprint blue for marks,
+The palette (docs/pathways/ILLUMINATOR.md, "Theme"): brass and copper for crafting and machines, blueprint blue for marks,
 lines and equations, pale steam white for fog, parchment cream for pages and scrolls, ink blue-black for the
 Paragon's depth. Pathway color 0xD9A441.
 """

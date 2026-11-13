@@ -52,7 +52,7 @@ import java.util.function.Predicate;
  * (DIED) and on logout (LEFT). Not saved: after a server restart nobody is left transformed. The aftermath runs for
  * TIME and ENDED only (a death or a lost Pathway leaves nothing to recover from). Star Dragon's Scaled Form, Radiant
  * Angel Form and Star Dragon Form are built on it, and Hand Of God's Giant Form could move onto it
- * (docs/STAR_DRAGON.md). The look is the ability's own: a worn model (ParticleShapes.modelOnTurning), cleared in
+ * (docs/pathways/star_dragon/STAR_DRAGON.md). The look is the ability's own: a worn model (ParticleShapes.modelOnTurning), cleared in
  * onEnd.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md

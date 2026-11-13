@@ -40,7 +40,7 @@ import java.util.UUID;
 
 /**
  * Hand Of God, key 7: the Silver and Twilight wheel (Silver Knight, Sequence 3, up to Twilight Giant, Sequence 0).
- * docs/HAND_OF_GOD.md, "Key 7 wheel". Every entry is cast where you aim.
+ * docs/pathways/HAND_OF_GOD.md, "Key 7 wheel". Every entry is cast where you aim.
  *
  *   Mercury Liquefaction (3)  melt into silver: slide to where you aim, wrapping enemies you pass; aimed at an ally
  *                             you become their Silver Armor, aimed at an enemy a coat that holds and chokes it

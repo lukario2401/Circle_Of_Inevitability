@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Sequences (people coming through Door Opening, the Spatial Cage, Symbolization and Conceptualization, Dimension
  * Sight, Blink's lingering afterimages), the Starlit mark, the Recorded Powers' pages, the passives that show. Visual
  * only: nothing here hurts, holds, hides, heals or moves anyone. The ability code does that, at the ticks named by the
- * constants below (..._OPENED, ..._LANDS, ...), with Later.run. See docs/KEY_OF_STARS.md.
+ * constants below (..._OPENED, ..._LANDS, ...), with Later.run. See docs/pathways/KEY_OF_STARS.md.
  *
  * ---------- See them in game ----------
  *   /starsfx all              every display one after another (/starsfx all 3 = three times over)

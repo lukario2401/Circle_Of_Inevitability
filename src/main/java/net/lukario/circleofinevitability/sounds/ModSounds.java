@@ -29,7 +29,7 @@ public final class ModSounds {
 
     private ModSounds() {}
 
-    /** Author (Spectator) asset cues; gameplay is designed in docs/AUTHOR.md. */
+    /** Author (Spectator) asset cues; gameplay is designed in docs/pathways/author/AUTHOR.md. */
     public static final java.util.Map<String, RegistryObject<SoundEvent>> AUTHOR = java.util.Map.ofEntries(
             java.util.Map.entry("observe", sound("author.observe")),
             java.util.Map.entry("spectator_state", sound("author.spectator_state")),
@@ -852,7 +852,7 @@ public final class ModSounds {
     /** A heavy step. */
     public static final RegistryObject<SoundEvent> STAR_DRAGON_DENSE_STEP = sound("star_dragon.dense_step");
 
-    // ---------- Hand Of Order (tools/model_gen/hand_of_order/sounds.py, docs/HAND_OF_ORDER.md)
+    // ---------- Hand Of Order (tools/model_gen/hand_of_order/sounds.py, docs/pathways/HAND_OF_ORDER.md)
     /** A word: Halt. */
     public static final RegistryObject<SoundEvent> ORDER_HALT = sound("hand_of_order.halt");
     /** A wave of Authority. */

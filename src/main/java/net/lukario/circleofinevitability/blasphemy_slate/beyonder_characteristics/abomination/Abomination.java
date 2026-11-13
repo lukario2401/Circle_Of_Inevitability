@@ -63,7 +63,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Abomination: the Chained Pathway of Lord of the Mysteries (docs/ABOMINATION.md). Seven keys in the Hand Of God
+ * Abomination: the Chained Pathway of Lord of the Mysteries (docs/pathways/ABOMINATION.md). Seven keys in the Hand Of God
  * pattern, from Prisoner (Sequence 9) up to Chained (Sequence 0); every plain key has a normal and a sneak cast:
  *
  *   1 Blood Chain     (Prisoner)  a chain of blood drags the enemy you look at to you and holds it; the wound bleeds

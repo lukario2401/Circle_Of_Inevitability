@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * How the Prince Of Abolition (the Black Emperor pathway) looks and sounds: every key, both casts, every wheel entry,
  * the mausoleums, the Order counter, what grows at higher Sequences and the passives that show. Visual only: nothing
  * here hurts, holds, seals, hides, revives or moves anyone. The ability code does that, at the ticks named by the
- * constants below (..._LANDS, ..._SLAMS, ..._RISEN...), with Later.run. See docs/PRINCE_OF_ABOLITION.md.
+ * constants below (..._LANDS, ..._SLAMS, ..._RISEN...), with Later.run. See docs/pathways/PRINCE_OF_ABOLITION.md.
  *
  * ---------- See them in game ----------
  *   /abolitionfx all            every display one after another (/abolitionfx all 3 = three times over)
@@ -100,7 +100,7 @@ import java.util.concurrent.ThreadLocalRandom;
  *          orderEnd(player) hides it.
  *   Passives: weaknessDetection(viewer, target) (only the viewer sees it), presence(sl, player, radius),
  *          looseOrder(sl, at), beyondTheWorld(sl, player)
- *   Melee: combo(sl, player, target, step) for the twelve hits of docs/PRINCE_OF_ABOLITION.md, "Melee combo".
+ *   Melee: combo(sl, player, target, step) for the twelve hits of docs/pathways/PRINCE_OF_ABOLITION.md, "Melee combo".
  *   Shells: shell(sl, center, radius, Shell.X, color, ticks, tag), a sphere of tiles (Seal, Abolition).
  *   Every timed cast: status(player, Status.X, ticks) shows its picture and clock; statusEnd(player, Status.X) takes them away.
  *
@@ -151,7 +151,7 @@ public final class PrinceOfAbolitionFx {
         }
     }
 
-    /** The feelings Bestowment can give (docs/PRINCE_OF_ABOLITION.md, the Fallen wheel). */
+    /** The feelings Bestowment can give (docs/pathways/PRINCE_OF_ABOLITION.md, the Fallen wheel). */
     public enum Feeling {
         SLUGGISH(0xFF7896D2),
         ANXIOUS(0xFFC8AAFF),
@@ -1533,7 +1533,7 @@ public final class PrinceOfAbolitionFx {
     }
 
     // =====================================================================================
-    // Melee combo (docs/PRINCE_OF_ABOLITION.md, "Melee combo")
+    // Melee combo (docs/pathways/PRINCE_OF_ABOLITION.md, "Melee combo")
     // =====================================================================================
 
     private static final SlashFx COMBO_EDGE = SlashFx.arc("slash/streaks")

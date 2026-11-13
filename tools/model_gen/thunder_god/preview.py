@@ -9,7 +9,7 @@ from PIL import Image, ImageDraw, ImageFont
 from generate import ASSETS, REPO, PREFIX, SILVER, FOAM, PARTICLES
 
 ROOT=ASSETS
-OUT=REPO/'docs/assets/thunder_god'
+OUT=REPO/'docs/pathways/thunder_god/assets'
 
 
 def rotated(p,rotation):

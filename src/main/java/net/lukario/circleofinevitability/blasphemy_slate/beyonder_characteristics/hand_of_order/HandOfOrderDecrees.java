@@ -33,7 +33,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Hand Of Order, key 5: the Decree wheel (Judge, Sequence 6). docs/HAND_OF_ORDER.md, "Key 5 wheel". A Decree is a
+ * Hand Of Order, key 5: the Decree wheel (Judge, Sequence 6). docs/pathways/HAND_OF_ORDER.md, "Key 5 wheel". A Decree is a
  * status/Decree written where you stand (from Hand of Order (1): anywhere in view up to 64 blocks); allies are never
  * bound; every Rule broken inside is a Violation and each is punished harder than the last (the ladder below).
  *

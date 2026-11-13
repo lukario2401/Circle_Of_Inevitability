@@ -36,7 +36,7 @@ import java.util.EnumSet;
 import java.util.List;
 
 /**
- * Hand Of Order, key 7: the Order wheel (Balancer, Sequence 2). docs/HAND_OF_ORDER.md, "Key 7 wheel".
+ * Hand Of Order, key 7: the Order wheel (Balancer, Sequence 2). docs/pathways/HAND_OF_ORDER.md, "Key 7 wheel".
  *
  *   Balance (2)                 the enemy you look at is pulled down to your weight for a while: its damage, armor,
  *                               speed and max health lowered to yours (beyond/Physique); the heavier, the shorter
@@ -61,7 +61,7 @@ public final class HandOfOrderOrder {
 
     // =========================
     // Settings (cost = spirituality, ticks: 20 = 1 second, distances in blocks). Costs from Sequence 2 up are
-    // placeholders until the spirituality pool there is known (docs/HAND_OF_ORDER.md).
+    // placeholders until the spirituality pool there is known (docs/pathways/HAND_OF_ORDER.md).
     // =========================
 
     static final int ORDER_SEQUENCE = 2;                         // the key
@@ -124,7 +124,7 @@ public final class HandOfOrderOrder {
     static final float SENTENCE_DEATH = 200f;           // 4th: Death, at once...
     static final int SENTENCE_NO_HEAL = 200;            // ...and no healing this long
 
-    /** The Court's clauses, in the order they are written (docs/HAND_OF_ORDER.md). */
+    /** The Court's clauses, in the order they are written (docs/pathways/HAND_OF_ORDER.md). */
     static final Decree.Rule[] CLAUSES = {
             Decree.Rule.PASSAGE, Decree.Rule.CONCEALMENT, Decree.Rule.RESURRECTION, Decree.Rule.STAND_INS,
             Decree.Rule.HEALING, Decree.Rule.PROJECTILES, Decree.Rule.ABILITIES};

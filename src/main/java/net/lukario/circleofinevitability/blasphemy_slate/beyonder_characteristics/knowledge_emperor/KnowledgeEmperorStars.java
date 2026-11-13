@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Knowledge Emperor, key 5: the Stars wheel (Constellations Master, Sequence 5). docs/KNOWLEDGE_EMPEROR.md, "Key 5 wheel".
+ * Knowledge Emperor, key 5: the Stars wheel (Constellations Master, Sequence 5). docs/pathways/KNOWLEDGE_EMPEROR.md, "Key 5 wheel".
  *
  *   Starlight Cage   starlight flies to the enemy you look at and sets into amber round it and everyone near it:
  *                    held until the amber breaks or melts. Scrollable. From Sage (2) wider, and bosses held as long

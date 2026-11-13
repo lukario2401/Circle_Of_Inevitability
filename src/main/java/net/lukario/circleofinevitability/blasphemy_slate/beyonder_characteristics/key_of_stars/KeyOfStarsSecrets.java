@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Key Of Stars, key 6: the Secrets and Space wheel (Secrets Sorcerer, Sequence 4). docs/KEY_OF_STARS.md, "Key 6 wheel".
+ * Key Of Stars, key 6: the Secrets and Space wheel (Secrets Sorcerer, Sequence 4). docs/pathways/KEY_OF_STARS.md, "Key 6 wheel".
  *
  *   Space Concealment   a sphere of space split off from the world where you aim (or round you): nothing outside
  *                       sees in or shoots in, allies inside are hidden and healed, enemies inside are Starlit and kept

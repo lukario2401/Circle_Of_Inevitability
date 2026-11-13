@@ -59,7 +59,7 @@ import net.minecraftforge.fml.common.Mod;
 import java.util.List;
 
 /**
- * Prince Of Abolition: the Black Emperor Pathway of Lord of the Mysteries (docs/PRINCE_OF_ABOLITION.md). Seven keys,
+ * Prince Of Abolition: the Black Emperor Pathway of Lord of the Mysteries (docs/pathways/PRINCE_OF_ABOLITION.md). Seven keys,
  * from Lawyer (Sequence 9) up to Black Emperor (0); every plain key has a normal and a sneak cast, and the three
  * wheels are the other way round (sneak opens the wheel, a normal press recasts the last pick):
  *
@@ -91,7 +91,7 @@ public class PrinceOfAbolition {
     public static final String PATHWAY = "Prince Of Abolition";
 
     // =========================
-    // Sequence Might, mausoleums and Order (docs/PRINCE_OF_ABOLITION.md)
+    // Sequence Might, mausoleums and Order (docs/pathways/PRINCE_OF_ABOLITION.md)
     // =========================
     static final float MIGHT_PER_SEQUENCE = 0.05f;      // attack, defense, range, area, duration: 5% for every Sequence reached
     static final float MIGHT_PER_MAUSOLEUM = 0.05f;     // attack and defense: 5% for every standing mausoleum
@@ -217,7 +217,7 @@ public class PrinceOfAbolition {
     /** True while Inversion turns a heal into harm (so nothing that harm sets off is turned again). */
     private static boolean inverting;
 
-    /** The melee combo (docs/PRINCE_OF_ABOLITION.md, "Melee combo"), registered in combat/MeleeCombos. */
+    /** The melee combo (docs/pathways/PRINCE_OF_ABOLITION.md, "Melee combo"), registered in combat/MeleeCombos. */
     public static final MeleeCombo MELEE_COMBO = MeleeCombo.forPathway(PATHWAY)
             .resetAfter(40)
             .step((player, target, level) -> PrinceOfAbolitionFx.combo(level, player, target, 0))
@@ -1074,7 +1074,7 @@ public class PrinceOfAbolition {
     }
 
     // =========================
-    // The wheels' recast rules (docs/PRINCE_OF_ABOLITION.md, "How it is laid out")
+    // The wheels' recast rules (docs/pathways/PRINCE_OF_ABOLITION.md, "How it is laid out")
     // =========================
     static final int RECAST_TWICE_SEQUENCE = 6;         // Baron of Corruption: a recast costs 2x (3x before)
     static final int RECAST_ONCE_SEQUENCE = 5;          // Mentor of Disorder: 1x

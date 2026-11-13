@@ -26,7 +26,7 @@ import net.minecraftforge.fml.common.Mod;
 
 import java.util.*;
 
-/** Marauder through Trojan Horse of Destiny. See docs/WORM_OF_TIME.md for bindings and adaptations. */
+/** Marauder through Trojan Horse of Destiny. See docs/pathways/WORM_OF_TIME.md for bindings and adaptations. */
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
 public final class WormOfTimePowers {
     public static final String PATHWAY = "Worm Of Time";

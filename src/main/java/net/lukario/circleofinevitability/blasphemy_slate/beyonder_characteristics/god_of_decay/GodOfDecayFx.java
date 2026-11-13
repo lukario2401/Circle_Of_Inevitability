@@ -30,7 +30,7 @@ import java.util.UUID;
 
 /** God of Decay presentation only. No damage, status application, terrain edits or forced movement.
  * Timed models expire on their own; end(...) cancels a cast's tagged models early. The ability owns
- * periodic calls and therefore stops them when dispelled. See docs/GOD_OF_DECAY_FX.md for the contract.
+ * periodic calls and therefore stops them when dispelled. See docs/pathways/god_of_decay/GOD_OF_DECAY_FX.md for the contract.
  */
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
 public final class GodOfDecayFx {

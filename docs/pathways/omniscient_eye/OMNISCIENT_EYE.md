@@ -138,7 +138,7 @@ rite regeneration (5), +4 max health (4), nearby concealment exposure (3), a maj
 sight-based study (1), and Open Book (0). Attributes are removed when the pathway/Sequence no longer qualifies.
 The optional melee combo and flavor-only spare ideas are not additional ability entries.
 
-See [SPELL_KIT.md](SPELL_KIT.md#study-prediction-and-borrowed-powers) for reusable catalog, library, prediction,
+See [SPELL_KIT.md](../../SPELL_KIT.md#study-prediction-and-borrowed-powers) for reusable catalog, library, prediction,
 inspection, Madness, conditional protection, one-shot casting modifiers and spell-loan APIs.
 
 Run `./gradlew build` and `./gradlew runGameTestServer -PomniscientEyeTests`.

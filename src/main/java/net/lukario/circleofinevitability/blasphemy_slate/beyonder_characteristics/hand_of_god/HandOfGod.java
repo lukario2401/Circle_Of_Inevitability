@@ -59,7 +59,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Hand Of God: the Twilight Giant Pathway of Lord of the Mysteries (docs/HAND_OF_GOD.md). Seven keys in the
+ * Hand Of God: the Twilight Giant Pathway of Lord of the Mysteries (docs/pathways/HAND_OF_GOD.md). Seven keys in the
  * Attendant Of Mysteries pattern, from Warrior (Sequence 9) up to Twilight Giant (Sequence 0); every ability has
  * a normal and a sneak cast:
  *

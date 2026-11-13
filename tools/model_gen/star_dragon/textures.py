@@ -5,7 +5,7 @@ Same layout as tools/model_gen/illuminator/textures.py: every model texture is a
 part of its material's cell that matches its size, so the texel density stays even; a face listed in a cube's
 'full' (or given another material through faces={...}) shows its whole cell, stretched (a wing, a ring, a beam).
 
-The palette (docs/STAR_DRAGON.md, "Theme"): star white and deep indigo-black for the void, dark green for the
+The palette (docs/pathways/star_dragon/STAR_DRAGON.md, "Theme"): star white and deep indigo-black for the void, dark green for the
 Weakening rays, pale blue for the Piercing Ray, gold-white for sunlight and fusion, silver-teal for the Tidal
 Scholar's scales and waves. Pathway color 0x6A5CFF.
 """

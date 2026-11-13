@@ -5,7 +5,7 @@ Same layout as tools/model_gen/knowledge_emperor/textures.py: every model textur
 part of its material's cell that matches its size, so the texel density stays even; a face listed in a cube's
 'full' shows its whole cell, stretched.
 
-The palette (docs/HAND_OF_ORDER.md, "Theme"): brass (0xC9A24B) and white-gold (0xFFF3D0) for Order and the Brass
+The palette (docs/pathways/HAND_OF_ORDER.md, "Theme"): brass (0xC9A24B) and white-gold (0xFFF3D0) for Order and the Brass
 Pillar, cold blue-white (0xA8C8FF) for Psychic lightning, iron grey (0x3E434D) for Rules and chains, dark red
 (0xB03030) for Punishment and Death, dark violet (0x5A3A7A) for Disorder.
 """

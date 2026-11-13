@@ -42,7 +42,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Hand Of God, key 6: the Demon Hunting wheel (Demon Hunter, Sequence 4). docs/HAND_OF_GOD.md, "Key 6 wheel".
+ * Hand Of God, key 6: the Demon Hunting wheel (Demon Hunter, Sequence 4). docs/pathways/HAND_OF_GOD.md, "Key 6 wheel".
  *
  *   Eye of Demon Hunting  12 s: evil and undead around you glow through walls; the enemy you look at is read (its
  *                         health, weakness and effects, in chat) and takes 20% more damage. From Silver Knight (3)

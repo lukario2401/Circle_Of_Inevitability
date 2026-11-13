@@ -99,7 +99,7 @@ def validate(root):
     assert len(set(decoded))==len(SOUNDS),'Duplicated audio'
     for rel,keys in manifest['shared_files'].items():
         data=json.loads((root/rel).read_text());assert all(k in data for k in keys),rel
-    docs=(REPO/'docs/NATURE_WALKER_ASSETS.md').read_text()
+    docs=(REPO/'docs/pathways/nature_walker/NATURE_WALKER_ASSETS.md').read_text()
     assert all('`'+n+'`' in docs for n in ABILITIES),'Ability missing from coverage table'
     print(f'PASS: {len(manifest["files"])} resource hashes; 39 distinct ability icons; {len(models)} legal models; '
           f'{len(ANIMATED)} compatible animations; {len(SOUNDS)} registered, decoded mono cues; Java and design coverage.')

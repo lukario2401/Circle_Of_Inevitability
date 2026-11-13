@@ -53,7 +53,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Key Of Stars: the Door Pathway of Lord of the Mysteries, the Magician card (docs/KEY_OF_STARS.md). Seven keys in
+ * Key Of Stars: the Door Pathway of Lord of the Mysteries, the Magician card (docs/pathways/KEY_OF_STARS.md). Seven keys in
  * the Attendant Of Mysteries pattern, from Apprentice (Sequence 9) up to Door (Sequence 0):
  *
  *   1 Door Opening   (Apprentice)        step through a wall by an illusory Door; a real door swings open for free
@@ -130,7 +130,7 @@ public class KeyOfStars {
     public static final int STARLIT_TICKS = 240;
     static final double STARLIT_SEEN = 64.0;                     // you and your allies see your marks this close
 
-    // Passives (docs/KEY_OF_STARS.md, "Passives")
+    // Passives (docs/pathways/KEY_OF_STARS.md, "Passives")
     static final float FOOTPRINTS_SHORTER = 0.75f;               // Apprentice: roots and holds on you last 25% less
     static final int NIMBLE_SEQUENCE = 8;                        // Trickmaster: no fall damage under...
     static final double NIMBLE_FALL = 6.0;

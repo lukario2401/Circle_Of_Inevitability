@@ -41,7 +41,7 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * How the Beauty Goddess (Moon) pathway looks and sounds: every key, both casts, and the four disasters of the Moon
  * wheel. Visual only: nothing here hurts, heals, roots or summons anyone. The ability code does that, at the ticks
- * named by the constants below (..._LANDS, ..._LOCKS, ..._GRIPS...), with Later.run. See docs/BEAUTY_GODDESS.md.
+ * named by the constants below (..._LANDS, ..._LOCKS, ..._GRIPS...), with Later.run. See docs/pathways/BEAUTY_GODDESS.md.
  *
  * ---------- See them in game ----------
  *   /beautyfx all              every display one after another (/beautyfx all 3 = three times over)

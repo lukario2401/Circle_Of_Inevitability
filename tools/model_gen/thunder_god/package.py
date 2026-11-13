@@ -24,18 +24,18 @@ def main():
         meta=json.loads((ASSETS.parent.parent/'pack.mcmeta').read_text())
         meta['pack']['description']='Thunder God: storm, sea and silver lightning resources'
         z.writestr('pack.mcmeta',json.dumps(meta,indent=2)+'\n')
-        for folder in ('tools/model_gen/thunder_god','docs/assets/thunder_god'):
+        for folder in ('tools/model_gen/thunder_god','docs/pathways/thunder_god/assets'):
             for file in (REPO/folder).rglob('*'):
                 if file.is_file() and '__pycache__' not in file.parts:z.write(file,file.relative_to(REPO))
-        for rel in ('LICENSE.txt','tools/model_gen/modelkit.py','docs/THUNDER_GOD.md','docs/THUNDER_GOD_ASSETS.md',
+        for rel in ('LICENSE.txt','tools/model_gen/modelkit.py','docs/pathways/thunder_god/THUNDER_GOD.md','docs/pathways/thunder_god/THUNDER_GOD_ASSETS.md',
                     'src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/thunder_god/ThunderGodFx.java'):
-            if rel=='docs/THUNDER_GOD_ASSETS.md':
-                z.writestr(rel,(REPO/rel).read_text().replace('../src/main/resources/assets/','../assets/'))
+            if rel=='docs/pathways/thunder_god/THUNDER_GOD_ASSETS.md':
+                z.writestr(rel,(REPO/rel).read_text().replace('../../../src/main/resources/assets/','../../../assets/'))
             else:z.write(REPO/rel,rel)
         events='\n'.join(f'Map.entry("{key}", sound("{PREFIX}.{key}"))' for key in manifest['sound_events'])
         z.writestr('integration/sound-registrations.txt','// Entries for ModSounds.THUNDER_GOD = Map.ofEntries(...):\n'+events.replace('\n',',\n')+'\n')
         z.writestr('integration/pathway-icon.txt','ICONS.put("Thunder God", icon("thunder_god"));\n')
-        z.writestr('README.txt','Thunder God asset pack\n\nStart with docs/THUNDER_GOD_ASSETS.md.\nAssets are at assets/circle_of_inevitability/.\nThe bundled sounds.json and lang/en_us.json contain only Thunder God entries. Merge them into existing mod JSON; do not overwrite other pathways.\nForge sound registration and cosmetic adapter source are included under integration/ and src/.\nAbility gameplay remains unimplemented.\n')
+        z.writestr('README.txt','Thunder God asset pack\n\nStart with docs/pathways/thunder_god/THUNDER_GOD_ASSETS.md.\nAssets are at assets/circle_of_inevitability/.\nThe bundled sounds.json and lang/en_us.json contain only Thunder God entries. Merge them into existing mod JSON; do not overwrite other pathways.\nForge sound registration and cosmetic adapter source are included under integration/ and src/.\nAbility gameplay remains unimplemented.\n')
     with zipfile.ZipFile(args.output) as z:
         assert z.testzip() is None
         for rel,digest in manifest['files'].items():

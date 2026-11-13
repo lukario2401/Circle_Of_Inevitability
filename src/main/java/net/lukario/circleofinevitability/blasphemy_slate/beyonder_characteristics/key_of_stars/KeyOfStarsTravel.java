@@ -34,7 +34,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Key Of Stars, key 5: the Travel wheel (Traveler, Sequence 5). docs/KEY_OF_STARS.md, "Key 5 wheel: Travel".
+ * Key Of Stars, key 5: the Travel wheel (Traveler, Sequence 5). docs/pathways/KEY_OF_STARS.md, "Key 5 wheel: Travel".
  *
  *   Traveler's Door   a Door to the Spirit World and out of another where you aim (or at the Star Anchor you aim at);
  *                     the further, the longer you wait inside; allies touching you come along

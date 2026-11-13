@@ -3,7 +3,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 ASSETS = REPO / 'src/main/resources/assets/circle_of_inevitability'
-PREVIEW = REPO / 'docs/assets/white_angel'
+PREVIEW = REPO / 'docs/pathways/white_angel/assets'
 NS = 'circle_of_inevitability'
 PREFIX = 'white_angel'
 BASIC = 'hymn_of_valor hymn_of_renewal sunshine daytime'.split()

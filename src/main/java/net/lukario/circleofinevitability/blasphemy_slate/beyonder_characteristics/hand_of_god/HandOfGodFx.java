@@ -44,7 +44,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * How the Hand Of God (Twilight Giant) pathway looks and sounds: every key, both casts, every wheel entry, the
  * growth at higher Sequences (Silver Armor, Cage, the larger Giant) and the passives that show. Visual only: nothing
  * here hurts, heals, roots, hides or moves anyone. The ability code does that, at the ticks named by the constants
- * below (..._RISEN, ..._GRIPS, ..._HITS...), with Later.run. See docs/HAND_OF_GOD.md.
+ * below (..._RISEN, ..._GRIPS, ..._HITS...), with Later.run. See docs/pathways/HAND_OF_GOD.md.
  *
  * ---------- See them in game ----------
  *   /handfx all              every display one after another (/handfx all 3 = three times over)

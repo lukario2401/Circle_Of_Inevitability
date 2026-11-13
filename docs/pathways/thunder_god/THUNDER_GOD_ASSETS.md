@@ -7,15 +7,15 @@ passives and the optional melee vocabulary. The supplied design remains a design
 its questions are not implementation instructions or decisions made by this asset pack.
 Sequences 9–0 now use these resources in the [complete playable pathway](THUNDER_GOD_IMPLEMENTATION.md), including higher abilities and summons. Instant casts do not show center-screen icons; timed indicators sit beside the hotbar.
 
-![All ability icons and status glyphs](assets/thunder_god/icons.png)
+![All ability icons and status glyphs](assets/icons.png)
 
-[Model contact sheet](assets/thunder_god/models.png) ·
-[Animated material sheet](assets/thunder_god/materials.png) ·
-[Wave, whirlpool and kingdom motion](assets/thunder_god/motion.gif)
+[Model contact sheet](assets/models.png) ·
+[Animated material sheet](assets/materials.png) ·
+[Wave, whirlpool and kingdom motion](assets/motion.gif)
 
 ## Inventory
 
-The [asset manifest](../src/main/resources/assets/circle_of_inevitability/thunder_god/asset_manifest.json)
+The [asset manifest](../../../src/main/resources/assets/circle_of_inevitability/thunder_god/asset_manifest.json)
 maps every ability to its models, sound and icons, lists pivots and render settings, and hashes
 275 individual resources. Paths below start at `src/main/resources/assets/circle_of_inevitability/`.
 
@@ -74,7 +74,7 @@ have an aura around their cube bounds. The windblade's low opacity is intentiona
 
 ## Cosmetic playback and integration
 
-[`ThunderGodFx`](../src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/thunder_god/ThunderGodFx.java)
+[`ThunderGodFx`](../../../src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/thunder_god/ThunderGodFx.java)
 provides `model`, `bolt`, `wave`, `cloud`, `kingdom`, `cue`, `rage` and `rageEnd` helpers.
 These only show things: they do not hurt, move, hold, target or summon entities, change weather,
 place water, or create vanilla lightning. Rage displays a supplied integer and performs no accounting.

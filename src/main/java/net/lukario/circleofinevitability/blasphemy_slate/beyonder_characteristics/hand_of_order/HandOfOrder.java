@@ -61,7 +61,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Hand Of Order: the Justiciar Pathway of Lord of the Mysteries, the Judgment card (docs/HAND_OF_ORDER.md). Seven keys
+ * Hand Of Order: the Justiciar Pathway of Lord of the Mysteries, the Judgment card (docs/pathways/HAND_OF_ORDER.md). Seven keys
  * in the Attendant Of Mysteries pattern, from Arbiter (Sequence 9) up to Justiciar (Sequence 0); every ability has a
  * normal and a sneak cast:
  *
@@ -162,7 +162,7 @@ public class HandOfOrder {
     static final float SWORD_PER_DISORDER = 0.15f;               // +15% for each point of Disorder...
     static final float SWORD_MAX = 2.5f;                         // ...up to this many times
 
-    // Passives (docs/HAND_OF_ORDER.md, "Passives"); the once-a-second ones run from SequencePassives
+    // Passives (docs/pathways/HAND_OF_ORDER.md, "Passives"); the once-a-second ones run from SequencePassives
     static final double ORDER_RADIUS = 5.0;                      // Arbiter: weak mobs this close keep their distance
     static final float ORDER_WEAK_HEALTH = 30f;
     static final int PROFICIENCY_SEQUENCE = 8;                   // Weapon Proficiency: faster attacks, more reach

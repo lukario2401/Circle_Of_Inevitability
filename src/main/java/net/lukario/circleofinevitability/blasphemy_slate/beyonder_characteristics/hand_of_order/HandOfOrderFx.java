@@ -44,7 +44,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * the spoken words of the Verdicts and Decrees, the Convict, the Decree zones and their Violations, the Court of
  * Judgment and its clauses, the passives that show and the melee combo. Visual only: nothing here hurts, holds, hides,
  * heals or moves anyone. The ability code does that, at the ticks named by the constants below (..._LANDS, ..._RISEN,
- * ...), with Later.run. See docs/HAND_OF_ORDER.md.
+ * ...), with Later.run. See docs/pathways/HAND_OF_ORDER.md.
  *
  * ---------- See them in game ----------
  *   /orderfx all              every display one after another (/orderfx all 3 = three times over)
@@ -1513,7 +1513,7 @@ public final class HandOfOrderFx {
         if (player instanceof Player viewerOfHud) status(viewerOfHud, Status.COURT, ticks);
     }
 
-    /** Clause 'index' (1 to 7, in the order of docs/HAND_OF_ORDER.md) is written: a gavel strikes, law rains down. */
+    /** Clause 'index' (1 to 7, in the order of docs/pathways/HAND_OF_ORDER.md) is written: a gavel strikes, law rains down. */
     public static void clause(ServerLevel sl, Vec3 center, double radius, int index) {
         ModelFx gavel = GAVEL.color(0xFFF0D68C).scale(2.5f).lifetime(18).fade(2, 8)
                 .key(0, pose().pitch(-60f).alpha(0f))
@@ -1627,7 +1627,7 @@ public final class HandOfOrderFx {
     }
 
     // =====================================================================================
-    // Melee combo (docs/HAND_OF_ORDER.md, "Melee combo")
+    // Melee combo (docs/pathways/HAND_OF_ORDER.md, "Melee combo")
     // =====================================================================================
 
     private static final SlashFx COMBO_RING = SlashFx.arc("slash/streaks")

@@ -36,7 +36,7 @@ import java.util.UUID;
 
 /**
  * Abomination, key 7: the Curses wheel (Disciple of Silence, Sequence 3; Ancient Bane, 2; Abomination, 1).
- * docs/ABOMINATION.md, "Key 7 wheel".
+ * docs/pathways/ABOMINATION.md, "Key 7 wheel".
  *
  *   Curse by Connection (Disciple)  an enemy you are connected to (status/Connection: hit, chained, cursed lately)
  *                                   is cursed wherever it is: Misfortune and more damage taken

@@ -22,7 +22,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Star Dragon, the rays (docs/STAR_DRAGON.md): the Weakening Ray and the Sunlight Ray (Star Sacrifice, key 2), the
+ * Star Dragon, the rays (docs/pathways/star_dragon/STAR_DRAGON.md): the Weakening Ray and the Sunlight Ray (Star Sacrifice, key 2), the
  * Piercing Ray (key 3, sneak) and the Series of Rays (Heavybringer, key 5). Every ray is a combat/Ray: it shows its
  * line for StarDragonFx.RAY_WARNING ticks and then it is there at once and cannot be dodged. Its hits go through
  * StarDragon.rayHit (the Star Chart's calculated shot, the void's manifestation). In the Star Dragon Form every ray is

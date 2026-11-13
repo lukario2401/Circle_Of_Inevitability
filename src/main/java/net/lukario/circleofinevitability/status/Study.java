@@ -27,7 +27,7 @@ import java.util.function.ToDoubleFunction;
  * Study: how well one caster knows one entity, from 0 to 100 percent. Every caster has a gauge of their own on
  * every entity; two casters never share theirs. The more a caster knows, the harder everything they do to it hits:
  * every 10% is BONUS_PER_TEN more damage (50% at most), for melee and abilities alike. Left alone for IDLE_TICKS,
- * the gauge falls DECAY_PER_SECOND a second. Knowledge Emperor is built on it (docs/KNOWLEDGE_EMPEROR.md, "Study").
+ * the gauge falls DECAY_PER_SECOND a second. Knowledge Emperor is built on it (docs/pathways/KNOWLEDGE_EMPEROR.md, "Study").
  *
  *   Study.add(player, target, 25);                 // a Pry: 25% more (100 at most). Returns the new value
  *   Study.strike(player, target, 20f, 10);         // Spells.strike (with the bonus), then 10% more

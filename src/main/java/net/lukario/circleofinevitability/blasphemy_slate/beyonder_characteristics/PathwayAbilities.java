@@ -183,7 +183,7 @@ public final class PathwayAbilities {
             new Ability("Attendant Of Mysteries", 7, "Grafting", 3, SNEAK, STEALABLE,
                     (player, level, sl) -> AttendantOfMysteries.attendantOfMysteriesGrafting(player, level, sl, true)),
 
-            // ---- Key Of Stars (docs/KEY_OF_STARS.md) ----
+            // ---- Key Of Stars (docs/pathways/KEY_OF_STARS.md) ----
             new Ability("Key Of Stars", 1, "Door Opening", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> KeyOfStars.keyOfStarsDoorOpening(player, level, sl, true)),
             new Ability("Key Of Stars", 2, "Tricks", 8, SNEAK, STEALABLE,                       // stolen: no wheel, its last (or a random) entry
@@ -199,7 +199,7 @@ public final class PathwayAbilities {
             new Ability("Key Of Stars", 7, "Starlight", 2, SNEAK, OWN_PATHWAY_ONLY,              // Omnipresence and the Alternate World
                     (player, level, sl) -> KeyOfStars.keyOfStarsStarlight(player, level, sl, true)),  // run on this Pathway's own rules
 
-            // ---- Hand Of Order (docs/HAND_OF_ORDER.md) ----
+            // ---- Hand Of Order (docs/pathways/HAND_OF_ORDER.md) ----
             new Ability("Hand Of Order", 1, "Halt", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> HandOfOrder.handOfOrderAuthority(player, level, sl, true)),
             new Ability("Hand Of Order", 2, "Jurisdiction", 8, SNEAK, STEALABLE,
@@ -327,7 +327,7 @@ public final class PathwayAbilities {
             new Ability("Beauty Goddess", 7, "Moon", 3, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> BeautyGoddess.beautyGoddessMoonWheel(player, level, sl, true)),
 
-            // ---- Knight Of Misfortune (docs/KNIGHT_OF_MISFORTUNE.md) ----
+            // ---- Knight Of Misfortune (docs/pathways/KNIGHT_OF_MISFORTUNE.md) ----
             new Ability("Knight Of Misfortune", 1, "Night Sight", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> KnightOfMisfortune.knightOfMisfortuneNightSight(player, level, sl, true)),
             new Ability("Knight Of Misfortune", 2, "Midnight Poem", 8, SNEAK, STEALABLE,       // stolen: no wheel, its last (or a random) poem
@@ -359,7 +359,7 @@ public final class PathwayAbilities {
             new Ability("God Of Decay", 7, "Time and Entropy", 2, SNEAK, STEALABLE,
                     (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, sl, 7, true)),
 
-            // ---- Hand Of God (docs/HAND_OF_GOD.md) ----
+            // ---- Hand Of God (docs/pathways/HAND_OF_GOD.md) ----
             new Ability("Hand Of God", 1, "Warrior's Charge", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> HandOfGod.handOfGodWarriorsCharge(player, level, sl, true)),
             new Ability("Hand Of God", 2, "Gladiator's Flurry", 8, SNEAK, STEALABLE,
@@ -375,7 +375,7 @@ public final class PathwayAbilities {
             new Ability("Hand Of God", 7, "Silver and Twilight", 3, SNEAK, STEALABLE,        // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> HandOfGodTwilight.handOfGodTwilight(player, level, sl, true)),
 
-            // ---- Abomination (docs/ABOMINATION.md) ----
+            // ---- Abomination (docs/pathways/ABOMINATION.md) ----
             new Ability("Abomination", 1, "Blood Chain", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> Abomination.abominationBloodChain(player, level, sl, true)),
             new Ability("Abomination", 2, "Moonstruck", 8, SNEAK, STEALABLE,
@@ -391,7 +391,7 @@ public final class PathwayAbilities {
             new Ability("Abomination", 7, "Curses", 3, SNEAK, STEALABLE,                      // stolen: no wheel; Abomination Form refuses a thief
                     (player, level, sl) -> AbominationCurses.abominationCurses(player, level, sl, true)),
 
-            // ---- Prince Of Abolition (docs/PRINCE_OF_ABOLITION.md). Its wheels open on sneak; a plain press recasts.
+            // ---- Prince Of Abolition (docs/pathways/PRINCE_OF_ABOLITION.md). Its wheels open on sneak; a plain press recasts.
             new Ability("Prince Of Abolition", 1, "Verdict", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> PrinceOfAbolition.princeOfAbolitionVerdict(player, level, sl, true)),
             new Ability("Prince Of Abolition", 2, "Brute Force", 8, SNEAK, STEALABLE,
@@ -407,7 +407,7 @@ public final class PathwayAbilities {
             new Ability("Prince Of Abolition", 7, "Sovereign", 6, SNEAK, STEALABLE,            // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> PrinceOfAbolitionSovereign.princeOfAbolitionSovereign(player, level, sl, true)),
 
-            // ---- Knowledge Emperor (docs/KNOWLEDGE_EMPEROR.md) ----
+            // ---- Knowledge Emperor (docs/pathways/KNOWLEDGE_EMPEROR.md) ----
             new Ability("Knowledge Emperor", 1, "Mystery Prying", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> KnowledgeEmperor.knowledgeEmperorMysteryPrying(player, level, sl, true)),
             new Ability("Knowledge Emperor", 2, "Weak-Point Strike", 8, SNEAK, STEALABLE,
@@ -423,7 +423,7 @@ public final class PathwayAbilities {
             new Ability("Knowledge Emperor", 7, "Knowledge", 2, SNEAK, STEALABLE,                // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> KnowledgeEmperorKnowledge.knowledgeEmperorKnowledge(player, level, sl, true)),
 
-            // ---- Illuminator (docs/ILLUMINATOR.md) ----
+            // ---- Illuminator (docs/pathways/ILLUMINATOR.md) ----
             new Ability("Illuminator", 1, "Compound Flask", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> Illuminator.illuminatorCompoundFlask(player, level, sl, true)),
             new Ability("Illuminator", 2, "Survey", 8, SNEAK, STEALABLE,
@@ -438,7 +438,7 @@ public final class PathwayAbilities {
                     (player, level, sl) -> IlluminatorAlchemy.illuminatorAlchemy(player, level, sl, true)),
             new Ability("Illuminator", 7, "Civilization", 2, SNEAK, STEALABLE,                 // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> IlluminatorCivilization.illuminatorCivilization(player, level, sl, true)),
-            // ---- Star Dragon (docs/STAR_DRAGON.md) ----
+            // ---- Star Dragon (docs/pathways/star_dragon/STAR_DRAGON.md) ----
             new Ability("Star Dragon", 1, "Star Chart", 9, SNEAK, STEALABLE,                       // sneak: Fate Glimpse (8)
                     (player, level, sl) -> StarDragon.starDragonAstronomy(player, level, sl, true)),
             new Ability("Star Dragon", 2, "Star Sacrifice", 7, SNEAK, STEALABLE,                   // stolen: no wheel, its last (or a random) entry

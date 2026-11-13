@@ -32,7 +32,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Hand Of Order, key 4: the Verdict wheel (Judge, Sequence 6). docs/HAND_OF_ORDER.md, "Key 4 wheel". Verdicts are one
+ * Hand Of Order, key 4: the Verdict wheel (Judge, Sequence 6). docs/pathways/HAND_OF_ORDER.md, "Key 4 wheel". Verdicts are one
  * spoken word; each shows its word above you (HandOfOrderFx.speak).
  *
  *   Imprison           layers of glass walls hold the enemy you look at; again on the same one: "Release", free.

@@ -29,7 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Knight Of Misfortune, key 2: the Midnight Poem wheel (Midnight Poet, Sequence 8). docs/KNIGHT_OF_MISFORTUNE.md,
+ * Knight Of Misfortune, key 2: the Midnight Poem wheel (Midnight Poet, Sequence 8). docs/pathways/KNIGHT_OF_MISFORTUNE.md,
  * "Key 2 wheel".
  *
  *   Tranquilize  you and your allies are calmed (fear, nausea, blindness, darkness and taunts end); the one you look

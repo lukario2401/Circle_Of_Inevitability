@@ -36,7 +36,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Abomination, key 4: the Zombie wheel (Zombie, Sequence 6). docs/ABOMINATION.md, "Key 4 wheel".
+ * Abomination, key 4: the Zombie wheel (Zombie, Sequence 6). docs/pathways/ABOMINATION.md, "Key 4 wheel".
  *
  *   Raise the Dead   three zombies claw out of the ground where you aim and fight for you; the enemies killed near
  *                    there in the last 10 seconds rise too, as what they were (combat/Fallen). Six from Puppet (4),

@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Abomination, key 6: the Chains wheel (Puppet, Sequence 4; and Chained, Sequence 0). docs/ABOMINATION.md, "Key 6 wheel".
+ * Abomination, key 6: the Chains wheel (Puppet, Sequence 4; and Chained, Sequence 0). docs/pathways/ABOMINATION.md, "Key 6 wheel".
  *
  *   Animate Objects     (Puppet)  every loose thing near you (dropped items, arrows, armor stands, boats; never
  *                                 blocks) rises on strings and is thrown at the enemies in sight (combat/Hurled).

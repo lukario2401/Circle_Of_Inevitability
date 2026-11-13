@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Order: everything a Prince Of Abolition leaves standing in the world (docs/PRINCE_OF_ABOLITION.md, "Order").
+ * Order: everything a Prince Of Abolition leaves standing in the world (docs/pathways/PRINCE_OF_ABOLITION.md, "Order").
  * A Compromised mark, a Bribe, a Connection, a Seal, a mausoleum: each one is one standing order while it lasts.
  * Nine count at most (ORDER_CAP). Shown beside the hotbar as "[sigil] Order 4/9" (PrinceOfAbolitionFx.order).
  *

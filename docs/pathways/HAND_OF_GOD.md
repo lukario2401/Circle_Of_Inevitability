@@ -2,7 +2,7 @@
 
 The Hand Of God Pathway is the Twilight Giant Pathway of Lord of the Mysteries, the Strength tarot card: Warrior (9), Pugilist (8), Weapon Master (7), Dawn Paladin (6), Guardian (5), Demon Hunter (4), Silver Knight (3), Glory (2), Hand of God (1), Twilight Giant (0). Source: the Twilight Giant Pathway and Twilight Giant Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-Every key, every wheel entry and every passive is written (see "What is built"). The rest of this file is the design they were built from: what every ability does, the numbers they started from (the code's constants are the truth now), which parts of the [spell kit](SPELL_KIT.md) build each one, and the new reusable parts that came out of it.
+Every key, every wheel entry and every passive is written (see "What is built"). The rest of this file is the design they were built from: what every ability does, the numbers they started from (the code's constants are the truth now), which parts of the [spell kit](../SPELL_KIT.md) build each one, and the new reusable parts that came out of it.
 
 Pathway name in code: `"Hand Of God"`.
 
@@ -171,9 +171,9 @@ Most of it is parts that existed already; the new ones are listed under "New reu
 
 ## New reusable parts worth writing first
 
-These come from this Pathway and would be useful to the others too. Each is one small class in `status/` (or a method in `Spells`) that looks after itself, like the rest of the kit. Each of them is described by what it should do so that it can be coded straight from here, and each should get a section in [SPELL_KIT.md](SPELL_KIT.md) when it is written.
+These come from this Pathway and would be useful to the others too. Each is one small class in `status/` (or a method in `Spells`) that looks after itself, like the rest of the kit. Each of them is described by what it should do so that it can be coded straight from here, and each should get a section in [SPELL_KIT.md](../SPELL_KIT.md) when it is written.
 
-All written; each has a section in [SPELL_KIT.md](SPELL_KIT.md). With keys 1, 2, 3 and 5: `Dome` (`combat/Dome`, with `keepsEnemiesOut`, `keepsEnemiesIn`, `stopsProjectiles`, `shields`, `wardsEffects`, `holdsOwner`, `outsiders`, `keepWhile`, `onBlock`, `weaken`, `renew`), `SupernaturalResistance` (`status/`), `Physique` (`blasphemy_slate/beyonder/`), `Spells.isEvil` (with `Spells.addEvilCheck`) and `Spells.isFriend`. `Aegis` turned out not to be needed: Damage Transference is `DamageLink.redirect` from each ally to the guardian. With the wheels, all in `status/` unless said: `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor` (planned as `ArmorOfLight`: the name says what it is for any Pathway), `ConjuredWeapon` (planned as `DawnBlade`), and in `combat/Spells`: `lightNear`, `lightAimed`, `inDaylight`, `canBeChosen` (what `Unnoticed` hides from) and `strikeThrough` (a hit that no `Dome` shield, `Substitute` or `DeathWard` stops; those three let it through).
+All written; each has a section in [SPELL_KIT.md](../SPELL_KIT.md). With keys 1, 2, 3 and 5: `Dome` (`combat/Dome`, with `keepsEnemiesOut`, `keepsEnemiesIn`, `stopsProjectiles`, `shields`, `wardsEffects`, `holdsOwner`, `outsiders`, `keepWhile`, `onBlock`, `weaken`, `renew`), `SupernaturalResistance` (`status/`), `Physique` (`blasphemy_slate/beyonder/`), `Spells.isEvil` (with `Spells.addEvilCheck`) and `Spells.isFriend`. `Aegis` turned out not to be needed: Damage Transference is `DamageLink.redirect` from each ally to the guardian. With the wheels, all in `status/` unless said: `Decay`, `WeaponCoat`, `Unnoticed`, `GiantForm`, `ConjuredArmor` (planned as `ArmorOfLight`: the name says what it is for any Pathway), `ConjuredWeapon` (planned as `DawnBlade`), and in `combat/Spells`: `lightNear`, `lightAimed`, `inDaylight`, `canBeChosen` (what `Unnoticed` hides from) and `strikeThrough` (a hit that no `Dome` shield, `Substitute` or `DeathWard` stops; those three let it through).
 
 | Part | Where | What it does | Used by |
 | --- | --- | --- | --- |
@@ -202,7 +202,7 @@ Two ideas are cheap and give the most: `Decay` and `Dome`. Four of the abilities
 
 ## Checklist for the code
 
-Follow the same steps as Beauty Goddess ([SPELL_KIT.md](SPELL_KIT.md), "The shape of an ability"):
+Follow the same steps as Beauty Goddess ([SPELL_KIT.md](../SPELL_KIT.md), "The shape of an ability"):
 
 1. Done: `blasphemy_slate/beyonder_characteristics/HandOfGod.java`, `PATHWAY = "Hand Of God"`, with `handOfGodWarriorsCharge`, `handOfGodGladiatorsFlurry`, `handOfGodGrandmastersEdge` and `handOfGodProtection`; the wheels each in a class of their own beside it: `HandOfGodDawn.handOfGodDawn`, `HandOfGodDemonHunting.handOfGodDemonHunting`, `HandOfGodTwilight.handOfGodTwilight`. Every number is a constant at the top of its class.
 2. Done: wheels `"hand_of_god_dawn"` (key 4), `"hand_of_god_demon_hunting"` (key 6) and `"hand_of_god_twilight"` (key 7, radius 92 for its eight entries), each with `.quickCastCooldown(false).quickCastCost(2f)` like Beauty Goddess.
@@ -210,14 +210,14 @@ Follow the same steps as Beauty Goddess ([SPELL_KIT.md](SPELL_KIT.md), "The shap
 4. Done: seven lines in `PathwayAbilities.ALL`: key 1 at Sequence 9, key 2 at 8, key 3 at 7, key 4 at 6, key 5 at 5, key 6 at 4, key 7 at 3.
 5. Done: `"Hand Of God"` in `SequenceCommands.PATHWAYS`.
 6. Done: the passives as lines in `SequencePassives`; a misspelt Pathway name stops the game on purpose.
-7. Done: a row for it in the tables of [SEQUENCES.md](SEQUENCES.md) and in the Pathway list at its top, and the list in the README.
+7. Done: a row for it in the tables of [SEQUENCES.md](../SEQUENCES.md) and in the Pathway list at its top, and the list in the README.
 8. Done already: `HandOfGodFx.java` and the icon in `PathwayHudIcon` under `"Hand Of God"`. Done too: the Pathway color in `DarkAngel.pathwayColor`.
 9. Done already: models, wheel pictures (32 px), status pictures (16 px), particles and sounds, generated by the scripts in `tools/model_gen/hand_of_god/`, and `/handfx all` to play every display.
 10. Set it with `/sequence pathway <player> "Hand Of God"`.
 
 ## What is built
 
-Every key and every passive. Keys 1, 2, 3 and 5 and the passives are in `blasphemy_slate/beyonder_characteristics/HandOfGod.java`; the wheels are in `HandOfGodDawn.java` (key 4), `HandOfGodDemonHunting.java` (key 6) and `HandOfGodTwilight.java` (key 7) beside it, which `HandOfGod` ticks and clears after a relog or a death. Every number is a constant at the top of its class. One line each in `PathwayAbilities.ALL` (Protection is not stealable: it is the Guardian's own sword), a row in [SEQUENCES.md](SEQUENCES.md), and the passives in `SequencePassives` and `HandOfGod`. Set the Pathway with `/sequence pathway <player> "Hand Of God"`.
+Every key and every passive. Keys 1, 2, 3 and 5 and the passives are in `blasphemy_slate/beyonder_characteristics/HandOfGod.java`; the wheels are in `HandOfGodDawn.java` (key 4), `HandOfGodDemonHunting.java` (key 6) and `HandOfGodTwilight.java` (key 7) beside it, which `HandOfGod` ticks and clears after a relog or a death. Every number is a constant at the top of its class. One line each in `PathwayAbilities.ALL` (Protection is not stealable: it is the Guardian's own sword), a row in [SEQUENCES.md](../SEQUENCES.md), and the passives in `SequencePassives` and `HandOfGod`. Set the Pathway with `/sequence pathway <player> "Hand Of God"`.
 
 How it works where the tables above do not say:
 - Warrior's Charge rushes at the enemy you look at if one is within 9 blocks, else 8 blocks straight ahead (`combat/Reel`). The first enemy in front of you is hit and thrown, and the rush stops there; enemies beside your path are shoved aside. It cannot be started while you are held in place.
@@ -273,7 +273,7 @@ Two things to know when the abilities are written:
 - The Sword of Dawn is shown held at the ready beside the body and turning with it; a model cannot follow the arm. Each swing is shown with `dawnSlash`.
 - Giant Form shows the Giant's body round the caster, turning with them; the caster's real size (the scale attribute of the planned `GiantForm`) is the ability's job. Its limbs do not move with the caster's.
 
-What is in the repository, all of it generated by the scripts in `tools/model_gen/hand_of_god/` (see "Hand Of God: ready-made displays" in [MODEL_FX.md](MODEL_FX.md)):
+What is in the repository, all of it generated by the scripts in `tools/model_gen/hand_of_god/` (see "Hand Of God: ready-made displays" in [MODEL_FX.md](../MODEL_FX.md)):
 
 | What | Where | Made by |
 | --- | --- | --- |

@@ -73,7 +73,7 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 /**
- * Illuminator: the Paragon Pathway of Lord of the Mysteries (docs/ILLUMINATOR.md). Seven keys in the Attendant Of
+ * Illuminator: the Paragon Pathway of Lord of the Mysteries (docs/pathways/ILLUMINATOR.md). Seven keys in the Attendant Of
  * Mysteries pattern, from Savant (Sequence 9) up to Paragon (Sequence 0); every key has a normal and a sneak cast:
  *
  *   1 Compound Flask  (Savant)            a flask of nitroglycerin in aqua regia: bursts, Corrodes   | sneak: Recall
@@ -185,7 +185,7 @@ public class Illuminator {
     static final double EXPLOIT_ALL_RANGE = 24.0;
     static final float EXPLOIT_ALL_SHARE = 0.6f;        // ...for this share (the one you look at takes it all)
 
-    // Costs and passives (docs/ILLUMINATOR.md, "Passives"); the once-a-second ones run from SequencePassives
+    // Costs and passives (docs/pathways/ILLUMINATOR.md, "Passives"); the once-a-second ones run from SequencePassives
     static final int QUICK_STUDY_SEQUENCE = 9;          // Quick Study: the same ability again within...
     static final int QUICK_STUDY_WINDOW = 400;
     static final float QUICK_STUDY_COST = 0.9f;         // ...costs this much
@@ -806,7 +806,7 @@ public class Illuminator {
         return weakness == null ? "nothing" : kind(weakness);
     }
 
-    /** The abilities that match a weakness (docs/ILLUMINATOR.md, the weakness table). */
+    /** The abilities that match a weakness (docs/pathways/ILLUMINATOR.md, the weakness table). */
     private static String matching(Weakness weakness) {
         if (weakness == null) return "no ability";
         return switch (weakness) {

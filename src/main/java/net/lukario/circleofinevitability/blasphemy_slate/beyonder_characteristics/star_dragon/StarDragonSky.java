@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Star Dragon, the sky (docs/STAR_DRAGON.md): Star Grazing and Fission Pulse (Star Shepherd, key 6), Fusion Cluster
+ * Star Dragon, the sky (docs/pathways/star_dragon/STAR_DRAGON.md): Star Grazing and Fission Pulse (Star Shepherd, key 6), Fusion Cluster
  * and Planetfall (the Cosmos wheel, key 7). Every sky ability shows where it lands before it does (the warning circles
  * are in StarDragonFx). The grazed star, the radiation, the storm and the cracks of light are combat/Zone on the spot
  * they were shown; the circling fusion clusters are a combat/Orbit. Every number is right below.

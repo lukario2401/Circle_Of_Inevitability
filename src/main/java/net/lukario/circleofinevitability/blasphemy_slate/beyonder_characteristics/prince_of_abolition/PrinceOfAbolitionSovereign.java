@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Prince Of Abolition, key 7: the Sovereign wheel (Baron of Corruption, Sequence 6). docs/PRINCE_OF_ABOLITION.md,
+ * Prince Of Abolition, key 7: the Sovereign wheel (Baron of Corruption, Sequence 6). docs/pathways/PRINCE_OF_ABOLITION.md,
  * "Key 7 wheel: Sovereign".
  *
  *   Ruin        (6) a black-and-gold beam along a line: every enemy on it is struck, and a rot sets in that eats

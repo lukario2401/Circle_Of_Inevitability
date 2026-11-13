@@ -2,7 +2,7 @@ package net.lukario.circleofinevitability.combat;
 
 /** Reusable, renderer-independent growth clock. The owning garden supplies time and speed,
  * handles stage changes, pulses mature effects and removes DEAD entries. Nothing loads chunks.
- * See docs/NATURE_WALKER_EXTENSION_GUIDE.md for a complete integration example. */
+ * See docs/pathways/nature_walker/NATURE_WALKER_EXTENSION_GUIDE.md for a complete integration example. */
 public final class Growth {
     public enum Stage { SEED, SPROUT, BLOOM, WITHERED, DEAD }
     private final int sprout, mature, wither;

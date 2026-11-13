@@ -42,7 +42,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * How the Abomination (Chained) pathway looks and sounds: every key, both casts, every wheel entry, and the passives
  * that show. Visual only: nothing here hurts, binds, curses, hides or moves anyone. The ability code does that, at
  * the ticks named by the constants below (..._REACHES, ..._LOCKED, ..._RISEN, ..._SHUT...), with Later.run.
- * See docs/ABOMINATION.md for which call goes with which ability.
+ * See docs/pathways/ABOMINATION.md for which call goes with which ability.
  *
  * ---------- See them in game ----------
  *   /abominationfx all            every display one after another (/abominationfx all 3 = three times over)

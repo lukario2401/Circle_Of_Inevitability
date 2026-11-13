@@ -30,7 +30,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Abomination, key 5: the Wraith wheel (Wraith, Sequence 5). docs/ABOMINATION.md, "Key 5 wheel".
+ * Abomination, key 5: the Wraith wheel (Wraith, Sequence 5). docs/pathways/ABOMINATION.md, "Key 5 wheel".
  *
  *   Mirror Step   step into the nearest reflection and out of the one you aim at, unseen on the way
  *   Possession    leave your body and ride inside the mob you look at, steering it (status/Parasite); from

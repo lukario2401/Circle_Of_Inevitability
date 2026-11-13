@@ -8,16 +8,16 @@ art, recordings or wiki imagery are bundled.
 This collection supplies resources and registers sound events. The
 [complete pathway and stored replication](OMNISCIENT_EYE.md) now use these resources. The PDF's implementation checklist and questions are design context.
 
-![Ability icons, statuses and particle textures](assets/omniscient_eye/preview.png)
+![Ability icons, statuses and particle textures](assets/preview.png)
 
-![Rendered geometry with its actual UV textures](assets/omniscient_eye/models.png)
+![Rendered geometry with its actual UV textures](assets/models.png)
 
-[Creature animation poses and spiral tower turntable](assets/omniscient_eye/turntable.gif)
+[Creature animation poses and spiral tower turntable](assets/turntable.gif)
 
 ## Inventory
 
 All paths below are relative to `src/main/resources/assets/circle_of_inevitability/`.
-The machine-readable inventory is [`omniscient_eye/asset_manifest.json`](../src/main/resources/assets/circle_of_inevitability/omniscient_eye/asset_manifest.json).
+The machine-readable inventory is [`omniscient_eye/asset_manifest.json`](../../../src/main/resources/assets/circle_of_inevitability/omniscient_eye/asset_manifest.json).
 It maps every ability to its icons, cue and model choices, lists pivots/render settings,
 and hashes the 155 individual asset files. Shared `sounds.json` and language files are additional.
 

@@ -79,7 +79,7 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
  */
 public final class HandOfOrderMobs {
 
-    // ---------- mob cooldowns (ticks; a player's: docs/HAND_OF_ORDER.md)
+    // ---------- mob cooldowns (ticks; a player's: docs/pathways/HAND_OF_ORDER.md)
     private static final int HALT_MOB_COOLDOWN = 160;
     private static final int PRESENCE_MOB_COOLDOWN = 280;
     private static final int RECOGNITION_MOB_COOLDOWN = 600;

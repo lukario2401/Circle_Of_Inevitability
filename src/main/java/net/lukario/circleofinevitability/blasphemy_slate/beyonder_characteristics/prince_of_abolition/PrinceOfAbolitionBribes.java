@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Prince Of Abolition, key 3: the Bribe wheel (Briber, Sequence 7). docs/PRINCE_OF_ABOLITION.md, "Key 3 wheel: Bribe".
+ * Prince Of Abolition, key 3: the Bribe wheel (Briber, Sequence 7). docs/pathways/PRINCE_OF_ABOLITION.md, "Key 3 wheel: Bribe".
  *
  *   Weaken     the enemy's attacks are weaker and it takes more from you
  *   Charm      it cannot bring itself to fight you; now and then it turns on its own side

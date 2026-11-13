@@ -35,7 +35,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Key Of Stars, key 7: the Starlight wheel (Planeswalker, Sequence 2, up to Door). docs/KEY_OF_STARS.md, "Key 7 wheel".
+ * Key Of Stars, key 7: the Starlight wheel (Planeswalker, Sequence 2, up to Door). docs/pathways/KEY_OF_STARS.md, "Key 7 wheel".
  *
  *   Toy Box (2)               a veil where you aim: small enemies in it become wind-up toys (status/Toy), the rest slow
  *   Replication (2)           the last ability anyone cast near you, cast again by you at once (combat/Casts)

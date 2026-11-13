@@ -2,7 +2,7 @@
   "schema_version": 1,
   "namespace": "circle_of_inevitability",
   "pathway": "Author",
-  "source_design": "docs/AUTHOR.md",
+  "source_design": "docs/pathways/author/AUTHOR.md",
   "scope": "Registered Author pathway with all 26 playable abilities, connected visual assets and sounds.",
   "abilities": [
     "observe",

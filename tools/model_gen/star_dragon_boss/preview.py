@@ -8,7 +8,7 @@ ROOT=Path(__file__).resolve().parents[3]
 A=ROOT/'src/main/resources/assets/circle_of_inevitability/boss/star_dragon'
 RIG=json.loads((A/'star_dragon.rig.json').read_text())
 CLIPS=json.loads((A/'star_dragon.animations.json').read_text())['clips']
-OUT=ROOT/'docs/assets/star_dragon_boss';OUT.mkdir(parents=True,exist_ok=True)
+OUT=ROOT/'docs/pathways/star_dragon/assets';OUT.mkdir(parents=True,exist_ok=True)
 def eye():return [[int(i==j) for j in range(4)] for i in range(4)]
 def mul(a,b):return [[sum(a[i][k]*b[k][j] for k in range(4)) for j in range(4)] for i in range(4)]
 def transform(p,r,s):

@@ -41,7 +41,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Star Dragon, the void and Fate (docs/STAR_DRAGON.md): Cosmic Void (Star Sacrifice, key 2), Void Passage (key 3),
+ * Star Dragon, the void and Fate (docs/pathways/star_dragon/STAR_DRAGON.md): Cosmic Void (Star Sacrifice, key 2), Void Passage (key 3),
  * Fate Convergence and Remote Sight (Heavybringer, key 5), Quantum Uncertainty (the Cosmos wheel, key 7). Every number
  * is right below; the looks are StarDragonFx's.
  */

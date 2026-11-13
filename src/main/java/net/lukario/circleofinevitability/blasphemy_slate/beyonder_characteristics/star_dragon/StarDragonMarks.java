@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * The marks the Star Dragon leaves on others (docs/STAR_DRAGON.md, "New reusable parts", 4), in the style of
+ * The marks the Star Dragon leaves on others (docs/pathways/star_dragon/STAR_DRAGON.md, "New reusable parts", 4), in the style of
  * PrinceOfAbolitionMarks: put, has, from, ticksLeft, end. Each one knows who laid it, and does what it does by itself
  * (its effects, its once-a-second part, its look and, on a player, its picture above the hotbar):
  *

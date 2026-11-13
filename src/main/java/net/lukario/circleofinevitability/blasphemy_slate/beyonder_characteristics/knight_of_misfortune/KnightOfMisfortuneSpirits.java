@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Knight Of Misfortune, key 5: the Spirit Commanding wheel (Spirit Warlock, Sequence 5). docs/KNIGHT_OF_MISFORTUNE.md,
+ * Knight Of Misfortune, key 5: the Spirit Commanding wheel (Spirit Warlock, Sequence 5). docs/pathways/KNIGHT_OF_MISFORTUNE.md,
  * "Key 5 wheel".
  *
  *   Terror Banshee   a wailing spirit floats at your shoulder for BANSHEE_TICKS; every BANSHEE_WAIL_EVERY it shrieks:

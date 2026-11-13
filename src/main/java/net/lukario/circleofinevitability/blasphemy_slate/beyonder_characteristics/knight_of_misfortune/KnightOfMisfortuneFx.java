@@ -46,7 +46,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * grows at higher Sequences (the complete Demonic Wolf, Misfortune and Catastrophe, the Sword's edicts) and the
  * passives that show. Visual only: nothing here hurts, holds, hides, puts to sleep or moves anyone. The ability code
  * does that, at the ticks named by the constants below (..._GROWN, ..._RISEN, ..._OPENS...), with Later.run.
- * See docs/KNIGHT_OF_MISFORTUNE.md.
+ * See docs/pathways/KNIGHT_OF_MISFORTUNE.md.
  *
  * ---------- See them in game ----------
  *   /knightfx all              every display one after another (/knightfx all 3 = three times over)
@@ -167,7 +167,7 @@ public final class KnightOfMisfortuneFx {
         }
     }
 
-    /** The Misfortunes that befall someone who carries Misfortune (docs/KNIGHT_OF_MISFORTUNE.md, "Misfortune"). */
+    /** The Misfortunes that befall someone who carries Misfortune (docs/pathways/KNIGHT_OF_MISFORTUNE.md, "Misfortune"). */
     public enum Mishap {
         STUMBLE,
         FUMBLE,

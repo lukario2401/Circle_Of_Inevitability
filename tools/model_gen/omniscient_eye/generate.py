@@ -548,7 +548,7 @@ def preview(root,path):
 def main():
     p=argparse.ArgumentParser(description=__doc__)
     p.add_argument('--assets',type=Path,default=DEFAULT_ASSETS)
-    p.add_argument('--preview',type=Path,default=REPO/'docs/assets/omniscient_eye/preview.png')
+    p.add_argument('--preview',type=Path,default=REPO/'docs/pathways/omniscient_eye/assets/preview.png')
     args=p.parse_args(); records=models(args.assets)
     gui(args.assets); particles(args.assets); sounds(args.assets)
     data=manifest(args.assets,records); preview(args.assets,args.preview)

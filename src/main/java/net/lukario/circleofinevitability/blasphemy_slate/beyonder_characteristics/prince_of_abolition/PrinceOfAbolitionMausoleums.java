@@ -30,7 +30,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * The Black Emperor's mausoleums (docs/PRINCE_OF_ABOLITION.md, "Mausoleums"). A mausoleum is a black stele trimmed in
+ * The Black Emperor's mausoleums (docs/pathways/PRINCE_OF_ABOLITION.md, "Mausoleums"). A mausoleum is a black stele trimmed in
  * gold, 3 blocks tall: a picture (PrinceOfAbolitionFx.raiseMausoleum) and a record here, never a block. They belong to
  * their owner alone and help, heal and revive no one else.
  *

@@ -3,7 +3,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 ASSETS = REPO / 'src/main/resources/assets/circle_of_inevitability'
-PREVIEW = REPO / 'docs/assets/author'
+PREVIEW = REPO / 'docs/pathways/author/assets'
 NS = 'circle_of_inevitability'
 BASIC = 'observe spectator_state awe frenzy psychoanalysis placate'.split()
 WHEELS = {

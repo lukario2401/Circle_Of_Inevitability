@@ -19,7 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Star Dragon, the two Mythical Creature Forms of the Cosmos wheel (docs/STAR_DRAGON.md): the Radiant Angel (Sequence
+ * Star Dragon, the two Mythical Creature Forms of the Cosmos wheel (docs/pathways/star_dragon/STAR_DRAGON.md): the Radiant Angel (Sequence
  * 2) and the Star Dragon (Sequence 1). Both are a status/Form like the Scaled Form in StarDragonTides: flying, a body
  * kept up while it lasts, an aftermath of weakness, and everything ended cleanly on death, logout or a lost Pathway.
  * The Dragon's small asteroid is a combat/Orbit of one body that is launched (Orbit.release) on the Dragon's blows.

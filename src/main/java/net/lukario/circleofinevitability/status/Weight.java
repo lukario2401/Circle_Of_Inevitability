@@ -39,7 +39,7 @@ import java.util.function.Predicate;
  *   - what it shoots or throws flies slower.
  *
  * Putting it on again keeps the higher level and the later end, so two abilities never cut each other short.
- * Saved with the entity. Star Dragon's Gravity Abnormality, Tidal Surge, Scaled Form, Heavybringing (docs/STAR_DRAGON.md).
+ * Saved with the entity. Star Dragon's Gravity Abnormality, Tidal Surge, Scaled Form, Heavybringing (docs/pathways/star_dragon/STAR_DRAGON.md).
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */

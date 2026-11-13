@@ -21,7 +21,7 @@ def package(output):
     for folder in (Path(__file__).resolve().parent,PREVIEW):
         for p in sorted(folder.iterdir()):
             if p.is_file():entries[p.relative_to(REPO).as_posix()]=p.read_bytes()
-    for rel in ('tools/model_gen/modelkit.py','docs/AUTHOR.md','docs/AUTHOR_ASSETS.md'):
+    for rel in ('tools/model_gen/modelkit.py','docs/pathways/author/AUTHOR.md','docs/pathways/author/AUTHOR_ASSETS.md'):
         entries[rel]=(REPO/rel).read_bytes()
     java=(REPO/'src/main/java/net/lukario/circleofinevitability/sounds/ModSounds.java').read_text()
     start=java.index('    /** Author (Spectator)');end=java.index('    /** White Angel',start)
@@ -31,7 +31,7 @@ def package(output):
         'Copy owned assets into src/main/resources/assets/circle_of_inevitability/.\n'
         'MERGE sounds.json and lang/en_us.json; do not replace the project files.\n'
         'Register sound events using integration/ModSounds_AUTHOR.txt in ModSounds.\n'
-        'See docs/AUTHOR.md for mechanics and docs/AUTHOR_ASSETS.md for formats.\n'
+        'See docs/pathways/author/AUTHOR.md for mechanics and docs/pathways/author/AUTHOR_ASSETS.md for formats.\n'
         'This handoff is not a standalone mod or resource pack.\n').encode()
     output.parent.mkdir(parents=True,exist_ok=True)
     with zipfile.ZipFile(output,'w',zipfile.ZIP_DEFLATED) as archive:

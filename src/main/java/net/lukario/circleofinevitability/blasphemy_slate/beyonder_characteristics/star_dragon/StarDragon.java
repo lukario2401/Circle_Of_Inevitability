@@ -52,7 +52,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
- * Star Dragon: the Condenser Pathway of Lord of the Mysteries (docs/STAR_DRAGON.md). Seven keys in the Attendant Of
+ * Star Dragon: the Condenser Pathway of Lord of the Mysteries (docs/pathways/star_dragon/STAR_DRAGON.md). Seven keys in the Attendant Of
  * Mysteries pattern, from Astronomy Aficionado (Sequence 9) up to Condenser (Sequence 0); every key has a normal and a
  * sneak cast:
  *
@@ -116,7 +116,7 @@ public class StarDragon {
     // Ability 7 - Cosmos (the wheel, Sequence 2): every entry's numbers are in the class it lives in
     static final int COSMOS_SEQUENCE = 2;
 
-    // Passives (docs/STAR_DRAGON.md, "Passives"); the once-a-second ones run from SequencePassives
+    // Passives (docs/pathways/star_dragon/STAR_DRAGON.md, "Passives"); the once-a-second ones run from SequencePassives
     static final int STARGAZING_SEQUENCE = 9;               // Stargazing: still this long under open sky...
     static final int STARGAZING_STILL = 60;
     static final float STARGAZING_REGEN = 0.3f;             // ...and spirituality comes back this much faster...

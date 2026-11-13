@@ -8,12 +8,12 @@ now makes all 39 ability entries playable; the preview command itself only displ
 
 ## Preview
 
-- [Ability icons and higher forms](assets/nature_walker/icons.png)
-- [All growth stages](assets/nature_walker/growths.png)
-- [Models rendered from their geometry and UVs](assets/nature_walker/models.png)
-- [Eight animated summons and forms](assets/nature_walker/forms.gif)
-- [HUD and particle sprites](assets/nature_walker/hud_particles.png)
-- [Twelve-cue sound sampler](assets/nature_walker/sound_sampler.ogg) with [cue timing](assets/nature_walker/sound_sampler.json)
+- [Ability icons and higher forms](assets/icons.png)
+- [All growth stages](assets/growths.png)
+- [Models rendered from their geometry and UVs](assets/models.png)
+- [Eight animated summons and forms](assets/forms.gif)
+- [HUD and particle sprites](assets/hud_particles.png)
+- [Twelve-cue sound sampler](assets/sound_sampler.ogg) with [cue timing](assets/sound_sampler.json)
 
 The contact sheets use independent scales. The software renderer is useful for geometry and texture
 review; it does not certify Minecraft lighting, player fit, visibility, sound balance or performance.

@@ -38,7 +38,7 @@ import java.util.UUID;
 
 /**
  * Knowledge Emperor, key 6: Retellings and Prophecy (Mysticologist, Sequence 4; the last three from Clairvoyant, 3).
- * docs/KNOWLEDGE_EMPEROR.md, "Key 6 wheel".
+ * docs/pathways/KNOWLEDGE_EMPEROR.md, "Key 6 wheel".
  *
  *   Sleeping Beauty   a golden spindle turns: enemies near fall asleep; the blow that wakes one does half again as
  *                     much. Bosses and players are only slowed hard. Scrollable

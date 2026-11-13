@@ -12,9 +12,9 @@ Entity IDs: `circle_of_inevitability:star_dragon_boss` (Sequence 2) and
 its own fixed Sequence, persists without despawning, shows a tracking boss bar, and drops its own Sequence's
 characteristic through the existing Beyonder loot system. There is no natural spawn rule or new dependency.
 
-![Normal and radiant forms](assets/star_dragon_boss/preview.png)
+![Normal and radiant forms](assets/preview.png)
 
-[Animation preview](assets/star_dragon_boss/animations.gif) uses the actual rig and keyframes with flat
+[Animation preview](assets/animations.gif) uses the actual rig and keyframes with flat
 materials. The game applies the supplied scale textures and emissive maps. The normal body is a celestial
 dragon; the Radiant Angel form unfolds six pairs of wings, a halo, gold-white materials, and flight.
 

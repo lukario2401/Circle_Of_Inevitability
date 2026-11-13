@@ -26,7 +26,7 @@ import java.util.function.Predicate;
  * Appraisal: one caster has read an entity for a while. It knows what the entity is weak to, and the caster's
  * ability hits on it land harder: by the mark's own bonus, and by MATCH_BONUS more when the hit is of the kind it is
  * weak to. Every caster has marks of their own; two casters never share theirs. The Illuminator is built on it
- * (docs/ILLUMINATOR.md, "The pathway mechanic"), and it fits any "I have studied you, now I know where to strike".
+ * (docs/pathways/ILLUMINATOR.md, "The pathway mechanic"), and it fits any "I have studied you, now I know where to strike".
  *
  *   Appraisal.mark(player, target, "corrosion", 240, 0.15f);    // 12 seconds: weak to corrosion, +15% from my abilities
  *   Appraisal.strike(player, target, 36f, "corrosion");          // Spells.strike counted as an ability hit of that kind:

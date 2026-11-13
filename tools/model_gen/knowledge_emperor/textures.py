@@ -5,7 +5,7 @@ Same layout as tools/model_gen/hand_of_god/textures.py: every model texture is a
 part of its material's cell that matches its size, so the texel density stays even; a face listed in a cube's
 'full' shows its whole cell, stretched (a page of writing, a lock, an open book).
 
-The palette (docs/KNOWLEDGE_EMPEROR.md, "Theme"): orchid purple (0xC070E8) and star-white for prying, starlight and
+The palette (docs/pathways/KNOWLEDGE_EMPEROR.md, "Theme"): orchid purple (0xC070E8) and star-white for prying, starlight and
 the cage; ink-black and deep indigo for the void and for information; pale gold for scrolls and ink.
 """
 import math

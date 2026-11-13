@@ -81,7 +81,7 @@ def validate(root):
     assert len(set(decoded))==len(SOUNDS),'Duplicated audio'
     for rel,keys in manifest['shared_files'].items():
         data=json.loads((root/rel).read_text());assert all(k in data for k in keys),rel
-    doc=(REPO/'docs/AUTHOR.md').read_text()
+    doc=(REPO/'docs/pathways/author/AUTHOR.md').read_text()
     assert all('`'+n+'`' in doc for n in ABILITIES),'Undocumented ability'
     print(f'PASS: {len(manifest["files"])} hashes; 26 distinct ability icons; {len(models)} legal models; '
           f'3 compatible animations; {len(SOUNDS)} registered, decoded mono cues; design coverage.')

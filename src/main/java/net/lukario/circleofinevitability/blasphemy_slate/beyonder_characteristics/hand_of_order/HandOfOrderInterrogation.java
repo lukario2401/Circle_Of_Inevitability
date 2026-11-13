@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Hand Of Order, key 3: the Interrogation wheel (Interrogator, Sequence 7). docs/HAND_OF_ORDER.md, "Key 3 wheel".
+ * Hand Of Order, key 3: the Interrogation wheel (Interrogator, Sequence 7). docs/pathways/HAND_OF_ORDER.md, "Key 3 wheel".
  *
  *   Psychic Lashing    the weapon in hand (or the fist) is an Illusory Torture Device for a while: every hit adds
  *                      lightning that no armor stops, and staggers (status/WeaponCoat)

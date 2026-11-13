@@ -46,7 +46,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Prince Of Abolition, key 6: the Fallen wheel (Barbarian, Sequence 8). docs/PRINCE_OF_ABOLITION.md, "Key 6 wheel".
+ * Prince Of Abolition, key 6: the Fallen wheel (Barbarian, Sequence 8). docs/pathways/PRINCE_OF_ABOLITION.md, "Key 6 wheel".
  *
  *   Raise Mausoleum   (8) a mausoleum rises where you look (PrinceOfAbolitionMausoleums: 2 minutes, +5% attack and
  *                         defense, Sanctuary, and it brings you back once)

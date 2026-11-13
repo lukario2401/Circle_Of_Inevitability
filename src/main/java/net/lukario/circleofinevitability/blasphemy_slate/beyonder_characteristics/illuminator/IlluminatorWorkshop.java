@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Illuminator, key 4: the Workshop wheel (Artisan, Sequence 6). docs/ILLUMINATOR.md, "Key 4 wheel".
+ * Illuminator, key 4: the Workshop wheel (Artisan, Sequence 6). docs/pathways/ILLUMINATOR.md, "Key 4 wheel".
  *
  *   Clockwork Rifle  a brass rifle in your hands fires a volley at what the crosshair is on; against an enemy you
  *                    Appraised the rounds carry its weakness. From Alchemist (4) five rounds

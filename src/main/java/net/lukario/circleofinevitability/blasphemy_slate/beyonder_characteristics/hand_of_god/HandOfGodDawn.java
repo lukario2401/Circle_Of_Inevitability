@@ -30,7 +30,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Hand Of God, key 4: the Dawn wheel (Dawn Paladin, Sequence 6). docs/HAND_OF_GOD.md, "Key 4 wheel".
+ * Hand Of God, key 4: the Dawn wheel (Dawn Paladin, Sequence 6). docs/pathways/HAND_OF_GOD.md, "Key 4 wheel".
  *
  *   Light of Dawn       dawn floods the ground round you: hidden enemies are forced out, evil burns, allies are
  *                       cleansed and healed

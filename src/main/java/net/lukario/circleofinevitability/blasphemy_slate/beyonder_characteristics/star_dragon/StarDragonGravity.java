@@ -37,7 +37,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Star Dragon, the gravity half of the wheels (docs/STAR_DRAGON.md): Gravity Abnormality and Electromagnetic Attraction
+ * Star Dragon, the gravity half of the wheels (docs/pathways/star_dragon/STAR_DRAGON.md): Gravity Abnormality and Electromagnetic Attraction
  * (Star Sacrifice, key 2), Heavybringing and the Heavy Sphere (Heavybringer, key 5), Gravitational Time Dilation, the
  * Neutron Star and the Singularity (the Cosmos wheel, key 7). All of them are combat/GravityField and status/Weight
  * underneath. Every number is right below; the looks are StarDragonFx's.

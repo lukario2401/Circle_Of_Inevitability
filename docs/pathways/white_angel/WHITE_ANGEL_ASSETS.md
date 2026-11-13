@@ -10,10 +10,10 @@ Gameplay costs, consent and passives live in the Java implementation.
 
 ## Inspect the assets
 
-- [Ability, key, upgrade and principle icons](assets/white_angel/icons.png)
-- [Models rendered from their actual geometry and UVs](assets/white_angel/models.png)
-- [Complete/incomplete Sunbird animation and Sun turntable](assets/white_angel/sunbird.gif)
-- [HUD and particle sheet](assets/white_angel/hud_particles.png)
+- [Ability, key, upgrade and principle icons](assets/icons.png)
+- [Models rendered from their actual geometry and UVs](assets/models.png)
+- [Complete/incomplete Sunbird animation and Sun turntable](assets/sunbird.gif)
+- [HUD and particle sheet](assets/hud_particles.png)
 
 The previews use a software renderer. In-game brightness, size, placement, armor fit, animation speed
 and audio balance still need a client review. Model contact sheets scale each prop independently.
@@ -22,7 +22,7 @@ and audio balance still need a client review. Model contact sheets scale each pr
 
 All paths below are relative to `src/main/resources/assets/circle_of_inevitability/`.
 The complete resource graph, per-ability model mapping, cube bounds, recommended pivots and SHA-256
-hashes are in [the asset manifest](../src/main/resources/assets/circle_of_inevitability/white_angel/asset_manifest.json).
+hashes are in [the asset manifest](../../../src/main/resources/assets/circle_of_inevitability/white_angel/asset_manifest.json).
 
 | Resource | Location and use |
 | --- | --- |

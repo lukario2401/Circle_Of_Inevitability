@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Illuminator, key 5: the Astronomy wheel (Astronomer, Sequence 5). docs/ILLUMINATOR.md, "Key 5 wheel".
+ * Illuminator, key 5: the Astronomy wheel (Astronomer, Sequence 5). docs/pathways/ILLUMINATOR.md, "Key 5 wheel".
  *
  *   Star of Curses        a ray of condensed starlight into the enemy you look at; struck again within 12 seconds it
  *                         climbs a ladder of curses: Weakness, then Trauma, then Mutation, then from the start

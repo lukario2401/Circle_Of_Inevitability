@@ -658,7 +658,7 @@ def preview(root,path):
 
 def main():
     p=argparse.ArgumentParser(description=__doc__);p.add_argument('--assets',type=Path,default=ASSETS)
-    p.add_argument('--preview',type=Path,default=REPO/'docs/assets/thunder_god/icons.png');args=p.parse_args()
+    p.add_argument('--preview',type=Path,default=REPO/'docs/pathways/thunder_god/assets/icons.png');args=p.parse_args()
     records=models(args.assets);gui(args.assets);particles(args.assets);sounds(args.assets)
     data=manifest(args.assets,records);preview(args.assets,args.preview)
     print(f'Created {len(records)} models, {len(ABILITIES)+len(UPGRADES)} menu icons, {len(STATUSES)} status glyphs, '

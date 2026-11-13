@@ -69,7 +69,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Knowledge Emperor: the Hermit Pathway of Lord of the Mysteries (docs/KNOWLEDGE_EMPEROR.md). Seven keys in the
+ * Knowledge Emperor: the Hermit Pathway of Lord of the Mysteries (docs/pathways/KNOWLEDGE_EMPEROR.md). Seven keys in the
  * Attendant Of Mysteries pattern, from Mystery Pryer (Sequence 9) up to Hermit (Sequence 0); every ability has a
  * normal and a sneak cast:
  *
@@ -183,7 +183,7 @@ public class KnowledgeEmperor {
     static final int EYE_TICKS = 120;                    // the eye's life; it is shown again before it fades
     static final int EYE_REFRESH = 100;
 
-    // Passives (docs/KNOWLEDGE_EMPEROR.md, "Passives"); the once-a-second ones run from SequencePassives
+    // Passives (docs/pathways/KNOWLEDGE_EMPEROR.md, "Passives"); the once-a-second ones run from SequencePassives
     static final int INTUITION_SEQUENCE = 9;             // Spiritual Intuition: a chime when hunted unseen...
     static final int INTUITION_REST = 60;
     static final double INTUITION_RADIUS = 6.0;          // ...and hidden things this close show faintly

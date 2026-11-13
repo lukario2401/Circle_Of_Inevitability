@@ -5,7 +5,7 @@ Same layout as tools/model_gen/hand_of_order/textures.py: every model texture is
 part of its material's cell that matches its size, so the texel density stays even; a face listed in a cube's
 'full' shows its whole cell, stretched.
 
-The palette (docs/KEY_OF_STARS.md, "Theme"): pale blue-white starlight (0x9DB4FF, the Pathway's color) with gold
+The palette (docs/pathways/KEY_OF_STARS.md, "Theme"): pale blue-white starlight (0x9DB4FF, the Pathway's color) with gold
 highlights (0xFFD98A), deep indigo (0x2A2A6E) for the doors and the dark between the stars (0x0E0C2A), a violet
 space-time storm (0x7A5AD8).
 """

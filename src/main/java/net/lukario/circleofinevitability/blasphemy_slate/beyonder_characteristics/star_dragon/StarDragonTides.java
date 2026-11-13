@@ -25,7 +25,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Star Dragon, the Tidal Scholar's key 4 (docs/STAR_DRAGON.md): Tidal Surge and Scaled Form (the Heavy Body from the
+ * Star Dragon, the Tidal Scholar's key 4 (docs/pathways/star_dragon/STAR_DRAGON.md): Tidal Surge and Scaled Form (the Heavy Body from the
  * Heavybringer). Scaled Form is a status/Form, the same manager the Radiant Angel and the Star Dragon forms use
  * (StarDragonForms). Every number is right below; the looks are StarDragonFx's.
  */

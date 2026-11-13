@@ -2,8 +2,8 @@
   "schema_version": 1,
   "namespace": "circle_of_inevitability",
   "pathway": "Nature Walker",
-  "source_design": "docs/NATURE_WALKER.md",
-  "scope": "Complete presentation collection; all 39 ability entries have gameplay integration documented in docs/NATURE_WALKER_GAMEPLAY.md.",
+  "source_design": "docs/pathways/nature_walker/NATURE_WALKER.md",
+  "scope": "Complete presentation collection; all 39 ability entries have gameplay integration documented in docs/pathways/nature_walker/NATURE_WALKER_GAMEPLAY.md.",
   "abilities": [
     "thorn_seed",
     "heartfruit_seed",

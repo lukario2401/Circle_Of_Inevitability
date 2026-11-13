@@ -21,7 +21,7 @@ import java.util.Map;
  * once, for free, with no chant and no cooldown of its own. Any spell can be a scroll: it is registered once with
  * a key and written as a function of who reads it and how strong it is, with no payment inside, so the same code
  * runs when it is cast by hand, read from a scroll, repeated by an echo or empowered by a passive. Knowledge Emperor's
- * Scrolls Professor is built on it (docs/KNOWLEDGE_EMPEROR.md, "Scroll pouch").
+ * Scrolls Professor is built on it (docs/pathways/KNOWLEDGE_EMPEROR.md, "Scroll pouch").
  *
  *   // once, in a static block: the key (no commas), its name, what it costs to cast by hand, and the spell
  *   Scrolls.register("my_pathway_hex", "Hex", 1250, (reader, sl, power) -> hex(reader, sl, power));

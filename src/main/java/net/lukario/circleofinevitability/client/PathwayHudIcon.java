@@ -31,17 +31,17 @@ public class PathwayHudIcon {
         ICONS.put("White Angel", icon("white_angel"));
         ICONS.put("Omniscient Eye", icon("omniscient_eye"));
         ICONS.put("Attendant Of Mysteries", icon("attendant_of_mysteries"));
-        ICONS.put("Beauty Goddess", icon("beauty_goddess"));            // shows once the Pathway exists (docs/BEAUTY_GODDESS.md)
+        ICONS.put("Beauty Goddess", icon("beauty_goddess"));            // shows once the Pathway exists (docs/pathways/BEAUTY_GODDESS.md)
         ICONS.put("God Of Decay", icon("god_of_decay"));
-        ICONS.put("Hand Of God", icon("hand_of_god"));                  // shows once the Pathway exists (docs/HAND_OF_GOD.md)
-        ICONS.put("Knight Of Misfortune", icon("knight_of_misfortune")); // docs/KNIGHT_OF_MISFORTUNE.md
-        ICONS.put("Abomination", icon("abomination"));                  // shows once the Pathway exists (docs/ABOMINATION.md)
-        ICONS.put("Prince Of Abolition", icon("prince_of_abolition"));  // docs/PRINCE_OF_ABOLITION.md
-        ICONS.put("Knowledge Emperor", icon("knowledge_emperor"));      // shows once the Pathway exists (docs/KNOWLEDGE_EMPEROR.md)
-        ICONS.put("Illuminator", icon("illuminator"));                  // shows once the Pathway exists (docs/ILLUMINATOR.md)
-        ICONS.put("Star Dragon", icon("star_dragon"));                  // shows once the Pathway exists (docs/STAR_DRAGON.md)
-        ICONS.put("Hand Of Order", icon("hand_of_order"));              // docs/HAND_OF_ORDER.md
-        ICONS.put("Key Of Stars", icon("key_of_stars"));                // shows once the Pathway exists (docs/KEY_OF_STARS.md)
+        ICONS.put("Hand Of God", icon("hand_of_god"));                  // shows once the Pathway exists (docs/pathways/HAND_OF_GOD.md)
+        ICONS.put("Knight Of Misfortune", icon("knight_of_misfortune")); // docs/pathways/KNIGHT_OF_MISFORTUNE.md
+        ICONS.put("Abomination", icon("abomination"));                  // shows once the Pathway exists (docs/pathways/ABOMINATION.md)
+        ICONS.put("Prince Of Abolition", icon("prince_of_abolition"));  // docs/pathways/PRINCE_OF_ABOLITION.md
+        ICONS.put("Knowledge Emperor", icon("knowledge_emperor"));      // shows once the Pathway exists (docs/pathways/KNOWLEDGE_EMPEROR.md)
+        ICONS.put("Illuminator", icon("illuminator"));                  // shows once the Pathway exists (docs/pathways/ILLUMINATOR.md)
+        ICONS.put("Star Dragon", icon("star_dragon"));                  // shows once the Pathway exists (docs/pathways/star_dragon/STAR_DRAGON.md)
+        ICONS.put("Hand Of Order", icon("hand_of_order"));              // docs/pathways/HAND_OF_ORDER.md
+        ICONS.put("Key Of Stars", icon("key_of_stars"));                // shows once the Pathway exists (docs/pathways/KEY_OF_STARS.md)
     }
 
     private static Identifier icon(String fileName) {

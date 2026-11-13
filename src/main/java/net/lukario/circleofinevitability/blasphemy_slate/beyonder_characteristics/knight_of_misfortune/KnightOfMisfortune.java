@@ -64,7 +64,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Knight Of Misfortune: the Darkness Pathway of Lord of the Mysteries (docs/KNIGHT_OF_MISFORTUNE.md). Seven keys in
+ * Knight Of Misfortune: the Darkness Pathway of Lord of the Mysteries (docs/pathways/KNIGHT_OF_MISFORTUNE.md). Seven keys in
  * the Attendant Of Mysteries pattern, from Sleepless (Sequence 9) up to Darkness (Sequence 0). All seven keys and every
  * passive are written.
  *

@@ -2961,7 +2961,7 @@ healing and durations keep the original ability behavior.
 
 ## Growths, mutations and owned wards
 
-See [Nature Walker's extension guide](NATURE_WALKER_EXTENSION_GUIDE.md) for renderer-independent
+See [Nature Walker's extension guide](pathways/nature_walker/NATURE_WALKER_EXTENSION_GUIDE.md) for renderer-independent
 `Growth` clocks, source-owned `Mutation`, `Healing.addScale`, attributed `Corrosion.onBite`,
 independently capped marionette groups, ward snapshot cleanup, and dynamic mob costs/cooldowns.
 These public helpers can be used without registering the Nature Walker pathway.

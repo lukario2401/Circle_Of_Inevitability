@@ -24,7 +24,7 @@ import java.util.Set;
 
 /** Presentation only: no damage, healing, movement, weather, terrain or summon AI changes.
  * Callers own durations and periodic beats. All models share a unique cast tag and expire.
- * Geometry and resource contracts: docs/NATURE_WALKER_ASSETS.md.
+ * Geometry and resource contracts: docs/pathways/nature_walker/NATURE_WALKER_ASSETS.md.
  */
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
 public final class NatureWalkerFx {

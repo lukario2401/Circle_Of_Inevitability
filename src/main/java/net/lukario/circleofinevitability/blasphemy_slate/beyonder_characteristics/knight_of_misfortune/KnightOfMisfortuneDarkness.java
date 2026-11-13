@@ -42,7 +42,7 @@ import java.util.List;
 
 /**
  * Knight Of Misfortune, key 7: the Darkness and Concealment wheel (Horror Bishop, Sequence 3, and up).
- * docs/KNIGHT_OF_MISFORTUNE.md, "Key 7 wheel".
+ * docs/pathways/KNIGHT_OF_MISFORTUNE.md, "Key 7 wheel".
  *
  *   Sword of Darkness         (3) a bone sword in your hand for SWORD_TICKS (status/ConjuredWeapon). A full swing that
  *                             lands sends a tide of Darkness forward: everything in its cone is submerged (a strike no

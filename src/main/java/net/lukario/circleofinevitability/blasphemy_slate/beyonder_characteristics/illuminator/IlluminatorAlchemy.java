@@ -54,7 +54,7 @@ import java.util.Set;
 import java.util.UUID;
 
 /**
- * Illuminator, key 6: the Alchemy and Arcana wheel (Alchemist, Sequence 4; Arcane Scholar, 3). docs/ILLUMINATOR.md,
+ * Illuminator, key 6: the Alchemy and Arcana wheel (Alchemist, Sequence 4; Arcane Scholar, 3). docs/pathways/ILLUMINATOR.md,
  * "Key 6 wheel".
  *
  *   Living Doll       a doll rises out of what you stand on and fights for you; what it is made of decides what it is.

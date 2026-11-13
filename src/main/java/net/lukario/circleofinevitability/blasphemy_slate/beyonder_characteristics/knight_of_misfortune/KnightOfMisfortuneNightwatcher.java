@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Knight Of Misfortune, key 6: the Nightwatcher wheel (Nightwatcher, Sequence 4). docs/KNIGHT_OF_MISFORTUNE.md,
+ * Knight Of Misfortune, key 6: the Nightwatcher wheel (Nightwatcher, Sequence 4). docs/pathways/KNIGHT_OF_MISFORTUNE.md,
  * "Key 6 wheel".
  *
  *   Night Domain        a tide of Darkness DOMAIN_RADIUS round where you stand, DOMAIN_TICKS: it is night inside

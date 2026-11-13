@@ -20,14 +20,14 @@ def package(output):
         metadata=json.loads((REPO/'src/main/resources/pack.mcmeta').read_text(encoding='utf-8'))
         metadata['pack']['description']='White Angel: sunlight, order and faith assets'
         archive.writestr('pack.mcmeta',json.dumps(metadata,indent=2)+'\n')
-        for folder in ('tools/model_gen/white_angel','docs/assets/white_angel'):
+        for folder in ('tools/model_gen/white_angel','docs/pathways/white_angel/assets'):
             for path in sorted((REPO/folder).rglob('*')):
                 if path.is_file() and '__pycache__' not in path.parts:archive.write(path,path.relative_to(REPO))
         archive.write(REPO/'tools/model_gen/modelkit.py','tools/model_gen/modelkit.py')
         for name in ('LICENSE.txt','LICENSE'):
             if (REPO/name).is_file():archive.write(REPO/name,name)
-        text=(REPO/'docs/WHITE_ANGEL_ASSETS.md').read_text(encoding='utf-8')
-        archive.writestr('docs/WHITE_ANGEL_ASSETS.md',text.replace('../src/main/resources/assets/','../assets/'))
+        text=(REPO/'docs/pathways/white_angel/WHITE_ANGEL_ASSETS.md').read_text(encoding='utf-8')
+        archive.writestr('docs/pathways/white_angel/WHITE_ANGEL_ASSETS.md',text.replace('../../../src/main/resources/assets/','../../../assets/'))
         registrations=',\n'.join(f'    java.util.Map.entry("{n}", sound("{PREFIX}.{n}"))' for n in manifest['sounds'])
         archive.writestr('integration/sound-registration.txt',
                         '// Add to ModSounds after its SOUNDS register is initialized.\n'
@@ -35,7 +35,7 @@ def package(output):
                         '    java.util.Map.ofEntries(\n'+registrations+');\n')
         archive.writestr('README.txt',
                         'White Angel assets\n\n'
-                        'Start with docs/WHITE_ANGEL_ASSETS.md and its preview links.\n'
+                        'Start with docs/pathways/white_angel/WHITE_ANGEL_ASSETS.md and its preview links.\n'
                         'assets/circle_of_inevitability/ contains only White Angel resources.\n'
                         'When importing source files, merge the bundled sounds.json and lang/en_us.json; '
                         'do not overwrite other pathways.\n'

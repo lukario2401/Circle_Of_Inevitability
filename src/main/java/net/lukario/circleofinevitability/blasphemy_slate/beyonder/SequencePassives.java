@@ -55,7 +55,7 @@ public final class SequencePassives {
         custom("Thunder God", 9, net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodEvents::seaFavor);
         effect(4, MobEffects.SATURATION); // Sequence 4 and stronger: never hungry
 
-        // ---- Beauty Goddess (docs/BEAUTY_GODDESS.md). Also in BeautyGoddess itself: afterimages when you sprint
+        // ---- Beauty Goddess (docs/pathways/BEAUTY_GODDESS.md). Also in BeautyGoddess itself: afterimages when you sprint
         // (Sequence 5), your potions and medicine last longer (Sequence 6).
         custom("Beauty Goddess", 9, player -> player.removeEffect(MobEffects.POISON));          // Apothecary: poison does not take
         effect("Beauty Goddess", 8, MobEffects.STRENGTH, 0);                                    // Beast Tamer: Strength I
@@ -71,7 +71,7 @@ public final class SequencePassives {
 
         effect("God Of Decay", 5, MobEffects.REGENERATION, 0);
 
-        // ---- Hand Of God (docs/HAND_OF_GOD.md). Also in HandOfGod itself: Weapon Mastery (Sequence 7), Giant's
+        // ---- Hand Of God (docs/pathways/HAND_OF_GOD.md). Also in HandOfGod itself: Weapon Mastery (Sequence 7), Giant's
         // Physique (6), half knockback (5), Tracking and Spiritual Intuition (4), wither does not take (2), Divine Touch (1).
         effect("Hand Of God", 9, MobEffects.STRENGTH, 0);                                       // Warrior: Strength I (Divine Blood)
         custom("Hand Of God", 8, HandOfGod::innateResistance);                                  // Pugilist: Supernatural Resistance
@@ -80,7 +80,7 @@ public final class SequencePassives {
         custom("Hand Of God", 2, HandOfGod::twilightResistance);                                // Glory: nothing stops your healing
         custom("Hand Of God", 0, HandOfGod::twilightAura);                                      // Twilight Giant: Twilight Aura
 
-        // ---- Knight Of Misfortune (docs/KNIGHT_OF_MISFORTUNE.md). Also in KnightOfMisfortune itself: the sense of hidden
+        // ---- Knight Of Misfortune (docs/pathways/KNIGHT_OF_MISFORTUNE.md). Also in KnightOfMisfortune itself: the sense of hidden
         // danger (Sequence 9), Steady Hand's falls and bow (8), Spirit Teeth (5, in KnightOfMisfortuneSpirits), Presence of
         // Concealment (2), the Archangel's hearts and Ill Omen (1), what does not take on Darkness (0).
         effect("Knight Of Misfortune", 9, MobEffects.NIGHT_VISION, 0);                          // Sleepless: sees in the dark...
@@ -94,7 +94,7 @@ public final class SequencePassives {
         effect("Knight Of Misfortune", 1, MobEffects.SPEED, 0);                                 // body (and its hearts, in KnightOfMisfortune)
         custom("Knight Of Misfortune", 0, KnightOfMisfortune::eternalSlumber);                  // Darkness: Eternal Slumber, Horror
 
-        // ---- Abomination (docs/ABOMINATION.md). Also in Abomination itself: Lunatic Mind and the Full Moon (Sequence 8),
+        // ---- Abomination (docs/pathways/ABOMINATION.md). Also in Abomination itself: Lunatic Mind and the Full Moon (Sequence 8),
         // Keen Senses' warning (7), Unliving Body's immunities and projectile cut (6), Weightless (5), Puppeteer (4, in
         // the summons' times), Whispering Curse (3), the Bane's immunities (2), Collection of Curses (1), Chained's thorns (0).
         effect("Abomination", 9, MobEffects.STRENGTH, 0);                                       // Prisoner: Strength I
@@ -104,14 +104,14 @@ public final class SequencePassives {
         custom("Abomination", 2, Abomination::baneAura);                                        // Ancient Bane: enemies near you lose their luck
         custom("Abomination", 0, Abomination::chainedAura);                                     // Chained: enemies near you are slowed and held to the ground
 
-        // ---- Prince Of Abolition (docs/PRINCE_OF_ABOLITION.md). Also in PrinceOfAbolition itself: Sequence Might and Law &
+        // ---- Prince Of Abolition (docs/pathways/PRINCE_OF_ABOLITION.md). Also in PrinceOfAbolition itself: Sequence Might and Law &
         // Order (Sequence 9), Physical Enhancement's hearts and Mental Resistance (8), Everyone Has A Price (7), Weakness
         // Detection (6), Presence's hesitation (5); the mausoleums' Sanctuary (7) in PrinceOfAbolitionMausoleums.
         effect("Prince Of Abolition", 9, MobEffects.HERO_OF_THE_VILLAGE, 0);                     // Lawyer: Silver Tongue, better prices
         effect("Prince Of Abolition", 8, MobEffects.STRENGTH, 0);                                // Barbarian: Physical Enhancement, Strength I
         custom("Prince Of Abolition", 5, PrinceOfAbolition::presence);                           // Mentor of Disorder: weak hostile mobs hesitate
 
-        // ---- Hand Of Order (docs/HAND_OF_ORDER.md). Also in HandOfOrder itself: Weapon Proficiency's speed and reach and
+        // ---- Hand Of Order (docs/pathways/HAND_OF_ORDER.md). Also in HandOfOrder itself: Weapon Proficiency's speed and reach and
         // Sheriff's Intuition (Sequence 8), Demolition Proficiency (7), Judge's Aura (6), Self-Restraint's shorter mind
         // effects (5). Law of Order (0) and the rest of Sense of Order (1) come with the Decrees.
         effect("Hand Of Order", 9, MobEffects.STRENGTH, 0);                                      // Arbiter: Order, Strength I...
@@ -122,7 +122,7 @@ public final class SequencePassives {
         custom("Hand Of Order", 2, HandOfOrder::senseImbalance);                                 // Balancer: the concealed cannot hide
         custom("Hand Of Order", 1, HandOfOrder::senseOfOrder);                                   // Hand of Order: casts near chime
 
-        // ---- Knowledge Emperor (docs/KNOWLEDGE_EMPEROR.md). Also in KnowledgeEmperor itself: Spiritual Intuition's chime
+        // ---- Knowledge Emperor (docs/pathways/KNOWLEDGE_EMPEROR.md). Also in KnowledgeEmperor itself: Spiritual Intuition's chime
         // (Sequence 9), Fighting Knowledge's reach, speed and Study on every hit (8), Warlock's Mind (7), Information
         // Skin's footing (4), Clairaudience on a blow (3), Sage's Mind (2), Law of Three (1), the Hermit's slow fading (0).
         custom("Knowledge Emperor", 9, KnowledgeEmperor::mysteryPryerSenses);                    // Mystery Pryer: hidden things show faintly; the Whisper
@@ -132,7 +132,7 @@ public final class SequencePassives {
         custom("Knowledge Emperor", 0, KnowledgeEmperor::hermitPresence);                        // Hermit: enemies near come to be known
         custom("Knowledge Emperor", 9, KnowledgeEmperor::enlightenment);                         // an Indoctrination's blessing
 
-        // ---- Illuminator (docs/ILLUMINATOR.md). Also in Illuminator itself: Quick Study's cheaper recasts (Sequence 9,
+        // ---- Illuminator (docs/pathways/ILLUMINATOR.md). Also in Illuminator itself: Quick Study's cheaper recasts (Sequence 9,
         // in costFor), Field Physique's hearts and lighter falls (8), Appraiser's Eye by the hotbar (7), Craftsman's
         // Hands in the Workshop wheel (6), the Enlightenment Aura's cheaper casts and shorter confusion for allies (1,
         // Illuminator.auraCost and its effect event), Reality Knowledge's marks twice as long and nothing reads it (0).
@@ -142,7 +142,7 @@ public final class SequencePassives {
         custom("Illuminator", 2, Illuminator::analysis);                                         // Knowledge Magister: Analysis
         custom("Illuminator", 1, Illuminator::enlightenmentAura);                                // Illuminator: Enlightenment Aura
 
-        // ---- Star Dragon (docs/STAR_DRAGON.md). Also in StarDragon itself: Spiritual Intuition's chime (Sequence 8), Star's
+        // ---- Star Dragon (docs/pathways/star_dragon/STAR_DRAGON.md). Also in StarDragon itself: Spiritual Intuition's chime (Sequence 8), Star's
         // Embrace's hearts and half falls (7), Starlight Scales' footing (5), Dense Body's footing, no falls and nothing
         // moving it (4), Fission Touch on a blow (3), Gravity Authority's lightness and slowed projectiles (1), Weight and
         // Density's steps and nothing rooting or freezing it (0).

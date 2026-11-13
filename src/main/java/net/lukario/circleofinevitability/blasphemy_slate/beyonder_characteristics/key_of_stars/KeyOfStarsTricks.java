@@ -24,7 +24,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 /**
- * Key Of Stars, key 2: the Tricks wheel (Trickmaster, Sequence 8). docs/KEY_OF_STARS.md, "Key 2 wheel: Tricks".
+ * Key Of Stars, key 2: the Tricks wheel (Trickmaster, Sequence 8). docs/pathways/KEY_OF_STARS.md, "Key 2 wheel: Tricks".
  * Strange but relatively weak: cheap and fast, and the real use is in what they set up.
  *
  *   Flash          a blinding flash in a cone: Blindness, and mobs lose you for a moment

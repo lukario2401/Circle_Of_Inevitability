@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * higher Sequences (Eyes of Secret Inquiry, the Knowledge Orbs, three lances), the shared Study eye and scroll pouch,
  * the passives that show and the melee combo. Visual only: nothing here hurts, holds, hides, heals or moves anyone.
  * The ability code does that, at the ticks named by the constants below (..._LANDS, ..._OPENS, ..._RISEN...), with
- * Later.run. See docs/KNOWLEDGE_EMPEROR.md.
+ * Later.run. See docs/pathways/KNOWLEDGE_EMPEROR.md.
  *
  * ---------- See them in game ----------
  *   /knowledgefx all              every display one after another (/knowledgefx all 3 = three times over)
@@ -586,7 +586,7 @@ public final class KnowledgeEmperorFx {
     }
 
     // =====================================================================================
-    // Study: the eye over an enemy that only the Hermit sees (docs/KNOWLEDGE_EMPEROR.md, "Study")
+    // Study: the eye over an enemy that only the Hermit sees (docs/pathways/KNOWLEDGE_EMPEROR.md, "Study")
     // =====================================================================================
 
     private static String studyTag(LivingEntity viewer) {
@@ -1922,7 +1922,7 @@ public final class KnowledgeEmperorFx {
     }
 
     // =====================================================================================
-    // Melee combo (docs/KNOWLEDGE_EMPEROR.md, "Melee combo")
+    // Melee combo (docs/pathways/KNOWLEDGE_EMPEROR.md, "Melee combo")
     // =====================================================================================
 
     private static final SlashFx COMBO_RING = SlashFx.arc("slash/streaks")

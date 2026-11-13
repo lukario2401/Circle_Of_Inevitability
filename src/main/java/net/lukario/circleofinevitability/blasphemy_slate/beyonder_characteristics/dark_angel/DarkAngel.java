@@ -806,9 +806,9 @@ public class DarkAngel {
             case "Omniscient Eye" -> 0xB0D1A94B;
             case "God Of Decay" -> 0xB09AB82E;
             case "Wanderer" -> 0xB0A0B4FF;
-            case "Key Of Stars" -> 0xB09DB4FF;                        // starlight (docs/KEY_OF_STARS.md)
+            case "Key Of Stars" -> 0xB09DB4FF;                        // starlight (docs/pathways/KEY_OF_STARS.md)
             case "Worm Of Time" -> 0xB052E3C4;
-            case "Hand Of Order" -> 0xB0C9A24B;                       // brass (docs/HAND_OF_ORDER.md)
+            case "Hand Of Order" -> 0xB0C9A24B;                       // brass (docs/pathways/HAND_OF_ORDER.md)
             case "Attendant Of Mysteries" -> 0xB09CFFE6;
             case "Frenzied Mage" -> 0xB0FF7A3A;
             case PrinceOfAbolition.PATHWAY -> 0xB0E0B04A;

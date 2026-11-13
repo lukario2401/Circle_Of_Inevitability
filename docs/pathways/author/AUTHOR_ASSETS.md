@@ -6,10 +6,10 @@ with these resources connected through `AuthorFx` and registered sound events.
 
 ## Review
 
-- [All 26 ability icons, arranged by key](assets/author/icons.png)
-- [Actual model geometry and UV textures](assets/author/models.png)
-- [Complete/incomplete Mind Dragons and imagined drake in motion](assets/author/dragons.gif)
-- [HUD states, six Insight levels and particles](assets/author/hud_particles.png)
+- [All 26 ability icons, arranged by key](assets/icons.png)
+- [Actual model geometry and UV textures](assets/models.png)
+- [Complete/incomplete Mind Dragons and imagined drake in motion](assets/dragons.gif)
+- [HUD states, six Insight levels and particles](assets/hud_particles.png)
 
 These are software renders of the shipped geometry. Model scales are fitted independently in the preview.
 Client-side glow, final placement, player/model fit, flight motion, animation timing and sound mixing need
@@ -19,7 +19,7 @@ interpolatable wing poses, not living entity rigs or a replacement player render
 ## Inventory
 
 Resource paths below are relative to `src/main/resources/assets/circle_of_inevitability/`.
-The [manifest](../src/main/resources/assets/circle_of_inevitability/author/asset_manifest.json) records
+The [manifest](../../../src/main/resources/assets/circle_of_inevitability/author/asset_manifest.json) records
 every owned resource hash, model bounds/pivot, ability-to-model mapping and stable wheel/ability IDs.
 
 | Resource | Path | Format |

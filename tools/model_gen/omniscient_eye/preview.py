@@ -8,7 +8,7 @@ from PIL import Image, ImageDraw, ImageFont
 from generate import DEFAULT_ASSETS, REPO, PREFIX, GOLD, CREAM
 
 ROOT=DEFAULT_ASSETS
-OUT=REPO/'docs/assets/omniscient_eye'
+OUT=REPO/'docs/pathways/omniscient_eye/assets'
 
 
 def rotated(p,rotation):

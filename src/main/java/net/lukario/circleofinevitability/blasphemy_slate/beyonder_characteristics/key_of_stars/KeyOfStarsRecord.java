@@ -22,7 +22,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Key Of Stars, key 4: Record (Scribe, Sequence 6). docs/KEY_OF_STARS.md, "Keys" and "Pathway systems".
+ * Key Of Stars, key 4: Record (Scribe, Sequence 6). docs/pathways/KEY_OF_STARS.md, "Keys" and "Pathway systems".
  *
  *   Record   for a while you watch: the first Beyonder ability another caster uses near you and in your sight is
  *            copied into a free Recorded slot, if the roll succeeds ("I came, I saw, I recorded."). A Beyonder mob

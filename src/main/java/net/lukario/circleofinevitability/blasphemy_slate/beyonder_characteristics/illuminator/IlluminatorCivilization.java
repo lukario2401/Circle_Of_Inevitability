@@ -48,7 +48,7 @@ import java.util.UUID;
 
 /**
  * Illuminator, key 7: the Civilization wheel (Knowledge Magister, Sequence 2; Illuminator, 1; Paragon, 0).
- * docs/ILLUMINATOR.md, "Key 7 wheel".
+ * docs/pathways/ILLUMINATOR.md, "Key 7 wheel".
  *
  *   Rewrite Principles       the earth bears no weight: enemies float off the ground; combustion makes no flame
  *   Colossus                 a mech of brass and steam round you; cast again while it stands for the Fusion Beam

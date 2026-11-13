@@ -43,7 +43,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * higher Sequences (two flasks and the acid puddle, Recall on an ally, Exploit Flaw on every mark, the arm cannon, the
  * steam form), the Appraised mark, the statuses, the passives that show and the melee combo. Visual only: nothing here
  * hurts, holds, hides, heals or moves anyone. The ability code does that, at the ticks named by the constants below
- * (..._LANDS, ..._READY, ..._RISEN...), with Later.run. See docs/ILLUMINATOR.md.
+ * (..._LANDS, ..._READY, ..._RISEN...), with Later.run. See docs/pathways/ILLUMINATOR.md.
  *
  * ---------- See them in game ----------
  *   /illuminatorfx all              every display one after another (/illuminatorfx all 3 = three times over)
@@ -145,7 +145,7 @@ public final class IlluminatorFx {
     public static final int CURSE_VIOLET = 0xFFB078FF;
     public static final int WHITE_GOLD = 0xFFFFF4D0;
 
-    /** What an Appraised enemy is weak to, with the lens shown over it and its color (docs/ILLUMINATOR.md). */
+    /** What an Appraised enemy is weak to, with the lens shown over it and its color (docs/pathways/ILLUMINATOR.md). */
     public enum Weakness {
         STARLIGHT("illuminator/appraisal_starlight", 0xFFFFECAA),
         CORROSION("illuminator/appraisal_corrosion", 0xFFC8E63C),
@@ -595,7 +595,7 @@ public final class IlluminatorFx {
     }
 
     // =====================================================================================
-    // The Appraised mark (docs/ILLUMINATOR.md, "The pathway mechanic")
+    // The Appraised mark (docs/pathways/ILLUMINATOR.md, "The pathway mechanic")
     // =====================================================================================
 
     /** The lens of the Appraised over the target's head for 'ticks', showing what it is weak to. */
@@ -1900,7 +1900,7 @@ public final class IlluminatorFx {
     }
 
     // =====================================================================================
-    // Melee combo (docs/ILLUMINATOR.md, "Melee combo"): parchment front, brass middle, ink tail
+    // Melee combo (docs/pathways/ILLUMINATOR.md, "Melee combo"): parchment front, brass middle, ink tail
     // =====================================================================================
 
     private static final SlashFx COMBO_GEARS = SlashFx.arc("slash/streaks")

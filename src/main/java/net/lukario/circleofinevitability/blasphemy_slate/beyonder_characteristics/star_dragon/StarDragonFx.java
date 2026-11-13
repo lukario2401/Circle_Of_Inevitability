@@ -44,7 +44,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * Heavy Body, the three asteroids, the electromagnetic storm, the imploding clusters), the marks it leaves on others,
  * the statuses, the three forms and the passives that show. Visual only: nothing here hurts, holds, pulls, hides or
  * moves anyone. The ability code does that, at the ticks named by the constants below (..._LANDS, ..._READY,
- * ..._RISEN...), with Later.run. See docs/STAR_DRAGON.md.
+ * ..._RISEN...), with Later.run. See docs/pathways/star_dragon/STAR_DRAGON.md.
  *
  * ---------- See them in game ----------
  *   /stardragonfx all              every display one after another (/stardragonfx all 3 = three times over)
@@ -161,7 +161,7 @@ public final class StarDragonFx {
     public static final int FROST = 0xFFD8F4FF;
     public static final int MISFORTUNE_RED = 0xFFE05050;
 
-    /** The rays, with the color of their beam and their core (docs/STAR_DRAGON.md, "Theme"). */
+    /** The rays, with the color of their beam and their core (docs/pathways/star_dragon/STAR_DRAGON.md, "Theme"). */
     public enum RayKind {
         WEAKENING(0xE02E8A4A, 0xFFB8FFC0, 0xFF7CE08A),
         PIERCING(0xE0A8D8FF, 0xFFFFFFFF, 0xFFD8F0FF),

@@ -40,7 +40,7 @@ import java.util.UUID;
 
 /**
  * Knowledge Emperor, key 7: the Knowledge wheel (Sage, Sequence 2; Knowledge Emperor, 1; Hermit, 0).
- * docs/KNOWLEDGE_EMPEROR.md, "Key 7 wheel".
+ * docs/pathways/KNOWLEDGE_EMPEROR.md, "Key 7 wheel".
  *
  *   Informatization          you become a stream of information: unhurt, unchosen, unheld and fast, while a false copy
  *                            stands where you were and bursts when enemies reach it; what hit you comes back out

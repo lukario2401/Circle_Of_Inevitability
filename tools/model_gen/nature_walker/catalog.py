@@ -3,7 +3,7 @@ from pathlib import Path
 
 REPO = Path(__file__).resolve().parents[3]
 ASSETS = REPO / 'src/main/resources/assets/circle_of_inevitability'
-PREVIEW = REPO / 'docs/assets/nature_walker'
+PREVIEW = REPO / 'docs/pathways/nature_walker/assets'
 NS = 'circle_of_inevitability'
 BASIC = 'thorn_seed heartfruit_seed treatment soul_suture cross_breed toxin_bloom'.split()
 WHEELS = {

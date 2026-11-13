@@ -22,7 +22,8 @@ fi
 [ -e "$NEW/ForgeRealm.java" ] && git mv "$NEW/ForgeRealm.java" "$NEW/CircleOfInevitability.java"
 
 files=$( { find src -type f \( -name '*.java' -o -name '*.json' -o -name '*.toml' -o -name '*.mcmeta' -o -name '*.md' \);
-           ls build.gradle gradle.properties settings.gradle CLAUDE.md docs/*.md scripts/rename-sequence.sh 2>/dev/null; } | sort -u)
+           find docs -type f -name '*.md';
+           ls build.gradle gradle.properties settings.gradle CLAUDE.md scripts/rename-sequence.sh 2>/dev/null; } | sort -u)
 for f in $files; do
     case "$f" in reference/*|*/reference/*) echo "refusing $f" >&2; exit 1 ;; esac
     perl -pi -e '

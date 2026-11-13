@@ -19,7 +19,7 @@ def package(output):
     for folder in (Path(__file__).resolve().parent,PREVIEW):
         for p in sorted(folder.iterdir()):
             if p.is_file():entries[p.relative_to(REPO).as_posix()]=p.read_bytes()
-    for rel in ('tools/model_gen/modelkit.py','docs/NATURE_WALKER.md','docs/NATURE_WALKER_ASSETS.md',
+    for rel in ('tools/model_gen/modelkit.py','docs/pathways/nature_walker/NATURE_WALKER.md','docs/pathways/nature_walker/NATURE_WALKER_ASSETS.md',
                 'src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/nature_walker/NatureWalkerFx.java'):
         entries[rel]=(REPO/rel).read_bytes()
     java=(REPO/'src/main/java/net/lukario/circleofinevitability/sounds/ModSounds.java').read_text()
@@ -31,7 +31,7 @@ def package(output):
         'MERGE sounds.json and lang/en_us.json; never replace the existing shared files.\n'
         'Copy NatureWalkerFx.java into the matching package; it requires this repository’s ModelFx, ParticleFx and combat helpers.\n'
         'Merge integration/ModSounds_NATURE_WALKER.txt into ModSounds.java.\n'
-        'See docs/NATURE_WALKER_ASSETS.md for contracts, regeneration and /naturefx previews.\n'
+        'See docs/pathways/nature_walker/NATURE_WALKER_ASSETS.md for contracts, regeneration and /naturefx previews.\n'
         'This asset ZIP excludes gameplay code. The repository implements all 39 abilities.\n'
         'This is not a standalone mod or resource pack.\n').encode()
     output.parent.mkdir(parents=True,exist_ok=True)

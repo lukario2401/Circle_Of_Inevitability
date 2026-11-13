@@ -23,6 +23,8 @@ Forge 65 client or server.
 
 `./gradlew runClient` and `./gradlew runServer` start a development game in `run/`.
 
+Pathway designs, gameplay guides and asset previews are indexed in [Pathway documentation](docs/pathways/README.md).
+
 ## Playing
 
 Ops set a player up with the `/soul` command, for example:
@@ -38,12 +40,12 @@ The seven abilities are on G, H, J, K, L, N and M (category "Circle Of Inevitabi
 sneak while pressing a key for the second cast. Soul Essence is shown above the hotbar.
 
 Apocalypse now weaves flame, silk and plague into Despair, harvests it with backstabs, prepares mirror
-ambushes and spends mirror charge on chosen catastrophes. See [Apocalypse mechanics](docs/APOCALYPSE.md)
+ambushes and spends mirror charge on chosen catastrophes. See [Apocalypse mechanics](docs/pathways/APOCALYPSE.md)
 for timings, combos and the focused server tests.
 
 Summon the animated Sequence 2 Star Dragon boss with `/stardragon summon ~ ~ ~8`, or the hard Sequence 0
 Condenser with `/stardragon summon_condenser ~ ~ ~8`. Their attacks, chains, windups, cooldowns, forms and
-manual controls are documented in [Star Dragon bosses](docs/STAR_DRAGON_BOSS.md).
+manual controls are documented in [Star Dragon bosses](docs/pathways/star_dragon/STAR_DRAGON_BOSS.md).
 
 Custom sword swings can be tuned live with `/swinganim`: repeat or hold a preview, edit keyframe numbers,
 timing, easing and global placement, then save local overrides or export Java. See
@@ -81,19 +83,19 @@ while viewing. Turning it off leaves Illuminator's natural Appraiser's Eye passi
 This is a port of the author's 1.21 mod; `MIGRATION_NOTES.md` records how it was ported and what is
 still to check.
 
-The [Omniscient Eye asset collection](docs/OMNISCIENT_EYE_ASSETS.md) supplies models, textures,
+The [Omniscient Eye asset collection](docs/pathways/omniscient_eye/OMNISCIENT_EYE_ASSETS.md) supplies models, textures,
 icons, particles and sound cues for the White Tower pathway design. The
-[complete Omniscient Eye abilities and fully studied replication](docs/OMNISCIENT_EYE.md) use all seven keys.
+[complete Omniscient Eye abilities and fully studied replication](docs/pathways/omniscient_eye/OMNISCIENT_EYE.md) use all seven keys.
 
-The [White Angel asset collection](docs/WHITE_ANGEL_ASSETS.md) supplies icons, models, animated
+The [White Angel asset collection](docs/pathways/white_angel/WHITE_ANGEL_ASSETS.md) supplies icons, models, animated
 Sunbird forms, particles and registered sound cues for the Sun pathway design, with generators and previews.
 
-The [Author / Spectator pathway design](docs/AUTHOR.md) covers all ten sequences and 26 abilities.
-Its [asset collection](docs/AUTHOR_ASSETS.md) includes icons, animated Mind Dragons, dream and authorship
+The [Author / Spectator pathway design](docs/pathways/author/AUTHOR.md) covers all ten sequences and 26 abilities.
+Its [asset collection](docs/pathways/author/AUTHOR_ASSETS.md) includes icons, animated Mind Dragons, dream and authorship
 models, particles, sound cues and previews. All 26 abilities are playable, with Insight, hypnosis, dream fields, Mind Dragon form and authored outcomes.
 Run the dedicated server checks with `./gradlew runGameTestServer -PauthorTests`.
 
-The [Nature Walker asset collection](docs/NATURE_WALKER_ASSETS.md) covers all 39 abilities in the
-[Mother pathway design](docs/NATURE_WALKER.md), with staged Growths, animated constructs and forms,
+The [Nature Walker asset collection](docs/pathways/nature_walker/NATURE_WALKER_ASSETS.md) covers all 39 abilities in the
+[Mother pathway design](docs/pathways/nature_walker/NATURE_WALKER.md), with staged Growths, animated constructs and forms,
 icons, particles and 59 original sound cues. Operators can inspect the presentation with `/naturefx`.
-[All 39 Nature Walker abilities are playable](docs/NATURE_WALKER_GAMEPLAY.md), including mutations, spirits, rebirth, realms and Mother authorities. The [extension guide](docs/NATURE_WALKER_EXTENSION_GUIDE.md) explains the reusable spell-kit APIs and how to add future abilities.
+[All 39 Nature Walker abilities are playable](docs/pathways/nature_walker/NATURE_WALKER_GAMEPLAY.md), including mutations, spirits, rebirth, realms and Mother authorities. The [extension guide](docs/pathways/nature_walker/NATURE_WALKER_EXTENSION_GUIDE.md) explains the reusable spell-kit APIs and how to add future abilities.

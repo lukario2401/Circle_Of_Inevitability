@@ -76,7 +76,7 @@ import java.util.function.Supplier;
  * it gets for them, and the bigger the shard's blast when key 6 (sneak) sets them all off.
  * Flame, silk and plague on the same enemy weave Despair. Fatal Step's backstab harvests it to mend you and
  * charge nearby mirrors. Leaving Mirror World after two seconds prepares a brief melee ambush. Catastrophes
- * drain nearby shards for extra power, competing with Shatter for their charge. See docs/APOCALYPSE.md.
+ * drain nearby shards for extra power, competing with Shatter for their charge. See docs/pathways/APOCALYPSE.md.
  * The two wheels are AbilityWheel (menu/): every entry its own Sequence, cost and cooldown, shown on the wheel.
  *
  * The look of every ability is in DemonessFx (see /demonessfx). What is reusable lives outside this class,
