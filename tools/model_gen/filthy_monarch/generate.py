@@ -33,7 +33,8 @@ def generate(root,skip_audio=False):
         files.extend(p for p in (root/folder).rglob('*') if p.is_file())
     files.append(root/'textures/gui/pathway_icons/filthy_monarch.png')
     manifest={'schema_version':1,'namespace':NS,'pathway':'Filthy Monarch','source_design':'docs/pathways/filthy_monarch/FILTHY_MONARCH.md',
-              'scope':'Presentation assets for all 35 designed abilities; gameplay is not implemented.',
+              'scope':'Presentation assets for all 35 designed abilities; the first 18 have gameplay implementations.',
+              'implemented_abilities':ABILITIES[:18],
               'abilities':ABILITIES,'sequences':SEQUENCES,'basic':BASIC,
               'wheels':{'filthy_monarch_'+k:v for k,v in WHEELS.items()},
               'key_icons':dict(enumerate(KEYS,1)),'status_icons':STATUSES,'particles':PARTICLES,

@@ -26,4 +26,4 @@ Pathways with multiple documents have their own folder. Shared systems and tooli
 | White Angel | [Design / gameplay](white_angel/WHITE_ANGEL.md), [Assets](white_angel/WHITE_ANGEL_ASSETS.md) |
 | Worm Of Time | [Design / gameplay](WORM_OF_TIME.md) |
 
-- [Filthy Monarch design](filthy_monarch/FILTHY_MONARCH.md) and [asset collection](filthy_monarch/FILTHY_MONARCH_ASSETS.md): 35 ability presentations, animated forms, particles and 59 sound cues; inspect with `/filthyfx`.
+- Filthy Monarch: [supplied design](filthy_monarch/FILTHY_MONARCH.md), [gameplay and controls](filthy_monarch/FILTHY_MONARCH_GAMEPLAY.md), and [asset collection](filthy_monarch/FILTHY_MONARCH_ASSETS.md). The first 18 of 35 abilities are playable; all 35 have presentation assets, inspectable with `/filthyfx`.

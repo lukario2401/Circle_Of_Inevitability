@@ -1,6 +1,6 @@
 # Filthy Monarch asset collection
 
-Presentation assets for all **35 abilities** in [the supplied design](FILTHY_MONARCH.md): six direct casts and 29 entries across four wheels. This adds the asset library, sound registrations, pathway HUD icon lookup and an operator preview command. It does not implement the pathway's combat, unlocks, counters, summons, cooldowns or seven-key routing. The supplied design is preserved as reference, including its unresolved balance questions.
+Presentation assets for all **35 abilities** in [the supplied design](FILTHY_MONARCH.md): six direct casts and 29 entries across four wheels. The asset library includes sound registrations, pathway HUD icon lookup and an operator preview command. The first **18 abilities now have combat implementations**, including unlocks, counters, summons and key routing; see the [gameplay guide](FILTHY_MONARCH_GAMEPLAY.md). The remaining 17 have presentation assets only. The supplied design is preserved as reference, including its unresolved balance questions.
 
 - 35 distinct transparent 32 × 32 ability icons, seven key icons, 35 ability HUD sprites and 13 status sprites at 16 × 16.
 - Depravity and Offerings strips for counts 0–5, plus the pathway icon.

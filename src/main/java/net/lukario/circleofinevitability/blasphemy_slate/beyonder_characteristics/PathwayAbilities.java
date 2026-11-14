@@ -87,6 +87,11 @@ public final class PathwayAbilities {
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
 
     public static final List<Ability> ALL = List.of(
+            new Ability("Filthy Monarch", 1, "Criminal's Kit", 9, SNEAK, STEALABLE, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.filthy_monarch.FilthyMonarch.key(p,level,sl,1,true)),
+            new Ability("Filthy Monarch", 2, "Demonic Attribute", 8, SNEAK, STEALABLE, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.filthy_monarch.FilthyMonarch.key(p,level,sl,2,true)),
+            new Ability("Filthy Monarch", 3, "Serial Killer", 7, SNEAK, STEALABLE, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.filthy_monarch.FilthyMonarch.key(p,level,sl,3,true)),
+            new Ability("Filthy Monarch", 4, "Devil Arts", 6, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.filthy_monarch.FilthyMonarch.key(p,level,sl,4,false)),
+            new Ability("Filthy Monarch", 5, "Desire and Malice", 5, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.filthy_monarch.FilthyMonarch.key(p,level,sl,5,false)),
             new Ability("Nature Walker", 1, "Sow", 9, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,1,false)),
             new Ability("Nature Walker", 2, "Treatment", 8, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,2,false)),
             new Ability("Nature Walker", 3, "Harvest", 7, SNEAK, OWN_PATHWAY_ONLY, (p,level,sl)->net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(p,level,sl,3,false)),
