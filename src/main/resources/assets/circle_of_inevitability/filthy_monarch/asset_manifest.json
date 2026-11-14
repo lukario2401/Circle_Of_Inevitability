@@ -1,0 +1,2578 @@
+{
+  "schema_version": 1,
+  "namespace": "circle_of_inevitability",
+  "pathway": "Filthy Monarch",
+  "source_design": "docs/pathways/filthy_monarch/FILTHY_MONARCH.md",
+  "scope": "Presentation assets for all 35 designed abilities; gameplay is not implemented.",
+  "abilities": [
+    "lawless_lunge",
+    "dirty_trick",
+    "sulfur_flame",
+    "sink",
+    "killing_spree",
+    "devil_worship",
+    "sulfur_fireball",
+    "devil_form",
+    "sword_of_lava",
+    "flame_cage",
+    "volcanic_eruption",
+    "toxic_vapor",
+    "hellfire",
+    "flames_of_the_abyss",
+    "shadow_shift",
+    "desire_control",
+    "mental_shock",
+    "desire_incarnation",
+    "desire_symbiosis",
+    "filthy_illusion",
+    "seed_of_malice",
+    "slow",
+    "die",
+    "corruption",
+    "confusion",
+    "sloth",
+    "blasphemy",
+    "blather",
+    "acid_swamp",
+    "blood_ignition",
+    "blood_burst",
+    "tide_of_filth",
+    "the_corroder",
+    "abyssal_sea",
+    "the_abyss"
+  ],
+  "sequences": {
+    "lawless_lunge": 9,
+    "dirty_trick": 9,
+    "sulfur_flame": 8,
+    "sink": 8,
+    "killing_spree": 7,
+    "devil_worship": 7,
+    "sulfur_fireball": 6,
+    "devil_form": 6,
+    "sword_of_lava": 6,
+    "flame_cage": 6,
+    "volcanic_eruption": 6,
+    "toxic_vapor": 6,
+    "hellfire": 4,
+    "flames_of_the_abyss": 1,
+    "shadow_shift": 5,
+    "desire_control": 5,
+    "mental_shock": 5,
+    "desire_incarnation": 5,
+    "desire_symbiosis": 5,
+    "filthy_illusion": 4,
+    "seed_of_malice": 2,
+    "slow": 6,
+    "die": 6,
+    "corruption": 6,
+    "confusion": 4,
+    "sloth": 4,
+    "blasphemy": 4,
+    "blather": 3,
+    "acid_swamp": 4,
+    "blood_ignition": 2,
+    "blood_burst": 2,
+    "tide_of_filth": 1,
+    "the_corroder": 1,
+    "abyssal_sea": 0,
+    "the_abyss": 0
+  },
+  "basic": [
+    "lawless_lunge",
+    "dirty_trick",
+    "sulfur_flame",
+    "sink",
+    "killing_spree",
+    "devil_worship"
+  ],
+  "wheels": {
+    "filthy_monarch_devil_arts": [
+      "sulfur_fireball",
+      "devil_form",
+      "sword_of_lava",
+      "flame_cage",
+      "volcanic_eruption",
+      "toxic_vapor",
+      "hellfire",
+      "flames_of_the_abyss"
+    ],
+    "filthy_monarch_desire_and_malice": [
+      "shadow_shift",
+      "desire_control",
+      "mental_shock",
+      "desire_incarnation",
+      "desire_symbiosis",
+      "filthy_illusion",
+      "seed_of_malice"
+    ],
+    "filthy_monarch_foul_tongue": [
+      "slow",
+      "die",
+      "corruption",
+      "confusion",
+      "sloth",
+      "blasphemy",
+      "blather"
+    ],
+    "filthy_monarch_blood_and_filth": [
+      "acid_swamp",
+      "blood_ignition",
+      "blood_burst",
+      "tide_of_filth",
+      "the_corroder",
+      "abyssal_sea",
+      "the_abyss"
+    ]
+  },
+  "key_icons": {
+    "1": "criminals_kit",
+    "2": "demonic_attribute",
+    "3": "serial_killer",
+    "4": "devil_arts",
+    "5": "desire_and_malice",
+    "6": "foul_tongue",
+    "7": "blood_and_filth"
+  },
+  "status_icons": [
+    "depravity",
+    "offerings",
+    "danger_premonition",
+    "bloodlust",
+    "bleeding",
+    "corrosion",
+    "fear",
+    "silenced",
+    "symbiosis",
+    "malice_ward",
+    "single_drop",
+    "king_of_filth",
+    "interference"
+  ],
+  "particles": [
+    "sulfur_flame",
+    "black_ember",
+    "blood_drop",
+    "sludge",
+    "fog",
+    "seed",
+    "claw",
+    "spark",
+    "ripple",
+    "foul_glyph",
+    "shadow",
+    "corrosion_streak",
+    "danger_eye",
+    "offering",
+    "horn"
+  ],
+  "sounds": [
+    "lawless_lunge",
+    "dirty_trick",
+    "sulfur_flame",
+    "sink",
+    "killing_spree",
+    "devil_worship",
+    "sulfur_fireball",
+    "devil_form",
+    "sword_of_lava",
+    "flame_cage",
+    "volcanic_eruption",
+    "toxic_vapor",
+    "hellfire",
+    "flames_of_the_abyss",
+    "shadow_shift",
+    "desire_control",
+    "mental_shock",
+    "desire_incarnation",
+    "desire_symbiosis",
+    "filthy_illusion",
+    "seed_of_malice",
+    "slow",
+    "die",
+    "corruption",
+    "confusion",
+    "sloth",
+    "blasphemy",
+    "blather",
+    "acid_swamp",
+    "blood_ignition",
+    "blood_burst",
+    "tide_of_filth",
+    "the_corroder",
+    "abyssal_sea",
+    "the_abyss",
+    "demon_form",
+    "corrosive_fog",
+    "seed_plant",
+    "seed_spend",
+    "offering_gain",
+    "instinct",
+    "danger_premonition",
+    "wingbeat",
+    "projection_swipe",
+    "fireball_impact",
+    "cage_close",
+    "eruption_warning",
+    "illusion_burst",
+    "link_break",
+    "malice_rebirth",
+    "single_drop",
+    "dissolve",
+    "reform",
+    "barrier_crack",
+    "kingdom_close",
+    "form_end",
+    "field_end",
+    "melee_swing",
+    "melee_impact"
+  ],
+  "ability_models": {
+    "lawless_lunge": [
+      "claw_slash"
+    ],
+    "dirty_trick": [
+      "grit_burst"
+    ],
+    "sulfur_flame": [
+      "flame_jet"
+    ],
+    "sink": [
+      "sink_seal"
+    ],
+    "killing_spree": [
+      "claw_slash",
+      "bloodlust_crown"
+    ],
+    "devil_worship": [
+      "ritual_sigil",
+      "devil_projection"
+    ],
+    "sulfur_fireball": [
+      "sulfur_fireball"
+    ],
+    "devil_form": [
+      "devil_form",
+      "demon_form"
+    ],
+    "sword_of_lava": [
+      "lava_sword"
+    ],
+    "flame_cage": [
+      "flame_cage"
+    ],
+    "volcanic_eruption": [
+      "warning_ring",
+      "eruption_pillar"
+    ],
+    "toxic_vapor": [
+      "toxic_cloud",
+      "corrosive_cloud"
+    ],
+    "hellfire": [
+      "hellfire_pillar"
+    ],
+    "flames_of_the_abyss": [
+      "abyss_flame_beam"
+    ],
+    "shadow_shift": [
+      "shadow_trail",
+      "shadow_afterimage"
+    ],
+    "desire_control": [
+      "desire_heart"
+    ],
+    "mental_shock": [
+      "horn_crown",
+      "mind_wave"
+    ],
+    "desire_incarnation": [
+      "desire_liquid"
+    ],
+    "desire_symbiosis": [
+      "symbiosis_link"
+    ],
+    "filthy_illusion": [
+      "filth_phantom"
+    ],
+    "seed_of_malice": [
+      "malice_seed"
+    ],
+    "slow": [
+      "word_slow"
+    ],
+    "die": [
+      "word_die",
+      "blood_spray"
+    ],
+    "corruption": [
+      "corrupted_fog"
+    ],
+    "confusion": [
+      "word_confusion"
+    ],
+    "sloth": [
+      "word_sloth"
+    ],
+    "blasphemy": [
+      "word_blasphemy"
+    ],
+    "blather": [
+      "word_blather"
+    ],
+    "acid_swamp": [
+      "acid_pool"
+    ],
+    "blood_ignition": [
+      "burning_heart"
+    ],
+    "blood_burst": [
+      "blood_spray"
+    ],
+    "tide_of_filth": [
+      "sludge_wave",
+      "filth_hand",
+      "sludge_pool"
+    ],
+    "the_corroder": [
+      "corrosion_beam",
+      "barrier_fracture"
+    ],
+    "abyssal_sea": [
+      "kingdom_tile",
+      "black_sea"
+    ],
+    "the_abyss": [
+      "abyss_form"
+    ]
+  },
+  "models": [
+    {
+      "name": "claw_slash",
+      "elements": 3,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          3,
+          6
+        ],
+        [
+          14.3,
+          15,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "grit_burst",
+      "elements": 9,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          3,
+          6
+        ],
+        [
+          14.3,
+          18,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "flame_jet",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          5.0,
+          0.0,
+          4.97
+        ],
+        [
+          11.5136,
+          26.0,
+          11.0
+        ]
+      ]
+    },
+    {
+      "name": "sink_seal",
+      "elements": 35,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          2,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "bloodlust_crown",
+      "elements": 36,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          3,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "ritual_sigil",
+      "elements": 37,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          4,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "devil_projection",
+      "elements": 44,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          -1.35
+        ],
+        [
+          24.6,
+          31,
+          17.35
+        ]
+      ]
+    },
+    {
+      "name": "devil_projection_0",
+      "elements": 44,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          -1.35
+        ],
+        [
+          24.6,
+          31,
+          17.35
+        ]
+      ]
+    },
+    {
+      "name": "devil_projection_1",
+      "elements": 44,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          -1.35
+        ],
+        [
+          24.6,
+          31,
+          17.35
+        ]
+      ]
+    },
+    {
+      "name": "devil_projection_2",
+      "elements": 44,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          -1.35
+        ],
+        [
+          24.6,
+          31,
+          17.35
+        ]
+      ]
+    },
+    {
+      "name": "devil_projection_3",
+      "elements": 44,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          -1.35
+        ],
+        [
+          24.6,
+          31,
+          17.35
+        ]
+      ]
+    },
+    {
+      "name": "sulfur_fireball",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3.0,
+          0.0,
+          2.95
+        ],
+        [
+          13.856,
+          12.0,
+          13.0
+        ]
+      ]
+    },
+    {
+      "name": "devil_form",
+      "elements": 28,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          4.7
+        ],
+        [
+          24.6,
+          31,
+          12.9
+        ]
+      ]
+    },
+    {
+      "name": "devil_form_0",
+      "elements": 28,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          4.7
+        ],
+        [
+          24.6,
+          31,
+          12.9
+        ]
+      ]
+    },
+    {
+      "name": "devil_form_1",
+      "elements": 28,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          4.7
+        ],
+        [
+          24.6,
+          31,
+          12.9
+        ]
+      ]
+    },
+    {
+      "name": "devil_form_2",
+      "elements": 28,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          4.7
+        ],
+        [
+          24.6,
+          31,
+          12.9
+        ]
+      ]
+    },
+    {
+      "name": "devil_form_3",
+      "elements": 28,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -8.6,
+          0,
+          4.7
+        ],
+        [
+          24.6,
+          31,
+          12.9
+        ]
+      ]
+    },
+    {
+      "name": "demon_form",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.6,
+          0,
+          4.7
+        ],
+        [
+          27.6,
+          31,
+          13.2
+        ]
+      ]
+    },
+    {
+      "name": "demon_form_0",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.6,
+          0,
+          4.7
+        ],
+        [
+          27.6,
+          31,
+          13.2
+        ]
+      ]
+    },
+    {
+      "name": "demon_form_1",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.6,
+          0,
+          4.7
+        ],
+        [
+          27.6,
+          31,
+          13.2
+        ]
+      ]
+    },
+    {
+      "name": "demon_form_2",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.6,
+          0,
+          4.7
+        ],
+        [
+          27.6,
+          31,
+          13.2
+        ]
+      ]
+    },
+    {
+      "name": "demon_form_3",
+      "elements": 32,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -11.6,
+          0,
+          4.7
+        ],
+        [
+          27.6,
+          31,
+          13.2
+        ]
+      ]
+    },
+    {
+      "name": "lava_sword",
+      "elements": 5,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          2,
+          0,
+          6
+        ],
+        [
+          14,
+          31,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "flame_cage",
+      "elements": 80,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -2.0,
+          0,
+          -2.01
+        ],
+        [
+          18.1712,
+          24.5,
+          18.0
+        ]
+      ]
+    },
+    {
+      "name": "warning_ring",
+      "elements": 38,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          2,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "eruption_pillar",
+      "elements": 22,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0.0,
+          -0.35
+        ],
+        [
+          16.35,
+          26.0,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "toxic_cloud",
+      "elements": 18,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          2,
+          -1
+        ],
+        [
+          16,
+          12,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "corrosive_cloud",
+      "elements": 18,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          2,
+          -1
+        ],
+        [
+          16,
+          12,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "hellfire_pillar",
+      "elements": 22,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0.0,
+          -0.35
+        ],
+        [
+          16.35,
+          26.0,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "abyss_flame_beam",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          5.0,
+          0.0,
+          4.97
+        ],
+        [
+          11.5136,
+          26.0,
+          11.0
+        ]
+      ]
+    },
+    {
+      "name": "shadow_trail",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          0.05,
+          -0.35
+        ],
+        [
+          17,
+          1.0,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "shadow_afterimage",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "desire_heart",
+      "elements": 5,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          2,
+          4.7
+        ],
+        [
+          13,
+          16,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "horn_crown",
+      "elements": 18,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1.2,
+          8,
+          1.65
+        ],
+        [
+          14.8,
+          22,
+          14.35
+        ]
+      ]
+    },
+    {
+      "name": "mind_wave",
+      "elements": 39,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          3,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "desire_liquid",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "desire_liquid_0",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "desire_liquid_1",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "desire_liquid_2",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "desire_liquid_3",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "symbiosis_link",
+      "elements": 10,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          5.6351,
+          1,
+          7.5
+        ],
+        [
+          10.3709,
+          20.8,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "filth_phantom",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_phantom_0",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_phantom_1",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_phantom_2",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_phantom_3",
+      "elements": 30,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          28,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "malice_seed",
+      "elements": 22,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0.65,
+          0,
+          0.65
+        ],
+        [
+          15.35,
+          15,
+          15.35
+        ]
+      ]
+    },
+    {
+      "name": "word_slow",
+      "elements": 20,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          1,
+          -0.35
+        ],
+        [
+          16.35,
+          21,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "word_die",
+      "elements": 21,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          1,
+          -0.35
+        ],
+        [
+          16.35,
+          21,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "blood_spray",
+      "elements": 9,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          1,
+          3,
+          6
+        ],
+        [
+          14.3,
+          18,
+          8.5
+        ]
+      ]
+    },
+    {
+      "name": "corrupted_fog",
+      "elements": 18,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          2,
+          -1
+        ],
+        [
+          16,
+          12,
+          16
+        ]
+      ]
+    },
+    {
+      "name": "word_confusion",
+      "elements": 22,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          1,
+          -0.35
+        ],
+        [
+          16.35,
+          21,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "word_sloth",
+      "elements": 23,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          1,
+          -0.35
+        ],
+        [
+          16.35,
+          21,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "word_blasphemy",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          1,
+          -0.35
+        ],
+        [
+          16.35,
+          21,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "word_blather",
+      "elements": 25,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          1,
+          -0.35
+        ],
+        [
+          16.35,
+          21,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "acid_pool",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          0.05,
+          -0.35
+        ],
+        [
+          17,
+          1.0,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "burning_heart",
+      "elements": 11,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          3,
+          2,
+          4.7
+        ],
+        [
+          13,
+          27.0,
+          11
+        ]
+      ]
+    },
+    {
+      "name": "sludge_wave",
+      "elements": 18,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -5,
+          0,
+          3
+        ],
+        [
+          22,
+          9.9563,
+          10
+        ]
+      ]
+    },
+    {
+      "name": "filth_hand",
+      "elements": 27,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          23.5,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_hand_0",
+      "elements": 27,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          23.5,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_hand_1",
+      "elements": 27,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          22.2,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_hand_2",
+      "elements": 27,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          21.0,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "filth_hand_3",
+      "elements": 27,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          22.7,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "sludge_pool",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          0.05,
+          -0.35
+        ],
+        [
+          17,
+          1.0,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "corrosion_beam",
+      "elements": 2,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          7,
+          0,
+          6.8
+        ],
+        [
+          9,
+          32,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "barrier_fracture",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          4,
+          0,
+          7
+        ],
+        [
+          10,
+          24,
+          8
+        ]
+      ]
+    },
+    {
+      "name": "kingdom_tile",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          0,
+          0,
+          7.7
+        ],
+        [
+          16,
+          16,
+          8.3
+        ]
+      ]
+    },
+    {
+      "name": "black_sea",
+      "elements": 24,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -1,
+          0.05,
+          -0.35
+        ],
+        [
+          17,
+          1.0,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "abyss_form",
+      "elements": 35,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          31,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "abyss_form_0",
+      "elements": 35,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          31,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "abyss_form_1",
+      "elements": 35,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          31,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "abyss_form_2",
+      "elements": 35,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          31,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "abyss_form_3",
+      "elements": 35,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          31,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "depravity_seed",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          4,
+          0,
+          3.8
+        ],
+        [
+          12,
+          15,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "offering_sigil",
+      "elements": 40,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          4,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "danger_marker",
+      "elements": 2,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          7,
+          0,
+          7
+        ],
+        [
+          9,
+          17,
+          9
+        ]
+      ]
+    },
+    {
+      "name": "blood_drop",
+      "elements": 6,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          4,
+          0,
+          3.8
+        ],
+        [
+          12,
+          15,
+          12
+        ]
+      ]
+    },
+    {
+      "name": "rebirth_ring",
+      "elements": 41,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          2,
+          16.35
+        ]
+      ]
+    },
+    {
+      "name": "corrosion_mark",
+      "elements": 42,
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ],
+      "bounds": [
+        [
+          -0.35,
+          0,
+          -0.35
+        ],
+        [
+          16.35,
+          3,
+          16.35
+        ]
+      ]
+    }
+  ],
+  "animations": {
+    "devil_form": {
+      "frames": [
+        "devil_form_0",
+        "devil_form_1",
+        "devil_form_2",
+        "devil_form_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "demon_form": {
+      "frames": [
+        "demon_form_0",
+        "demon_form_1",
+        "demon_form_2",
+        "demon_form_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "devil_projection": {
+      "frames": [
+        "devil_projection_0",
+        "devil_projection_1",
+        "devil_projection_2",
+        "devil_projection_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "desire_liquid": {
+      "frames": [
+        "desire_liquid_0",
+        "desire_liquid_1",
+        "desire_liquid_2",
+        "desire_liquid_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "filth_phantom": {
+      "frames": [
+        "filth_phantom_0",
+        "filth_phantom_1",
+        "filth_phantom_2",
+        "filth_phantom_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "abyss_form": {
+      "frames": [
+        "abyss_form_0",
+        "abyss_form_1",
+        "abyss_form_2",
+        "abyss_form_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    },
+    "filth_hand": {
+      "frames": [
+        "filth_hand_0",
+        "filth_hand_1",
+        "filth_hand_2",
+        "filth_hand_3"
+      ],
+      "pivot_pixels": [
+        8,
+        0,
+        8
+      ]
+    }
+  },
+  "texture_animations": {
+    "abyss_atlas": {
+      "frames": 4,
+      "size": [
+        64,
+        64
+      ],
+      "frametime": 4
+    }
+  },
+  "shared_files": {
+    "sounds.json": [
+      "filthy_monarch.lawless_lunge",
+      "filthy_monarch.dirty_trick",
+      "filthy_monarch.sulfur_flame",
+      "filthy_monarch.sink",
+      "filthy_monarch.killing_spree",
+      "filthy_monarch.devil_worship",
+      "filthy_monarch.sulfur_fireball",
+      "filthy_monarch.devil_form",
+      "filthy_monarch.sword_of_lava",
+      "filthy_monarch.flame_cage",
+      "filthy_monarch.volcanic_eruption",
+      "filthy_monarch.toxic_vapor",
+      "filthy_monarch.hellfire",
+      "filthy_monarch.flames_of_the_abyss",
+      "filthy_monarch.shadow_shift",
+      "filthy_monarch.desire_control",
+      "filthy_monarch.mental_shock",
+      "filthy_monarch.desire_incarnation",
+      "filthy_monarch.desire_symbiosis",
+      "filthy_monarch.filthy_illusion",
+      "filthy_monarch.seed_of_malice",
+      "filthy_monarch.slow",
+      "filthy_monarch.die",
+      "filthy_monarch.corruption",
+      "filthy_monarch.confusion",
+      "filthy_monarch.sloth",
+      "filthy_monarch.blasphemy",
+      "filthy_monarch.blather",
+      "filthy_monarch.acid_swamp",
+      "filthy_monarch.blood_ignition",
+      "filthy_monarch.blood_burst",
+      "filthy_monarch.tide_of_filth",
+      "filthy_monarch.the_corroder",
+      "filthy_monarch.abyssal_sea",
+      "filthy_monarch.the_abyss",
+      "filthy_monarch.demon_form",
+      "filthy_monarch.corrosive_fog",
+      "filthy_monarch.seed_plant",
+      "filthy_monarch.seed_spend",
+      "filthy_monarch.offering_gain",
+      "filthy_monarch.instinct",
+      "filthy_monarch.danger_premonition",
+      "filthy_monarch.wingbeat",
+      "filthy_monarch.projection_swipe",
+      "filthy_monarch.fireball_impact",
+      "filthy_monarch.cage_close",
+      "filthy_monarch.eruption_warning",
+      "filthy_monarch.illusion_burst",
+      "filthy_monarch.link_break",
+      "filthy_monarch.malice_rebirth",
+      "filthy_monarch.single_drop",
+      "filthy_monarch.dissolve",
+      "filthy_monarch.reform",
+      "filthy_monarch.barrier_crack",
+      "filthy_monarch.kingdom_close",
+      "filthy_monarch.form_end",
+      "filthy_monarch.field_end",
+      "filthy_monarch.melee_swing",
+      "filthy_monarch.melee_impact"
+    ],
+    "lang/en_us.json": [
+      "ability.circle_of_inevitability.filthy_monarch.lawless_lunge",
+      "ability.circle_of_inevitability.filthy_monarch.dirty_trick",
+      "ability.circle_of_inevitability.filthy_monarch.sulfur_flame",
+      "ability.circle_of_inevitability.filthy_monarch.sink",
+      "ability.circle_of_inevitability.filthy_monarch.killing_spree",
+      "ability.circle_of_inevitability.filthy_monarch.devil_worship",
+      "ability.circle_of_inevitability.filthy_monarch.sulfur_fireball",
+      "ability.circle_of_inevitability.filthy_monarch.devil_form",
+      "ability.circle_of_inevitability.filthy_monarch.sword_of_lava",
+      "ability.circle_of_inevitability.filthy_monarch.flame_cage",
+      "ability.circle_of_inevitability.filthy_monarch.volcanic_eruption",
+      "ability.circle_of_inevitability.filthy_monarch.toxic_vapor",
+      "ability.circle_of_inevitability.filthy_monarch.hellfire",
+      "ability.circle_of_inevitability.filthy_monarch.flames_of_the_abyss",
+      "ability.circle_of_inevitability.filthy_monarch.shadow_shift",
+      "ability.circle_of_inevitability.filthy_monarch.desire_control",
+      "ability.circle_of_inevitability.filthy_monarch.mental_shock",
+      "ability.circle_of_inevitability.filthy_monarch.desire_incarnation",
+      "ability.circle_of_inevitability.filthy_monarch.desire_symbiosis",
+      "ability.circle_of_inevitability.filthy_monarch.filthy_illusion",
+      "ability.circle_of_inevitability.filthy_monarch.seed_of_malice",
+      "ability.circle_of_inevitability.filthy_monarch.slow",
+      "ability.circle_of_inevitability.filthy_monarch.die",
+      "ability.circle_of_inevitability.filthy_monarch.corruption",
+      "ability.circle_of_inevitability.filthy_monarch.confusion",
+      "ability.circle_of_inevitability.filthy_monarch.sloth",
+      "ability.circle_of_inevitability.filthy_monarch.blasphemy",
+      "ability.circle_of_inevitability.filthy_monarch.blather",
+      "ability.circle_of_inevitability.filthy_monarch.acid_swamp",
+      "ability.circle_of_inevitability.filthy_monarch.blood_ignition",
+      "ability.circle_of_inevitability.filthy_monarch.blood_burst",
+      "ability.circle_of_inevitability.filthy_monarch.tide_of_filth",
+      "ability.circle_of_inevitability.filthy_monarch.the_corroder",
+      "ability.circle_of_inevitability.filthy_monarch.abyssal_sea",
+      "ability.circle_of_inevitability.filthy_monarch.the_abyss",
+      "ability.circle_of_inevitability.filthy_monarch.criminals_kit",
+      "ability.circle_of_inevitability.filthy_monarch.demonic_attribute",
+      "ability.circle_of_inevitability.filthy_monarch.serial_killer",
+      "ability.circle_of_inevitability.filthy_monarch.devil_arts",
+      "ability.circle_of_inevitability.filthy_monarch.desire_and_malice",
+      "ability.circle_of_inevitability.filthy_monarch.foul_tongue",
+      "ability.circle_of_inevitability.filthy_monarch.blood_and_filth",
+      "ability.circle_of_inevitability.filthy_monarch.depravity",
+      "ability.circle_of_inevitability.filthy_monarch.offerings",
+      "ability.circle_of_inevitability.filthy_monarch.danger_premonition",
+      "ability.circle_of_inevitability.filthy_monarch.bloodlust",
+      "ability.circle_of_inevitability.filthy_monarch.bleeding",
+      "ability.circle_of_inevitability.filthy_monarch.corrosion",
+      "ability.circle_of_inevitability.filthy_monarch.fear",
+      "ability.circle_of_inevitability.filthy_monarch.silenced",
+      "ability.circle_of_inevitability.filthy_monarch.symbiosis",
+      "ability.circle_of_inevitability.filthy_monarch.malice_ward",
+      "ability.circle_of_inevitability.filthy_monarch.single_drop",
+      "ability.circle_of_inevitability.filthy_monarch.king_of_filth",
+      "ability.circle_of_inevitability.filthy_monarch.interference",
+      "ability.circle_of_inevitability.filthy_monarch.demon_form",
+      "ability.circle_of_inevitability.filthy_monarch.corrosive_fog",
+      "ability.circle_of_inevitability.filthy_monarch.seed_plant",
+      "ability.circle_of_inevitability.filthy_monarch.seed_spend",
+      "ability.circle_of_inevitability.filthy_monarch.offering_gain",
+      "ability.circle_of_inevitability.filthy_monarch.instinct",
+      "ability.circle_of_inevitability.filthy_monarch.wingbeat",
+      "ability.circle_of_inevitability.filthy_monarch.projection_swipe",
+      "ability.circle_of_inevitability.filthy_monarch.fireball_impact",
+      "ability.circle_of_inevitability.filthy_monarch.cage_close",
+      "ability.circle_of_inevitability.filthy_monarch.eruption_warning",
+      "ability.circle_of_inevitability.filthy_monarch.illusion_burst",
+      "ability.circle_of_inevitability.filthy_monarch.link_break",
+      "ability.circle_of_inevitability.filthy_monarch.malice_rebirth",
+      "ability.circle_of_inevitability.filthy_monarch.dissolve",
+      "ability.circle_of_inevitability.filthy_monarch.reform",
+      "ability.circle_of_inevitability.filthy_monarch.barrier_crack",
+      "ability.circle_of_inevitability.filthy_monarch.kingdom_close",
+      "ability.circle_of_inevitability.filthy_monarch.form_end",
+      "ability.circle_of_inevitability.filthy_monarch.field_end",
+      "ability.circle_of_inevitability.filthy_monarch.melee_swing",
+      "ability.circle_of_inevitability.filthy_monarch.melee_impact",
+      "subtitles.circle_of_inevitability.filthy_monarch.lawless_lunge",
+      "subtitles.circle_of_inevitability.filthy_monarch.dirty_trick",
+      "subtitles.circle_of_inevitability.filthy_monarch.sulfur_flame",
+      "subtitles.circle_of_inevitability.filthy_monarch.sink",
+      "subtitles.circle_of_inevitability.filthy_monarch.killing_spree",
+      "subtitles.circle_of_inevitability.filthy_monarch.devil_worship",
+      "subtitles.circle_of_inevitability.filthy_monarch.sulfur_fireball",
+      "subtitles.circle_of_inevitability.filthy_monarch.devil_form",
+      "subtitles.circle_of_inevitability.filthy_monarch.sword_of_lava",
+      "subtitles.circle_of_inevitability.filthy_monarch.flame_cage",
+      "subtitles.circle_of_inevitability.filthy_monarch.volcanic_eruption",
+      "subtitles.circle_of_inevitability.filthy_monarch.toxic_vapor",
+      "subtitles.circle_of_inevitability.filthy_monarch.hellfire",
+      "subtitles.circle_of_inevitability.filthy_monarch.flames_of_the_abyss",
+      "subtitles.circle_of_inevitability.filthy_monarch.shadow_shift",
+      "subtitles.circle_of_inevitability.filthy_monarch.desire_control",
+      "subtitles.circle_of_inevitability.filthy_monarch.mental_shock",
+      "subtitles.circle_of_inevitability.filthy_monarch.desire_incarnation",
+      "subtitles.circle_of_inevitability.filthy_monarch.desire_symbiosis",
+      "subtitles.circle_of_inevitability.filthy_monarch.filthy_illusion",
+      "subtitles.circle_of_inevitability.filthy_monarch.seed_of_malice",
+      "subtitles.circle_of_inevitability.filthy_monarch.slow",
+      "subtitles.circle_of_inevitability.filthy_monarch.die",
+      "subtitles.circle_of_inevitability.filthy_monarch.corruption",
+      "subtitles.circle_of_inevitability.filthy_monarch.confusion",
+      "subtitles.circle_of_inevitability.filthy_monarch.sloth",
+      "subtitles.circle_of_inevitability.filthy_monarch.blasphemy",
+      "subtitles.circle_of_inevitability.filthy_monarch.blather",
+      "subtitles.circle_of_inevitability.filthy_monarch.acid_swamp",
+      "subtitles.circle_of_inevitability.filthy_monarch.blood_ignition",
+      "subtitles.circle_of_inevitability.filthy_monarch.blood_burst",
+      "subtitles.circle_of_inevitability.filthy_monarch.tide_of_filth",
+      "subtitles.circle_of_inevitability.filthy_monarch.the_corroder",
+      "subtitles.circle_of_inevitability.filthy_monarch.abyssal_sea",
+      "subtitles.circle_of_inevitability.filthy_monarch.the_abyss",
+      "subtitles.circle_of_inevitability.filthy_monarch.demon_form",
+      "subtitles.circle_of_inevitability.filthy_monarch.corrosive_fog",
+      "subtitles.circle_of_inevitability.filthy_monarch.seed_plant",
+      "subtitles.circle_of_inevitability.filthy_monarch.seed_spend",
+      "subtitles.circle_of_inevitability.filthy_monarch.offering_gain",
+      "subtitles.circle_of_inevitability.filthy_monarch.instinct",
+      "subtitles.circle_of_inevitability.filthy_monarch.danger_premonition",
+      "subtitles.circle_of_inevitability.filthy_monarch.wingbeat",
+      "subtitles.circle_of_inevitability.filthy_monarch.projection_swipe",
+      "subtitles.circle_of_inevitability.filthy_monarch.fireball_impact",
+      "subtitles.circle_of_inevitability.filthy_monarch.cage_close",
+      "subtitles.circle_of_inevitability.filthy_monarch.eruption_warning",
+      "subtitles.circle_of_inevitability.filthy_monarch.illusion_burst",
+      "subtitles.circle_of_inevitability.filthy_monarch.link_break",
+      "subtitles.circle_of_inevitability.filthy_monarch.malice_rebirth",
+      "subtitles.circle_of_inevitability.filthy_monarch.single_drop",
+      "subtitles.circle_of_inevitability.filthy_monarch.dissolve",
+      "subtitles.circle_of_inevitability.filthy_monarch.reform",
+      "subtitles.circle_of_inevitability.filthy_monarch.barrier_crack",
+      "subtitles.circle_of_inevitability.filthy_monarch.kingdom_close",
+      "subtitles.circle_of_inevitability.filthy_monarch.form_end",
+      "subtitles.circle_of_inevitability.filthy_monarch.field_end",
+      "subtitles.circle_of_inevitability.filthy_monarch.melee_swing",
+      "subtitles.circle_of_inevitability.filthy_monarch.melee_impact",
+      "pathway.circle_of_inevitability.filthy_monarch",
+      "hud.circle_of_inevitability.filthy_monarch.depravity",
+      "hud.circle_of_inevitability.filthy_monarch.offerings"
+    ]
+  },
+  "files": {
+    "models/model_fx/filthy_monarch/abyss_flame_beam.json": "e34c043037bb3ad9798c3ec1b24cc1a73b4f276194bc02ebaee78e1f15e430b0",
+    "models/model_fx/filthy_monarch/abyss_form.json": "6086a58db29c2da4fd9d7d70df957ba018ccf2b5cfe4ace69ce0480aa3e662bb",
+    "models/model_fx/filthy_monarch/abyss_form_0.json": "6086a58db29c2da4fd9d7d70df957ba018ccf2b5cfe4ace69ce0480aa3e662bb",
+    "models/model_fx/filthy_monarch/abyss_form_1.json": "cc486214cb536beb0be987f95dc6a9af66d49ad9e17e33fdf00ce4f6c1d8722a",
+    "models/model_fx/filthy_monarch/abyss_form_2.json": "a59559a871435649653ae5a1c5bf5abcd3dbe9fd9ca16f85c92b2e4d85d51c14",
+    "models/model_fx/filthy_monarch/abyss_form_3.json": "7b3f5cb526fdb15b108e2957e18b4487b47684123dcb13fef9451803a63635a1",
+    "models/model_fx/filthy_monarch/acid_pool.json": "14150e52ca3f786b38ca163f4381eb1ed6c30c9c7a758d7fcab3897f046a07f0",
+    "models/model_fx/filthy_monarch/barrier_fracture.json": "e31d3f7108a9849960c2ebed1b1bcd825c22e143ee171e45e02141468e082bc8",
+    "models/model_fx/filthy_monarch/black_sea.json": "6410ebf12748c655a99a438b054d72d6e44fefac058ece8f9b0b9217d036b9cc",
+    "models/model_fx/filthy_monarch/blood_drop.json": "fd0b34c5732193b422aeddc62bc45bea3bd1d60a7f663805b7549659585d5bc2",
+    "models/model_fx/filthy_monarch/blood_spray.json": "da73afd6976b753c106d594ba04265bff95db3e6df44434c28dab92fbaf70f66",
+    "models/model_fx/filthy_monarch/bloodlust_crown.json": "2ac24c75dbbe8d3cff3c6af20ec844f6f65ed4aadf394aee532fdf571940a6e1",
+    "models/model_fx/filthy_monarch/burning_heart.json": "8c26bbce18918610bd0941da2e96b9a17dab1b0e3375e482306a9193f0947fcc",
+    "models/model_fx/filthy_monarch/claw_slash.json": "8160cb589437ade4ed415c547706bd9d4ffe5ae0c54fa12e704665c212b507f9",
+    "models/model_fx/filthy_monarch/corrosion_beam.json": "3fd2a596ffccf854808d188be5b392e26a7d3a70061d679ccb7bd818a88d6e90",
+    "models/model_fx/filthy_monarch/corrosion_mark.json": "4f37a0172bb94d563f6625c1dbe9f6162d2e951e0eed014bf3afcd05a1c01cac",
+    "models/model_fx/filthy_monarch/corrosive_cloud.json": "3c4ff9ff9021f9b59dc51bd9087760e71454dbac5f6d03805e9048aca4eafc29",
+    "models/model_fx/filthy_monarch/corrupted_fog.json": "3c4ff9ff9021f9b59dc51bd9087760e71454dbac5f6d03805e9048aca4eafc29",
+    "models/model_fx/filthy_monarch/danger_marker.json": "1d3838651671fcfe10264774862f60c81df47e048d01613236081e691965bbcc",
+    "models/model_fx/filthy_monarch/demon_form.json": "06cba4df7adbc73275e828f199f0a13ebd84e0ececf04801574fb8d1d94c573e",
+    "models/model_fx/filthy_monarch/demon_form_0.json": "06cba4df7adbc73275e828f199f0a13ebd84e0ececf04801574fb8d1d94c573e",
+    "models/model_fx/filthy_monarch/demon_form_1.json": "924be700117d93bfb53e5d821af5bdd29ef23d293a5557d2d20d1d699d3d6772",
+    "models/model_fx/filthy_monarch/demon_form_2.json": "06cba4df7adbc73275e828f199f0a13ebd84e0ececf04801574fb8d1d94c573e",
+    "models/model_fx/filthy_monarch/demon_form_3.json": "a7deaaddbbf788903edb23bcae4a2eff78c796968733f96ae34236710e231ebf",
+    "models/model_fx/filthy_monarch/depravity_seed.json": "f1c3fc56a8293b72f42acd9da482ed556f4ee63cf7ef3eb8e0a72ac47cb3320b",
+    "models/model_fx/filthy_monarch/desire_heart.json": "f51b9abbbfb2bb517056904ea6b4c6372e308be57da1d9cca74b2df061a74954",
+    "models/model_fx/filthy_monarch/desire_liquid.json": "83a54e8642c21a8a0cab6755bbd90e01865c6451a5a8947bb022065f1d96f895",
+    "models/model_fx/filthy_monarch/desire_liquid_0.json": "83a54e8642c21a8a0cab6755bbd90e01865c6451a5a8947bb022065f1d96f895",
+    "models/model_fx/filthy_monarch/desire_liquid_1.json": "cb96658433756ed4e3f96fd49690422f27a90e21c7d1b2a489ca08c3c40f04e6",
+    "models/model_fx/filthy_monarch/desire_liquid_2.json": "83a54e8642c21a8a0cab6755bbd90e01865c6451a5a8947bb022065f1d96f895",
+    "models/model_fx/filthy_monarch/desire_liquid_3.json": "f48857fc3351070ffeb0dc654afbc3867cf051bc5065577610c31c0941750196",
+    "models/model_fx/filthy_monarch/devil_form.json": "c2321c143f92c31003be3aa6d36f4710b47cf333c60f036027e3c1a92e687fc6",
+    "models/model_fx/filthy_monarch/devil_form_0.json": "c2321c143f92c31003be3aa6d36f4710b47cf333c60f036027e3c1a92e687fc6",
+    "models/model_fx/filthy_monarch/devil_form_1.json": "429615dea78bdab6088a494e4a2f8f8b7b7f675bccb5710299a8a4254cb1de37",
+    "models/model_fx/filthy_monarch/devil_form_2.json": "c2321c143f92c31003be3aa6d36f4710b47cf333c60f036027e3c1a92e687fc6",
+    "models/model_fx/filthy_monarch/devil_form_3.json": "459d7a5944e738f6ff1812ede04b67b4e65a79e17b9a70f3b64291bf796cfddd",
+    "models/model_fx/filthy_monarch/devil_projection.json": "5e8d1556fc01a8ff8cc53fa9a40c9f772ff372d2a6934b3adefcfd94bf71f211",
+    "models/model_fx/filthy_monarch/devil_projection_0.json": "5e8d1556fc01a8ff8cc53fa9a40c9f772ff372d2a6934b3adefcfd94bf71f211",
+    "models/model_fx/filthy_monarch/devil_projection_1.json": "0da52280fa0cbc89c6cdd440ec3c527ff1b2d12c811de8e5d017766907dc4ce5",
+    "models/model_fx/filthy_monarch/devil_projection_2.json": "5e8d1556fc01a8ff8cc53fa9a40c9f772ff372d2a6934b3adefcfd94bf71f211",
+    "models/model_fx/filthy_monarch/devil_projection_3.json": "c5ab4a5ff73d30a238a5e8d85b1634a6a5ef92932ed5aac4a48f9ef681e02921",
+    "models/model_fx/filthy_monarch/eruption_pillar.json": "0284158b97f2ba32f744d851993dcae2460f9f5809456118bb6e4b2cfe38e3cd",
+    "models/model_fx/filthy_monarch/filth_hand.json": "8b59122e809373d7be80fd2adbc68bd9d29988c21723ab05f7e3ec59bf90b28f",
+    "models/model_fx/filthy_monarch/filth_hand_0.json": "8b59122e809373d7be80fd2adbc68bd9d29988c21723ab05f7e3ec59bf90b28f",
+    "models/model_fx/filthy_monarch/filth_hand_1.json": "69d7f911e48d615e578f772a6aaf4b01b840e63b2a91168b767ec50d840dac00",
+    "models/model_fx/filthy_monarch/filth_hand_2.json": "788af4e10a5d9cd5fe77f2596327cb3084583d9ef23e89149171b12905795db0",
+    "models/model_fx/filthy_monarch/filth_hand_3.json": "7b04cd6574199d4110c63c7010defe856b92a1e44c70ec6fbcbd7f20702bfe49",
+    "models/model_fx/filthy_monarch/filth_phantom.json": "12e80ed36d13ee5dc72c08ad8ea6da9d80886848d042c97572a0f8d9ac586601",
+    "models/model_fx/filthy_monarch/filth_phantom_0.json": "12e80ed36d13ee5dc72c08ad8ea6da9d80886848d042c97572a0f8d9ac586601",
+    "models/model_fx/filthy_monarch/filth_phantom_1.json": "9986932a244cda5b0036f4e916e4babfedf34cfd14c2aceead40090917f07b0c",
+    "models/model_fx/filthy_monarch/filth_phantom_2.json": "12e80ed36d13ee5dc72c08ad8ea6da9d80886848d042c97572a0f8d9ac586601",
+    "models/model_fx/filthy_monarch/filth_phantom_3.json": "60b317b2d5feb5d9725759723dfe32198ce1b0e3f88d56483d1c69b6788b1a30",
+    "models/model_fx/filthy_monarch/flame_cage.json": "299fec2b873fe33e86ce1585f140a2b36359a036e7710c8ec597076cd3574b73",
+    "models/model_fx/filthy_monarch/flame_jet.json": "e34c043037bb3ad9798c3ec1b24cc1a73b4f276194bc02ebaee78e1f15e430b0",
+    "models/model_fx/filthy_monarch/grit_burst.json": "b58004141f222e57c71dd4ecbd7a0167afb4799edafe3e9ace27feffeb28fa4f",
+    "models/model_fx/filthy_monarch/hellfire_pillar.json": "0284158b97f2ba32f744d851993dcae2460f9f5809456118bb6e4b2cfe38e3cd",
+    "models/model_fx/filthy_monarch/horn_crown.json": "73315093b6e097403660271978c4be939222ec9b18b510688b567b21d2b0ac8d",
+    "models/model_fx/filthy_monarch/kingdom_tile.json": "a27b7fdb3a7955951d3650ab4bc70ee32949991682b132a9f0538025fed778f8",
+    "models/model_fx/filthy_monarch/lava_sword.json": "fa312442f9360efdb40406fe240b67bc9a74cebbbd11139f586bbc7d71c0c66a",
+    "models/model_fx/filthy_monarch/malice_seed.json": "118f382e7dd8a9e173129c66a4bec0a67e087446763acf96310493dd8b2e01ac",
+    "models/model_fx/filthy_monarch/mind_wave.json": "d03044439e4c1a237823132c78a4981fac1de49a510f76365ce0938b45bdfac3",
+    "models/model_fx/filthy_monarch/offering_sigil.json": "7f08573de69de2a27138a299568982787f3c76badd6cdb223b8250d2e50f5cb3",
+    "models/model_fx/filthy_monarch/rebirth_ring.json": "e02db4d4bd58a318036e473e81d7712a675d19e27de44bffde709752f4471c59",
+    "models/model_fx/filthy_monarch/ritual_sigil.json": "ff9f8861eff1c12f2e9c141fdef89ef7217ab8232abee1082a2756ba63e3345f",
+    "models/model_fx/filthy_monarch/shadow_afterimage.json": "83a54e8642c21a8a0cab6755bbd90e01865c6451a5a8947bb022065f1d96f895",
+    "models/model_fx/filthy_monarch/shadow_trail.json": "1cd530c52d7109cfcbecc6a5b6edddb372d4e5f09608bf47b2f62ba54ddbee17",
+    "models/model_fx/filthy_monarch/sink_seal.json": "82872a8f2f3e46f2d5d27b7bb57f7b9fce52f1b8ffa97b9682f82a414f0cfbec",
+    "models/model_fx/filthy_monarch/sludge_pool.json": "14150e52ca3f786b38ca163f4381eb1ed6c30c9c7a758d7fcab3897f046a07f0",
+    "models/model_fx/filthy_monarch/sludge_wave.json": "850924b6fbdcc76d821870334967059e24d2627cfd6138a6423c59634ea3753c",
+    "models/model_fx/filthy_monarch/sulfur_fireball.json": "8aaaab728c2f2af1c5c30f880e4b172a7cd25b8f7c77c9de38aee647c400c0c4",
+    "models/model_fx/filthy_monarch/symbiosis_link.json": "478178153d514f36bf89c692ef17491632e086c486f031a950d7b7ef78f6789e",
+    "models/model_fx/filthy_monarch/toxic_cloud.json": "0fc5b8f67b3491a356d61c6fb3c72724bb728ce40bf4d9dcbbf1e4d3975f157b",
+    "models/model_fx/filthy_monarch/warning_ring.json": "fdb0d36ab154e32aad49a9f383042273426543ff4cc697ea844c8a1c1ccda86b",
+    "models/model_fx/filthy_monarch/word_blasphemy.json": "eaf4a3a56df6e601506fff11c8f9bb6fcdcb4b0aa124fe6ab81c947485498cf6",
+    "models/model_fx/filthy_monarch/word_blather.json": "50f7f99a3e3d46768a1d762c1b700b8d390cefb5aeacc76c596eccaf8c68c5e2",
+    "models/model_fx/filthy_monarch/word_confusion.json": "ece425cbb1913265f371f44fb3c7f696395bd9d825f27bc2e64d38978eb6d533",
+    "models/model_fx/filthy_monarch/word_die.json": "2d9f1b0b3773d5e447f3d702e15816d9744402f7161926e17430cf5164b6a5a1",
+    "models/model_fx/filthy_monarch/word_sloth.json": "7ee90e28f4efbd0ae0544f0d212c4cc169a64ec764ffc42e8cbe7e014f3882bc",
+    "models/model_fx/filthy_monarch/word_slow.json": "f6455c97f3518b96c75334238999c21725f2431bdfe909a9a8c4c66e27e57dc5",
+    "sounds/filthy_monarch/abyssal_sea.ogg": "32d56df8bdb01d6ce12500520ea5ba4f7f83ec9c975909e35cb1d0acb03d7ae0",
+    "sounds/filthy_monarch/acid_swamp.ogg": "ba3dc516624d0d7fa168916989d85a5d186ad3208c1e3d3f0d28974381886065",
+    "sounds/filthy_monarch/barrier_crack.ogg": "58bf1073b951b67acc0a34911a8e4ab6c0046eff58ad47c69292b13a2bd45819",
+    "sounds/filthy_monarch/blasphemy.ogg": "28ca8f49d9a47ae647f69d260cf018a9b0eb36b136c503be40cf2679c01bfe62",
+    "sounds/filthy_monarch/blather.ogg": "39ee4b47ee14f4d6258a86ba91efc6c28af18cafa1857019adf17afc64dfad8f",
+    "sounds/filthy_monarch/blood_burst.ogg": "c5332ebd900506388d59f1ec5b3f3172786992d34e8f0932b35750585b24592d",
+    "sounds/filthy_monarch/blood_ignition.ogg": "918a1c924dbcb8534fdfa4e00764ebbefd4a860fc210a53dea55c05d6bfafba5",
+    "sounds/filthy_monarch/cage_close.ogg": "6ad854fd5e52959cc3ffe83130220ed9575c877812c8a455acf219c194255fa2",
+    "sounds/filthy_monarch/confusion.ogg": "84ee384459587e35ee5b19b6e7e05c2c7a306351f30ee5122abd7835d493c448",
+    "sounds/filthy_monarch/corrosive_fog.ogg": "be28a413e960fed4dd15fe0efbb5e5f847049c501b1cdfa04aec2fba816f4ad5",
+    "sounds/filthy_monarch/corruption.ogg": "fce41e658fad56285ae063c8d29330f91a3b5993f141a6e8fa787bbb16290152",
+    "sounds/filthy_monarch/danger_premonition.ogg": "30be88b95ad9dfff3a5a5baff3e68507154914438c9c6bde9fa6fb28f18ace83",
+    "sounds/filthy_monarch/demon_form.ogg": "a5cfcd29acf162ab5f6fdd85de80c76778836c0d730268c76c2d1e5cdc8d72c0",
+    "sounds/filthy_monarch/desire_control.ogg": "fda5832ce2fc89b3dc8c8065fa3237aafa4338f766791176382068355cfbe893",
+    "sounds/filthy_monarch/desire_incarnation.ogg": "2624c11021cbdabf6565d63a7945173416c74b04b8d87b7e223ed5169b9f816c",
+    "sounds/filthy_monarch/desire_symbiosis.ogg": "2634927b7a560a5f16a1d5ebe66d2d3d73d41424f73306d0ce8ad1fa6f4abd53",
+    "sounds/filthy_monarch/devil_form.ogg": "08de82476a6b5aa2c2a51d7ec0e512b8f4e65f6198e3957093983584e2255f6c",
+    "sounds/filthy_monarch/devil_worship.ogg": "f43c2411a86471dbf985247c32170fd5cb5c0826963ac064b6713ddee4e13116",
+    "sounds/filthy_monarch/die.ogg": "1c42f2758e075cadd5c3c0613a2a3d03fd855ff1a739fe917984a29c9d9df85c",
+    "sounds/filthy_monarch/dirty_trick.ogg": "959d11f7a38e142e3635523c4f651ecb9a076b5df90b98149c975354b91eee36",
+    "sounds/filthy_monarch/dissolve.ogg": "c35d96cd5c8e1376f471b95587dc7190ee8e7c6b1eee68cacfce83c7457d573b",
+    "sounds/filthy_monarch/eruption_warning.ogg": "2dd6d73082309087eb77688db5aa8b5beef43c5ff9aaae9ce2be4bb6b6cd14e0",
+    "sounds/filthy_monarch/field_end.ogg": "81bff5a59fffa39fa8f996bb39a76d8ab2037fd08659901c7967a1dd04ca303b",
+    "sounds/filthy_monarch/filthy_illusion.ogg": "6ec7d28c79bdd38b1128d497e76896b699714881ce1dd144c0e077fe4fc26293",
+    "sounds/filthy_monarch/fireball_impact.ogg": "eec9d34bc043f802d032c74905deea09aa7574664bc7de715c67a7cb5125112e",
+    "sounds/filthy_monarch/flame_cage.ogg": "6af6c48d58e796026b5e31fdafcf4918fccf7fb2ec383686693617703f88ad39",
+    "sounds/filthy_monarch/flames_of_the_abyss.ogg": "1b72124d897f4fd83081407668ba050303353b065b9cf3321d1c8e9ae3dfe920",
+    "sounds/filthy_monarch/form_end.ogg": "e94a71bd2b30541e08c82dc915b6a335e8f15e56e008eb1ca30348b75bc8a50d",
+    "sounds/filthy_monarch/hellfire.ogg": "16bd2224eea05e4a551bd5c5e89407695ea5c3d3c5b0075bbe7da1827ea8a7da",
+    "sounds/filthy_monarch/illusion_burst.ogg": "def1a0bd4faf2a3c697aa3b4c797c61647482d7506727fe50025fd3c0b738b63",
+    "sounds/filthy_monarch/instinct.ogg": "44ab8906d98bccc642fea70ba21022ae5a51276e9eb93ffb130ba8ba1847327a",
+    "sounds/filthy_monarch/killing_spree.ogg": "ab4d78464599c3fa7408a9e2130ceb7bd5735c4668226692159ee1ae3b22d451",
+    "sounds/filthy_monarch/kingdom_close.ogg": "4cee6caf2c5f53dcbfb6fa5498294f7fd2abec8698193c8256e5652183e6af1b",
+    "sounds/filthy_monarch/lawless_lunge.ogg": "699ad3c7d6ba1d49a4de344150f8db9d16a6c39eed3fe532523d8915557482ea",
+    "sounds/filthy_monarch/link_break.ogg": "3769a3e8b3dbc66d6be495735352662bffb57d88856255c8de44df9b9fbcf167",
+    "sounds/filthy_monarch/malice_rebirth.ogg": "194a101b50a4e8e1d414202da56a7910d0631b1438dc8821bfb3c4a7218def65",
+    "sounds/filthy_monarch/melee_impact.ogg": "b3f93dbe0b9671060342a7435a34cb086ac2d146d882a1aee40b3b0a468b0edb",
+    "sounds/filthy_monarch/melee_swing.ogg": "37dc69716aafe276cf63a7cb9a20d549b02e65248df8a816f29b50a75c03d6ec",
+    "sounds/filthy_monarch/mental_shock.ogg": "02641651ef825c305d1cac186d0b9531b297f0ccbae98991b98106348fbea9b1",
+    "sounds/filthy_monarch/offering_gain.ogg": "080cac82ada888a2d31db2ce7526c8f553755983fb879c293197c3aad44ff21d",
+    "sounds/filthy_monarch/projection_swipe.ogg": "bd3a5361a3e97bd8e1d4595bb87703c81b60c508555f443ae5b75c87b2e6252e",
+    "sounds/filthy_monarch/reform.ogg": "f4c2501b754c4509bbb3d48f61b423d7af4f1df01d454123a06251049220469b",
+    "sounds/filthy_monarch/seed_of_malice.ogg": "1dee84b1bf148a04b91c4f78e750f8af29ba425e6c2ef46ffb1f3ca501c29afb",
+    "sounds/filthy_monarch/seed_plant.ogg": "6ec9a0c5a3dc7981cf276981296dfb9b975ad05b71b3b031b9006a7ebc02fdbe",
+    "sounds/filthy_monarch/seed_spend.ogg": "6daa22d58c4dbe19f546fbcfc7387cf526f6b92b4bd05e52fe3258fd001f6f0a",
+    "sounds/filthy_monarch/shadow_shift.ogg": "3c17c0afc00f569891a2af3d7ae879be0434a2179acbc51e37d25f4b4422112a",
+    "sounds/filthy_monarch/single_drop.ogg": "acab1cc8523193d861550229dcf1bf87f8caa527bc0b39109ba324a67eca1c1f",
+    "sounds/filthy_monarch/sink.ogg": "37020190f998e86b9205f53a812a407664906370721d5f6f9bc28c1109fa6965",
+    "sounds/filthy_monarch/sloth.ogg": "fb891f3bd4b390e83cffa85fabcf4bcc67bd98af3d9fd61d5653fc744ea90b54",
+    "sounds/filthy_monarch/slow.ogg": "571eb24f3cae9b8b7a1950e051265f719c271600391f6c36e4f0fc69f79130b4",
+    "sounds/filthy_monarch/sulfur_fireball.ogg": "99c8fe13b4b2deaa22a904f715c9877eacfea3ea1b1579f8a5d3aaff341e4ba8",
+    "sounds/filthy_monarch/sulfur_flame.ogg": "3a6992dde354a368f39ad53193c5b3c387da6f91c10558451c6f95c3dcc1e5e6",
+    "sounds/filthy_monarch/sword_of_lava.ogg": "21d8c4db140d24382691fe62bfe3ad085ad9d8ee3d689e19d2b41c183aa4d59d",
+    "sounds/filthy_monarch/the_abyss.ogg": "556246653cf6dfbee82be9bf7787d87b8572017cd38117e0cf7441552ee579b3",
+    "sounds/filthy_monarch/the_corroder.ogg": "339276a1da77f8db187840d240b6885732a339bafef1f198a65a2f1449005005",
+    "sounds/filthy_monarch/tide_of_filth.ogg": "4824ed46d53658b8d497008a9920250bb51f8e7ee82e7217ff42050ccbb02a84",
+    "sounds/filthy_monarch/toxic_vapor.ogg": "35b993fbaf30852b555785b010d079141d0a8fa10f93127cea02f39794b95ee0",
+    "sounds/filthy_monarch/volcanic_eruption.ogg": "a0d316d152b12e6c067c3f90df1e76d9bf2816fdd0390df403881d0b5ebecc71",
+    "sounds/filthy_monarch/wingbeat.ogg": "9bd90291dbbf77caa91cb1405ee1ab4ee706f8387ebbdf8b0b9f364c390cb2ea",
+    "textures/gui/ability_menus/filthy_monarch/abyssal_sea.png": "926b4d5511d8795d94d9b1b0061cb837298a862b849445485114d0ae3eec076f",
+    "textures/gui/ability_menus/filthy_monarch/acid_swamp.png": "b181be3341adce79d13745cb52ab06d83be5928af3501405401ae12886b82f4a",
+    "textures/gui/ability_menus/filthy_monarch/blasphemy.png": "ad7d4e86070a0c53d1a93642a6f1397cf1b64d0ae777f511d6040f178021b635",
+    "textures/gui/ability_menus/filthy_monarch/blather.png": "7679d8388bbd49428674bed515eb7ca7826c1e2cea51ff12e78e0af233095603",
+    "textures/gui/ability_menus/filthy_monarch/blood_and_filth.png": "6f9ac52db330ef7924b69684df77bfd4e952bc9ab873021a01cdad6d8574a267",
+    "textures/gui/ability_menus/filthy_monarch/blood_burst.png": "7c9957c4bea013d54218ef69a8e20e458b9a511cace1a0328832167d9068799f",
+    "textures/gui/ability_menus/filthy_monarch/blood_ignition.png": "edbc58214af496db258a3277567ef66ab45b46afa9fb2946411b5eac3ee55318",
+    "textures/gui/ability_menus/filthy_monarch/confusion.png": "4fc1dac76ed9860c4ed3c3e0bb01d782155980264a48076de0b7a6ee2bdf011f",
+    "textures/gui/ability_menus/filthy_monarch/corruption.png": "4b2f0dae41b8e1c625a8fd515734b93789d6b2bdecd58fb3ba0ed4a7e5bb1563",
+    "textures/gui/ability_menus/filthy_monarch/criminals_kit.png": "6192bd2f81a9f19362bb73126fed898934a1b05bd1f6c257b10da56306827fd7",
+    "textures/gui/ability_menus/filthy_monarch/demonic_attribute.png": "d9efb4e3bb138b6e8da611669cdfacb69f59d1fce74ab1a10dd4e2cae3ad0a83",
+    "textures/gui/ability_menus/filthy_monarch/desire_and_malice.png": "abf1502ea30cf62720516af75789340119043063c5dc92c5e5abbd07c32537af",
+    "textures/gui/ability_menus/filthy_monarch/desire_control.png": "abf1502ea30cf62720516af75789340119043063c5dc92c5e5abbd07c32537af",
+    "textures/gui/ability_menus/filthy_monarch/desire_incarnation.png": "5a98bee60a22d45b9755677fd1dee8c250d7ccefb472c264df383e30fc5745e3",
+    "textures/gui/ability_menus/filthy_monarch/desire_symbiosis.png": "ed9c26522089d532fb18589cef0acd79f6b4eaa861059ec51e5030922671b8d1",
+    "textures/gui/ability_menus/filthy_monarch/devil_arts.png": "bc1ccd1f36c79f5204f4f933144f5827b6c757071555a9ce986d0a929eb5abc9",
+    "textures/gui/ability_menus/filthy_monarch/devil_form.png": "bc1ccd1f36c79f5204f4f933144f5827b6c757071555a9ce986d0a929eb5abc9",
+    "textures/gui/ability_menus/filthy_monarch/devil_worship.png": "5a16d0cc8553ee07f6f8e775fa6c930957cada7006e0ce59a44893573d911ea9",
+    "textures/gui/ability_menus/filthy_monarch/die.png": "54ba21716b9f05738bb876c2db80bc0d3219ca0124c825d399ad528c4c9e4b06",
+    "textures/gui/ability_menus/filthy_monarch/dirty_trick.png": "86830af4ba45a4b7217f6ac37524047518da3c2a14fd4de6ffbbea5de921024d",
+    "textures/gui/ability_menus/filthy_monarch/filthy_illusion.png": "5a1b2e16427f14ea67a9c027b0068f675e2f77d74396468f8cd1f0fa73fa8ba8",
+    "textures/gui/ability_menus/filthy_monarch/flame_cage.png": "9b8af7c07a9a10d7f1f555a8564a6c35c737eca8aabee24e82aa45bd165411b4",
+    "textures/gui/ability_menus/filthy_monarch/flames_of_the_abyss.png": "793d4331c4dcbfc57c5909347986f71e3fe9401f8f21a9f3eb4381054993b423",
+    "textures/gui/ability_menus/filthy_monarch/foul_tongue.png": "ad7d4e86070a0c53d1a93642a6f1397cf1b64d0ae777f511d6040f178021b635",
+    "textures/gui/ability_menus/filthy_monarch/hellfire.png": "6a176a23efb12452f51d8a6a97e4407b38693a847ef4b552094cb28d6967d20c",
+    "textures/gui/ability_menus/filthy_monarch/killing_spree.png": "20c5b1dc8f9fe55e4f5a2dd8e660fc3e88f3c8929b11c3322223548715305fd6",
+    "textures/gui/ability_menus/filthy_monarch/lawless_lunge.png": "6192bd2f81a9f19362bb73126fed898934a1b05bd1f6c257b10da56306827fd7",
+    "textures/gui/ability_menus/filthy_monarch/mental_shock.png": "7a89ba73f27e9e54cc12ad78d32d67a1e7c7d45cd8e3d45c624bf62304b23ecb",
+    "textures/gui/ability_menus/filthy_monarch/seed_of_malice.png": "8f91cff7577423a5dcec749458d82af82ee5b4c722f0fbf6c51bf0fb121ce266",
+    "textures/gui/ability_menus/filthy_monarch/serial_killer.png": "20c5b1dc8f9fe55e4f5a2dd8e660fc3e88f3c8929b11c3322223548715305fd6",
+    "textures/gui/ability_menus/filthy_monarch/shadow_shift.png": "5dfddf097fb0f7e182c60c619ad1553dab38f54e00cb9c921b3bbec4fb549d67",
+    "textures/gui/ability_menus/filthy_monarch/sink.png": "e314b1e1fa1e02593784a08cc0d74defe1cd5a67c4bad3820432222845e76284",
+    "textures/gui/ability_menus/filthy_monarch/sloth.png": "1c458370d1b42b9aa4142cd1ea8019713468dfb044190e8c3d552e09837c591e",
+    "textures/gui/ability_menus/filthy_monarch/slow.png": "aeedb78127b9da2be9507507214f31db8c0c65d4a5b824cbeff33e786547e42c",
+    "textures/gui/ability_menus/filthy_monarch/sulfur_fireball.png": "cafa4e921551972cf307589a06c80d33a1e6e02b37d1fb1947a61591b9d55695",
+    "textures/gui/ability_menus/filthy_monarch/sulfur_flame.png": "d9efb4e3bb138b6e8da611669cdfacb69f59d1fce74ab1a10dd4e2cae3ad0a83",
+    "textures/gui/ability_menus/filthy_monarch/sword_of_lava.png": "cf0763eed1457814eae696915f057169143ff5a5c5213c81f11fef5ffe75d070",
+    "textures/gui/ability_menus/filthy_monarch/the_abyss.png": "061f66f28d4eb78cf0aa67277625a827b97199cdabbb21bd71a198faa18ac97a",
+    "textures/gui/ability_menus/filthy_monarch/the_corroder.png": "8ac83cfdc44b1a43281af8e8e07aeb806767438e5c6e82978e232f3bab8135fd",
+    "textures/gui/ability_menus/filthy_monarch/tide_of_filth.png": "6f9ac52db330ef7924b69684df77bfd4e952bc9ab873021a01cdad6d8574a267",
+    "textures/gui/ability_menus/filthy_monarch/toxic_vapor.png": "b666b9634502724ce6dcdc582261489de5440719fbe262fbad94f906f9f823f1",
+    "textures/gui/ability_menus/filthy_monarch/volcanic_eruption.png": "d4d473c6f2dcdb4b6963a8879dc953ce097c03a8334c7903536db493cc512a5f",
+    "textures/gui/filthy_monarch/abyssal_sea.png": "995444f70aeffe9118d9b1fdc44da5877797b33f56819c0ed5782bcb9763cba5",
+    "textures/gui/filthy_monarch/acid_swamp.png": "0fbe75b9c1f6f1a6ca2b97d163437f1e785da23039d17d7856abf7f91e321dc6",
+    "textures/gui/filthy_monarch/blasphemy.png": "a2e4d76201c782c6ecb43f02d6077d4c9621ecb5bfcafd47a8278295a503372c",
+    "textures/gui/filthy_monarch/blather.png": "680c5ed3756e8a23e844a69bc8d49f0b00a83e6ba09ed8563b210311d473a180",
+    "textures/gui/filthy_monarch/bleeding.png": "56653494de48e65e3b3cd972f523c6c2751313d68be20989c15e6f720f393493",
+    "textures/gui/filthy_monarch/blood_burst.png": "d71fdfc510a13525ab3d43440ddd8378ecfc5891a52c7104205d79aca927c13e",
+    "textures/gui/filthy_monarch/blood_ignition.png": "37f2b81930d248ca257067e8b6523ad29446a849400d7335388aafc8c4aef988",
+    "textures/gui/filthy_monarch/bloodlust.png": "208a079b3b09ad39059b14750cb0c1a04dbdeee48275578741fe54f8511b0463",
+    "textures/gui/filthy_monarch/confusion.png": "de384c3aeba85a90144be81ada0ffc581bba1ec2efc1ba867cd829be901b3403",
+    "textures/gui/filthy_monarch/corrosion.png": "4ad9be67a3a32de648d486c03cd306e8d0dfbedb4325dc4bf92344fe3cdef586",
+    "textures/gui/filthy_monarch/corruption.png": "9f9c4e2d3605ef35eba95f0601ba9a466ba8f096c63f38f7a88514ed475d9f79",
+    "textures/gui/filthy_monarch/danger_premonition.png": "1642efd9e31edd8e35eba570d5552c351df93288a3c5309d74e7caff52db33bb",
+    "textures/gui/filthy_monarch/depravity.png": "d3a74df0aaffd03f41d1263aadad8c55768856696013d992f8df5ddb51c43c27",
+    "textures/gui/filthy_monarch/depravity_0.png": "8e55897648c705c4edb7e9463ecfc1734427e67a9daeda9490494b3e6a7b734f",
+    "textures/gui/filthy_monarch/depravity_1.png": "b1516d7026ca4c9d98004b8b96a9fcac7a7baf27659e3173ed821cd30abcefc4",
+    "textures/gui/filthy_monarch/depravity_2.png": "6180bcaf1954d11a74e427bff92f9c4a8fae4f2c8aa5234b5c28f80749f9edd9",
+    "textures/gui/filthy_monarch/depravity_3.png": "4f8135caf0fd662b073b360903bd4727c123f4d492de2028ce662f0521e1d6ef",
+    "textures/gui/filthy_monarch/depravity_4.png": "2c653d6ff34411358bb845743756f8e7fe4fdc46ffeed717a6b647b3f38fb900",
+    "textures/gui/filthy_monarch/depravity_5.png": "a7c87d25e39ebbe1cb16c166a03e0b247edc1793784ff129e94397a8277565dc",
+    "textures/gui/filthy_monarch/desire_control.png": "e2ee35ffb10d80f47fb50141becee45590f8264b5994d9f27351cc8f3d06e93b",
+    "textures/gui/filthy_monarch/desire_incarnation.png": "6a837d8fbeb40e909530fdd531d9d6fc816a3142e50e2b2f235214be92188e94",
+    "textures/gui/filthy_monarch/desire_symbiosis.png": "376e4cd1e25f19e8e5944e5891d576952ea90693cbd5420ebb95b70c52ec8f97",
+    "textures/gui/filthy_monarch/devil_form.png": "1ced98bea5282f9701cca8296239c918e770074b08cfcb25f2ed073b80c92ac8",
+    "textures/gui/filthy_monarch/devil_worship.png": "788881c6474cde2e2b5328fbc8767b188208f9ffc25d056665ea869652b58af5",
+    "textures/gui/filthy_monarch/die.png": "9056912bde88d43575aa3f49e289b8f52a7ed28535e5d349b052b0c182047528",
+    "textures/gui/filthy_monarch/dirty_trick.png": "9db38830f4c5a7bd7ea700372b0a964e1007f0cce89bedc2507fe8a22d8c4107",
+    "textures/gui/filthy_monarch/fear.png": "73d209a6f48da8f8f3746825ffcdaf479b8f73aebe09633ad5791107cb8c01f5",
+    "textures/gui/filthy_monarch/filthy_illusion.png": "58bc4b46bc8951ce1aba75ebf14c76fee164a119134746f28111e8954e7358ad",
+    "textures/gui/filthy_monarch/flame_cage.png": "4ebd48adfb4782c8c5845faf740d14de0a289d9a94f01319262fa3fc91dcf69e",
+    "textures/gui/filthy_monarch/flames_of_the_abyss.png": "83c49b04970915c3d2ed558fcb5ba2978da0d77f2b61d07856fd39fee1ac29aa",
+    "textures/gui/filthy_monarch/hellfire.png": "5e4bcd65c2bbc8685f8a8e03c4bf3954ca6045304d6efec147f0f8b42cd8a6f9",
+    "textures/gui/filthy_monarch/interference.png": "9d6a1f9fa6333d75d38f838b063b06660d021181e5ae32a5e5ffc19ef0d9056b",
+    "textures/gui/filthy_monarch/killing_spree.png": "af883c2f8bb8c237e8b106c29d75cc772156f97c93f1b97ba1d8ac083e2b3d91",
+    "textures/gui/filthy_monarch/king_of_filth.png": "62f820f8d93af6ef36c7c01bbeb376f9d3318d0dffa105cbe2c6b3888102887f",
+    "textures/gui/filthy_monarch/lawless_lunge.png": "ec48d9f2848bbd7328d1183ae7975526d1a9ba3ec03984a6e1813a62e1f4b2a4",
+    "textures/gui/filthy_monarch/malice_ward.png": "e85ec0681e536b83124cd17ab719af053327f2ab9c240de1a35c9a5f2fefb5b0",
+    "textures/gui/filthy_monarch/mental_shock.png": "1642efd9e31edd8e35eba570d5552c351df93288a3c5309d74e7caff52db33bb",
+    "textures/gui/filthy_monarch/offerings.png": "2f2ccc2935d478cb84d9d2d3efd7bc33d74f6a650c97a220d2620afb761f70f0",
+    "textures/gui/filthy_monarch/offerings_0.png": "8e55897648c705c4edb7e9463ecfc1734427e67a9daeda9490494b3e6a7b734f",
+    "textures/gui/filthy_monarch/offerings_1.png": "76a15549abefacb1ad33e4cd8142a6507e68299ab1cf18f663590019c0256885",
+    "textures/gui/filthy_monarch/offerings_2.png": "40bfe728b0a77446f372a655e3873b0d6a30a1d680ab315cd0ab84434558ea85",
+    "textures/gui/filthy_monarch/offerings_3.png": "598fbae29521b5210ddf16607fad43860bf8e4e0f589fd6742c593805f076f2f",
+    "textures/gui/filthy_monarch/offerings_4.png": "3824a36bd968131556b8a34d9637ec0f00620be493662223da32074ecb2ae5b2",
+    "textures/gui/filthy_monarch/offerings_5.png": "2c158d83e565d1b1dd6bc016da1912c8d57fea70b0e80ed9626380d4b7808f27",
+    "textures/gui/filthy_monarch/seed_of_malice.png": "662ac450343d9cb9b0c0ef53d5453b38e088bcacb56e3c848cb91655341d56c9",
+    "textures/gui/filthy_monarch/shadow_shift.png": "c27d707f6c83de30f8c5bb6478b6c92442578fa758af23114e060f687b52cd93",
+    "textures/gui/filthy_monarch/silenced.png": "5b296ad91602e93f3f3913454b74b5d3d08eeae0920c7efc5dc57f7cbce21d95",
+    "textures/gui/filthy_monarch/single_drop.png": "adfeaeaa09436494a4b06f45dcd1a9eee8a1af90b3b20738bf31262dbc50d792",
+    "textures/gui/filthy_monarch/sink.png": "d23efac6825a45738515199c8535279912852e7ffb9cec6bda6ef99e955139ec",
+    "textures/gui/filthy_monarch/sloth.png": "bc450a2140eb26f322f5aa4c401db88430a774e9ea265fb83e6f8e2dcbe9505e",
+    "textures/gui/filthy_monarch/slow.png": "014d30fa4b417e10fd8444aa11c6be4cb7486aaaa9babbe0c443771c3bf52843",
+    "textures/gui/filthy_monarch/sulfur_fireball.png": "48ce340a9c3129cbf7cdbbd9160ea8bfd5418149cf29c67261fcbed3265ead4c",
+    "textures/gui/filthy_monarch/sulfur_flame.png": "d14e96d6a5c9d228447d675fa2cf7fcd04d8d9a172b1f144b6601819f09e6a3a",
+    "textures/gui/filthy_monarch/sword_of_lava.png": "7dbffc1bfcbb97a4f33a0e55a8ba0b699ae764452d159e97a8477730955049db",
+    "textures/gui/filthy_monarch/symbiosis.png": "376e4cd1e25f19e8e5944e5891d576952ea90693cbd5420ebb95b70c52ec8f97",
+    "textures/gui/filthy_monarch/the_abyss.png": "6ecedac9f84b53ea88e2e84da11548cc01b3ca36de3096d4bd306acec3d7e472",
+    "textures/gui/filthy_monarch/the_corroder.png": "1dc4d72b5580761a2ab6a519644929fbc24b96404e450be3ca5779b2320fcf74",
+    "textures/gui/filthy_monarch/tide_of_filth.png": "053e29105bc48437fc9b71beb2dc8faca357fbd54aa29a74be5aca05b4e7b816",
+    "textures/gui/filthy_monarch/toxic_vapor.png": "e8b33eeb323ceeaf6f34d0d039cdb6b1e935e03128eddd7911cbf79e2b514278",
+    "textures/gui/filthy_monarch/volcanic_eruption.png": "965d447341a4ed8bd11db64b6d74ea636ac42010470253b71027562769a02059",
+    "textures/gui/pathway_icons/filthy_monarch.png": "1ced98bea5282f9701cca8296239c918e770074b08cfcb25f2ed073b80c92ac8",
+    "textures/model_fx/filthy_monarch/abyss_atlas.png": "24979a7b567ccdaa5a433707cc295066de72d2ff53d4a902d62444caea4f60be",
+    "textures/model_fx/filthy_monarch/abyss_atlas.png.mcmeta": "8709c2cb977c449f9f4ce93b0d0f96afa75d8c9d7dae4b2ca57a9e11eb3f68f6",
+    "textures/model_fx/filthy_monarch/flesh_atlas.png": "d4b1368f5800a7d0ae94fd1943d928873d7a979e05b663f77d9f78abb87edadd",
+    "textures/particle/fx/filthy_monarch/black_ember.png": "ce3270b2e3902c34a01f1c2a3dbb0665ac65d22a95fd892aa736b7bf8c923d16",
+    "textures/particle/fx/filthy_monarch/blood_drop.png": "51f9f21d46f005165ff4493c6d7a60b2f905a7d13b5b82a1368150c07ab94fd2",
+    "textures/particle/fx/filthy_monarch/claw.png": "c5bdc316cb3ffe59dbfeb8396afa8522969fc16848e2682bcdc7ab976dcb6931",
+    "textures/particle/fx/filthy_monarch/corrosion_streak.png": "0fc14752e5fa8a9af108e2442c57e047f94b8d059a8812a190c053fe3e757a17",
+    "textures/particle/fx/filthy_monarch/danger_eye.png": "60aa0cbdde2dc786e05f9f6a6b824c04648982f2e8e06ef552c4801548746d1c",
+    "textures/particle/fx/filthy_monarch/fog.png": "d85549db9c7692fe45c56729da6cbcfd4104e43aaa7f0cd79fc8fc4d62e80148",
+    "textures/particle/fx/filthy_monarch/foul_glyph.png": "84d8aa14902e3e666e842e1e4494ef15a33f51ed4c6c801a8b2fbb9f6ed88e79",
+    "textures/particle/fx/filthy_monarch/horn.png": "0935aa89281b5c0a2c845fe367182a381ad24abf14b9b41d2c9656ef711cc5e4",
+    "textures/particle/fx/filthy_monarch/offering.png": "b0e2a8c571ce93d13b50a780b1b8f35baedf1c46ee97ac961f688b3ee85b51dc",
+    "textures/particle/fx/filthy_monarch/ripple.png": "1f02c3dc6481ddb842c43aa2afc92a5440dfcca1707a6af6e663cf4ed393bf3b",
+    "textures/particle/fx/filthy_monarch/seed.png": "db8af695265274edb878be6916da887c6b501d048eea3218d335acde6a694a54",
+    "textures/particle/fx/filthy_monarch/shadow.png": "364822185f2ce6a7643754a9be2ac6cad06fbe720db72d835ed61db3673286dc",
+    "textures/particle/fx/filthy_monarch/sludge.png": "9e981b963d60b84d47f53405036ed298f1c9373328cb1cb7dc0916ac1bd5cd08",
+    "textures/particle/fx/filthy_monarch/spark.png": "1aa404680ce44d5e67eb2c819013a55c8a07877df1c9070b6ca817a3b5f191fc",
+    "textures/particle/fx/filthy_monarch/sulfur_flame.png": "1aa404680ce44d5e67eb2c819013a55c8a07877df1c9070b6ca817a3b5f191fc"
+  }
+}

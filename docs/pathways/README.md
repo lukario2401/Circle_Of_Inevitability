@@ -25,3 +25,5 @@ Pathways with multiple documents have their own folder. Shared systems and tooli
 | Thunder God | [Design / gameplay](thunder_god/THUNDER_GOD.md), [Assets](thunder_god/THUNDER_GOD_ASSETS.md), [Implementation](thunder_god/THUNDER_GOD_IMPLEMENTATION.md) |
 | White Angel | [Design / gameplay](white_angel/WHITE_ANGEL.md), [Assets](white_angel/WHITE_ANGEL_ASSETS.md) |
 | Worm Of Time | [Design / gameplay](WORM_OF_TIME.md) |
+
+- [Filthy Monarch design](filthy_monarch/FILTHY_MONARCH.md) and [asset collection](filthy_monarch/FILTHY_MONARCH_ASSETS.md): 35 ability presentations, animated forms, particles and 59 sound cues; inspect with `/filthyfx`.

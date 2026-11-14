@@ -1,0 +1,42 @@
+[
+  {
+    "cue": "sulfur_flame",
+    "start_seconds": 0,
+    "duration_seconds": 1.5
+  },
+  {
+    "cue": "devil_form",
+    "start_seconds": 1.85,
+    "duration_seconds": 2.6
+  },
+  {
+    "cue": "danger_premonition",
+    "start_seconds": 4.8,
+    "duration_seconds": 0.65
+  },
+  {
+    "cue": "die",
+    "start_seconds": 5.8,
+    "duration_seconds": 1.5
+  },
+  {
+    "cue": "blather",
+    "start_seconds": 7.65,
+    "duration_seconds": 1.5
+  },
+  {
+    "cue": "blood_burst",
+    "start_seconds": 9.5,
+    "duration_seconds": 1.5
+  },
+  {
+    "cue": "tide_of_filth",
+    "start_seconds": 11.35,
+    "duration_seconds": 2.6
+  },
+  {
+    "cue": "abyssal_sea",
+    "start_seconds": 14.3,
+    "duration_seconds": 2.6
+  }
+]
