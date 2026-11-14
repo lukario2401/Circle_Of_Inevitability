@@ -26,6 +26,7 @@ public class PathwayHudIcon {
     private static final Map<String, Identifier> ICONS = new HashMap<>();
 
     static {
+        ICONS.put("Filthy Monarch", icon("filthy_monarch"));
         ICONS.put("Thunder God", icon("thunder_god"));
         ICONS.put("Author", icon("author"));
         ICONS.put("White Angel", icon("white_angel"));

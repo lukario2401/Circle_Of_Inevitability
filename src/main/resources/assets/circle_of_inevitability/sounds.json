@@ -5810,5 +5810,477 @@
         "name": "circle_of_inevitability:nature_walker/brood_form_complete"
       }
     ]
+  },
+  "filthy_monarch.lawless_lunge": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.lawless_lunge",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/lawless_lunge"
+      }
+    ]
+  },
+  "filthy_monarch.dirty_trick": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.dirty_trick",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/dirty_trick"
+      }
+    ]
+  },
+  "filthy_monarch.sulfur_flame": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.sulfur_flame",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/sulfur_flame"
+      }
+    ]
+  },
+  "filthy_monarch.sink": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.sink",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/sink"
+      }
+    ]
+  },
+  "filthy_monarch.killing_spree": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.killing_spree",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/killing_spree"
+      }
+    ]
+  },
+  "filthy_monarch.devil_worship": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.devil_worship",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/devil_worship"
+      }
+    ]
+  },
+  "filthy_monarch.sulfur_fireball": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.sulfur_fireball",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/sulfur_fireball"
+      }
+    ]
+  },
+  "filthy_monarch.devil_form": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.devil_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/devil_form"
+      }
+    ]
+  },
+  "filthy_monarch.sword_of_lava": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.sword_of_lava",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/sword_of_lava"
+      }
+    ]
+  },
+  "filthy_monarch.flame_cage": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.flame_cage",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/flame_cage"
+      }
+    ]
+  },
+  "filthy_monarch.volcanic_eruption": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.volcanic_eruption",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/volcanic_eruption"
+      }
+    ]
+  },
+  "filthy_monarch.toxic_vapor": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.toxic_vapor",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/toxic_vapor"
+      }
+    ]
+  },
+  "filthy_monarch.hellfire": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.hellfire",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/hellfire"
+      }
+    ]
+  },
+  "filthy_monarch.flames_of_the_abyss": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.flames_of_the_abyss",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/flames_of_the_abyss"
+      }
+    ]
+  },
+  "filthy_monarch.shadow_shift": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.shadow_shift",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/shadow_shift"
+      }
+    ]
+  },
+  "filthy_monarch.desire_control": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.desire_control",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/desire_control"
+      }
+    ]
+  },
+  "filthy_monarch.mental_shock": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.mental_shock",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/mental_shock"
+      }
+    ]
+  },
+  "filthy_monarch.desire_incarnation": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.desire_incarnation",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/desire_incarnation"
+      }
+    ]
+  },
+  "filthy_monarch.desire_symbiosis": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.desire_symbiosis",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/desire_symbiosis"
+      }
+    ]
+  },
+  "filthy_monarch.filthy_illusion": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.filthy_illusion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/filthy_illusion"
+      }
+    ]
+  },
+  "filthy_monarch.seed_of_malice": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.seed_of_malice",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/seed_of_malice"
+      }
+    ]
+  },
+  "filthy_monarch.slow": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.slow",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/slow"
+      }
+    ]
+  },
+  "filthy_monarch.die": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.die",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/die"
+      }
+    ]
+  },
+  "filthy_monarch.corruption": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.corruption",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/corruption"
+      }
+    ]
+  },
+  "filthy_monarch.confusion": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.confusion",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/confusion"
+      }
+    ]
+  },
+  "filthy_monarch.sloth": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.sloth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/sloth"
+      }
+    ]
+  },
+  "filthy_monarch.blasphemy": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.blasphemy",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/blasphemy"
+      }
+    ]
+  },
+  "filthy_monarch.blather": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.blather",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/blather"
+      }
+    ]
+  },
+  "filthy_monarch.acid_swamp": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.acid_swamp",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/acid_swamp"
+      }
+    ]
+  },
+  "filthy_monarch.blood_ignition": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.blood_ignition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/blood_ignition"
+      }
+    ]
+  },
+  "filthy_monarch.blood_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.blood_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/blood_burst"
+      }
+    ]
+  },
+  "filthy_monarch.tide_of_filth": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.tide_of_filth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/tide_of_filth"
+      }
+    ]
+  },
+  "filthy_monarch.the_corroder": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.the_corroder",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/the_corroder"
+      }
+    ]
+  },
+  "filthy_monarch.abyssal_sea": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.abyssal_sea",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/abyssal_sea"
+      }
+    ]
+  },
+  "filthy_monarch.the_abyss": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.the_abyss",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/the_abyss"
+      }
+    ]
+  },
+  "filthy_monarch.demon_form": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.demon_form",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/demon_form"
+      }
+    ]
+  },
+  "filthy_monarch.corrosive_fog": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.corrosive_fog",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/corrosive_fog"
+      }
+    ]
+  },
+  "filthy_monarch.seed_plant": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.seed_plant",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/seed_plant"
+      }
+    ]
+  },
+  "filthy_monarch.seed_spend": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.seed_spend",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/seed_spend"
+      }
+    ]
+  },
+  "filthy_monarch.offering_gain": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.offering_gain",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/offering_gain"
+      }
+    ]
+  },
+  "filthy_monarch.instinct": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.instinct",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/instinct"
+      }
+    ]
+  },
+  "filthy_monarch.danger_premonition": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.danger_premonition",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/danger_premonition"
+      }
+    ]
+  },
+  "filthy_monarch.wingbeat": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.wingbeat",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/wingbeat"
+      }
+    ]
+  },
+  "filthy_monarch.projection_swipe": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.projection_swipe",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/projection_swipe"
+      }
+    ]
+  },
+  "filthy_monarch.fireball_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.fireball_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/fireball_impact"
+      }
+    ]
+  },
+  "filthy_monarch.cage_close": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.cage_close",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/cage_close"
+      }
+    ]
+  },
+  "filthy_monarch.eruption_warning": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.eruption_warning",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/eruption_warning"
+      }
+    ]
+  },
+  "filthy_monarch.illusion_burst": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.illusion_burst",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/illusion_burst"
+      }
+    ]
+  },
+  "filthy_monarch.link_break": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.link_break",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/link_break"
+      }
+    ]
+  },
+  "filthy_monarch.malice_rebirth": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.malice_rebirth",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/malice_rebirth"
+      }
+    ]
+  },
+  "filthy_monarch.single_drop": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.single_drop",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/single_drop"
+      }
+    ]
+  },
+  "filthy_monarch.dissolve": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.dissolve",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/dissolve"
+      }
+    ]
+  },
+  "filthy_monarch.reform": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.reform",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/reform"
+      }
+    ]
+  },
+  "filthy_monarch.barrier_crack": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.barrier_crack",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/barrier_crack"
+      }
+    ]
+  },
+  "filthy_monarch.kingdom_close": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.kingdom_close",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/kingdom_close"
+      }
+    ]
+  },
+  "filthy_monarch.form_end": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.form_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/form_end"
+      }
+    ]
+  },
+  "filthy_monarch.field_end": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.field_end",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/field_end"
+      }
+    ]
+  },
+  "filthy_monarch.melee_swing": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.melee_swing",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/melee_swing"
+      }
+    ]
+  },
+  "filthy_monarch.melee_impact": {
+    "subtitle": "subtitles.circle_of_inevitability.filthy_monarch.melee_impact",
+    "sounds": [
+      {
+        "name": "circle_of_inevitability:filthy_monarch/melee_impact"
+      }
+    ]
   }
 }

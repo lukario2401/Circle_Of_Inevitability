@@ -99,3 +99,5 @@ The [Nature Walker asset collection](docs/pathways/nature_walker/NATURE_WALKER_A
 [Mother pathway design](docs/pathways/nature_walker/NATURE_WALKER.md), with staged Growths, animated constructs and forms,
 icons, particles and 59 original sound cues. Operators can inspect the presentation with `/naturefx`.
 [All 39 Nature Walker abilities are playable](docs/pathways/nature_walker/NATURE_WALKER_GAMEPLAY.md), including mutations, spirits, rebirth, realms and Mother authorities. The [extension guide](docs/pathways/nature_walker/NATURE_WALKER_EXTENSION_GUIDE.md) explains the reusable spell-kit APIs and how to add future abilities.
+
+The [Filthy Monarch asset collection](docs/pathways/filthy_monarch/FILTHY_MONARCH_ASSETS.md) covers all 35 abilities in the supplied Abyss pathway design with icons, animated forms, models, particles and 59 original sound cues. The first **18 abilities are playable**, with Depravity Seeds, Offerings, summons and two combat wheels; see the [controls and gameplay guide](docs/pathways/filthy_monarch/FILTHY_MONARCH_GAMEPLAY.md). Operators can inspect all presentation assets with `/filthyfx`.

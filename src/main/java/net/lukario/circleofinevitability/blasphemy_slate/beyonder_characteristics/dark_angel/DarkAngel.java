@@ -802,6 +802,7 @@ public class DarkAngel {
     /** The color of a player's soul: the color of their Pathway (0xAARRGGBB). Also the Illuminator's residues. */
     public static int pathwayColor(String pathway) {
         return switch (pathway) {
+            case "Filthy Monarch" -> 0xB07FD8FF;
             case "Thunder God" -> 0xB010294A;
             case "Omniscient Eye" -> 0xB0D1A94B;
             case "God Of Decay" -> 0xB09AB82E;
