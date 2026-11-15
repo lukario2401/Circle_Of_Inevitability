@@ -90,6 +90,29 @@ import java.util.function.Predicate;
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
 public final class Spells {
+    /** Pay health directly, bypassing armor without killing the caster. No mutation on refusal. */
+    public static boolean payBlood(LivingEntity caster, float amount, float minimumHealth) {
+        if (caster.level().isClientSide() || !caster.isAlive() || !Float.isFinite(amount) || amount < 0
+                || !Float.isFinite(minimumHealth) || caster.getHealth() < minimumHealth || caster.getHealth() - amount < 1) return false;
+        caster.setHealth(caster.getHealth() - amount);
+        return true;
+    }
+
+    /** Damage the four armor slots using normal durability, Unbreaking and item-break handling. */
+    public static void wearArmor(LivingEntity target,int amount) {
+        if(target.level().isClientSide() || amount<=0)return;
+        for(var slot:java.util.List.of(net.minecraft.world.entity.EquipmentSlot.HEAD,net.minecraft.world.entity.EquipmentSlot.CHEST,
+                net.minecraft.world.entity.EquipmentSlot.LEGS,net.minecraft.world.entity.EquipmentSlot.FEET)) {
+            var stack=target.getItemBySlot(slot);if(stack.isDamageableItem())stack.hurtAndBreak(amount,target,slot);
+        }
+    }
+
+    /** Fraction of current health, with the same nonlethal floor as payBlood. */
+    public static boolean payBloodFraction(LivingEntity caster, float fraction, float minimumHealth) {
+        return Float.isFinite(fraction) && fraction >= 0 && fraction < 1
+                && payBlood(caster, caster.getHealth() * fraction, minimumHealth);
+    }
+
     /** Exact hitbox ray selection, optionally through terrain; includes concealed bodies when the caller allows them. */
     public static LivingEntity aimLiving(LivingEntity caster, ServerLevel sl, double range, boolean throughWalls,
                                         java.util.function.Predicate<LivingEntity> allowed) {

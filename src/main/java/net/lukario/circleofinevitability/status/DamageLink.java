@@ -52,7 +52,7 @@ public final class DamageLink {
     /** A puff of sparks on whoever receives passed-on damage. Set to false to handle visuals yourself. */
     public static boolean SHOW_PARTICLES = true;
 
-    private record Redirect(UUID receiver, float fraction, long expires) {}
+    private record Redirect(UUID receiver, float fraction, long expires, java.util.function.BooleanSupplier condition) {}
 
     private static final class Bond {
         final Set<UUID> members = new HashSet<>();
@@ -93,10 +93,19 @@ public final class DamageLink {
 
     /** For 'ticks' ticks, 'fraction' (0..1) of every hit 'victim' takes is dealt to 'receiver' instead. */
     public static void redirect(LivingEntity victim, LivingEntity receiver, float fraction, int ticks) {
-        if (!(victim.level() instanceof ServerLevel sl) || ticks <= 0 || victim == receiver) return;
+        redirectWhen(victim, receiver, fraction, ticks, () -> true);
+    }
+
+    /** Conditional redirect checked on each hit. Keep its token to clear only this application. */
+    public static Object redirectWhen(LivingEntity victim, LivingEntity receiver, float fraction, int ticks,
+                                      java.util.function.BooleanSupplier condition) {
+        if (!(victim.level() instanceof ServerLevel sl) || ticks <= 0 || victim == receiver
+                || receiver == null || receiver.level() != sl || !receiver.isAlive()) return null;
         float part = Math.max(0f, Math.min(1f, fraction));
         forgetExpired(sl.getGameTime());
-        REDIRECTS.put(victim.getUUID(), new Redirect(receiver.getUUID(), part, sl.getGameTime() + ticks));
+        Redirect link = new Redirect(receiver.getUUID(), part, sl.getGameTime() + ticks, java.util.Objects.requireNonNull(condition));
+        REDIRECTS.put(victim.getUUID(), link);
+        return link;
     }
 
     /** Who part of this entity's damage currently goes to, or null. */
@@ -116,11 +125,16 @@ public final class DamageLink {
         REDIRECTS.remove(victim.getUUID());
     }
 
+    public static boolean clearRedirectIf(Entity victim, Object token) {
+        if(token==null || REDIRECTS.get(victim.getUUID())!=token)return false;
+        REDIRECTS.remove(victim.getUUID());return true;
+    }
+
     /** The victim's redirect if it has one that has not run out and whose receiver is still alive here. */
     private static Redirect liveRedirect(LivingEntity victim, ServerLevel sl) {
         Redirect redirect = REDIRECTS.get(victim.getUUID());
         if (redirect == null) return null;
-        if (redirect.expires() < sl.getGameTime() || receiverOf(redirect, sl) == null) {
+        if (redirect.expires() <= sl.getGameTime() || !redirect.condition().getAsBoolean() || receiverOf(redirect, sl) == null) {
             REDIRECTS.remove(victim.getUUID());
             return null;
         }

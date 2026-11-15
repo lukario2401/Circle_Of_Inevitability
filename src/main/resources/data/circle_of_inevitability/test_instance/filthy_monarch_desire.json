@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "environment": "minecraft:default",
+  "function": "circle_of_inevitability:filthy_monarch_desire",
+  "max_ticks": 300,
+  "required": true,
+  "setup_ticks": 1,
+  "structure": "forge:empty3x3x3"
+}

@@ -71,6 +71,7 @@ public final class Taunt {
         CompoundTag tag = new CompoundTag();
         tag.store(TARGET, UUIDUtil.CODEC, at.getUUID());
         tag.putLong(UNTIL, mob.level().getGameTime() + ticks);
+        tag.putString("Instance", java.util.UUID.randomUUID().toString());
         mob.getPersistentData().put(TAG, tag);
         aim(mob, at);
         return true;
@@ -117,6 +118,16 @@ public final class Taunt {
     /** Ends the taunt. The mob keeps fighting what it fights now, but may choose again from here on. */
     public static void remove(LivingEntity entity) {
         entity.getPersistentData().remove(TAG);
+    }
+
+    /** Identity of this application; store it to release only your own taunt later. */
+    public static String snapshot(Entity entity) {
+        return entity.getPersistentData().getCompoundOrEmpty(TAG).getStringOr("Instance", "");
+    }
+
+    /** Preserve a newer application, even if it chose the same target on the same tick. */
+    public static void removeIf(LivingEntity entity, String instance) {
+        if (instance != null && !instance.isEmpty() && instance.equals(snapshot(entity))) remove(entity);
     }
 
     // =========================

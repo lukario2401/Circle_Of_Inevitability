@@ -308,9 +308,7 @@ public final class ThunderGodPowers {
                     if(downpour){Blind.apply(e,15,6);Spells.keepEffect(e,MobEffects.DARKNESS,0,15);}
                     if(sequence(p)<=3&&p.tickCount%20==0)EntitySight.show(p,e,30);
                     // Equipment wear uses normal item break handling and never edits terrain.
-                    for(var slot:new net.minecraft.world.entity.EquipmentSlot[]{net.minecraft.world.entity.EquipmentSlot.HEAD,net.minecraft.world.entity.EquipmentSlot.CHEST,net.minecraft.world.entity.EquipmentSlot.LEGS,net.minecraft.world.entity.EquipmentSlot.FEET}){
-                        var stack=e.getItemBySlot(slot);if(stack.isDamageableItem())stack.hurtAndBreak(1,e,slot);
-                    }
+                    Spells.wearArmor(e,1);
                     if(inside>=80)Corrosion.apply(e,p,1,0,60);
                 }).onEnd(()->{RAINS.remove(p.getUUID(),rain);ParticleShapes.clearModels(sl,ground,RAIN);})
                 .open(p,sl,RAIN);

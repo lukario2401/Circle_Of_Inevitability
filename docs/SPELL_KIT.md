@@ -2,10 +2,17 @@
 
 The Attendant Of Mysteries abilities are built from small tools that any Pathway can use: something that flies and hits, a countdown on the screen, a line between two moving things, damage that goes somewhere else, taking over a mob, vanishing, cheating death.
 
+For interruptible channels, conditional wards/links, health costs, armor wear, attack tempo and barrier erosion, see [reusable lifecycle helpers](SPELL_KIT_LIFECYCLES.md).
+
 Nothing needs registering. Call them from your ability method. The 3D models themselves are covered in [MODEL_FX.md](MODEL_FX.md).
 
 | I want | Use | Lives in |
 |---|---|---|
+| An interruptible channel with owned movement restrictions | [`Channel`](SPELL_KIT_LIFECYCLES.md#channels) | `combat/` |
+| A blood price, armor durability wear or final boss damage cap | [`Spells`, `DamageLimit`](SPELL_KIT_LIFECYCLES.md#health-durability-and-damage) | `combat/` |
+| A ward or damage link valid only while its anchor lives | [`DeathWard.armWhen`, `DamageLink.redirectWhen`](SPELL_KIT_LIFECYCLES.md#conditional-wards-and-links) | `status/` |
+| A beam that weakens and breaks hostile barriers | [`BarrierErosion`](SPELL_KIT_LIFECYCLES.md#barriers) | `combat/` |
+| A named reduction in attack speed for players and mobs | [`AttackTempo`](SPELL_KIT_LIFECYCLES.md#attack-tempo-and-healing) | `status/` |
 | Store study/favorites/selection for key variants and individual wheel spells | [`AbilityCatalog`, `AbilityStudy`](#study-prediction-and-borrowed-powers) | `combat/` |
 | Predict moving targets, inspect an entity or lend a concrete spell | [`Prediction`, `Dossier`, `AbilityGrants`](#study-prediction-and-borrowed-powers) | `combat/` |
 | Modify the next successful cast's cost and damage, with the current spell ID available | [`NextCast`, `CastContext`](#study-prediction-and-borrowed-powers) | `combat/` |

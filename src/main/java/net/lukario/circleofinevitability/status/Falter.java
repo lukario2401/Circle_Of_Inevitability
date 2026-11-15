@@ -31,6 +31,9 @@ import java.util.List;
  */
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public final class Falter {
+    private static final java.util.List<java.util.function.ToDoubleFunction<LivingEntity>> DURATION=new java.util.ArrayList<>();
+    public static void addDurationScale(java.util.function.ToDoubleFunction<LivingEntity> rule){DURATION.add(rule);}
+
 
     /** Runs for every attack that missed. 'name' is the reason with the biggest chance. */
     @FunctionalInterface
@@ -49,6 +52,8 @@ public final class Falter {
 
     /** 'chance' (0.4 = 40%) of its attacks miss for 'ticks', for this reason. */
     public static void apply(LivingEntity target, String name, float chance, int ticks) {
+        if(ticks<=0)return;
+        for(var rule:DURATION)ticks=Math.max(1,(int)Math.round(ticks*Math.clamp(rule.applyAsDouble(target),0,1)));
         if (target.level().isClientSide() || ticks <= 0 || chance <= 0f) return;
         CompoundTag tag = target.getPersistentData().getCompoundOrEmpty(TAG);
         tag.putFloat(name + CHANCE, Math.min(1f, chance));

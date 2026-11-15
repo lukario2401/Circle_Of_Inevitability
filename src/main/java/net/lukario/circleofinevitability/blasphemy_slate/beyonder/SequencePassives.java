@@ -46,6 +46,11 @@ public final class SequencePassives {
     // The passives: one line each
     // =========================
     static {
+        effect("Filthy Monarch",9,MobEffects.STRENGTH,0);
+        effect("Filthy Monarch",6,MobEffects.RESISTANCE,0);
+        effect("Filthy Monarch",6,MobEffects.SPEED,0);
+        custom("Filthy Monarch",6,p->p.removeEffect(MobEffects.POISON));
+
         effect("White Angel",8,MobEffects.NIGHT_VISION,0);
         effect("White Angel",7,MobEffects.FIRE_RESISTANCE,0);
         effect("White Angel",6,MobEffects.HERO_OF_THE_VILLAGE,0);
