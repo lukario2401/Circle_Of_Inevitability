@@ -82,6 +82,7 @@ public final class Wall {
     private int age;
     private boolean closed = true;
     private boolean allowsLivingThrough;
+    private int weakUntil;
     private final Map<UUID, Boolean> wasInFront = new HashMap<>();
     private final Map<UUID, Integer> lastShown = new HashMap<>();
 
@@ -166,7 +167,7 @@ public final class Wall {
     /** Its whole time again, from now. */
     public static void renew(LivingEntity owner, String name) {
         Wall wall = find(owner, name);
-        if (wall != null) wall.age = 0;
+        if (wall != null) { wall.age = 0; wall.weakUntil = 0; }
     }
 
     /** Advance enemy lifetimes in a weathering field; normal end callbacks run immediately on expiry. */
@@ -177,6 +178,28 @@ public final class Wall {
             wall.age += ticks;
             if (wall.age >= wall.lasts) wall.end();
         }
+    }
+
+    public record Raised(LivingEntity owner, String name, Object token) {}
+    public static java.util.List<Raised> crossedBy(ServerLevel level, Vec3 from, Vec3 to) {
+        java.util.List<Raised> hits=new java.util.ArrayList<>();
+        for(Wall wall:RAISED) {
+            if(wall.closed || wall.level!=level)continue;
+            double a=wall.front(from), b=wall.front(to), denominator=a-b;
+            if(Math.abs(denominator)<1e-8 || a*b>0)continue;
+            Vec3 contact=from.add(to.subtract(from).scale(a/denominator));
+            if(wall.beside(contact,0))hits.add(new Raised(wall.owner,wall.name,wall));
+        }
+        return hits;
+    }
+    public static void weaken(LivingEntity owner,String name,int ticks) {
+        Wall wall=find(owner,name); if(wall!=null)wall.weakUntil=Math.max(wall.weakUntil,wall.age+ticks);
+    }
+    public static boolean isWeakened(LivingEntity owner,String name) {
+        Wall wall=find(owner,name);return wall!=null && wall.age<wall.weakUntil;
+    }
+    public static void closeIf(LivingEntity owner,String name,Object token) {
+        Wall wall=find(owner,name);if(wall!=null && wall==token)wall.end();
     }
 
     private static Wall find(LivingEntity owner, String name) {
@@ -222,6 +245,7 @@ public final class Wall {
             return;
         }
         age++;
+        if(age<weakUntil)return;
         AABB box = box();
         Set<UUID> seen = new HashSet<>();
         for (LivingEntity entity : level.getEntitiesOfClass(LivingEntity.class, box,

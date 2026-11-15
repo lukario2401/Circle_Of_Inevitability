@@ -9,6 +9,9 @@ public final class Healing {
     private static final java.util.List<Scale> SCALES=new java.util.ArrayList<>();
     /** Register once at setup. Return 1 for unaffected targets; finite nonnegative values multiply. */
     public static void addScale(Scale rule) { SCALES.add(java.util.Objects.requireNonNull(rule)); }
+    private static int spellDepth;
+    /** True only during an attributed Healing.apply call; lets auras block natural recovery without blocking spells. */
+    public static boolean isSpellHealing() { return spellDepth > 0; }
     private Healing() {}
     public static float apply(LivingEntity target, float amount) {
         return apply(target,target,amount);
@@ -21,7 +24,8 @@ public final class Healing {
         }
         if (!target.isAlive() || target.level().isClientSide() || !Float.isFinite(amount) || amount <= 0) return 0;
         float before = target.getHealth();
-        target.heal(amount);
+        spellDepth++;
+        try { target.heal(amount); } finally { spellDepth--; }
         return Math.max(0, target.getHealth() - before);
     }
 }

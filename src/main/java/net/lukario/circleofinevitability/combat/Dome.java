@@ -256,6 +256,11 @@ public final class Dome {
         return count;
     }
 
+    public static Object snapshot(LivingEntity owner, String name) { return find(owner, name); }
+    public static void closeIf(LivingEntity owner, String name, Object token) {
+        Dome dome=find(owner,name); if(dome!=null && dome==token)dome.end();
+    }
+
     public static void weaken(LivingEntity owner, String name, int ticks) {
         Dome dome = find(owner, name);
         if (dome != null) dome.weakUntil = Math.max(dome.weakUntil, dome.age + ticks);

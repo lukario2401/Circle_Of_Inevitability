@@ -23,15 +23,17 @@ import net.minecraftforge.event.server.ServerStoppedEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
-/** First 18 Filthy Monarch abilities. The remaining 17 have assets, but no cast entries. */
+/** Filthy Monarch: all 35 casts, with shared kit primitives and owned lifecycles. */
 @Mod.EventBusSubscriber(modid="circle_of_inevitability")
 public final class FilthyMonarch {
     public static final String PATHWAY="Filthy Monarch", DEVIL="filthy_monarch_devil", LIQUID="filthy_monarch_liquid",
-            SUMMONS="filthy_monarch_projections", OFFERINGS="filthy_monarch_offerings";
+            SUMMONS="filthy_monarch_projections", OFFERINGS="filthy_monarch_offerings", ABYSS="filthy_monarch_abyss", SEA="filthy_monarch_sea";
     public static final AbilityWheel BASIC=wheel("basic","Criminal, Unwinged Angel and Serial Killer").noCooldownsWhen(p->true);
     public static final AbilityWheel DEVIL_ARTS=wheel("devil_arts","Devil Arts");
     public static final AbilityWheel DESIRE=wheel("desire_and_malice","Desire and Malice");
-    public static final List<AbilityWheel> WHEELS=List.of(BASIC,DEVIL_ARTS,DESIRE);
+    public static final AbilityWheel TONGUE=wheel("foul_tongue","Foul Tongue");
+    public static final AbilityWheel BLOOD=wheel("blood_and_filth","Blood and Filth");
+    public static final List<AbilityWheel> WHEELS=List.of(BASIC,DEVIL_ARTS,DESIRE,TONGUE,BLOOD);
     private static final Set<UUID> BORROWED=new HashSet<>();
     static final Map<UUID,State> STATES=new HashMap<>();
     private static boolean initialized;
@@ -56,6 +58,25 @@ public final class FilthyMonarch {
         entry(DESIRE,"mental_shock","Mental Shock",5,3500,240,"An armor-piercing mental cone: 55 damage, stagger, fear and a Seed.");
         entry(DESIRE,"desire_incarnation","Desire Incarnation",5,4000,400,"Become liquid for 6 s: 80% less damage, speed and a damaging aura.");
         DESIRE.free(p->Form.isIn(p,LIQUID));
+        entry(DESIRE,"desire_symbiosis","Desire Symbiosis",5,4500,600,"Link to an enemy for 12 s: redirect 25% damage and survive one lethal blow.");
+        entry(DESIRE,"filthy_illusion","Filthy Illusion",4,6000,360,"Three pursuing phantoms draw aggression and burst for 50 damage and a Seed.");
+        entry(DESIRE,"seed_of_malice","Seed of Malice",2,25000,1200,"Plant a 90 s rebirth anchor: 40 damage, two Seeds and fear.");
+        entry(TONGUE,"slow","Slow",6,1000,100,"Enemies within 8 blocks take 15 damage and nearly stop for 2 s.");
+        entry(TONGUE,"die","Die",6,2000,120,"60 damage plus 30 per spent Seed; execute weak non-bosses with three Seeds.");
+        entry(TONGUE,"corruption","Corruption",6,2000,160,"45 damage and two Seeds in black fog that lingers for 5 s.");
+        entry(TONGUE,"confusion","Confusion",4,5000,300,"Confuse enemies within 12 blocks for 6 s: attacks miss and mobs fight each other.");
+        entry(TONGUE,"sloth","Sloth",4,4500,240,"Slow and weaken one enemy for 8 s, halve attack speed and rot for 12 per second.");
+        entry(TONGUE,"blasphemy","Blasphemy",4,6000,200,"130 armor-piercing damage and silence; each spent Seed adds 20 damage and 1 s.");
+        entry(TONGUE,"blather","Blather",3,12000,160,"150 damage plus 40 per spent Seed; reach marked enemies through walls and curse them.");
+        entry(BLOOD,"acid_swamp","Acid Swamp",4,6000,300,"A 12 s acid field: 14 damage per second, slow, armor wear and growing corrosion.");
+        entry(BLOOD,"blood_ignition","Blood Ignition",2,18000,240,"Burn blood for 6 s: 25 damage plus 10 per spent Seed each second, splash and no healing.");
+        entry(BLOOD,"blood_burst","Blood Burst",2,15000,200,"Pay 20% current health: 120 damage, knockback, poison and corrosion around you.");
+        entry(BLOOD,"tide_of_filth","Tide of Filth",1,30000,400,"A broad advancing tide: 150 damage, corrosion, lingering sludge and six grasping hands.");
+        entry(BLOOD,"the_corroder","The Corroder",1,30000,300,"Channel corrosion for 4 s: doubling damage and continuous erosion of hostile barriers.");
+        entry(BLOOD,"abyssal_sea","Abyssal Sea",0,50000,2400,"Seal a 32 block kingdom for 60 s: Seeds, growing damage and half-cost abilities.");
+        BLOOD.free(p->Dome.isRaised(p,SEA));
+        entry(BLOOD,"the_abyss","The Abyss",0,40000,1800,"For 30 s: +50% damage, 40% less taken, lifesteal, Seeds, fear and cheaper abilities.");
+        BLOOD.free(p->Form.isIn(p,ABYSS));
     }
     private FilthyMonarch() {}
     private static AbilityWheel wheel(String id,String title) {
@@ -63,7 +84,16 @@ public final class FilthyMonarch {
     }
     private static void entry(AbilityWheel wheel,String id,String title,int seq,int cost,int cooldown,String description) {
         wheel.entry(id,"ability_menus/filthy_monarch/"+id,title,seq,cost,cooldown,(p,sl)->perform(p,id))
-                .description(description).notCopyable();
+                .description(description).notCopyable().costBy((p,baseCost)->(int)Math.ceil(baseCost*costScale(p)));
+    }
+    static double costScale(ServerPlayer p) {
+        return (Dome.isInside(p,SEA,p)?.5:1)*(Form.isIn(p,ABYSS)?.75:1);
+    }
+    public static final MeleeCombo COMBO=combo();
+    private static MeleeCombo combo() {
+        MeleeCombo combo=MeleeCombo.forPathway(PATHWAY).resetAfter(40);
+        for(int i=0;i<6;i++){final int step=i;combo.step((p,t,sl)->FilthyMonarchFx.melee(sl,p,t.getBoundingBox().getCenter(),step,true));}
+        return combo;
     }
     public static void initialize() {
         if(initialized)return;initialized=true;
@@ -74,6 +104,7 @@ public final class FilthyMonarch {
             }
         });
         Spells.addEvilCheck(e->e instanceof Player p && own(p));
+        FilthyMonarchPassives.initialize();
     }
     static boolean own(Player p) { return PATHWAY.equals(SoulCore.getPathway(p)); }
     static final class State {
@@ -92,6 +123,17 @@ public final class FilthyMonarch {
         final Map<UUID,Long> noSprint=new HashMap<>(), controlUntil=new HashMap<>();
         final Map<UUID,String> taunts=new HashMap<>();
         long spreeUntil,channelUntil,channelNext;
+        Channel channel;
+        final Map<String,Affliction> afflictions=new HashMap<>();
+        final Map<UUID,Long> curses=new HashMap<>();
+        final Set<String> zones=new HashSet<>();
+        final Map<UUID,Mob> phantoms=new HashMap<>();
+        LivingEntity symbiosis,malice,corroder;
+        Object linkToken,wardToken;
+        long symbiosisUntil,maliceUntil;
+        final BarrierErosion erosion=new BarrierErosion();
+        long defenseReady;
+        final Map<UUID,Long> threats=new HashMap<>();
         Vec3 channelDirection;
         UUID meleeTarget;
         int meleeHits,offeringHud=-1;
@@ -100,14 +142,19 @@ public final class FilthyMonarch {
         long now() {return level.getGameTime();}
     }
     record Pending(long at,Runnable action) {}
+    record Affliction(LivingEntity target,long until,long next,float damage,String kind) {}
     record Burn(LivingEntity target,long until,long next,float damage,boolean soul) {}
     static State state(ServerPlayer p) {
         State s=STATES.get(p.getUUID());
         if(s!=null&&!valid(s)){clear(p);s=null;}
-        if(s==null){s=new State(p);STATES.put(p.getUUID(),s);}return s;
+        if(s==null){s=new State(p);STATES.put(p.getUUID(),s);if(FilthyMonarchPassives.dropReady(s))FilthyMonarchDesire.armWard(s);}return s;
     }
     static boolean valid(State s) {
-        return STATES.get(s.player.getUUID())==s && s.player.isAlive() && !s.player.isRemoved()
+        return current(s) && s.player.isAlive();
+    }
+    /** Cast identity remains valid during a cancellable death event, when health is already zero. */
+    static boolean current(State s) {
+        return STATES.get(s.player.getUUID())==s && !s.player.isRemoved()
                 && s.player.level()==s.level && s.pathway.equals(SoulCore.getPathway(s.player))
                 && s.sequence==SoulCore.getSequence(s.player);
     }
@@ -131,25 +178,26 @@ public final class FilthyMonarch {
     public static void key(Player player,Level level,ServerLevel sl,int key,boolean borrowed) {
         if(!(player instanceof ServerPlayer p)||(!own(p)&&!borrowed)||!p.isAlive()||p.isSpectator())return;
         if(key<1||key>7||Silence.isSilenced(p))return;
-        if(key>=6){if(!borrowed)p.sendOverlayMessage(Component.literal("This Filthy Monarch wheel is not implemented yet."));return;}
         if(borrowed&&key>3)return;
         if(key<=3) {
             if(borrowed)BORROWED.add(p.getUUID());
             try {BASIC.cast(p,BASIC.entries().get((key-1)*2+(p.isShiftKeyDown()?1:0)));}
             finally {if(borrowed)BORROWED.remove(p.getUUID());}
         } else {
-            AbilityWheel wheel=key==4?DEVIL_ARTS:DESIRE;
-            if(!Beyonder.hasSequence(p,key==4?6:5))return;
+            AbilityWheel wheel=switch(key){case 4->DEVIL_ARTS;case 5->DESIRE;case 6->TONGUE;default->BLOOD;};
+            if(!Beyonder.hasSequence(p,key==4||key==6?6:key==5?5:4))return;
             if(p.isShiftKeyDown())wheel.open(p);else wheel.quickCast(p);
         }
     }
     static AbilityWheel.Result perform(ServerPlayer p,String id) {
-        if((!own(p)&&!BORROWED.contains(p.getUUID()))||!p.isAlive()||p.isSpectator()||Silence.isSilenced(p))
+        if((!own(p)&&!BORROWED.contains(p.getUUID()))||!p.isAlive()||p.isSpectator()||Silence.isSilenced(p)||Root.has(p,RootRestriction.ABILITIES))
             return AbilityWheel.Result.REFUSED;
         State s=state(p);
-        if(s.channelUntil>s.now())return refuse(p,"Finish or interrupt the Abyss flame channel first.");
+        if(s.channel!=null&&s.channel.active())return refuse(p,"Finish or interrupt the current channel first.");
         if(DEVIL_ARTS.entry(id)!=null)return FilthyMonarchDevil.cast(s,id);
         if(DESIRE.entry(id)!=null)return FilthyMonarchDesire.cast(s,id);
+        if(TONGUE.entry(id)!=null)return FilthyMonarchTongue.cast(s,id);
+        if(BLOOD.entry(id)!=null)return FilthyMonarchBlood.cast(s,id);
         switch(id) {
             case "lawless_lunge" -> {
                 LivingEntity t=aim(s,s.sequence<=6?12:8);
@@ -269,6 +317,10 @@ public final class FilthyMonarch {
         List<Pending> due=s.pending.stream().filter(j->j.at<=now).toList();s.pending.removeAll(due);
         for(Pending j:due){if(!valid(s))return;j.action.run();}
         FilthyMonarchDevil.tick(s);
+        FilthyMonarchDesire.tick(s);
+        if(s.channel!=null)s.channel.tick();
+        FilthyMonarchBlood.tick(s);
+        FilthyMonarchPassives.tick(s);
         for(var entry:List.copyOf(s.burns.entrySet())) {
             Burn b=entry.getValue();
             if(!enemy(s,b.target)||now>b.until){s.burns.remove(entry.getKey());continue;}
@@ -320,7 +372,7 @@ public final class FilthyMonarch {
         if(source!=null) {
             State s=STATES.get(source.getUUID());
             if(s!=null&&valid(s)&&enemy(s,target)) {
-                event.setAmount(event.getAmount()*Depravity.bonus(source,target)*(s.spreeUntil>s.now()?1.25f:1));
+                event.setAmount(event.getAmount()*Depravity.bonus(source,target)*(s.spreeUntil>s.now()?1.25f:1)*(Form.isIn(source,ABYSS)?1.5f:1)*(s.curses.getOrDefault(target.getUUID(),0L)>s.now()?1.2f:1));
                 boolean melee=event.getSource().is(DamageTypes.PLAYER_ATTACK)&&!Spells.isSpellHit(target);
                 if(melee) {
                     if(Form.isIn(source,DEVIL))burn(s,target,60,4,false);
@@ -358,13 +410,15 @@ public final class FilthyMonarch {
     @SubscribeEvent public static void stopped(ServerStoppedEvent event) {STATES.clear();BORROWED.clear();}
     public static void clear(ServerPlayer p) {
         State s=STATES.remove(p.getUUID());if(s==null)return;
-        if(Form.isIn(p,DEVIL)||Form.isIn(p,LIQUID))Form.end(p);
+        if(s.channel!=null)s.channel.close();
+        FilthyMonarchBlood.clear(s);FilthyMonarchDesire.clear(s);FilthyMonarchPassives.clear(s);
+        if(Form.isIn(p,DEVIL)||Form.isIn(p,LIQUID)||Form.isIn(p,ABYSS))Form.end(p);
         FilthyMonarchDevil.clear(s);Construct.endAll(p,SUMMONS);HudCounter.hide(p,OFFERINGS);
         Root.removeOwned(p,s.tag("channel"));
         for(LivingEntity t:s.marked.values()){Depravity.clear(p,t);FilthyMonarchFx.end(s.level,t,t.position(),s.tag("seeds_"+t.getUUID()));}
         for(LivingEntity t:s.controlled.values()) {
-            for(String root:List.of("sink","lunge","cage","shock","desire"))Root.removeOwned(t,s.tag(root));
-            Falter.remove(t,s.tag("trick"));Falter.remove(t,s.tag("desire"));Taunt.removeIf(t,s.taunts.get(t.getUUID()));
+            for(String root:List.of("sink","lunge","cage","shock","desire","filth"))Root.removeOwned(t,s.tag(root));
+            Falter.remove(t,s.tag("trick"));Falter.remove(t,s.tag("desire"));Falter.remove(t,s.tag("confusion"));AttackTempo.remove(t,s.tag("sloth"));Taunt.removeIf(t,s.taunts.get(t.getUUID()));
         }
         FilthyMonarchFx.end(s.level,p,p.position(),s.tag("cast"));
         s.pending.clear();s.burns.clear();s.noSprint.clear();

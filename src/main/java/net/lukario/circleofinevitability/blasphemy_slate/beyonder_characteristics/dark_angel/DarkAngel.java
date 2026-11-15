@@ -370,7 +370,7 @@ public class DarkAngel {
         }
         riseFromShadow(player, sl);
         // the price is paid straight from the body: not a blow, so nothing can block or soften it
-        player.setHealth(player.getHealth() - RITUAL_PRICE);
+        if (!Spells.payBlood(player, RITUAL_PRICE, RITUAL_PRICE + 1f)) return;
         HangedManFx.ritualPrice(sl, player);
 
         Vec3 ground = Spells.groundAt(player, sl, player.position());

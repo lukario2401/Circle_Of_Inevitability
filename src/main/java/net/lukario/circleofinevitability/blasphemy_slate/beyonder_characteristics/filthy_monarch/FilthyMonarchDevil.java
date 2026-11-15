@@ -12,7 +12,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.*;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.*;
 
@@ -128,8 +127,15 @@ final class FilthyMonarchDevil {
                 FilthyMonarchFx.sound(s.level,p.position(),"eruption_warning");
             }
             case "flames_of_the_abyss" -> {
-                s.channelUntil=s.now()+(s.sequence==0?100:60);s.channelNext=s.now();s.channelDirection=p.getLookAngle();
-                Root.applyOwned(p,s.tag("channel"),(int)(s.channelUntil-s.now()),Set.of(RootRestriction.MOVE,RootRestriction.JUMP));
+                s.channelUntil=s.now()+(s.sequence==0?100:60);s.channelDirection=p.getLookAngle();
+                s.channel=new Channel(p,(int)(s.channelUntil-s.now()),20,0,true,()->valid(s),index->{
+                    Vec3 from=p.getEyePosition(),to=from.add(s.channelDirection.scale(s.sequence==0?50:30));
+                    FilthyMonarchFx.beam(s.level,from,to,false,20,s.tag("channel_fx"));
+                    for(LivingEntity t:Spells.enemiesOnLine(p,s.level,from,to,s.sequence==0?5:2.5))if(enemy(s,t)) {
+                        magic(s,t,fireProtected(t)?60:90);burn(s,t,40,4,false);
+                        Spells.keepEffect(t,MobEffects.POISON,1,40);Corrosion.apply(t,p,3,1,60);seed(s,t,1);
+                    }
+                },()->{s.channelUntil=0;FilthyMonarchFx.end(s.level,p,p.position(),s.tag("channel_fx"));});
                 FilthyMonarchFx.sound(s.level,p.position(),id);
             }
             default -> {return AbilityWheel.Result.REFUSED;}
@@ -186,24 +192,8 @@ final class FilthyMonarchDevil {
                     magic(s,t,8);Spells.keepEffect(t,MobEffects.POISON,1,25);
                     if(s.sequence<=4&&f.inside.getOrDefault(t.getUUID(),0)>=60) {
                         Corrosion.apply(t,s.player,2,1,40);
-                        for(EquipmentSlot slot:List.of(EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS,EquipmentSlot.FEET)) {
-                            ItemStack item=t.getItemBySlot(slot);if(!item.isEmpty())item.hurtAndBreak(1,t,slot);
-                        }
+                        Spells.wearArmor(t,1);
                     }
-                }
-            }
-        }
-        if(s.channelUntil>0) {
-            if(now>=s.channelUntil||Silence.isSilenced(s.player)||Root.has(s.player,RootRestriction.ATTACK)) {
-                s.channelUntil=0;Root.removeOwned(s.player,s.tag("channel"));
-                FilthyMonarchFx.end(s.level,s.player,s.player.position(),s.tag("channel_fx"));
-            } else if(now>=s.channelNext) {
-                s.channelNext=now+20;
-                Vec3 from=s.player.getEyePosition(),to=from.add(s.channelDirection.scale(s.sequence==0?50:30));
-                FilthyMonarchFx.beam(s.level,from,to,false,20,s.tag("channel_fx"));
-                for(LivingEntity t:Spells.enemiesOnLine(s.player,s.level,from,to,s.sequence==0?5:2.5))if(enemy(s,t)) {
-                    magic(s,t,fireProtected(t)?60:90);burn(s,t,40,4,false);
-                    Spells.keepEffect(t,MobEffects.POISON,1,40);Corrosion.apply(t,s.player,3,1,60);seed(s,t,1);
                 }
             }
         }

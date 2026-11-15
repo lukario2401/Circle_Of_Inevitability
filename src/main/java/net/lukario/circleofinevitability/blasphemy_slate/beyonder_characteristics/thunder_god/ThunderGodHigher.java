@@ -590,7 +590,7 @@ public final class ThunderGodHigher {
         slow(e,PREFIX+"tyrant_aura",.25f,aura);
     }
     private static void slow(LivingEntity e,String id,float cut,boolean wanted){Physique.keep(e,net.minecraft.world.entity.ai.attributes.Attributes.MOVEMENT_SPEED,Physique.id(id),-cut,net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL,wanted);}
-    private static void wear(LivingEntity e,int amount){for(EquipmentSlot slot:new EquipmentSlot[]{EquipmentSlot.HEAD,EquipmentSlot.CHEST,EquipmentSlot.LEGS,EquipmentSlot.FEET}){var stack=e.getItemBySlot(slot);if(stack.isDamageableItem())stack.hurtAndBreak(amount,e,slot);}}
+    private static void wear(LivingEntity e,int amount){Spells.wearArmor(e,amount); }
     private static List<LivingEntity> rawAround(Player p,ServerLevel sl,Vec3 at,double radius){return sl.getEntitiesOfClass(LivingEntity.class,new AABB(at,at).inflate(radius+2),e->e!=p&&e.isAlive()&&!e.isSpectator()&&!separated(p,e)&&Spells.distanceToBody(e,at)<=radius);}
     private static List<LivingEntity> line(Player p,ServerLevel sl,Vec3 from,Vec3 to,double width){return sl.getEntitiesOfClass(LivingEntity.class,new AABB(from,to).inflate(width+2),e->targets(p,e)&&!separated(p,e)&&e.getBoundingBox().inflate(width).clip(from,to).isPresent());}
     private static double distanceToSegment(Vec3 p,Vec3 a,Vec3 b){Vec3 delta=b.subtract(a);double t=delta.lengthSqr()<.001?0:Math.clamp(p.subtract(a).dot(delta)/delta.lengthSqr(),0,1);return p.distanceTo(a.add(delta.scale(t)));}

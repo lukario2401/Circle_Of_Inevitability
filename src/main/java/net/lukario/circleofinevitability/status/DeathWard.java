@@ -52,7 +52,7 @@ public final class DeathWard {
     /** How long someone who was just saved cannot be hurt (ticks). */
     public static int GRACE_TICKS = 40;
 
-    private record Ward(long expires, float health, Revive onRevive) {}
+    private record Ward(long expires, float health, Revive onRevive, java.util.function.BooleanSupplier condition, int grace) {}
 
     private static final Map<UUID, Ward> WARDS = new HashMap<>();
     private static final String GRACE_TAG = "circle_of_inevitability_death_ward_grace";   // on the saved entity: the game time it ends
@@ -64,11 +64,21 @@ public final class DeathWard {
     // =========================
 
     public static void arm(LivingEntity entity, int ticks, float healthFraction, Revive onRevive) {
-        if (!(entity.level() instanceof ServerLevel sl) || ticks <= 0) return;
-        if (Decree.violate(entity, Decree.Rule.RESURRECTION)) return;    // "Resurrection of the dead is prohibited here!"
+        armWhen(entity, ticks, healthFraction, GRACE_TICKS, () -> true, onRevive);
+    }
+
+    /** Conditional, owned ward. The condition is checked at death, not just on a polling tick.
+     * Returns a token for disarmIf; null means resurrection was forbidden. */
+    public static Object armWhen(LivingEntity entity, int ticks, float healthFraction, int graceTicks,
+                                 java.util.function.BooleanSupplier condition, Revive onRevive) {
+        if (!(entity.level() instanceof ServerLevel sl) || ticks <= 0) return null;
+        if (Decree.violate(entity, Decree.Rule.RESURRECTION)) return null;    // "Resurrection of the dead is prohibited here!"
         long now = sl.getGameTime();
         WARDS.values().removeIf(old -> old.expires() < now);        // the ones that faded unused
-        WARDS.put(entity.getUUID(), new Ward(now + ticks, healthFraction, onRevive));
+        Ward ward = new Ward(now + ticks, Math.clamp(healthFraction, 0, 1), onRevive,
+                java.util.Objects.requireNonNull(condition), Math.max(0, graceTicks));
+        WARDS.put(entity.getUUID(), ward);
+        return ward;
     }
 
     public static boolean isArmed(Entity entity) {
@@ -81,7 +91,7 @@ public final class DeathWard {
         Ward ward = WARDS.get(entity.getUUID());
         if (ward == null) return 0;
         long left = ward.expires() - entity.level().getGameTime();
-        if (left <= 0) {
+        if (left <= 0 || !ward.condition().getAsBoolean()) {
             WARDS.remove(entity.getUUID());
             return 0;
         }
@@ -94,7 +104,8 @@ public final class DeathWard {
 
     /** Remove only the caller's ward, preserving a later replacement from another spell. */
     public static boolean disarmIf(Entity entity,Object token) {
-        return token!=null && WARDS.remove(entity.getUUID(),token);
+        if(token==null || WARDS.get(entity.getUUID())!=token)return false;
+        WARDS.remove(entity.getUUID());return true;
     }
 
     /** Opaque identity for a curse that honors only wards armed before it was pronounced. */
@@ -131,7 +142,7 @@ public final class DeathWard {
         // (returning true below cancels the death)
         entity.setHealth(Math.max(1f, entity.getMaxHealth() * ward.health()));
         entity.clearFire();
-        if (GRACE_TICKS > 0) entity.getPersistentData().putLong(GRACE_TAG, sl.getGameTime() + GRACE_TICKS);   // a moment to get away
+        if (ward.grace() > 0) entity.getPersistentData().putLong(GRACE_TAG, sl.getGameTime() + ward.grace());   // a moment to get away
         if (ward.onRevive() == null) return true;
         try {
             ward.onRevive().run(entity, event.getSource(), sl);

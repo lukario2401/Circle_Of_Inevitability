@@ -18,7 +18,7 @@ def package(output):
  for folder in (Path(__file__).resolve().parent,PREVIEW):
   for p in sorted(folder.iterdir()):
    if p.is_file():entries[p.relative_to(REPO).as_posix()]=p.read_bytes()
- for rel in ('tools/model_gen/modelkit.py','LICENSE.txt','docs/pathways/filthy_monarch/FILTHY_MONARCH.md','docs/pathways/filthy_monarch/FILTHY_MONARCH_ASSETS.md',
+ for rel in ('tools/model_gen/modelkit.py','LICENSE.txt','docs/pathways/filthy_monarch/FILTHY_MONARCH.md','docs/pathways/filthy_monarch/FILTHY_MONARCH_ASSETS.md','docs/pathways/filthy_monarch/FILTHY_MONARCH_GAMEPLAY.md','docs/SPELL_KIT_LIFECYCLES.md',
              'src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/filthy_monarch/FilthyMonarchFx.java'):
   entries[rel]=(REPO/rel).read_bytes()
  java=(REPO/'src/main/java/net/lukario/circleofinevitability/sounds/ModSounds.java').read_text()
