@@ -12,9 +12,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .serverAcceptedVersions((status, version) -> true)
-            .clientAcceptedVersions((status, version) -> true)
-            .networkProtocolVersion(1)
+            .networkProtocolVersion(2)
             .simpleChannel();
 
     public static void register() {
@@ -161,6 +159,11 @@ public class PacketHandler {
         INSTANCE.messageBuilder(SCodexChoicePacket.class, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SCodexChoicePacket::encode).decoder(SCodexChoicePacket::new)
                 .consumerMainThread(SCodexChoicePacket::handle).add();
+        INSTANCE.messageBuilder(CSyncSpiritualityPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CSyncSpiritualityPacket::encode)
+                .decoder(CSyncSpiritualityPacket::new)
+                .consumerMainThread(CSyncSpiritualityPacket::handle)
+                .add();
     }
 
     public static void sendToServer(Object msg) {

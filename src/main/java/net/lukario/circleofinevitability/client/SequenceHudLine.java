@@ -7,12 +7,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameType;
 
 /**
- * One short line under the spirituality text above the hotbar: "Sequence N - Pathway - Digestion P%".
+ * One short line above the hotbar: "Sequence N - Pathway - Digestion P%".
  * Drawn every frame by HudLayerHook from ClientPathwayData (synced by PathwaySync). Hidden while there is no Pathway.
  */
 public class SequenceHudLine {
 
-    /** Vanilla draws the action bar text (the spirituality line) at 68 px above the bottom; this goes right under it. */
+    /** Leaves room above for vanilla action bar messages. */
     private static final int Y_FROM_BOTTOM = 68 - 10;
     private static final int COLOR = 0xFFC8B8FF;
 

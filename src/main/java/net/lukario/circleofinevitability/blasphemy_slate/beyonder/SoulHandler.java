@@ -1,30 +1,46 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
-import net.minecraft.network.chat.Component;
+import net.lukario.circleofinevitability.fate.Fate;
+import net.lukario.circleofinevitability.network.CSyncSpiritualityPacket;
+import net.lukario.circleofinevitability.network.PacketHandler;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
 public class SoulHandler {
 
+    private static final Map<UUID, CSyncSpiritualityPacket> LAST_SENT_SPIRITUALITY = new HashMap<>();
+
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {
-        if (event.player().level().isClientSide()) return;
-        Player player = event.player();
+        if (!(event.player() instanceof ServerPlayer player)) return;
 
-            SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + Beyonder.spiritualityRegenPerTick(player) * net.lukario.circleofinevitability.fate.Fate.tier(player).regen
-                    * (net.lukario.circleofinevitability.fate.Fate.applies(player) ? 1.05f : 1f));
+        SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + Beyonder.spiritualityRegenPerTick(player)
+                * Fate.tier(player).regen * (Fate.applies(player) ? 1.05f : 1f));
 
-            player.sendOverlayMessage(
-                    Component.translatable("hud.circle_of_inevitability.spirituality", String.valueOf(SoulCore.getSpirituality(player)))
-            );
+        CSyncSpiritualityPacket snapshot = new CSyncSpiritualityPacket(
+                SoulCore.getSpirituality(player), Beyonder.maxSpirituality(player));
+        if (!snapshot.equals(LAST_SENT_SPIRITUALITY.get(player.getUUID()))) {
+            PacketHandler.sendToPlayer(snapshot, player);
+            LAST_SENT_SPIRITUALITY.put(player.getUUID(), snapshot);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        LAST_SENT_SPIRITUALITY.remove(event.getEntity().getUUID());
     }
 
     @SubscribeEvent

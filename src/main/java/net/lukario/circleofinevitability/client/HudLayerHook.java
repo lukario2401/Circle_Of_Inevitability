@@ -31,6 +31,7 @@ public class HudLayerHook {
         SequenceHudLine.render(guiGraphics);
         ScreenImageRenderer.render(guiGraphics);
         AbilityHudOverlay.render(guiGraphics);
+        SpiritualityHud.render(guiGraphics);
         HudTimerOverlay.render(guiGraphics);
         HudCounterOverlay.render(guiGraphics);
     }
@@ -42,6 +43,7 @@ public class HudLayerHook {
         if (minecraft.player == null) {
             ClientPathwayData.setPathway("none"); // left the world
             ClientPathwayData.setProgress(9, 0);
+            SpiritualityHud.clear();
         }
     }
 
