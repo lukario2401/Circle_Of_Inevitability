@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
 import net.lukario.circleofinevitability.client.ClientPathwayData;
 import net.lukario.circleofinevitability.client.Keybindings;
+import net.lukario.circleofinevitability.combat.AbilityCombos;
 import net.lukario.circleofinevitability.network.PacketHandler;
 import net.lukario.circleofinevitability.network.SAbilityKeyPacket;
 import net.lukario.circleofinevitability.network.SAbilityKeyPacket.Action;
@@ -32,6 +33,7 @@ public class ClientForgeHandler {
     private static final List<SAbilityKeyPacket> PENDING_INPUT = new ArrayList<>();
     private static LocalPlayer lastPlayer;
     private static ClientLevel lastLevel;
+    private static boolean lastInputActive;
 
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent.Pre event) {
@@ -50,12 +52,16 @@ public class ClientForgeHandler {
     private static void pollAbilityKeys(Minecraft minecraft) {
         if (minecraft.player != lastPlayer || minecraft.level != lastLevel) {
             Arrays.fill(ABILITY_KEYS_DOWN, false);
+            lastInputActive = false;
             lastPlayer = minecraft.player;
             lastLevel = minecraft.level;
         }
 
         boolean active = lastPlayer != null && lastPlayer.isAlive() && minecraft.isWindowActive()
                 && minecraft.gui.screen() == null && minecraft.gui.overlay() == null;
+        if (!active && lastInputActive) PENDING_INPUT.add(new SAbilityKeyPacket(0, Action.CANCEL));
+        lastInputActive = active;
+        int releases = 0;
         for (int index = 0; index < ABILITY_KEYS.size(); index++) {
             KeyMapping mapping = ABILITY_KEYS.get(index);
             boolean clicked = mapping.consumeClick();
@@ -69,8 +75,10 @@ public class ClientForgeHandler {
                     PENDING_INPUT.add(new SAbilityKeyPacket(slot, wasDown ? Action.REPEAT : Action.PRESS));
                 }
             }
-            if (!down && (wasDown || active && clicked)) {
-                PENDING_INPUT.add(new SAbilityKeyPacket(slot, active ? Action.RELEASE : Action.CANCEL));
+            if (active && !down) {
+                // Send releases of previously held keys before new presses observed in the same tick.
+                if (wasDown) PENDING_INPUT.add(releases++, new SAbilityKeyPacket(slot, Action.RELEASE));
+                else if (clicked) PENDING_INPUT.add(new SAbilityKeyPacket(slot, Action.RELEASE));
             }
             if (!down) discardClicks(mapping);
             ABILITY_KEYS_DOWN[index] = down && (wasDown || clicked);
@@ -84,9 +92,12 @@ public class ClientForgeHandler {
         boolean opensQuickActions = mapping.same(quickActions);
         if (!opensAdvancements && !opensQuickActions) return;
 
-        PathwayAbilities.Ability ability = PathwayAbilities.of(ClientPathwayData.getPathway(), slot);
-        if (ability == null || ClientPathwayData.getSequence() > ability.sequence()
-                || ability.normalChargeTicks() <= 0 && ability.sneakChargeTicks() <= 0) return;
+        String pathway = ClientPathwayData.getPathway();
+        int sequence = ClientPathwayData.getSequence();
+        PathwayAbilities.Ability ability = PathwayAbilities.of(pathway, slot);
+        boolean canCharge = ability != null && sequence <= ability.sequence()
+                && (ability.normalChargeTicks() > 0 || ability.sneakChargeTicks() > 0);
+        if (!canCharge && !AbilityCombos.usesSlot(pathway, sequence, slot)) return;
 
         if (opensAdvancements) discardClicks(advancements);
         if (opensQuickActions) discardClicks(quickActions);

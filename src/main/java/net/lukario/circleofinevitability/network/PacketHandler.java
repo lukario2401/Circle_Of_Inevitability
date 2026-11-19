@@ -12,7 +12,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(3)
+            .networkProtocolVersion(4)
             .simpleChannel();
 
     public static void register() {

@@ -79,6 +79,19 @@ Filthy Monarch implements all 35 designed abilities and passive progression. Sne
 
 Conqueror's Cull (default **L**, Sequence 5) casts on release. Hold for up to two seconds to build up to double damage. Sneak + L casts Fireball on press. If Advancements also uses L, open it from the pause menu or rebind it.
 
+### Conqueror ability combos
+
+Use the normal ability keys. For **+**, press both keys together in either order. For **→**, tap and release the first key, then press the second quickly. The input windows are 3 and 8 server ticks respectively. A completed combo uses both inputs and its own spirituality cost and cooldown.
+
+| Keys | Combo | Sequence | Spirituality | Cooldown | Effect |
+| --- | --- | ---: | ---: | ---: | --- |
+| G + J | Raven Trap | 7 | 700 | 4s | Fuses Hunter's Trap and Fire Ravens. The trap holds enemies in place and launches three fire ravens when sprung. |
+| H + K | Ashen Bastion | 6 | 1600 | 10s | Raises a six-second dome that stops hostile projectiles and wards allies against harmful effects. |
+| H → L | Executioner's Challenge | 5 | 2100 | 5s | Fuses Provocation and Cull. Provokes the targeted enemy immediately and reaps it with Cull's scythe. |
+| K → N | Iron Quake | 4 | 3200 | 6s | Sends out a ground shockwave that damages, pushes back, and slows enemies. |
+
+The displayed keys are defaults. Rebinding an ability also rebinds its combo slot. Rebind Quick Actions or Advancements if you want separate shortcuts for those menus.
+
 Thunder God implements Sequences 9–0. Its five wheels use **sneak to open and normal to repeat**, paying the full cost on every cast except the explicit kingdom discounts, with no cooldowns. Source of Wrath temporarily improves casting Sequence. See [THUNDER_GOD_IMPLEMENTATION.md](pathways/thunder_god/THUNDER_GOD_IMPLEMENTATION.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.

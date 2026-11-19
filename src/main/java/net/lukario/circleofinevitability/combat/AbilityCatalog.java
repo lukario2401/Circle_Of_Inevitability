@@ -10,6 +10,7 @@ public final class AbilityCatalog {
     private AbilityCatalog() {}
     public record Power(String id, String name, String icon, int sequence, Casts.Cast cast) {}
     public static String id(Casts.Cast cast) {
+        if (cast.combo() != null) return cast.combo().id();
         return cast.entry()!=null ? "wheel/"+cast.wheel().id()+"/"+cast.entry().key()
                 : "key/"+cast.pathway()+"/"+cast.key()+"/"+cast.sneak();
     }

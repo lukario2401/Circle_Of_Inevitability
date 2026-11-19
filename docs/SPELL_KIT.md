@@ -220,6 +220,19 @@ Spells.strike(player, target, damage);
 
 The server measures the hold and keeps the form selected on press. The ability runs once on release, aims and pays at that point, and can build charge up to its configured duration.
 
+### Ability key combos
+
+Define each combo alongside its pathway's abilities and include it in `AbilityCombos.ALL`. A definition specifies the pathway, stable key, name, required Sequence, input style, two ability slots, spirituality, cooldown in ticks, and a prepare callback. See [ConquerorCombos.java](../src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/conqueror/ConquerorCombos.java) for working examples.
+
+```java
+new Combo(PATHWAY, "my_pathway_frost_trap", "Frost Trap", 7,
+        Input.CHORD, 1, 3, 600, 80, MyPathway::prepareFrostTrap)
+```
+
+Use `Input.CHORD` for two overlapping presses in either order and `Input.SEQUENCE` for a released first tap followed by the second press. Slots follow the player's ability key bindings. Combos use the normal forms and work when the player meets the configured Sequence.
+
+The prepare callback checks the target and returns a `Runnable` that performs the effect, or returns `null` to refuse the cast. It should leave the world untouched until the effect runs. The key handler checks both slots, pays once, and applies the combo cooldown on success. Unmatched inputs fall back to the original ability, including its charge duration.
+
 ---
 
 ## 1. Spells: aiming and enemies

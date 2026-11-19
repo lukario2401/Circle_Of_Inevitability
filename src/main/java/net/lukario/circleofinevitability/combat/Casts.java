@@ -73,10 +73,16 @@ public final class Casts {
      */
     public record Cast(UUID caster, String casterName, String pathway, int key, boolean sneak,
                        AbilityWheel wheel, AbilityWheel.Entry entry, PathwayAbilities.Ability ability,
-                       String dimension, Vec3 at, long time) {
+                       String dimension, Vec3 at, long time, AbilityCombos.Combo combo) {
+        public Cast(UUID caster, String casterName, String pathway, int key, boolean sneak,
+                    AbilityWheel wheel, AbilityWheel.Entry entry, PathwayAbilities.Ability ability,
+                    String dimension, Vec3 at, long time) {
+            this(caster, casterName, pathway, key, sneak, wheel, entry, ability, dimension, at, time, null);
+        }
 
         /** "Blink", "Door Opening (sneak)". */
         public String name() {
+            if (combo != null) return combo.name();
             if (entry != null) return entry.name();
             if (ability == null) return "an unknown power";
             if (pathway.equals("Omniscient Eye")) return switch(key) {
@@ -90,6 +96,7 @@ public final class Casts {
 
         /** The Sequence it needs: the entry's own, else the key's. 9 when unknown. */
         public int sequence() {
+            if (combo != null) return combo.sequence();
             if (entry != null) return entry.sequence();
             return ability == null ? 9 : ability.sequence();
         }
@@ -326,6 +333,13 @@ public final class Casts {
         PathwayAbilities.Ability ability = key > 0 ? PathwayAbilities.of(pathway, key) : null;
         tell(player, sl, new Cast(player.getUUID(), player.getName().getString(), pathway, key, player.isShiftKeyDown(),
                 wheel, entry, ability, sl.dimension().toString(), player.position(), sl.getGameTime()));
+    }
+
+    public static void comboCast(ServerPlayer player, AbilityCombos.Combo combo) {
+        if (isCopying(player)) return;
+        ServerLevel level = player.level();
+        tell(player, level, new Cast(player.getUUID(), player.getName().getString(), combo.pathway(), 0, false,
+                null, null, null, level.dimension().toString(), player.position(), level.getGameTime(), combo));
     }
 
     private static void tell(ServerPlayer caster, ServerLevel sl, Cast cast) {

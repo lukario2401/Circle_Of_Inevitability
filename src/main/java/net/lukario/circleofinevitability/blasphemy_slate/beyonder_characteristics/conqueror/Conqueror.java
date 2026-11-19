@@ -37,6 +37,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 /**
  * Conqueror: the Hunter pathway (Red Priest) of Lord of the Mysteries. Each key is one step up the pathway,
@@ -396,13 +397,20 @@ public class Conqueror {
 
     /** A circle shows where it is being set, then it lies hidden: only a glint now and then gives it away. */
     static void setTrap(LivingEntity player, ServerLevel sl, Vec3 ground) {
+        setTrap(player, sl, ground, TRAP_NAME, victim -> {});
+    }
+
+    static void setTrap(LivingEntity player, ServerLevel sl, Vec3 ground, String name, Consumer<LivingEntity> afterSpring) {
         Trap.at(ground, TRAP_RADIUS)
                 .armsAfter(TRAP_ARM_TICKS)
                 .lasts(TRAP_TICKS)
                 .showEvery(TRAP_GLINT_EVERY)
                 .onWait(ticksLeft -> ParticleShapes.ring(sl, TRAP_GLINT, ground.add(0, 0.1, 0), TRAP_RADIUS * 0.6, 6, 0))
-                .onSpring(victim -> springTrap(player, sl, ground, victim))
-                .set(player, sl, TRAP_NAME, TRAP_MAX);
+                .onSpring(victim -> {
+                    springTrap(player, sl, ground, victim);
+                    afterSpring.accept(victim);
+                })
+                .set(player, sl, name, TRAP_MAX);
 
         SpellFx.warningCircle(sl, ground, TRAP_RADIUS, TRAP_COLOR, TRAP_ARM_TICKS);
         ConquerorFx.trapSet(sl, ground, player.getYRot());           // the bear trap opens, then fades into hiding
@@ -453,6 +461,10 @@ public class Conqueror {
         }
         if (!Spells.paySpirituality(player, PROVOKE_COST)) return;
 
+        provokeTarget(player, sl, target);
+    }
+
+    static void provokeTarget(LivingEntity player, ServerLevel sl, LivingEntity target) {
         Vulnerable.add(target, PROVOKE_EXTRA, PROVOKE_EXTRA, PROVOKE_TICKS);    // a fixed share: casting again does not stack it
         Taunt.apply(target, player, PROVOKE_TICKS);                             // (does nothing to a player: they have no AI)
         if (target instanceof Player other) {
@@ -530,12 +542,15 @@ public class Conqueror {
 
         prey.sort(Comparator.comparingDouble(enemy -> enemy.distanceToSqr(player)));   // the nearest get theirs first
         Vec3 from = Spells.clearStart(player, sl, eye.add(0, 0.2, 0));
-        FIRE_RAVEN.onHit((target, at) -> ravenStrikes(player, sl, target, at))
-                .launchAt(player, sl, from, prey, RAVENS_COUNT, RAVENS_EVERY);
+        ravenSeeker(player, sl).launchAt(player, sl, from, prey, RAVENS_COUNT, RAVENS_EVERY);
 
         ConquerorFx.ravensErupt(sl, player, from);                   // rings of fire round you, embers where they leave
         Spells.sound(sl, from, SoundEvents.BLAZE_SHOOT, 1f, 1.2f);
         Spells.sound(sl, from, SoundEvents.ENDER_DRAGON_FLAP, 0.8f, 1.8f);
+    }
+
+    static Seeker ravenSeeker(LivingEntity player, ServerLevel level) {
+        return FIRE_RAVEN.onHit((target, at) -> ravenStrikes(player, level, target, at));
     }
 
     /** A raven reaches its prey: it hits, sets it alight and bursts. */
@@ -665,18 +680,24 @@ public class Conqueror {
     }
 
     private static void cull(LivingEntity player, ServerLevel sl, float damageMultiplier) {
+        LivingEntity target = cullTarget(player, sl);
+        if (target == null) {
+            Spells.tell(player, Component.literal("There is nothing in sight to reap."));
+            return;
+        }
+        if (Spells.paySpirituality(player, CULL_COST)) cullTarget(player, sl, target, damageMultiplier);
+    }
+
+    static LivingEntity cullTarget(LivingEntity player, ServerLevel sl) {
         LivingEntity prey = Spells.aimEnemy(player, sl, CULL_RANGE);
         if (prey == null) {
             List<LivingEntity> inSight = Spells.enemiesInSight(player, sl, CULL_RANGE, 30.0);
             if (!inSight.isEmpty()) prey = inSight.get(0);
         }
-        if (prey == null) {
-            Spells.tell(player, Component.literal("There is nothing in sight to reap."));
-            return;                                                  // nothing spent
-        }
-        if (!Spells.paySpirituality(player, CULL_COST)) return;
+        return prey;
+    }
 
-        LivingEntity target = prey;
+    static void cullTarget(LivingEntity player, ServerLevel sl, LivingEntity target, float damageMultiplier) {
         float yaw = Spells.yawOf(target.position().subtract(player.position()));   // the cut faces away from you
         Root.apply(target, ConquerorFx.CULL_HITS, RootRestriction.MOVEMENT);       // it cannot walk out of the swing
         ConquerorFx.cull(sl, target, yaw);

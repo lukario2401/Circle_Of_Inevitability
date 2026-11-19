@@ -5,6 +5,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.network.CustomPayloadEvent;
 
 public record SAbilityKeyPacket(int key, Action action) {
+    /** CANCEL with key 0 clears every pending ability input when leaving gameplay. */
     public enum Action { PRESS, REPEAT, RELEASE, CANCEL }
 
     public SAbilityKeyPacket(FriendlyByteBuf buffer) {
