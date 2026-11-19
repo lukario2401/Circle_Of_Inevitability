@@ -81,7 +81,17 @@ public final class PathwayAbilities {
      * sneakForm: true if it does something else when cast while sneaking.
      * stealable: false if it only works for its own Pathway (it needs that Pathway's stars, opens its menu, needs its key to end) or does nothing yet.
      */
-    public record Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable, Cast cast) {}
+    public record Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable,
+                          Cast cast, int normalChargeTicks, int sneakChargeTicks) {
+        public Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable, Cast cast) {
+            this(pathway, key, name, sequence, sneakForm, stealable, cast, 0, 0);
+        }
+
+        /** A positive duration opts the corresponding key form into casting on release. */
+        public int chargeTicks(boolean sneaking) {
+            return sneaking && sneakForm ? sneakChargeTicks : normalChargeTicks;
+        }
+    }
 
     private static final boolean SNEAK = true, NO_SNEAK = false;
     private static final boolean STEALABLE = true, OWN_PATHWAY_ONLY = false;
@@ -280,7 +290,7 @@ public final class PathwayAbilities {
             new Ability("Conqueror", 4, "Flame Transformation", 6, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorFlameTransformation(player, level, sl, true)),
             new Ability("Conqueror", 5, "Cull", 5, SNEAK, STEALABLE,
-                    (player, level, sl) -> Conqueror.conquerorCull(player, level, sl, true)),
+                    (player, level, sl) -> Conqueror.conquerorCull(player, level, sl, true), Conqueror.CULL_CHARGE_TICKS, 0),
             new Ability("Conqueror", 6, "Galvanization", 4, SNEAK, STEALABLE,
                     (player, level, sl) -> Conqueror.conquerorGalvanization(player, level, sl, true)),
             new Ability("Conqueror", 7, "Fog of War", 3, SNEAK, STEALABLE,

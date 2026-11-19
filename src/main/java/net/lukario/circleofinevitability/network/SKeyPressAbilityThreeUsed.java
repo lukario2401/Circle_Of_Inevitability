@@ -1,19 +1,11 @@
 package net.lukario.circleofinevitability.network;
 
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.StolenAbilities;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryPowers;
-import net.lukario.circleofinevitability.combat.Casts;
-import net.lukario.circleofinevitability.status.Decree;
-import net.lukario.circleofinevitability.status.KeySeal;
-import net.lukario.circleofinevitability.status.Parasite;
-import net.lukario.circleofinevitability.status.Silence;
-import net.minecraft.network.chat.Component;
 
-import net.minecraft.network.FriendlyByteBuf;
+import net.lukario.circleofinevitability.combat.AbilityCharge;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
-import net.minecraftforge.event.network.CustomPayloadEvent;
 
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination.abominationRendingPounce;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.apocalypse.Apocalypse.apocalypseMirrorWorld;
@@ -34,75 +26,37 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator.illuminatorAppraise;
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon.starDragonNavigator;
 
-public class SKeyPressAbilityThreeUsed {
+final class SKeyPressAbilityThreeUsed {
+    private SKeyPressAbilityThreeUsed() {}
 
-    public SKeyPressAbilityThreeUsed() {}
-    public SKeyPressAbilityThreeUsed(FriendlyByteBuf buffer) {}
-    public void encode(FriendlyByteBuf buffer) {}
+    static void cast(ServerPlayer player, Level level, ServerLevel serverLevel, AbilityCharge charge) {
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(player, level, serverLevel, 3, false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(player, level, serverLevel, 3, false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(player, level, serverLevel, 3, false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(player, level, serverLevel, 3, false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.filthy_monarch.FilthyMonarch.key(player, level, serverLevel, 3, false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(player, level, serverLevel, 3, false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, serverLevel, 3, false);
+        SnakeOfMercuryPowers.luck(player, level, serverLevel, false);
 
-    public void handle(CustomPayloadEvent.Context context) {
-        ServerPlayer player = context.getSender();
-        if(player == null)
-            return;
+        wandererBuff(player,level,serverLevel,false);
 
-        cast(player);
-    }
-
-    public static void cast(ServerPlayer player) {
-        Level level = player.level();
-
-        if (!(level instanceof ServerLevel serverLevel)) return;
-
-        // a Decree that prohibits abilities here (status/Decree, ABILITIES): refused, and a Violation
-        if (Decree.blocksKey(player, 3)) return;
-        // rooted with ABILITIES = can't use any ability (status/Silence lets a power that needs no voice through)
-        if (Silence.blocksKey(player, 3)) {
-            player.sendOverlayMessage(Component.literal("You are bound by Order."));
-            return;
-        }
-        // an ability that was stolen from this player (Worm Of Time) is not theirs to use meanwhile
-        if (StolenAbilities.blocksKey(player, 3)) return;
-        // a player who lives inside a host (status/Parasite) has no body to use most abilities with
-        if (Parasite.blocksKey(player, 3)) return;
-        // one power taken away for a while (status/KeySeal, the Hand Of Order's Deprivation)
-        if (KeySeal.blocksKey(player, 3)) return;
-        if (net.lukario.circleofinevitability.combat.HeldActions.defer(player, () -> cast(player))) return;
-        KeySeal.pressed(player, 3);
-        Casts.keyPressed(player, 3);                 // combat/Casts: told if the press goes off
-        try {
-            net.lukario.circleofinevitability.combat.NextCast.run(player, () -> {
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGod.key(player, level, serverLevel, 3, false);
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEye.key(player, level, serverLevel, 3, false);
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngel.key(player, level, serverLevel, 3, false);
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.author.Author.key(player, level, serverLevel, 3, false);
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.filthy_monarch.FilthyMonarch.key(player, level, serverLevel, 3, false);
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.nature_walker.NatureWalker.key(player, level, serverLevel, 3, false);
-            net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.god_of_decay.GodOfDecay.key(player, level, serverLevel, 3, false);
-            SnakeOfMercuryPowers.luck(player, level, serverLevel, false);
-
-            wandererBuff(player,level,serverLevel,false);
-
-            keyOfStarsAstrology(player, level, serverLevel, false);
-            attendantOfMysteriesDamageTransfer(player,level,serverLevel,false);
-            handOfOrderInterrogation(player,level,serverLevel,false);
-            frenziedMageFrost(player,level,serverLevel,false);
-            paleEmperorSerpent(player,level,serverLevel,false);
-            wormOfTimeAbility3(player,level,serverLevel,false);
-            conquerorFireRavens(player,level,serverLevel,false);
-            apocalypseMirrorWorld(player,level,serverLevel,false);
-            hangedManShadowBinding(player,level,serverLevel,false);
-            beautyGoddessWings(player,level,serverLevel,false);
-            handOfGodGrandmastersEdge(player,level,serverLevel,false);
-            knightOfMisfortuneNightmare(player,level,serverLevel,false);
-            abominationRendingPounce(player,level,serverLevel,false);
-            princeOfAbolitionBribe(player,level,serverLevel,false);
-            knowledgeEmperorSpells(player,level,serverLevel,false);
-            illuminatorAppraise(player,level,serverLevel,false);
-            starDragonNavigator(player,level,serverLevel,false);
-            return null;
-            });
-        } finally {
-            Casts.keyDone(player);
-        }
+        keyOfStarsAstrology(player, level, serverLevel, false);
+        attendantOfMysteriesDamageTransfer(player,level,serverLevel,false);
+        handOfOrderInterrogation(player,level,serverLevel,false);
+        frenziedMageFrost(player,level,serverLevel,false);
+        paleEmperorSerpent(player,level,serverLevel,false);
+        wormOfTimeAbility3(player,level,serverLevel,false);
+        conquerorFireRavens(player,level,serverLevel,false);
+        apocalypseMirrorWorld(player,level,serverLevel,false);
+        hangedManShadowBinding(player,level,serverLevel,false);
+        beautyGoddessWings(player,level,serverLevel,false);
+        handOfGodGrandmastersEdge(player,level,serverLevel,false);
+        knightOfMisfortuneNightmare(player,level,serverLevel,false);
+        abominationRendingPounce(player,level,serverLevel,false);
+        princeOfAbolitionBribe(player,level,serverLevel,false);
+        knowledgeEmperorSpells(player,level,serverLevel,false);
+        illuminatorAppraise(player,level,serverLevel,false);
+        starDragonNavigator(player,level,serverLevel,false);
     }
 }

@@ -77,6 +77,8 @@ The number is the weakest Sequence that can use it (that Sequence and every stro
 
 Filthy Monarch implements all 35 designed abilities and passive progression. Sneak + K/L/N/M opens a wheel; a normal press repeats the last choice at full cost with no cooldown. Wheel selections retain their listed cooldowns. See [FILTHY_MONARCH_GAMEPLAY.md](pathways/filthy_monarch/FILTHY_MONARCH_GAMEPLAY.md) for controls, costs and gameplay adaptations.
 
+Conqueror's Cull (default **L**, Sequence 5) casts on release. Hold for up to two seconds to build up to double damage. Sneak + L casts Fireball on press. If Advancements also uses L, open it from the pause menu or rebind it.
+
 Thunder God implements Sequences 9–0. Its five wheels use **sneak to open and normal to repeat**, paying the full cost on every cast except the explicit kingdom discounts, with no cooldowns. Source of Wrath temporarily improves casting Sequence. See [THUNDER_GOD_IMPLEMENTATION.md](pathways/thunder_god/THUNDER_GOD_IMPLEMENTATION.md).
 
 A stolen ability is the exception: Worm Of Time's Theft (H) casts what it stole whatever its Sequence, at no cost (`Beyonder.castUnbound`; see "Another Pathway's abilities" in [SPELL_KIT.md](SPELL_KIT.md)). The same table is in code as `PathwayAbilities.ALL`; a new ability gets a line in both.

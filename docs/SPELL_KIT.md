@@ -186,7 +186,7 @@ public static void myPathwayIceLance(Player player, Level level, ServerLevel sl,
 
 `SoulCore` and `Beyonder` are in `blasphemy_slate/beyonder/`. Sequences, what each one can pay for and the Sequence every existing ability needs are in [SEQUENCES.md](SEQUENCES.md); add a new ability to its table.
 
-Then add it to the packet of the key it belongs to (`network/SKeyPressAbilityOneUsed` ... `SevenUsed`): one `import static` at the top and one line next to the others.
+Then add it to the handler for its key (`network/SKeyPressAbilityOneUsed` through `SevenUsed`) with a static import and one call next to the other Pathways.
 
 ```java
 import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.MyPathway.myPathwayIceLance;
@@ -201,7 +201,24 @@ A new Pathway also goes into `SequenceCommands.PATHWAYS`, so that `/sequence pat
 Two habits worth keeping:
 
 - **Check first, pay after.** A cast that cannot work (no target, no room) should cost nothing.
-- **Messages go to chat** (`player.sendSystemMessage`). The line above the hotbar is rewritten every tick by the spirituality display, so a message there is gone at once.
+- **Use chat for feedback the player may need to read later** (`player.sendSystemMessage`).
+
+### Hold-to-charge abilities
+
+To charge an existing or new key ability, add two durations in ticks after its cast callback in `PathwayAbilities.ALL`. The first duration is for the normal form and the second is for the sneak form. A duration of zero casts on press. For example, Cull uses `40, 0` so Cull builds charge for two seconds and Fireball casts on press.
+
+Pass the key handler's `AbilityCharge charge` parameter to your ability method. Use `charge.ticks()` for effects at specific hold durations or `charge.progress()` for scaling from zero to one. Keep direct casts such as borrowed powers callable with `AbilityCharge.NONE`.
+
+```java
+// In the key handler
+myPathwayIceLance(player, level, serverLevel, false, charge);
+
+// In the ability, after the usual target and cost checks
+float damage = 20f + 20f * charge.progress();
+Spells.strike(player, target, damage);
+```
+
+The server measures the hold and keeps the form selected on press. The ability runs once on release, aims and pays at that point, and can build charge up to its configured duration.
 
 ---
 

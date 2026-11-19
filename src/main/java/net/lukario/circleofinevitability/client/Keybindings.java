@@ -7,6 +7,8 @@ import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.client.settings.KeyConflictContext;
 
+import java.util.List;
+
 public final class Keybindings {
     // 26.2: categories are KeyMapping.Category records, and registering the same id twice throws, so this one
     // is shared with DashKeybindClient and StarBurstKeybindClient (all three used "key.categories.<modid>").
@@ -75,4 +77,7 @@ public final class Keybindings {
             InputConstants.Type.KEYSYM, InputConstants.KEY_M,
             CATEGORY, 0
     );
+
+    public final List<KeyMapping> abilityKeys = List.of(abilityOnePacketKey, abilityTwoPacketKey,
+            abilityThreePacketKey, abilityFourPacketKey, abilityFivePacketKey, abilitySixPacketKey, abilitySevenPacketKey);
 }

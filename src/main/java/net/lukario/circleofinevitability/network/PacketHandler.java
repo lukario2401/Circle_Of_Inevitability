@@ -12,7 +12,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(2)
+            .networkProtocolVersion(3)
             .simpleChannel();
 
     public static void register() {
@@ -22,47 +22,10 @@ public class PacketHandler {
                 .consumerMainThread(SKeyPressSpawnEntityPacket::handle)
                 .add();
 
-        INSTANCE.messageBuilder(SKeyPressAbilityOneUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SKeyPressAbilityOneUsed::encode)
-                .decoder(SKeyPressAbilityOneUsed::new)
-                .consumerMainThread(SKeyPressAbilityOneUsed::handle)
-                .add();
-
-        INSTANCE.messageBuilder(SKeyPressAbilityTwoUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SKeyPressAbilityTwoUsed::encode)
-                .decoder(SKeyPressAbilityTwoUsed::new)
-                .consumerMainThread(SKeyPressAbilityTwoUsed::handle)
-                .add();
-
-        INSTANCE.messageBuilder(SKeyPressAbilityThreeUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SKeyPressAbilityThreeUsed::encode)
-                .decoder(SKeyPressAbilityThreeUsed::new)
-                .consumerMainThread(SKeyPressAbilityThreeUsed::handle)
-                .add();
-
-        INSTANCE.messageBuilder(SKeyPressAbilityFourUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SKeyPressAbilityFourUsed::encode)
-                .decoder(SKeyPressAbilityFourUsed::new)
-                .consumerMainThread(SKeyPressAbilityFourUsed::handle)
-                .add();
-
-        INSTANCE.messageBuilder(SKeyPressAbilityFiveUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SKeyPressAbilityFiveUsed::encode)
-                .decoder(SKeyPressAbilityFiveUsed::new)
-                .consumerMainThread(SKeyPressAbilityFiveUsed::handle)
-                .add();
-
-
-        INSTANCE.messageBuilder(SKeyPressAbilitySixUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SKeyPressAbilitySixUsed::encode)
-                .decoder(SKeyPressAbilitySixUsed::new)
-                .consumerMainThread(SKeyPressAbilitySixUsed::handle)
-                .add();
-
-        INSTANCE.messageBuilder(SKeyPressAbilitySevenUsed.class, NetworkDirection.PLAY_TO_SERVER)
-                .encoder(SKeyPressAbilitySevenUsed::encode)
-                .decoder(SKeyPressAbilitySevenUsed::new)
-                .consumerMainThread(SKeyPressAbilitySevenUsed::handle)
+        INSTANCE.messageBuilder(SAbilityKeyPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SAbilityKeyPacket::encode)
+                .decoder(SAbilityKeyPacket::new)
+                .consumerMainThread(SAbilityKeyPacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(CWhiteAngelLabelPacket.class, NetworkDirection.PLAY_TO_CLIENT)

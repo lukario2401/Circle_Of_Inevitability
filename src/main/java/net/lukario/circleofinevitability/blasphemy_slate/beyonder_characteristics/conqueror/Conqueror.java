@@ -46,7 +46,7 @@ import java.util.UUID;
  *   2 Provocation          (Provoker)             a mob drops everything to come for you, and takes more damage | sneak: Repugnant Aura, the mobs around you fight each other
  *   3 Fire Ravens          (Pyromaniac)           a flock of fire ravens hunts the enemies around you            | sneak: Dash, flung the way you look in a streak of fire
  *   4 Flame Transformation (Conspirer)            ride a flame lance, steer it with your look, step out at the end | sneak: Misdirection, vanish and leave a flame figure that blows up
- *   5 Cull                 (Reaper)               a fireball that bursts on what it hits                        | sneak: Cull, a giant scythe reaps the enemy you aim at
+ *   5 Cull                 (Reaper)               charge a giant scythe that reaps the enemy you aim at         | sneak: Fireball
  *   6 Galvanization        (Iron-blooded Knight)  a mantle of iron: half damage, blows rebound, strength       | sneak: Iron Charge, a charge that runs through enemies
  *   7 Fog of War           (War Bishop)           a dome of fog: enemies in it are blinded, slowed, weakened    | sneak: War Banner, a banner that blesses allies near it
  *
@@ -160,9 +160,11 @@ public class Conqueror {
     static final double FIREBALL_SPEED = 1.4;            // blocks per tick
     static final double FIREBALL_RADIUS = 3.5;           // the burst where it lands
     static final float FIREBALL_DAMAGE = 40f;            // in the middle of the burst (BLAST_EDGE of it at the rim)
-    static final int CULL_COST = 1800;                   // sneak: Cull
+    static final int CULL_COST = 1800;
     static final double CULL_RANGE = 20.0;               // how far away the prey can be
     static final float CULL_DAMAGE = 45f;
+    public static final int CULL_CHARGE_TICKS = 40;
+    static final float CULL_FULL_CHARGE_MULTIPLIER = 2f;
     static final float CULL_EXECUTE_SHARE = 0.3f;        // prey at or under this share of its health is killed outright
     static final int CULL_BLEED_TICKS = 100;             // Wither afterwards: it bleeds
 
@@ -631,17 +633,21 @@ public class Conqueror {
 
     // =========================
     // Ability 5 - Cull
-    // Normal: a fireball flies where you look and bursts on the first enemy or block (fireBlast: FIREBALL_DAMAGE,
+    // Sneak:  a fireball flies where you look and bursts on the first enemy or block (fireBlast: FIREBALL_DAMAGE,
     //         thrown back, set on fire).
-    // Sneak:  Cull: a giant scythe rises behind the enemy you aim at (or the nearest one in sight) and reaps it
-    //         at ConquerorFx.CULL_HITS. It is held in place until then. CULL_DAMAGE, or death outright if it is down
+    // Normal: release the key to reap the enemy you aim at (or the nearest one in sight). The enemy is held
+    //         through the swing. Damage increases with charge, or it dies outright if it is down
     //         to CULL_EXECUTE_SHARE of its health; then it bleeds (Wither).
     // =========================
     public static void conquerorCull(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        conquerorCull(player, level, sl, bypassClassCheck, AbilityCharge.NONE);
+    }
+
+    public static void conquerorCull(Player player, Level level, ServerLevel sl, boolean bypassClassCheck, AbilityCharge charge) {
         if (!ready(player, bypassClassCheck, CULL_SEQUENCE)) return;
 
         if (player.isShiftKeyDown()) fireball(player, sl);
-        else cull(player, sl);
+        else cull(player, sl, 1f + (CULL_FULL_CHARGE_MULTIPLIER - 1f) * charge.progress());
     }
 
     static void fireball(LivingEntity player, ServerLevel sl) {
@@ -655,6 +661,10 @@ public class Conqueror {
     }
 
     static void cull(LivingEntity player, ServerLevel sl) {
+        cull(player, sl, 1f);
+    }
+
+    private static void cull(LivingEntity player, ServerLevel sl, float damageMultiplier) {
         LivingEntity prey = Spells.aimEnemy(player, sl, CULL_RANGE);
         if (prey == null) {
             List<LivingEntity> inSight = Spells.enemiesInSight(player, sl, CULL_RANGE, 30.0);
@@ -678,7 +688,7 @@ public class Conqueror {
 
             Marks.add(target,player, "conqueror_cull",5*Beyonder.powerLevel(player),20*20);
             int marks = Marks.count(target, player, "conqueror_cull");
-            Spells.strike(player, target, weak ? target.getMaxHealth() * 10f + 1000f : CULL_DAMAGE*marks);   // through any armour
+            Spells.strike(player, target, weak ? target.getMaxHealth() * 10f + 1000f : CULL_DAMAGE * marks * damageMultiplier);
 
 
             if (target.isAlive()) target.addEffect(new MobEffectInstance(MobEffects.WITHER, CULL_BLEED_TICKS, 1));
