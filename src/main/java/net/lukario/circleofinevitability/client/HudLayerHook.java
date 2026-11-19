@@ -6,6 +6,8 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.AddGuiOverlayLayersEvent;
+import net.minecraftforge.client.gui.overlay.ForgeLayer;
+import net.minecraftforge.client.gui.overlay.ForgeLayeredDraw;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -50,8 +52,33 @@ public class HudLayerHook {
     @SubscribeEvent
     public static void onHudLayerHookAddLayers(AddGuiOverlayLayersEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
-        event.getLayeredDraw().addWithCondition(LAYER,
+        ForgeLayeredDraw layers = event.getLayeredDraw();
+        liftLayers(layers, ForgeLayeredDraw.HOTBAR_AND_DECOS,
+                ForgeLayeredDraw.BACKGROUND, ForgeLayeredDraw.CONTEXTUAL_INFO, ForgeLayeredDraw.EXPERIENCE_LEVEL,
+                ForgeLayeredDraw.HEALTH_BAR, ForgeLayeredDraw.VEHICLE_HEALTH, ForgeLayeredDraw.SELECTED_ITEM_NAME);
+        liftLayers(layers, ForgeLayeredDraw.POST_SLEEP_STACK, ForgeLayeredDraw.HOTBAR_MESSAGE);
+        layers.addWithCondition(LAYER,
                 (guiGraphics, deltaTracker) -> renderAll(guiGraphics),
                 () -> !minecraft.gui.hud.isHidden());
+    }
+
+    private static void liftLayers(ForgeLayeredDraw layers, Identifier stackId, Identifier... layerIds) {
+        ForgeLayeredDraw stack = layers.getChild(stackId);
+        if (stack == null) return;
+
+        for (Identifier layerId : layerIds) {
+            ForgeLayer layer = stack.getLayer(layerId);
+            if (layer == null) continue;
+
+            layers.replace(stackId, layerId, (graphics, deltaTracker) -> {
+                graphics.pose().pushMatrix();
+                try {
+                    graphics.pose().translate(0, -SpiritualityHud.hotbarHudOffset());
+                    layer.extract(graphics, deltaTracker);
+                } finally {
+                    graphics.pose().popMatrix();
+                }
+            });
+        }
     }
 }

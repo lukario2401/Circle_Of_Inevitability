@@ -60,7 +60,7 @@ public class PathwayHudIcon {
 
         // Vanilla hunger bar: right edge at screen center + 91, top at 39 px above the bottom
         int x = guiGraphics.guiWidth() / 2 + 91 - ICON_SIZE;
-        int y = guiGraphics.guiHeight() - 39 - ICON_SIZE - 1;
+        int y = guiGraphics.guiHeight() - 39 - ICON_SIZE - 1 - SpiritualityHud.hotbarHudOffset();
 
         // move up when the air bubbles row is showing (it sits right above the hunger bar)
         if (player.isEyeInFluid(FluidTags.WATER) || player.getAirSupply() < player.getMaxAirSupply()) {
