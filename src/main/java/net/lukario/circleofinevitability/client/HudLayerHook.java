@@ -28,7 +28,6 @@ public class HudLayerHook {
 
     private static void renderAll(GuiGraphicsExtractor guiGraphics) {
         PathwayHudIcon.render(guiGraphics);
-        SequenceHudLine.render(guiGraphics);
         ScreenImageRenderer.render(guiGraphics);
         AbilityHudOverlay.render(guiGraphics);
         SpiritualityHud.render(guiGraphics);

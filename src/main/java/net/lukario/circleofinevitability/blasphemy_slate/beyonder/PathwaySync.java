@@ -31,7 +31,7 @@ public class PathwaySync {
         String pathway = SoulCore.getPathway(player);
         int sequence = SoulCore.getSequence(player);
         int digestion = Digestion.percent(player);
-        // the pathway alone decides what other players are told; the HUD line also needs Sequence and digestion
+        // Other clients receive only the pathway for swing animations.
         String sent = LAST_SENT_PATHWAY.get(player.getUUID());
         String now = pathway + "|" + sequence + "|" + digestion;
         if (!now.equals(sent)) {
