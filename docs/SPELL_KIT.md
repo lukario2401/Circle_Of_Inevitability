@@ -237,6 +237,8 @@ Use `Input.CHORD` for two overlapping presses in either order and `Input.SEQUENC
 
 The prepare callback checks the target and returns a `Runnable` that performs the effect, or returns `null` to refuse the cast. It should leave the world untouched until the effect runs. The key handler checks both slots, pays once, and applies the combo cooldown on success. Unmatched inputs fall back to the original ability, including its charge duration.
 
+For a charged chord, use the `Combo` constructor that takes a metered `AbilityCharge.Rule`, a charge-feedback callback, and a three-argument prepare callback. The combo cost is the initial payment. The rule sets the cap, interval and subsequent installment cost. The server starts timing when the second key completes the chord. It pays once per interval, shows feedback on each payment, and fires once when either key is released, the cap is reached, or another installment is unaffordable. The prepare callback receives the paid charge and the caster’s aim at release. The shared handler records the cast and starts its cooldown on success. See `ApocalypseCombos` for Obsidian Lance.
+
 Dark Angel uses both input styles. At Sequence 7, press slots 1 and 3 together for Hangman's Snare. It reveals and roots the strongest enemy within 24 blocks for 3 seconds, costs 900 Spirituality, and has a 6-second cooldown. At Sequence 6, tap and release slot 2, then press slot 4 within the 8-tick combo window for Choir of Flesh. After a 1-second warning, the target and enemies within 6 blocks receive Weakness II for 5 seconds. It costs 1,500 Spirituality and has an 8-second cooldown.
 
 Five more Dark Angel combos use the same slot bindings. All times below assume 20 server ticks per second.

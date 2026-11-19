@@ -358,9 +358,11 @@ public class Apocalypse {
         final Vec3 b;
         final long expires;
         final String tag;
+        final Shard anchor;
         boolean snapped;
 
-        TripLine(LivingEntity owner, ServerLevel level, Vec3 a, Vec3 b, long expires, String tag) {
+        TripLine(LivingEntity owner, ServerLevel level, Vec3 a, Vec3 b, long expires, String tag, Shard anchor) {
+            this.anchor = anchor;
             this.owner = owner;
             this.level = level;
             this.a = a;
@@ -1017,7 +1019,7 @@ public class Apocalypse {
         TRIP_KNOTS.remove(player.getUUID());
         if (player instanceof Player viewerOfHud) HudTimer.hide(viewerOfHud, TRIP_TIMER);
         ParticleShapes.clearModels(sl, knot.at(), knot.tag());
-        stretchTripLine(player, sl, knot.at(), at, knot.tag());
+        stretchTripLine(player, sl, knot.at(), at, knot.tag(), null);
         return AbilityWheel.Result.FREE;
     }
 
@@ -1042,7 +1044,11 @@ public class Apocalypse {
         return point.subtract(player.getLookAngle().scale(0.15)).add(0, 0.35, 0);
     }
 
-    private static void stretchTripLine(LivingEntity player, ServerLevel sl, Vec3 a, Vec3 b, String tag) {
+    static void widowLine(LivingEntity player, ServerLevel sl, Shard anchor, Vec3 end) {
+        stretchTripLine(player, sl, anchor.ground.add(0, 0.6, 0), end, TRIP_TAG + silkNumber++, anchor);
+    }
+
+    private static void stretchTripLine(LivingEntity player, ServerLevel sl, Vec3 a, Vec3 b, String tag, Shard anchor) {
         long now = sl.getGameTime();
         TRIP_LINES.removeIf(line -> line.snapped || line.expires < line.level.getGameTime());
         List<TripLine> mine = new ArrayList<>();
@@ -1056,7 +1062,7 @@ public class Apocalypse {
             DemonessFx.tripSnap(oldest.level, oldest.a, oldest.b, oldest.tag);
         }
 
-        TripLine line = new TripLine(player, sl, a, b, now + TRIP_TICKS, tag);
+        TripLine line = new TripLine(player, sl, a, b, now + TRIP_TICKS, tag, anchor);
         TRIP_LINES.add(line);
         DemonessFx.tripWeb(sl, a, b, TRIP_TICKS, () -> !line.snapped && sl.getGameTime() <= line.expires, tag);
         Spells.sound(sl, b, SoundEvents.SPIDER_STEP, 0.6f, 1.8f);
@@ -1068,7 +1074,8 @@ public class Apocalypse {
         Later.run(line.level, 2, () -> {
             if (line.snapped) return;
             ServerLevel sl = line.level;
-            if (!Spells.casterStillHere(line.owner, sl) || sl.getGameTime() > line.expires) {
+            if (!Spells.casterStillHere(line.owner, sl) || sl.getGameTime() > line.expires
+                    || (line.anchor != null && (!SHARDS.contains(line.anchor) || line.anchor.expires < sl.getGameTime()))) {
                 line.snapped = true;
                 TRIP_LINES.remove(line);
                 ParticleShapes.clearModels(sl, line.a, line.tag);
@@ -1083,6 +1090,14 @@ public class Apocalypse {
             TRIP_LINES.remove(line);
             DemonessFx.tripSnap(sl, line.a, line.b, line.tag);
             ApocalypseMechanics.afflict(line.owner, sl, victim, ApocalypseMechanics.Affliction.SILK);
+            if (line.anchor != null) {
+                Vec3 front = line.anchor.ground.add(Vec3.directionFromRotation(0, line.anchor.yaw).scale(1.8));
+                Reel.in(victim, () -> front).stopAt(0.6).lasts(30)
+                        .onEnd(() -> {
+                            if (Spells.casterStillHere(victim, sl)) Root.apply(victim, 40, RootRestriction.MOVEMENT);
+                        }).start(sl);
+                return;
+            }
             Spells.strike(line.owner, victim, TRIP_DAMAGE);
             // down it goes: dropped to the ground and held there
             Vec3 motion = victim.getDeltaMovement();
@@ -1295,25 +1310,24 @@ public class Apocalypse {
     // Normal: the target carries the plague for PLAGUE_TICKS, sickening every second. Then (or when it dies)
     // the disease jumps to the 2 to 3 enemies nearest to it, stronger each jump.
     private static void plague(LivingEntity player, ServerLevel sl, LivingEntity target) {
-        Contagion.spread()
-                .lasts(PLAGUE_TICKS)
+        plagueOutbreak(player, sl, PLAGUE_TICKS).passesTo(PLAGUE_JUMPS_MIN, PLAGUE_JUMPS_MAX)
+                .reach(PLAGUE_REACH).generations(PLAGUE_GENERATIONS).maxVictims(PLAGUE_MAX_VICTIMS)
+                .start(player, sl, target);
+        ParticleShapes.burst(sl, DemonessFx.SPORE, SpellFx.handOf(player, sl), 10, 0.03, 0.12);
+        Spells.sound(sl, player.position(), SoundEvents.WITHER_AMBIENT, 0.4f, 1.6f);
+    }
+
+    static Contagion plagueOutbreak(LivingEntity player, ServerLevel sl, int ticks) {
+        return Contagion.spread().lasts(ticks)
                 .every(20, (victim, stage) -> Spells.strike(player, victim, plagueDamage(stage)))
-                .passesTo(PLAGUE_JUMPS_MIN, PLAGUE_JUMPS_MAX)
-                .reach(PLAGUE_REACH)
-                .generations(PLAGUE_GENERATIONS)
-                .maxVictims(PLAGUE_MAX_VICTIMS)
                 .travel(DemonessFx.PLAGUE_JUMP_TICKS)
                 .onCatch((victim, stage) -> {
                     ApocalypseMechanics.afflict(player, sl, victim, ApocalypseMechanics.Affliction.PLAGUE);
-                    DemonessFx.plagueMark(sl, victim, PLAGUE_TICKS, stage, PLAGUE_TAG);
+                    DemonessFx.plagueMark(sl, victim, ticks, stage, PLAGUE_TAG);
                     Spells.sound(sl, victim.position(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 0.5f, 1.4f + stage * 0.1f);
                 })
                 .onRunOut((victim, stage) -> DemonessFx.plagueBloom(sl, victim))
-                .onPass((from, to, stage) -> DemonessFx.plagueJump(sl, from, to))
-                .start(player, sl, target);
-
-        ParticleShapes.burst(sl, DemonessFx.SPORE, SpellFx.handOf(player, sl), 10, 0.03, 0.12);
-        Spells.sound(sl, player.position(), SoundEvents.WITHER_AMBIENT, 0.4f, 1.6f);
+                .onPass((from, to, stage) -> DemonessFx.plagueJump(sl, from, to));
     }
 
     /** What the plague does each second at a stage: PLAGUE_DAMAGE on the first one, PLAGUE_GROWTH times more each jump. */

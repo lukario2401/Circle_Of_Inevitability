@@ -51,6 +51,9 @@ final class ApocalypseMechanics {
             return until;
         }
     }
+    private record Omen(ServerLevel level, Vec3 spot, long until) {}
+    private static final Map<UUID, Omen> OMENS = new HashMap<>();
+
     private record Preparation(ServerLevel level, long readyAt) {}
     private static final Map<Pair, Weave> WEAVES = new HashMap<>();
     private static final Map<UUID, Preparation> PREPARATIONS = new HashMap<>();
@@ -82,6 +85,26 @@ final class ApocalypseMechanics {
         Spells.sound(sl, victim.position(), SoundEvents.AMETHYST_BLOCK_RESONATE, 0.9f, 0.5f);
         if (owner instanceof Player player) player.sendOverlayMessage(
                 Component.literal("Despair woven — Fatal Step can harvest it"));
+    }
+
+    static boolean hasSeal(LivingEntity owner, LivingEntity victim, Affliction kind) {
+        Weave weave = WEAVES.get(new Pair(owner.getUUID(), victim.getUUID()));
+        return weave != null && weave.level == owner.level() && victim.level() == weave.level
+                && weave.seals[kind.ordinal()] > weave.level.getGameTime();
+    }
+
+    static void claimOmen(LivingEntity owner, ServerLevel sl, LivingEntity victim) {
+        if (!hasDespair(owner, victim)) return;
+        WEAVES.get(new Pair(owner.getUUID(), victim.getUUID())).despairUntil = 0;
+        Vec3 spot = victim.position();
+        clearOmen(owner);
+        OMENS.put(owner.getUUID(), new Omen(sl, spot, sl.getGameTime() + 100));
+        DemonessFx.omenHalo(sl, spot, owner.getUUID().toString());
+    }
+
+    private static void clearOmen(LivingEntity owner) {
+        Omen omen = OMENS.remove(owner.getUUID());
+        if (omen != null) DemonessFx.endHalo(omen.level(), omen.spot(), owner.getUUID().toString());
     }
 
     static boolean hasDespair(LivingEntity owner, LivingEntity victim) {
@@ -132,11 +155,16 @@ final class ApocalypseMechanics {
             DemonessFx.shardCharge(sl, shard.ground, shard.yaw, 0, shard.tag);
         }
         float power = 1 + Math.min(Apocalypse.SHARD_MAX, charge) * CHARGE_POWER;
+        Omen omen = OMENS.get(owner.getUUID());
+        if (omen != null && omen.level() == sl && omen.until() > sl.getGameTime() && omen.spot().distanceToSqr(ground) <= 36) {
+            clearOmen(owner);
+            power += 0.25f;
+        }
         if (power > 1) {
             SpellFx.shockRing(sl, ground, 3, 0xC0D27BFF, 12, 0);
             Spells.sound(sl, ground, SoundEvents.GLASS_BREAK, 0.8f, 1.4f);
             if (owner instanceof Player player) player.sendOverlayMessage(
-                    Component.literal("Mirror-fed catastrophe +" + Math.round((power - 1) * 100) + "%"));
+                    Component.literal("Catastrophe power +" + Math.round((power - 1) * 100) + "%"));
         }
         return power;
     }
@@ -149,11 +177,13 @@ final class ApocalypseMechanics {
         if (previous != null && now - previous < 20) return;
         LAST_SWEEP.put(sl, now);
         WEAVES.entrySet().removeIf(e -> e.getValue().level == sl && e.getValue().expires() <= now);
+        OMENS.values().removeIf(o -> o.level() == sl && o.until() <= now);
         PREPARATIONS.entrySet().removeIf(e -> e.getValue().level() == sl && e.getValue().readyAt() <= now);
     }
 
     private static void clearOwner(LivingEntity entity) {
         UUID id = entity.getUUID();
+        clearOmen(entity);
         WEAVES.keySet().removeIf(key -> key.owner().equals(id));
         boolean prepared = PREPARATIONS.remove(id) != null || EmpoweredHit.isArmed(entity, AMBUSH);
         EmpoweredHit.disarm(entity, AMBUSH);
@@ -171,6 +201,7 @@ final class ApocalypseMechanics {
 
     static void clearLevel(ServerLevel level) {
         LAST_SWEEP.remove(level);
+        OMENS.values().removeIf(o -> o.level() == level);
         WEAVES.values().removeIf(weave -> weave.level == level);
         PREPARATIONS.values().removeIf(preparation -> preparation.level() == level);
     }

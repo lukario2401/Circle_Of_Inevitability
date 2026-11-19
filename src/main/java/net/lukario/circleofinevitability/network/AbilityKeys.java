@@ -45,9 +45,9 @@ public final class AbilityKeys {
     private record Key(ServerPlayer player, int slot) {}
 
     private record Hold(ServerLevel level, String pathway, int sequence, boolean sneaking, long startTick,
-                        AbilityCharge.Rule rule, int paidIntervals) {
+                        AbilityCharge.Rule rule, int paidIntervals, Combo combo) {
         Hold paidInterval() {
-            return new Hold(level, pathway, sequence, sneaking, startTick, rule, paidIntervals + 1);
+            return new Hold(level, pathway, sequence, sneaking, startTick, rule, paidIntervals + 1, combo);
         }
     }
 
@@ -80,7 +80,11 @@ public final class AbilityKeys {
         if (slot < 1 || slot > CASTS.size()) return;
         Key key = new Key(player, slot);
         if (CONSUMED_KEYS.contains(key)) {
-            if (action == SAbilityKeyPacket.Action.RELEASE || action == SAbilityKeyPacket.Action.CANCEL) CONSUMED_KEYS.remove(key);
+            if (action == SAbilityKeyPacket.Action.RELEASE || action == SAbilityKeyPacket.Action.CANCEL) {
+                if (action == SAbilityKeyPacket.Action.RELEASE) release(key, player.level().getGameTime());
+                else removeHold(key);
+                CONSUMED_KEYS.remove(key);
+            }
             return;
         }
         long now = player.level().getGameTime();
@@ -125,7 +129,8 @@ public final class AbilityKeys {
                         PENDING_COMBOS.remove(player);
                         if (!pending.released()) CONSUMED_KEYS.add(pending.key());
                         CONSUMED_KEYS.add(key);
-                        castCombo(player, combo);
+                        if (combo.rule().metered()) beginChord(player, combo, now);
+                        else castCombo(player, combo, AbilityCharge.NONE);
                         return;
                     }
                 }
@@ -176,7 +181,32 @@ public final class AbilityKeys {
         } else if (!repeat && Beyonder.hasSequence(player, ability.sequence()) && canCast(player, key.slot())) {
             if (rule.metered() && !Spells.paySpirituality(player, rule.installmentCost())) return;
             ServerLevel level = player.level();
-            HOLDS.put(key, new Hold(level, pathway, SoulCore.getSequence(player), sneaking, pressedAt, rule, 0));
+            HOLDS.put(key, new Hold(level, pathway, SoulCore.getSequence(player), sneaking, pressedAt, rule, 0, null));
+        }
+    }
+
+    private static void beginChord(ServerPlayer player, Combo combo, long now) {
+        if (!canCast(player, combo) || !Cooldowns.ready(player, combo.key(), combo.name())
+                || !Spells.paySpirituality(player, combo.cost())) return;
+        Hold hold = new Hold(player.level(), combo.pathway(), SoulCore.getSequence(player), false, now, combo.rule(), 0, combo);
+        storeHold(new Key(player, combo.first()), hold);
+        combo.chargePulse().accept(player);
+    }
+
+    private static void storeHold(Key key, Hold hold) {
+        if (hold.combo() == null) {
+            HOLDS.put(key, hold);
+        } else {
+            HOLDS.put(new Key(key.player(), hold.combo().first()), hold);
+            HOLDS.put(new Key(key.player(), hold.combo().second()), hold);
+        }
+    }
+
+    private static void removeHold(Key key) {
+        Hold hold = HOLDS.remove(key);
+        if (hold != null && hold.combo() != null) {
+            HOLDS.remove(new Key(key.player(), hold.combo().first()));
+            HOLDS.remove(new Key(key.player(), hold.combo().second()));
         }
     }
 
@@ -187,11 +217,11 @@ public final class AbilityKeys {
     /** Both a release packet and a server tick can land on the payment boundary. Settle it exactly once. */
     private static void advance(Key key, long now, boolean released) {
         Hold hold = HOLDS.get(key);
-        if (hold == null) return;
+        if (hold == null || (!released && hold.combo() != null && key.slot() != hold.combo().first())) return;
         ServerPlayer player = key.player();
         if (!player.isAlive() || player.hasDisconnected() || player.level() != hold.level()
                 || !hold.pathway().equals(SoulCore.getPathway(player)) || hold.sequence() != SoulCore.getSequence(player)) {
-            HOLDS.remove(key);
+            removeHold(key);
             return;
         }
 
@@ -199,8 +229,9 @@ public final class AbilityKeys {
         int ticks = (int) Math.clamp(now - hold.startTick(), 0L, rule.maxTicks());
         if (rule.metered()) {
             while (hold.paidIntervals() < ticks / rule.intervalTicks()) {
-                if (!canCast(player, key.slot())) {
-                    HOLDS.remove(key);
+                boolean allowed = hold.combo() == null ? canCast(player, key.slot()) : canCast(player, hold.combo());
+                if (!allowed) {
+                    removeHold(key);
                     return;
                 }
                 if (!Spells.paySpirituality(player, rule.installmentCost())) {
@@ -208,17 +239,19 @@ public final class AbilityKeys {
                     return;
                 }
                 hold = hold.paidInterval();
-                HOLDS.put(key, hold);
+                storeHold(key, hold);
+                if (hold.combo() != null) hold.combo().chargePulse().accept(player);
             }
         }
         if (released || (rule.metered() && ticks == rule.maxTicks())) finish(key, hold, ticks, released);
     }
 
     private static void finish(Key key, Hold hold, int ticks, boolean released) {
-        HOLDS.remove(key);
+        removeHold(key);
         if (!released) CONSUMED_KEYS.add(key);
         AbilityCharge charge = new AbilityCharge(ticks, hold.rule().maxTicks(), hold.rule().metered());
-        inForm(key.player(), hold.sneaking(), () -> cast(key, charge));
+        if (hold.combo() == null) inForm(key.player(), hold.sneaking(), () -> cast(key, charge));
+        else inForm(key.player(), false, () -> castCombo(key.player(), hold.combo(), charge));
     }
 
     private static void inForm(ServerPlayer player, boolean wasSneaking, Runnable action) {
@@ -231,17 +264,17 @@ public final class AbilityKeys {
         }
     }
 
-    private static void castCombo(ServerPlayer player, Combo combo) {
+    private static void castCombo(ServerPlayer player, Combo combo, AbilityCharge charge) {
         if (!player.isAlive() || player.hasDisconnected() || !combo.pathway().equals(SoulCore.getPathway(player))
                 || !Beyonder.hasSequence(player, combo.sequence())) return;
-        if (!canCast(player, combo.first()) || !canCast(player, combo.second()) || !Cooldowns.ready(player, combo.key(), combo.name())
-                || HeldActions.defer(player, () -> castCombo(player, combo))) return;
+        if (!canCast(player, combo) || !Cooldowns.ready(player, combo.key(), combo.name())
+                || HeldActions.defer(player, () -> castCombo(player, combo, charge))) return;
 
         KeySeal.pressed(player, combo.first());
         KeySeal.pressed(player, combo.second());
         boolean cast = NextCast.run(player, () -> CastContext.run(player, combo.id(), () -> {
-            Runnable effect = combo.prepare().prepare(player, player.level());
-            if (effect == null || !Spells.paySpirituality(player, combo.cost())) return false;
+            Runnable effect = combo.prepare().prepare(player, player.level(), charge);
+            if (effect == null || !charge.payBase(player, combo.cost())) return false;
             effect.run();
             return true;
         }));
@@ -267,6 +300,10 @@ public final class AbilityKeys {
         } finally {
             Casts.keyDone(player);
         }
+    }
+
+    private static boolean canCast(ServerPlayer player, Combo combo) {
+        return canCast(player, combo.first()) && canCast(player, combo.second());
     }
 
     private static boolean canCast(ServerPlayer player, int slot) {

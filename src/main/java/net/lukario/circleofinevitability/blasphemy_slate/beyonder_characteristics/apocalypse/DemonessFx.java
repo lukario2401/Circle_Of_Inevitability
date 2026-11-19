@@ -4,6 +4,7 @@ import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.SpellFx;
+import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.particles.fx.ModelFx;
 import net.lukario.circleofinevitability.particles.fx.ModelFx.Ease;
 import net.lukario.circleofinevitability.particles.fx.ParticleFx;
@@ -334,6 +335,29 @@ public final class DemonessFx {
     }
 
     public static final int SHARD_EXPLODE_TICKS = 16;
+
+    public static void lanceCharge(ServerLevel sl, LivingEntity player) {
+        Vec3 hand = SpellFx.handOf(player, sl);
+        Vec3 offset = Spells.rightOf(player).scale(0.24);
+        ModelFx splinter = SLIVER.scale(0.55f).lifetime(12).fade(1, 4).spin(18);
+        ParticleShapes.modelAlong(sl, splinter, hand.add(offset), player.getLookAngle());
+        ParticleShapes.modelAlong(sl, splinter, hand.subtract(offset), player.getLookAngle());
+        ParticleShapes.model(sl, BLACK_FLAME.scale(0.35f).lifetime(12).fade(1, 4), hand, player);
+    }
+
+    public static void omenHalo(ServerLevel sl, Vec3 spot, String tag) {
+        ModelFx halo = SpellFx.RUNE_CIRCLE.color(0xCAAD6CFF).scale(2.5f).spin(2).tag(tag).lifetime(100).fade(3, 6);
+        Vec3 center = spot.add(0, 1.8, 0);
+        ParticleShapes.model(sl, halo, center, 0, 0, 0);
+        for (int i = 0; i < 3; i++) {
+            Vec3 at = Spells.spotAround(center, i * 120, 1.1);
+            ParticleShapes.model(sl, SLIVER.scale(0.45f).tag(tag).lifetime(100).fade(3, 6), at, i * 120, 20, 30);
+        }
+    }
+
+    public static void endHalo(ServerLevel sl, Vec3 spot, String tag) {
+        ParticleShapes.clearModels(sl, spot.add(0, 1.8, 0), tag);
+    }
 
     /**
      * The shard bursts: slivers of glass fly out in every direction, a violet flash and a ring. 'power' 0..1 is

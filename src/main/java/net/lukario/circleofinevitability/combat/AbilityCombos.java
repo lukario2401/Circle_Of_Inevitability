@@ -2,10 +2,12 @@ package net.lukario.circleofinevitability.combat;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.conqueror.ConquerorCombos;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.dark_angel.DarkAngelCombos;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.apocalypse.ApocalypseCombos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Stream;
 
 /** Two-key patterns registered by pathways. Slots are the seven remappable ability keys. */
@@ -30,9 +32,24 @@ public final class AbilityCombos {
         Runnable prepare(ServerPlayer player, ServerLevel level);
     }
 
+    @FunctionalInterface
+    public interface ChargedPrepare {
+        Runnable prepare(ServerPlayer player, ServerLevel level, AbilityCharge charge);
+    }
+
     public record Combo(String pathway, String key, String name, int sequence, Input input, int first, int second,
-                        float cost, int cooldown, Prepare prepare) {
+                        float cost, int cooldown, AbilityCharge.Rule rule, Consumer<ServerPlayer> chargePulse,
+                        ChargedPrepare prepare) {
+        public Combo(String pathway, String key, String name, int sequence, Input input, int first, int second,
+                     float cost, int cooldown, Prepare prepare) {
+            this(pathway, key, name, sequence, input, first, second, cost, cooldown, AbilityCharge.Rule.INSTANT,
+                    player -> {}, (player, level, charge) -> prepare.prepare(player, level));
+        }
+
         public Combo {
+            if (rule.maxTicks() > 0 && (input != Input.CHORD || !rule.metered())) {
+                throw new IllegalArgumentException("Charged combos need an overlapping chord and a metered rule");
+            }
             if (first < 1 || first > 7 || second < 1 || second > 7 || first == second) {
                 throw new IllegalArgumentException("A combo needs two distinct ability slots from 1 to 7");
             }
@@ -52,7 +69,7 @@ public final class AbilityCombos {
         }
     }
 
-    private static final List<Combo> ALL = Stream.of(ConquerorCombos.ALL, DarkAngelCombos.ALL)
+    private static final List<Combo> ALL = Stream.of(ConquerorCombos.ALL, DarkAngelCombos.ALL, ApocalypseCombos.ALL)
             .flatMap(List::stream).toList();
 
     private AbilityCombos() {}

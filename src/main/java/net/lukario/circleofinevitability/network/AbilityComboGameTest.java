@@ -43,6 +43,7 @@ public final class AbilityComboGameTest {
             DeferredRegister.create(Registries.TEST_FUNCTION, CircleOfInevitability.MOD_ID);
 
     static {
+        FUNCTIONS.register("apocalypse_combo_keys", () -> AbilityComboGameTest::apocalypse);
         FUNCTIONS.register("dark_angel_techniques", () -> AbilityComboGameTest::techniques);
         FUNCTIONS.register("dark_angel_ability_keys", () -> AbilityComboGameTest::darkAngel);
         FUNCTIONS.register("conqueror_ability_combos", () -> AbilityComboGameTest::run);
@@ -305,6 +306,57 @@ public final class AbilityComboGameTest {
         for (BlockPos spot : BlockPos.betweenClosed(floor.offset(0, 1, 6), floor.offset(0, 4, 7))) {
             level.setBlockAndUpdate(spot, block.defaultBlockState());
         }
+    }
+
+    private static void apocalypse(GameTestHelper test) {
+        ServerLevel level = test.getLevel();
+        Vec3 origin = test.absoluteVec(new Vec3(1.5, 70, 1.5));
+        ServerPlayer player = player(test, origin);
+        SoulCore.setPathway(player, "Apocalypse");
+        SoulCore.setSequence(player, 7);
+        Mob[] targets = new Mob[4];
+        for (int i = 0; i < targets.length; i++) targets[i] = target(test, origin.add(0, 0, 3 + i * 2));
+        String lance = "apocalypse_obsidian_lance";
+        test.startSequence().thenExecute(() -> {
+            SoulCore.setSpiritualityQuietly(player, 1800);
+            AbilityKeys.input(player, 3, PRESS);
+            AbilityKeys.input(player, 2, PRESS);
+            test.assertTrue(SoulCore.getSpirituality(player) == 1400, "First installment taken once");
+            release(player, 3);
+            test.assertTrue(targets[0].getHealth() == 982 && targets[1].getHealth() == 1000, "Releasing slot 3 fires a tier-one lance");
+            release(player, 2);
+            Cooldowns.reset(player, lance);
+            SoulCore.setSpiritualityQuietly(player, 1800);
+            AbilityKeys.input(player, 2, PRESS);
+            AbilityKeys.input(player, 3, PRESS);
+        }).thenIdle(38).thenExecute(() -> SoulCore.setSpiritualityQuietly(player, 900))
+          .thenIdle(4).thenExecute(() -> {
+            float balance = SoulCore.getSpirituality(player);
+            test.assertTrue(balance >= 500 && balance < 580, "One installment charged at two seconds");
+            release(player, 2);
+            release(player, 3);
+            test.assertTrue(targets[0].getHealth() == 952 && targets[1].getHealth() == 970
+                    && targets[2].getHealth() == 1000, "Tier two pierces two targets for 30");
+            Cooldowns.reset(player, lance);
+            SoulCore.setSpiritualityQuietly(player, 1980);
+            AbilityKeys.input(player, 2, PRESS);
+            AbilityKeys.input(player, 3, PRESS);
+        }).thenIdle(122).thenExecute(() -> {
+            test.assertTrue(targets[3].getHealth() == 946, "Full lance fires automatically and reaches the fourth target");
+            AbilityKeys.input(player, 2, REPEAT);
+            release(player, 3);
+            release(player, 2);
+            test.assertTrue(targets[3].getHealth() == 946, "Late release cannot fire twice");
+            Cooldowns.reset(player, lance);
+            SoulCore.setSpiritualityQuietly(player, 400);
+            AbilityKeys.input(player, 3, PRESS);
+            AbilityKeys.input(player, 2, PRESS);
+        }).thenIdle(42).thenExecute(() -> {
+            test.assertTrue(targets[0].getHealth() == 880 && targets[1].getHealth() == 916,
+                    "An unaffordable installment releases the last funded tier");
+            release(player, 2);
+            release(player, 3);
+          }).thenSucceed();
     }
 
     private static void chord(ServerPlayer player, int first, int second) {

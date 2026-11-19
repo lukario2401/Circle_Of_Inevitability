@@ -34,6 +34,7 @@ public final class ApocalypseGameTests {
         FUNCTIONS.register("apocalypse_mirror_fuel", () -> ApocalypseGameTests::fuel);
         FUNCTIONS.register("apocalypse_refused_cast", () -> ApocalypseGameTests::refused);
         FUNCTIONS.register("apocalypse_contacts", () -> ApocalypseGameTests::contacts);
+        FUNCTIONS.register("apocalypse_combo_effects", () -> ApocalypseGameTests::comboEffects);
         FUNCTIONS.register("apocalypse_cleanup", () -> ApocalypseGameTests::cleanup);
         FUNCTIONS.register("apocalypse_allies", () -> ApocalypseGameTests::allies);
     }
@@ -80,6 +81,61 @@ public final class ApocalypseGameTests {
     private static void equal(GameTestHelper h, double actual, double expected, String message) {
         h.assertTrue(Math.abs(actual - expected) < 0.01, message + ": " + actual + " != " + expected);
     }
+    private static Runnable prepare(ServerPlayer player, String name) {
+        var combo = ApocalypseCombos.ALL.stream().filter(c -> c.name().equals(name)).findFirst().orElseThrow();
+        return combo.prepare().prepare(player, player.level(), net.lukario.circleofinevitability.combat.AbilityCharge.NONE);
+    }
+
+    private static void comboEffects(GameTestHelper h) {
+        var p = player(h);
+        var sl = h.getLevel();
+        Vec3 origin = h.absoluteVec(new Vec3(1.5, 45, 1.5));
+        p.setPos(origin.x, origin.y, origin.z);
+        BlockPos floor = BlockPos.containing(origin).below();
+        for (BlockPos at : BlockPos.betweenClosed(floor.offset(-1, 0, -1), floor.offset(1, 0, 10))) {
+            sl.setBlockAndUpdate(at, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        }
+        var target = enemy(h, p);
+        target.setPos(origin.x, origin.y, origin.z + 5);
+        p.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+        h.assertTrue(prepare(p, "Fever Thread") == null && prepare(p, "Omen of Ruin") == null, "Missing owner seals refuse casts");
+        var mirror = shard(h, p, origin, 1);
+        p.setPos(origin.x, origin.y, origin.z - 1);
+        p.lookAt(EntityAnchorArgument.Anchor.EYES, origin.add(0, 0.9, 0));
+        prepare(p, "Mirror Wake").run();
+        equal(h, mirror.charge, 0.5f, "Wake spends half the shard");
+        h.assertTrue(target.getHealth() < 1000 && Apocalypse.SHARDS.contains(mirror), "Forward fan strikes and retains its source");
+        target.setDeltaMovement(Vec3.ZERO);
+        target.setPos(origin.x, origin.y, origin.z + 5);
+        p.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+        prepare(p, "Widow's Crossing").run();
+        var bystander = enemy(h, p);
+        bystander.setPos(origin.x + 2, origin.y, origin.z + 5);
+        var distant = enemy(h, p);
+        distant.setPos(origin.x + 5, origin.y, origin.z + 6);
+        h.runAfterDelay(5, () -> {
+            p.lookAt(EntityAnchorArgument.Anchor.EYES, target.getEyePosition());
+            h.assertTrue(ApocalypseMechanics.hasSeal(p, target, ApocalypseMechanics.Affliction.SILK), "Crossing laid a silk seal");
+            ApocalypseMechanics.afflict(p, sl, target, ApocalypseMechanics.Affliction.FLAME);
+            prepare(p, "Fever Thread").run();
+            h.assertTrue(ApocalypseMechanics.hasDespair(p, target), "Thread completes this caster's weave");
+            Vec3 impact = target.position();
+            prepare(p, "Omen of Ruin").run();
+            equal(h, ApocalypseMechanics.harvest(p, sl, target), 0, "Omen spends the harvest opportunity");
+            SoulCore.setSpiritualityQuietly(p, 0);
+            h.assertTrue(Apocalypse.CATASTROPHES.cast(p, Apocalypse.CATASTROPHES.entry("earthquake")) == AbilityWheel.Result.REFUSED,
+                    "Refused catastrophe preserves omen");
+            equal(h, ApocalypseMechanics.feedCatastrophe(p, sl, impact.add(30, 0, 0)), 1, "Distant cast preserves omen");
+            equal(h, ApocalypseMechanics.feedCatastrophe(p, sl, impact), 1.325, "Omen adds to mirror charge on one cast");
+            equal(h, ApocalypseMechanics.feedCatastrophe(p, sl, impact), 1, "Omen spent once");
+        });
+        h.runAfterDelay(56, () -> {
+            h.assertTrue(ApocalypseMechanics.hasSeal(p, bystander, ApocalypseMechanics.Affliction.PLAGUE)
+                    && !ApocalypseMechanics.hasSeal(p, distant, ApocalypseMechanics.Affliction.PLAGUE), "Fever makes exactly one nearest jump");
+            h.succeed();
+        });
+    }
+
     private static void noCastCounter(GameTestHelper h) {
         var p = player(h); var t = enemy(h, p);
         // Sequence 4 can pay for the casts, but has no catastrophe unlocked (the old passive burst here).
