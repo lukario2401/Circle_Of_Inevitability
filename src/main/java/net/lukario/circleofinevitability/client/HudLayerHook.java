@@ -12,6 +12,8 @@ import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import java.util.function.IntSupplier;
+
 /**
  * Single place where the mod draws on the HUD.
  *
@@ -53,32 +55,30 @@ public class HudLayerHook {
     public static void onHudLayerHookAddLayers(AddGuiOverlayLayersEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         ForgeLayeredDraw layers = event.getLayeredDraw();
-        liftLayers(layers, ForgeLayeredDraw.HOTBAR_AND_DECOS,
-                ForgeLayeredDraw.BACKGROUND, ForgeLayeredDraw.CONTEXTUAL_INFO, ForgeLayeredDraw.EXPERIENCE_LEVEL,
-                ForgeLayeredDraw.HEALTH_BAR, ForgeLayeredDraw.VEHICLE_HEALTH, ForgeLayeredDraw.SELECTED_ITEM_NAME);
-        liftLayers(layers, ForgeLayeredDraw.POST_SLEEP_STACK, ForgeLayeredDraw.HOTBAR_MESSAGE);
+        liftLayer(layers, ForgeLayeredDraw.HOTBAR_AND_DECOS, ForgeLayeredDraw.SELECTED_ITEM_NAME,
+                () -> SpiritualityHud.messageOffset(minecraft, true));
+        liftLayer(layers, ForgeLayeredDraw.POST_SLEEP_STACK, ForgeLayeredDraw.HOTBAR_MESSAGE,
+                () -> SpiritualityHud.messageOffset(minecraft, false));
         layers.addWithCondition(LAYER,
                 (guiGraphics, deltaTracker) -> renderAll(guiGraphics),
                 () -> !minecraft.gui.hud.isHidden());
     }
 
-    private static void liftLayers(ForgeLayeredDraw layers, Identifier stackId, Identifier... layerIds) {
+    private static void liftLayer(ForgeLayeredDraw layers, Identifier stackId, Identifier layerId, IntSupplier offset) {
         ForgeLayeredDraw stack = layers.getChild(stackId);
         if (stack == null) return;
 
-        for (Identifier layerId : layerIds) {
-            ForgeLayer layer = stack.getLayer(layerId);
-            if (layer == null) continue;
+        ForgeLayer layer = stack.getLayer(layerId);
+        if (layer == null) return;
 
-            layers.replace(stackId, layerId, (graphics, deltaTracker) -> {
-                graphics.pose().pushMatrix();
-                try {
-                    graphics.pose().translate(0, -SpiritualityHud.hotbarHudOffset());
-                    layer.extract(graphics, deltaTracker);
-                } finally {
-                    graphics.pose().popMatrix();
-                }
-            });
-        }
+        layers.replace(stackId, layerId, (graphics, deltaTracker) -> {
+            graphics.pose().pushMatrix();
+            try {
+                graphics.pose().translate(0, -offset.getAsInt());
+                layer.extract(graphics, deltaTracker);
+            } finally {
+                graphics.pose().popMatrix();
+            }
+        });
     }
 }

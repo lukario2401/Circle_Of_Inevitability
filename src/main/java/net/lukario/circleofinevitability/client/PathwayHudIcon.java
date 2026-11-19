@@ -3,17 +3,17 @@ package net.lukario.circleofinevitability.client;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.contextualbar.ContextualBar;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.level.GameType;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Small icon above the hunger bar showing the player's current pathway.
+ * Small icon near the hunger bar showing the player's current pathway.
  * Drawn every frame by HudLayerHook; disappears when the pathway has no icon (or is "none").
  *
  * To give another pathway an icon: add a PNG to assets/circle_of_inevitability/textures/gui/pathway_icons/
@@ -58,14 +58,9 @@ public class PathwayHudIcon {
         Identifier texture = ICONS.get(ClientPathwayData.getPathway());
         if (texture == null) return;
 
-        // Vanilla hunger bar: right edge at screen center + 91, top at 39 px above the bottom
-        int x = guiGraphics.guiWidth() / 2 + 91 - ICON_SIZE;
-        int y = guiGraphics.guiHeight() - 39 - ICON_SIZE - 1 - SpiritualityHud.hotbarHudOffset();
-
-        // move up when the air bubbles row is showing (it sits right above the hunger bar)
-        if (player.isEyeInFluid(FluidTags.WATER) || player.getAirSupply() < player.getMaxAirSupply()) {
-            y -= 10;
-        }
+        int right = guiGraphics.guiWidth() / 2 + ContextualBar.WIDTH / 2;
+        int x = SpiritualityHud.isVisible(minecraft) ? right + 3 : right - ICON_SIZE;
+        int y = guiGraphics.guiHeight() - SpiritualityHud.rightStatusTopOffset(minecraft) - ICON_SIZE - 1;
 
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, texture, x, y, 0f, 0f, ICON_SIZE, ICON_SIZE,
                 ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
