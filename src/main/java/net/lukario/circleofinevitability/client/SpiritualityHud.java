@@ -21,7 +21,7 @@ public final class SpiritualityHud {
     private SpiritualityHud() {}
 
     public static void update(float current, float maximum) {
-        label = format(current) + "/" + format(maximum);
+        label = (int) current + "/" + (int) maximum;
         filledWidth = Math.round(Mth.clamp(current / maximum, 0f, 1f) * (WIDTH - 2));
     }
 
@@ -43,10 +43,5 @@ public final class SpiritualityHud {
                     FILL_TOP_COLOR, FILL_BOTTOM_COLOR);
         }
         graphics.centeredText(minecraft.font, label, center, y - minecraft.font.lineHeight - 2, TEXT_COLOR);
-    }
-
-    private static String format(float value) {
-        int whole = (int) value;
-        return whole == value ? Integer.toString(whole) : Float.toString(value);
     }
 }
