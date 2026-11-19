@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics;
 
+import net.lukario.circleofinevitability.combat.AbilityCharge.Rule;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.Abomination;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationChains;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.abomination.AbominationCurses;
@@ -82,14 +83,22 @@ public final class PathwayAbilities {
      * stealable: false if it only works for its own Pathway (it needs that Pathway's stars, opens its menu, needs its key to end) or does nothing yet.
      */
     public record Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable,
-                          Cast cast, int normalChargeTicks, int sneakChargeTicks) {
-        public Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable, Cast cast) {
-            this(pathway, key, name, sequence, sneakForm, stealable, cast, 0, 0);
+                          Cast cast, Rule normalCharge, Rule sneakCharge) {
+        public Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable,
+                       Cast cast, int normalTicks, int sneakTicks) {
+            this(pathway, key, name, sequence, sneakForm, stealable, cast, Rule.onRelease(normalTicks), Rule.onRelease(sneakTicks));
         }
 
-        /** A positive duration opts the corresponding key form into casting on release. */
-        public int chargeTicks(boolean sneaking) {
-            return sneaking && sneakForm ? sneakChargeTicks : normalChargeTicks;
+        public Ability(String pathway, int key, String name, int sequence, boolean sneakForm, boolean stealable, Cast cast) {
+            this(pathway, key, name, sequence, sneakForm, stealable, cast, Rule.INSTANT, Rule.INSTANT);
+        }
+
+        public int normalChargeTicks() { return normalCharge.maxTicks(); }
+        public int sneakChargeTicks() { return sneakCharge.maxTicks(); }
+        public int chargeTicks(boolean sneaking) { return chargeRule(sneaking).maxTicks(); }
+
+        public Rule chargeRule(boolean sneaking) {
+            return sneaking && sneakForm ? sneakCharge : normalCharge;
         }
     }
 
@@ -320,7 +329,7 @@ public final class PathwayAbilities {
             new Ability("Dark Angel", 3, "Shadow Binding", 7, SNEAK, OWN_PATHWAY_ONLY,  // the same key is the way back out of the shadow
                     (player, level, sl) -> DarkAngel.hangedManShadowBinding(player, level, sl, true)),
             new Ability("Dark Angel", 4, "Flesh Bomb", 6, SNEAK, STEALABLE,
-                    (player, level, sl) -> DarkAngel.hangedManFleshBomb(player, level, sl, true)),
+                    (player, level, sl) -> DarkAngel.hangedManFleshBomb(player, level, sl, true), DarkAngel.BOMB_CHARGE, Rule.INSTANT),
             new Ability("Dark Angel", 5, "Grazing", 5, SNEAK, OWN_PATHWAY_ONLY,         // its slots and wheel are the Hanged Man's own
                     (player, level, sl) -> DarkAngel.hangedManGrazing(player, level, sl, true)),
             new Ability("Dark Angel", 6, "Cull of Spiritual Flesh", 4, SNEAK, STEALABLE,

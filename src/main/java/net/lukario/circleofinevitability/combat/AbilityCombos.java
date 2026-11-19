@@ -1,10 +1,12 @@
 package net.lukario.circleofinevitability.combat;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.conqueror.ConquerorCombos;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.dark_angel.DarkAngelCombos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 /** Two-key patterns registered by pathways. Slots are the seven remappable ability keys. */
 public final class AbilityCombos {
@@ -50,7 +52,8 @@ public final class AbilityCombos {
         }
     }
 
-    private static final List<Combo> ALL = ConquerorCombos.ALL;
+    private static final List<Combo> ALL = Stream.of(ConquerorCombos.ALL, DarkAngelCombos.ALL)
+            .flatMap(List::stream).toList();
 
     private AbilityCombos() {}
 

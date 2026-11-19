@@ -446,6 +446,17 @@ public final class HangedManFx {
                 caster.getEyePosition().add(Spells.rightOf(caster).scale(0.35)).add(0, -0.25, 0));
     }
 
+    public static void fleshBombRelease(ServerLevel sl, LivingEntity caster, float charge) {
+        play(sl, caster.position(), SoundEvents.WARDEN_HEARTBEAT, 0.65f + charge * 0.55f, 1.25f - charge * 0.5f);
+    }
+
+    /** A brief voice jumps between bodies without replacing an active Whispers model. */
+    public static void choirVoice(ServerLevel sl, LivingEntity from, LivingEntity to) {
+        SpellFx.tether(sl, WHISPER_LINE, () -> SpellFx.topOf(from, sl), () -> SpellFx.topOf(to, sl), 10);
+        ParticleShapes.burst(sl, WHISPER, SpellFx.topOf(to, sl), 10, 0.02, 0.06);
+        play(sl, to.position(), SoundEvents.SOUL_ESCAPE, 0.8f, 0.65f);
+    }
+
     /** The lump stuck on the target, swelling and throbbing faster and faster for 'ticks', with a quickening heartbeat. */
     public static void fleshBombStick(ServerLevel sl, LivingEntity target, int ticks) {
         ModelFx lump = FLESH_LUMP.scale(0.7f).lifetime(ticks + 2).tag(FLESH_BOMB_TAG)

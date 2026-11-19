@@ -44,7 +44,12 @@ public final class AbilityKeys {
 
     private record Key(ServerPlayer player, int slot) {}
 
-    private record Hold(ServerLevel level, String pathway, int sequence, boolean sneaking, long startTick, int maxTicks) {}
+    private record Hold(ServerLevel level, String pathway, int sequence, boolean sneaking, long startTick,
+                        AbilityCharge.Rule rule, int paidIntervals) {
+        Hold paidInterval() {
+            return new Hold(level, pathway, sequence, sneaking, startTick, rule, paidIntervals + 1);
+        }
+    }
 
     private record Pending(Key key, ServerLevel level, String pathway, int sequence, long pressedAt, long releasedAt,
                            List<Combo> options, long expiresAt) {
@@ -165,23 +170,55 @@ public final class AbilityKeys {
         String pathway = SoulCore.getPathway(player);
         PathwayAbilities.Ability ability = PathwayAbilities.of(pathway, key.slot());
         boolean sneaking = player.isShiftKeyDown();
-        int maxTicks = ability == null ? 0 : ability.chargeTicks(sneaking);
-        if (maxTicks <= 0) {
+        AbilityCharge.Rule rule = ability == null ? AbilityCharge.Rule.INSTANT : ability.chargeRule(sneaking);
+        if (rule.maxTicks() == 0) {
             cast(key, AbilityCharge.NONE);
         } else if (!repeat && Beyonder.hasSequence(player, ability.sequence()) && canCast(player, key.slot())) {
+            if (rule.metered() && !Spells.paySpirituality(player, rule.installmentCost())) return;
             ServerLevel level = player.level();
-            HOLDS.put(key, new Hold(level, pathway, SoulCore.getSequence(player), sneaking, pressedAt, maxTicks));
+            HOLDS.put(key, new Hold(level, pathway, SoulCore.getSequence(player), sneaking, pressedAt, rule, 0));
         }
     }
 
     private static void release(Key key, long releasedAt) {
-        Hold hold = HOLDS.remove(key);
-        ServerPlayer player = key.player();
-        if (hold == null || !player.isAlive() || player.hasDisconnected() || player.level() != hold.level()
-                || !hold.pathway().equals(SoulCore.getPathway(player)) || hold.sequence() != SoulCore.getSequence(player)) return;
+        advance(key, releasedAt, true);
+    }
 
-        int ticks = (int) Math.clamp(releasedAt - hold.startTick(), 0L, hold.maxTicks());
-        inForm(player, hold.sneaking(), () -> cast(key, new AbilityCharge(ticks, hold.maxTicks())));
+    /** Both a release packet and a server tick can land on the payment boundary. Settle it exactly once. */
+    private static void advance(Key key, long now, boolean released) {
+        Hold hold = HOLDS.get(key);
+        if (hold == null) return;
+        ServerPlayer player = key.player();
+        if (!player.isAlive() || player.hasDisconnected() || player.level() != hold.level()
+                || !hold.pathway().equals(SoulCore.getPathway(player)) || hold.sequence() != SoulCore.getSequence(player)) {
+            HOLDS.remove(key);
+            return;
+        }
+
+        AbilityCharge.Rule rule = hold.rule();
+        int ticks = (int) Math.clamp(now - hold.startTick(), 0L, rule.maxTicks());
+        if (rule.metered()) {
+            while (hold.paidIntervals() < ticks / rule.intervalTicks()) {
+                if (!canCast(player, key.slot())) {
+                    HOLDS.remove(key);
+                    return;
+                }
+                if (!Spells.paySpirituality(player, rule.installmentCost())) {
+                    finish(key, hold, hold.paidIntervals() * rule.intervalTicks(), released);
+                    return;
+                }
+                hold = hold.paidInterval();
+                HOLDS.put(key, hold);
+            }
+        }
+        if (released || (rule.metered() && ticks == rule.maxTicks())) finish(key, hold, ticks, released);
+    }
+
+    private static void finish(Key key, Hold hold, int ticks, boolean released) {
+        HOLDS.remove(key);
+        if (!released) CONSUMED_KEYS.add(key);
+        AbilityCharge charge = new AbilityCharge(ticks, hold.rule().maxTicks(), hold.rule().metered());
+        inForm(key.player(), hold.sneaking(), () -> cast(key, charge));
     }
 
     private static void inForm(ServerPlayer player, boolean wasSneaking, Runnable action) {
@@ -251,7 +288,11 @@ public final class AbilityKeys {
     public static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {
         if (!(event.player() instanceof ServerPlayer player)) return;
         Pending pending = PENDING_COMBOS.get(player);
-        if (pending != null) expirePending(player, pending, player.level().getGameTime());
+        long now = player.level().getGameTime();
+        if (pending != null) expirePending(player, pending, now);
+        if (!HOLDS.isEmpty()) {
+            for (int slot = 1; slot <= CASTS.size(); slot++) advance(new Key(player, slot), now, false);
+        }
     }
 
     @SubscribeEvent

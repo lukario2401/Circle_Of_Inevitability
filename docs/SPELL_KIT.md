@@ -220,6 +220,10 @@ Spells.strike(player, target, damage);
 
 The server measures the hold and keeps the form selected on press. The ability runs once on release, aims and pays at that point, and can build charge up to its configured duration.
 
+For a hold with recurring payments and automatic release, pass an `AbilityCharge.Rule` for each form. Flesh Bomb uses `new AbilityCharge.Rule(120, 40, 1500)` for normal and `AbilityCharge.Rule.INSTANT` for sneak. The server takes one installment on press and another at each 40-tick boundary, including tick 120. It fires once on manual release, at the cap, or at the last paid tier if the next payment fails. Cancelling the input discards the hold and keeps installments already spent.
+
+In the metered ability, use `charge.payBase(player, baseCost)` at the normal payment point. This records a funded key cast and charges the usual base cost for a direct or borrowed cast. Use `charge.ticks() / rule.intervalTicks()` for whole paid upgrades and `charge.progress()` for continuous effects.
+
 ### Ability key combos
 
 Define each combo alongside its pathway's abilities and include it in `AbilityCombos.ALL`. A definition specifies the pathway, stable key, name, required Sequence, input style, two ability slots, spirituality, cooldown in ticks, and a prepare callback. See [ConquerorCombos.java](../src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/conqueror/ConquerorCombos.java) for working examples.
@@ -232,6 +236,17 @@ new Combo(PATHWAY, "my_pathway_frost_trap", "Frost Trap", 7,
 Use `Input.CHORD` for two overlapping presses in either order and `Input.SEQUENCE` for a released first tap followed by the second press. Slots follow the player's ability key bindings. Combos use the normal forms and work when the player meets the configured Sequence.
 
 The prepare callback checks the target and returns a `Runnable` that performs the effect, or returns `null` to refuse the cast. It should leave the world untouched until the effect runs. The key handler checks both slots, pays once, and applies the combo cooldown on success. Unmatched inputs fall back to the original ability, including its charge duration.
+
+Dark Angel uses both input styles. At Sequence 7, press slots 1 and 3 together for Hangman's Snare. It reveals and roots the strongest enemy within 24 blocks for 3 seconds, costs 900 Spirituality, and has a 6-second cooldown. At Sequence 6, tap and release slot 2, then press slot 4 within the 8-tick combo window for Choir of Flesh. After a 1-second warning, the target and enemies within 6 blocks receive Weakness II for 5 seconds. It costs 1,500 Spirituality and has an 8-second cooldown.
+
+| Flesh Bomb hold (slot 4) | Total base Spirituality spent | Center damage | Blast radius |
+| --- | ---: | ---: | ---: |
+| Tap | 1,500 | 36 | 4 blocks |
+| 2 seconds | 3,000 | 72 | 5 blocks |
+| 4 seconds | 4,500 | 108 | 6 blocks |
+| 6 seconds (automatic release) | 6,000 | 144 | 7 blocks |
+
+Damage increases at each payment. Radius grows smoothly while holding. Shift + slot 4 casts Flesh Cloak on press.
 
 ---
 

@@ -10,6 +10,7 @@ import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Dome;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Trap;
+import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -39,6 +40,7 @@ public final class AbilityComboGameTest {
             DeferredRegister.create(Registries.TEST_FUNCTION, CircleOfInevitability.MOD_ID);
 
     static {
+        FUNCTIONS.register("dark_angel_ability_keys", () -> AbilityComboGameTest::darkAngel);
         FUNCTIONS.register("conqueror_ability_combos", () -> AbilityComboGameTest::run);
     }
 
@@ -118,6 +120,84 @@ public final class AbilityComboGameTest {
                 .thenIdle(9)
                 .thenExecute(() -> test.assertTrue(Casts.last(player).key() == 2, "An untaken sequence falls back to Provocation"))
                 .thenSucceed();
+    }
+
+    private static void darkAngel(GameTestHelper test) {
+        Vec3 origin = test.absoluteVec(new Vec3(1.5, 35, 1.5));
+        ServerPlayer player = player(test, origin);
+        SoulCore.setPathway(player, "Dark Angel");
+        SoulCore.setSequence(player, 6);
+        Mob source = target(test, origin.add(0, 0, 5));
+        Mob nearby = target(test, origin.add(5.5, 0, 5));
+        Mob outside = target(test, origin.add(9, 0, 5));
+        nearby.getAttribute(Attributes.MAX_HEALTH).setBaseValue(800);
+        outside.getAttribute(Attributes.MAX_HEALTH).setBaseValue(700);
+        nearby.setHealth(800);
+        outside.setHealth(700);
+
+        test.startSequence().thenExecute(() -> {
+            SoulCore.setSpiritualityQuietly(player, 6400);
+            AbilityKeys.input(player, 3, PRESS);
+            AbilityKeys.input(player, 1, PRESS);
+            assertCombo(test, player, "dark_angel_hangmans_snare", 6400, 900);
+            release(player, 1);
+            release(player, 3);
+            tap(player, 2);
+            tap(player, 4);
+            assertCombo(test, player, "dark_angel_choir_of_flesh", 5500, 1500);
+            test.assertFalse(nearby.hasEffect(MobEffects.WEAKNESS), "Choir gives an audible warning before it spreads");
+        }).thenIdle(23).thenExecute(() -> {
+            test.assertTrue(Root.isRooted(source) && !Root.isRooted(nearby), "Snare singles out the strongest enemy");
+            test.assertTrue(source.hasEffect(MobEffects.WEAKNESS) && nearby.hasEffect(MobEffects.WEAKNESS)
+                    && !outside.hasEffect(MobEffects.WEAKNESS), "Choir weakens the source and nearby enemies");
+            player.setShiftKeyDown(true);
+            AbilityKeys.input(player, 4, PRESS);
+            test.assertTrue(Casts.last(player).sneak() && Casts.last(player).key() == 4, "Flesh Cloak casts on press");
+            release(player, 4);
+            player.setShiftKeyDown(false);
+            SoulCore.setSpiritualityQuietly(player, 6400);
+            AbilityKeys.input(player, 4, PRESS);
+            test.assertTrue(SoulCore.getSpirituality(player) == 4900, "The first payment is taken on press");
+        }).thenIdle(38).thenExecute(() -> primeInstallment(player))
+          .thenIdle(4).thenExecute(() -> assertInstallment(test, player))
+          .thenIdle(36).thenExecute(() -> primeInstallment(player))
+          .thenIdle(4).thenExecute(() -> assertInstallment(test, player))
+          .thenIdle(36).thenExecute(() -> {
+              test.assertTrue(Casts.last(player).sneak(), "Flesh Bomb waits for release or the cap");
+              primeInstallment(player);
+          }).thenIdle(4).thenExecute(() -> {
+              assertInstallment(test, player);
+              Casts.Cast fired = Casts.last(player);
+              test.assertTrue(fired.key() == 4 && !fired.sneak(), "Full charge fires without a release");
+              AbilityKeys.input(player, 4, REPEAT);
+              release(player, 4);
+              test.assertTrue(Casts.last(player) == fired, "Repeat and release cannot fire a second bomb");
+          }).thenIdle(48).thenExecute(() -> {
+              test.assertTrue(source.getHealth() <= 856 && source.getHealth() > 850, "Full charge hits for 144");
+              test.assertTrue(nearby.getHealth() < 800 && outside.getHealth() == 700, "Full charge reaches seven blocks");
+              player.setYRot(180);
+              SoulCore.setSpiritualityQuietly(player, 1500);
+              AbilityKeys.input(player, 4, PRESS);
+          }).thenIdle(42).thenExecute(() -> {
+              test.assertTrue(Casts.last(player).time() >= player.level().getGameTime() - 3,
+                      "An unaffordable second installment fires the paid bomb");
+              release(player, 4);
+              SoulCore.setSpiritualityQuietly(player, 3000);
+              tap(player, 4);
+              test.assertTrue(SoulCore.getSpirituality(player) == 1500, "A manual release consumes the base cost only");
+              AbilityKeys.input(player, 4, PRESS);
+              AbilityKeys.input(player, 0, CANCEL);
+          }).thenIdle(42).thenExecute(() -> test.assertTrue(Casts.last(player).time() < player.level().getGameTime() - 40,
+                  "A cancelled hold cannot fire later")).thenSucceed();
+    }
+
+    private static void primeInstallment(ServerPlayer player) {
+        SoulCore.setSpiritualityQuietly(player, 3000);
+    }
+
+    private static void assertInstallment(GameTestHelper test, ServerPlayer player) {
+        float balance = SoulCore.getSpirituality(player);
+        test.assertTrue(balance >= 1500 && balance < 1800, "One 1500 payment, plus passive regeneration: " + balance);
     }
 
     private static void assertCombo(GameTestHelper test, ServerPlayer player, String key, float before, float cost) {

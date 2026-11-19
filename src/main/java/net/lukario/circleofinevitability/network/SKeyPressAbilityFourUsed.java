@@ -49,7 +49,7 @@ final class SKeyPressAbilityFourUsed {
         paleEmperorSpearSkull(player,level,serverLevel,false);
         conquerorFlameTransformation(player,level,serverLevel,false);
         apocalypseSilkWeaver(player,level,serverLevel,false);
-        hangedManFleshBomb(player,level,serverLevel,false);
+        hangedManFleshBomb(player, level, serverLevel, false, charge);
         beautyGoddessPotions(player,level,serverLevel,false);
         handOfGodDawn(player,level,serverLevel,false);
         knightOfMisfortuneRequiem(player,level,serverLevel,false);

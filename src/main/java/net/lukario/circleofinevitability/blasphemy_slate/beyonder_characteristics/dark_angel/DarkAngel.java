@@ -14,6 +14,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.knowledge_emperor.KnowledgeEmperor;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.illuminator.Illuminator;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon;
+import net.lukario.circleofinevitability.combat.AbilityCharge;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityMenu;
@@ -142,6 +143,8 @@ public class DarkAngel {
     // Ability 4 - Flesh Bomb (Sequence 6)
     static final int BOMB_SEQUENCE = 6;
     static final int BOMB_COST = 1500;
+    public static final AbilityCharge.Rule BOMB_CHARGE = new AbilityCharge.Rule(120, 40, BOMB_COST);
+    static final double BOMB_MAX_RADIUS = 7.0;
     static final double BOMB_RANGE = 24.0;
     static final int BOMB_FUSE = 40;                     // ticks it swells on the one it stuck to
     static final double BOMB_RADIUS = 4.0;
@@ -578,45 +581,56 @@ public class DarkAngel {
     //         mends you every half second. Cast again to take it off.
     // =========================
     public static void hangedManFleshBomb(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        hangedManFleshBomb(player, level, sl, bypassClassCheck, AbilityCharge.NONE);
+    }
+
+    public static void hangedManFleshBomb(Player player, Level level, ServerLevel sl, boolean bypassClassCheck, AbilityCharge charge) {
         if (!ready(player, bypassClassCheck, BOMB_SEQUENCE)) return;
 
         if (player.isShiftKeyDown()) {
             fleshCloak(player, sl);
             return;
         }
-        if (!Spells.paySpirituality(player, BOMB_COST)) return;
+        if (!charge.payBase(player, BOMB_COST)) return;
         riseFromShadow(player, sl);
-        fleshBomb(player, sl);
+        fleshBomb(player, sl, charge);
     }
 
     static void fleshBomb(LivingEntity player, ServerLevel sl) {
+        fleshBomb(player, sl, AbilityCharge.NONE);
+    }
+
+    private static void fleshBomb(LivingEntity player, ServerLevel sl, AbilityCharge charge) {
+        double radius = BOMB_RADIUS + (BOMB_MAX_RADIUS - BOMB_RADIUS) * charge.progress();
+        float peakDamage = BOMB_DAMAGE * (1 + charge.ticks() / BOMB_CHARGE.intervalTicks());
+        HangedManFx.fleshBombRelease(sl, player, charge.progress());
         Vec3 hand = HangedManFx.fleshBombHand(player, sl);
         Vec3 direction = Spells.aimFrom(player, sl, hand, BOMB_RANGE);
         boolean[] stuck = {false};
         HangedManFx.FLESH_BOMB.range(BOMB_RANGE)
                 .onHit((target, at) -> {
                     stuck[0] = true;
-                    stickBomb(player, sl, target);
+                    stickBomb(player, sl, target, radius, peakDamage);
                 })
                 .onEnd((at, hitBlock) -> Later.run(sl, 1, () -> {      // (after onHit, whichever is called first)
-                    if (!stuck[0] && Spells.casterStillHere(player, sl)) burstBomb(player, sl, at, null);
+                    if (!stuck[0] && Spells.casterStillHere(player, sl)) burstBomb(player, sl, at, null, radius, peakDamage);
                 }))
                 .fire(player, sl, hand, direction);
     }
 
-    private static void stickBomb(LivingEntity player, ServerLevel sl, LivingEntity target) {
+    private static void stickBomb(LivingEntity player, ServerLevel sl, LivingEntity target, double radius, float peakDamage) {
         HangedManFx.fleshBombStick(sl, target, BOMB_FUSE);
         Later.run(sl, BOMB_FUSE, () -> {
             if (!Spells.casterStillHere(player, sl) || target.level() != sl) return;
-            burstBomb(player, sl, target.getBoundingBox().getCenter(), target.isAlive() ? target : null);
+            burstBomb(player, sl, target.getBoundingBox().getCenter(), target.isAlive() ? target : null, radius, peakDamage);
         });
     }
 
-    private static void burstBomb(LivingEntity player, ServerLevel sl, Vec3 center, LivingEntity stuckOn) {
-        HangedManFx.fleshBombBurst(sl, center, BOMB_RADIUS, stuckOn);
-        for (LivingEntity enemy : Spells.enemiesAround(player, sl, center, BOMB_RADIUS)) {
-            double near = 1.0 - Math.min(1.0, Spells.distanceToBody(enemy, center) / BOMB_RADIUS);
-            float damage = enemy == stuckOn ? BOMB_DAMAGE : BOMB_DAMAGE * (BOMB_EDGE + (1f - BOMB_EDGE) * (float) near);
+    private static void burstBomb(LivingEntity player, ServerLevel sl, Vec3 center, LivingEntity stuckOn, double radius, float peakDamage) {
+        HangedManFx.fleshBombBurst(sl, center, radius, stuckOn);
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, center, radius)) {
+            double near = 1.0 - Math.min(1.0, Spells.distanceToBody(enemy, center) / radius);
+            float damage = enemy == stuckOn ? peakDamage : peakDamage * (BOMB_EDGE + (1f - BOMB_EDGE) * (float) near);
             Spells.strike(player, enemy, damage);
             if (enemy.isAlive()) enemy.addEffect(new MobEffectInstance(MobEffects.WITHER, BOMB_ROT_TICKS, 0));
         }
