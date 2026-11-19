@@ -4,6 +4,8 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.lukario.circleofinevitability.status.Marks;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.entity.EntityJoinLevelEvent;
@@ -86,6 +88,22 @@ public final class Echo {
             }
         }
         return wentOff;
+    }
+
+    /** Arm one repeat. A spell opts in after a successful cast by passing its captured effect to repeatNext. */
+    public static void armNext(LivingEntity caster, String key, int window) {
+        Marks.add(caster, key, 1, window);
+    }
+
+    public static boolean repeatNext(LivingEntity caster, ServerLevel level, String key, int delay, float strength, Runnable replay) {
+        if (Casts.isCopying(caster) || Marks.take(caster, key) == 0) return false;
+        Later.run(level, delay, () -> {
+            if (Spells.casterStillHere(caster, level)) weaker(caster, strength, () -> {
+                replay.run();
+                return true;
+            });
+        });
+        return true;
     }
 
     /** Runs 'run' with every hit 'caster' makes in it (and in what it starts for later) at 'strength'. Returns its answer. */

@@ -239,6 +239,18 @@ The prepare callback checks the target and returns a `Runnable` that performs th
 
 Dark Angel uses both input styles. At Sequence 7, press slots 1 and 3 together for Hangman's Snare. It reveals and roots the strongest enemy within 24 blocks for 3 seconds, costs 900 Spirituality, and has a 6-second cooldown. At Sequence 6, tap and release slot 2, then press slot 4 within the 8-tick combo window for Choir of Flesh. After a 1-second warning, the target and enemies within 6 blocks receive Weakness II for 5 seconds. It costs 1,500 Spirituality and has an 8-second cooldown.
 
+Five more Dark Angel combos use the same slot bindings. All times below assume 20 server ticks per second.
+
+| Technique | Unlock | Input (slots) | Effect | Base cost / cooldown |
+| --- | --- | --- | --- | --- |
+| Carrion Bell | Sequence 7 | 2 + 3 together | Set a bell on the ground within 20 blocks. The first enemy within 1.5 blocks rings it. Enemies within 6 blocks glow for 3 seconds and are pulled once. One bell can wait up to 20 seconds. | 800 / 8s |
+| Crimson Tithe | Sequence 6 | Tap 1, then press 4 | Mark an aimed enemy for 5 seconds. The next Flesh Bomb blast that damages it heals you for a quarter of the health and absorption it actually lost, up to 6 hearts. Another caster's blast cannot collect your mark. | 900 / 10s |
+| Shepherd's Passage | Sequence 5 | 3 + 5 together | Aim at an enemy within 16 blocks. A whisper sounds behind it four ticks before you step through. If the landing closes during the whisper, the cost and cooldown are returned. The cast checks the footing, room for your body, world border and teleport restrictions before payment. | 1,800 / 10s |
+| Black Procession | Sequence 4 | 4 + 6 together | Black ribs erupt on the ground 3, 6 and 9 blocks ahead, a quarter-second apart. Each lifts nearby enemies. An enemy in overlapping eruptions takes the 32 damage once. | 3,600 / 12s |
+| Trinity Refrain | Sequence 3 | Tap 5, then press 7 | For 5 seconds, your next normal Whispers, Shadow Binding or Flesh Bomb leaves an afterimage. Eight ticks later it repeats the original cast with half damage and shorter control or Wither duration. A bomb uses its original aim, radius and paid charge. | 7,500 / 18s |
+
+A bomb counts as a cast when it fires. To echo a six-second bomb, start holding slot 4 and activate Refrain during the charge. To collect a Tithe on a fully charged bomb, you can mark the target after the projectile sticks and before its fuse runs out.
+
 | Flesh Bomb hold (slot 4) | Total base Spirituality spent | Center damage | Blast radius |
 | --- | ---: | ---: | ---: |
 | Tap | 1,500 | 36 | 4 blocks |
@@ -1133,6 +1145,8 @@ Echo.weaker(player, 0.8f, () -> Casts.recast(player, cast));   // a copy whose h
 Echo.strength(entity)                                           // what its hits land at right now (1 = whole)
 Echo.addSkip(cast -> ...)                                       // once: never repeated elsewhere (a door that moves you)
 ```
+
+For a one-use echo of selected spells, call `Echo.armNext(caster, key, windowTicks)`. After an eligible spell has paid and captured its target, direction or charge, call `Echo.repeatNext(caster, level, key, delayTicks, strength, replayEffect)`. It consumes the armed repeat once, scales damage through scheduled hits, and returns true when an afterimage should be shown. Replay the effect directly with the captured inputs. Supply shorter durations explicitly for control effects. See Dark Angel's `bindAt` and `throwBomb` for examples.
 
 `repeat` stands the caster on each spot for the moment of the cast (server only: nobody sees them move), casts it as a copy
 and puts them back; a copy that moved them itself puts them back properly. "Weaker" is every hit the caster makes while it

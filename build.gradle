@@ -34,7 +34,7 @@ minecraft {
         }
 
         register('gameTestServer') {
-            if (providers.gradleProperty('darkAngelTests').isPresent()) { args '--tests', 'circle_of_inevitability:dark_angel_ability_keys' }
+            if (providers.gradleProperty('darkAngelTests').isPresent()) { args '--tests', 'circle_of_inevitability:dark_angel_*' }
             if (providers.gradleProperty('conquerorComboTests').isPresent()) { args '--tests', 'circle_of_inevitability:conqueror_ability_combos' }
             if (providers.gradleProperty('filthyMonarchTests').isPresent()) { args '--tests', 'circle_of_inevitability:filthy_monarch_*' }
             if (providers.gradleProperty('natureWalkerTests').isPresent()) { args '--tests', 'circle_of_inevitability:nature_walker_*' }

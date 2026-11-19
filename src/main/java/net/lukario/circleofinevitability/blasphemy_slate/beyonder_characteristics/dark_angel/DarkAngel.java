@@ -23,6 +23,7 @@ import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.DeathWard;
 import net.lukario.circleofinevitability.status.EmpoweredHit;
+import net.lukario.circleofinevitability.status.Marks;
 import net.lukario.circleofinevitability.status.NoHeal;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.lukario.circleofinevitability.status.Vulnerable;
@@ -438,29 +439,36 @@ public class DarkAngel {
         HangedManFx.whispers(sl, player, target, WHISPERS_TICKS);
         HangedManFx.status(player, Status.WHISPERS, WHISPERS_TICKS);
         if (target instanceof Mob mob) mob.setTarget(null);
-        whisperTick(player, sl, target, until);
+        whisperTick(player, sl, target, until, false);
+        DarkAngelCombos.repeat(player, sl, () -> {
+            if (target.level() != sl || !target.isAlive() || target.getPersistentData().getLongOr(WHISPERED_UNTIL, 0L) != until) return;
+            HangedManFx.choirVoice(sl, player, target);
+            whisperTick(player, sl, target, until, true);
+        });
     }
 
     /** Once a second while the whispers last (until a new whisper replaces them). */
-    private static void whisperTick(LivingEntity player, ServerLevel sl, LivingEntity target, long until) {
+    private static void whisperTick(LivingEntity player, ServerLevel sl, LivingEntity target, long until, boolean echo) {
         Later.run(sl, 20, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
             if (!target.isAlive() || target.level() != sl) {
+                if (echo) return;
                 WHISPERED.remove(player.getUUID(), target);
                 if (target.getPersistentData().getLongOr(WHISPERED_UNTIL, 0L) == until) HangedManFx.statusEnd(player, Status.WHISPERS);
                 return;
             }
             if (target.getPersistentData().getLongOr(WHISPERED_UNTIL, 0L) != until) return;   // whispered again since
-            if (sl.getGameTime() > until) {
+            if (sl.getGameTime() > until + (echo ? DarkAngelCombos.ECHO_DELAY : 0)) {
+                if (echo) return;
                 target.getPersistentData().remove(WHISPERED_UNTIL);
                 WHISPERED.remove(player.getUUID(), target);
                 return;
             }
             Spells.strike(player, target, WHISPERS_DAMAGE);
-            Spells.keepEffect(target, MobEffects.WEAKNESS, WHISPERS_WEAKNESS_LEVEL, 30);
-            Spells.keepEffect(target, MobEffects.SLOWNESS, WHISPERS_SLOW_LEVEL, 30);
+            Spells.keepEffect(target, MobEffects.WEAKNESS, WHISPERS_WEAKNESS_LEVEL, echo ? 15 : 30);
+            Spells.keepEffect(target, MobEffects.SLOWNESS, WHISPERS_SLOW_LEVEL, echo ? 15 : 30);
             if (target instanceof Mob mob && mob.getTarget() == player) mob.setTarget(null);   // it no longer knows who you are
-            whisperTick(player, sl, target, until);
+            whisperTick(player, sl, target, until, echo);
         });
     }
 
@@ -509,15 +517,22 @@ public class DarkAngel {
 
     static void shadowBinding(LivingEntity player, ServerLevel sl) {
         Vec3 ground = Spells.aimGround(player, sl, BINDING_RANGE);
+        bindAt(player, sl, ground, false);
+        DarkAngelCombos.repeat(player, sl, () -> bindAt(player, sl, ground, true));
+    }
+
+    private static void bindAt(LivingEntity player, ServerLevel sl, Vec3 ground, boolean echo) {
+        int rootTicks = BINDING_TICKS - HangedManFx.BIND_GRIPS - 10;
+        int duration = echo ? rootTicks / 2 : rootTicks;
         HangedManFx.bindingWarning(sl, ground, BINDING_RADIUS);
         Later.run(sl, BINDING_WARNING, () -> {
             if (!Spells.casterStillHere(player, sl)) return;
             for (LivingEntity enemy : Spells.enemiesAround(player, sl, ground.add(0, 0.5, 0), BINDING_RADIUS)) {
-                HangedManFx.bind(sl, enemy, BINDING_TICKS);
+                HangedManFx.bind(sl, enemy, duration + HangedManFx.BIND_GRIPS + 10);
                 Later.run(sl, HangedManFx.BIND_GRIPS, () -> {
                     if (!enemy.isAlive() || enemy.level() != sl || !Spells.casterStillHere(player, sl)) return;
                     Spells.strike(player, enemy, BINDING_DAMAGE);
-                    if (enemy.isAlive()) Root.apply(enemy, BINDING_TICKS - HangedManFx.BIND_GRIPS - 10, RootRestriction.MOVEMENT);
+                    if (enemy.isAlive()) Root.apply(enemy, duration, RootRestriction.MOVEMENT);
                 });
             }
         });
@@ -606,33 +621,41 @@ public class DarkAngel {
         HangedManFx.fleshBombRelease(sl, player, charge.progress());
         Vec3 hand = HangedManFx.fleshBombHand(player, sl);
         Vec3 direction = Spells.aimFrom(player, sl, hand, BOMB_RANGE);
+        throwBomb(player, sl, hand, direction, radius, peakDamage, BOMB_ROT_TICKS);
+        DarkAngelCombos.repeat(player, sl, () -> throwBomb(player, sl, hand, direction, radius, peakDamage, BOMB_ROT_TICKS / 2));
+    }
+
+    private static void throwBomb(LivingEntity player, ServerLevel sl, Vec3 hand, Vec3 direction,
+                                  double radius, float peakDamage, int rotTicks) {
         boolean[] stuck = {false};
         HangedManFx.FLESH_BOMB.range(BOMB_RANGE)
                 .onHit((target, at) -> {
                     stuck[0] = true;
-                    stickBomb(player, sl, target, radius, peakDamage);
+                    stickBomb(player, sl, target, radius, peakDamage, rotTicks);
                 })
                 .onEnd((at, hitBlock) -> Later.run(sl, 1, () -> {      // (after onHit, whichever is called first)
-                    if (!stuck[0] && Spells.casterStillHere(player, sl)) burstBomb(player, sl, at, null, radius, peakDamage);
+                    if (!stuck[0] && Spells.casterStillHere(player, sl)) burstBomb(player, sl, at, null, radius, peakDamage, rotTicks);
                 }))
                 .fire(player, sl, hand, direction);
     }
 
-    private static void stickBomb(LivingEntity player, ServerLevel sl, LivingEntity target, double radius, float peakDamage) {
+    private static void stickBomb(LivingEntity player, ServerLevel sl, LivingEntity target, double radius, float peakDamage, int rotTicks) {
         HangedManFx.fleshBombStick(sl, target, BOMB_FUSE);
         Later.run(sl, BOMB_FUSE, () -> {
             if (!Spells.casterStillHere(player, sl) || target.level() != sl) return;
-            burstBomb(player, sl, target.getBoundingBox().getCenter(), target.isAlive() ? target : null, radius, peakDamage);
+            burstBomb(player, sl, target.getBoundingBox().getCenter(), target.isAlive() ? target : null, radius, peakDamage, rotTicks);
         });
     }
 
-    private static void burstBomb(LivingEntity player, ServerLevel sl, Vec3 center, LivingEntity stuckOn, double radius, float peakDamage) {
+    private static void burstBomb(LivingEntity player, ServerLevel sl, Vec3 center, LivingEntity stuckOn, double radius, float peakDamage, int rotTicks) {
         HangedManFx.fleshBombBurst(sl, center, radius, stuckOn);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, center, radius)) {
             double near = 1.0 - Math.min(1.0, Spells.distanceToBody(enemy, center) / radius);
             float damage = enemy == stuckOn ? peakDamage : peakDamage * (BOMB_EDGE + (1f - BOMB_EDGE) * (float) near);
+            float before = enemy.getHealth() + enemy.getAbsorptionAmount();
             Spells.strike(player, enemy, damage);
-            if (enemy.isAlive()) enemy.addEffect(new MobEffectInstance(MobEffects.WITHER, BOMB_ROT_TICKS, 0));
+            DarkAngelCombos.collectTithe(sl, player, enemy, before - enemy.getHealth() - enemy.getAbsorptionAmount());
+            if (enemy.isAlive()) enemy.addEffect(new MobEffectInstance(MobEffects.WITHER, rotTicks, 0));
         }
     }
 
@@ -1198,6 +1221,7 @@ public class DarkAngel {
 
     /** After a relog or a death: nothing of the timed casts is left over (their looks did not survive either). */
     private static void clearState(Player player) {
+        Marks.clear(player, DarkAngelCombos.REFRAIN);
         CompoundTag data = player.getPersistentData();
         if (data.contains(TRINITY_UNTIL) && DeathWard.isArmed(player)) DeathWard.disarm(player);   // died anyway (the void)
         for (String key : List.of(RITUAL_UNTIL, LISTEN_UNTIL, LURK_UNTIL, CLOAK_UNTIL, ARMOR_UNTIL,

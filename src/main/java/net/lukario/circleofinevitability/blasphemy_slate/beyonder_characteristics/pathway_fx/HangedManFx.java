@@ -810,6 +810,46 @@ public final class HangedManFx {
         play(sl, caster.position(), SoundEvents.ILLUSIONER_MIRROR_MOVE, 0.8f, 1.0f);
     }
 
+    public static void bellSet(ServerLevel sl, Vec3 ground) {
+        ParticleShapes.burst(sl, WHISPER, ground.add(0, 0.25, 0), 8, 0.02, 0.05);
+        play(sl, ground, SoundEvents.SOUL_ESCAPE, 0.5f, 0.7f);
+    }
+
+    public static void bellRing(ServerLevel sl, Vec3 ground) {
+        SpellFx.shockRing(sl, ground, 6, 0xC0921834, 10, 0);
+        play(sl, ground, SoundEvents.BELL_RESONATE, 1f, 0.65f);
+    }
+
+    public static void titheMark(ServerLevel sl, LivingEntity target, LivingEntity caster, int ticks) {
+        SpellFx.circleUnder(sl, target, Math.max(0.7, target.getBbWidth()), 0xD0A81225, ticks, "hm_tithe_" + caster.getUUID());
+        play(sl, target.position(), SoundEvents.WARDEN_HEARTBEAT, 0.8f, 0.8f);
+    }
+
+    public static void titheEnd(ServerLevel sl, LivingEntity target, LivingEntity caster) {
+        ParticleShapes.clearModels(sl, target, "hm_tithe_" + caster.getUUID());
+    }
+
+    public static void passageWhisper(ServerLevel sl, Vec3 feet) {
+        play(sl, feet, SoundEvents.SOUL_ESCAPE, 1f, 0.65f);
+        ParticleShapes.burst(sl, SHADOW_WISP, feet.add(0, 0.8, 0), 16, 0.03, 0.1);
+    }
+
+    private static final ModelFx BLACK_RIB = ModelFx.of("hanged_man/black_rib")
+            .pivot(8, -16, 8).scale(1.5f).color(0xFF251522).lifetime(15).fade(0, 4)
+            .key(0, pose().up(-1.8f)).key(3, pose().up(0f), Ease.OUT)
+            .during(9, 15, pose().up(-1.8f), Ease.IN);
+
+    public static void blackRib(ServerLevel sl, Vec3 ground, float yaw) {
+        ParticleShapes.model(sl, BLACK_RIB, ground, yaw, 0f, 0f);
+        play(sl, ground, SoundEvents.BONE_BLOCK_BREAK, 0.9f, 0.65f);
+    }
+
+    public static void refrainImage(ServerLevel sl, LivingEntity caster) {
+        ModelFx image = TRINITY_BODY.scale(caster.getBbHeight() / 2.35f).lifetime(18).fade(2, 8);
+        ParticleShapes.model(sl, image, caster.position(), caster.getYRot(), 0f, 0f);
+        play(sl, caster.position(), SoundEvents.ILLUSIONER_MIRROR_MOVE, 0.8f, 0.75f);
+    }
+
     /** The extra bodies and heads are gone. */
     public static void trinityEnd(ServerLevel sl, LivingEntity caster) {
         ParticleShapes.clearModels(sl, caster, TRINITY_TAG);

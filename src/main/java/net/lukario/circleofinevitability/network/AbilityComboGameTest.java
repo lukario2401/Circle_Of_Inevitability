@@ -11,6 +11,8 @@ import net.lukario.circleofinevitability.combat.Dome;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Trap;
 import net.lukario.circleofinevitability.root.Root;
+import net.lukario.circleofinevitability.status.Marks;
+import net.lukario.circleofinevitability.combat.Cooldowns;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -26,6 +28,7 @@ import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.registries.DeferredRegister;
@@ -40,6 +43,7 @@ public final class AbilityComboGameTest {
             DeferredRegister.create(Registries.TEST_FUNCTION, CircleOfInevitability.MOD_ID);
 
     static {
+        FUNCTIONS.register("dark_angel_techniques", () -> AbilityComboGameTest::techniques);
         FUNCTIONS.register("dark_angel_ability_keys", () -> AbilityComboGameTest::darkAngel);
         FUNCTIONS.register("conqueror_ability_combos", () -> AbilityComboGameTest::run);
     }
@@ -191,6 +195,125 @@ public final class AbilityComboGameTest {
                   "A cancelled hold cannot fire later")).thenSucceed();
     }
 
+    private static void techniques(GameTestHelper test) {
+        ServerLevel level = test.getLevel();
+        Vec3 origin = test.absoluteVec(new Vec3(1.5, 75, 1.5));
+        BlockPos floor = BlockPos.containing(origin).below();
+        for (BlockPos block : BlockPos.betweenClosed(floor.offset(-4, 0, -2), floor.offset(4, 0, 12))) {
+            level.setBlockAndUpdate(block, Blocks.STONE.defaultBlockState());
+        }
+        ServerPlayer player = player(test, origin);
+        SoulCore.setPathway(player, "Dark Angel");
+        SoulCore.setSequence(player, 3);
+        SoulCore.setSpiritualityQuietly(player, 50000);
+        Mob target = target(test, origin.add(0, 0, 5));
+        target.setYRot(180);
+        Mob witness = target(test, origin.add(3, 0, 5));
+        test.startSequence().thenExecute(() -> {
+            float before = SoulCore.getSpirituality(player);
+            player.setXRot(60);
+            Vec3 bell = Spells.aimGround(player, level, 20);
+            chord(player, 3, 2);
+            player.setXRot(0);
+            target.setPos(bell.x, bell.y, bell.z);
+            witness.setPos(bell.x + 3, bell.y, bell.z);
+            assertCombo(test, player, "dark_angel_carrion_bell", before, 800);
+        }).thenIdle(7).thenExecute(() -> {
+            test.assertTrue(witness.hasEffect(MobEffects.GLOWING) && (witness.getX() < origin.x + 2.99 || witness.getDeltaMovement().x < 0),
+                    "Bell glow " + witness.hasEffect(MobEffects.GLOWING) + ", x offset " + (witness.getX() - origin.x)
+                            + ", velocity " + witness.getDeltaMovement() + ", traps " + Trap.count(player, "dark_angel_carrion_bell", 1));
+            test.assertTrue(Trap.count(player, "dark_angel_carrion_bell", 1) == 0, "The bell springs once");
+            witness.discard();
+            target.setPos(origin.x, origin.y, origin.z + 5);
+            target.setDeltaMovement(Vec3.ZERO);
+            target.setYRot(180);
+            passageWall(level, floor, Blocks.STONE);
+            float before = SoulCore.getSpirituality(player);
+            chord(player, 3, 5);
+            test.assertTrue(SoulCore.getSpirituality(player) == before && player.distanceToSqr(origin) < 0.01,
+                    "Obstructed passage spends nothing");
+            passageWall(level, floor, Blocks.AIR);
+            SoulCore.setSequence(player, 5);
+            SoulCore.setSpiritualityQuietly(player, 10000);
+            chord(player, 5, 3);
+            assertCombo(test, player, "dark_angel_shepherds_passage", 10000, 1800);
+            passageWall(level, floor, Blocks.STONE);
+        }).thenIdle(5).thenExecute(() -> {
+            test.assertTrue(player.distanceToSqr(origin) < 0.01 && SoulCore.getSpirituality(player) >= 10000
+                    && Cooldowns.left(player, "dark_angel_shepherds_passage") == 0, "A closing passage refunds its cost and cooldown");
+            passageWall(level, floor, Blocks.AIR);
+            SoulCore.setSequence(player, 3);
+            float before = SoulCore.getSpirituality(player);
+            chord(player, 5, 3);
+            assertCombo(test, player, "dark_angel_shepherds_passage", before, 1800);
+            test.assertTrue(player.distanceToSqr(origin) < 0.01, "The whisper precedes teleportation");
+        }).thenIdle(5).thenExecute(() -> {
+            test.assertTrue(player.getZ() > target.getZ() + 1, "Passage lands behind the enemy");
+            player.setPos(origin.x, origin.y, origin.z);
+            float before = SoulCore.getSpirituality(player);
+            chord(player, 4, 6);
+            assertCombo(test, player, "dark_angel_black_procession", before, 3600);
+        }).thenIdle(16).thenExecute(() -> {
+            test.assertTrue(target.getHealth() == 968, "Overlapping ribs deal damage once");
+            target.setPos(origin.x, origin.y, origin.z + 5);
+            target.setDeltaMovement(Vec3.ZERO);
+            target.setHealth(1000);
+            float before = SoulCore.getSpirituality(player);
+            tap(player, 1);
+            tap(player, 4);
+            assertCombo(test, player, "dark_angel_crimson_tithe", before, 900);
+            tap(player, 5);
+            tap(player, 7);
+            assertCombo(test, player, "dark_angel_trinity_refrain", before - 900, 7500);
+            AbilityKeys.input(player, 4, PRESS);
+        }).thenIdle(42).thenExecute(() -> {
+            release(player, 4);
+            player.setYRot(180);
+        }).thenIdle(39).thenExecute(() -> player.setHealth(2))
+          .thenIdle(7).thenExecute(() -> {
+            test.assertTrue(player.getHealth() >= 14 && player.getHealth() < 17
+                    && Marks.count(target, player, "dark_angel_crimson_tithe") == 0,
+                    "Tithe heals six hearts and consumes the mark. Health " + player.getHealth());
+        }).thenIdle(13).thenExecute(() -> {
+            test.assertTrue(target.getHealth() <= 892 && target.getHealth() > 888,
+                    "Paid bomb deals 72 and the captured echo deals 36, even after turning. Health " + target.getHealth());
+            player.setYRot(0);
+            target.setPos(origin.x, origin.y, origin.z + 5);
+            target.setDeltaMovement(Vec3.ZERO);
+            target.setHealth(1000);
+            target.removeEffect(MobEffects.WITHER);
+            Cooldowns.reset(player, "dark_angel_trinity_refrain");
+            tap(player, 5);
+            tap(player, 7);
+            tap(player, 3);
+        }).thenIdle(44).thenExecute(() -> {
+            test.assertTrue(target.getHealth() == 979 && Root.isRooted(target), "Binding hits for 14 and echoes for 7");
+            target.setHealth(1000);
+            target.setPos(origin.x, origin.y, origin.z + 5);
+            target.setDeltaMovement(Vec3.ZERO);
+            Cooldowns.reset(player, "dark_angel_trinity_refrain");
+            tap(player, 5);
+            tap(player, 7);
+            tap(player, 2);
+        }).thenIdle(39).thenExecute(() -> {
+            test.assertTrue(target.getHealth() == 994 && target.hasEffect(MobEffects.WEAKNESS),
+                    "The original Whispers and its echo tick independently for 4 and 2");
+        }).thenSucceed();
+    }
+
+    private static void passageWall(ServerLevel level, BlockPos floor, Block block) {
+        for (BlockPos spot : BlockPos.betweenClosed(floor.offset(0, 1, 6), floor.offset(0, 4, 7))) {
+            level.setBlockAndUpdate(spot, block.defaultBlockState());
+        }
+    }
+
+    private static void chord(ServerPlayer player, int first, int second) {
+        AbilityKeys.input(player, first, PRESS);
+        AbilityKeys.input(player, second, PRESS);
+        release(player, first);
+        release(player, second);
+    }
+
     private static void primeInstallment(ServerPlayer player) {
         SoulCore.setSpiritualityQuietly(player, 3000);
     }
@@ -217,7 +340,8 @@ public final class AbilityComboGameTest {
 
     private static ServerPlayer player(GameTestHelper test, Vec3 origin) {
         ServerLevel level = test.getLevel();
-        var cookie = CommonListenerCookie.createInitial(new GameProfile(UUID.randomUUID(), "combo_test"), false);
+        UUID id = UUID.randomUUID();
+        var cookie = CommonListenerCookie.createInitial(new GameProfile(id, "combo_" + id.toString().substring(0, 8)), false);
         var player = new ServerPlayer(level.getServer(), level, cookie.gameProfile(), cookie.clientInformation());
         var connection = new Connection(PacketFlow.SERVERBOUND);
         new EmbeddedChannel(connection);
