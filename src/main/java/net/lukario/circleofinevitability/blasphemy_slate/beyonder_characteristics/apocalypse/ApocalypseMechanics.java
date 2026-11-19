@@ -184,6 +184,7 @@ final class ApocalypseMechanics {
     private static void clearOwner(LivingEntity entity) {
         UUID id = entity.getUUID();
         clearOmen(entity);
+        DemonessTechniques.clearEye(entity);
         WEAVES.keySet().removeIf(key -> key.owner().equals(id));
         boolean prepared = PREPARATIONS.remove(id) != null || EmpoweredHit.isArmed(entity, AMBUSH);
         EmpoweredHit.disarm(entity, AMBUSH);
@@ -201,6 +202,7 @@ final class ApocalypseMechanics {
 
     static void clearLevel(ServerLevel level) {
         LAST_SWEEP.remove(level);
+        DemonessTechniques.clearLevel(level);
         OMENS.values().removeIf(o -> o.level() == level);
         WEAVES.values().removeIf(weave -> weave.level == level);
         PREPARATIONS.values().removeIf(preparation -> preparation.level() == level);

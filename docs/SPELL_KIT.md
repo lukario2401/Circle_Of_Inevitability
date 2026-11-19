@@ -224,6 +224,19 @@ For a hold with recurring payments and automatic release, pass an `AbilityCharge
 
 In the metered ability, use `charge.payBase(player, baseCost)` at the normal payment point. This records a funded key cast and charges the usual base cost for a direct or borrowed cast. Use `charge.ticks() / rule.intervalTicks()` for whole paid upgrades and `charge.progress()` for continuous effects.
 
+### Read-only pathway ability guides
+
+The bare `/sequence` command looks up the current pathway in `AbilityGuide.PATHWAYS`. To add a guide, register the pathway name and a supplier of an `AbilityGuide`. The server sends the pathway and current Sequence. The client builds the sections from the cards in declaration order and resolves the viewer’s key bindings. See `DemonessGuide` for a complete kit.
+
+Give each card a short gameplay summary and a detailed hover description. Use the existing GUI texture path relative to `textures/gui/`, without the extension. A plain `Card` describes a single key, sneak variant or passive. Use the factories for combos and wheel entries so cost, cooldown, Sequence, slots and charge rules follow the cast definition.
+
+```java
+Card.combo("Combos", frostCombo, "ability_menus/my_pathway/frost",
+        "Catch two enemies in a ribbon of ice.", "Roots both enemies for 2s.");
+Card.wheel("Silk", 4, silkWheel.entry("snare"),
+        "Lay a web that catches passing enemies.", "Roots each enemy for 2s.");
+```
+
 ### Ability key combos
 
 Define each combo alongside its pathway's abilities and include it in `AbilityCombos.ALL`. A definition specifies the pathway, stable key, name, required Sequence, input style, two ability slots, spirituality, cooldown in ticks, and a prepare callback. See [ConquerorCombos.java](../src/main/java/net/lukario/circleofinevitability/blasphemy_slate/beyonder_characteristics/conqueror/ConquerorCombos.java) for working examples.

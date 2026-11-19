@@ -52,7 +52,7 @@ public final class DeathWard {
     /** How long someone who was just saved cannot be hurt (ticks). */
     public static int GRACE_TICKS = 40;
 
-    private record Ward(long expires, float health, Revive onRevive, java.util.function.BooleanSupplier condition, int grace) {}
+    private record Ward(String ability, long expires, float health, Revive onRevive, java.util.function.BooleanSupplier condition, int grace) {}
 
     private static final Map<UUID, Ward> WARDS = new HashMap<>();
     private static final String GRACE_TAG = "circle_of_inevitability_death_ward_grace";   // on the saved entity: the game time it ends
@@ -71,11 +71,20 @@ public final class DeathWard {
      * Returns a token for disarmIf; null means resurrection was forbidden. */
     public static Object armWhen(LivingEntity entity, int ticks, float healthFraction, int graceTicks,
                                  java.util.function.BooleanSupplier condition, Revive onRevive) {
+        return armWhen(entity, "", ticks, healthFraction, graceTicks, condition, onRevive);
+    }
+
+    public static boolean isArmedBy(Entity entity, String ability) {
+        return isArmed(entity) && ability.equals(WARDS.get(entity.getUUID()).ability());
+    }
+
+    public static Object armWhen(LivingEntity entity, String ability, int ticks, float healthFraction, int graceTicks,
+                                 java.util.function.BooleanSupplier condition, Revive onRevive) {
         if (!(entity.level() instanceof ServerLevel sl) || ticks <= 0) return null;
         if (Decree.violate(entity, Decree.Rule.RESURRECTION)) return null;    // "Resurrection of the dead is prohibited here!"
         long now = sl.getGameTime();
         WARDS.values().removeIf(old -> old.expires() < now);        // the ones that faded unused
-        Ward ward = new Ward(now + ticks, Math.clamp(healthFraction, 0, 1), onRevive,
+        Ward ward = new Ward(ability, now + ticks, Math.clamp(healthFraction, 0, 1), onRevive,
                 java.util.Objects.requireNonNull(condition), Math.max(0, graceTicks));
         WARDS.put(entity.getUUID(), ward);
         return ward;

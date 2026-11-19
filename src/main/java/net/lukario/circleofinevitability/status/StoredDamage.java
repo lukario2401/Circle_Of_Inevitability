@@ -61,11 +61,15 @@ public final class StoredDamage {
 
     private static final class Debt {
         final long expires;
+        final UUID owner;
+        final String ability;
         final Stored onStored;
         final Due onDue;
         float total;
 
-        Debt(long expires, Stored onStored, Due onDue) {
+        Debt(long expires, LivingEntity owner, String ability, Stored onStored, Due onDue) {
+            this.owner = owner == null ? null : owner.getUUID();
+            this.ability = ability;
             this.expires = expires;
             this.onStored = onStored;
             this.onDue = onDue;
@@ -83,10 +87,19 @@ public final class StoredDamage {
 
     /** Writes down everything 'victim' takes for 'ticks' ticks; 'onDue' gets the sum when the time is up. */
     public static void start(LivingEntity victim, LivingEntity owner, int ticks, Stored onStored, Due onDue) {
+        start(victim, owner, "", ticks, onStored, onDue);
+    }
+
+    public static boolean belongsTo(Entity victim, LivingEntity owner, String ability) {
+        Debt debt = live(victim);
+        return debt != null && owner.getUUID().equals(debt.owner) && ability.equals(debt.ability);
+    }
+
+    public static void start(LivingEntity victim, LivingEntity owner, String ability, int ticks, Stored onStored, Due onDue) {
         if (!(victim.level() instanceof ServerLevel sl) || ticks <= 0) return;
         long now = sl.getGameTime();
         DEBTS.values().removeIf(old -> old.expires < now);
-        Debt debt = new Debt(now + ticks, onStored, onDue);
+        Debt debt = new Debt(now + ticks, owner, ability, onStored, onDue);
         DEBTS.put(victim.getUUID(), debt);
         Later.run(sl, ticks, () -> {
             Debt current = DEBTS.get(victim.getUUID());

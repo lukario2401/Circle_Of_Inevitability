@@ -12,7 +12,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(4)
+            .networkProtocolVersion(5)
             .simpleChannel();
 
     public static void register() {
@@ -127,6 +127,9 @@ public class PacketHandler {
                 .decoder(CSyncSpiritualityPacket::new)
                 .consumerMainThread(CSyncSpiritualityPacket::handle)
                 .add();
+        INSTANCE.messageBuilder(COpenGuidePacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(COpenGuidePacket::encode).decoder(COpenGuidePacket::new)
+                .consumerMainThread(COpenGuidePacket::handle).add();
     }
 
     public static void sendToServer(Object msg) {

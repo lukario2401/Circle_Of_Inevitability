@@ -1338,7 +1338,7 @@ public class Apocalypse {
     // Sneak - Curse: for CURSE_TICKS everything the target takes is stored; then it all hits it again at once.
     private static void curse(LivingEntity player, ServerLevel sl, LivingEntity target) {
         DemonessFx.curseMark(sl, target, CURSE_TICKS, CURSE_TAG);
-        StoredDamage.start(target, player, CURSE_TICKS,
+        StoredDamage.start(target, player, CURSE_TAG, CURSE_TICKS,
                 (victim, amount, total, level) -> DemonessFx.curseCharge(level, victim, total / CURSE_FULL),
                 (victim, total, level) -> {
                     DemonessFx.curseRelease(level, victim, CURSE_TAG);
@@ -1374,12 +1374,13 @@ public class Apocalypse {
 
     // Normal: for UNAGING_TICKS your next death is cancelled. You come back with half your health, unseen for a moment.
     private static void unaging(LivingEntity player, ServerLevel sl) {
-        DeathWard.arm(player, UNAGING_TICKS, UNAGING_HEALTH, Apocalypse::unagingReturn);
+        if (DeathWard.armWhen(player, WARD_TAG, UNAGING_TICKS, UNAGING_HEALTH, DeathWard.GRACE_TICKS,
+                () -> true, Apocalypse::unagingReturn) == null) return;
         DemonessFx.unagingWard(sl, player, UNAGING_TICKS, WARD_TAG);
         Spells.sound(sl, player.position(), SoundEvents.BEACON_ACTIVATE, 0.8f, 0.6f);
     }
 
-    private static void unagingReturn(LivingEntity saved, DamageSource source, ServerLevel sl) {
+    static void unagingReturn(LivingEntity saved, DamageSource source, ServerLevel sl) {
         DemonessFx.unagingRevive(sl, saved, WARD_TAG);
         Spells.cleanse(saved);
         Concealment.hide(saved, UNAGING_HIDE_TICKS);
@@ -1413,16 +1414,32 @@ public class Apocalypse {
     // Ability 7 - Catastrophe
     // =========================
 
-    /**
-     * A disaster called down on 'ground' at 'power' (1 = base power, increased by nearby mirror charge).
-     */
+    /** Power and the allies protected from this particular cast, including its delayed hits. */
+    record Impact(float power, Set<UUID> sheltered) {
+        List<LivingEntity> targets(LivingEntity caster, ServerLevel level, Vec3 center, double radius) {
+            List<LivingEntity> targets = Spells.enemiesAround(caster, level, center, radius);
+            if (!sheltered.isEmpty()) targets.removeIf(target -> sheltered.contains(target.getUUID()));
+            return targets;
+        }
+    }
+
     @FunctionalInterface
     public interface CatastropheCast {
         void cast(LivingEntity player, ServerLevel sl, Vec3 ground, float power);
     }
 
+    @FunctionalInterface
+    interface ShelteredCatastropheCast extends CatastropheCast {
+        void cast(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact);
+
+        @Override
+        default void cast(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+            cast(player, sl, ground, new Impact(power, Set.of()));
+        }
+    }
+
     /** One entry of the catastrophe wheel. A new disaster is one more line here and a method. */
-    record Disaster(String key, String name, int sequence, int cost, int cooldown, CatastropheCast cast) {}
+    record Disaster(String key, String name, int sequence, int cost, int cooldown, ShelteredCatastropheCast cast) {}
 
     static final List<Disaster> DISASTERS = List.of(
             new Disaster("earthquake", "Earthquake", 3, DISASTER_MEDIUM_COST, DISASTER_MEDIUM_COOLDOWN, Apocalypse::earthquake),
@@ -1461,22 +1478,22 @@ public class Apocalypse {
     static void castDisaster(LivingEntity player, ServerLevel sl, Disaster disaster) {
         Vec3 ground = Spells.aimGround(player, sl, DISASTER_RANGE);
         float power = ApocalypseMechanics.feedCatastrophe(player, sl, ground);
-        disaster.cast().cast(player, sl, ground, power);
+        disaster.cast().cast(player, sl, ground, new Impact(power, DemonessTechniques.claimEye(player, sl)));
     }
 
     // ---------- Earthquake ----------
 
     // The ground splits in a wide circle: everyone on it is hurt and thrown up, and staggered when they come down.
-    private static void earthquake(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+    private static void earthquake(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact) {
         DemonessFx.earthquake(sl, ground, QUAKE_RADIUS);
         Spells.sound(sl, ground, SoundEvents.WARDEN_SONIC_BOOM, 1f, 0.4f);
         Later.run(sl, DemonessFx.QUAKE_SPLITS, () -> {
             Spells.sound(sl, ground, SoundEvents.GENERIC_EXPLODE.value(), 1.6f, 0.5f);
             Spells.sound(sl, ground, SoundEvents.ANVIL_LAND, 0.8f, 0.4f);
             if (!Spells.casterStillHere(player, sl)) return;
-            for (LivingEntity target : Spells.enemiesAround(player, sl, ground, QUAKE_RADIUS)) {
+            for (LivingEntity target : impact.targets(player, sl, ground, QUAKE_RADIUS)) {
                 if (Math.abs(target.getY() - ground.y) > 3.0) continue;             // on the shaking ground only
-                Spells.strike(player, target, QUAKE_DAMAGE * power);
+                Spells.strike(player, target, QUAKE_DAMAGE * impact.power());
                 Vec3 motion = target.getDeltaMovement();
                 target.setDeltaMovement(motion.x, QUAKE_LIFT, motion.z);
                 target.hurtMarked = true;
@@ -1492,7 +1509,7 @@ public class Apocalypse {
     // ---------- Hailstorm ----------
 
     // Ice falls over the circle for HAIL_TICKS: steady damage and slowness for whoever stays under it.
-    private static void hailstorm(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+    private static void hailstorm(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact) {
         DemonessFx.hailstorm(sl, ground, HAIL_RADIUS, HAIL_TICKS, HAIL_PER_SECOND);
         Spells.sound(sl, ground, SoundEvents.LIGHTNING_BOLT_THUNDER, 0.6f, 1.4f);
         String name = DISASTER_TAG + (disasterNumber++);
@@ -1503,7 +1520,8 @@ public class Apocalypse {
                     .lasts(HAIL_TICKS)
                     .every(10)
                     .onInside((target, ticksInside) -> {
-                        Spells.strike(player, target, HAIL_DAMAGE * power);
+                        if (impact.sheltered().contains(target.getUUID())) return;
+                        Spells.strike(player, target, HAIL_DAMAGE * impact.power());
                         Spells.keepEffect(target, MobEffects.SLOWNESS, HAIL_SLOW_LEVEL, 30);
                     })
                     .onPulse(ticksLeft -> Spells.sound(sl, ground, SoundEvents.GLASS_BREAK, 0.5f, 1.6f))
@@ -1515,7 +1533,7 @@ public class Apocalypse {
 
     // A tornado forms where you aim and travels the way you look for TORNADO_TICKS. It draws enemies in; those it
     // reaches are lifted and whirled round, then thrown out.
-    private static void tornado(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+    private static void tornado(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact) {
         float yaw = player.getYRot();
         DemonessFx.tornado(sl, ground, yaw, TORNADO_SPEED, TORNADO_TICKS);
         Spells.sound(sl, ground, SoundEvents.BREEZE_JUMP, 1.4f, 0.4f);
@@ -1523,11 +1541,11 @@ public class Apocalypse {
         Map<UUID, Long> thrown = new HashMap<>();                    // thrown out: left alone until then
         for (int t = DemonessFx.TORNADO_FORMS; t < TORNADO_TICKS; t += 2) {
             int tick = t;
-            Later.run(sl, t, () -> tornadoTick(player, sl, ground, yaw, tick, power, carried, thrown));
+            Later.run(sl, t, () -> tornadoTick(player, sl, ground, yaw, tick, impact, carried, thrown));
         }
     }
 
-    private static void tornadoTick(LivingEntity player, ServerLevel sl, Vec3 ground, float yaw, int tick, float power,
+    private static void tornadoTick(LivingEntity player, ServerLevel sl, Vec3 ground, float yaw, int tick, Impact impact,
                                     Map<UUID, Integer> carried, Map<UUID, Long> thrown) {
         if (!Spells.casterStillHere(player, sl)) return;
         Vec3 foot = DemonessFx.tornadoAt(ground, yaw, TORNADO_SPEED, tick);
@@ -1535,7 +1553,7 @@ public class Apocalypse {
         boolean last = tick + 2 >= TORNADO_TICKS;
         if (tick % 20 == 0) Spells.sound(sl, foot, SoundEvents.WIND_CHARGE_THROW, 1f, 0.5f);
 
-        for (LivingEntity target : Spells.enemiesAround(player, sl, foot.add(0, 2.0, 0), TORNADO_PULL_RADIUS)) {
+        for (LivingEntity target : impact.targets(player, sl, foot.add(0, 2.0, 0), TORNADO_PULL_RADIUS)) {
             if (thrown.getOrDefault(target.getUUID(), 0L) > now) continue;
             double dx = target.getX() - foot.x;
             double dz = target.getZ() - foot.z;
@@ -1549,7 +1567,7 @@ public class Apocalypse {
                 carried.remove(target.getUUID());
                 thrown.put(target.getUUID(), now + 30);
                 Spells.push(target, foot, TORNADO_THROW, 0.8);
-                Spells.strike(player, target, TORNADO_THROW_DAMAGE * power);
+                Spells.strike(player, target, TORNADO_THROW_DAMAGE * impact.power());
                 continue;
             }
             // round and up: along the funnel's turn, rising until the top
@@ -1558,7 +1576,7 @@ public class Apocalypse {
             double up = target.getY() - foot.y < TORNADO_TOP ? 0.3 : 0.02;
             target.setDeltaMovement(around.add(in).add(0, up, 0));
             target.hurtMarked = true;
-            if (held % 10 == 0) Spells.strike(player, target, TORNADO_SPIN_DAMAGE * power);
+            if (held % 10 == 0) Spells.strike(player, target, TORNADO_SPIN_DAMAGE * impact.power());
         }
     }
 
@@ -1566,7 +1584,7 @@ public class Apocalypse {
 
     // The ground freezes over for ICE_TICKS: whoever is on it gets slower every second, cannot heal, is weakened,
     // and after ICE_FROZEN_AFTER inside is frozen solid.
-    private static void iceAge(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+    private static void iceAge(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact) {
         DemonessFx.iceAge(sl, ground, ICE_RADIUS, ICE_TICKS);
         Spells.sound(sl, ground, SoundEvents.AMETHYST_BLOCK_RESONATE, 1.4f, 0.4f);
         Spells.sound(sl, ground, SoundEvents.GLASS_BREAK, 1f, 0.5f);
@@ -1576,11 +1594,12 @@ public class Apocalypse {
                 .every(20)
                 .countsTo(ICE_FROZEN_AFTER)
                 .onInside((target, ticksInside) -> {
+                    if (impact.sheltered().contains(target.getUUID())) return;
                     int seconds = ticksInside / 20;
                     Spells.keepEffect(target, MobEffects.SLOWNESS, Math.min(4, seconds), 30);
                     Spells.keepEffect(target, MobEffects.WEAKNESS, 1, 30);
                     NoHeal.apply(target, 30);
-                    if (ticksInside > 0) Spells.strike(player, target, ICE_DAMAGE * power);
+                    if (ticksInside > 0) Spells.strike(player, target, ICE_DAMAGE * impact.power());
                     if (ticksInside >= ICE_FROZEN_AFTER && !Freeze.isFrozen(target)) {
                         Freeze.apply(target, ICE_FREEZE_TICKS);
                         Spells.sound(sl, target.position(), SoundEvents.GLASS_BREAK, 0.8f, 0.4f);
@@ -1594,23 +1613,23 @@ public class Apocalypse {
 
     // A plague cloud settles where you aim for DEATH_TICKS and sickens whoever is in it; every new victim it
     // infects makes it wider, with no limit but its time.
-    private static void blackDeath(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+    private static void blackDeath(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact) {
         String tag = DISASTER_TAG + (disasterNumber++);
         Vec3 center = ground.add(0, 0.8, 0);
         DemonessFx.blackDeath(sl, center, DEATH_RADIUS, DEATH_TICKS, tag);
         Spells.sound(sl, ground, SoundEvents.WITHER_AMBIENT, 1f, 0.5f);
-        blackDeathTick(player, sl, center, tag, new double[]{DEATH_RADIUS}, new HashSet<>(), 10, power);
+        blackDeathTick(player, sl, center, tag, new double[]{DEATH_RADIUS}, new HashSet<>(), 10, impact);
     }
 
     private static void blackDeathTick(LivingEntity player, ServerLevel sl, Vec3 center, String tag, double[] radius,
-                                       Set<UUID> infected, int tick, float power) {
+                                       Set<UUID> infected, int tick, Impact impact) {
         Later.run(sl, 10, () -> {
             if (!Spells.casterStillHere(player, sl)) {
                 ParticleShapes.clearModels(sl, center, tag);
                 return;
             }
             boolean second = tick % 20 == 0;
-            for (LivingEntity target : Spells.enemiesAround(player, sl, center, radius[0])) {
+            for (LivingEntity target : impact.targets(player, sl, center, radius[0])) {
                 if (infected.add(target.getUUID())) {                               // a new one: the cloud grows
                     radius[0] += DEATH_GROWTH;
                     DemonessFx.blackDeathGrow(sl, tag, radius[0]);
@@ -1618,11 +1637,11 @@ public class Apocalypse {
                     Spells.sound(sl, target.position(), SoundEvents.ZOMBIE_VILLAGER_CONVERTED, 0.5f, 1.4f);
                 }
                 if (second) {
-                    Spells.strike(player, target, DEATH_DAMAGE * power);
+                    Spells.strike(player, target, DEATH_DAMAGE * impact.power());
                     Spells.keepEffect(target, MobEffects.WEAKNESS, 0, 40);
                 }
             }
-            if (tick + 10 <= DEATH_TICKS) blackDeathTick(player, sl, center, tag, radius, infected, tick + 10, power);
+            if (tick + 10 <= DEATH_TICKS) blackDeathTick(player, sl, center, tag, radius, infected, tick + 10, impact);
         });
     }
 
@@ -1630,21 +1649,21 @@ public class Apocalypse {
 
     // Black fire falls over the circle for RAIN_TICKS, half of it on the enemies there: what it hits is burnt by
     // the black flame and gets the Curse (key 5 sneak), which hits it again later with everything it took.
-    private static void blackFlameRain(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+    private static void blackFlameRain(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact) {
         DemonessFx.rainCloud(sl, ground, RAIN_RADIUS, RAIN_TICKS + DemonessFx.FLAME_FALLS);
         Spells.sound(sl, ground, SoundEvents.LIGHTNING_BOLT_THUNDER, 0.8f, 0.6f);
         float yaw = sl.getRandom().nextFloat() * 360f;
         for (int t = 0; t < RAIN_TICKS; t += RAIN_EVERY) {
             Later.run(sl, t, () -> {
                 if (!Spells.casterStillHere(player, sl)) return;
-                Vec3 spot = fallingSpot(player, sl, ground, RAIN_RADIUS, RAIN_AIMED, 0.8);
+                Vec3 spot = fallingSpot(player, sl, impact, ground, RAIN_RADIUS, RAIN_AIMED, 0.8);
                 DemonessFx.blackFlameDrop(sl, spot, yaw + (sl.getRandom().nextFloat() - 0.5f) * 30f);
                 Later.run(sl, DemonessFx.FLAME_FALLS, () -> {
                     if (!Spells.casterStillHere(player, sl)) return;
                     if (sl.getRandom().nextInt(4) == 0) Spells.sound(sl, spot, SoundEvents.FIRECHARGE_USE, 0.5f, 0.5f);
-                    for (LivingEntity target : Spells.enemiesAround(player, sl, spot.add(0, 0.5, 0), RAIN_HIT_RADIUS)) {
-                        Spells.strike(player, target, RAIN_DAMAGE * power);
-                        burnBlack(player, sl, target, RAIN_BURN_TICKS, power);
+                    for (LivingEntity target : impact.targets(player, sl, spot.add(0, 0.5, 0), RAIN_HIT_RADIUS)) {
+                        Spells.strike(player, target, RAIN_DAMAGE * impact.power());
+                        burnBlack(player, sl, target, RAIN_BURN_TICKS, impact.power());
                         if (!StoredDamage.isStoring(target)) curse(player, sl, target);
                     }
                 });
@@ -1656,18 +1675,18 @@ public class Apocalypse {
 
     // The sky turns dark red over the circle for DOOM_TICKS: meteors, black flame and red lightning fall near
     // enemies picked at random.
-    private static void doomsdaySky(LivingEntity player, ServerLevel sl, Vec3 ground, float power) {
+    private static void doomsdaySky(LivingEntity player, ServerLevel sl, Vec3 ground, Impact impact) {
         DemonessFx.bloodSky(sl, ground, DOOM_RADIUS, DOOM_TICKS);
         Spells.sound(sl, ground, SoundEvents.WITHER_SPAWN, 0.8f, 0.5f);
         for (int t = 20; t < DOOM_TICKS - 20; t += DOOM_EVERY) {
             Later.run(sl, t, () -> {
                 if (!Spells.casterStillHere(player, sl)) return;
-                doomFalls(player, sl, fallingSpot(player, sl, ground, DOOM_RADIUS, 1f, DOOM_SPREAD), power);
+                doomFalls(player, sl, fallingSpot(player, sl, impact, ground, DOOM_RADIUS, 1f, DOOM_SPREAD), impact);
             });
         }
     }
 
-    private static void doomFalls(LivingEntity player, ServerLevel sl, Vec3 spot, float power) {
+    private static void doomFalls(LivingEntity player, ServerLevel sl, Vec3 spot, Impact impact) {
         RandomSource random = sl.getRandom();
         switch (random.nextInt(3)) {
             case 0 -> {
@@ -1676,8 +1695,8 @@ public class Apocalypse {
                 Later.run(sl, DemonessFx.METEOR_FALLS, () -> {
                     Spells.sound(sl, spot, SoundEvents.GENERIC_EXPLODE.value(), 1.2f, 0.7f);
                     if (!Spells.casterStillHere(player, sl)) return;
-                    for (LivingEntity target : Spells.enemiesAround(player, sl, spot.add(0, 0.5, 0), 2.2 * size)) {
-                        Spells.strike(player, target, METEOR_DAMAGE * power);
+                    for (LivingEntity target : impact.targets(player, sl, spot.add(0, 0.5, 0), 2.2 * size)) {
+                        Spells.strike(player, target, METEOR_DAMAGE * impact.power());
                         Spells.push(target, spot, 0.7, 0.5);
                     }
                 });
@@ -1686,9 +1705,9 @@ public class Apocalypse {
                 DemonessFx.blackFlameDrop(sl, spot, random.nextFloat() * 360f);
                 Later.run(sl, DemonessFx.FLAME_FALLS, () -> {
                     if (!Spells.casterStillHere(player, sl)) return;
-                    for (LivingEntity target : Spells.enemiesAround(player, sl, spot.add(0, 0.5, 0), RAIN_HIT_RADIUS)) {
-                        Spells.strike(player, target, DOOM_FLAME_DAMAGE * power);
-                        burnBlack(player, sl, target, RAIN_BURN_TICKS, power);
+                    for (LivingEntity target : impact.targets(player, sl, spot.add(0, 0.5, 0), RAIN_HIT_RADIUS)) {
+                        Spells.strike(player, target, DOOM_FLAME_DAMAGE * impact.power());
+                        burnBlack(player, sl, target, RAIN_BURN_TICKS, impact.power());
                     }
                 });
             }
@@ -1697,8 +1716,8 @@ public class Apocalypse {
                 Later.run(sl, DemonessFx.LIGHTNING_HITS, () -> {
                     Spells.sound(sl, spot, SoundEvents.LIGHTNING_BOLT_IMPACT, 1f, 0.8f);
                     if (!Spells.casterStillHere(player, sl)) return;
-                    for (LivingEntity target : Spells.enemiesAround(player, sl, spot.add(0, 0.5, 0), 1.5)) {
-                        Spells.strike(player, target, LIGHTNING_DAMAGE * power);
+                    for (LivingEntity target : impact.targets(player, sl, spot.add(0, 0.5, 0), 1.5)) {
+                        Spells.strike(player, target, LIGHTNING_DAMAGE * impact.power());
                     }
                 });
             }
@@ -1709,12 +1728,12 @@ public class Apocalypse {
      * Where the next thing falls in a circle: with chance 'aimed', next to an enemy in it picked at random
      * (within 'spread'), otherwise anywhere in the circle. On the ground.
      */
-    private static Vec3 fallingSpot(LivingEntity player, ServerLevel sl, Vec3 ground, double radius, float aimed, double spread) {
+    private static Vec3 fallingSpot(LivingEntity player, ServerLevel sl, Impact impact, Vec3 ground, double radius, float aimed, double spread) {
         RandomSource random = sl.getRandom();
         Vec3 spot = null;
         if (random.nextFloat() < aimed) {
             List<LivingEntity> under = new ArrayList<>();
-            for (LivingEntity target : Spells.enemiesAround(player, sl, ground, radius + 1.0)) {
+            for (LivingEntity target : impact.targets(player, sl, ground, radius + 1.0)) {
                 if (Math.abs(target.getY() - ground.y) < 12.0) under.add(target);
             }
             if (!under.isEmpty()) {

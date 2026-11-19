@@ -4,6 +4,9 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import net.lukario.circleofinevitability.menu.AbilityGuide;
+import net.lukario.circleofinevitability.network.COpenGuidePacket;
+import net.lukario.circleofinevitability.network.PacketHandler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -36,6 +39,16 @@ public class SequenceCommands {
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("sequence")
+                .executes(ctx -> {
+                    var player = ctx.getSource().getPlayerOrException();
+                    String pathway = SoulCore.getPathway(player);
+                    if (AbilityGuide.PATHWAYS.containsKey(pathway)) {
+                        PacketHandler.sendToPlayer(new COpenGuidePacket(pathway, SoulCore.getSequence(player)), player);
+                    } else {
+                        ctx.getSource().sendSuccess(() -> info(player), false);
+                    }
+                    return 1;
+                })
                 // /sequence info
                 .then(Commands.literal("info")
                         .executes(ctx -> {

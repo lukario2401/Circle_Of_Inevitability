@@ -61,6 +61,13 @@ Use the normal ability slots. A chord accepts either press order within three ti
 | Fever Thread | 5 | Tap 4, press 5 | Infect an aimed enemy carrying your silk seal. After one second, or on its death, the plague jumps once to the nearest other enemy within six blocks. Each infection applies your plague seal. | 2,200 / 12s |
 | Mirror Wake | 4 | 3 + 6 | Aim at a charged shard within 24 blocks. It spends half its charge to fire a ten-block fan in the direction the shard faces. Damage scales from 20 to 50. The shard remains standing. | 3,200 / 10s |
 | Omen of Ruin | 3 | Tap 5, press 7 | Claim an aimed enemy carrying your unharvested Despair. For five seconds, your next successful catastrophe within six blocks of the marked position gains 25 percentage points of power, added to any mirror bonus. Opening the wheel, a refused cast, or a distant impact preserves the omen. | 6,000 / 18s |
+| False Footsteps | 7 | 1 + 3 | A reflection wearing your skin walks ahead for 3s. Hostile mobs within 8 blocks pursue it. | 700 / 10s |
+| Black Wick | 6 | 2 + 4 | Ignite the nearest end of your own tripwire within 24 blocks. The flame travels along it, dealing 18 damage and applying a flame seal once per enemy. The wire can still catch an enemy. | 1,200 / 10s |
+| Cruel Accounting | 5 | Tap 2, press 5 | Settle your Curse on an enemy within 24 blocks. It takes 75% of the stored damage immediately and the debt ends. | 1,800 / 12s |
+| Borrowed Tomorrow | 4 | Tap 1, press 6 | Transfer your active Unaging ward to an unwarded ally within 24 blocks. They receive up to 8s of the remaining duration and revive at half health. | 3,500 / 24s |
+| Eye of the Storm | 3 | 6 + 7 | Mark a 3-block circle on ground within 40 blocks for 5s. When you cast your next catastrophe, allies in the circle keep protection for that entire cast. Other players can join the refuge by crouching inside at cast time. | 5,000 / 20s |
+
+As a Demoness, enter `/sequence` to open the ability guide. Browse Abilities, Combos, Silk, Disasters and Passives. The cards use your current bindings and show future unlocks. Hover or focus a card for costs, timings, damage and conditions. Use the arrows or mouse wheel to change pages. `/sequence info` shows your character statistics.
 
 Combat seals, harvest windows and ambush preparations reset on death, logout and dimension changes.
 They are not saved across server restarts. Existing saves discard the old counter and stack pictures.

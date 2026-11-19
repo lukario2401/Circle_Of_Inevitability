@@ -310,7 +310,8 @@ public final class AbilityComboGameTest {
 
     private static void apocalypse(GameTestHelper test) {
         ServerLevel level = test.getLevel();
-        Vec3 origin = test.absoluteVec(new Vec3(1.5, 70, 1.5));
+        Vec3 fixture = test.absoluteVec(new Vec3(1.5, 70, 1.5));
+        Vec3 origin = new Vec3(fixture.x, fixture.y, (BlockPos.containing(fixture).getZ() & ~15) + 2.5);
         ServerPlayer player = player(test, origin);
         SoulCore.setPathway(player, "Apocalypse");
         SoulCore.setSequence(player, 7);

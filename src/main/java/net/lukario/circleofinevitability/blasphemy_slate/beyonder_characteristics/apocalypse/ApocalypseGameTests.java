@@ -7,6 +7,9 @@ import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.status.EmpoweredHit;
 import net.lukario.circleofinevitability.status.NoHeal;
+import net.lukario.circleofinevitability.status.DeathWard;
+import net.lukario.circleofinevitability.status.StoredDamage;
+import net.lukario.circleofinevitability.status.Taunt;
 import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -35,6 +38,10 @@ public final class ApocalypseGameTests {
         FUNCTIONS.register("apocalypse_refused_cast", () -> ApocalypseGameTests::refused);
         FUNCTIONS.register("apocalypse_contacts", () -> ApocalypseGameTests::contacts);
         FUNCTIONS.register("apocalypse_combo_effects", () -> ApocalypseGameTests::comboEffects);
+        FUNCTIONS.register("apocalypse_reflection_and_wick", () -> ApocalypseGameTests::reflectionAndWick);
+        FUNCTIONS.register("apocalypse_debts_and_wards", () -> ApocalypseGameTests::debtsAndWards);
+        FUNCTIONS.register("apocalypse_storm_refuge", () -> ApocalypseGameTests::stormRefuge);
+        FUNCTIONS.register("apocalypse_ability_guide", () -> ApocalypseGameTests::abilityGuide);
         FUNCTIONS.register("apocalypse_cleanup", () -> ApocalypseGameTests::cleanup);
         FUNCTIONS.register("apocalypse_allies", () -> ApocalypseGameTests::allies);
     }
@@ -89,7 +96,9 @@ public final class ApocalypseGameTests {
     private static void comboEffects(GameTestHelper h) {
         var p = player(h);
         var sl = h.getLevel();
-        Vec3 origin = h.absoluteVec(new Vec3(1.5, 45, 1.5));
+        Vec3 fixture = h.absoluteVec(new Vec3(1.5, 45, 1.5));
+        // Keep the complete ray in the loaded structure chunk, even when the random origin is on its edge.
+        Vec3 origin = new Vec3(fixture.x, fixture.y, (BlockPos.containing(fixture).getZ() & ~15) + 2.5);
         p.setPos(origin.x, origin.y, origin.z);
         BlockPos floor = BlockPos.containing(origin).below();
         for (BlockPos at : BlockPos.betweenClosed(floor.offset(-1, 0, -1), floor.offset(1, 0, 10))) {
@@ -134,6 +143,106 @@ public final class ApocalypseGameTests {
                     && !ApocalypseMechanics.hasSeal(p, distant, ApocalypseMechanics.Affliction.PLAGUE), "Fever makes exactly one nearest jump");
             h.succeed();
         });
+    }
+
+    private static void reflectionAndWick(GameTestHelper h) {
+        var owner = player(h);
+        var level = h.getLevel();
+        var victim = enemy(h, owner);
+        Vec3 start = h.absoluteVec(new Vec3(1.5, 60, 1.5));
+        owner.setPos(start);
+        owner.setYRot(0);
+        victim.setPos(start.add(0.7, 0, 3));
+        prepare(owner, "False Footsteps").run();
+        var image = Taunt.targetOf(victim);
+        h.assertTrue(image instanceof net.minecraft.world.entity.decoration.Mannequin, "Hostile AI pursues the reflection");
+        Vec3 initial = image.position();
+        var wire = new Apocalypse.TripLine(owner, level, start.add(0, 0.6, 1), start.add(0, 0.6, 6),
+                level.getGameTime() + 100, "test_wick", null);
+        Apocalypse.TRIP_LINES.add(wire);
+        h.addCleanup(ok -> Apocalypse.TRIP_LINES.remove(wire));
+        prepare(owner, "Black Wick").run();
+        h.runAfterDelay(10, () -> {
+            h.assertTrue(image.getZ() > initial.z + 0.5, "Reflection advances along the original heading");
+            h.assertTrue(ApocalypseMechanics.hasSeal(owner, victim, ApocalypseMechanics.Affliction.FLAME),
+                    "Flame crosses the victim");
+            h.assertTrue(!wire.snapped && Apocalypse.TRIP_LINES.contains(wire), "Casting leaves wire armed");
+        });
+        h.runAfterDelay(62, () -> {
+            h.assertTrue(!image.isAlive() && Taunt.targetOf(victim) == null, "Reflection and taunt expire");
+            h.succeed();
+        });
+    }
+
+    private static void debtsAndWards(GameTestHelper h) {
+        var p = player(h);
+        var level = h.getLevel();
+        var victim = enemy(h, p);
+        StoredDamage.start(victim, p, 200, null, null);
+        h.assertTrue(prepare(p, "Cruel Accounting") == null, "Another ability's debt cannot be collected");
+        p.setShiftKeyDown(true);
+        Apocalypse.apocalypsePlague(p, level, level, false);
+        p.setShiftKeyDown(false);
+        Spells.strike(p, victim, 20);
+        float stored = StoredDamage.total(victim);
+        float before = victim.getHealth();
+        h.assertTrue(stored > 0, "Curse stored a hit");
+        prepare(p, "Cruel Accounting").run();
+        equal(h, before - victim.getHealth(), stored * 0.75f, "Pays three quarters");
+        h.assertTrue(!StoredDamage.isStoring(victim), "Settlement cancels natural payout");
+        Friends.add(p, victim.getUUID(), "ally", false);
+        DeathWard.arm(p, 200, 1, null);
+        h.assertTrue(prepare(p, "Borrowed Tomorrow") == null, "Unrelated ward cannot transfer");
+        Apocalypse.apocalypseUnaging(p, level, level, false);
+        DeathWard.arm(victim, 20, 1, null);
+        h.assertTrue(prepare(p, "Borrowed Tomorrow") == null && DeathWard.isArmed(p), "Existing ally ward is preserved");
+        DeathWard.disarm(victim);
+        prepare(p, "Borrowed Tomorrow").run();
+        equal(h, DeathWard.ticksLeft(victim), 160, "Transferred duration capped");
+        h.assertTrue(!DeathWard.isArmed(p), "Transfer consumes owner ward");
+        DeathWard.disarm(victim);
+        h.succeed();
+    }
+
+    private static void stormRefuge(GameTestHelper h) {
+        var owner = player(h);
+        Vec3 spot = h.absoluteVec(new Vec3(2.5, 50, 2.5));
+        var level = h.getLevel();
+        for (BlockPos at : BlockPos.betweenClosed(BlockPos.containing(spot).offset(-2, -1, -2),
+                BlockPos.containing(spot).offset(2, -1, 5))) {
+            level.setBlockAndUpdate(at, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        }
+        owner.setPos(spot);
+        var ally = enemy(h, owner);
+        var enemy = enemy(h, owner);
+        enemy.setPos(spot.add(1, 0, 2));
+        Friends.add(owner, ally.getUUID(), "ally", false);
+        owner.lookAt(EntityAnchorArgument.Anchor.EYES, spot.add(0, -0.1, 2));
+        prepare(owner, "Eye of the Storm").run();
+        Apocalypse.castDisaster(owner, level, Apocalypse.DISASTERS.getFirst());
+        Friends.remove(owner, ally.getUUID());
+        h.runAfterDelay(40, () -> {
+            equal(h, ally.getHealth(), 1000, "The cast remembers the sheltered ally even after friendship changes");
+            h.assertTrue(enemy.getHealth() < 1000, "Enemies in the same circle take the earthquake");
+            h.assertTrue(DemonessTechniques.claimEye(owner, level).isEmpty(), "A second cast cannot claim the eye");
+            h.succeed();
+        });
+    }
+
+    private static void abilityGuide(GameTestHelper h) {
+        var cards = DemonessGuide.guide().cards();
+        for (var combo : ApocalypseCombos.ALL) {
+            var card = cards.stream().filter(c -> c.name().equals(combo.name())).findFirst().orElseThrow();
+            h.assertTrue(card.baseCost() == combo.cost() && card.cooldown() == combo.cooldown()
+                    && card.first() == combo.first() && card.second() == combo.second()
+                    && card.sequence() == combo.sequence(), "Guide matches cast metadata for " + combo.name());
+        }
+        for (var wheel : java.util.List.of(Apocalypse.SILKS, Apocalypse.CATASTROPHES)) {
+            for (var entry : wheel.entries()) h.assertTrue(cards.stream().anyMatch(c -> c.name().equals(entry.name())
+                    && c.icon().equals(entry.icon()) && c.cooldown() == entry.cooldown()), "Guide includes " + entry.name());
+        }
+        h.assertTrue(cards.stream().allMatch(c -> !c.summary().isBlank() && !c.details().isBlank()), "Every card has both layers of information");
+        h.succeed();
     }
 
     private static void noCastCounter(GameTestHelper h) {

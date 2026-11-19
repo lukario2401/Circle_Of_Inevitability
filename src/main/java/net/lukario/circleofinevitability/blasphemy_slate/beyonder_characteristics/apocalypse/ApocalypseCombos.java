@@ -28,7 +28,17 @@ public final class ApocalypseCombos {
             new Combo(PATHWAY, "apocalypse_mirror_wake", "Mirror Wake", 4, Input.CHORD, 3, 6,
                     3200, 200, ApocalypseCombos::wake),
             new Combo(PATHWAY, "apocalypse_omen_of_ruin", "Omen of Ruin", 3, Input.SEQUENCE, 5, 7,
-                    6000, 360, ApocalypseCombos::omen));
+                    6000, 360, ApocalypseCombos::omen),
+            new Combo(PATHWAY, "apocalypse_false_footsteps", "False Footsteps", 7, Input.CHORD, 1, 3,
+                    700, 200, DemonessTechniques::footsteps),
+            new Combo(PATHWAY, "apocalypse_black_wick", "Black Wick", 6, Input.CHORD, 2, 4,
+                    1200, 200, DemonessTechniques::wick),
+            new Combo(PATHWAY, "apocalypse_cruel_accounting", "Cruel Accounting", 5, Input.SEQUENCE, 2, 5,
+                    1800, 240, DemonessTechniques::accounting),
+            new Combo(PATHWAY, "apocalypse_borrowed_tomorrow", "Borrowed Tomorrow", 4, Input.SEQUENCE, 1, 6,
+                    3500, 480, DemonessTechniques::tomorrow),
+            new Combo(PATHWAY, "apocalypse_eye_of_the_storm", "Eye of the Storm", 3, Input.CHORD, 6, 7,
+                    5000, 400, DemonessTechniques::eye));
 
     private ApocalypseCombos() {}
 
@@ -114,7 +124,7 @@ public final class ApocalypseCombos {
         };
     }
 
-    private static Runnable refuse(ServerPlayer player, String reason) {
+    static Runnable refuse(ServerPlayer player, String reason) {
         player.sendOverlayMessage(Component.literal(reason));
         return null;
     }
