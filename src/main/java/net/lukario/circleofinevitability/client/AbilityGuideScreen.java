@@ -127,6 +127,8 @@ public final class AbilityGuideScreen extends Screen {
     private String binding(Card c) {
         return switch (c.gesture()) {
             case PRESS -> key(c.first());
+            case HOLD_RELEASE -> "Hold / release " + key(c.first());
+            case ATTACK -> minecraft.options.keyAttack.getTranslatedKeyMessage().getString();
             case SNEAK -> minecraft.options.keyShift.getTranslatedKeyMessage().getString() + " + " + key(c.first());
             case WHEEL -> key(c.first()) + " wheel";
             case CHORD -> key(c.first()) + " + " + key(c.second());

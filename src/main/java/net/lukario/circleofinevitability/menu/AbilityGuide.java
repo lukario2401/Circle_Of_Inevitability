@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.menu;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.apocalypse.DemonessGuide;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.conqueror.ConquerorGuide;
 import net.lukario.circleofinevitability.combat.AbilityCombos.Combo;
 import net.lukario.circleofinevitability.combat.AbilityCombos.Input;
 
@@ -10,13 +11,15 @@ import java.util.function.Supplier;
 
 /** Read-only field guide. Descriptions live with the pathway and bindings are resolved by the viewing client. */
 public record AbilityGuide(String title, List<Card> cards) {
-    public static final Map<String, Supplier<AbilityGuide>> PATHWAYS = Map.of("Apocalypse", DemonessGuide::guide);
+    public static final Map<String, Supplier<AbilityGuide>> PATHWAYS = Map.of(
+            "Apocalypse", DemonessGuide::guide,
+            "Conqueror", ConquerorGuide::guide);
 
     public AbilityGuide {
         cards = List.copyOf(cards);
     }
 
-    public enum Gesture { PRESS, SNEAK, CHORD, HOLD_CHORD, ORDERED, WHEEL, PASSIVE }
+    public enum Gesture { PRESS, HOLD_RELEASE, ATTACK, SNEAK, CHORD, HOLD_CHORD, ORDERED, WHEEL, PASSIVE }
 
     public record Card(String section, String name, String icon, String summary, String details,
                        int sequence, float baseCost, int cooldown, Gesture gesture, int first, int second) {
