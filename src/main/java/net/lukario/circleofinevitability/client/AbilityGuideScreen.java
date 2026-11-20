@@ -129,7 +129,8 @@ public final class AbilityGuideScreen extends Screen {
             case PRESS -> key(c.first());
             case HOLD_RELEASE -> "Hold / release " + key(c.first());
             case ATTACK -> minecraft.options.keyAttack.getTranslatedKeyMessage().getString();
-            case SNEAK -> minecraft.options.keyShift.getTranslatedKeyMessage().getString() + " + " + key(c.first());
+            case SNEAK, SNEAK_WHEEL -> minecraft.options.keyShift.getTranslatedKeyMessage().getString() + " + " + key(c.first())
+                    + (c.gesture() == AbilityGuide.Gesture.SNEAK_WHEEL ? " wheel" : "");
             case WHEEL -> key(c.first()) + " wheel";
             case CHORD -> key(c.first()) + " + " + key(c.second());
             case HOLD_CHORD -> "Hold " + key(c.first()) + " + " + key(c.second());
@@ -152,8 +153,9 @@ public final class AbilityGuideScreen extends Screen {
             binding = binding(card);
             locked = sequence > card.sequence();
             String rank = (locked ? "Unlocks at sequence " : "Sequence ") + card.sequence();
-            String stats = card.gesture() == AbilityGuide.Gesture.PASSIVE ? "" : "\nBase spirituality  " + (int) card.baseCost();
-            if (card.cooldown() > 0) stats += "    Cooldown  " + AbilityGuide.seconds(card.cooldown()) + "s";
+            String cost = card.baseCost() == Card.VARIABLE_COST ? "varies by pick" : Integer.toString((int) card.baseCost());
+            String stats = card.gesture() == AbilityGuide.Gesture.PASSIVE ? "" : "\nBase spirituality  " + cost;
+            if (card.cooldown() > 0) stats += "    Base cooldown  " + AbilityGuide.seconds(card.cooldown()) + "s";
             var text = Component.literal(card.name() + "  ·  " + binding).withStyle(ChatFormatting.AQUA)
                     .append(Component.literal("\n" + rank + stats).withStyle(ChatFormatting.GOLD))
                     .append(Component.literal("\n\n" + card.details()).withStyle(ChatFormatting.WHITE));

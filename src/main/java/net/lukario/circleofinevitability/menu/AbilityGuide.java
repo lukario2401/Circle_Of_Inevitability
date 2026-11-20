@@ -2,6 +2,8 @@ package net.lukario.circleofinevitability.menu;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.apocalypse.DemonessGuide;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.conqueror.ConquerorGuide;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.dark_angel.DarkAngelGuide;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionGuide;
 import net.lukario.circleofinevitability.combat.AbilityCombos.Combo;
 import net.lukario.circleofinevitability.combat.AbilityCombos.Input;
 
@@ -13,16 +15,20 @@ import java.util.function.Supplier;
 public record AbilityGuide(String title, List<Card> cards) {
     public static final Map<String, Supplier<AbilityGuide>> PATHWAYS = Map.of(
             "Apocalypse", DemonessGuide::guide,
-            "Conqueror", ConquerorGuide::guide);
+            "Conqueror", ConquerorGuide::guide,
+            "Dark Angel", DarkAngelGuide::guide,
+            "Prince Of Abolition", PrinceOfAbolitionGuide::guide);
 
     public AbilityGuide {
         cards = List.copyOf(cards);
     }
 
-    public enum Gesture { PRESS, HOLD_RELEASE, ATTACK, SNEAK, CHORD, HOLD_CHORD, ORDERED, WHEEL, PASSIVE }
+    public enum Gesture { PRESS, HOLD_RELEASE, ATTACK, SNEAK, CHORD, HOLD_CHORD, ORDERED, WHEEL, SNEAK_WHEEL, PASSIVE }
 
     public record Card(String section, String name, String icon, String summary, String details,
                        int sequence, float baseCost, int cooldown, Gesture gesture, int first, int second) {
+        public static final int VARIABLE_COST = -1;
+
         public static Card combo(String section, Combo combo, String icon, String summary, String details) {
             Gesture gesture = combo.rule().metered() ? Gesture.HOLD_CHORD
                     : combo.input() == Input.CHORD ? Gesture.CHORD : Gesture.ORDERED;
@@ -38,8 +44,12 @@ public record AbilityGuide(String title, List<Card> cards) {
         }
 
         public static Card wheel(String section, int slot, AbilityWheel.Entry entry, String summary, String details) {
+            return wheel(section, slot, Gesture.WHEEL, entry, summary, details);
+        }
+
+        public static Card wheel(String section, int slot, Gesture gesture, AbilityWheel.Entry entry, String summary, String details) {
             return new Card(section, entry.name(), entry.icon(), summary, details, entry.sequence(), entry.cost(),
-                    entry.cooldown(), Gesture.WHEEL, slot, 0);
+                    entry.cooldown(), gesture, slot, 0);
         }
     }
 
