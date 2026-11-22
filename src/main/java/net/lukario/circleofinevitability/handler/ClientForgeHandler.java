@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.handler;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
+import net.lukario.circleofinevitability.client.ClientDetachedCamera;
 import net.lukario.circleofinevitability.client.ClientPathwayData;
 import net.lukario.circleofinevitability.client.Keybindings;
 import net.lukario.circleofinevitability.combat.AbilityCombos;
@@ -38,11 +39,12 @@ public class ClientForgeHandler {
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
-        if(Keybindings.INSTANCE.exampleKey.consumeClick() && minecraft.player != null) {
+        boolean detached = ClientDetachedCamera.viewpoint() != null;
+        if(Keybindings.INSTANCE.exampleKey.consumeClick() && minecraft.player != null && !detached) {
             minecraft.player.sendSystemMessage(EXAMPLE_KEY_PRESSED);
         }
 
-        if(Keybindings.INSTANCE.examplePacketKey.consumeClick() && minecraft.player != null) {
+        if(Keybindings.INSTANCE.examplePacketKey.consumeClick() && minecraft.player != null && !detached) {
             minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
             PacketHandler.sendToServer(new SKeyPressSpawnEntityPacket());
         }
@@ -57,7 +59,7 @@ public class ClientForgeHandler {
             lastLevel = minecraft.level;
         }
 
-        boolean active = lastPlayer != null && lastPlayer.isAlive() && minecraft.isWindowActive()
+        boolean active = ClientDetachedCamera.viewpoint() == null && lastPlayer != null && lastPlayer.isAlive() && minecraft.isWindowActive()
                 && minecraft.gui.screen() == null && minecraft.gui.overlay() == null;
         if (!active && lastInputActive) PENDING_INPUT.add(new SAbilityKeyPacket(0, Action.CANCEL));
         lastInputActive = active;

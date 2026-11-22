@@ -53,6 +53,7 @@ public class CircleOfInevitability
         ModDataComponents.register(modEventBus);
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
+        net.lukario.circleofinevitability.camera.CameraGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.combat.FriendGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.network.AbilityComboGameTest.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.item.artifacts.SealedArtifactGameTests.FUNCTIONS.register(modEventBus);

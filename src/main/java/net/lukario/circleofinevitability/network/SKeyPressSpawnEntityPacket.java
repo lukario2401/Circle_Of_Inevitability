@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.network;
 
+import net.lukario.circleofinevitability.camera.DetachedCamera;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -23,7 +24,7 @@ public class SKeyPressSpawnEntityPacket {
 
     public void handle(CustomPayloadEvent.Context context) {
         ServerPlayer player = context.getSender();
-        if(player == null)
+        if (player == null || DetachedCamera.active(player))
             return;
 
         ServerLevel level = player.level();

@@ -1,4 +1,5 @@
 {
+  "key.circle_of_inevitability.exit_detached_camera": "Return to body",
   "item.circle_of_inevitability.sun_brooch": "Sun Brooch",
   "tooltip.circle_of_inevitability.sun_brooch.power": "Right-click: purification (6 blocks), cleanse poison/wither, night vision. Cooldown: 8s.",
   "tooltip.circle_of_inevitability.sun_brooch.drawback": "Carrying builds heat; each use adds 20. At 60: weakness and exhaustion; at 100: slowness.",

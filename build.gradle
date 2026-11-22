@@ -27,13 +27,16 @@ minecraft {
             systemProperty 'forge.enabledGameTestNamespaces', 'circle_of_inevitability'
         }
 
-        register('client')
+        register('client') {
+            args '--mixin.config', 'circle_of_inevitability.camera.mixins.json'
+        }
 
         register('server') {
             args '--nogui'
         }
 
         register('gameTestServer') {
+            if (providers.gradleProperty('cameraTests').isPresent()) { args '--tests', 'circle_of_inevitability:camera_*' }
             if (providers.gradleProperty('darkAngelTests').isPresent()) { args '--tests', 'circle_of_inevitability:dark_angel_*' }
             if (providers.gradleProperty('conquerorComboTests').isPresent()) { args '--tests', 'circle_of_inevitability:conqueror_ability_combos' }
             if (providers.gradleProperty('filthyMonarchTests').isPresent()) { args '--tests', 'circle_of_inevitability:filthy_monarch_*' }
@@ -81,6 +84,7 @@ dependencies {
 tasks.named('jar', Jar) {
     manifest {
         attributes([
+            'MixinConfigs'          : 'circle_of_inevitability.camera.mixins.json',
             'Specification-Title'     : 'circle_of_inevitability',
             'Specification-Vendor'    : 'Lukario2401',
             'Specification-Version'   : '1',

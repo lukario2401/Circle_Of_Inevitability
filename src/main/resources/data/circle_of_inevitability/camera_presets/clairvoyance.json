@@ -1,0 +1,6 @@
+{
+  "motion": { "mode": "fixed" },
+  "collision": { "mode": "solid" },
+  "duration": 160,
+  "display": { "fov": 65, "hide_hud": true, "return_ticks": 8 }
+}

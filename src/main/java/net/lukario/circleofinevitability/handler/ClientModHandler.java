@@ -17,6 +17,7 @@ public class ClientModHandler {
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(Keybindings.INSTANCE.exampleKey);
         event.register(Keybindings.INSTANCE.examplePacketKey);
+        event.register(Keybindings.INSTANCE.exitDetachedCamera);
         Keybindings.INSTANCE.abilityKeys.forEach(event::register);
     }
 

@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.StolenAbilities;
+import net.lukario.circleofinevitability.camera.DetachedCamera;
 import net.lukario.circleofinevitability.combat.AbilityCharge;
 import net.lukario.circleofinevitability.combat.AbilityCombos;
 import net.lukario.circleofinevitability.combat.AbilityCombos.Combo;
@@ -73,7 +74,7 @@ public final class AbilityKeys {
     private AbilityKeys() {}
 
     static void input(ServerPlayer player, int slot, SAbilityKeyPacket.Action action) {
-        if (slot == 0 && action == SAbilityKeyPacket.Action.CANCEL) {
+        if (DetachedCamera.active(player) || (slot == 0 && action == SAbilityKeyPacket.Action.CANCEL)) {
             clear(player);
             return;
         }
@@ -307,7 +308,7 @@ public final class AbilityKeys {
     }
 
     private static boolean canCast(ServerPlayer player, int slot) {
-        if (Decree.blocksKey(player, slot)) return false;
+        if (DetachedCamera.active(player) || Decree.blocksKey(player, slot)) return false;
         if (Silence.blocksKey(player, slot)) {
             player.sendOverlayMessage(Component.literal("You are bound by Order."));
             return false;
@@ -324,6 +325,10 @@ public final class AbilityKeys {
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {
         if (!(event.player() instanceof ServerPlayer player)) return;
+        if (DetachedCamera.active(player)) {
+            clear(player);
+            return;
+        }
         Pending pending = PENDING_COMBOS.get(player);
         long now = player.level().getGameTime();
         if (pending != null) expirePending(player, pending, now);

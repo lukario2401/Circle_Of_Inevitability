@@ -1,6 +1,8 @@
 package net.lukario.circleofinevitability.item.custom.abilitys.star_burst;
 
 
+import net.lukario.circleofinevitability.camera.DetachedCamera;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -38,6 +40,7 @@ public class StarBurstHandler {
         // server share a process (single player / LAN host). On a dedicated server KeyMapping does not exist and the
         // old code crashed on the first player tick; there it now does nothing.
         if (!FMLEnvironment.dist.isClient()) return;
+        if (event.player() instanceof ServerPlayer playerInView && DetachedCamera.active(playerInView)) return;
 
         Player player = event.player();
         Level level = event.player().level();

@@ -1,6 +1,8 @@
 package net.lukario.circleofinevitability.network;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.camera.CameraFrame;
+import net.lukario.circleofinevitability.camera.CameraInput;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.ChannelBuilder;
@@ -12,7 +14,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(5)
+            .networkProtocolVersion(6)
             .simpleChannel();
 
     public static void register() {
@@ -130,6 +132,12 @@ public class PacketHandler {
         INSTANCE.messageBuilder(COpenGuidePacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(COpenGuidePacket::encode).decoder(COpenGuidePacket::new)
                 .consumerMainThread(COpenGuidePacket::handle).add();
+        INSTANCE.messageBuilder(CameraFrame.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CameraFrame::encode).decoder(CameraFrame::decode)
+                .consumerMainThread(CameraFrame::handle).add();
+        INSTANCE.messageBuilder(CameraInput.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(CameraInput::encode).decoder(CameraInput::new)
+                .consumerMainThread(CameraInput::handle).add();
     }
 
     public static void sendToServer(Object msg) {

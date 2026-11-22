@@ -1,0 +1,7 @@
+{
+  "motion": { "mode": "orbit", "orbit_radius": 4 },
+  "collision": { "mode": "solid" },
+  "range": 8,
+  "duration": 300,
+  "display": { "return_ticks": 6 }
+}

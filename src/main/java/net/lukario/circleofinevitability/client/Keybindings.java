@@ -78,6 +78,10 @@ public final class Keybindings {
             CATEGORY, 0
     );
 
+    public final KeyMapping exitDetachedCamera = new KeyMapping(
+            "key.circle_of_inevitability.exit_detached_camera", KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM, org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE, CATEGORY, 0);
+
     public final List<KeyMapping> abilityKeys = List.of(abilityOnePacketKey, abilityTwoPacketKey,
             abilityThreePacketKey, abilityFourPacketKey, abilityFivePacketKey, abilitySixPacketKey, abilitySevenPacketKey);
 }
