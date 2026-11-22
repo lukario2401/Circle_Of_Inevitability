@@ -2,12 +2,14 @@ package net.lukario.circleofinevitability.camera;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.JsonOps;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ServerboundPlayerLoadedPacket;
 import net.minecraft.resources.Identifier;
@@ -32,6 +34,7 @@ public final class CameraGameTests {
     static {
         FUNCTIONS.register("camera_walls", () -> CameraGameTests::walls);
         FUNCTIONS.register("camera_sessions", () -> CameraGameTests::sessions);
+        FUNCTIONS.register("camera_scripted", () -> CameraGameTests::scripted);
     }
 
     private CameraGameTests() {}
@@ -68,9 +71,9 @@ public final class CameraGameTests {
         h.succeed();
     }
 
-    private static void sessions(GameTestHelper h) {
+    private static ServerPlayer createPlayer(GameTestHelper h, String name) {
         var level = h.getLevel();
-        var cookie = CommonListenerCookie.createInitial(new GameProfile(UUID.randomUUID(), "CameraTester"), false);
+        var cookie = CommonListenerCookie.createInitial(new GameProfile(UUID.randomUUID(), name), false);
         ServerPlayer player = new ServerPlayer(level.getServer(), level, cookie.gameProfile(), cookie.clientInformation());
         Connection connection = new Connection(PacketFlow.SERVERBOUND);
         new EmbeddedChannel(connection);
@@ -81,12 +84,20 @@ public final class CameraGameTests {
         player.setChunkTrackingView(ChunkTrackingView.of(ChunkPos.containing(BlockPos.containing(body)), 5));
         player.setGameMode(GameType.SURVIVAL);
         player.connection.handleAcceptPlayerLoad(new ServerboundPlayerLoadedPacket());
+        return player;
+    }
+
+    private static void sessions(GameTestHelper h) {
+        var level = h.getLevel();
+        var player = createPlayer(h, "CameraTester");
+        Vec3 body = player.position();
         int[] actions = {0};
         h.assertTrue(!DetachedCamera.start(player, "missing_preset"), "Unknown preset fails cleanly");
         h.assertTrue(DetachedCamera.start(player, "spirit_scouting", (p, view) -> actions[0]++), "Scout opens");
         var scout = DetachedCamera.handle(player).orElseThrow();
         h.assertTrue(!DetachedCamera.start(player, "orbit"), "Two abilities cannot own the same view");
         var forward = new Input(true, false, false, false, false, false, true);
+        h.assertTrue(!scout.setPose(body, 90, 15), "Free flight belongs to the player");
         var move = new CameraInput(scout.id(), forward, 90, 0, true, false, false);
         DetachedCamera.input(player, move);
         DetachedCamera.input(player, move);
@@ -120,6 +131,66 @@ public final class CameraGameTests {
         player.setPos(body.add(0, 1, 0));
         DetachedCamera.tick(new TickEvent.PlayerTickEvent.Post(player));
         h.assertTrue(orbit.view().orElseThrow().position().distanceTo(player.getEyePosition().add(offset)) < 1e-4, "Orbit follows its moving anchor");
+        h.succeed();
+    }
+
+    private static void scripted(GameTestHelper h) {
+        var player = createPlayer(h, "CameraDirector");
+        var body = player.position();
+        var eye = player.getEyePosition();
+        var tick = new TickEvent.PlayerTickEvent.Post(player);
+        var camera = DetachedCamera.startScripted(player).orElseThrow();
+        var destination = eye.add(4, 2, 0);
+        h.assertTrue(camera.moveTo(destination, -90, 30, 4), "Ability can queue a four-tick movement");
+        var input = new CameraInput(camera.id(), new Input(true, false, false, false, true, false, true),
+                160, -70, false, false, false);
+        for (int step = 1; step <= 4; step++) {
+            DetachedCamera.input(player, input);
+            DetachedCamera.tick(tick);
+            var view = camera.view().orElseThrow();
+            double fraction = step / 4.0;
+            h.assertTrue(view.position().distanceTo(eye.lerp(destination, fraction)) < 1e-6,
+                    "Only the ability moves the camera");
+            Vec3 expectedAim = Vec3.directionFromRotation((float)(12 + 18 * fraction), (float)(23 - 113 * fraction));
+            h.assertTrue(view.direction().distanceTo(expectedAim) < 1e-5, "Only the ability turns the camera");
+        }
+        h.assertTrue(camera.setPose(destination, 170, -10), "Ability can turn in place");
+        DetachedCamera.tick(tick);
+        h.assertTrue(camera.view().orElseThrow().direction().distanceTo(Vec3.directionFromRotation(-10, 170)) < 1e-5,
+                "Stationary look change applied");
+        h.assertTrue(!camera.setPose(new Vec3(Double.NaN, 0, 0), 0, 0), "Invalid pose rejected");
+        h.assertTrue(player.position().equals(body) && player.getYRot() == 23 && player.getXRot() == 12,
+                "Camera travel leaves the real body and aim alone");
+
+        Vec3 high = destination.add(0, 90, 0);
+        h.assertTrue(camera.setPose(high, 0, 90), "Can request a distant point in a tracked chunk");
+        DetachedCamera.tick(tick);
+        h.assertTrue(camera.view().orElseThrow().position().equals(high), "Zero range allows untethered travel");
+        camera.setPose(destination, 0, -90);
+        DetachedCamera.tick(tick);
+        BlockPos wall = BlockPos.containing(destination.add(0, 2, 0));
+        h.getLevel().setBlockAndUpdate(wall, Blocks.STONE.defaultBlockState());
+        camera.setPose(destination.add(0, 4, 0), 0, -90);
+        DetachedCamera.tick(tick);
+        h.assertTrue(camera.view().orElseThrow().position().y < wall.getY(), "Scripted poses respect solid walls");
+        camera.stop();
+        h.assertTrue(!camera.setPose(eye, 0, 0), "Stops take priority over queued camera moves");
+        for (int i = 0; i < 6; i++) DetachedCamera.tick(tick);
+        var spirit = DetachedCamera.startScripted(player, "spirit_scouting").orElseThrow();
+        h.assertTrue(!camera.setPose(eye, 0, 0), "An expired handle cannot move the next ability's camera");
+        Vec3 beyond = destination.add(0, 4, 0);
+        spirit.setPose(beyond, 0, 0);
+        DetachedCamera.tick(tick);
+        h.assertTrue(spirit.view().orElseThrow().position().distanceTo(beyond) < 1e-6,
+                "An ability can drive the ward preset straight through stone");
+        var frame = CameraFrame.pose(spirit.id(), beyond, -175, 28);
+        var buffer = new FriendlyByteBuf(Unpooled.buffer());
+        try {
+            frame.encode(buffer);
+            h.assertTrue(frame.equals(CameraFrame.decode(buffer)) && !buffer.isReadable(), "Pose packet preserves position and aim");
+        } finally {
+            buffer.release();
+        }
         h.succeed();
     }
 }

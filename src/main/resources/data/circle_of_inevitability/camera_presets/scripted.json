@@ -1,0 +1,7 @@
+{
+  "motion": { "mode": "scripted" },
+  "collision": { "mode": "solid" },
+  "range": 0,
+  "duration": 0,
+  "display": { "return_ticks": 6 }
+}

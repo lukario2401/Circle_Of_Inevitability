@@ -23,7 +23,7 @@ abstract class CameraMixin {
         if (view == null) return;
         Vec3 eye = view.getPosition(partial);
         setPosition(eye);
-        setRotation(view.getYRot(), view.getXRot());
+        setRotation(view.getViewYRot(partial), view.getViewXRot(partial));
         // Vanilla uses this flag to draw the local player's body.
         detached = eye.distanceToSqr(Minecraft.getInstance().player.getEyePosition(partial)) > 0.25;
     }

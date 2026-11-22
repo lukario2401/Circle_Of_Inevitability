@@ -13,7 +13,7 @@ import java.util.Optional;
 /** Server-side data from data/<namespace>/camera_presets/<name>.json. */
 public record CameraPreset(Motion motion, Collision collision, double range, boolean returnAtBoundary,
                            int duration, boolean cancelOnDamage, boolean manualExit, Display display) {
-    public enum Mode { FREE, FIXED, ORBIT }
+    public enum Mode { FREE, FIXED, ORBIT, SCRIPTED }
     public enum Walls { SOLID, PHASE, ALLOWLIST, DENYLIST }
 
     private static <E extends Enum<E>> Codec<E> names(Class<E> type) {
@@ -62,7 +62,7 @@ public record CameraPreset(Motion motion, Collision collision, double range, boo
     public static final Codec<CameraPreset> CODEC = RecordCodecBuilder.create(i -> i.group(
             Motion.CODEC.optionalFieldOf("motion", Motion.DEFAULT).forGetter(CameraPreset::motion),
             Collision.CODEC.optionalFieldOf("collision", Collision.DEFAULT).forGetter(CameraPreset::collision),
-            Codec.doubleRange(0.5, 512).optionalFieldOf("range", 48.0).forGetter(CameraPreset::range),
+            Codec.doubleRange(0, 512).optionalFieldOf("range", 48.0).forGetter(CameraPreset::range),
             Codec.BOOL.optionalFieldOf("return_at_boundary", false).forGetter(CameraPreset::returnAtBoundary),
             Codec.intRange(0, 72000).optionalFieldOf("duration", 200).forGetter(CameraPreset::duration),
             Codec.BOOL.optionalFieldOf("cancel_on_damage", true).forGetter(CameraPreset::cancelOnDamage),

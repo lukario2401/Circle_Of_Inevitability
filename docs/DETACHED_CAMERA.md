@@ -9,7 +9,7 @@ import net.lukario.circleofinevitability.camera.DetachedCamera;
 boolean opened = DetachedCamera.start(player, "spirit_scouting");
 ```
 
-The player can look back at their own body. Their movement keys and mouse control the view, while their body keeps its facing, game mode, inventory and vulnerability. Gravity and external forces still act on it. The server calculates the viewpoint and checks collision and range. The player can explore terrain already tracked around their body in the current dimension.
+In free flight the player can use the movement keys and mouse to look back at their own body. In scripted mode the ability sets the camera’s position and aim. In both modes the body keeps its facing, game mode, inventory and vulnerability. Gravity and external forces still act on it. The server calculates the viewpoint and checks collision and range. The player can explore terrain already tracked around their body in the current dimension.
 
 ## Try it in game
 
@@ -23,6 +23,29 @@ An operator can run these commands in chat. Tab completes preset IDs.
 ```
 
 Scouting lasts 30 seconds and reaches 48 blocks. Fly with the movement keys, ascend with Jump, descend with Sneak, and boost with Sprint. Try flying through stone and then obsidian. The scouting preset treats obsidian and crying obsidian as wards. Clairvoyance gives eight seconds of mouse look from the chosen point. Moving the mouse in Orbit circles the selected entity. **Return to body** defaults to Backspace and can be rebound in Controls.
+
+## Let the ability direct the camera
+
+Open a scripted view from the ability's server-side cast and keep its handle for the rest of the cast. Here the camera rises six blocks over one second and turns straight down, leaving the caster visible below.
+
+```java
+DetachedCamera.startScripted(player).ifPresent(camera -> {
+    Vec3 overhead = player.getEyePosition().add(0, 6, 0);
+    camera.moveTo(overhead, player.getYRot(), 90, 20);
+});
+```
+
+`moveTo(position, yaw, pitch, ticks)` moves in a straight line and turns along the shortest yaw arc. Coordinates are absolute, angles are Minecraft degrees, and durations are game ticks. To animate a curve, follow a moving target, or rotate in place, call `camera.setPose(position, yaw, pitch)` from the ability's server tick. Each call replaces the previous destination. The view holds its last pose until the next instruction or the end of the session. When the cast ends, call `camera.stop()`.
+
+The player can use the configured exit key during a scripted view. Their movement and mouse input leave both the body and the shot alone. To use another preset's block collision, range and exit rules, pass its ID to `startScripted(player, "spirit_scouting")`. A move returns false for a stale handle, a player-controlled view, invalid values, or an unavailable destination. Accepted moves still obey collision and range each tick.
+
+Preview the same ability API in-game with these operator commands. The second command moves the camera six blocks above your feet and turns it downward over one second.
+
+```mcfunction
+/coicamera start circle_of_inevitability:scripted
+/coicamera move ~ ~6 ~ 0 90 20
+/coicamera stop
+```
 
 ## Anchors, actions and cleanup
 
@@ -47,7 +70,7 @@ DetachedCamera.start(player, "spirit_scouting", (caster, view) -> {
 
 The action runs on the server with a validated origin and look direction. The example uses Minecraft's Vec3, ClipContext, HitResult and Component. Ordinary attacking, mining and item use are suppressed while observing. Each ability chooses its own target rules, reach, cost and cooldown.
 
-All three start methods return false if a preset is missing, the player already has a view, the anchor is unavailable, or the initial point intersects a blocked shape. Riding, sleeping and possession also prevent opening. A bare preset name uses the mod namespace. A fully qualified ID can refer to any datapack.
+The boolean entry points (`start`, `at`, and `follow`) return false if a preset is missing, the player already has a view, the anchor is unavailable, or the initial point intersects a blocked shape. Under the same conditions, `startScripted` returns an empty Optional. Riding, sleeping and possession also prevent opening. A bare preset name uses the mod namespace. A fully qualified ID can refer to any datapack.
 
 Call `DetachedCamera.stop(player)` for an immediate ability decision. For delayed callbacks, capture the handle when the view opens and call `handle.stop()` when the ability expires. A handle only affects the session that created it. Its `view()` returns an empty Optional once that session ends.
 
@@ -66,14 +89,14 @@ Place a JSON file at `data/<namespace>/camera_presets/<name>.json` and run `/rel
 
 | Field | Default | Meaning |
 | --- | --- | --- |
-| `motion.mode` | `free` | `free` flies with the keys. `fixed` stays at the anchor. `orbit` circles the anchor using mouse look. |
+| `motion.mode` | `free` | `free` flies with the keys. `fixed` stays at the anchor. `orbit` circles the anchor using mouse look. `scripted` takes position and rotation from the ability. |
 | `motion.speed` | 0.35 | Free flight speed in blocks per tick, from 0.01 to 4. |
 | `motion.sprint_multiplier` | 2 | Free flight boost from 1 to 4. |
 | `motion.acceleration`, `motion.braking` | 0.5, 0.7 | Fraction of the remaining change in speed applied each tick, from 0.01 to 1. A value of 1 responds immediately. |
 | `motion.orbit_radius` | 4 | Desired orbit radius in blocks, from 0.5 to 32. Walls and the range limit can shorten it. |
 | `collision.mode` | `solid` | `solid` stops at block collision shapes, `phase` passes through them all, `allowlist` passes only tagged shapes, and `denylist` stops only at tagged shapes. |
 | `collision.tag` | omitted | Required for either list mode. Supply a block tag ID such as `circle_of_inevitability:camera_wards`, without a leading `#`. |
-| `range` | 48 | Maximum distance in blocks from the anchor, from 0.5 to 512. The world border, build height and tracked chunks also limit travel. |
+| `range` | 48 | Maximum distance in blocks from the anchor, up to 512. Zero removes the distance tether for any mode, including player flight. The world border, build height and tracked chunks still limit travel. |
 | `return_at_boundary` | false | End the view when flight exceeds its bounds. Otherwise the camera stops at the limit. |
 | `duration` | 200 | Session length in ticks, from 0 to 72000. Zero runs until another exit condition. |
 | `manual_exit`, `cancel_on_damage` | true, true | Allow the return key and interrupt on damage to the body, respectively. |

@@ -1,11 +1,15 @@
 package net.lukario.circleofinevitability.camera;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.commands.arguments.coordinates.RotationArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.event.RegisterCommandsEvent;
@@ -31,6 +35,11 @@ public final class CameraCommands {
         event.getDispatcher().register(Commands.literal("coicamera")
                 .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
                 .then(Commands.literal("start").then(preset))
+                .then(Commands.literal("move").then(Commands.argument("position", Vec3Argument.vec3())
+                        .then(Commands.argument("rotation", RotationArgument.rotation())
+                                .executes(ctx -> move(ctx, 1))
+                                .then(Commands.argument("ticks", IntegerArgumentType.integer(1))
+                                        .executes(ctx -> move(ctx, IntegerArgumentType.getInteger(ctx, "ticks")))))))
                 .then(Commands.literal("stop").executes(ctx -> {
                     var player = ctx.getSource().getPlayerOrException();
                     if (!DetachedCamera.active(player)) {
@@ -40,6 +49,16 @@ public final class CameraCommands {
                     DetachedCamera.stop(player);
                     return 1;
                 })));
+    }
+
+    private static int move(CommandContext<CommandSourceStack> ctx, int ticks) throws CommandSyntaxException {
+        var source = ctx.getSource();
+        var camera = DetachedCamera.handle(source.getPlayerOrException());
+        var rotation = RotationArgument.getRotation(ctx, "rotation").getRotation(source);
+        var position = Vec3Argument.getVec3(ctx, "position");
+        if (camera.isPresent() && camera.get().moveTo(position, rotation.y, rotation.x, ticks)) return 1;
+        source.sendFailure(Component.literal("Start a scripted camera and choose a position in tracked terrain."));
+        return 0;
     }
 
     private static int result(CommandSourceStack source, boolean opened) {

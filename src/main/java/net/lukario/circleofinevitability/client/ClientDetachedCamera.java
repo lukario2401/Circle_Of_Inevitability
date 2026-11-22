@@ -35,6 +35,8 @@ public final class ClientDetachedCamera {
     private static UUID session;
     private static Vec3 target;
     private static int fov, returnTicks;
+    private static float targetYaw, targetPitch;
+    private static boolean scripted, returning;
     private static CameraType originalPerspective;
     private static boolean originalHud, hideHud;
 
@@ -49,12 +51,12 @@ public final class ClientDetachedCamera {
     public static void turn(LocalPlayer player, double mouseX, double mouseY) {
         Marker view = viewpoint();
         if (view == null) player.turn(mouseX, mouseY);
-        else if (returnTicks == 0) view.turn(mouseX, mouseY);
+        else if (!scripted && !returning) view.turn(mouseX, mouseY);
     }
 
     public static void receive(CameraFrame frame) {
         Minecraft mc = Minecraft.getInstance();
-        if (frame.kind() == CameraFrame.Kind.OPEN) {
+        if (frame.kind() == CameraFrame.Kind.OPEN || frame.kind() == CameraFrame.Kind.OPEN_SCRIPTED) {
             clear();
             if (mc.player == null || mc.level == null || mc.getCameraEntity() != mc.player) {
                 PacketHandler.sendToServer(new CameraInput(frame.session(), Input.EMPTY, 0, 0, false, false, true));
@@ -67,7 +69,10 @@ public final class ClientDetachedCamera {
             owner.setDeltaMovement(0, motion.y, 0);
             target = frame.position();
             marker = new Marker(EntityTypes.MARKER, mc.level);
-            marker.snapTo(target, frame.yaw(), frame.pitch());
+            scripted = frame.kind() == CameraFrame.Kind.OPEN_SCRIPTED;
+            targetYaw = frame.yaw();
+            targetPitch = frame.pitch();
+            marker.snapTo(target, targetYaw, targetPitch);
             fov = frame.fov();
             originalPerspective = mc.options.getCameraType();
             originalHud = mc.gui.hud.isHidden();
@@ -78,7 +83,15 @@ public final class ClientDetachedCamera {
         } else if (frame.session().equals(session)) {
             switch (frame.kind()) {
                 case CLOSE -> clear();
-                case RETURN -> returnTicks = frame.returnTicks();
+                case RETURN -> {
+                    returning = true;
+                    returnTicks = frame.returnTicks();
+                }
+                case POSE -> {
+                    target = frame.position();
+                    targetYaw = frame.yaw();
+                    targetPitch = frame.pitch();
+                }
                 case MOVE -> target = frame.position();
             }
         }
@@ -90,6 +103,7 @@ public final class ClientDetachedCamera {
         mc.options.setCameraType(originalPerspective);
         if (hideHud && originalHud != mc.gui.hud.isHidden()) mc.gui.hud.toggle();
         returnTicks = 0;
+        returning = false;
         marker = null;
         owner = null;
         session = null;
@@ -111,10 +125,13 @@ public final class ClientDetachedCamera {
             float fraction = 1f / returnTicks--;
             marker.setYRot(Mth.rotLerp(fraction, marker.getYRot(), owner.getYRot()));
             marker.setXRot(Mth.lerp(fraction, marker.getXRot(), owner.getXRot()));
+        } else if (scripted && !returning) {
+            marker.setYRot(targetYaw);
+            marker.setXRot(targetPitch);
         }
         var keys = mc.options;
         boolean gameplay = mc.isWindowActive() && mc.gui.screen() == null && mc.gui.overlay() == null;
-        Input input = gameplay ? new Input(keys.keyUp.isDown(), keys.keyDown.isDown(), keys.keyLeft.isDown(),
+        Input input = gameplay && !scripted ? new Input(keys.keyUp.isDown(), keys.keyDown.isDown(), keys.keyLeft.isDown(),
                 keys.keyRight.isDown(), keys.keyJump.isDown(), keys.keyShift.isDown(), keys.keySprint.isDown()) : Input.EMPTY;
         boolean use = consume(keys.keyUse);
         boolean exit = consume(Keybindings.INSTANCE.exitDetachedCamera);
@@ -124,6 +141,7 @@ public final class ClientDetachedCamera {
         consume(keys.keySwapOffhand);
         consume(keys.keyTogglePerspective);
         if (hideHud && !mc.gui.hud.isHidden()) mc.gui.hud.toggle();
+        if (scripted && !(gameplay && (use || exit))) return;
         PacketHandler.sendToServer(new CameraInput(session, input, marker.getYRot(), marker.getXRot(),
                 gameplay && use, gameplay && exit, false));
     }

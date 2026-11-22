@@ -102,6 +102,6 @@ icons, particles and 59 original sound cues. Operators can inspect the presentat
 
 The [Filthy Monarch asset collection](docs/pathways/filthy_monarch/FILTHY_MONARCH_ASSETS.md) covers all 35 abilities in the supplied Abyss pathway design with icons, animated forms, models, particles and 59 original sound cues. All **35 abilities are playable**, with passive progression, Depravity Seeds, Offerings, summons and four combat wheels; see the [controls and gameplay guide](docs/pathways/filthy_monarch/FILTHY_MONARCH_GAMEPLAY.md). Operators can inspect all presentation assets with `/filthyfx`.
 
-Abilities can open a **detached camera** for free flight, fixed-point clairvoyance or orbiting an entity.
+Abilities can open a **detached camera** for player-controlled flight, fixed-point clairvoyance, orbiting an entity, or a scripted shot. An ability can move and aim a scripted camera every tick or send it to a new pose over a chosen duration.
 Operators can try `/coicamera start circle_of_inevitability:spirit_scouting` and press Backspace to return.
 The [camera guide](docs/DETACHED_CAMERA.md) covers one-call ability integration, block tags and datapack presets.
