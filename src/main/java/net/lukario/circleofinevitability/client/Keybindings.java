@@ -3,8 +3,6 @@ package net.lukario.circleofinevitability.client;
 import com.mojang.blaze3d.platform.InputConstants;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
-import net.lukario.circleofinevitability.item.custom.abilitys.DashKeybindClient;
-import net.lukario.circleofinevitability.item.custom.abilitys.star_burst.StarBurstKeybindClient;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.resources.Identifier;
 import net.minecraftforge.client.settings.KeyConflictContext;
@@ -84,12 +82,13 @@ public final class Keybindings {
             "key.circle_of_inevitability.exit_detached_camera", KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM, org.lwjgl.glfw.GLFW.GLFW_KEY_BACKSPACE, CATEGORY, 0);
 
-    public boolean cameraOpenHeld() {
-        return DashKeybindClient.DASH_KEY.isDown() && StarBurstKeybindClient.STAR_BURST_KEY.isDown();
-    }
+    public final KeyMapping cameraModifier = cameraKey("camera_modifier", InputConstants.KEY_Z);
+    public final KeyMapping cameraOpen = cameraKey("camera_open", InputConstants.KEY_C);
+    public final KeyMapping cameraStep = cameraKey("camera_step", InputConstants.KEY_V);
 
-    public boolean cameraStepHeld() {
-        return DashKeybindClient.DASH_KEY.isDown() && examplePacketKey.isDown();
+    private static KeyMapping cameraKey(String name, int key) {
+        return new KeyMapping("key." + CircleOfInevitability.MOD_ID + "." + name,
+                KeyConflictContext.IN_GAME, InputConstants.Type.KEYSYM, key, CATEGORY, 0);
     }
 
     public final List<KeyMapping> abilityKeys = List.of(abilityOnePacketKey, abilityTwoPacketKey,

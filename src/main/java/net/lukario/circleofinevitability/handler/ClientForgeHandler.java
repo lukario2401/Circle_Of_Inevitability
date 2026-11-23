@@ -3,14 +3,15 @@ package net.lukario.circleofinevitability.handler;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars;
+import net.lukario.circleofinevitability.client.CameraChordInput;
 import net.lukario.circleofinevitability.client.ClientDetachedCamera;
 import net.lukario.circleofinevitability.client.ClientPathwayData;
 import net.lukario.circleofinevitability.client.Keybindings;
 import net.lukario.circleofinevitability.combat.AbilityCombos;
+import net.lukario.circleofinevitability.item.custom.abilitys.DashKeybindClient;
 import net.lukario.circleofinevitability.item.custom.abilitys.star_burst.StarBurstKeybindClient;
 import net.lukario.circleofinevitability.network.PacketHandler;
-import net.lukario.circleofinevitability.network.SOpenStarCameraPacket;
+import net.lukario.circleofinevitability.network.SLegacyAbilityPacket;
 import net.lukario.circleofinevitability.network.SAbilityKeyPacket;
 import net.lukario.circleofinevitability.network.SAbilityKeyPacket.Action;
 import net.lukario.circleofinevitability.network.SKeyPressSpawnEntityPacket;
@@ -38,33 +39,28 @@ public class ClientForgeHandler {
     private static LocalPlayer lastPlayer;
     private static ClientLevel lastLevel;
     private static boolean lastInputActive;
-    private static boolean openChordDown;
 
     @SubscribeEvent
     public static void clientTick(TickEvent.ClientTickEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
         boolean detached = ClientDetachedCamera.viewpoint() != null;
+        boolean gameplay = CameraChordInput.updateContext(minecraft);
         var keys = Keybindings.INSTANCE;
-        boolean openHeld = keys.cameraOpenHeld();
-        boolean starPlayer = ClientPathwayData.is(KeyOfStars.PATHWAY);
-        boolean gameplay = minecraft.player != null && minecraft.player.isAlive() && minecraft.isWindowActive()
-                && minecraft.gui.screen() == null && minecraft.gui.overlay() == null;
-        if (gameplay && starPlayer && openHeld && !openChordDown && !detached) {
-            PacketHandler.sendToServer(new SOpenStarCameraPacket());
-        }
-        openChordDown = openHeld;
-        if (detached || (starPlayer && openHeld)) discardClicks(StarBurstKeybindClient.STAR_BURST_KEY);
-        if (detached || (starPlayer && keys.cameraStepHeld())) discardClicks(keys.examplePacketKey);
-
-        if(Keybindings.INSTANCE.exampleKey.consumeClick() && minecraft.player != null && !detached) {
+        if (CameraChordInput.click(keys.exampleKey) && gameplay && !detached) {
             minecraft.player.sendSystemMessage(EXAMPLE_KEY_PRESSED);
         }
-
-        if(Keybindings.INSTANCE.examplePacketKey.consumeClick() && minecraft.player != null && !detached) {
+        if (CameraChordInput.click(keys.examplePacketKey) && gameplay && !detached) {
             minecraft.player.sendOverlayMessage(EXAMPLE_KEY_PRESSED);
             PacketHandler.sendToServer(new SKeyPressSpawnEntityPacket());
         }
+        var dash = DashKeybindClient.DASH_KEY;
+        boolean dashPressed = CameraChordInput.click(dash) || CameraChordInput.down(dash);
+        boolean burstPressed = CameraChordInput.click(StarBurstKeybindClient.STAR_BURST_KEY);
+        if (gameplay && !detached && minecraft.hasSingleplayerServer() && (dashPressed || burstPressed)) {
+            PacketHandler.sendToServer(new SLegacyAbilityPacket(dashPressed, burstPressed));
+        }
         pollAbilityKeys(minecraft);
+        CameraChordInput.finishTick();
     }
 
     private static void pollAbilityKeys(Minecraft minecraft) {
@@ -82,9 +78,9 @@ public class ClientForgeHandler {
         int releases = 0;
         for (int index = 0; index < ABILITY_KEYS.size(); index++) {
             KeyMapping mapping = ABILITY_KEYS.get(index);
-            boolean clicked = mapping.consumeClick();
+            boolean clicked = CameraChordInput.click(mapping);
             boolean wasDown = ABILITY_KEYS_DOWN[index];
-            boolean down = active && mapping.isDown();
+            boolean down = active && CameraChordInput.down(mapping);
             int slot = index + 1;
 
             if (active && clicked) {

@@ -18,6 +18,9 @@ public class ClientModHandler {
         event.register(Keybindings.INSTANCE.exampleKey);
         event.register(Keybindings.INSTANCE.examplePacketKey);
         event.register(Keybindings.INSTANCE.exitDetachedCamera);
+        event.register(Keybindings.INSTANCE.cameraModifier);
+        event.register(Keybindings.INSTANCE.cameraOpen);
+        event.register(Keybindings.INSTANCE.cameraStep);
         Keybindings.INSTANCE.abilityKeys.forEach(event::register);
     }
 

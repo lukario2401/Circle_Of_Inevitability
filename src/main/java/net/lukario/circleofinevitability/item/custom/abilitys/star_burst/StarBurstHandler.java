@@ -1,21 +1,12 @@
 package net.lukario.circleofinevitability.item.custom.abilitys.star_burst;
 
 
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars;
-import net.lukario.circleofinevitability.client.ClientPathwayData;
-import net.lukario.circleofinevitability.client.Keybindings;
-import net.lukario.circleofinevitability.camera.DetachedCamera;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -23,45 +14,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.loading.FMLEnvironment;
-import net.minecraftforge.network.ForgePacketHandler;
 import org.joml.Vector3f;
 import java.util.List;
 
 
-@Mod.EventBusSubscriber(modid = "circle_of_inevitability", bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class StarBurstHandler {
 
-    @SubscribeEvent
-    public static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {
-        if (event.player().level().isClientSide()) return;
-        // Forge 65 port: this runs on the server thread but reads a client key, so it only works where client and
-        // server share a process (single player / LAN host). On a dedicated server KeyMapping does not exist and the
-        // old code crashed on the first player tick; there it now does nothing.
-        if (!FMLEnvironment.dist.isClient()) return;
-        if (event.player() instanceof ServerPlayer playerInView && DetachedCamera.active(playerInView)) return;
-
-        if (ClientPathwayData.is(KeyOfStars.PATHWAY) && Keybindings.INSTANCE.cameraOpenHeld()) return;
-
-        Player player = event.player();
-        Level level = event.player().level();
-
-        if (StarBurstKeybindClient.STAR_BURST_KEY.consumeClick()) {
-
-            LivingEntity target = getTarget(player);
-
-            if (target!=null){
-                if (!level.isClientSide()){
-                    shoot(player, level, target);
-                    shoot(player, level, target);
-                    shoot(player, level, target);
-                }
-            }
-        }
+    public static void starBurst(ServerPlayer player) {
+        LivingEntity target = getTarget(player);
+        if (target == null) return;
+        for (int i = 0; i < 3; i++) shoot(player, player.level(), target);
     }
 
     private static void shoot(Player player, Level level, LivingEntity target){

@@ -148,7 +148,7 @@ public final class ClientDetachedCamera {
         if (hideHud && !mc.gui.hud.isHidden()) mc.gui.hud.toggle();
         if (scripted && !(gameplay && (use || exit))) return;
         PacketHandler.sendToServer(new CameraInput(session, input, marker.getYRot(), marker.getXRot(),
-                gameplay && use, gameplay && exit, false, gameplay && Keybindings.INSTANCE.cameraStepHeld()));
+                gameplay && use, gameplay && exit, false, gameplay && CameraChordInput.stepHeld()));
     }
 
     private static boolean consume(KeyMapping key) {
