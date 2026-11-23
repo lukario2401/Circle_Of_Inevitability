@@ -20,8 +20,8 @@ import java.util.function.IntSupplier;
  * Forge 1.21 (51.x) had no working "render HUD" event, so the old code added its own layer to vanilla's
  * HUD layer list (Gui.layers) by reflection, with a chat-layer fallback.
  * Forge 65 (26.2) has a real hook: AddGuiOverlayLayersEvent, fired once when the HUD is built.
- * The layer goes at the end of the root stack, so as before it draws on top of the vanilla HUD,
- * is hidden with F1, and still shows while chat/inventory is open. There is nothing left to fall back from.
+ * The HUD widgets draw on top of the vanilla HUD and hide with F1. The corruption tint sits
+ * beneath the HUD so it colors the world even when the widgets are hidden.
  *
  * To draw something new on the HUD, call your render method from renderAll().
  */
@@ -29,6 +29,7 @@ import java.util.function.IntSupplier;
 public class HudLayerHook {
 
     private static final Identifier LAYER = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "hud");
+    private static final Identifier CORRUPTION_TINT = Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "corruption_tint");
 
     private static void renderAll(GuiGraphicsExtractor guiGraphics) {
         PathwayHudIcon.render(guiGraphics);
@@ -47,6 +48,7 @@ public class HudLayerHook {
             ClientPathwayData.setPathway("none"); // left the world
             ClientPathwayData.setProgress(9, 0);
             SpiritualityHud.clear();
+            CorruptionTint.update(0);
         }
     }
 
@@ -55,6 +57,8 @@ public class HudLayerHook {
     public static void onHudLayerHookAddLayers(AddGuiOverlayLayersEvent event) {
         Minecraft minecraft = Minecraft.getInstance();
         ForgeLayeredDraw layers = event.getLayeredDraw();
+        layers.addBelow(CORRUPTION_TINT, ForgeLayeredDraw.PRE_SLEEP_STACK,
+                (graphics, deltaTracker) -> CorruptionTint.render(graphics));
         liftLayer(layers, ForgeLayeredDraw.HOTBAR_AND_DECOS, ForgeLayeredDraw.SELECTED_ITEM_NAME,
                 () -> SpiritualityHud.messageOffset(minecraft, true));
         liftLayer(layers, ForgeLayeredDraw.POST_SLEEP_STACK, ForgeLayeredDraw.HOTBAR_MESSAGE,

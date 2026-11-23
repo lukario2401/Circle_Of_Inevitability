@@ -50,6 +50,9 @@ public class SoulCore {
     // Corruption
     // =========================
 
+    public static final int FIRST_HARMFUL_CORRUPTION = 66;
+    public static final int MAX_CORRUPTION = 100;
+
     private static CompoundTag getModDataCorruption(LivingEntity entity) {
         CompoundTag persistentData = entity.getPersistentData();
 
@@ -71,7 +74,7 @@ public class SoulCore {
     }
 
     public static void setCorruption(LivingEntity livingEntity, int value) {
-        int clamped = Math.min(100, Math.max(0, value));
+        int clamped = Math.min(MAX_CORRUPTION, Math.max(0, value));
 
         getModDataCorruption(livingEntity).putInt("corruption_level", clamped);
     }

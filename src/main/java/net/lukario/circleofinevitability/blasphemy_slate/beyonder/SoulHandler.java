@@ -1,7 +1,7 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder;
 
 import net.lukario.circleofinevitability.fate.Fate;
-import net.lukario.circleofinevitability.network.CSyncSpiritualityPacket;
+import net.lukario.circleofinevitability.network.CSyncSoulStatsPacket;
 import net.lukario.circleofinevitability.network.PacketHandler;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +21,7 @@ import java.util.UUID;
 @Mod.EventBusSubscriber(modid = "circle_of_inevitability")
 public class SoulHandler {
 
-    private static final Map<UUID, CSyncSpiritualityPacket> LAST_SENT_SPIRITUALITY = new HashMap<>();
+    private static final Map<UUID, CSyncSoulStatsPacket> LAST_SENT_SOUL_STATS = new HashMap<>();
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent.Post event) {
@@ -30,17 +30,17 @@ public class SoulHandler {
         SoulCore.setSpirituality(player, SoulCore.getSpirituality(player) + Beyonder.spiritualityRegenPerTick(player)
                 * Fate.tier(player).regen * (Fate.applies(player) ? 1.05f : 1f));
 
-        CSyncSpiritualityPacket snapshot = new CSyncSpiritualityPacket(
-                SoulCore.getSpirituality(player), Beyonder.maxSpirituality(player));
-        if (!snapshot.equals(LAST_SENT_SPIRITUALITY.get(player.getUUID()))) {
+        CSyncSoulStatsPacket snapshot = new CSyncSoulStatsPacket(
+                SoulCore.getSpirituality(player), Beyonder.maxSpirituality(player), SoulCore.getCorruption(player));
+        if (!snapshot.equals(LAST_SENT_SOUL_STATS.get(player.getUUID()))) {
             PacketHandler.sendToPlayer(snapshot, player);
-            LAST_SENT_SPIRITUALITY.put(player.getUUID(), snapshot);
+            LAST_SENT_SOUL_STATS.put(player.getUUID(), snapshot);
         }
     }
 
     @SubscribeEvent
     public static void onPlayerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
-        LAST_SENT_SPIRITUALITY.remove(event.getEntity().getUUID());
+        LAST_SENT_SOUL_STATS.remove(event.getEntity().getUUID());
     }
 
     @SubscribeEvent
@@ -50,7 +50,7 @@ public class SoulHandler {
         if (entity.level().isClientSide()) return;
         if (entity.tickCount % 20 != 0) return;
 
-        if (SoulCore.getCorruption(entity)==100){
+        if (SoulCore.getCorruption(entity) == SoulCore.MAX_CORRUPTION) {
             entity.kill((ServerLevel) entity.level());
         }
         if (SoulCore.getCorruption(entity)>95){
@@ -69,7 +69,7 @@ public class SoulHandler {
             }
             entity.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 120, 0));
         }
-        if (SoulCore.getCorruption(entity)>65){
+        if (SoulCore.getCorruption(entity) >= SoulCore.FIRST_HARMFUL_CORRUPTION) {
             if (entity.getRandom().nextInt(5) == 0) {
                 entity.hurt(entity.damageSources().outOfBorder(), 1);
             }

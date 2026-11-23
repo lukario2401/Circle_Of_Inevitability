@@ -14,7 +14,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(7)
+            .networkProtocolVersion(8)
             .simpleChannel();
 
     public static void register() {
@@ -124,10 +124,10 @@ public class PacketHandler {
         INSTANCE.messageBuilder(SCodexChoicePacket.class, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(SCodexChoicePacket::encode).decoder(SCodexChoicePacket::new)
                 .consumerMainThread(SCodexChoicePacket::handle).add();
-        INSTANCE.messageBuilder(CSyncSpiritualityPacket.class, NetworkDirection.PLAY_TO_CLIENT)
-                .encoder(CSyncSpiritualityPacket::encode)
-                .decoder(CSyncSpiritualityPacket::new)
-                .consumerMainThread(CSyncSpiritualityPacket::handle)
+        INSTANCE.messageBuilder(CSyncSoulStatsPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(CSyncSoulStatsPacket::encode)
+                .decoder(CSyncSoulStatsPacket::new)
+                .consumerMainThread(CSyncSoulStatsPacket::handle)
                 .add();
         INSTANCE.messageBuilder(COpenGuidePacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(COpenGuidePacket::encode).decoder(COpenGuidePacket::new)

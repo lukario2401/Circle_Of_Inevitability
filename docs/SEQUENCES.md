@@ -288,7 +288,7 @@ Every gamble uses the item up. Won: the new Pathway and Sequence, digestion at 0
 | `/sequence set <player> <0-9>` | op | Set the Sequence. |
 | `/sequence digestion <player> <0-100>` | op | Set digestion. |
 | `/sequence spirituality <player> <amount>` | op | Set spirituality (clamped to the maximum). |
-| `/soul corruption <player> [0-100]` | op | Show or set corruption (unchanged). |
+| `/soul corruption <player> [0-100]` | op | Show or set corruption. At 66 and above the player's screen takes on a red tint that deepens with corruption. |
 
 The old `/soul get, setAspect, setstage, settier, setshards, addshards, addSoulEssence` are gone.
 
