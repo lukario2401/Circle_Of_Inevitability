@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx.Status;
+import net.lukario.circleofinevitability.camera.DetachedCamera;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Cooldowns;
 import net.lukario.circleofinevitability.combat.Echo;
@@ -554,6 +555,10 @@ public class KeyOfStars {
     // =========================
     // What a cast costs, how long a cooldown is (every key and wheel entry goes through these)
     // =========================
+
+    public static boolean openScoutingCamera(ServerPlayer player) {
+        return ready(player, false, DOOR_SEQUENCE) && DetachedCamera.start(player, "key_of_stars_scouting");
+    }
 
     /** True for a Key Of Stars at that Sequence or stronger. */
     public static boolean isKeyOfStars(Player player, int sequence) {

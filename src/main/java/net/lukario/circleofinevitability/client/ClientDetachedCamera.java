@@ -59,7 +59,7 @@ public final class ClientDetachedCamera {
         if (frame.kind() == CameraFrame.Kind.OPEN || frame.kind() == CameraFrame.Kind.OPEN_SCRIPTED) {
             clear();
             if (mc.player == null || mc.level == null || mc.getCameraEntity() != mc.player) {
-                PacketHandler.sendToServer(new CameraInput(frame.session(), Input.EMPTY, 0, 0, false, false, true));
+                PacketHandler.sendToServer(new CameraInput(frame.session(), Input.EMPTY, 0, 0, false, false, true, false));
                 return;
             }
             session = frame.session();
@@ -93,6 +93,11 @@ public final class ClientDetachedCamera {
                     targetPitch = frame.pitch();
                 }
                 case MOVE -> target = frame.position();
+                case SNAP -> {
+                    target = frame.position();
+                    marker.setPos(target);
+                    marker.setOldPosAndRot();
+                }
             }
         }
     }
@@ -115,7 +120,7 @@ public final class ClientDetachedCamera {
         Minecraft mc = Minecraft.getInstance();
         if (viewpoint() == null) {
             if (mc.getConnection() != null)
-                PacketHandler.sendToServer(new CameraInput(session, Input.EMPTY, 0, 0, false, false, true));
+                PacketHandler.sendToServer(new CameraInput(session, Input.EMPTY, 0, 0, false, false, true, false));
             clear();
             return;
         }
@@ -143,7 +148,7 @@ public final class ClientDetachedCamera {
         if (hideHud && !mc.gui.hud.isHidden()) mc.gui.hud.toggle();
         if (scripted && !(gameplay && (use || exit))) return;
         PacketHandler.sendToServer(new CameraInput(session, input, marker.getYRot(), marker.getXRot(),
-                gameplay && use, gameplay && exit, false));
+                gameplay && use, gameplay && exit, false, gameplay && Keybindings.INSTANCE.cameraStepHeld()));
     }
 
     private static boolean consume(KeyMapping key) {

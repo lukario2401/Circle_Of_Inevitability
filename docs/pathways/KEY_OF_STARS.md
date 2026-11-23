@@ -55,6 +55,10 @@ The abilities do not each get a Sequence of their own. Sequence 8 has seven abil
 | Key of Stars (1) | Space Fragmentation, Starlight Seal, Space-Time Labyrinth |
 | Door (0) | Alternate World, Omnipresence, Close the Door |
 
+## Scouting camera
+
+From Apprentice (Sequence 9), press **Z+C** to detach your view. Fly with the movement keys and aim with the mouse. Hold **Z+V** to jump the camera one block in the direction it faces every half-second. Release either key to reset the interval. **Backspace** returns to the body. Damage also ends the view. The camera lasts 30 seconds, reaches 48 blocks, and passes through ordinary blocks. Obsidian and crying obsidian stop it. [Camera controls and implementation guide](../DETACHED_CAMERA.md#wire-a-held-forward-step-to-another-ability)
+
 ## Keys
 
 | Key | Ability | Sequence | Normal cast | Sneak cast |

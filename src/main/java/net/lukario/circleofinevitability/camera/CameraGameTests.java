@@ -5,6 +5,8 @@ import com.mojang.serialization.JsonOps;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.embedded.EmbeddedChannel;
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
@@ -34,6 +36,7 @@ public final class CameraGameTests {
     static {
         FUNCTIONS.register("camera_walls", () -> CameraGameTests::walls);
         FUNCTIONS.register("camera_sessions", () -> CameraGameTests::sessions);
+        FUNCTIONS.register("camera_star_steps", () -> CameraGameTests::starSteps);
         FUNCTIONS.register("camera_scripted", () -> CameraGameTests::scripted);
     }
 
@@ -98,7 +101,7 @@ public final class CameraGameTests {
         h.assertTrue(!DetachedCamera.start(player, "orbit"), "Two abilities cannot own the same view");
         var forward = new Input(true, false, false, false, false, false, true);
         h.assertTrue(!scout.setPose(body, 90, 15), "Free flight belongs to the player");
-        var move = new CameraInput(scout.id(), forward, 90, 0, true, false, false);
+        var move = new CameraInput(scout.id(), forward, 90, 0, true, false, false, false);
         DetachedCamera.input(player, move);
         DetachedCamera.input(player, move);
         DetachedCamera.tick(new TickEvent.PlayerTickEvent.Post(player));
@@ -107,7 +110,7 @@ public final class CameraGameTests {
         h.assertTrue(player.position().equals(body) && player.getYRot() == 23 && player.getXRot() == 12
                 && player.getCamera() == player && !player.isSpectator(), "Body, facing and game mode survive detached flight");
         for (int i = 0; i < 160; i++) {
-            DetachedCamera.input(player, new CameraInput(scout.id(), forward, 90, -90, false, false, false));
+            DetachedCamera.input(player, new CameraInput(scout.id(), forward, 90, -90, false, false, false, false));
             DetachedCamera.tick(new TickEvent.PlayerTickEvent.Post(player));
         }
         h.assertTrue(Math.abs(scout.view().orElseThrow().position().distanceTo(eye) - 48) < 1e-4, "Flight stops at its tether");
@@ -134,6 +137,66 @@ public final class CameraGameTests {
         h.succeed();
     }
 
+    private static void starSteps(GameTestHelper h) {
+        var player = createPlayer(h, "StarCamera");
+        var tick = new TickEvent.PlayerTickEvent.Post(player);
+        var body = player.position();
+        var eye = player.getEyePosition();
+        h.assertTrue(!KeyOfStars.openScoutingCamera(player), "Other pathways cannot open the star camera");
+        SoulCore.setPathway(player, KeyOfStars.PATHWAY);
+        h.assertTrue(KeyOfStars.openScoutingCamera(player), "A Key of Stars can open the scouting view");
+        var camera = DetachedCamera.handle(player).orElseThrow();
+        var held = new CameraInput(camera.id(), Input.EMPTY, 0, 0, false, false, false, true);
+        var release = new CameraInput(camera.id(), Input.EMPTY, 0, 0, false, false, false, false);
+        for (int i = 1; i <= 29; i++) {
+            DetachedCamera.input(player, held);
+            DetachedCamera.input(player, held);
+            DetachedCamera.tick(tick);
+            h.assertTrue(camera.view().orElseThrow().position().distanceTo(eye.add(0, 0, i / 10)) < 1e-5,
+                    "Advance one block per ten server ticks regardless of packet count");
+        }
+        DetachedCamera.input(player, release);
+        var lookUp = new CameraInput(camera.id(), Input.EMPTY, 0, -90, false, false, false, true);
+        Vec3 before = camera.view().orElseThrow().position();
+        for (int i = 0; i < 9; i++) {
+            DetachedCamera.input(player, lookUp);
+            DetachedCamera.tick(tick);
+        }
+        h.assertTrue(camera.view().orElseThrow().position().equals(before), "Release discards a partial interval");
+        DetachedCamera.input(player, lookUp);
+        DetachedCamera.tick(tick);
+        Vec3 above = camera.view().orElseThrow().position();
+        h.assertTrue(above.distanceTo(before.add(0, 1, 0)) < 1e-5, "Step follows the current camera pitch");
+        BlockPos ward = BlockPos.containing(above.add(0, 1, 0));
+        h.getLevel().setBlockAndUpdate(ward, Blocks.OBSIDIAN.defaultBlockState());
+        for (int i = 0; i < 20; i++) {
+            DetachedCamera.input(player, lookUp);
+            DetachedCamera.tick(tick);
+        }
+        h.assertTrue(camera.view().orElseThrow().position().y < ward.getY(), "Forward steps respect wards");
+        h.assertTrue(player.position().equals(body) && player.getYRot() == 23 && player.getXRot() == 12,
+                "Camera jumps leave the body and its facing in place");
+        camera.stop();
+        h.assertTrue(DetachedCamera.start(player, "spirit_scouting"), "Ordinary scouting opens after a return");
+        var ordinary = DetachedCamera.handle(player).orElseThrow();
+        for (int i = 0; i < 20; i++) {
+            DetachedCamera.input(player, new CameraInput(ordinary.id(), Input.EMPTY, 0, 0, false, false, false, true));
+            DetachedCamera.tick(tick);
+        }
+        h.assertTrue(ordinary.view().orElseThrow().position().equals(eye), "Presets opt in to forward stepping");
+        var buf = new FriendlyByteBuf(Unpooled.buffer());
+        try {
+            held.encode(buf);
+            var snap = CameraFrame.move(camera.id(), above, true);
+            snap.encode(buf);
+            h.assertTrue(held.equals(new CameraInput(buf)) && snap.equals(CameraFrame.decode(buf)) && !buf.isReadable(),
+                    "Held input and instant camera position survive the wire");
+        } finally {
+            buf.release();
+        }
+        h.succeed();
+    }
+
     private static void scripted(GameTestHelper h) {
         var player = createPlayer(h, "CameraDirector");
         var body = player.position();
@@ -143,7 +206,7 @@ public final class CameraGameTests {
         var destination = eye.add(4, 2, 0);
         h.assertTrue(camera.moveTo(destination, -90, 30, 4), "Ability can queue a four-tick movement");
         var input = new CameraInput(camera.id(), new Input(true, false, false, false, true, false, true),
-                160, -70, false, false, false);
+                160, -70, false, false, false, false);
         for (int step = 1; step <= 4; step++) {
             DetachedCamera.input(player, input);
             DetachedCamera.tick(tick);

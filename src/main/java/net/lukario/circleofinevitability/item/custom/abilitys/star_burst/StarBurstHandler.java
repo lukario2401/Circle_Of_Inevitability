@@ -1,6 +1,9 @@
 package net.lukario.circleofinevitability.item.custom.abilitys.star_burst;
 
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars;
+import net.lukario.circleofinevitability.client.ClientPathwayData;
+import net.lukario.circleofinevitability.client.Keybindings;
 import net.lukario.circleofinevitability.camera.DetachedCamera;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.client.Minecraft;
@@ -41,6 +44,8 @@ public class StarBurstHandler {
         // old code crashed on the first player tick; there it now does nothing.
         if (!FMLEnvironment.dist.isClient()) return;
         if (event.player() instanceof ServerPlayer playerInView && DetachedCamera.active(playerInView)) return;
+
+        if (ClientPathwayData.is(KeyOfStars.PATHWAY) && Keybindings.INSTANCE.cameraOpenHeld()) return;
 
         Player player = event.player();
         Level level = event.player().level();

@@ -54,7 +54,8 @@ public final class DetachedCamera {
         Pose destination;
         int travelTicks;
         int age, lastInput, returnTicks;
-        boolean use;
+        boolean use, stepHeld;
+        int stepTicks;
 
         Session(ServerPlayer player, CameraPreset preset, Vec3 point, Entity anchor, Action action, boolean scripted) {
             this.mode = scripted ? CameraPreset.Mode.SCRIPTED : preset.motion().mode();
@@ -193,6 +194,8 @@ public final class DetachedCamera {
             s.yaw = Mth.wrapDegrees(packet.yaw());
             s.pitch = Mth.clamp(packet.pitch(), -90, 90);
             s.keys = packet.keys();
+            s.stepHeld = packet.stepHeld();
+            if (!s.stepHeld) s.stepTicks = 0;
             s.lastInput = s.age;
         }
         s.use |= packet.use() && s.action != null;
@@ -272,32 +275,49 @@ public final class DetachedCamera {
                 close(player);
                 return;
             }
-            move(player, s, next);
+            move(player, s, next, false);
             return;
         }
         if (++s.age > s.preset.duration() && s.preset.duration() > 0) { stop(player); return; }
-        if (s.age - s.lastInput > 5) s.keys = Input.EMPTY;
+        if (s.age - s.lastInput > 5) {
+            s.keys = Input.EMPTY;
+            s.stepHeld = false;
+            s.stepTicks = 0;
+        }
         Vec3 center = s.center();
-        Vec3 next = switch (s.mode) {
-            case FREE -> fly(s);
-            case FIXED -> center;
-            case SCRIPTED -> advanceScript(s);
-            case ORBIT -> orbit(player, s, center);
-        };
+        CameraPreset.ForwardStep step = s.preset.motion().forwardStep().orElse(null);
+        boolean jumping = false;
+        if (s.mode == CameraPreset.Mode.FREE && step != null && s.stepHeld) {
+            s.stepTicks++;
+            jumping = s.stepTicks == step.intervalTicks();
+        }
+        Vec3 next;
+        if (jumping) {
+            s.stepTicks = 0;
+            s.velocity = Vec3.ZERO;
+            next = s.position.add(s.direction().scale(step.blocks()));
+        } else {
+            next = switch (s.mode) {
+                case FREE -> fly(s);
+                case FIXED -> center;
+                case SCRIPTED -> advanceScript(s);
+                case ORBIT -> orbit(player, s, center);
+            };
+        }
         double range = s.preset.range();
         if (range > 0 && next.distanceToSqr(center) > range * range + 1e-8) {
             if (s.preset.returnAtBoundary()) { stop(player); return; }
             next = center.add(next.subtract(center).normalize().scale(range));
         }
-        if (available(player, next) && (s.mode != CameraPreset.Mode.SCRIPTED || trackedPath(player, s.position, next))) {
+        if (available(player, next) && ((s.mode != CameraPreset.Mode.SCRIPTED && !jumping) || trackedPath(player, s.position, next))) {
             Vec3 resolved = CameraTravel.sweep(s.level, s.position, next, s.preset.collision());
             if (range > 0 && resolved.distanceToSqr(center) > range * range + 1e-6) { stop(player); return; }
             if (!resolved.equals(next)) s.velocity = Vec3.ZERO;
-            move(player, s, resolved);
+            move(player, s, resolved, jumping);
         } else {
             s.velocity = Vec3.ZERO;
             if (s.preset.returnAtBoundary()) { stop(player); return; }
-            move(player, s, s.position);
+            move(player, s, s.position, false);
         }
         if (s.use) {
             s.use = false;
@@ -305,14 +325,14 @@ public final class DetachedCamera {
         }
     }
 
-    private static void move(ServerPlayer player, Session s, Vec3 position) {
+    private static void move(ServerPlayer player, Session s, Vec3 position, boolean snap) {
         boolean scripted = s.mode == CameraPreset.Mode.SCRIPTED && s.returnTicks == 0;
         boolean turned = scripted && (s.yaw != s.sentYaw || s.pitch != s.sentPitch);
         if (!turned && position.equals(s.position)) return;
         s.position = position;
         s.sentYaw = s.yaw;
         s.sentPitch = s.pitch;
-        CameraFrame frame = scripted ? CameraFrame.pose(s.id, position, s.yaw, s.pitch) : CameraFrame.move(s.id, position);
+        CameraFrame frame = scripted ? CameraFrame.pose(s.id, position, s.yaw, s.pitch) : CameraFrame.move(s.id, position, snap);
         PacketHandler.sendToPlayer(frame, player);
     }
 

@@ -14,7 +14,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(8)
+            .networkProtocolVersion(9)
             .simpleChannel();
 
     public static void register() {
@@ -138,6 +138,9 @@ public class PacketHandler {
         INSTANCE.messageBuilder(CameraInput.class, NetworkDirection.PLAY_TO_SERVER)
                 .encoder(CameraInput::encode).decoder(CameraInput::new)
                 .consumerMainThread(CameraInput::handle).add();
+        INSTANCE.messageBuilder(SOpenStarCameraPacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder((packet, buf) -> {}).decoder(buf -> new SOpenStarCameraPacket())
+                .consumerMainThread(SOpenStarCameraPacket::handle).add();
     }
 
     public static void sendToServer(Object msg) {

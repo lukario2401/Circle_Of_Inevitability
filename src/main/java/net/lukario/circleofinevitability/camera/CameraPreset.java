@@ -26,17 +26,27 @@ public record CameraPreset(Motion motion, Collision collision, double range, boo
         }, value -> value.name().toLowerCase(Locale.ROOT));
     }
 
+    /** An optional jump along the current free-flight aim after each full interval of held input. */
+    public record ForwardStep(double blocks, int intervalTicks) {
+        static final Codec<ForwardStep> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Codec.doubleRange(0.01, 64).fieldOf("blocks").forGetter(ForwardStep::blocks),
+                Codec.intRange(1, 72000).fieldOf("interval_ticks").forGetter(ForwardStep::intervalTicks)
+        ).apply(i, ForwardStep::new));
+    }
+
     public record Motion(Mode mode, double speed, double sprintMultiplier, double acceleration,
-                         double braking, double orbitRadius) {
-        static final Motion DEFAULT = new Motion(Mode.FREE, 0.35, 2, 0.5, 0.7, 4);
-        static final Codec<Motion> CODEC = RecordCodecBuilder.create(i -> i.group(
+                         double braking, double orbitRadius, Optional<ForwardStep> forwardStep) {
+        static final Motion DEFAULT = new Motion(Mode.FREE, 0.35, 2, 0.5, 0.7, 4, Optional.empty());
+        static final Codec<Motion> CODEC = RecordCodecBuilder.<Motion>create(i -> i.group(
                 names(Mode.class).optionalFieldOf("mode", DEFAULT.mode).forGetter(Motion::mode),
                 Codec.doubleRange(0.01, 4).optionalFieldOf("speed", DEFAULT.speed).forGetter(Motion::speed),
                 Codec.doubleRange(1, 4).optionalFieldOf("sprint_multiplier", DEFAULT.sprintMultiplier).forGetter(Motion::sprintMultiplier),
                 Codec.doubleRange(0.01, 1).optionalFieldOf("acceleration", DEFAULT.acceleration).forGetter(Motion::acceleration),
                 Codec.doubleRange(0.01, 1).optionalFieldOf("braking", DEFAULT.braking).forGetter(Motion::braking),
-                Codec.doubleRange(0.5, 32).optionalFieldOf("orbit_radius", DEFAULT.orbitRadius).forGetter(Motion::orbitRadius)
-        ).apply(i, Motion::new));
+                Codec.doubleRange(0.5, 32).optionalFieldOf("orbit_radius", DEFAULT.orbitRadius).forGetter(Motion::orbitRadius),
+                ForwardStep.CODEC.optionalFieldOf("forward_step").forGetter(Motion::forwardStep)
+        ).apply(i, Motion::new)).validate(m -> m.forwardStep.isEmpty() || m.mode == Mode.FREE
+                ? DataResult.success(m) : DataResult.error(() -> "forward_step requires free motion"));
     }
 
     public record Collision(Walls mode, Optional<TagKey<Block>> tag) {
