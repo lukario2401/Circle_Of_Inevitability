@@ -14,7 +14,17 @@ Select **Altar structure** to see the next pattern and the coordinates of each m
 
 ## Sacrificial Knife
 
-Craft the knife on a crafting table. Place an iron ingot in the top right, an amethyst shard in the center, and a copper ingot in the bottom left. The knife deals four attack damage, has 128 durability, and accepts iron ingots for anvil repairs.
+Carry glass bottles in your offhand and personally kill two adult mobs. Cows, pigs, sheep, goats, chickens, rabbits, mooshrooms, spiders, hoglins, and zombie variants yield one **Mob Blood Vial** per kill when mob drops are enabled. You can start with an ordinary weapon anywhere in the world. Your first filled vial unlocks the knife in the recipe book.
+
+Arrange these items on a crafting table. Each vial can hold ordinary mob blood or ritual blood from an altar hunt. Crafting returns both empty bottles.
+
+| Left | Center | Right |
+| --- | --- | --- |
+| Empty | Blood vial | Iron ingot |
+| Empty | Amethyst shard | Blood vial |
+| Copper ingot | Empty | Empty |
+
+The knife deals four attack damage, has 128 durability, and accepts iron ingots for anvil repairs.
 
 Hold the knife in your main hand to donate blood at the table or deliver the final blow in a procession. If you carry glass bottles in your offhand, each credited kill fills one Ritual Blood Vial until the assignment is complete. Select the vial under **Offerings** to dedicate it to any deity and recover the empty bottle. Permanent heart sacrifices use the table’s separate confirmation screen.
 
@@ -57,6 +67,8 @@ At 100 favour, a Lord of the Mysteries worshipper can select **Higher favour →
 ## Operators and data packs
 
 Operators can use `/favour add <player> <amount>` with 1–100 points. Before the third heart, the command grants friendship up to the next heart gate. After it, the command grants replenishable favour. The player confirms each heart sacrifice at a suitable altar.
+
+Data packs can add huntable mobs to the entity type tag `circle_of_inevitability:blood_sources` and additional crafting ingredients to the item tag `circle_of_inevitability:knife_blood_vials`.
 
 To add a deity, copy a [deity definition](../src/main/resources/data/circle_of_inevitability/circle_of_inevitability/ritual_deity/lord_of_the_mysteries.json) into a data pack at `data/<namespace>/circle_of_inevitability/ritual_deity/<id>.json`. Reopen the world after installing it.
 

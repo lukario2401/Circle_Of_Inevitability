@@ -1,0 +1,15 @@
+{
+  "values": [
+    "#minecraft:zombies",
+    "minecraft:spider",
+    "minecraft:cave_spider",
+    "minecraft:hoglin",
+    "minecraft:cow",
+    "minecraft:mooshroom",
+    "minecraft:pig",
+    "minecraft:sheep",
+    "minecraft:goat",
+    "minecraft:chicken",
+    "minecraft:rabbit"
+  ]
+}

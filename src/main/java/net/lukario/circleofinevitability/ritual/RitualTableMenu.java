@@ -140,7 +140,8 @@ record RitualTableMenu(ResourceKey<Level> dimension, BlockPos pos, int playerEnt
         }
         boolean holdingKnife = p.getMainHandItem().is(ModItems.SACRIFICIAL_KNIFE.get());
         option(menu, "filthy_monarch/blood_burst", "Donate blood", -65, 0, holdingKnife ? waitText(f, "blood_ready") : "Hold a Sacrificial Knife",
-                "Hold the knife in your main hand and pay one current heart for up to 3 friendship. Cooldown 90s.",
+                holdingKnife ? "Pay one current heart for up to 3 friendship. Cooldown 90s."
+                        : "To craft a knife, carry glass bottles in your offhand and kill two adult mobs such as zombies or cows.",
                 !holdingKnife || room == 0 || f.waitSeconds("blood_ready") > 0,
                 player -> perform(player, faith -> faith.donateBlood(pos), "Hold your Sacrificial Knife. The donation must draw health."));
         option(menu, OATH, "Offer experience", 65, 0, waitText(f, "prayer_ready"),

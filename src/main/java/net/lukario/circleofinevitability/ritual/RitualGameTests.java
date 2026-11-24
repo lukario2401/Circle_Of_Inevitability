@@ -19,6 +19,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.Identifier;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
@@ -29,6 +30,8 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.inventory.ContainerInput;
+import net.minecraft.world.inventory.CraftingMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingInput;
@@ -54,6 +57,7 @@ public final class RitualGameTests {
         FUNCTIONS.register("ritual_table", () -> RitualGameTests::table);
         FUNCTIONS.register("ritual_covenant", () -> RitualGameTests::covenant);
         FUNCTIONS.register("ritual_blessings", () -> RitualGameTests::blessings);
+        FUNCTIONS.register("ritual_knife", () -> RitualGameTests::knife);
         FUNCTIONS.register("ritual_tasks", () -> RitualGameTests::tasks);
         FUNCTIONS.register("ritual_miracle", () -> RitualGameTests::miracle);
     }
@@ -241,33 +245,83 @@ public final class RitualGameTests {
         h.succeed();
     }
 
+    private static void knife(GameTestHelper h) {
+        var p = new TestClient(h).player;
+        p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.WOODEN_SWORD));
+        p.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.GLASS_BOTTLE, 2));
+        var skeleton = h.spawn(EntityTypes.SKELETON, TABLE);
+        skeleton.setHealth(0.01f);
+        p.attack(skeleton);
+        var pig = h.spawn(EntityTypes.PIG, TABLE);
+        pig.hurtServer(h.getLevel(), p.damageSources().genericKill(), 100);
+        h.assertTrue(p.getOffhandItem().getCount() == 2, "A bloodless mob or an environmental death leaves the bottles empty");
+
+        var cow = h.spawn(EntityTypes.COW, TABLE);
+        cow.setHealth(0.01f);
+        p.attack(cow);
+        var firstVial = p.getInventory().getNonEquipmentItems().stream()
+                .filter(stack -> stack.is(ModItems.MOB_BLOOD_VIAL.get())).findFirst().orElseThrow();
+        p.inventoryMenu.broadcastChanges();
+        var unlock = h.getLevel().getServer().getAdvancements().get(
+                Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "recipes/combat/sacrificial_knife"));
+        h.assertTrue(unlock != null && p.getAdvancements().getOrStartProgress(unlock).isDone(), "The first vial unlocks the knife recipe");
+
+        var spider = h.spawn(EntityTypes.SPIDER, TABLE);
+        spider.setHealth(0.01f);
+        p.attack(spider);
+        h.assertTrue(firstVial.getCount() == 1 && p.getOffhandItem().is(ModItems.MOB_BLOOD_VIAL.get()),
+                "Two ordinary hunts fill exactly two bottles before any pledge or altar");
+
+        h.setBlock(TABLE, Blocks.CRAFTING_TABLE);
+        h.useBlock(TABLE, p);
+        var menu = (CraftingMenu) p.containerMenu;
+        var grid = menu.getInputGridSlots();
+        grid.get(2).set(new ItemStack(Items.IRON_INGOT));
+        grid.get(4).set(new ItemStack(Items.AMETHYST_SHARD));
+        grid.get(6).set(new ItemStack(Items.COPPER_INGOT));
+        h.assertTrue(!menu.getResultSlot().hasItem(), "The former blood-free recipe no longer crafts a knife");
+        grid.get(1).set(firstVial.split(1));
+        h.assertTrue(!menu.getResultSlot().hasItem(), "One vial is insufficient");
+        grid.get(5).set(p.getOffhandItem().split(1));
+        menu.clicked(CraftingMenu.RESULT_SLOT, 0, ContainerInput.PICKUP, p);
+        var knife = menu.getCarried();
+        h.assertTrue(knife.is(ModItems.SACRIFICIAL_KNIFE.get()) && knife.getMaxDamage() == 128
+                && knife.isValidRepairItem(new ItemStack(Items.IRON_INGOT)), "Take an iron-repairable knife from the crafting result");
+        h.assertTrue(grid.get(1).getItem().is(Items.GLASS_BOTTLE) && grid.get(5).getItem().is(Items.GLASS_BOTTLE)
+                && !grid.get(2).hasItem() && !grid.get(4).hasItem() && !grid.get(6).hasItem() && !menu.getResultSlot().hasItem(),
+                "Crafting consumes both vials and all three materials, returning both empty bottles");
+
+        var mixed = CraftingInput.of(3, 3, List.of(ItemStack.EMPTY, new ItemStack(ModItems.RITUAL_BLOOD_VIAL.get()), new ItemStack(Items.IRON_INGOT),
+                ItemStack.EMPTY, new ItemStack(Items.AMETHYST_SHARD), new ItemStack(ModItems.MOB_BLOOD_VIAL.get()),
+                new ItemStack(Items.COPPER_INGOT), ItemStack.EMPTY, ItemStack.EMPTY));
+        var recipe = h.getLevel().recipeAccess().getRecipeFor(RecipeType.CRAFTING, mixed, h.getLevel()).orElseThrow().value();
+        h.assertTrue(recipe.assemble(mixed).is(ModItems.SACRIFICIAL_KNIFE.get()) && recipe.getRemainingItems(mixed).get(1).is(Items.GLASS_BOTTLE),
+                "A saved ritual vial can replace either ordinary vial and also returns glass");
+        h.succeed();
+    }
+
     private static void tasks(GameTestHelper h) {
         var client = pledge(h, "God Almighty");
         var p = client.player;
         var f = new Worship(p);
         var pos = h.absolutePos(TABLE);
         var center = Vec3.atCenterOf(pos);
-        var input = CraftingInput.of(3, 3, List.of(ItemStack.EMPTY, ItemStack.EMPTY, new ItemStack(Items.IRON_INGOT),
-                ItemStack.EMPTY, new ItemStack(Items.AMETHYST_SHARD), ItemStack.EMPTY,
-                new ItemStack(Items.COPPER_INGOT), ItemStack.EMPTY, ItemStack.EMPTY));
-        var knife = h.getLevel().recipeAccess().getRecipeFor(RecipeType.CRAFTING, input, h.getLevel())
-                .orElseThrow().value().assemble(input);
-        h.assertTrue(knife.is(ModItems.SACRIFICIAL_KNIFE.get()) && knife.getMaxDamage() == 128
-                && knife.isValidRepairItem(new ItemStack(Items.IRON_INGOT)), "Craft and repair the sacrificial knife");
-        p.setItemInHand(InteractionHand.MAIN_HAND, knife);
-        p.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.GLASS_BOTTLE, 2));
+        p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(ModItems.SACRIFICIAL_KNIFE.get()));
+        p.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.GLASS_BOTTLE, 4));
         Mob local = h.spawn(EntityTypes.ZOMBIE, TABLE);
         local.setPos(center);
         local.setHealth(0.01f);
         p.attack(local);
-        h.assertTrue(f.taskProgress(pos) == 0 && p.getOffhandItem().getCount() == 2, "A local kill gives neither task credit nor blood");
+        h.assertTrue(f.taskProgress(pos) == 0 && p.getOffhandItem().getCount() == 3
+                && p.getInventory().countItem(ModItems.MOB_BLOOD_VIAL.get()) == 1, "A local zombie yields ordinary blood and zero task progress");
         var spellKill = h.spawn(EntityTypes.HUSK, TABLE);
         spellKill.setPos(center.add(10, 0, 0));
         f.observeQuarry();
         spellKill.setPos(center);
         spellKill.hurtServer(h.getLevel(), p.damageSources().playerAttack(p), 100);
-        h.assertTrue(f.taskProgress(pos) == 0 && p.getOffhandItem().getCount() == 2,
-                "Holding the knife during another source of damage cannot collect blood");
+        h.assertTrue(f.taskProgress(pos) == 0 && p.getOffhandItem().getCount() == 2
+                && p.getInventory().countItem(ModItems.MOB_BLOOD_VIAL.get()) == 2,
+                "Holding the knife during another source of damage only collects ordinary blood");
         for (var type : List.of(EntityTypes.ZOMBIE, EntityTypes.HUSK, EntityTypes.SKELETON)) {
             var mob = h.spawn(type, TABLE);
             mob.setNoAi(true);
@@ -278,7 +332,8 @@ public final class RitualGameTests {
             p.attack(mob);
         }
         h.assertTrue(p.getOffhandItem().is(ModItems.RITUAL_BLOOD_VIAL.get())
-                && p.getInventory().getNonEquipmentItems().stream().anyMatch(stack -> stack.is(ModItems.RITUAL_BLOOD_VIAL.get())),
+                && p.getInventory().getNonEquipmentItems().stream().anyMatch(stack -> stack.is(ModItems.RITUAL_BLOOD_VIAL.get()))
+                && p.getInventory().countItem(ModItems.MOB_BLOOD_VIAL.get()) == 2,
                 "A stack of two bottles collects two vials, and a third kill still counts without a bottle");
         h.assertTrue(f.taskProgress(pos) == 3 && f.claimTask(pos), "Bring three different mobs to the altar and slay them");
         h.assertTrue(!f.claimTask(pos) && f.waitSeconds("task_ready") == 240 && f.task().kind() == RitualTask.Kind.ASSEMBLY,

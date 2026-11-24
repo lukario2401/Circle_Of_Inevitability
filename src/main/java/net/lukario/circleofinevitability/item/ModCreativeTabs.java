@@ -31,6 +31,7 @@ public final class ModCreativeTabs {
                         }
                         output.accept(ModItems.RITUAL_TABLE.get());
                         output.accept(ModItems.SACRIFICIAL_KNIFE.get());
+                        output.accept(ModItems.MOB_BLOOD_VIAL.get());
                         output.accept(ModItems.RITUAL_BLOOD_VIAL.get());
                     })
                     .build());

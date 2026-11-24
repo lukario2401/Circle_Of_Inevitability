@@ -8,18 +8,23 @@ import net.lukario.circleofinevitability.status.Decree;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.gamerules.GameRules;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -35,6 +40,8 @@ import java.util.List;
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID)
 public final class Worship {
     private static final String SAVE_KEY = "circle_of_inevitability_worship";
+    private static final TagKey<EntityType<?>> BLOOD_SOURCES = TagKey.create(Registries.ENTITY_TYPE,
+            Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "blood_sources"));
     private static final Identifier HEART_COST = Physique.id("ritual_heart_cost");
     private static final int[] FRIENDSHIP_RANKS = {10, 25, 50};
     private static final int[] HEART_GATES = {60, 80, 100};
@@ -227,23 +234,19 @@ public final class Worship {
         data.put("quarry", marked);
     }
 
-    private void recordKill(LivingEntity victim) {
+    private boolean recordProcessionKill(LivingEntity victim) {
         if (!hasAssignment() || deity == null || task().kind() != RitualTask.Kind.PROCESSION
-                || !task().accepts(victim) || data.getIntOr("kills", 0) >= task().count()) return;
+                || !task().accepts(victim) || data.getIntOr("kills", 0) >= task().count()) return false;
         BlockPos altar = BlockPos.of(data.getLongOr("altar_pos", 0));
         Vec3 center = Vec3.atCenterOf(altar);
         var marked = data.getCompoundOrEmpty("quarry");
         if (!boundHere(altar) || player.distanceToSqr(center) > 64 || victim.distanceToSqr(center) > 64
                 || !player.level().getBlockState(altar).is(RitualTableBlock.TABLE.get())
-                || marked.getLongOr(victim.getStringUUID(), 0) <= time()) return;
+                || marked.getLongOr(victim.getStringUUID(), 0) <= time()) return false;
         marked.remove(victim.getStringUUID());
         data.putInt("kills", data.getIntOr("kills", 0) + 1);
         save();
-        var bottle = player.getOffhandItem();
-        if (bottle.is(Items.GLASS_BOTTLE)) {
-            var filled = new ItemStack(ModItems.RITUAL_BLOOD_VIAL.get());
-            player.setItemInHand(InteractionHand.OFF_HAND, ItemUtils.createFilledResult(bottle, player, filled));
-        }
+        return true;
     }
 
     boolean canSacrifice(RitualAltar altar) {
@@ -298,9 +301,16 @@ public final class Worship {
 
     @SubscribeEvent
     public static void onDrops(LivingDropsEvent event) {
-        if (SacrificialKnifeItem.isStrike(event.getSource()) && event.getSource().getEntity() instanceof ServerPlayer p) {
-            new Worship(p).recordKill(event.getEntity());
-        }
+        if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
+        var victim = event.getEntity();
+        boolean ritualKill = SacrificialKnifeItem.isStrike(event.getSource()) && new Worship(player).recordProcessionKill(victim);
+        var bottles = player.getOffhandItem();
+        if (!bottles.is(Items.GLASS_BOTTLE)) return;
+        if (!ritualKill && (!(victim instanceof Mob) || victim.isBaby() || !victim.is(BLOOD_SOURCES)
+                || !player.level().getGameRules().get(GameRules.MOB_DROPS))) return;
+
+        var vial = ritualKill ? ModItems.RITUAL_BLOOD_VIAL.get() : ModItems.MOB_BLOOD_VIAL.get();
+        player.setItemInHand(InteractionHand.OFF_HAND, ItemUtils.createFilledResult(bottles, player, new ItemStack(vial)));
     }
 
     @SubscribeEvent(priority = Priority.LOW)

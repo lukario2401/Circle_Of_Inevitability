@@ -11,6 +11,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ToolMaterial;
 import net.minecraft.world.item.component.ItemLore;
@@ -49,10 +50,14 @@ public final class ModItems {
                     .component(DataComponents.LORE, new ItemLore(List.of(
                             Component.translatable("tooltip.circle_of_inevitability.sacrificial_knife"))))));
 
-    public static final RegistryObject<Item> RITUAL_BLOOD_VIAL = ITEMS.register("ritual_blood_vial", () ->
-            new Item(properties("ritual_blood_vial").stacksTo(16)
-                    .component(DataComponents.LORE, new ItemLore(List.of(
-                            Component.translatable("tooltip.circle_of_inevitability.ritual_blood_vial"))))));
+    public static final RegistryObject<Item> MOB_BLOOD_VIAL = bloodVial("mob_blood_vial");
+    public static final RegistryObject<Item> RITUAL_BLOOD_VIAL = bloodVial("ritual_blood_vial");
+
+    private static RegistryObject<Item> bloodVial(String name) {
+        return ITEMS.register(name, () -> new Item(properties(name).stacksTo(16).craftRemainder(Items.GLASS_BOTTLE)
+                .component(DataComponents.LORE, new ItemLore(List.of(
+                        Component.translatable("tooltip.circle_of_inevitability." + name))))));
+    }
 
     private ModItems() {}
 
