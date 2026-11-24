@@ -1,7 +1,6 @@
 package net.lukario.circleofinevitability.ritual;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.minecraft.core.Holder;
@@ -9,48 +8,60 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stat;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 
-public record RitualDeity(String name, Identifier icon, String domain, Holder<Item> offering, Task task, Blessing blessing) {
+import java.util.List;
+import java.util.stream.Stream;
+
+public record RitualDeity(String name, Identifier icon, String domain, Holder<Item> offering, List<Offering> tributes,
+                         RitualTask task, List<RitualTask> rotation, RitualBlessing blessing, boolean revival) {
     public static final ResourceKey<Registry<RitualDeity>> REGISTRY = ResourceKey.createRegistryKey(
             Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "ritual_deity"));
-
     public static final Codec<RitualDeity> CODEC = RecordCodecBuilder.create(i -> i.group(
             Codec.STRING.fieldOf("name").forGetter(RitualDeity::name),
             Identifier.CODEC.fieldOf("icon").forGetter(RitualDeity::icon),
             Codec.STRING.fieldOf("domain").forGetter(RitualDeity::domain),
             Item.CODEC.fieldOf("offering").forGetter(RitualDeity::offering),
-            Task.CODEC.fieldOf("task").forGetter(RitualDeity::task),
-            Blessing.CODEC.fieldOf("blessing").forGetter(RitualDeity::blessing)
+            Offering.CODEC.listOf().optionalFieldOf("tributes", List.of()).forGetter(RitualDeity::tributes),
+            RitualTask.CODEC.fieldOf("task").forGetter(RitualDeity::task),
+            RitualTask.CODEC.listOf().optionalFieldOf("rotation", List.of()).forGetter(RitualDeity::rotation),
+            RitualBlessing.CODEC.fieldOf("blessing").forGetter(RitualDeity::blessing),
+            Codec.BOOL.optionalFieldOf("revival", false).forGetter(RitualDeity::revival)
     ).apply(i, RitualDeity::new));
 
-    public record Task(String description, Stat<?> statistic, int count) {
-        private static final Codec<Stat<?>> STAT = ObjectiveCriteria.CODEC.comapFlatMap(
-                criterion -> criterion instanceof Stat<?> stat ? DataResult.success(stat)
-                        : DataResult.error(() -> "A ritual task requires a player statistic"), stat -> stat);
-        static final Codec<Task> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.STRING.fieldOf("description").forGetter(Task::description),
-                STAT.fieldOf("statistic").forGetter(Task::statistic),
-                Codec.intRange(1, Integer.MAX_VALUE).fieldOf("count").forGetter(Task::count)
-        ).apply(i, Task::new));
-
-        int total(ServerPlayer player) {
-            return player.getStats().getValue(statistic);
-        }
+    record Offering(Holder<Item> item, int count, int points) {
+        static final Codec<Offering> CODEC = RecordCodecBuilder.create(i -> i.group(
+                Item.CODEC.fieldOf("item").forGetter(Offering::item),
+                Codec.intRange(1, 64).fieldOf("count").forGetter(Offering::count),
+                Codec.intRange(1, 30).fieldOf("points").forGetter(Offering::points)
+        ).apply(i, Offering::new));
+        String label() { return count + " × " + item.value().getDefaultInstance().getHoverName().getString(); }
     }
 
-    public record Blessing(String name, String perRank, Holder<Attribute> attribute,
-                           double amount, AttributeModifier.Operation operation) {
-        static final Codec<Blessing> CODEC = RecordCodecBuilder.create(i -> i.group(
-                Codec.STRING.fieldOf("name").forGetter(Blessing::name),
-                Codec.STRING.fieldOf("per_rank").forGetter(Blessing::perRank),
-                Attribute.CODEC.fieldOf("attribute").forGetter(Blessing::attribute),
-                Codec.DOUBLE.fieldOf("amount").forGetter(Blessing::amount),
-                AttributeModifier.Operation.CODEC.fieldOf("operation").forGetter(Blessing::operation)
-        ).apply(i, Blessing::new));
+    List<Offering> offerings() {
+        return Stream.concat(Stream.of(new Offering(offering, 1, 2)), tributes.stream()).toList();
+    }
+
+    RitualTask taskAt(int index) {
+        int slot = Math.floorMod(index, rotation.size() + 1);
+        return slot == 0 ? task : rotation.get(slot - 1);
+    }
+
+    static int stock(ServerPlayer player, Holder<Item> item) {
+        return player.getInventory().getNonEquipmentItems().stream()
+                .filter(stack -> stack.is(item)).mapToInt(stack -> stack.getCount()).sum();
+    }
+
+    static boolean pay(ServerPlayer player, Holder<Item> item, int count) {
+        if (stock(player, item) < count) return false;
+        for (var stack : player.getInventory().getNonEquipmentItems()) {
+            if (!stack.is(item)) continue;
+            int take = Math.min(stack.getCount(), count);
+            stack.shrink(take);
+            count -= take;
+            if (count == 0) break;
+        }
+        player.getInventory().setChanged();
+        return true;
     }
 }

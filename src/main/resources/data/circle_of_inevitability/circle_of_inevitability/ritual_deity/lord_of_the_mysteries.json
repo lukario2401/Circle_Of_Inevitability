@@ -4,15 +4,150 @@
   "domain": "Walk beyond the gray fog, where doors and miracles meet.",
   "offering": "minecraft:amethyst_shard",
   "task": {
-    "description": "Cross space by using two ender pearls.",
-    "statistic": "minecraft.used:minecraft.ender_pearl",
-    "count": 2
+    "kind": "statistic",
+    "description": "Cross space by throwing two ender pearls.",
+    "count": 2,
+    "reward": 10,
+    "cooldown_seconds": 180,
+    "statistic": "minecraft.used:minecraft.ender_pearl"
   },
   "blessing": {
-    "name": "Wandering Step",
-    "per_rank": "Gain 4% movement speed per rank.",
-    "attribute": "minecraft:movement_speed",
-    "amount": 0.04,
-    "operation": "add_multiplied_base"
-  }
+    "name": "Blessings of the Gray Fog",
+    "per_rank": "Door guides your steps. The Fool lends intuition, agility and a final miracle.",
+    "stages": [
+      {
+        "rank": 1,
+        "description": "Wandering Step grants 4% movement speed.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:movement_speed",
+            "amount": 0.04,
+            "operation": "add_multiplied_base"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "description": "Spiritual intuition outlines a nearby hostile for 4s.",
+        "pulses": [
+          {
+            "when": "danger",
+            "effect": "minecraft:glowing",
+            "ticks": 80,
+            "target_enemy": true
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "description": "Clown balance extends safe falling distance by one block.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:safe_fall_distance",
+            "amount": 1,
+            "operation": "add_value"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "description": "Faceless footwork grants 10% sneaking speed and another 2% movement speed.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:sneaking_speed",
+            "amount": 0.1,
+            "operation": "add_multiplied_base"
+          },
+          {
+            "attribute": "minecraft:movement_speed",
+            "amount": 0.02,
+            "operation": "add_multiplied_base"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "description": "A paper substitute softens a fall with 3s of slow falling.",
+        "pulses": [
+          {
+            "when": "falling",
+            "effect": "minecraft:slow_falling",
+            "ticks": 60
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "description": "Traveler’s escape adds 2% movement speed and one more block of safe falling distance.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:movement_speed",
+            "amount": 0.02,
+            "operation": "add_multiplied_base"
+          },
+          {
+            "attribute": "minecraft:safe_fall_distance",
+            "amount": 1,
+            "operation": "add_value"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "description": "A wish can heal two hearts when wounded. At 100 favour, invoke the revival miracle at a sanctuary.",
+        "pulses": [
+          {
+            "when": "wounded",
+            "effect": "minecraft:instant_health",
+            "ticks": 1
+          }
+        ]
+      }
+    ]
+  },
+  "tributes": [
+    {
+      "item": "minecraft:amethyst_shard",
+      "count": 5,
+      "points": 8
+    },
+    {
+      "item": "minecraft:ender_eye",
+      "count": 1,
+      "points": 12
+    }
+  ],
+  "rotation": [
+    {
+      "kind": "procession",
+      "description": "Lure enderman, witch, spider into the eight-block ring. Approach them outside the ring first, then kill them at the table yourself.",
+      "count": 2,
+      "reward": 14,
+      "cooldown_seconds": 240,
+      "targets": [
+        "minecraft:enderman",
+        "minecraft:witch",
+        "minecraft:spider"
+      ]
+    },
+    {
+      "kind": "delivery",
+      "description": "Bring 16 paper to this altar and hand them in.",
+      "count": 16,
+      "reward": 10,
+      "cooldown_seconds": 180,
+      "item": "minecraft:paper"
+    },
+    {
+      "kind": "assembly",
+      "description": "Gather ten living villagers within eight blocks of this altar at the same time.",
+      "count": 10,
+      "reward": 20,
+      "cooldown_seconds": 480,
+      "targets": [
+        "minecraft:villager"
+      ]
+    }
+  ],
+  "revival": true
 }

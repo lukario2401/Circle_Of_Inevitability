@@ -4,15 +4,163 @@
   "domain": "Exercise the authority of the Black Emperor and the Justiciar.",
   "offering": "minecraft:copper_ingot",
   "task": {
-    "description": "Strike three bargains by trading with villagers.",
-    "statistic": "minecraft.custom:minecraft.traded_with_villager",
-    "count": 3
+    "kind": "assembly",
+    "description": "Gather ten living villagers within eight blocks of this altar at the same time.",
+    "count": 10,
+    "reward": 20,
+    "cooldown_seconds": 480,
+    "targets": [
+      "minecraft:villager"
+    ]
   },
   "blessing": {
-    "name": "Imperial Reach",
-    "per_rank": "Gain 0.25 blocks of melee reach per rank.",
-    "attribute": "minecraft:entity_interaction_range",
-    "amount": 0.25,
-    "operation": "add_value"
-  }
+    "name": "Imperial Authority",
+    "per_rank": "Justiciar extends jurisdiction. Black Emperor strengthens the body and distorts reach.",
+    "stages": [
+      {
+        "rank": 1,
+        "description": "Jurisdiction grants 0.15 blocks of melee reach.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:entity_interaction_range",
+            "amount": 0.15,
+            "operation": "add_value"
+          }
+        ]
+      },
+      {
+        "rank": 2,
+        "description": "Imperial bearing grants 5% knockback resistance.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:knockback_resistance",
+            "amount": 0.05,
+            "operation": "add_value"
+          }
+        ]
+      },
+      {
+        "rank": 3,
+        "description": "The magistrate gains one point of armor.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:armor",
+            "amount": 1,
+            "operation": "add_value"
+          }
+        ]
+      },
+      {
+        "rank": 4,
+        "description": "Distortion extends block reach by 0.5 blocks and melee reach by a further 0.15.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:block_interaction_range",
+            "amount": 0.5,
+            "operation": "add_value"
+          },
+          {
+            "attribute": "minecraft:entity_interaction_range",
+            "amount": 0.15,
+            "operation": "add_value"
+          }
+        ]
+      },
+      {
+        "rank": 5,
+        "description": "Majesty adds 0.5 attack damage and briefly marks a hostile for judgment.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:attack_damage",
+            "amount": 0.5,
+            "operation": "add_value"
+          }
+        ],
+        "pulses": [
+          {
+            "when": "danger",
+            "effect": "minecraft:glowing",
+            "ticks": 80,
+            "target_enemy": true
+          }
+        ]
+      },
+      {
+        "rank": 6,
+        "description": "Imperial order adds one armor toughness and 3% attack speed.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:armor_toughness",
+            "amount": 1,
+            "operation": "add_value"
+          },
+          {
+            "attribute": "minecraft:attack_speed",
+            "amount": 0.03,
+            "operation": "add_multiplied_base"
+          }
+        ]
+      },
+      {
+        "rank": 7,
+        "description": "Coronation adds a further 5% knockback resistance and can grant 4s of strength in danger.",
+        "modifiers": [
+          {
+            "attribute": "minecraft:knockback_resistance",
+            "amount": 0.05,
+            "operation": "add_value"
+          }
+        ],
+        "pulses": [
+          {
+            "when": "danger",
+            "effect": "minecraft:strength",
+            "ticks": 80
+          }
+        ]
+      }
+    ]
+  },
+  "tributes": [
+    {
+      "item": "minecraft:copper_ingot",
+      "count": 5,
+      "points": 8
+    },
+    {
+      "item": "minecraft:emerald",
+      "count": 3,
+      "points": 12
+    }
+  ],
+  "rotation": [
+    {
+      "kind": "statistic",
+      "description": "Seal three bargains by trading with villagers.",
+      "count": 3,
+      "reward": 10,
+      "cooldown_seconds": 180,
+      "statistic": "minecraft.custom:minecraft.traded_with_villager"
+    },
+    {
+      "kind": "procession",
+      "description": "Lure pillager, vindicator, vex into the eight-block ring. Approach them outside the ring first, then kill them at the table yourself.",
+      "count": 2,
+      "reward": 14,
+      "cooldown_seconds": 240,
+      "targets": [
+        "minecraft:pillager",
+        "minecraft:vindicator",
+        "minecraft:vex"
+      ]
+    },
+    {
+      "kind": "delivery",
+      "description": "Bring 6 iron ingot to this altar and hand them in.",
+      "count": 6,
+      "reward": 12,
+      "cooldown_seconds": 180,
+      "item": "minecraft:iron_ingot"
+    }
+  ]
 }

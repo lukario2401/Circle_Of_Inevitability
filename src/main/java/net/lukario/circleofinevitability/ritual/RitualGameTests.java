@@ -8,6 +8,12 @@ import net.lukario.circleofinevitability.item.ModItems;
 import net.lukario.circleofinevitability.menu.AbilityMenu;
 import net.lukario.circleofinevitability.network.COpenAbilityMenuPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.permissions.PermissionSet;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.network.Connection;
@@ -46,6 +52,9 @@ public final class RitualGameTests {
     static {
         FUNCTIONS.register("ritual_table", () -> RitualGameTests::table);
         FUNCTIONS.register("ritual_covenant", () -> RitualGameTests::covenant);
+        FUNCTIONS.register("ritual_blessings", () -> RitualGameTests::blessings);
+        FUNCTIONS.register("ritual_tasks", () -> RitualGameTests::tasks);
+        FUNCTIONS.register("ritual_miracle", () -> RitualGameTests::miracle);
     }
 
     private static final BlockPos TABLE = new BlockPos(1, 1, 1);
@@ -126,103 +135,215 @@ public final class RitualGameTests {
         client.click("God Almighty");
         client.click("Pledge faith");
         h.assertTrue(new Worship(p).deity.name().equals("God Almighty"), "Select a deity at a placed table");
-        p.getInventory().add(new ItemStack(Items.GOLD_INGOT, 3));
+        p.getInventory().add(new ItemStack(Items.GOLD_INGOT, 6));
+        client.click("Offerings");
         String oldMenu = client.menu().menuId();
-        client.click("Give offering");
-        AbilityMenu.handleChoice(p, oldMenu, 0);
-        h.assertTrue(new Worship(p).friendship() == 5 && p.getInventory().countItem(Items.GOLD_INGOT) == 2,
-                "One offering spends one item once");
-        client.click("Give offering");
-        h.assertTrue(p.getAttributeValue(Attributes.ARMOR) == 1 && p.getMaxHealth() == 20, "Early blessing before heart loss");
+        client.click("5 × Gold Ingot");
+        AbilityMenu.handleChoice(p, oldMenu, 1);
+        Worship f = new Worship(p);
+        BlockPos pos = h.absolutePos(TABLE);
+        h.assertTrue(f.friendship() == 8 && p.getInventory().countItem(Items.GOLD_INGOT) == 1, "Pay for the larger offering exactly once");
+        h.assertTrue(!f.offer(pos, f.deity.offerings().getFirst()), "All gifts share a cooldown");
+        client.click("Offerings");
         float health = p.getHealth();
         client.click("Donate blood");
-        h.assertTrue(new Worship(p).friendship() == 13 && p.getHealth() < health && p.getMaxHealth() == 20,
-                "Blood costs current health only");
-        p.setHealth(2);
-        client.click("Donate blood");
-        h.assertTrue(p.getHealth() == 2 && new Worship(p).friendship() == 13, "Refuse blood at one current heart");
-
+        h.assertTrue(f.friendship() == 11 && p.getHealth() < health && p.getMaxHealth() == 20, "Blood grants friendship and an early blessing");
+        h.assertTrue(!f.donateBlood(pos), "Blood cooldown");
+        p.giveExperienceLevels(1);
+        client.click("Offerings");
+        client.click("Offer experience");
+        h.assertTrue(f.friendship() == 17 && p.experienceLevel == 0, "Prayer consumes a level");
+        client.click("Change faith");
+        client.click("The Anarchy");
         h.setBlock(TABLE, Blocks.AIR);
-        client.click("Give offering");
-        h.assertTrue(new Worship(p).friendship() == 13, "Removed table cannot take another offering");
-        h.setBlock(TABLE, RitualTableBlock.TABLE.get());
-        h.useBlock(TABLE, p);
-        p.setPos(p.position().add(30, 0, 0));
-        client.click("Give offering");
-        h.assertTrue(new Worship(p).friendship() == 13, "Leaving the table cancels a pending choice");
+        client.click("Change faith");
+        h.assertTrue(new Worship(p).deity.name().equals("God Almighty") && f.friendship() == 17,
+                "Breaking the altar invalidates a pending choice");
         h.succeed();
     }
 
-    private static void covenant(GameTestHelper h) {
+    private static TestClient pledge(GameTestHelper h, String name) {
         var client = new TestClient(h);
-        var p = client.player;
         h.setBlock(TABLE, RitualTableBlock.TABLE.get());
-        var zombies = Stats.ENTITY_KILLED.get(EntityTypes.ZOMBIE);
-        p.awardStat(zombies, 9);
-        h.useBlock(TABLE, p);
-        client.click("God Almighty");
+        h.useBlock(TABLE, client.player);
+        client.click(name);
         client.click("Pledge faith");
-        Worship faith = new Worship(p);
-        h.assertTrue(faith.taskProgress() == 0 && !faith.claimTask(), "Only kills made after pledging count");
-        p.awardStat(zombies, 3);
-        h.useBlock(TABLE, p);
-        client.click("Report task");
-        h.assertTrue(new Worship(p).friendship() == 10 && !new Worship(p).claimTask(), "Claim one completed task once");
+        return client;
+    }
 
-        p.getInventory().add(new ItemStack(Items.GOLD_INGOT, 24));
-        for (int heart = 1; heart <= 3; heart++) {
-            faith = new Worship(p);
-            h.assertTrue(!faith.canSacrifice(), "Friendship gates each sacrifice");
-            while (faith.canEarn()) {
-                h.assertTrue(faith.offer(), "The deity accepts its offering until the gate");
-            }
-            int left = p.getInventory().countItem(Items.GOLD_INGOT);
-            h.assertTrue(!faith.offer() && p.getInventory().countItem(Items.GOLD_INGOT) == left, "No offering is spent at a gate");
-            h.useBlock(TABLE, p);
-            client.click("Sacrifice heart");
-            client.click("Keep heart");
-            h.assertTrue(faith.hearts() == heart - 1, "Declining keeps the heart");
-            client.click("Sacrifice heart");
-            client.click("Sacrifice heart");
-            faith = new Worship(p);
-            h.assertTrue(faith.hearts() == heart && p.getMaxHealth() == 20 - 2 * heart
-                    && p.getAttributeValue(Attributes.ARMOR) == 3 + heart, "Each confirmed heart grants one late rank");
+    private static void floor(GameTestHelper h, BlockPos pos) {
+        for (int x = -1; x <= 1; x++) for (int z = -1; z <= 1; z++)
+            h.getLevel().setBlockAndUpdate(pos.offset(x, -1, z), Blocks.POLISHED_DEEPSLATE.defaultBlockState());
+    }
+
+    private static void sanctuary(GameTestHelper h, BlockPos pos) {
+        floor(h, pos);
+        for (Direction side : Direction.Plane.HORIZONTAL) {
+            BlockPos base = pos.relative(side, 2);
+            h.getLevel().setBlockAndUpdate(base, Blocks.CHISELED_DEEPSLATE.defaultBlockState());
+            h.getLevel().setBlockAndUpdate(base.above(), Blocks.SOUL_LANTERN.defaultBlockState());
         }
-        h.assertTrue(faith.rank() == 6 && !faith.offer() && !faith.sacrifice(), "Cap all rewards and costs at the final rank");
+    }
 
+    private static void max(GameTestHelper h, Worship f, BlockPos pos) {
+        sanctuary(h, pos);
+        for (int i = 0; i < 3; i++) {
+            f.grant(100);
+            h.assertTrue(f.sacrifice(pos), "A new friendship gate accepts exactly one permanent heart");
+        }
+    }
+
+    private static void covenant(GameTestHelper h) {
+        var client = pledge(h, "The Anarchy");
+        var p = client.player;
+        var f = new Worship(p);
+        var pos = h.absolutePos(TABLE);
+        var level = h.getLevel();
+        var bare = RitualAltar.inspect(level, pos);
+        h.assertTrue(bare.rank() == 1 && bare.limit() == 25 && bare.missing().size() == 9, "Bare altar shows its missing foundation");
+        f.grant(25);
+        h.assertTrue(f.room(bare, false) == 0 && p.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE) > 0, "Altar cap and ranked attributes");
+        floor(h, pos);
+        var improved = RitualAltar.inspect(level, pos);
+        h.assertTrue(improved.rank() == 2 && improved.limit() == 60 && improved.missing().size() == 8, "A shared floor advances the altar");
+        f.grant(100);
+        h.useBlock(TABLE, p);
+        client.click("Sacrifice heart");
+        client.click("Keep heart");
+        h.assertTrue(f.hearts() == 0, "Cancel sacrifice");
+        client.click("Sacrifice heart");
+        level.setBlockAndUpdate(pos.below(), Blocks.AIR.defaultBlockState());
+        client.click("Sacrifice heart");
+        h.assertTrue(f.hearts() == 0, "Recheck the structure at confirmation");
+        max(h, f, pos);
         var other = new TestClient(h);
-        h.assertTrue(new Worship(other.player).deity == null, "Players at one table keep independent covenants");
+        h.assertTrue(new Worship(other.player).deity == null, "Worship remains personal at a shared altar");
         other.player.restoreFrom(p, false);
         Worship.respawn(new PlayerEvent.PlayerRespawnEvent(other.player, false));
-        h.assertTrue(other.player.getMaxHealth() == 14 && new Worship(other.player).rank() == 6, "Restore covenant after death");
-        var output = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, p.registryAccess());
-        p.saveWithoutId(output);
-        p.load(TagValueInput.create(ProblemReporter.DISCARDING, p.registryAccess(), output.buildResult()));
+        h.assertTrue(other.player.getMaxHealth() == 14 && new Worship(other.player).rank() == 6, "Respawn restores covenant");
+        var saved = TagValueOutput.createWithContext(ProblemReporter.DISCARDING, p.registryAccess());
+        p.saveWithoutId(saved);
+        p.load(TagValueInput.create(ProblemReporter.DISCARDING, p.registryAccess(), saved.buildResult()));
         Worship.login(new PlayerEvent.PlayerLoggedInEvent(p));
-        h.assertTrue(p.getMaxHealth() == 14 && p.getAttributeValue(Attributes.ARMOR) == 6, "Reload without stacking modifiers");
+        f = new Worship(p);
+        h.assertTrue(f.hearts() == 3 && p.getAttributeValue(Attributes.ARMOR) == 1, "Reload keeps only one set of modifiers");
+        h.useBlock(TABLE, p);
+        client.click("Change faith");
+        client.click("God Almighty");
+        client.click("Change faith");
+        h.assertTrue(new Worship(p).rank() == 0 && p.getMaxHealth() == 20 && p.getAttributeValue(Attributes.ARMOR) == 0,
+                "Switch refunds hearts and removes former rank modifiers");
+        h.succeed();
+    }
 
+    private static void tasks(GameTestHelper h) {
+        var client = pledge(h, "God Almighty");
+        var p = client.player;
+        var f = new Worship(p);
+        var pos = h.absolutePos(TABLE);
+        var center = Vec3.atCenterOf(pos);
+        Mob local = h.spawn(EntityTypes.ZOMBIE, TABLE);
+        local.setPos(center);
+        local.hurtServer(h.getLevel(), p.damageSources().playerAttack(p), 100);
+        h.assertTrue(f.taskProgress(pos) == 0, "A locally spawned kill is not a procession");
+        for (var type : List.of(EntityTypes.ZOMBIE, EntityTypes.HUSK, EntityTypes.SKELETON)) {
+            var mob = h.spawn(type, TABLE);
+            mob.setNoAi(true);
+            mob.setPos(center.add(10, 0, 0));
+            f.observeQuarry();
+            mob.setPos(center);
+            mob.hurtServer(h.getLevel(), p.damageSources().playerAttack(p), 100);
+        }
+        h.assertTrue(f.taskProgress(pos) == 3 && f.claimTask(pos), "Bring three different mobs to the altar and slay them");
+        h.assertTrue(!f.claimTask(pos) && f.waitSeconds("task_ready") == 240 && f.task().kind() == RitualTask.Kind.ASSEMBLY,
+                "Paid task rotates and starts its cooldown");
+        var assembly = pledge(h, "The Anarchy");
+        var crowd = new Worship(assembly.player);
+        for (int i = 0; i < 9; i++) h.spawn(EntityTypes.VILLAGER, TABLE).setPos(center);
+        h.assertTrue(crowd.taskProgress(pos) == 9 && !crowd.claimTask(pos), "Nine villagers cannot complete the gathering");
+        h.spawn(EntityTypes.VILLAGER, TABLE).setPos(center);
+        h.assertTrue(crowd.claimTask(pos) && crowd.friendship() == 20, "Ten living villagers gathered at once");
+        h.succeed();
+    }
+
+    private static void blessings(GameTestHelper h) {
+        var client = pledge(h, "God Almighty");
+        var p = client.player;
+        var f = new Worship(p);
+        f.grant(50);
+        p.addEffect(new MobEffectInstance(MobEffects.NIGHT_VISION, 1200, 1));
+        p.getFoodData().setFoodLevel(20);
+        p.setHealth(8);
+        f.onlineSecond();
+        h.assertTrue(p.hasEffect(MobEffects.REGENERATION) && p.getEffect(MobEffects.REGENERATION).getAmplifier() == 0,
+                "A wounded worshipper receives low-level regeneration");
+        p.getFoodData().setFoodLevel(5);
+        f.onlineSecond();
+        h.assertTrue(!p.hasEffect(MobEffects.SATURATION), "A second eligible effect waits for the shared pulse cooldown");
         h.useBlock(TABLE, p);
         client.click("Change faith");
         client.click("Lord of the Mysteries");
         client.click("Change faith");
-        faith = new Worship(p);
-        h.assertTrue(faith.deity.name().equals("Lord of the Mysteries") && faith.friendship() == 0 && faith.hearts() == 0
-                && p.getMaxHealth() == 20 && p.getAttributeValue(Attributes.ARMOR) == 0, "Switching refunds hearts and clears worship");
+        h.assertTrue(!p.hasEffect(MobEffects.REGENERATION) && p.getEffect(MobEffects.NIGHT_VISION).getAmplifier() == 1,
+                "Changing removes the ritual effect and preserves an external potion");
+        var seer = pledge(h, "Lord of the Mysteries").player;
+        var gray = new Worship(seer);
+        double speed = seer.getAttributeValue(Attributes.MOVEMENT_SPEED);
+        gray.grant(25);
+        h.assertTrue(Math.abs(seer.getAttributeValue(Attributes.MOVEMENT_SPEED) - speed * 1.04) < 0.00001,
+                "Early movement gain remains four percent");
+        var mob = h.spawn(EntityTypes.HUSK, TABLE);
+        mob.setPos(seer.position());
+        gray.onlineSecond();
+        h.assertTrue(mob.hasEffect(MobEffects.GLOWING), "Spiritual intuition reveals a nearby hostile");
+        h.succeed();
+    }
+
+    private static int command(ServerPlayer p, String command, boolean op) {
+        CommandSourceStack source = p.createCommandSourceStack().withSuppressedOutput()
+                .withPermission(op ? PermissionSet.ALL_PERMISSIONS : PermissionSet.NO_PERMISSIONS);
+        try {
+            return p.level().getServer().getCommands().getDispatcher().execute(command, source);
+        } catch (com.mojang.brigadier.exceptions.CommandSyntaxException denied) {
+            return 0;
+        }
+    }
+
+    private static void miracle(GameTestHelper h) {
+        var client = pledge(h, "Lord of the Mysteries");
+        var p = client.player;
+        var pos = h.absolutePos(TABLE);
+        var f = new Worship(p);
+        String grant = "favour add " + p.getScoreboardName() + " 100";
+        h.assertTrue(command(p, grant, false) == 0 && f.friendship() == 0, "Only operators can grant points");
+        h.assertTrue(command(p, grant, true) == 60 && f.hearts() == 0, "Operator grant stops at the first heart gate");
+        max(h, f, pos);
         p.awardStat(Stats.ITEM_USED.get(Items.ENDER_PEARL), 2);
-        h.assertTrue(faith.claimTask() && p.getAttributeValue(Attributes.MOVEMENT_SPEED) > 0.1, "Reward the traveler");
+        h.assertTrue(f.claimTask(pos) && f.favour() == 10 && f.friendship() == 100, "Sanctuary tasks refill the temporary pool");
+        h.assertTrue(!f.offer(pos, f.deity.offerings().getFirst()), "Gifts cannot purchase higher favour");
+        f.grant(40);
+        h.assertTrue(f.rank() == 7, "Higher favour activates rank seven");
+        for (int i = 0; i < 120; i++) f.onlineSecond();
+        h.assertTrue(f.favour() == 49 && f.rank() == 6, "Online decay removes the seventh rank only");
+        f.grant(100);
         h.useBlock(TABLE, p);
-        client.click("Change faith");
-        client.click("The Anarchy");
-        client.click("Change faith");
-        faith = new Worship(p);
-        double reach = p.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE);
-        p.awardStat(Stats.TRADED_WITH_VILLAGER, 3);
-        h.assertTrue(faith.claimTask() && p.getAttributeValue(Attributes.ENTITY_INTERACTION_RANGE) == reach + 0.25, "Reward the bargainer");
+        client.click("Higher favour");
+        client.click("Invoke miracle");
+        h.assertTrue(f.armed() && !f.arm(pos), "Arm a single miracle");
+        p.invulnerableTime = 0;
+        p.hurtServer(h.getLevel(), p.damageSources().magic(), 1000);
+        h.assertTrue(p.isAlive() && p.getHealth() > 0 && !f.armed() && f.favour() == 0 && f.hearts() == 3
+                && f.revivalWait() > Worship.REVIVAL_COOLDOWN_MS - 5000, "A lethal hit spends favour and starts the two-hour cooldown");
+        f.grant(100);
+        h.assertTrue(!f.arm(pos), "Refilling favour cannot bypass the revival cooldown");
         h.useBlock(TABLE, p);
         client.click("Change faith");
         client.click("God Almighty");
         client.click("Change faith");
-        h.assertTrue(new Worship(p).rank() == 0 && new Worship(p).taskProgress() == 0, "Returning to a former deity starts anew");
+        max(h, new Worship(p), pos);
+        f = new Worship(p);
+        f.grant(100);
+        h.assertTrue(!f.arm(pos) && f.revivalWait() > 0, "The miracle is deity-specific and its cooldown survives conversion");
         h.succeed();
     }
 }
