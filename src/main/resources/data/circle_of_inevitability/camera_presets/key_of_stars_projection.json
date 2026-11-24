@@ -1,0 +1,8 @@
+{
+  "motion": { "mode": "fixed" },
+  "collision": { "mode": "denylist", "tag": "circle_of_inevitability:camera_wards" },
+  "range": 48,
+  "duration": 0,
+  "manual_exit": true,
+  "cancel_on_damage": true
+}

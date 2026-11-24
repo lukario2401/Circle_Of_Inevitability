@@ -142,58 +142,67 @@ public final class CameraGameTests {
         var tick = new TickEvent.PlayerTickEvent.Post(player);
         var body = player.position();
         var eye = player.getEyePosition();
-        h.assertTrue(!KeyOfStars.openScoutingCamera(player), "Other pathways cannot open the star camera");
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 20;
         SoulCore.setPathway(player, KeyOfStars.PATHWAY);
-        h.assertTrue(KeyOfStars.openScoutingCamera(player), "A Key of Stars can open the scouting view");
+        h.assertTrue(!KeyOfStars.releaseCameraCharge(player), "Other pathways cannot prime the teleport");
+
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 9;
+        h.assertTrue(!KeyOfStars.releaseCameraCharge(player) && !DetachedCamera.active(player), "A short tap stays in body");
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 20;
+        KeyOfStars.cancelCameraCharge(player);
+        h.assertTrue(!KeyOfStars.releaseCameraCharge(player), "Cancelling discards the charge");
+
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 18;
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 7;
+        h.assertTrue(!DetachedCamera.active(player), "Holding the chord keeps the normal view");
+        player.setXRot(-90);
+        h.assertTrue(KeyOfStars.releaseCameraCharge(player), "Release opens the charged view from the body");
         var camera = DetachedCamera.handle(player).orElseThrow();
-        var held = new CameraInput(camera.id(), Input.EMPTY, 0, 0, false, false, false, true);
-        var release = new CameraInput(camera.id(), Input.EMPTY, 0, 0, false, false, false, false);
-        for (int i = 1; i <= 29; i++) {
-            DetachedCamera.input(player, held);
-            DetachedCamera.input(player, held);
-            DetachedCamera.tick(tick);
-            h.assertTrue(camera.view().orElseThrow().position().distanceTo(eye.add(0, 0, i / 10)) < 1e-5,
-                    "Advance one block per ten server ticks regardless of packet count");
-        }
-        DetachedCamera.input(player, release);
-        var lookUp = new CameraInput(camera.id(), Input.EMPTY, 0, -90, false, false, false, true);
-        Vec3 before = camera.view().orElseThrow().position();
-        for (int i = 0; i < 9; i++) {
-            DetachedCamera.input(player, lookUp);
+        Vec3 target = eye.add(0, 2, 0);
+        h.assertTrue(camera.view().orElseThrow().position().distanceTo(target) < 1e-5,
+                "25 ticks teleport two whole blocks along the release aim");
+        var forward = new Input(true, false, false, false, false, false, false);
+        for (int i = 0; i < 610; i++) {
+            DetachedCamera.input(player, new CameraInput(camera.id(), forward, 90, 0, false, false, false, true));
             DetachedCamera.tick(tick);
         }
-        h.assertTrue(camera.view().orElseThrow().position().equals(before), "Release discards a partial interval");
-        DetachedCamera.input(player, lookUp);
-        DetachedCamera.tick(tick);
-        Vec3 above = camera.view().orElseThrow().position();
-        h.assertTrue(above.distanceTo(before.add(0, 1, 0)) < 1e-5, "Step follows the current camera pitch");
-        BlockPos ward = BlockPos.containing(above.add(0, 1, 0));
+        h.assertTrue(camera.view().orElseThrow().position().distanceTo(target) < 1e-5 && player.position().equals(body),
+                "The camera stays at its landing point and the body stays put");
+        DetachedCamera.input(player, new CameraInput(camera.id(), Input.EMPTY, 0, 0, false, true, false, false));
+        h.assertTrue(!DetachedCamera.active(player) && !KeyOfStars.releaseCameraCharge(player),
+                "Backspace restores the body and a duplicate release cannot reopen the view");
+
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 600;
+        h.assertTrue(KeyOfStars.releaseCameraCharge(player), "A long hold opens one view");
+        h.assertTrue(Math.abs(DetachedCamera.handle(player).orElseThrow().view().orElseThrow().position().distanceTo(eye) - 48) < 1e-5,
+                "The preset caps charge distance");
+        DetachedCamera.stop(player);
+        BlockPos ward = BlockPos.containing(eye.add(0, 2, 0));
         h.getLevel().setBlockAndUpdate(ward, Blocks.OBSIDIAN.defaultBlockState());
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 50;
+        h.assertTrue(KeyOfStars.releaseCameraCharge(player), "A ward clips the cast");
+        var blocked = DetachedCamera.handle(player).orElseThrow();
+        h.assertTrue(blocked.view().orElseThrow().position().y < ward.getY(), "A charged teleport cannot cross the ward");
+        blocked.stop();
+
+        h.assertTrue(KeyOfStars.openScoutingCamera(player), "Z+C still opens free flight");
+        KeyOfStars.beginCameraCharge(player);
+        player.tickCount += 20;
+        h.assertTrue(!KeyOfStars.releaseCameraCharge(player), "Scouting cannot be replaced by the charged cast");
+        var scout = DetachedCamera.handle(player).orElseThrow();
+        var held = new CameraInput(scout.id(), Input.EMPTY, 0, 0, false, false, false, true);
         for (int i = 0; i < 20; i++) {
-            DetachedCamera.input(player, lookUp);
+            DetachedCamera.input(player, held);
             DetachedCamera.tick(tick);
         }
-        h.assertTrue(camera.view().orElseThrow().position().y < ward.getY(), "Forward steps respect wards");
-        h.assertTrue(player.position().equals(body) && player.getYRot() == 23 && player.getXRot() == 12,
-                "Camera jumps leave the body and its facing in place");
-        camera.stop();
-        h.assertTrue(DetachedCamera.start(player, "spirit_scouting"), "Ordinary scouting opens after a return");
-        var ordinary = DetachedCamera.handle(player).orElseThrow();
-        for (int i = 0; i < 20; i++) {
-            DetachedCamera.input(player, new CameraInput(ordinary.id(), Input.EMPTY, 0, 0, false, false, false, true));
-            DetachedCamera.tick(tick);
-        }
-        h.assertTrue(ordinary.view().orElseThrow().position().equals(eye), "Presets opt in to forward stepping");
-        var buf = new FriendlyByteBuf(Unpooled.buffer());
-        try {
-            held.encode(buf);
-            var snap = CameraFrame.move(camera.id(), above, true);
-            snap.encode(buf);
-            h.assertTrue(held.equals(new CameraInput(buf)) && snap.equals(CameraFrame.decode(buf)) && !buf.isReadable(),
-                    "Held input and instant camera position survive the wire");
-        } finally {
-            buf.release();
-        }
+        h.assertTrue(scout.view().orElseThrow().position().equals(eye), "Z+V does not step the scouting view");
         h.succeed();
     }
 

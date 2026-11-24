@@ -1,6 +1,5 @@
 {
-  "motion": { "mode": "free", "speed": 0.35, "sprint_multiplier": 2, "acceleration": 0.45, "braking": 0.7,
-              "forward_step": { "blocks": 1, "interval_ticks": 10 } },
+  "motion": { "mode": "free", "speed": 0.35, "sprint_multiplier": 2, "acceleration": 0.45, "braking": 0.7 },
   "collision": { "mode": "denylist", "tag": "circle_of_inevitability:camera_wards" },
   "range": 48,
   "duration": 600,

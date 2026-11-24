@@ -4,7 +4,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars;
 import net.lukario.circleofinevitability.network.PacketHandler;
-import net.lukario.circleofinevitability.network.SOpenStarCameraPacket;
+import net.lukario.circleofinevitability.network.SStarCameraPacket;
+import net.lukario.circleofinevitability.network.SStarCameraPacket.Action;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -29,6 +30,7 @@ public final class CameraChordInput {
     private static LocalPlayer owner;
     private static ClientLevel level;
     private static boolean listening;
+    private static boolean charging;
 
     private CameraChordInput() {}
 
@@ -36,6 +38,11 @@ public final class CameraChordInput {
         boolean gameplay = mc.player != null && mc.player.isAlive() && mc.isWindowActive()
                 && mc.gui.screen() == null && mc.gui.overlay() == null;
         boolean enabled = gameplay && (ClientPathwayData.is(KeyOfStars.PATHWAY) || ClientDetachedCamera.viewpoint() != null);
+        if (charging && (!gameplay || owner != mc.player || level != mc.level || !ClientPathwayData.is(KeyOfStars.PATHWAY)
+                || ClientDetachedCamera.viewpoint() != null)) {
+            charging = false;
+            if (mc.getConnection() != null) PacketHandler.sendToServer(new SStarCameraPacket(Action.CANCEL));
+        }
         if (owner != mc.player || level != mc.level || listening != enabled) {
             held.clear();
             claimed.clear();
@@ -66,7 +73,12 @@ public final class CameraChordInput {
 
     private static void input(InputConstants.Key key, int action) {
         updateContext(Minecraft.getInstance());
+        var keys = Keybindings.INSTANCE;
         if (action == GLFW.GLFW_RELEASE) {
+            if (charging && (keys.cameraModifier.matches(key) || keys.cameraStep.matches(key))) {
+                charging = false;
+                PacketHandler.sendToServer(new SStarCameraPacket(Action.RELEASE));
+            }
             boolean used = claimed.remove(key);
             if (held.remove(key)) {
                 intercepted.add(key);
@@ -79,11 +91,15 @@ public final class CameraChordInput {
         intercepted.add(key);
         boolean detached = ClientDetachedCamera.viewpoint() != null;
         if (detached) claimed.add(key);
-        var keys = Keybindings.INSTANCE;
-        if (complete(key, keys.cameraOpen) && !detached && ClientPathwayData.is(KeyOfStars.PATHWAY)) {
-            PacketHandler.sendToServer(new SOpenStarCameraPacket());
+        boolean open = complete(key, keys.cameraOpen);
+        boolean teleport = complete(key, keys.cameraStep);
+        if (detached || charging || !ClientPathwayData.is(KeyOfStars.PATHWAY)) return;
+        if (open) {
+            PacketHandler.sendToServer(new SStarCameraPacket(Action.SCOUT));
+        } else if (teleport) {
+            charging = true;
+            PacketHandler.sendToServer(new SStarCameraPacket(Action.BEGIN_CHARGE));
         }
-        complete(key, keys.cameraStep);
     }
 
     private static boolean complete(InputConstants.Key pressed, KeyMapping action) {

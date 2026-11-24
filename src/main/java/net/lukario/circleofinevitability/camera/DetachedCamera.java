@@ -103,6 +103,24 @@ public final class DetachedCamera {
         return open(player, preset, point, null, action, false).isPresent();
     }
 
+    /** Open a view directly ahead, clipping the cast to its preset range, tracked terrain and collision rules. */
+    public static boolean atForward(ServerPlayer player, String name, double blocks) {
+        CameraPreset preset = preset(name);
+        if (preset == null || active(player) || !Double.isFinite(blocks) || blocks <= 0) return false;
+        double distance = preset.range() > 0 ? Math.min(blocks, preset.range()) : blocks;
+        Vec3 eye = player.getEyePosition();
+        if (!available(player, eye) || !CameraTravel.fits(player.level(), eye, preset.collision())) return false;
+        Vec3 direction = player.getLookAngle();
+        Vec3 point = eye;
+        for (double traveled = 0; traveled < distance; traveled++) {
+            Vec3 next = eye.add(direction.scale(Math.min(traveled + 1, distance)));
+            if (!available(player, next) || !trackedPath(player, point, next)) break;
+            point = CameraTravel.sweep(player.level(), point, next, preset.collision());
+            if (!point.equals(next)) break;
+        }
+        return point.distanceToSqr(eye) > 1e-8 && at(player, name, point);
+    }
+
     /** Use a moving entity's eyes as the anchor for a fixed view, orbit, or flight tether. */
     public static boolean follow(ServerPlayer player, String preset, Entity anchor) {
         return follow(player, preset, anchor, null);
@@ -113,9 +131,13 @@ public final class DetachedCamera {
         return open(player, preset, anchor.getEyePosition(), anchor, action, false).isPresent();
     }
 
-    private static Optional<Handle> open(ServerPlayer player, String name, Vec3 point, Entity anchor, Action action, boolean scripted) {
+    private static CameraPreset preset(String name) {
         Identifier key = Identifier.tryParse(name.contains(":") ? name : CircleOfInevitability.MOD_ID + ":" + name);
-        CameraPreset preset = key == null ? null : CameraPresets.loaded.get(key);
+        return key == null ? null : CameraPresets.loaded.get(key);
+    }
+
+    private static Optional<Handle> open(ServerPlayer player, String name, Vec3 point, Entity anchor, Action action, boolean scripted) {
+        CameraPreset preset = preset(name);
         if (preset == null || active(player) || !player.isAlive() || player.isPassenger() || player.isSleeping()
                 || player.getCamera() != player || Parasite.isInside(player) || !available(player, point)
                 || !CameraTravel.fits(player.level(), point, preset.collision())) return Optional.empty();

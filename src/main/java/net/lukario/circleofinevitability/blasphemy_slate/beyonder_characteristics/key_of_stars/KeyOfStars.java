@@ -296,6 +296,11 @@ public class KeyOfStars {
             KeyOfStarsFx.intuition(hunted, event.getEntity().getEyePosition());
         }
 
+        @SubscribeEvent
+        public static void changedDimension(PlayerEvent.PlayerChangedDimensionEvent event) {
+            cancelCameraCharge(event.getEntity());
+        }
+
         // what was on the screen does not survive relogging or dying: start clean (a Wandering is ended where they are)
         @SubscribeEvent
         public static void onKeyOfStarsLogin(PlayerEvent.PlayerLoggedInEvent event) {
@@ -309,6 +314,7 @@ public class KeyOfStars {
     }
 
     private static void clearState(Player player) {
+        cancelCameraCharge(player);
         player.getPersistentData().remove(INTERFERENCE_TURNS);
         player.getPersistentData().remove(INTERFERENCE_SHOWN);
         player.getPersistentData().remove(WORMS_SHOWN);
@@ -556,8 +562,30 @@ public class KeyOfStars {
     // What a cast costs, how long a cooldown is (every key and wheel entry goes through these)
     // =========================
 
+    private static final String CAMERA_CHARGE_START = "key_of_stars_camera_charge_start";
+    private static final int CAMERA_TICKS_PER_BLOCK = 10;
+
     public static boolean openScoutingCamera(ServerPlayer player) {
+        cancelCameraCharge(player);
         return ready(player, false, DOOR_SEQUENCE) && DetachedCamera.start(player, "key_of_stars_scouting");
+    }
+
+    public static void beginCameraCharge(ServerPlayer player) {
+        if (DetachedCamera.active(player) || !player.isAlive() || !ready(player, false, DOOR_SEQUENCE)) return;
+        var data = player.getPersistentData();
+        if (!data.contains(CAMERA_CHARGE_START)) data.putInt(CAMERA_CHARGE_START, player.tickCount);
+    }
+
+    public static void cancelCameraCharge(Player player) {
+        player.getPersistentData().remove(CAMERA_CHARGE_START);
+    }
+
+    public static boolean releaseCameraCharge(ServerPlayer player) {
+        var start = player.getPersistentData().getInt(CAMERA_CHARGE_START);
+        cancelCameraCharge(player);
+        if (start.isEmpty() || DetachedCamera.active(player) || !ready(player, false, DOOR_SEQUENCE)) return false;
+        long blocks = ((long) player.tickCount - start.get()) / CAMERA_TICKS_PER_BLOCK;
+        return blocks > 0 && DetachedCamera.atForward(player, "key_of_stars_projection", blocks);
     }
 
     /** True for a Key Of Stars at that Sequence or stronger. */

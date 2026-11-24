@@ -57,7 +57,7 @@ The abilities do not each get a Sequence of their own. Sequence 8 has seven abil
 
 ## Scouting camera
 
-From Apprentice (Sequence 9), press **Z+C** to detach your view. Fly with the movement keys and aim with the mouse. Hold **Z+V** to jump the camera one block in the direction it faces every half-second. Release either key to reset the interval. **Backspace** returns to the body. Damage also ends the view. The camera lasts 30 seconds, reaches 48 blocks, and passes through ordinary blocks. Obsidian and crying obsidian stop it. [Camera controls and implementation guide](../DETACHED_CAMERA.md#wire-a-held-forward-step-to-another-ability)
+From Apprentice (Sequence 9), **Z+C** opens free flight for 30 seconds. **Z+V** is a separate cast from your normal view. Hold both keys to charge, then release either key to teleport just the camera one block forward per completed half-second, up to 48 blocks. Aim at release determines the direction. You can look around from that point until you press **Backspace** to return. Both views pass through ordinary blocks, stop at obsidian and crying obsidian, and end on damage. [Camera implementation guide](../DETACHED_CAMERA.md#wire-a-charge-and-release-camera-to-an-ability)
 
 ## Keys
 
