@@ -35,6 +35,15 @@ public final class AbilityCatalog {
         }
         return result;
     }
+    /** Resolve an actual mob wheel pick before it is reported to observers. */
+    public static AbilityWheel wheelFor(String pathway, String entry) {
+        AbilityCatalogBootstrap.initialize();
+        for (AbilityWheel wheel : AbilityWheel.registered()) {
+            if (wheel.entry(entry) != null && pathway.equals(wheel.pathway())) return wheel;
+        }
+        return null;
+    }
+
     public static List<Power> of(LivingEntity entity) {
         String pathway=Beyonders.pathwayOf(entity);int sequence=Beyonders.sequenceOf(entity);
         return all().values().stream().filter(p->p.sequence()>=sequence && p.cast().pathway().equals(pathway)).toList();

@@ -3,15 +3,13 @@ package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristi
 import java.util.*;
 import net.lukario.circleofinevitability.combat.AbilityStudy.Row;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsReplication;
 import net.lukario.circleofinevitability.combat.*;
-import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.network.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.*;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.network.chat.Component;
 
 /** Only stable catalog identifiers are persisted; no expiring Cast or entity references. */
@@ -36,36 +34,47 @@ public final class Codex {
         int count=0;for(var power:catalog().values())if(learn(p,power,100))count++;
         return count;
     }
+    private static AbilityStudy activeLibrary(Player player) {
+        if (enabled(player)) return LIBRARY;
+        return KeyOfStarsReplication.enabled(player) ? KeyOfStarsReplication.MEMORY : null;
+    }
+
     public static void observe(LivingEntity caster,ServerLevel sl,Casts.Cast cast) {
         if (!cast.copyable()) return;
         for (ServerPlayer p:sl.players()) {
-            if (!enabled(p) || p==caster || p.distanceToSqr(caster)>32*32 || !p.hasLineOfSight(caster)) continue;
-            Vec3 towards=caster.getEyePosition().subtract(p.getEyePosition());
-            if (towards.lengthSqr()>0 && p.getLookAngle().dot(towards.normalize())<0.5) continue;
+            AbilityStudy library = activeLibrary(p);
+            if (library == null || !StudyRules.witnesses(p, caster)) continue;
             int seq=SoulCore.getSequence(p);
             if (cast.sequence()<seq) continue;
             String key=id(cast);
-            LIBRARY.add(p,key,StudyRules.gain(seq,cast.sequence()));
+            if (library.complete(p, key)) continue;
+            double progress = library.add(p, key, StudyRules.gain(seq, cast.sequence()));
+            if (library == KeyOfStarsReplication.MEMORY && progress >= 100) {
+                p.sendSystemMessage(Component.literal("Memorized " + cast.name() + " for Replication."));
+            }
         }
     }
     public static List<Row> rows(ServerPlayer p) { return LIBRARY.rows(p,catalog().values()); }
     public static void open(ServerPlayer p) {
-        if (enabled(p)) PacketHandler.sendToPlayer(new COpenCodexPacket(rows(p)),p);
+        AbilityStudy library = activeLibrary(p);
+        if (library != null) PacketHandler.sendToPlayer(new COpenCodexPacket(library.rows(p, catalog().values())), p);
     }
     public static void choice(ServerPlayer p,String id,boolean favorite) {
-        if (!enabled(p)) return;
-        AbilityCatalog.Power power=catalog().get(id);
-        if (power==null || study(p,id)<=0) return;
+        AbilityStudy library = activeLibrary(p);
+        if (library == null) return;
+        AbilityCatalog.Power power = catalog().get(id);
+        if (power == null || library.progress(p, id) <= 0) return;
         if (favorite) {
-            LIBRARY.toggleFavorite(p,id);
+            library.toggleFavorite(p, id);
             open(p);
-        } else if (study(p,id)>=100 && power.sequence()>=SoulCore.getSequence(p)) LIBRARY.select(p,id);
+        } else if (power.sequence() >= SoulCore.getSequence(p)) {
+            library.select(p, id);
+        }
     }
     public static void replicate(ServerPlayer p) {
         if (!enabled(p)) return;
-        String id=data(p).getStringOr("selected","");
-        AbilityCatalog.Power power=catalog().get(id);
-        if (power==null || study(p,id)<100 || power.sequence()<SoulCore.getSequence(p)) {
+        AbilityCatalog.Power power = LIBRARY.selectedPower(p);
+        if (power == null) {
             p.sendSystemMessage(Component.literal("Replication requires 100% study at your Sequence or weaker. Sneak + key 4 to choose.")); return;
         }
         boolean success=net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder.atOwnSequence(p,

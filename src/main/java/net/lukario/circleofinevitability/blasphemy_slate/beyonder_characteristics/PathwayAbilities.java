@@ -15,6 +15,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_god.HandOfGod;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrder;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStars;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsReplication;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTravel;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsTricks;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.hand_of_order.HandOfOrderDecrees;
@@ -222,8 +223,8 @@ public final class PathwayAbilities {
                     (player, level, sl) -> KeyOfStarsTravel.keyOfStarsTravel(player, level, sl, true)),
             new Ability("Key Of Stars", 6, "Secrets and Space", 4, SNEAK, STEALABLE,             // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> KeyOfStars.keyOfStarsSecrets(player, level, sl, true)),
-            new Ability("Key Of Stars", 7, "Starlight", 2, SNEAK, OWN_PATHWAY_ONLY,              // Omnipresence and the Alternate World
-                    (player, level, sl) -> KeyOfStars.keyOfStarsStarlight(player, level, sl, true)),  // run on this Pathway's own rules
+            new Ability("Key Of Stars", 7, "Replication", 2, SNEAK, OWN_PATHWAY_ONLY,
+                    (player, level, sl) -> KeyOfStarsReplication.use(player)),
 
             // ---- Hand Of Order (docs/pathways/HAND_OF_ORDER.md) ----
             new Ability("Hand Of Order", 1, "Halt", 9, SNEAK, STEALABLE,

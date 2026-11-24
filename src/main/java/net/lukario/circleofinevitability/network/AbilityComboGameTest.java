@@ -43,6 +43,7 @@ public final class AbilityComboGameTest {
             DeferredRegister.create(Registries.TEST_FUNCTION, CircleOfInevitability.MOD_ID);
 
     static {
+        FUNCTIONS.register("key_of_stars_replication", () -> KeyOfStarsReplicationTest::run);
         FUNCTIONS.register("apocalypse_combo_keys", () -> AbilityComboGameTest::apocalypse);
         FUNCTIONS.register("dark_angel_techniques", () -> AbilityComboGameTest::techniques);
         FUNCTIONS.register("dark_angel_ability_keys", () -> AbilityComboGameTest::darkAngel);
@@ -382,7 +383,7 @@ public final class AbilityComboGameTest {
         test.assertTrue(SoulCore.getSpirituality(player) == before - cost, "Only the combo's spirituality is charged");
     }
 
-    private static void tap(ServerPlayer player, int slot) {
+    static void tap(ServerPlayer player, int slot) {
         AbilityKeys.input(player, slot, PRESS);
         release(player, slot);
     }
@@ -391,7 +392,7 @@ public final class AbilityComboGameTest {
         AbilityKeys.input(player, slot, RELEASE);
     }
 
-    private static ServerPlayer player(GameTestHelper test, Vec3 origin) {
+    static ServerPlayer player(GameTestHelper test, Vec3 origin) {
         ServerLevel level = test.getLevel();
         UUID id = UUID.randomUUID();
         var cookie = CommonListenerCookie.createInitial(new GameProfile(id, "combo_" + id.toString().substring(0, 8)), false);
@@ -411,7 +412,7 @@ public final class AbilityComboGameTest {
         return player;
     }
 
-    private static Mob target(GameTestHelper test, Vec3 at) {
+    static Mob target(GameTestHelper test, Vec3 at) {
         var target = EntityTypes.HUSK.create(test.getLevel(), EntitySpawnReason.MOB_SUMMONED);
         target.setPos(at.x, at.y, at.z);
         target.setNoAi(true);

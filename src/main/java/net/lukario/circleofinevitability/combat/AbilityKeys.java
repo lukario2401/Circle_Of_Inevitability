@@ -4,6 +4,7 @@ import java.util.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.*;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.PathwayAbilities;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsRecord;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsReplication;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.Codex;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.StolenAbilities;
 import net.lukario.circleofinevitability.status.KeySeal;
@@ -27,6 +28,10 @@ public final class AbilityKeys {
     if (pathway.equals("Key Of Stars"))
       for (var page : KeyOfStarsRecord.recorded(p))
         candidates.add(new Candidate(4, page.cast().sequence()));
+    if (KeyOfStarsReplication.enabled(p))
+      for (var row : KeyOfStarsReplication.MEMORY.rows(p, AbilityCatalog.all().values()))
+        if (row.study() >= 100 && row.sequence() >= SoulCore.getSequence(p))
+          candidates.add(new Candidate(7, row.sequence()));
     if (pathway.equals("Omniscient Eye"))
       for (var row : Codex.rows(p))
         if (row.study() >= 100 && row.sequence() >= SoulCore.getSequence(p))

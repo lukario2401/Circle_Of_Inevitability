@@ -42,6 +42,7 @@ public final class MobAbility {
     private final int key;
     private final boolean sneak;
     private final PathwayAbilities.Ability ability;     // the player version (null if that key is not listed)
+    private String previousId;
     private String entry = "";                          // a wheel's entry (a key with a wheel has one per entry)
     private String name;
     private int sequence;
@@ -83,6 +84,10 @@ public final class MobAbility {
      */
     public MobAbility entry(String entry) { this.entry = entry == null ? "" : entry; return this; }
 
+    /** Retain stored cooldowns and recorded pages when moving an existing ability to a different slot. */
+    public MobAbility previously(String id) { previousId = id; return this; }
+    public String storageId() { return previousId == null ? id() : previousId; }
+
     /** The weakest Sequence that casts it (default: the player ability's). */
     public MobAbility sequence(int sequence) { this.sequence = sequence; return this; }
 
@@ -118,6 +123,7 @@ public final class MobAbility {
     public MobAbility copy() {
         MobAbility out = new MobAbility(pathway, key, sneak).entry(entry).named(name).sequence(sequence)
                 .cost(cost).cooldown(cooldown).range(range).weight(weight).when(when).cast(cast);
+        out.previousId = previousId;
         out.sight = sight;out.costRule=costRule;out.cooldownRule=cooldownRule;
         return out;
     }

@@ -1,7 +1,9 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.combat.AbilityCatalog;
 import net.lukario.circleofinevitability.combat.Casts;
+import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.AbilityLock;
@@ -116,7 +118,7 @@ public final class MobCasting {
 
     /** Ticks before this mob can cast it again (0 = now). */
     public static int cooldownLeft(LivingEntity mob, MobAbility ability) {
-        return left(mob, ability.id());
+        return left(mob, ability.storageId());
     }
 
     /** Ticks of the pause after its last cast (0 = none). */
@@ -151,17 +153,17 @@ public final class MobCasting {
             wentOff = ability.cast().run(mob, target, sl);
         } catch (RuntimeException e) {
             CircleOfInevitability.LOGGER.error("A mob ability failed: {} cast by {}", ability, mob, e);
-            startCooldown(mob, sl, ability.id(), castCooldown);
+            startCooldown(mob, sl, ability.storageId(), castCooldown);
             return false;
         } finally {
             MobSpirituality.endPrepaid(mob);
         }
         if (!wentOff) return false;                                         // refused: nothing spent
         MobSpirituality.spend(mob, castCost);
-        startCooldown(mob, sl, ability.id(), Math.round(castCooldown * Math.max(0f, BeyonderMobRules.COOLDOWN_SCALE)));
+        startCooldown(mob, sl, ability.storageId(), Math.round(castCooldown * Math.max(0f, BeyonderMobRules.COOLDOWN_SCALE)));
         startCooldown(mob, sl, PAUSE, Math.max(0, recoveryTicks));
         if (mob instanceof DirectedCaster directed) directed.onAbilityCast(ability);
-        if (ability.ability() != null) Casts.mobCast(mob, sl, Casts.madeUpFor(mob, sl, ability.ability(), ability.sneak()));
+        reportCast(mob, sl, ability);
         return true;
     }
 
@@ -188,8 +190,20 @@ public final class MobCasting {
         }
         if (!wentOff) return null;
         if (mob instanceof DirectedCaster directed) directed.onAbilityCast(ability);
-        if (ability.ability() != null) Casts.mobCast(mob, sl, Casts.madeUpFor(mob, sl, ability.ability(), ability.sneak()));
+        reportCast(mob, sl, ability);
         return Refusal.NONE;
+    }
+
+    private static void reportCast(Mob mob, ServerLevel sl, MobAbility ability) {
+        if (ability.ability() == null) return;
+        AbilityWheel wheel = ability.entry().isEmpty() ? null : AbilityCatalog.wheelFor(ability.pathway(), ability.entry());
+        if (wheel == null) {
+            Casts.mobCast(mob, sl, Casts.madeUpFor(mob, sl, ability.ability(), ability.sneak()));
+        } else {
+            Casts.mobCast(mob, sl, new Casts.Cast(mob.getUUID(), mob.getName().getString(), ability.pathway(),
+                    ability.key(), ability.sneak(), wheel, wheel.entry(ability.entry()), ability.ability(),
+                    sl.dimension().toString(), mob.position(), sl.getGameTime()));
+        }
     }
 
     /** It forgets every cooldown (it is no Beyonder any more, or a command). */

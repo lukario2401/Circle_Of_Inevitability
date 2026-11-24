@@ -68,10 +68,8 @@ import java.util.List;
  *   5 Travel         (Traveler)          the wheel: Traveler's Door, Blink, Invisible Hand, Star Anchor, Wandering (3)
  *                                        (KeyOfStarsTravel); while Wandering, the key steps you out | sneak: the last pick
  *   6 Secrets        (Secrets Sorcerer)  the wheel: Space Concealment, Transfiguration, Exile, Pocket Space, Space
- *                                        Tearing (3) (KeyOfStarsSecrets)  | sneak: the last pick
- *   7 Starlight      (Planeswalker)      the wheel: Toy Box, Replication, Space Fragmentation (1), Starlight Seal (1),
- *                                        Space-Time Labyrinth (1), Alternate World (0), Omnipresence (0), Close the
- *                                        Door (0) (KeyOfStarsStarlight)   | sneak: the last pick
+ *                                        Tearing (3) (KeyOfStarsSecrets)  | sneak: last pick, or Starlight from Sequence 2
+ *   7 Replication    (Planeswalker)      cast a fully studied power       | sneak: choose it in the Codex
  *
  * The parts of the kit it leans on, any Pathway can use too: status/Starlit (the mark; KeyOfStars.starlit shows it),
  * status/Anchors (Star Anchors), status/Unbound (Slip Free), status/Unreadable (Interference; its turned-away hook
@@ -180,7 +178,7 @@ public class KeyOfStars {
         // (here, not in KeyOfStars: the event bus loads this class when the mod starts, so the rules are in from the start)
         static {
             // the single keys have no cooldown (KEY_COOLDOWNS)
-            if (!KEY_COOLDOWNS) Cooldowns.addFree(Cooldowns.keysStartingWith("key_of_stars_"));
+            if (!KEY_COOLDOWNS) Cooldowns.addFree(Cooldowns.keysStartingWith("key_of_stars_", KeyOfStarsReplication.COOLDOWN_KEY));
             // Footprints of Freedom (9): roots and holds on you last a quarter less; Astral Footing (3): Teleport roots half
             Root.addDurationScale((target, restriction) -> {
                 if (!(target instanceof Player player) || !isKeyOfStars(player, DOOR_SEQUENCE)) return 1f;
@@ -500,10 +498,6 @@ public class KeyOfStars {
 
     public static void keyOfStarsSecrets(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         KeyOfStarsSecrets.keyOfStarsSecrets(player, level, sl, bypassClassCheck);
-    }
-
-    public static void keyOfStarsStarlight(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        KeyOfStarsStarlight.keyOfStarsStarlight(player, level, sl, bypassClassCheck);
     }
 
     // =========================

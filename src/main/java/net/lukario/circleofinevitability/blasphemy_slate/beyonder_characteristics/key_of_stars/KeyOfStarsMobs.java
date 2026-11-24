@@ -1,6 +1,8 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars;
 
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.StudyRules;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobCasting;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbilities;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobAbility;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.MobSpells;
@@ -59,8 +61,9 @@ import static net.lukario.circleofinevitability.blasphemy_slate.beyonder_charact
  *   5  Travel (5): Traveler's Door (to its target from afar), Blink (behind its target, dodging the next hit),
  *      Invisible Hand (its target yanked to its feet)
  *   6  Secrets and Space (4): Space Concealment, Transfiguration, Exile, Space Tearing (3)
- *   7  Starlight (2): Toy Box, Replication, Space Fragmentation (1), Starlight Seal (1), Space-Time Labyrinth (1),
+ *   6  Starlight (2, sneak): Toy Box, Space Fragmentation (1), Starlight Seal (1), Space-Time Labyrinth (1),
  *      Alternate World (0), Omnipresence (0: its afterimages take the hits; they repeat nothing), Close the Door (0)
+ *   7  Replication (2): cast one of the powers it has fully studied
  *
  * Left out (no use to a mob): Star Anchor and Wandering (Travel), Pocket Space (an Ender Chest).
  */
@@ -100,6 +103,7 @@ public final class KeyOfStarsMobs {
 
     /** MobAbilities calls this once. */
     public static void register() {
+        Casts.addAnyCasterListener(KeyOfStarsMobs::studySeen);
         Casts.addAnyCasterListener(KeyOfStarsMobs::recordSeen);              // Record: a watching mob sees the cast
 
         // ---- key 1: Door Opening
@@ -201,55 +205,59 @@ public final class KeyOfStarsMobs {
                 .when((mob, target, sl) -> mob.distanceTo(target) <= tearingRange(mob))
                 .cast(KeyOfStarsMobs::spaceTearing));
 
-        // ---- key 7: the Starlight wheel
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("toy_box").named("Toy Box")
+        // ---- sneak + key 6: the Starlight wheel
+        MobAbilities.register(starlight("toy_box").named("Toy Box")
                 .sequence(KeyOfStarsStarlight.STARLIGHT_SEQUENCE)
                 .cost(KeyOfStarsStarlight.TOY_COST).cooldown(Math.max(STARLIGHT_MOB_COOLDOWN, KeyOfStarsStarlight.TOY_COOLDOWN))
                 .range(KeyOfStarsStarlight.TOY_RANGE).sight()
                 .when((mob, target, sl) -> !Zone.isOpen(mob, TOY_ZONE))
                 .cast(KeyOfStarsMobs::toyBox));
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("replication").named("Replication")
-                .sequence(KeyOfStarsStarlight.STARLIGHT_SEQUENCE)
-                .cost(KeyOfStarsStarlight.REPLICATION_COST).cooldown(Math.max(STARLIGHT_MOB_COOLDOWN / 2, KeyOfStarsStarlight.REPLICATION_COOLDOWN))
-                .range(KeyOfStarsStarlight.REPLICATION_RANGE)
-                .when((mob, target, sl) -> toReplicate(mob, sl) != null)
-                .cast(KeyOfStarsMobs::replication));
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("space_fragmentation").named("Space Fragmentation")
+        MobAbilities.register(starlight("space_fragmentation").named("Space Fragmentation")
                 .sequence(KeyOfStarsStarlight.KEY_OF_STARS_SEQUENCE)
                 .cost(KeyOfStarsStarlight.FRAGMENTATION_COST).cooldown(KeyOfStarsStarlight.FRAGMENTATION_COOLDOWN)
                 .range(KeyOfStarsStarlight.FRAGMENTATION_RANGE).sight()
                 .when((mob, target, sl) -> !Zone.isOpen(mob, FRAGMENTATION_ZONE))
                 .cast(KeyOfStarsMobs::spaceFragmentation));
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("starlight_seal").named("Starlight Seal")
+        MobAbilities.register(starlight("starlight_seal").named("Starlight Seal")
                 .sequence(KeyOfStarsStarlight.KEY_OF_STARS_SEQUENCE)
                 .cost(KeyOfStarsStarlight.SEAL_COST).cooldown(KeyOfStarsStarlight.SEAL_COOLDOWN)
                 .range(KeyOfStarsStarlight.SEAL_RANGE).sight()
                 .when((mob, target, sl) -> caught(mob, target) && !Seal.isSealed(target))
                 .cast(KeyOfStarsMobs::starlightSeal));
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("labyrinth").named("Space-Time Labyrinth")
+        MobAbilities.register(starlight("labyrinth").named("Space-Time Labyrinth")
                 .sequence(KeyOfStarsStarlight.KEY_OF_STARS_SEQUENCE)
                 .cost(KeyOfStarsStarlight.LABYRINTH_COST).cooldown(KeyOfStarsStarlight.LABYRINTH_COOLDOWN)
                 .range(KeyOfStarsStarlight.LABYRINTH_RANGE).sight()
                 .when((mob, target, sl) -> !Enclosure.isOpen(mob, LABYRINTH_ENCLOSURE))
                 .cast(KeyOfStarsMobs::labyrinth));
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("alternate_world").named("Alternate World")
+        MobAbilities.register(starlight("alternate_world").named("Alternate World")
                 .sequence(KeyOfStarsStarlight.DOOR_SEQUENCE)
                 .cost(KeyOfStarsStarlight.WORLD_COST).cooldown(KeyOfStarsStarlight.WORLD_COOLDOWN)
                 .range(KeyOfStarsStarlight.WORLD_RADIUS)
                 .when((mob, target, sl) -> !Enclosure.isOpen(mob, WORLD_ENCLOSURE))
                 .cast(KeyOfStarsMobs::alternateWorld));
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("omnipresence").named("Omnipresence")
+        MobAbilities.register(starlight("omnipresence").named("Omnipresence")
                 .sequence(KeyOfStarsStarlight.DOOR_SEQUENCE)
                 .cost(KeyOfStarsStarlight.OMNI_COST).cooldown(KeyOfStarsStarlight.OMNI_COOLDOWN)
                 .anyRange()
                 .when((mob, target, sl) -> MobSpells.hurt(mob, 0.6f) && !Substitute.isArmed(mob))
                 .cast(KeyOfStarsMobs::omnipresence));
-        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).entry("close_the_door").named("Close the Door")
+        MobAbilities.register(starlight("close_the_door").named("Close the Door")
                 .sequence(KeyOfStarsStarlight.DOOR_SEQUENCE)
                 .cost(KeyOfStarsStarlight.CLOSE_COST).cooldown(KeyOfStarsStarlight.CLOSE_COOLDOWN)
                 .range(KeyOfStarsStarlight.CLOSE_RADIUS)
                 .when((mob, target, sl) -> !Zone.isOpen(mob, CLOSE_ZONE))
                 .cast(KeyOfStarsMobs::closeTheDoor));
+
+        MobAbilities.register(MobAbility.of(PATHWAY, 7, MobAbility.NORMAL).previously(PATHWAY + "/7/replication")
+                .cost(KeyOfStarsReplication.COST).cooldown(Math.max(STARLIGHT_MOB_COOLDOWN / 2, KeyOfStarsReplication.COOLDOWN))
+                .range(StudyRules.RANGE)
+                .when((mob, target, sl) -> !remembered(mob, target, sl).isEmpty())
+                .cast(KeyOfStarsMobs::replication));
+    }
+
+    private static MobAbility starlight(String entry) {
+        return MobAbility.of(PATHWAY, 6, MobAbility.SNEAK).entry(entry).previously(PATHWAY + "/7/" + entry);
     }
 
     /** One trick of the Tricks wheel (Sequence 8): its cost, its cooldown (never under TRICK_MOB_COOLDOWN), its reach. */
@@ -723,7 +731,7 @@ public final class KeyOfStarsMobs {
     }
 
     // =========================
-    // Key 7: the Starlight wheel
+    // Starlight and Replication
     // =========================
 
     private static boolean toyBox(Mob mob, LivingEntity target, ServerLevel sl) {
@@ -767,20 +775,40 @@ public final class KeyOfStarsMobs {
         return true;
     }
 
-    /** The newest power another cast near it in the last REPLICATION_AGE ticks that a mob can cast, or null. */
-    private static Casts.Cast toReplicate(Mob mob, ServerLevel sl) {
-        Casts.Cast cast = Casts.latestNear(sl, mob.position(), KeyOfStarsStarlight.REPLICATION_RANGE,
-                KeyOfStarsStarlight.REPLICATION_AGE, one -> !one.caster().equals(mob.getUUID()) && one.copyable());
-        return cast != null && MobAbilities.forCast(cast) != null ? cast : null;
+    private static void studySeen(LivingEntity caster, ServerLevel sl, Casts.Cast cast) {
+        if (!cast.copyable()) return;
+        MobAbility power = MobAbilities.forCast(cast);
+        if (power == null) return;
+        for (Mob mob : sl.getEntitiesOfClass(Mob.class, caster.getBoundingBox().inflate(StudyRules.RANGE),
+                one -> KeyOfStars.isKeyOfStars(one, KeyOfStarsReplication.SEQUENCE))) {
+            int sequence = BeyonderMobs.sequence(mob);
+            double gain = StudyRules.gain(sequence, cast.sequence());
+            if (gain > 0 && power.sequence() >= sequence && StudyRules.witnesses(mob, caster)) {
+                KeyOfStarsReplication.MEMORY.add(mob, power.storageId(), gain);
+            }
+        }
+    }
+
+    private static List<MobAbility> remembered(Mob mob, LivingEntity target, ServerLevel sl) {
+        List<MobAbility> usable = new ArrayList<>();
+        var memory = KeyOfStarsReplication.MEMORY;
+        for (String id : memory.data(mob).keySet()) {
+            if (!memory.complete(mob, id)) continue;
+            MobAbility power = MobAbilities.byId(id);
+            if (power != null && power.sequence() >= BeyonderMobs.sequence(mob) && MobCasting.inReach(mob, power, target)
+                    && (power.when() == null || power.when().test(mob, target, sl))) usable.add(power);
+        }
+        return usable;
     }
 
     private static boolean replication(Mob mob, LivingEntity target, ServerLevel sl) {
-        Casts.Cast cast = toReplicate(mob, sl);
-        MobAbility copy = cast == null ? null : MobAbilities.forCast(cast);
-        if (copy == null || (copy.range() > 0 && (target == null || target.level() != sl))) return false;
-        if (sl.getEntity(cast.caster()) instanceof LivingEntity source) KeyOfStarsFx.replication(sl, mob, source);
+        List<MobAbility> powers = remembered(mob, target, sl);
+        if (powers.isEmpty()) return false;
+        MobAbility copy = powers.get(mob.getRandom().nextInt(powers.size()));
         MobSpells.face(mob, target);
-        return Echo.weaker(mob, KeyOfStarsStarlight.REPLICATION_STRENGTH, () -> copy.cast().run(mob, target, sl));
+        boolean cast = Echo.weaker(mob, KeyOfStarsReplication.STRENGTH, () -> copy.cast().run(mob, target, sl));
+        if (cast) KeyOfStarsFx.replication(sl, mob);
+        return cast;
     }
 
     private static boolean spaceFragmentation(Mob mob, LivingEntity target, ServerLevel sl) {

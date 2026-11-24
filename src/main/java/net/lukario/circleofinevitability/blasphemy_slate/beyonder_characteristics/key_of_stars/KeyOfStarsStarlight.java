@@ -1,7 +1,6 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonder;
-import net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.key_of_stars.KeyOfStarsFx.Status;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Echo;
@@ -24,7 +23,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -35,10 +33,9 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * Key Of Stars, key 7: the Starlight wheel (Planeswalker, Sequence 2, up to Door). docs/pathways/KEY_OF_STARS.md, "Key 7 wheel".
+ * The Starlight wheel on sneak + key 6 (Planeswalker, Sequence 2, up to Door).
  *
  *   Toy Box (2)               a veil where you aim: small enemies in it become wind-up toys (status/Toy), the rest slow
- *   Replication (2)           the last ability anyone cast near you, cast again by you at once (combat/Casts)
  *   Space Fragmentation (1)   nine planets circle where you aim: their gravity drags and shreds, then they collapse
  *   Starlight Seal (1)        a caught enemy is Sealed (status/Seal: no abilities, no teleports, it mends itself);
  *                             aimed at an ally, their connections are sealed instead
@@ -50,7 +47,7 @@ import java.util.UUID;
  *                             meant for you
  *   Close the Door (0)        every enemy near loses travel, their Seals and roots double, the hidden are forced out
  *
- * Sneak casts the last pick again without the wheel. Every entry's cost goes through KeyOfStars.wheelCostFor and every
+ * Every entry's cost goes through KeyOfStars.wheelCostFor and every
  * cooldown through KeyOfStars.cooldownFor. The looks are KeyOfStarsFx's; every number is right below.
  */
 public final class KeyOfStarsStarlight {
@@ -73,13 +70,6 @@ public final class KeyOfStarsStarlight {
     static final int TOY_TICKS = 160;
     static final float TOY_MAX_HEALTH = 150f;           // bigger than this (and players) are only slowed
     static final int TOY_SLOWED = 60;
-
-    // Replication
-    static final int REPLICATION_COST = 15000;
-    static final int REPLICATION_COOLDOWN = 200;
-    static final double REPLICATION_RANGE = 32.0;
-    static final int REPLICATION_AGE = 100;             // cast no longer ago than this
-    static final float REPLICATION_STRENGTH = 0.8f;
 
     // Space Fragmentation
     static final int FRAGMENTATION_COST = 30000;
@@ -151,15 +141,10 @@ public final class KeyOfStarsStarlight {
 
     private static final AbilityWheel WHEEL = AbilityWheel.create("key_of_stars_starlight", "Starlight")
             .radius(84)
-            .quickCastCooldown(false).quickCastCost(KeyOfStars.QUICK_CAST_COST)     // sneak: no cooldown, 3x the cost
             .cooldownBy(KeyOfStars::cooldownFor)
             .entry("toy_box", KeyOfStarsFx.WHEEL_TOY_BOX, "Toy Box", STARLIGHT_SEQUENCE, TOY_COST, TOY_COOLDOWN,
                     KeyOfStarsStarlight::toyBox)
             .costBy(KeyOfStars::wheelCostFor)
-            .entry("replication", KeyOfStarsFx.WHEEL_REPLICATION, "Replication", STARLIGHT_SEQUENCE, REPLICATION_COST,
-                    REPLICATION_COOLDOWN, KeyOfStarsStarlight::replication)
-            .costBy(KeyOfStars::wheelCostFor)
-            .notCopyable()                                                       // a copy of a copier copies nothing
             .entry("space_fragmentation", KeyOfStarsFx.WHEEL_SPACE_FRAGMENTATION, "Space Fragmentation",
                     KEY_OF_STARS_SEQUENCE, FRAGMENTATION_COST, FRAGMENTATION_COOLDOWN, KeyOfStarsStarlight::spaceFragmentation)
             .costBy(KeyOfStars::wheelCostFor)
@@ -182,14 +167,8 @@ public final class KeyOfStarsStarlight {
                     CLOSE_COOLDOWN, KeyOfStarsStarlight::closeTheDoor)
             .costBy(KeyOfStars::wheelCostFor);
 
-    // =========================
-    // Ability 7 - Starlight
-    // Normal: the Starlight wheel. Sneak: the last pick again, without the wheel.
-    // =========================
-    public static void keyOfStarsStarlight(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
-        if (!KeyOfStars.ready(player, bypassClassCheck, STARLIGHT_SEQUENCE)) return;
-        if (player.isShiftKeyDown()) WHEEL.quickCast(player);
-        else WHEEL.open(player);
+    static void open(Player player) {
+        WHEEL.open(player);
     }
 
     /** A relog or a respawn: what was standing is gone. */
@@ -257,33 +236,6 @@ public final class KeyOfStarsStarlight {
             if (!enemy.isAlive() || !Zone.isOpen(player, TOY_ZONE)) return;
             if (Toy.make(enemy, Math.max(20, Zone.ticksLeft(player, TOY_ZONE)))) toys.add(enemy);
         });
-    }
-
-    // =========================
-    // Replication: the newest ability another Beyonder cast within REPLICATION_RANGE in the last REPLICATION_AGE ticks
-    // (combat/Casts) is cast again by you, now, toward your crosshair, its hits at REPLICATION_STRENGTH. No slot, no
-    // roll. Mobs cast nothing, so aiming at a Beyonder mob (blasphemy_slate/beyonder_mobs) within REPLICATION_RANGE
-    // replicates one of its Pathway's abilities, up to its Sequence, instead. If nothing was cast, or the copy cannot
-    // go off (no target), nothing is spent.
-    // =========================
-    private static AbilityWheel.Result replication(ServerPlayer player, ServerLevel sl) {
-        LivingEntity aimed = Spells.aimEnemy(player, sl, REPLICATION_RANGE);
-        Casts.Cast fromMob = BeyonderMobs.castOf(aimed, sl, player.getRandom());         // null unless a Beyonder mob
-        Casts.Cast cast = fromMob != null ? fromMob : Casts.latestNear(sl, player.position(), REPLICATION_RANGE,
-                REPLICATION_AGE, one -> !one.caster().equals(player.getUUID()) && one.copyable());
-        if (cast == null) {
-            player.sendSystemMessage(Component.literal("Nothing was cast near you to replicate."));
-            return AbilityWheel.Result.REFUSED;
-        }
-        LivingEntity source = fromMob != null ? aimed : sl.getPlayerByUUID(cast.caster());
-        if (source != null) KeyOfStarsFx.replication(sl, player, source);
-        boolean went = Echo.weaker(player, REPLICATION_STRENGTH, () -> Casts.recast(player, cast));
-        if (!went) {
-            player.sendSystemMessage(Component.literal(cast.name() + " would not go off from here."));
-            return AbilityWheel.Result.REFUSED;
-        }
-        player.sendSystemMessage(Component.literal("Replicated " + cast.name() + " of " + cast.casterName() + "."));
-        return AbilityWheel.Result.DONE;
     }
 
     // =========================
@@ -574,7 +526,6 @@ public final class KeyOfStarsStarlight {
 
     /** The entries a copy from elsewhere (an echo) never repeats: they shape the world round you, or copy. */
     static boolean isWorldShaping(String entryKey) {
-        return entryKey.equals("alternate_world") || entryKey.equals("omnipresence") || entryKey.equals("close_the_door")
-                || entryKey.equals("replication");
+        return entryKey.equals("alternate_world") || entryKey.equals("omnipresence") || entryKey.equals("close_the_door");
     }
 }

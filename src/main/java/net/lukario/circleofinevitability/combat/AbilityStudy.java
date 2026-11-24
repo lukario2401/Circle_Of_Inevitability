@@ -1,5 +1,7 @@
 package net.lukario.circleofinevitability.combat;
+import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 /** A reusable saved study library. Store under the soul tag to inherit SoulCore's death cloning. */
 public final class AbilityStudy {
@@ -9,19 +11,19 @@ public final class AbilityStudy {
     }
     private final String name;
     public AbilityStudy(String name) { this.name=name; }
-    public CompoundTag data(Player p) {
+    public CompoundTag data(LivingEntity p) {
         CompoundTag all=p.getPersistentData();
         if(!all.contains("circle_of_inevitability"))all.put("circle_of_inevitability",new CompoundTag());
         CompoundTag soul=all.getCompoundOrEmpty("circle_of_inevitability");
         if(!soul.contains(name))soul.put(name,new CompoundTag());
         return soul.getCompoundOrEmpty(name);
     }
-    public double progress(Player p,String id) {
+    public double progress(LivingEntity p,String id) {
         double value=data(p).getDoubleOr(id,0);
         return Double.isFinite(value)?Math.clamp(value,0,100):0;
     }
-    public boolean complete(Player p,String id) { return progress(p,id)>=100; }
-    public double add(Player p,String id,double amount) {
+    public boolean complete(LivingEntity p,String id) { return progress(p,id)>=100; }
+    public double add(LivingEntity p,String id,double amount) {
         double next=Math.clamp(progress(p,id)+Math.max(0,Double.isFinite(amount)?amount:0),0,100);
         data(p).putDouble(id,next);return next;
     }
@@ -30,6 +32,14 @@ public final class AbilityStudy {
         data(p).putString("selected",id);return true;
     }
     public String selected(Player p){return data(p).getStringOr("selected","");}
+    /** Recheck mastery and current Sequence when casting, including after a respec or catalog change. */
+    public AbilityCatalog.Power selectedPower(Player player) {
+        String id = selected(player);
+        if (id.isEmpty() || !complete(player, id)) return null;
+        AbilityCatalog.Power power = AbilityCatalog.all().get(id);
+        return power != null && power.sequence() >= SoulCore.getSequence(player) ? power : null;
+    }
+
     /** Removes a record and any favorite/selection pointing at it, including obsolete catalog IDs. */
     public boolean forget(Player p,String id){
         CompoundTag library=data(p);

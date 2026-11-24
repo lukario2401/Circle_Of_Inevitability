@@ -162,11 +162,13 @@ public final class KeyOfStarsSecrets {
 
     // =========================
     // Ability 6 - Secrets and Space
-    // Normal: the Secrets wheel. Sneak: the last pick again, without the wheel.
+    // Sneak repeats the last Secrets pick until Planeswalker, then opens Starlight. Borrowed casts use Secrets.
     // =========================
     public static void keyOfStarsSecrets(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!KeyOfStars.ready(player, bypassClassCheck, SECRETS_SEQUENCE)) return;
-        if (player.isShiftKeyDown()) WHEEL.quickCast(player);
+        if (player.isShiftKeyDown() && !bypassClassCheck && KeyOfStarsReplication.enabled(player)) {
+            KeyOfStarsStarlight.open(player);
+        } else if (player.isShiftKeyDown()) WHEEL.quickCast(player);
         else WHEEL.open(player);
     }
 

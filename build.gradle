@@ -36,6 +36,7 @@ minecraft {
         }
 
         register('gameTestServer') {
+            if (providers.gradleProperty('keyOfStarsTests').isPresent()) { args '--tests', 'circle_of_inevitability:key_of_stars_*' }
             if (providers.gradleProperty('cameraTests').isPresent()) { args '--tests', 'circle_of_inevitability:camera_*' }
             if (providers.gradleProperty('darkAngelTests').isPresent()) { args '--tests', 'circle_of_inevitability:dark_angel_*' }
             if (providers.gradleProperty('conquerorComboTests').isPresent()) { args '--tests', 'circle_of_inevitability:conqueror_ability_combos' }

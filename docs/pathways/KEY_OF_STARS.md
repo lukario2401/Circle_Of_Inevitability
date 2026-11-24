@@ -18,13 +18,14 @@ Nothing here breaks blocks or lights real fire. Doors and Space only move, hide,
 
 ## Pathway systems
 
-Three small systems tie the abilities together. They replace Attendant Of Mysteries' stacks: there is no stack burst here.
+The Door Pathway uses marks, anchors, recorded pages and a Planeswalker's permanent memory.
 
 | System | What it is | Where it shows up |
 |---|---|---|
 | Starlit | A starlight mark on a creature. It lasts 12 seconds, glows through walls for you and your allies, and counts as "initial control" in the book's sense. At most 3 marks at once; a new one replaces the oldest. | Put on by Star Divination, Invisible Hand, Space Concealment (everything caught). Needed by Exile and Starlight Seal. |
 | Star Anchors | Places you saved: a faint star-door on the spot, kept for 10 minutes, at most 3 (5 from Wanderer). Saved with the player, with the dimension. | Star Anchor makes them, Traveler's Door goes to them, Wandering and Alternate World can use them later. |
-| Recorded Powers | Up to 5 abilities of other Beyonders, copied and kept for one use each. They sit in the picture row right of the hotbar (the place Attendant's stacks use). | Record fills the slots, Replay empties them, Replication skips them. |
+| Recorded Powers | Up to 5 abilities of other Beyonders, copied and kept for one use each. They sit in the picture row right of the hotbar (the place Attendant's stacks use). | Record fills the slots and Replay spends them. |
+| Replication | From Sequence 2, watching another player or Beyonder mob cast a copyable ability within 32 blocks builds study. Face the caster with a clear line of sight. Powers at your Sequence or weaker earn the same progress per sighting as in the Omniscient Eye Codex. | Sneak + M shows progress, favorites and your selected power. At 100% study you can select it and cast it repeatedly with M. The library survives death, relogging and server restarts. |
 
 Chances and strength of a record (the book: weaker powers copy almost perfectly, stronger ones badly or not at all). `gap` = the ability's Sequence minus yours (a Sequence 9 ability seen by a Sequence 6 Beyonder is gap 3):
 
@@ -36,9 +37,9 @@ Status pictures above the Recorded slots (same idea as Attendant's `showStatus`)
 
 ## How it is laid out
 
-It follows the Attendant Of Mysteries pattern: seven keys (G H J K L N M), every key has a normal cast and a sneak cast. Four keys (2, 5, 6, 7) are wheels like Apocalypse's and Hand Of God's, where every entry has its own Sequence, cost and cooldown; on a wheel key, sneak casts the last pick again (`AbilityWheel.quickCast`).
+The seven ability slots default to G, H, J, K, L, N and M. Tricks, Travel and Secrets open on H, L and N. From Planeswalker, sneak + N opens Starlight and M casts Replication.
 
-**Cooldowns.** The single keys have no cooldown: spirituality is their only limit (`KeyOfStars.KEY_COOLDOWNS = false`, through `Cooldowns.addFree`; set it to true to bring back the numbers below). The wheels keep their cooldowns when you pick from the wheel; a sneak recast of the last pick has no cooldown and costs 3 times as much (`KeyOfStars.QUICK_CAST_COST`).
+**Cooldowns.** Replication has a 10-second base cooldown. The other single keys use spirituality as their only limit by default. Wheel picks keep their own cooldowns. Wherever sneak repeats the last pick, it costs three times as much and skips the cooldown.
 
 The abilities do not each get a Sequence of their own. Sequence 8 has seven abilities (the tricks), Sequences 5 and 4 have four, Sequences 1 and 0 have three, and Sequences 9, 7, 6, 3 and 2 have two each. Sequences 3, 2, 1 and 0 are not left empty, and they also strengthen what is already there (see "Grows with the Sequence").
 
@@ -68,8 +69,8 @@ From Apprentice (Sequence 9), **Z+C** opens free flight for 30 seconds. **Z+V** 
 | 3 | Astrology | Astrologer (7) | **Star Divination:** a crystal ball of starlight forms in your hand. Aimed at a creature within 48 blocks it becomes Starlit: you see its health, every effect on it and the last ability it used, and it shows through walls. Aimed at nothing, every creature within 40 blocks shows as a small star through walls for 8 seconds. If a disguise or a Faceless-style ability is ever added, the ball shows who is behind it. | **Interference:** for 20 seconds you are Unreadable: abilities that need to find, read or lock on to you (Gaze, Divination, Eye of Demon Hunting, homing shots, the threads of Spirit Body Threads) cannot pick you, and mobs further than 8 blocks forget you. The first ability that tries and fails is turned back: its caster is Starlit for 6 seconds. |
 | 4 | Record | Scribe (6) | **Record:** for 8 seconds you watch. The first Beyonder ability another player uses within 32 blocks and in your sight is copied into a free Recorded slot, if the roll succeeds (see Pathway systems). Pressed while looking at a Beyonder mob, one of its abilities (its Pathway, up to its Sequence) is rolled for at once. A message appears: "I came, I saw, I recorded." | **Replay:** casts the oldest Recorded ability at once, from your hand toward your crosshair, free, at the reduced strength, and empties its slot. No stack, no cost. |
 | 5 | Travel | Traveler (5) | The Travel wheel: Traveler's Door, Blink, Invisible Hand, Star Anchor, Wandering. Each has its own Sequence, cost and cooldown. | The last pick again, without the wheel. |
-| 6 | Secrets and Space | Secrets Sorcerer (4) | The Secrets wheel: Space Concealment, Transfiguration, Exile, Pocket Space, Space Tearing. | The last pick again, without the wheel. |
-| 7 | Starlight | Planeswalker (2) | The Starlight wheel, cast where you aim: Toy Box (2), Replication (2), Space Fragmentation (1), Starlight Seal (1), Space-Time Labyrinth (1), Alternate World (0), Omnipresence (0), Close the Door (0). | The last pick again, without the wheel. |
+| 6 | Secrets and Space | Secrets Sorcerer (4) | The Secrets wheel: Space Concealment, Transfiguration, Exile, Pocket Space, Space Tearing. | At Sequences 4 and 3, repeat the last Secrets pick. From Sequence 2, open the Starlight wheel. |
+| 7 | Replication | Planeswalker (2) | Cast the selected, fully studied power at 80% damage. A successful cast costs 15,000 spirituality and starts a 10-second cooldown before modifiers. | Open the Codex to check progress, favorite a power or select a fully studied one. |
 
 ## Key 2 wheel: Tricks
 
@@ -105,12 +106,11 @@ All are Trickmaster (8). The book calls them "strange but relatively weak"; they
 | Pocket Space | Secrets Sorcerer (4) | Open a door to your own Concealed space: your vanilla Ender Chest (27 slots), anywhere. |
 | Space Tearing | Wanderer (3) | Aimed at an enemy within 8 blocks: a ring warns for half a second, then space tears around it. It and everything within 3 blocks take 80 damage and then burn in a Space-Time storm for 4 seconds (12 damage per second, Slowness II). |
 
-## Key 7 wheel: Starlight
+## Starlight wheel (sneak + key 6)
 
 | Entry | Sequence | What it does |
 |---|---|---|
 | Toy Box | Planeswalker (2) | A circular veil opens where you aim (28 blocks) with an 8 block radius. Enemies in it with up to 150 maximum health shrink into wind-up toys for 8 seconds: a quarter of their size, stiff jerky movement, 60% slower, 20% of their damage. Players and bigger creatures are only slowed (Slowness III, 3 seconds). A new Toy Box releases the old one. |
-| Replication | Planeswalker (2) | Copies the last Beyonder ability anyone used within 32 blocks in the past 5 seconds and casts it yourself, now, at 80% strength. Aimed at a Beyonder mob, it copies one of that mob's abilities instead (its Pathway, up to its Sequence). It needs no slot and no roll. If nothing was cast, nothing is spent. |
 | Space Fragmentation | Key of Stars (1) | Nine colored planets of starlight circle the spot you aim at (32 blocks, 12 block radius) for 6 seconds. Their gravity pulls enemies to the middle and shreds them (25 damage per second, Slowness II), bends projectiles away and slows enemy attacks by half. At the end the planets collapse in one shatter: 120 damage in 12 blocks. |
 | Starlight Seal | Key of Stars (1) | Aimed at an enemy that is Starlit or held: starlight falls on it and every drop becomes a door that sinks into it. For 8 seconds it is Sealed: no abilities, no teleports. The seal repairs itself, so cleansing does not end it (Slip Free on the target does not either). Bosses for 4 seconds. Aimed at an ally: their connections are sealed for 12 seconds, so nothing can be Grafted, threaded, marked, Starlit or mind-controlled on them. |
 | Space-Time Labyrinth | Key of Stars (1) | A maze of starlight fills 14 blocks around the spot you aim at for 15 seconds. Enemies inside are slowed by 50%, cannot teleport, and walking out of the edge brings them back in at the opposite side. You and allies walk freely. |
@@ -152,7 +152,7 @@ These do not get their own key or entry. The same ability is stronger from the S
 | Escape Trick | Secrets Sorcerer (4) | The distance after a diversion grows to 14 blocks. |
 | Record | Traveler (5) | 4 slots instead of 3. |
 | Record | Secrets Sorcerer (4) | 5 slots, and Angel-level abilities can be recorded (at 15% chance, weakly). |
-| Record | Planeswalker (2) | No failure roll for abilities at your own Sequence or weaker. Replication is its live twin. |
+| Record | Planeswalker (2) | No failure roll for abilities at your own Sequence or weaker. Witnessed casts also build permanent Replication study. |
 | Blink | Secrets Sorcerer (4) | For 3 seconds after a Blink your wheel abilities cost 30% less and cool down twice as fast (the book's "faster than normal" powers), and a Blink tears you out of mind control (Spirit Body Threads countdowns, charms). |
 | Blink | Planeswalker (2) | Afterimages stay for 4 seconds and echo every ability you cast at 40% strength, up to 3 of them. Same part as Omnipresence. |
 | Traveler's Door | Secrets Sorcerer (4) | Range 96 blocks. |
@@ -242,7 +242,7 @@ Gas Transfer, Fog, Ignition, Object Manipulation and Electric Shock (the weaker 
 ## Open questions
 
 1. Record, Replay and Replication only work if every pathway's abilities are callable through one registry (`AbilityRegistry`). Is that acceptable, or should Record be limited to something simpler? (Answered: `PathwayAbilities` and `combat/Casts` instead of a new registry.)
-2. The Starlight wheel has 8 entries. Is there a size limit on the wheel UI?
+2. The Starlight wheel has 7 entries. Is there a size limit on the wheel UI?
 3. Should Star Anchors be visible to everyone, or only to their owner (if the effects layer can send to one player)?
 4. Door Opening ignores Teleport roots here, as in the book. Keep that, or make it respect them? (Answered: kept.)
 5. Costs from Sequence 2 up are guesses. What is the Spirituality pool at those Sequences?
@@ -253,9 +253,9 @@ Gas Transfer, Fog, Ignition, Object Manipulation and Electric Shock (the weaker 
 The code is in `beyonder_characteristics/key_of_stars/`, one class per key that needs one: `KeyOfStars` (keys 1 and 3, the
 Starlit mark, the passives, the cost, cooldown and free-travel rules, and the events), `KeyOfStarsTricks` (key 2),
 `KeyOfStarsRecord` (key 4 and Quick Study), `KeyOfStarsTravel` (key 5), `KeyOfStarsSecrets` (key 6) and
-`KeyOfStarsStarlight` (key 7). Every number is a constant at the top of its class, with the line of this plan it comes from.
+`KeyOfStarsStarlight` (sneak + key 6). `KeyOfStarsReplication` handles key 7. Every number is a constant at the top of its class, with the line of this plan it comes from.
 `PathwayAbilities` lists all seven keys: 1, 2, 3 and 6 can be stolen; 4 (the pages are the Scribe's own), 5 (Wandering needs
-its own key) and 7 (Omnipresence and the Alternate World run on this Pathway's rules) cannot.
+its own key) and 7 (Replication uses its owner's memory) cannot.
 
 | Part | State |
 | --- | --- |
@@ -265,7 +265,8 @@ its own key) and 7 (Omnipresence and the Alternate World run on this Pathway's r
 | 4 Record / Replay | Built on `combat/Casts`: the first power cast within 32 blocks and in sight while you watch, by any player of any Pathway, key or wheel entry. The roll and the strength are the ones under "Pathway systems"; Replay casts it as a copy (`Casts.recast`: free, no Sequence gate, no cooldown) with its hits at that strength (`combat/Echo`). 3 / 4 / 5 slots, Angel-level powers from the Secrets Sorcerer, no roll from the Planeswalker. The slots live in memory: kept through a relog and a death, not a server restart. Quick Study shows the chance beside the hotbar for every power Record could copy. |
 | 5 Travel (all five) | Built, with every growth: Traveler's Door to Anchors in another dimension (Wanderer: look straight up; `Teleport.goTo`), Blink's quick powers (Secrets Sorcerer) and echoing afterimages (Planeswalker: up to 3, for 4 s, at 40%), Symbolization and Conceptualization. |
 | 6 Secrets and Space (all five) | Built. Space Concealment is a `Dome` (enemies kept in, shots stopped) with a Door enemies may pass until you shut it; Spatial Cage (Wanderer) and the Hostel size (Planeswalker). Transfiguration is `Substitute` with one charge a layer. Exile is `status/Exile`. Pocket Space opens the vanilla Ender Chest. Space Tearing with the Planeswalker's tear round you. |
-| 7 Starlight (all eight) | Built. Toy Box (`status/Toy`), Replication (`Casts.latestNear` and `Casts.recast` at 80%), Space Fragmentation (a `Zone`; Door: the planet-annihilation), Starlight Seal (`status/Seal`, on an ally `Seal.guard`), Space-Time Labyrinth and Alternate World (`combat/Enclosure`), Omnipresence (`combat/Echo` from six afterimages; a hit may strike one of them instead), Close the Door. |
+| 7 Replication | Saves study, favorites and selection in `AbilityStudy`. Casting the selected power uses `Casts.recast` at 80% damage. |
+| Sneak + 6 Starlight (all seven) | Built. Toy Box (`status/Toy`), Space Fragmentation (a `Zone`; Door: the planet-annihilation), Starlight Seal (`status/Seal`, on an ally `Seal.guard`), Space-Time Labyrinth and Alternate World (`combat/Enclosure`), Omnipresence (`combat/Echo` from six afterimages; a hit may strike one of them instead), Close the Door. |
 | Starlit | Built (`status/Starlit`); you and allied players within 64 see your marks through walls, Planeswalker anywhere |
 | Passives | All. Footprints of Freedom: roots 25% shorter, berry bushes and powder snow do not hurt; the slowing in cobwebs, bushes and powder snow is the client's own movement and is left out. Starlit Eyes: blindness and nausea do not take (there are no illusions in the mod to break yet). |
 
@@ -275,7 +276,7 @@ Left out or simpler than the plan:
 - Echoes and copies weaken only hits. A copy of a power that roots, heals or moves is whole.
 - An echo is skipped for this Pathway's travels (Door Opening, Escape Trick, the Travel wheel), Record, Space Concealment,
   Transfiguration, Exile, Pocket Space, Replication and the three Door powers: they would move you, or shape the world round you.
-- Mobs do not use the keys, so a Beyonder mob's powers are never seen being cast. Instead, Record pressed while you look at a Beyonder mob writes down one of its abilities at once (same roll), and Replication aimed at one copies one of its abilities: its Pathway's, up to its Sequence ([BEYONDER_MOBS.md](../BEYONDER_MOBS.md), `BeyonderMobs.castOf`).
+- Beyonder mobs study visible casts and can replicate a fully memorized power that has a mob implementation. A Scribe can also aim Record at a mob to roll for a page immediately. See [Beyonder mobs](../BEYONDER_MOBS.md).
 - Pocket Space is the vanilla Ender Chest (27 slots), not a 54-slot space of its own.
 
 New reusable parts (see SPELL_KIT.md): `combat/Teleport` (`throughWall`, `standNear`, `goTo` across dimensions,
@@ -283,8 +284,7 @@ New reusable parts (see SPELL_KIT.md): `combat/Teleport` (`throughWall`, `standN
 `status/Anchors`, `status/Seal`, `status/Toy`, `Root.addDurationScale`, `Unreadable.addTurnedAwayListener`,
 `AbilityWheel.notCopyable`.
 
-To try it: `/sequence pathway @s "Key Of Stars"`, `/sequence set @s 0`, `/sequence spirituality @s 100000`. Record needs a
-second player casting near you.
+To try it: `/sequence pathway @s "Key Of Stars"`, `/sequence set @s 0`, `/sequence spirituality @s 100000`. Watch another player or Beyonder mob cast a power, then check its progress with sneak + M. Run the Replication regression with `./gradlew runGameTestServer -PkeyOfStarsTests`.
 
 ## Looks, sounds and pictures
 
@@ -297,8 +297,9 @@ Everything the abilities need to look and sound right is in `KeyOfStarsFx.java` 
 | 3 Astrology | Star Divination: `starDivination(sl, player, target)` (Starlit at `DIVINED`; null target = the sweep), `smallStar(owner, who, ticks)` for each creature the sweep finds | Interference: `interference(sl, player, ticks, tag)`, `interferenceTick` now and then, `interferenceTurned(sl, player, caster)` for the search turned back, `mobForgets(sl, mob)`, `interferenceEnd` |
 | 4 Record | Record: `record(sl, player, ticks, tag)`, `recorded(sl, player, from, angel)` when a power is copied, `recordFailed(sl, player)`, `recordEnd`; the slots on screen with `recordedPages(player, angel[])` (call it whenever they change and after a relog) | Replay: `replay(sl, player)`, then the power itself |
 | 5 Travel (wheel) | Traveler's Door: `travelersDoor(sl, player, from)` (inside at `TRAVEL_ENTERED`), `travelersArrive(sl, at, yaw)`. Blink: `blink(sl, player, from, to, chain)`, `blinkDodge(sl, player)`, `blinkEcho(sl, player, at, ticks, tag)` (Planeswalker), `quickened(player, ticks)` (Secrets Sorcerer). Invisible Hand: `invisibleHand(sl, player, target)` (grabs at `HAND_GRABS`), `invisibleHandItem(sl, player, at)`, `yanked(sl, target)`. Star Anchor: `starAnchor(sl, player, at, ticks, tag)`, `anchorLift(sl, at, tag)`, `anchorDirection(owner, anchor)` each second. Wandering: `wandering(sl, player, ticks, Form.X, tag)`, `wanderingTick` every 2 ticks, `conceptualized(sl, enemy)`, `wanderingEnd`. Icons `WHEEL_TRAVELERS_DOOR` ... `WHEEL_WANDERING` | the last pick again |
-| 6 Secrets and Space (wheel) | Space Concealment: `spaceConcealment(sl, player, center, radius, ticks, doorYaw, cage, tag)` (closed at `CONCEALED`; `cage` = the Spatial Cage), `concealmentShut`, `concealedHeal(sl, ally)`, `concealmentEnd`. Transfiguration: `transfiguration(sl, player, layers, ticks, tag)`, `layerTorn(sl, player, from, to, layersLeft)`, `transfigurationEnd`. Exile: `exile(sl, player, target)` (swallowed at `EXILE_SWALLOWED`), `exiled(sl, target, at, ticks, tag)`, `exileReturn(sl, at, tag)`. Pocket Space: `pocketSpace(sl, player)`. Space Tearing: `spaceTearing(sl, player, target, radius)` (tears at `TEAR_LANDS`), `storm(sl, target, ticks, tag)`, `stormTick` each second. Icons `WHEEL_SPACE_CONCEALMENT` ... `WHEEL_SPACE_TEARING` | the last pick again |
-| 7 Starlight (wheel) | Toy Box: `toyBox(sl, player, center, radius, ticks, tag)`, `toyed(sl, target, ticks, tag)` (shrunk at `TOY_SHRUNK`), `toyTick`, `toySlowed(sl, target, ticks)`, `toyReleased`, `toyBoxEnd`. Replication: `replication(sl, player, source)`. Space Fragmentation: `spaceFragmentation(sl, player, center, radius, ticks, tag)`, `fragmentationTick` every few ticks, `fragmentationCollapse`. Starlight Seal: `starlightSeal(sl, player, target, ticks, tag)` (Sealed at `SEALED_AT`), `sealRepaired(sl, target)`, `sealEnd`; on an ally `sealAlly(sl, player, ally, ticks, tag)`. Space-Time Labyrinth: `labyrinth(sl, player, center, radius, ticks, tag)` (risen at `LABYRINTH_RISEN`), `lost(sl, target, ticks)`, `labyrinthLoop(sl, from, to)`, `labyrinthEnd`. Alternate World: `alternateWorld(sl, player, center, radius, ticks, tag)` (unfolded at `WORLD_UNFOLDED`), `alternateWorldTick` each second, `alternateWorldEnd`. Omnipresence: `omnipresence(sl, player, ticks, tag)`, `afterimageAt(player, index)`, `omnipresenceEcho(sl, player, index)`, `afterimageStruck(sl, player, tag, index)`, `omnipresenceEnd`. Close the Door: `closeTheDoor(sl, player, center, radius, ticks, tag)` (shut at `DOORS_SHUT`), `doorsClosed(sl, target, ticks, tag)`, `forcedOut(sl, who)`. Icons `WHEEL_TOY_BOX` ... `WHEEL_CLOSE_THE_DOOR` | the last pick again |
+| 6 Secrets and Space (wheel) | Space Concealment: `spaceConcealment(sl, player, center, radius, ticks, doorYaw, cage, tag)` (closed at `CONCEALED`; `cage` = the Spatial Cage), `concealmentShut`, `concealedHeal(sl, ally)`, `concealmentEnd`. Transfiguration: `transfiguration(sl, player, layers, ticks, tag)`, `layerTorn(sl, player, from, to, layersLeft)`, `transfigurationEnd`. Exile: `exile(sl, player, target)` (swallowed at `EXILE_SWALLOWED`), `exiled(sl, target, at, ticks, tag)`, `exileReturn(sl, at, tag)`. Pocket Space: `pocketSpace(sl, player)`. Space Tearing: `spaceTearing(sl, player, target, radius)` (tears at `TEAR_LANDS`), `storm(sl, target, ticks, tag)`, `stormTick` each second. Icons `WHEEL_SPACE_CONCEALMENT` ... `WHEEL_SPACE_TEARING` | Repeat at Sequences 4 and 3. From Sequence 2, open Starlight. |
+| Sneak + 6 Starlight (wheel) | Toy Box: `toyBox(sl, player, center, radius, ticks, tag)`, `toyed(sl, target, ticks, tag)` (shrunk at `TOY_SHRUNK`), `toyTick`, `toySlowed(sl, target, ticks)`, `toyReleased`, `toyBoxEnd`. Space Fragmentation: `spaceFragmentation(sl, player, center, radius, ticks, tag)`, `fragmentationTick` every few ticks, `fragmentationCollapse`. Starlight Seal: `starlightSeal(sl, player, target, ticks, tag)` (Sealed at `SEALED_AT`), `sealRepaired(sl, target)`, `sealEnd`; on an ally `sealAlly(sl, player, ally, ticks, tag)`. Space-Time Labyrinth: `labyrinth(sl, player, center, radius, ticks, tag)` (risen at `LABYRINTH_RISEN`), `lost(sl, target, ticks)`, `labyrinthLoop(sl, from, to)`, `labyrinthEnd`. Alternate World: `alternateWorld(sl, player, center, radius, ticks, tag)` (unfolded at `WORLD_UNFOLDED`), `alternateWorldTick` each second, `alternateWorldEnd`. Omnipresence: `omnipresence(sl, player, ticks, tag)`, `afterimageAt(player, index)`, `omnipresenceEcho(sl, player, index)`, `afterimageStruck(sl, player, tag, index)`, `omnipresenceEnd`. Close the Door: `closeTheDoor(sl, player, center, radius, ticks, tag)` (shut at `DOORS_SHUT`), `doorsClosed(sl, target, ticks, tag)`, `forcedOut(sl, who)`. Icons `WHEEL_TOY_BOX` ... `WHEEL_CLOSE_THE_DOOR` | Open with sneak + key 6 from Planeswalker. |
+| 7 Replication | `replication(sl, player)` plays when the memorized power succeeds. | Open the Codex. |
 | Starlit | `starlit(sl, caster, target, ticks, tag)`, `starlitSeen(viewer, who)` each second for the caster and each ally (only they see it through walls), `dimensionSight(owner, who)` (Planeswalker), `starlitEnd` | |
 | Passives | `wormAura(sl, player, ticks, tag)` (Secrets Sorcerer), `intuition(owner, from)`, `divinationFelt(owner)`, `quickStudy(owner, caster)` (show the chance in the action bar), `safeLanding(sl, player)`, `illusionBroken(sl, player)`, `afterimageMiss(sl, player)`, `doorOfDoors(sl, player)` (only the owner sees or hears the ones that take `owner`) | |
 

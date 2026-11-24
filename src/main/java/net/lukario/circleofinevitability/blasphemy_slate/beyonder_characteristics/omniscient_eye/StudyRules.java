@@ -1,8 +1,19 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye;
 
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec3;
+
 /** Sequence numbers run backwards: zero is strongest. Pure rules shared by server and tests. */
 public final class StudyRules {
     private StudyRules() {}
+    public static final int RANGE = 32;
+
+    public static boolean witnesses(LivingEntity observer, LivingEntity caster) {
+        if (observer == caster || observer.distanceToSqr(caster) > RANGE * RANGE || !observer.hasLineOfSight(caster)) return false;
+        Vec3 towards = caster.getEyePosition().subtract(observer.getEyePosition());
+        return towards.lengthSqr() == 0 || observer.getLookAngle().dot(towards.normalize()) >= 0.5;
+    }
+
     public static double gain(int observer, int ability) {
         if (observer < 0 || ability > 9 || ability < observer) return 0;
         return Math.min(100, 5.0 * Math.pow(2, ability - observer) / (10 - ability));

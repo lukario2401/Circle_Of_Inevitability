@@ -46,7 +46,7 @@ When it dies, the characteristic of its Pathway and Sequence drops where it fell
 | --- | --- | --- | --- |
 | Worm Of Time: Theft (H) | one of their abilities, up to their Sequence | one of its Pathway's, up to its Sequence (then empty for 30 s, as before) | nothing |
 | Dark Angel: Grazing (L) | the same, when you kill them | the same, when you kill it | nothing |
-| Key Of Stars: Replication (Starlight wheel) | what they just cast | aimed at it: one of its Pathway's, up to its Sequence, cast at once | nothing |
+| Key Of Stars: Replication (M) | study powers you see them cast, then select one at 100% | study powers you see it cast under the same rules | nothing |
 | Key Of Stars: Record (K) | the first thing they cast while you watch | looking at it when you press Record: one of its abilities, rolled for at once; or, while you watch, the first thing it really casts (Quick Study glints at its casts too) | nothing |
 
 Only abilities marked `STEALABLE` in `PathwayAbilities` can be taken, as before.
@@ -199,7 +199,7 @@ BeyonderMobs.make(mob, "Hand Of Order", 7) // whatever its Rule says (and a full
 BeyonderMobs.summon(sl, EntityTypes.ZOMBIE, pos, "Star Dragon", 3)  // a new mob that already is one (rituals, structures, boss fights)
 BeyonderMobs.clear(mob)
 BeyonderMobs.roll(mob)                     // by its Rule
-BeyonderMobs.castOf(mob, sl, random)       // a cast of one of its abilities, for Replication-like copies
+BeyonderMobs.castOf(mob, sl, random)       // a cast of one of its abilities, for Record
 ```
 
 Use `Beyonders` (not `SoulCore`) in any new ability that reads, steals or judges someone else's powers, so it works on mobs too.

@@ -41,7 +41,7 @@ import net.minecraftforge.fml.common.Mod;
 /**
  * Beyonder mobs (docs/BEYONDER_MOBS.md): a mob that carries a Beyonder Characteristic of one Pathway and Sequence.
  * When it dies, the characteristic drops (item/BeyonderCharacteristicItem). Abilities that steal or copy powers from
- * a mob (Worm Of Time's Theft, Dark Angel's Grazing, Key Of Stars' Replication and Record) only find something in
+ * a mob (Worm Of Time's Theft, Dark Angel's Grazing, Key Of Stars' Record) only find something in
  * these, and only from their Pathway, up to their Sequence: ask Beyonders (blasphemy_slate/beyonder) for that.
  *
  * Which mobs, how often, which Pathway and Sequence, and how much stronger they get: BeyonderMobRules. Here is the

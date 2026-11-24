@@ -115,7 +115,7 @@ public final class MobAbilities {
     /** The one with that id ("Hand Of Order/1/sneak", MobAbility.id), or null. */
     public static MobAbility byId(String id) {
         for (MobAbility ability : ALL) {
-            if (ability.id().equals(id)) return ability;
+            if (ability.id().equals(id) || ability.storageId().equals(id)) return ability;
         }
         return null;
     }

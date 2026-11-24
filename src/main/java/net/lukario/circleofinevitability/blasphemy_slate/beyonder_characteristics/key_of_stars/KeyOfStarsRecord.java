@@ -165,7 +165,7 @@ public final class KeyOfStarsRecord {
             if (watcher.getPersistentData().getLongOr(STUDY_READY, 0L) > now) continue;
             watcher.getPersistentData().putLong(STUDY_READY, now + QUICK_STUDY_REST);
             KeyOfStarsFx.quickStudy(watcher, caster);
-            HudTimer.show(watcher, STUDY_CLOCK, cast.name() + ": " + Math.round(chance * 100) + "%", QUICK_STUDY_SHOWN, 0xE8ECFC);
+            HudTimer.show(watcher, STUDY_CLOCK, cast.name() + " · Record chance " + Math.round(chance * 100) + "%", QUICK_STUDY_SHOWN, 0xE8ECFC);
         }
     }
 

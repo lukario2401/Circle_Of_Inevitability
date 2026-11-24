@@ -92,11 +92,11 @@ import java.util.concurrent.ThreadLocalRandom;
  *           pocketSpace(sl, player)
  *           spaceTearing(sl, player, target, radius) (tears at TEAR_LANDS), storm(sl, target, ticks, tag),
  *               stormTick(sl, target)
- *   Key 7   the wheel's pictures: WHEEL_TOY_BOX ... WHEEL_CLOSE_THE_DOOR
+ *   Key 7   replication(sl, player)
+ *   Sneak + key 6: Starlight wheel pictures WHEEL_TOY_BOX ... WHEEL_CLOSE_THE_DOOR
  *           toyBox(sl, player, center, radius, ticks, tag), toyed(sl, target, ticks, tag) (shrunk at TOY_SHRUNK),
  *               toyTick(sl, target), toyReleased(sl, target, tag), toySlowed(sl, target, ticks), toyBoxEnd(sl, center,
  *               tag)
- *           replication(sl, player, source)
  *           spaceFragmentation(sl, player, center, radius, ticks, tag), fragmentationTick(sl, center, radius) every few
  *               ticks, fragmentationCollapse(sl, center, radius, tag)
  *           starlightSeal(sl, player, target, ticks, tag) (Sealed at SEALED_AT), sealRepaired(sl, target),
@@ -1382,10 +1382,10 @@ public final class KeyOfStarsFx {
         ParticleShapes.clearModels(sl, center, tag);
     }
 
-    /** Replication: a power used by 'source' is copied in the moment: a line from it to the Planeswalker, two pages. */
-    public static void replication(ServerLevel sl, LivingEntity player, LivingEntity source) {
-        Vec3 from = chestOf(source);
+    /** A remembered page takes shape in front of the Planeswalker and returns to their hand. */
+    public static void replication(ServerLevel sl, LivingEntity player) {
         Vec3 to = chestOf(player);
+        Vec3 from = to.add(Spells.flatLook(player).scale(1.5)).add(0, 0.5, 0);
         ParticleShapes.slashBetween(sl, STAR_LINE.lifetime(12).sweep(6), from, to);
         ParticleShapes.burst(sl, PAGE, from, 3, 0.03, 0.08);
         ParticleShapes.burst(sl, PAGE, to, 3, 0.03, 0.08);
@@ -1974,7 +1974,7 @@ public final class KeyOfStarsFx {
                 Later.run(sl, 160, () -> toyBoxEnd(sl, c, tag));
             }),
             new Case("replication", 30, false, (sl, v, t, spot) -> {
-                if (t != v) replication(sl, v, t);
+                replication(sl, v);
             }),
             new Case("space_fragmentation", 140, false, (sl, v, t, spot) -> {
                 String tag = tagFor("fragment");
