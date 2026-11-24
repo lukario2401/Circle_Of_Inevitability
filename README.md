@@ -25,6 +25,20 @@ Forge 65 client or server.
 
 Pathway designs, gameplay guides and asset previews are indexed in [Pathway documentation](docs/pathways/README.md).
 
+## Ritual Table
+
+Place an amethyst shard above a book, a copper ingot on either side of the book, and polished deepslate below it in a crafting table. Place the Ritual Table and right-click it to pledge. Any player can worship, and every table recognizes their covenant.
+
+| Deity | Offering | Repeatable task | Blessing per rank |
+| --- | --- | --- | --- |
+| God Almighty | Gold ingot | Defeat 3 zombies | +1 armor |
+| Lord of the Mysteries | Amethyst shard | Use 2 ender pearls | +4% movement speed |
+| The Anarchy | Copper ingot | Trade with villagers 3 times | +0.25 blocks of melee reach |
+
+An offering earns 5 friendship. Report a completed task for 10, or donate blood for 3 by taking damage. The first three blessing ranks unlock at 10, 25, and 50 friendship. At 60, 80, and 100, confirm a sacrifice of one maximum heart to advance. Each sacrifice persists through death and relogging. Changing deity returns the sacrificed hearts and clears all friendship, blessings, and task progress.
+
+To add a deity, copy a [bundled definition](src/main/resources/data/circle_of_inevitability/circle_of_inevitability/ritual_deity/god_almighty.json) into a data pack at `data/<namespace>/circle_of_inevitability/ritual_deity/<id>.json`. Set the offering item, the task's Minecraft scoreboard statistic and count, and the blessing's player attribute, operation, and amount per rank. The icon is a resource identifier for a texture available to the client. Open the world again after installing the pack. The table lists new entries automatically.
+
 ## Playing
 
 Ops set a player up with the `/soul` command, for example:

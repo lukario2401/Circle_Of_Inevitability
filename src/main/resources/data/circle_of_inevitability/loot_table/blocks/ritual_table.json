@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "circle_of_inevitability:ritual_table"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "circle_of_inevitability:blocks/ritual_table"
+}

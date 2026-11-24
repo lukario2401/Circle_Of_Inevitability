@@ -7,7 +7,11 @@ import net.lukario.circleofinevitability.item.ModCreativeTabs;
 import net.lukario.circleofinevitability.item.ModDataComponents;
 import net.lukario.circleofinevitability.item.ModItems;
 import net.lukario.circleofinevitability.particles.ModParticles;
+import net.lukario.circleofinevitability.ritual.RitualDeity;
+import net.lukario.circleofinevitability.ritual.RitualGameTests;
+import net.lukario.circleofinevitability.ritual.RitualTableBlock;
 import net.lukario.circleofinevitability.sounds.ModSounds;
+import net.minecraftforge.registries.DataPackRegistryEvent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
@@ -51,6 +55,10 @@ public class CircleOfInevitability
         ModSounds.SOUNDS.register(modEventBus);
         ModEffects.register(modEventBus);
         ModDataComponents.register(modEventBus);
+        RitualGameTests.FUNCTIONS.register(modEventBus);
+        RitualTableBlock.BLOCKS.register(modEventBus);
+        DataPackRegistryEvent.NewRegistry.BUS.addListener(event ->
+                event.dataPackRegistry(RitualDeity.REGISTRY, RitualDeity.CODEC));
         ModItems.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         net.lukario.circleofinevitability.camera.CameraGameTests.FUNCTIONS.register(modEventBus);

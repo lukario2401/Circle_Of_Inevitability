@@ -1,5 +1,6 @@
 package net.lukario.circleofinevitability.menu;
 
+import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.network.COpenAbilityMenuPacket;
 import net.lukario.circleofinevitability.network.PacketHandler;
 import net.lukario.circleofinevitability.root.Root;
@@ -8,6 +9,9 @@ import net.lukario.circleofinevitability.screen.ScreenImages;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,6 +47,7 @@ import java.util.function.Predicate;
  *                    // clockwise (their own x, y are then not used)
  * A wheel of spells with costs, cooldowns and a remembered last pick is built on this: see AbilityWheel.
  */
+@Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID)
 public class AbilityMenu {
 
     @FunctionalInterface
@@ -173,6 +178,11 @@ public class AbilityMenu {
 
         OPEN_MENUS.put(serverPlayer.getUUID(), this);
         PacketHandler.sendToPlayer(new COpenAbilityMenuPacket(id, title, iconSize, sent), serverPlayer);
+    }
+
+    @SubscribeEvent
+    public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        OPEN_MENUS.remove(event.getEntity().getUUID());
     }
 
     /** Called by SAbilityMenuChoicePacket. choice = -1 means the menu was closed without picking. */

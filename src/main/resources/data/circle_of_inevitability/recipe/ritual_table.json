@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "pattern": [
+    " A ",
+    "CBC",
+    " D "
+  ],
+  "key": {
+    "A": "minecraft:amethyst_shard",
+    "C": "minecraft:copper_ingot",
+    "B": "minecraft:book",
+    "D": "minecraft:polished_deepslate"
+  },
+  "result": {
+    "id": "circle_of_inevitability:ritual_table"
+  }
+}

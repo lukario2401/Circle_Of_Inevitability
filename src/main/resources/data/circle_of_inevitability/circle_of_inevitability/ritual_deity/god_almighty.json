@@ -1,0 +1,18 @@
+{
+  "name": "God Almighty",
+  "icon": "circle_of_inevitability:textures/gui/white_angel/holy_eye.png",
+  "domain": "Bear witness to the light of the Chaos Sea.",
+  "offering": "minecraft:gold_ingot",
+  "task": {
+    "description": "Purify the dead by defeating three zombies.",
+    "statistic": "minecraft.killed:minecraft.zombie",
+    "count": 3
+  },
+  "blessing": {
+    "name": "Solar Aegis",
+    "per_rank": "Gain 1 armor per rank.",
+    "attribute": "minecraft:armor",
+    "amount": 1,
+    "operation": "add_value"
+  }
+}

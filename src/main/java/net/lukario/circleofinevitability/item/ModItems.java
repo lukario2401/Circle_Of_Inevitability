@@ -5,6 +5,8 @@ import net.lukario.circleofinevitability.item.artifacts.SunBroochItem;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.lukario.circleofinevitability.ritual.RitualTableBlock;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
@@ -31,6 +33,9 @@ public final class ModItems {
     public static final RegistryObject<Item> SUN_BROOCH = ITEMS.register("sun_brooch",
             () -> new SunBroochItem(properties("sun_brooch")
                     .rarity(Rarity.RARE)));
+
+    public static final RegistryObject<BlockItem> RITUAL_TABLE = ITEMS.register("ritual_table", () ->
+            new BlockItem(RitualTableBlock.TABLE.get(), properties("ritual_table").useBlockDescriptionPrefix()));
 
     private ModItems() {}
 

@@ -29,6 +29,7 @@ public final class ModCreativeTabs {
                                 output.accept(BeyonderCharacteristicItem.of(pathway, sequence));
                             }
                         }
+                        output.accept(ModItems.RITUAL_TABLE.get());
                     })
                     .build());
 

@@ -12,33 +12,27 @@ import java.util.List;
 /**
  * Server -> Client: open an icon menu. Don't use directly — use AbilityMenu.open(player).
  */
-public class COpenAbilityMenuPacket {
+public record COpenAbilityMenuPacket(String menuId, String title, int iconSize, List<Option> options) {
 
     /** detail: a small second line under the label ("" = none). locked: greyed out, cannot be picked. */
     public record Option(Identifier icon, String label, int x, int y, String detail, boolean locked, String description) {}
 
-    private final String menuId;
-    private final String title;
-    private final int iconSize;
-    private final List<Option> options;
-
-    public COpenAbilityMenuPacket(String menuId, String title, int iconSize, List<Option> options) {
-        this.menuId = menuId;
-        this.title = title;
-        this.iconSize = iconSize;
-        this.options = options;
+    public COpenAbilityMenuPacket {
+        options = List.copyOf(options);
     }
 
     public COpenAbilityMenuPacket(FriendlyByteBuf buffer) {
-        this.menuId = buffer.readUtf();
-        this.title = buffer.readUtf();
-        this.iconSize = buffer.readInt();
+        this(buffer.readUtf(), buffer.readUtf(), buffer.readInt(), readOptions(buffer));
+    }
+
+    private static List<Option> readOptions(FriendlyByteBuf buffer) {
         int count = buffer.readInt();
-        this.options = new ArrayList<>();
+        List<Option> options = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             options.add(new Option(buffer.readIdentifier(), buffer.readUtf(), buffer.readInt(), buffer.readInt(),
                     buffer.readUtf(), buffer.readBoolean(), buffer.readUtf()));
         }
+        return options;
     }
 
     public void encode(FriendlyByteBuf buffer) {
