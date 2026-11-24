@@ -2,17 +2,24 @@ package net.lukario.circleofinevitability.item;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.item.artifacts.SunBroochItem;
+import net.lukario.circleofinevitability.ritual.RitualTableBlock;
+import net.lukario.circleofinevitability.ritual.SacrificialKnifeItem;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.lukario.circleofinevitability.ritual.RitualTableBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.ToolMaterial;
+import net.minecraft.world.item.component.ItemLore;
 import net.minecraftforge.eventbus.api.bus.BusGroup;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.List;
 
 /**
  * The mod's items. Since 1.21.2 every item needs its id in its Properties (setId), so each one is made through
@@ -36,6 +43,16 @@ public final class ModItems {
 
     public static final RegistryObject<BlockItem> RITUAL_TABLE = ITEMS.register("ritual_table", () ->
             new BlockItem(RitualTableBlock.TABLE.get(), properties("ritual_table").useBlockDescriptionPrefix()));
+
+    public static final RegistryObject<Item> SACRIFICIAL_KNIFE = ITEMS.register("sacrificial_knife", () ->
+            new SacrificialKnifeItem(properties("sacrificial_knife").sword(ToolMaterial.IRON, 1.0F, -2.2F).durability(128)
+                    .component(DataComponents.LORE, new ItemLore(List.of(
+                            Component.translatable("tooltip.circle_of_inevitability.sacrificial_knife"))))));
+
+    public static final RegistryObject<Item> RITUAL_BLOOD_VIAL = ITEMS.register("ritual_blood_vial", () ->
+            new Item(properties("ritual_blood_vial").stacksTo(16)
+                    .component(DataComponents.LORE, new ItemLore(List.of(
+                            Component.translatable("tooltip.circle_of_inevitability.ritual_blood_vial"))))));
 
     private ModItems() {}
 

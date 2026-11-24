@@ -29,7 +29,7 @@ Pathway designs, gameplay guides and asset previews are indexed in [Pathway docu
 
 Craft the table with an amethyst shard above a book, a copper ingot on either side, and polished deepslate below. Place it and right-click to pledge to God Almighty, Lord of the Mysteries, or The Anarchy.
 
-Choose an offering, donate blood, offer experience, or complete the altar’s rotating assignment. Blessings start at 10 friendship. Build up the altar to reach the three heart sacrifices and the replenishable seventh rank. Open **Altar structure** for the next pattern and missing block positions, or **Blessings** for your deity’s rewards.
+Use a Sacrificial Knife for blood donations and altar hunts. Carry a glass bottle in your offhand during a hunt to collect a Ritual Blood Vial. You can also offer items or experience, or complete the altar’s rotating assignment. Blessings start at 10 friendship. Build up the altar to reach the three heart sacrifices and the replenishable seventh rank. Open **Altar structure** for the next pattern and missing block positions, or **Blessings** for your deity’s rewards.
 
 The [ritual table guide](docs/RITUAL_TABLE.md) covers costs, cooldowns, the revival miracle, the operator command, and adding deities with data packs.
 

@@ -1,4 +1,8 @@
 {
+  "tooltip.circle_of_inevitability.sacrificial_knife": "Carry an off-hand bottle on an altar hunt to collect blood.",
+  "tooltip.circle_of_inevitability.ritual_blood_vial": "Offer at a ritual table for friendship and an empty bottle.",
+  "item.circle_of_inevitability.ritual_blood_vial": "Ritual Blood Vial",
+  "item.circle_of_inevitability.sacrificial_knife": "Sacrificial Knife",
   "block.circle_of_inevitability.ritual_table": "Ritual Table",
   "key.circle_of_inevitability.camera_modifier": "Camera combo modifier",
   "key.circle_of_inevitability.camera_open": "Detach camera (with modifier)",

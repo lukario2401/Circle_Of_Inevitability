@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.ritual;
 
 import net.lukario.circleofinevitability.menu.AbilityMenu;
+import net.lukario.circleofinevitability.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -93,7 +94,7 @@ record RitualTableMenu(ResourceKey<Level> dimension, BlockPos pos, int playerEnt
         option(menu, "white_angel/blessing", "Offerings", -85, -56, "Gifts, blood and prayer",
                 "Choose the cost and see the friendship it earns.", false, this::offerings);
         option(menu, "hand_of_order/contract", "Ritual task", 0, -56, waitText(faith, "task_ready"),
-                faith.task().description(), false, this::task);
+                faith.task().instructions(), false, this::task);
         option(menu, "white_angel/domain", "Altar structure", 85, -56, "Rank " + altar.rank() + "/3",
                 altar.pattern(), false, this::structure);
         option(menu, deity.icon().toString(), "Sacrifice heart", -85, 14,
@@ -137,9 +138,11 @@ record RitualTableMenu(ResourceKey<Level> dimension, BlockPos pos, int playerEnt
                     room == 0 || f.waitSeconds("offering_ready") > 0,
                     player -> perform(player, faith -> faith.offer(pos, gift), "The altar could not accept that offering."));
         }
-        option(menu, "filthy_monarch/blood_burst", "Donate blood", -65, 0, waitText(f, "blood_ready"),
-                "Pay one current heart for up to 3 friendship. Cooldown 90s.", room == 0 || f.waitSeconds("blood_ready") > 0,
-                player -> perform(player, faith -> faith.donateBlood(pos), "The blood donation must draw health."));
+        boolean holdingKnife = p.getMainHandItem().is(ModItems.SACRIFICIAL_KNIFE.get());
+        option(menu, "filthy_monarch/blood_burst", "Donate blood", -65, 0, holdingKnife ? waitText(f, "blood_ready") : "Hold a Sacrificial Knife",
+                "Hold the knife in your main hand and pay one current heart for up to 3 friendship. Cooldown 90s.",
+                !holdingKnife || room == 0 || f.waitSeconds("blood_ready") > 0,
+                player -> perform(player, faith -> faith.donateBlood(pos), "Hold your Sacrificial Knife. The donation must draw health."));
         option(menu, OATH, "Offer experience", 65, 0, waitText(f, "prayer_ready"),
                 "Offer one experience level in prayer for up to 6 friendship. Cooldown 5 minutes.", room == 0 || f.waitSeconds("prayer_ready") > 0,
                 player -> perform(player, faith -> faith.pray(pos), "You need one experience level."));
@@ -160,7 +163,7 @@ record RitualTableMenu(ResourceKey<Level> dimension, BlockPos pos, int playerEnt
         var altar = RitualAltar.inspect(p.level(), pos);
         var menu = menu("Ritual task · " + waitText(f, "task_ready"));
         int done = f.taskProgress(pos);
-        String terms = t.description() + " Earn up to " + t.reward() + (f.exalted() ? " favour" : " friendship")
+        String terms = t.instructions() + " Earn up to " + t.reward() + (f.exalted() ? " favour" : " friendship")
                 + ". The next task opens " + t.cooldown() + "s after reporting.";
         p.sendSystemMessage(Component.literal(terms));
         option(menu, "hand_of_order/contract", "Report task", -65, 0, done + "/" + t.count(),

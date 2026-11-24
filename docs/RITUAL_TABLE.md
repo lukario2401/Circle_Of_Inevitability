@@ -12,6 +12,12 @@ Right-click a placed Ritual Table to choose a deity. Worship belongs to the play
 
 Select **Altar structure** to see the next pattern and the coordinates of each missing block. Sparks mark the missing positions in the world. Removing part of the structure lowers the cap for future rites at that table. Earned ranks and paid hearts stay with the worshipper.
 
+## Sacrificial Knife
+
+Craft the knife on a crafting table. Place an iron ingot in the top right, an amethyst shard in the center, and a copper ingot in the bottom left. The knife deals four attack damage, has 128 durability, and accepts iron ingots for anvil repairs.
+
+Hold the knife in your main hand to donate blood at the table or deliver the final blow in a procession. If you carry glass bottles in your offhand, each credited kill fills one Ritual Blood Vial until the assignment is complete. Select the vial under **Offerings** to dedicate it to any deity and recover the empty bottle. Permanent heart sacrifices use the table’s separate confirmation screen.
+
 ## Earn friendship
 
 | Action | Reward | Personal cooldown |
@@ -19,7 +25,8 @@ Select **Altar structure** to see the next pattern and the coordinates of each m
 | Give one preferred item | 2 | 45 seconds, shared across offerings |
 | Give five preferred items | 8 | Same offering cooldown |
 | Give a rare tribute | 12 | Same offering cooldown |
-| Donate blood | 3 when the damage draws current health | 90 seconds |
+| Give a Ritual Blood Vial | 4 | Same offering cooldown |
+| Donate blood with the knife | 3 when the damage draws current health | 90 seconds |
 | Offer one experience level in prayer | 6 | 5 minutes |
 | Report a completed assignment | 10–20 for the starting deities | 3–8 minutes, according to the assignment |
 
@@ -27,7 +34,7 @@ God Almighty accepts gold ingots or one golden apple. Lord of the Mysteries acce
 
 An assignment binds to a table when you open it after the previous cooldown. Read **Ritual task** for the objective. Reporting advances the rotation. **Move assignment** starts the current objective over at a different altar. Stat-based tasks begin counting when assigned.
 
-- For a procession, come within 16 blocks of an eligible living mob outside the eight-block ring, within 24 blocks of the table. Give it a moment to be observed, lead it inside, and personally deliver the killing blow while you are also inside. The altar remembers a quarry for five minutes after observing it outside. Each deity names its eligible creatures.
+- For a procession, come within 16 blocks of an eligible living mob outside the eight-block ring, within 24 blocks of the table. Give it a moment to be observed, lead it inside, and personally deliver the killing blow with the knife while you are also inside. The altar remembers a quarry for five minutes after observing it outside. Each deity names its eligible creatures.
 - For a congregation, gather ten living villagers within eight blocks at the same time. Report while all ten are present.
 - Other assignments include deliveries, fishing, using ender pearls, and villager trades. Deliveries consume the listed items when reported.
 
@@ -53,7 +60,7 @@ Operators can use `/favour add <player> <amount>` with 1–100 points. Before th
 
 To add a deity, copy a [deity definition](../src/main/resources/data/circle_of_inevitability/circle_of_inevitability/ritual_deity/lord_of_the_mysteries.json) into a data pack at `data/<namespace>/circle_of_inevitability/ritual_deity/<id>.json`. Reopen the world after installing it.
 
-- Set `offering` to the preferred item. Add `tributes` with an item, count, and points. Extra offerings paginate automatically.
+- Set `offering` to the preferred item. Add `tributes` with an item, count, and points. Extra offerings paginate automatically. Every deity accepts one Ritual Blood Vial for four friendship by default. A single-vial tribute can set a different reward.
 - Set the first `task` and any subsequent entries in `rotation`. Each sets a count, reward, cooldown in seconds, and player-facing description. A `procession` or `assembly` lists entity types in `targets`. A `delivery` specifies an item. A `statistic` uses a Minecraft scoreboard statistic.
 - Give the blessing a name and summary in `per_rank`. Each entry in `stages` unlocks at its specified rank. Add player attribute modifiers or conditional pulses with an effect, duration in ticks, and optional hostile target. Conditions include danger, hunger, injury, darkness, submersion, sprinting, and falling.
 - The optional `revival` setting grants access to the miracle. Of the three bundled deities, only Lord of the Mysteries has it. Original data-pack definitions with one statistic and a per-rank attribute remain supported.

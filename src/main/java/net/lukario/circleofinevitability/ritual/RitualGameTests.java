@@ -11,6 +11,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.permissions.PermissionSet;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Mob;
@@ -111,7 +112,8 @@ public final class RitualGameTests {
                 }
                 if (text.equals("Next")) nextPage = index;
             }
-            if (nextPage < 0) throw new AssertionError("Missing menu choice " + label);
+            if (nextPage < 0) throw new AssertionError("Missing menu choice " + label + " among "
+                    + menu.options().stream().map(COpenAbilityMenuPacket.Option::label).toList());
             AbilityMenu.handleChoice(player, menu.menuId(), nextPage);
             click(label);
         }
@@ -144,11 +146,14 @@ public final class RitualGameTests {
         BlockPos pos = h.absolutePos(TABLE);
         h.assertTrue(f.friendship() == 8 && p.getInventory().countItem(Items.GOLD_INGOT) == 1, "Pay for the larger offering exactly once");
         h.assertTrue(!f.offer(pos, f.deity.offerings().getFirst()), "All gifts share a cooldown");
-        client.click("Offerings");
         float health = p.getHealth();
+        h.assertTrue(!f.donateBlood(pos) && p.getHealth() == health, "A missing knife costs no health or cooldown");
+        var knife = new ItemStack(ModItems.SACRIFICIAL_KNIFE.get());
+        p.setItemInHand(InteractionHand.MAIN_HAND, knife);
+        client.click("Offerings");
         client.click("Donate blood");
         h.assertTrue(f.friendship() == 11 && p.getHealth() < health && p.getMaxHealth() == 20, "Blood grants friendship and an early blessing");
-        h.assertTrue(!f.donateBlood(pos), "Blood cooldown");
+        h.assertTrue(!f.donateBlood(pos) && knife.getDamageValue() == 1, "Only a successful donation wears the knife");
         p.giveExperienceLevels(1);
         client.click("Offerings");
         client.click("Offer experience");
@@ -242,27 +247,58 @@ public final class RitualGameTests {
         var f = new Worship(p);
         var pos = h.absolutePos(TABLE);
         var center = Vec3.atCenterOf(pos);
+        var input = CraftingInput.of(3, 3, List.of(ItemStack.EMPTY, ItemStack.EMPTY, new ItemStack(Items.IRON_INGOT),
+                ItemStack.EMPTY, new ItemStack(Items.AMETHYST_SHARD), ItemStack.EMPTY,
+                new ItemStack(Items.COPPER_INGOT), ItemStack.EMPTY, ItemStack.EMPTY));
+        var knife = h.getLevel().recipeAccess().getRecipeFor(RecipeType.CRAFTING, input, h.getLevel())
+                .orElseThrow().value().assemble(input);
+        h.assertTrue(knife.is(ModItems.SACRIFICIAL_KNIFE.get()) && knife.getMaxDamage() == 128
+                && knife.isValidRepairItem(new ItemStack(Items.IRON_INGOT)), "Craft and repair the sacrificial knife");
+        p.setItemInHand(InteractionHand.MAIN_HAND, knife);
+        p.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(Items.GLASS_BOTTLE, 2));
         Mob local = h.spawn(EntityTypes.ZOMBIE, TABLE);
         local.setPos(center);
-        local.hurtServer(h.getLevel(), p.damageSources().playerAttack(p), 100);
-        h.assertTrue(f.taskProgress(pos) == 0, "A locally spawned kill is not a procession");
+        local.setHealth(0.01f);
+        p.attack(local);
+        h.assertTrue(f.taskProgress(pos) == 0 && p.getOffhandItem().getCount() == 2, "A local kill gives neither task credit nor blood");
+        var spellKill = h.spawn(EntityTypes.HUSK, TABLE);
+        spellKill.setPos(center.add(10, 0, 0));
+        f.observeQuarry();
+        spellKill.setPos(center);
+        spellKill.hurtServer(h.getLevel(), p.damageSources().playerAttack(p), 100);
+        h.assertTrue(f.taskProgress(pos) == 0 && p.getOffhandItem().getCount() == 2,
+                "Holding the knife during another source of damage cannot collect blood");
         for (var type : List.of(EntityTypes.ZOMBIE, EntityTypes.HUSK, EntityTypes.SKELETON)) {
             var mob = h.spawn(type, TABLE);
             mob.setNoAi(true);
             mob.setPos(center.add(10, 0, 0));
             f.observeQuarry();
             mob.setPos(center);
-            mob.hurtServer(h.getLevel(), p.damageSources().playerAttack(p), 100);
+            mob.setHealth(0.01f);
+            p.attack(mob);
         }
+        h.assertTrue(p.getOffhandItem().is(ModItems.RITUAL_BLOOD_VIAL.get())
+                && p.getInventory().getNonEquipmentItems().stream().anyMatch(stack -> stack.is(ModItems.RITUAL_BLOOD_VIAL.get())),
+                "A stack of two bottles collects two vials, and a third kill still counts without a bottle");
         h.assertTrue(f.taskProgress(pos) == 3 && f.claimTask(pos), "Bring three different mobs to the altar and slay them");
         h.assertTrue(!f.claimTask(pos) && f.waitSeconds("task_ready") == 240 && f.task().kind() == RitualTask.Kind.ASSEMBLY,
                 "Paid task rotates and starts its cooldown");
+        h.useBlock(TABLE, p);
+        client.click("Offerings");
+        client.click("1 × Ritual Blood Vial");
+        h.assertTrue(f.friendship() == 18 && f.waitSeconds("offering_ready") > 0
+                && p.getInventory().countItem(Items.GLASS_BOTTLE) == 1, "Dedicating blood earns four friendship and returns its bottle");
         var assembly = pledge(h, "The Anarchy");
         var crowd = new Worship(assembly.player);
+        assembly.player.setItemInHand(InteractionHand.OFF_HAND, new ItemStack(ModItems.RITUAL_BLOOD_VIAL.get()));
+        assembly.click("Offerings");
+        assembly.click("1 × Ritual Blood Vial");
+        h.assertTrue(crowd.friendship() == 4 && assembly.player.getOffhandItem().is(Items.GLASS_BOTTLE),
+                "An offhand-only vial can be dedicated and returns a bottle to that hand");
         for (int i = 0; i < 9; i++) h.spawn(EntityTypes.VILLAGER, TABLE).setPos(center);
         h.assertTrue(crowd.taskProgress(pos) == 9 && !crowd.claimTask(pos), "Nine villagers cannot complete the gathering");
         h.spawn(EntityTypes.VILLAGER, TABLE).setPos(center);
-        h.assertTrue(crowd.claimTask(pos) && crowd.friendship() == 20, "Ten living villagers gathered at once");
+        h.assertTrue(crowd.claimTask(pos) && crowd.friendship() == 24, "Ten living villagers gathered at once");
         h.succeed();
     }
 

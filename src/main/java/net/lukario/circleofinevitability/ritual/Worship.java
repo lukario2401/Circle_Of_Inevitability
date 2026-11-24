@@ -3,6 +3,7 @@ package net.lukario.circleofinevitability.ritual;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Physique;
 import net.lukario.circleofinevitability.combat.Spells;
+import net.lukario.circleofinevitability.item.ModItems;
 import net.lukario.circleofinevitability.status.Decree;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -12,9 +13,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemUtils;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.event.TickEvent;
@@ -131,8 +136,14 @@ public final class Worship {
 
     boolean offer(BlockPos pos, RitualDeity.Offering offering) {
         int room = room(RitualAltar.inspect(player.level(), pos), false);
+        boolean heldVial = player.getOffhandItem().is(ModItems.RITUAL_BLOOD_VIAL.get());
         if (room <= 0 || waitSeconds("offering_ready") > 0 || !deity.offerings().contains(offering)
                 || !RitualDeity.pay(player, offering.item(), offering.count())) return false;
+        if (offering.item().is(ModItems.RITUAL_BLOOD_VIAL.getKey())) {
+            var empties = new ItemStack(Items.GLASS_BOTTLE, offering.count());
+            if (heldVial && player.getOffhandItem().isEmpty()) player.setItemInHand(InteractionHand.OFF_HAND, empties);
+            else player.getInventory().placeItemBackInInventory(empties);
+        }
         data.putLong("offering_ready", time() + 20 * 45);
         earn(offering.points(), room);
         return true;
@@ -141,9 +152,12 @@ public final class Worship {
     boolean donateBlood(BlockPos pos) {
         int room = room(RitualAltar.inspect(player.level(), pos), false);
         float before = player.getHealth();
-        if (room <= 0 || waitSeconds("blood_ready") > 0 || before <= 2 || player.isInvulnerable()) return false;
+        var knife = player.getMainHandItem();
+        if (!knife.is(ModItems.SACRIFICIAL_KNIFE.get()) || room <= 0 || waitSeconds("blood_ready") > 0
+                || before <= 2 || player.isInvulnerable()) return false;
         player.hurtServer(player.level(), player.damageSources().magic(), 2);
         if (!player.isAlive() || player.getHealth() >= before) return false;
+        knife.hurtAndBreak(1, player, InteractionHand.MAIN_HAND);
         data.putLong("blood_ready", time() + 20 * 90);
         earn(BLOOD_POINTS, room);
         return true;
@@ -214,7 +228,8 @@ public final class Worship {
     }
 
     private void recordKill(LivingEntity victim) {
-        if (!hasAssignment() || deity == null || task().kind() != RitualTask.Kind.PROCESSION || !task().accepts(victim)) return;
+        if (!hasAssignment() || deity == null || task().kind() != RitualTask.Kind.PROCESSION
+                || !task().accepts(victim) || data.getIntOr("kills", 0) >= task().count()) return;
         BlockPos altar = BlockPos.of(data.getLongOr("altar_pos", 0));
         Vec3 center = Vec3.atCenterOf(altar);
         var marked = data.getCompoundOrEmpty("quarry");
@@ -222,8 +237,13 @@ public final class Worship {
                 || !player.level().getBlockState(altar).is(RitualTableBlock.TABLE.get())
                 || marked.getLongOr(victim.getStringUUID(), 0) <= time()) return;
         marked.remove(victim.getStringUUID());
-        data.putInt("kills", Math.min(task().count(), data.getIntOr("kills", 0) + 1));
+        data.putInt("kills", data.getIntOr("kills", 0) + 1);
         save();
+        var bottle = player.getOffhandItem();
+        if (bottle.is(Items.GLASS_BOTTLE)) {
+            var filled = new ItemStack(ModItems.RITUAL_BLOOD_VIAL.get());
+            player.setItemInHand(InteractionHand.OFF_HAND, ItemUtils.createFilledResult(bottle, player, filled));
+        }
     }
 
     boolean canSacrifice(RitualAltar altar) {
@@ -278,7 +298,9 @@ public final class Worship {
 
     @SubscribeEvent
     public static void onDrops(LivingDropsEvent event) {
-        if (event.getSource().getEntity() instanceof ServerPlayer p) new Worship(p).recordKill(event.getEntity());
+        if (SacrificialKnifeItem.isStrike(event.getSource()) && event.getSource().getEntity() instanceof ServerPlayer p) {
+            new Worship(p).recordKill(event.getEntity());
+        }
     }
 
     @SubscribeEvent(priority = Priority.LOW)

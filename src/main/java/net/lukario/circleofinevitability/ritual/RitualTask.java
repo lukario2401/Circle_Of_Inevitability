@@ -45,6 +45,11 @@ record RitualTask(Kind kind, String description, int count, int reward, int cool
         case DELIVERY -> task.item.isPresent() ? DataResult.success(task) : DataResult.error(() -> "Missing delivery item");
     });
 
+    String instructions() {
+        if (kind != Kind.PROCESSION) return description;
+        return description + " Land the final hit with a Sacrificial Knife. Carry a glass bottle in your off hand to collect a blood vial.";
+    }
+
     boolean accepts(LivingEntity entity) {
         return targets.contains(entity.getType());
     }

@@ -3,15 +3,19 @@ package net.lukario.circleofinevitability.ritual;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.item.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
+import org.apache.commons.lang3.StringUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 public record RitualDeity(String name, Identifier icon, String domain, Holder<Item> offering, List<Offering> tributes,
                          RitualTask task, List<RitualTask> rotation, RitualBlessing blessing, boolean revival) {
@@ -35,11 +39,25 @@ public record RitualDeity(String name, Identifier icon, String domain, Holder<It
                 Codec.intRange(1, 64).fieldOf("count").forGetter(Offering::count),
                 Codec.intRange(1, 30).fieldOf("points").forGetter(Offering::points)
         ).apply(i, Offering::new));
-        String label() { return count + " × " + item.value().getDefaultInstance().getHoverName().getString(); }
+        String label() {
+            String name = item.value().getDefaultInstance().getHoverName().getString();
+            // Dedicated servers can lack client-side translations for mod items.
+            if (name.equals(item.value().getDescriptionId())) {
+                String path = item.unwrapKey().orElseThrow().identifier().getPath();
+                name = Arrays.stream(path.split("[/_]+")).map(StringUtils::capitalize).collect(Collectors.joining(" "));
+            }
+            return count + " × " + name;
+        }
     }
 
     List<Offering> offerings() {
-        return Stream.concat(Stream.of(new Offering(offering, 1, 2)), tributes.stream()).toList();
+        var gifts = new ArrayList<Offering>();
+        gifts.add(new Offering(offering, 1, 2));
+        gifts.addAll(tributes);
+        if (gifts.stream().noneMatch(gift -> gift.count() == 1 && gift.item().is(ModItems.RITUAL_BLOOD_VIAL.getKey()))) {
+            gifts.add(new Offering(ModItems.RITUAL_BLOOD_VIAL.get().builtInRegistryHolder(), 1, 4));
+        }
+        return List.copyOf(gifts);
     }
 
     RitualTask taskAt(int index) {
@@ -48,8 +66,10 @@ public record RitualDeity(String name, Identifier icon, String domain, Holder<It
     }
 
     static int stock(ServerPlayer player, Holder<Item> item) {
-        return player.getInventory().getNonEquipmentItems().stream()
+        var offhand = player.getOffhandItem();
+        int carried = player.getInventory().getNonEquipmentItems().stream()
                 .filter(stack -> stack.is(item)).mapToInt(stack -> stack.getCount()).sum();
+        return carried + (offhand.is(item) ? offhand.getCount() : 0);
     }
 
     static boolean pay(ServerPlayer player, Holder<Item> item, int count) {
@@ -61,6 +81,7 @@ public record RitualDeity(String name, Identifier icon, String domain, Holder<It
             count -= take;
             if (count == 0) break;
         }
+        if (count > 0) player.getOffhandItem().shrink(count);
         player.getInventory().setChanged();
         return true;
     }
