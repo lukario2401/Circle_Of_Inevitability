@@ -256,7 +256,7 @@ public final class GrayFogArmor {
         if (spot != null && Teleport.of(wearer).fallGuard(40).go(level, spot))
             level.playSound(null, wearer.blockPosition(), SoundEvents.ILLUSIONER_MIRROR_MOVE, SoundSource.PLAYERS, .8f, 1.2f);
         if (wearer instanceof ServerPlayer player)
-            player.displayClientMessage(Component.translatable("message.circle_of_inevitability." + SET + ".substituted"), true);
+            player.sendOverlayMessage(Component.translatable("message.circle_of_inevitability." + SET + ".substituted"));
     }
 
     /** When the figurine is back; 0 when it is ready. Honors both the coat and the wearer so swapping coats cannot skip it. */
