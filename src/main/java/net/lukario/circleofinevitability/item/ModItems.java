@@ -56,6 +56,13 @@ public final class ModItems {
     public static final RegistryObject<Item> UNSHADOWED_LEGGINGS = unshadowed("unshadowed_leggings", net.minecraft.world.item.equipment.ArmorType.LEGGINGS);
     public static final RegistryObject<Item> UNSHADOWED_BOOTS = unshadowed("unshadowed_boots", net.minecraft.world.item.equipment.ArmorType.BOOTS);
 
+    public static final RegistryObject<Item> GRAY_FOG_CORE = ITEMS.register("gray_fog_core",
+            () -> new Item(properties("gray_fog_core").rarity(Rarity.EPIC).fireResistant()));
+    public static final RegistryObject<Item> GRAY_FOG_HELMET = grayFog("gray_fog_helmet", net.minecraft.world.item.equipment.ArmorType.HELMET);
+    public static final RegistryObject<Item> GRAY_FOG_CHESTPLATE = grayFog("gray_fog_chestplate", net.minecraft.world.item.equipment.ArmorType.CHESTPLATE);
+    public static final RegistryObject<Item> GRAY_FOG_LEGGINGS = grayFog("gray_fog_leggings", net.minecraft.world.item.equipment.ArmorType.LEGGINGS);
+    public static final RegistryObject<Item> GRAY_FOG_BOOTS = grayFog("gray_fog_boots", net.minecraft.world.item.equipment.ArmorType.BOOTS);
+
     private static RegistryObject<Item> armor(String name, net.minecraft.world.item.equipment.ArmorType type) {
         return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
                 properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.InevitabilityArmor.MATERIAL,
@@ -65,6 +72,11 @@ public final class ModItems {
         return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
                 properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.UnshadowedArmor.MATERIAL,
                 type, net.lukario.circleofinevitability.item.armor.UnshadowedArmor.SET));
+    }
+    private static RegistryObject<Item> grayFog(String name, net.minecraft.world.item.equipment.ArmorType type) {
+        return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
+                properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.GrayFogArmor.MATERIAL,
+                type, net.lukario.circleofinevitability.item.armor.GrayFogArmor.SET));
     }
 
     public static final RegistryObject<BlockItem> RITUAL_TABLE = ITEMS.register("ritual_table", () ->

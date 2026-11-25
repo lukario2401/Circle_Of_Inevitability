@@ -19,9 +19,13 @@ public final class ArmorModelExtensions implements IClientItemExtensions {
     public ArmorModelExtensions(Function<EquipmentSlot, HumanoidModel<?>> factory) { this.factory = factory; }
 
     public static ArmorModelExtensions forSet(String setId) {
-        return new ArmorModelExtensions(net.lukario.circleofinevitability.item.armor.UnshadowedArmor.SET.equals(setId)
-                ? slot -> new UnshadowedArmorModel(UnshadowedArmorModel.createLayer(slot).bakeRoot(), slot)
-                : slot -> new InevitabilityArmorModel(InevitabilityArmorModel.createLayer(slot).bakeRoot(), slot));
+        return new ArmorModelExtensions(switch (setId) {
+            case net.lukario.circleofinevitability.item.armor.UnshadowedArmor.SET ->
+                    slot -> new UnshadowedArmorModel(UnshadowedArmorModel.createLayer(slot).bakeRoot(), slot);
+            case net.lukario.circleofinevitability.item.armor.GrayFogArmor.SET ->
+                    slot -> new GrayFogArmorModel(GrayFogArmorModel.createLayer(slot).bakeRoot(), slot);
+            default -> slot -> new InevitabilityArmorModel(InevitabilityArmorModel.createLayer(slot).bakeRoot(), slot);
+        });
     }
     @Override public HumanoidModel<?> getHumanoidArmorModel(LivingEntityRenderState state, ItemStack stack,
                                                            EquipmentSlot slot, HumanoidModel<?> original) {
