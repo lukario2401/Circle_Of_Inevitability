@@ -18,14 +18,19 @@ public final class ArmorModelExtensions implements IClientItemExtensions {
     private final Map<EquipmentSlot, HumanoidModel<?>> models = new EnumMap<>(EquipmentSlot.class);
     public ArmorModelExtensions(Function<EquipmentSlot, HumanoidModel<?>> factory) { this.factory = factory; }
 
-    public static ArmorModelExtensions forSet(String setId) {
-        return new ArmorModelExtensions(switch (setId) {
-            case net.lukario.circleofinevitability.item.armor.UnshadowedArmor.SET ->
-                    slot -> new UnshadowedArmorModel(UnshadowedArmorModel.createLayer(slot).bakeRoot(), slot);
-            case net.lukario.circleofinevitability.item.armor.GrayFogArmor.SET ->
-                    slot -> new GrayFogArmorModel(GrayFogArmorModel.createLayer(slot).bakeRoot(), slot);
-            default -> slot -> new InevitabilityArmorModel(InevitabilityArmorModel.createLayer(slot).bakeRoot(), slot);
-        });
+    /**
+     * Forge asks for client extensions from inside Item's constructor, before a subclass has set its fields, so the
+     * set id is read lazily, when the first model is baked, never at registration.
+     */
+    public static ArmorModelExtensions forSet(java.util.function.Supplier<String> setId) {
+        return new ArmorModelExtensions(slot -> factory(setId.get()).apply(slot));
+    }
+    private static Function<EquipmentSlot, HumanoidModel<?>> factory(String setId) {
+        if (net.lukario.circleofinevitability.item.armor.UnshadowedArmor.SET.equals(setId))
+            return slot -> new UnshadowedArmorModel(UnshadowedArmorModel.createLayer(slot).bakeRoot(), slot);
+        if (net.lukario.circleofinevitability.item.armor.GrayFogArmor.SET.equals(setId))
+            return slot -> new GrayFogArmorModel(GrayFogArmorModel.createLayer(slot).bakeRoot(), slot);
+        return slot -> new InevitabilityArmorModel(InevitabilityArmorModel.createLayer(slot).bakeRoot(), slot);
     }
     @Override public HumanoidModel<?> getHumanoidArmorModel(LivingEntityRenderState state, ItemStack stack,
                                                            EquipmentSlot slot, HumanoidModel<?> original) {

@@ -43,6 +43,6 @@ public class TentacleArmorItem extends Item {
     public String setId() { return setId; }
     public EquipmentSlot slot() { return slot; }
     @Override public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
-        consumer.accept(net.lukario.circleofinevitability.client.armor.ArmorModelExtensions.forSet(setId));
+        consumer.accept(net.lukario.circleofinevitability.client.armor.ArmorModelExtensions.forSet(this::setId));
     }
 }
