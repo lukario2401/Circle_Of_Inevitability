@@ -75,7 +75,7 @@ public final class ModItems {
     private ModItems() {}
 
     /** Properties with the item's id already set (the name is the one given to ITEMS.register). */
-    private static Item.Properties properties(String name) {
+    public static Item.Properties properties(String name) {
         return new Item.Properties().setId(ResourceKey.create(Registries.ITEM,
                 Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, name)));
     }

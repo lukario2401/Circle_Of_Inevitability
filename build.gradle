@@ -36,6 +36,7 @@ minecraft {
         }
 
         register('gameTestServer') {
+            if (providers.gradleProperty('mountTests').isPresent()) { args '--tests', 'circle_of_inevitability:mount_*' }
             if (providers.gradleProperty('inevitabilityArmorTests').isPresent()) {
                 workingDir = layout.buildDirectory.dir('inevitability-armor-gametest')
                 args '--tests', 'circle_of_inevitability:inevitability_armor_*'

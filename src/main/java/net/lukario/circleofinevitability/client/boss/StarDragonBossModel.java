@@ -2,10 +2,11 @@ package net.lukario.circleofinevitability.client.boss;
 
 import com.google.gson.*;
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.client.model.CubeRig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.*;
-import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.resources.Identifier;
 import java.io.*;
 import java.util.*;
@@ -31,23 +32,7 @@ public final class StarDragonBossModel extends EntityModel<StarDragonBossRendere
         }
     }
     public static LayerDefinition createLayer() {
-        JsonObject rig = read("star_dragon.rig.json");
-        MeshDefinition mesh = new MeshDefinition(); Map<String, PartDefinition> parts = new HashMap<>(); parts.put("_root", mesh.getRoot());
-        for (JsonElement element : rig.getAsJsonArray("bones")) {
-            JsonObject b = element.getAsJsonObject();
-            CubeListBuilder cubes = CubeListBuilder.create();
-            for (JsonElement ce : b.getAsJsonArray("cubes")) {
-                JsonObject c = ce.getAsJsonObject(); JsonArray p = c.getAsJsonArray("origin"), s = c.getAsJsonArray("size"), uv = c.getAsJsonArray("uv");
-                cubes.texOffs(uv.get(0).getAsInt(), uv.get(1).getAsInt()).addBox(f(p,0),f(p,1),f(p,2),f(s,0),f(s,1),f(s,2));
-            }
-            JsonArray p = b.getAsJsonArray("pivot"), r = b.getAsJsonArray("rotation");
-            String parent = b.has("parent") && !b.get("parent").isJsonNull() ? b.get("parent").getAsString() : "_root";
-            String name = b.get("name").getAsString();
-            parts.put(name, parts.get(parent).addOrReplaceChild(name, cubes,
-                    PartPose.offsetAndRotation(f(p,0),f(p,1),f(p,2),rad(f(r,0)),rad(f(r,1)),rad(f(r,2)))));
-        }
-        JsonArray size = rig.getAsJsonArray("texture_size");
-        return LayerDefinition.create(mesh, size.get(0).getAsInt(), size.get(1).getAsInt());
+        return CubeRig.bake(read("star_dragon.rig.json"));
     }
     @Override public void setupAnim(StarDragonBossRenderer.State s) {
         super.setupAnim(s);

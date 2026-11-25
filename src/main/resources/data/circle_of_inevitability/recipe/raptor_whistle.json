@@ -1,0 +1,12 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "equipment",
+  "ingredients": [
+    "minecraft:saddle",
+    "minecraft:copper_ingot",
+    "minecraft:feather"
+  ],
+  "result": {
+    "id": "circle_of_inevitability:raptor_whistle"
+  }
+}

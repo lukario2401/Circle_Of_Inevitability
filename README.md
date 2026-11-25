@@ -28,6 +28,10 @@ Forge 65 client or server.
 
 Pathway designs, gameplay guides and asset previews are indexed in [Pathway documentation](docs/pathways/README.md).
 
+## Riding mounts
+
+Craft a whistle to ride an amethyst-winged wyvern or a crested raptor. Recipes, controls and an example for adding another mount are in the [mount guide](docs/MOUNTS.md).
+
 ## Ritual Table
 
 Craft the table with an amethyst shard above a book, a copper ingot on either side, and polished deepslate below. Place it and right-click to pledge to God Almighty, Lord of the Mysteries, or The Anarchy.

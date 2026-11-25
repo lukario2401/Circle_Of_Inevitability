@@ -6,6 +6,8 @@ import net.lukario.circleofinevitability.effects.ModEffects;
 import net.lukario.circleofinevitability.item.ModCreativeTabs;
 import net.lukario.circleofinevitability.item.ModDataComponents;
 import net.lukario.circleofinevitability.item.ModItems;
+import net.lukario.circleofinevitability.mount.MountGameTests;
+import net.lukario.circleofinevitability.mount.Mounts;
 import net.lukario.circleofinevitability.particles.ModParticles;
 import net.lukario.circleofinevitability.ritual.RitualDeity;
 import net.lukario.circleofinevitability.ritual.RitualGameTests;
@@ -43,6 +45,8 @@ public class CircleOfInevitability
         ServerStartingEvent.BUS.addListener(this::onServerStarting);
 
         net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossRegistry.ENTITIES.register(modEventBus);
+        Mounts.ENTITIES.register(modEventBus);
+        MountGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodHigherGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.white_angel.WhiteAngelGameTests.FUNCTIONS.register(modEventBus);
