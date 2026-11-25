@@ -106,6 +106,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Damage that names no attacker (`damageSources().magic()`, an explosion or lightning with no owner) showing as the caster's damage number | `DamageFx.credit(player, target)` right before it ([DAMAGE_FX.md](DAMAGE_FX.md)) | `combat/` |
 | Know an enemy better and better (0 to 100%, one gauge per caster): every hit on it grows stronger the more you know, and it fades when left alone | [`Study`](#study) | `status/` |
 | Keep spells on paper: a pouch of scrolls, each one a stored cast that goes off for free when read; any spell can be one | [`Scrolls`](#scrolls) | `status/` |
+| A drone, spirit, eye or robot that follows the caster and damages nearby enemies | [`FollowerSummon`](#followers-that-guard-the-caster) | `combat/` |
 | A few bodies circling a player (stars, blades, motes) that each stop a projectile and come back, and strike enemies that come close | [`Orbit`](#orbit-bodies-that-circle-and-guard) | `combat/` |
 | Launch one of those bodies yourself (a cluster flung, an asteroid thrown on a blow) and have it back later | [`Orbit.release`](#orbit-bodies-that-circle-and-guard) | `combat/` |
 | The projectiles of the other side near a spot, to slow, stop, hang or bend them | [`Spells.hostileShotsAround`](#1-spells-aiming-and-enemies) | `combat/` |
@@ -751,6 +752,26 @@ Good to know:
 - **Crossing its plane is what counts**, checked every tick, so walking, being knocked through or a teleport across all count; someone put back stands just on their own side and is pushed off it. Its ends and its top are open: going round or over is allowed.
 - It has no thickness and no look of its own. Draw it when you raise it (`PrinceOfAbolitionFx.gate` draws a lattice 10 wide and 5 tall) and clear the look in `onEnd`.
 - It falls when its owner dies, logs out or changes dimension. Build a new one for every cast. Not saved.
+
+---
+
+## Followers that guard the caster
+
+Define the follower once with a `ModelFx`. This eye deals 6 damage to the nearest visible enemy within 3 blocks of the eye, at most once every 20 ticks. It lasts 30 seconds.
+
+```java
+private static final FollowerSummon GUARD_EYE =
+        FollowerSummon.drone(ModelFx.of("star_dragon/star_eye").pivot(8, 8, 8).scale(0.4f))
+                .strikes(3.0, 20, 6f)
+                .lasts(600);
+
+// Inside the server-side ability method
+GUARD_EYE.summon(player, "star_dragon_guard_eye");
+```
+
+The drone holds its pivot 0.65 blocks beside the caster and 1.55 blocks above their feet. Its position follows the caster even through a teleport in the same dimension. Turning in place keeps it in the same spot. For a spirit, robot or other companion with its own hover point, use `FollowerSummon.hover(model, new Vec3(x, y, z))`. The offset uses world axes. Both factories default to 4 damage, 3 blocks of range, a 20-tick cooldown and a 200-tick lifetime.
+
+Attacks count as the caster's spell damage and obey the spell kit's ally and targeting rules. Each caster can keep one follower per name. Recasting replaces that follower. Use `FollowerSummon.dismiss(player, "star_dragon_guard_eye")` to end it early. It also ends on expiry, death, logout or leaving the dimension.
 
 ---
 

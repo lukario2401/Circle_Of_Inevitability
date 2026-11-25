@@ -5,6 +5,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.item.ModItems;
 import net.lukario.circleofinevitability.item.artifacts.SunBroochItem;
+import net.lukario.circleofinevitability.particles.fx.ModelFx;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.BlockPos;
@@ -42,6 +43,7 @@ public final class FriendGameTests {
         FUNCTIONS.register("friend_mob_completion", () -> FriendGameTests::mobs);
         FUNCTIONS.register("friend_persistence", () -> FriendGameTests::persistence);
         FUNCTIONS.register("friend_abilities", () -> FriendGameTests::abilities);
+        FUNCTIONS.register("friend_follower_summon", () -> FriendGameTests::followerSummon);
     }
 
     private FriendGameTests() {}
@@ -165,6 +167,46 @@ public final class FriendGameTests {
         loaded.load(TagValueInput.create(ProblemReporter.DISCARDING, loaded.registryAccess(), removed.buildResult()));
         h.assertTrue(!Friends.contains(loaded, mob), "Removal remains removed after save/load");
         h.succeed();
+    }
+
+    private static void followerSummon(GameTestHelper h) {
+        ServerPlayer owner = player(h, "drone");
+        Vec3 start = h.absoluteVec(new Vec3(3.5, 2, 2.5));
+        owner.setPos(start);
+        Mob friend = mob(h, owner, 0.7, 0);
+        Mob first = mob(h, owner, 2, 0);
+        Mob outside = mob(h, owner, -1.1, 0);
+        Mob destination = mob(h, owner, 2, 6);
+        for (Mob target : List.of(friend, first, outside, destination)) {
+            target.getPersistentData().putBoolean("circle_of_inevitability_beyonder_rolled", true);
+            target.getAttribute(Attributes.KNOCKBACK_RESISTANCE).setBaseValue(1);
+        }
+        Friends.add(owner, friend.getUUID(), "Ally", false);
+        ModelFx eye = ModelFx.of("star_dragon/star_eye");
+        FollowerSummon.drone(eye).strikes(1.25, 10, 5f).lasts(100).summon(owner, "guard");
+        h.addCleanup(ok -> FollowerSummon.dismiss(owner, "guard"));
+
+        h.runAfterDelay(3, () -> {
+            h.assertTrue(first.getHealth() < 100 && owner.getLastHurtMob() == first, "Caster gets credit at the drone's reach");
+            h.assertTrue(friend.getHealth() == 100 && outside.getHealth() == 100, "Closer ally and enemy outside drone range are spared");
+            owner.setPos(start.add(0, 0, 6));
+            owner.setYRot(180);
+        });
+        h.runAfterDelay(7, () -> h.assertTrue(destination.getHealth() == 100, "A new nearby target respects the existing cooldown"));
+        h.runAfterDelay(13, () -> {
+            h.assertTrue(destination.getHealth() < 100, "Drone keeps its close offset through movement and a turn");
+            destination.setHealth(100);
+            FollowerSummon.hover(eye, new Vec3(-2, 1.55, 0)).strikes(1, 1, 5f).lasts(3).summon(owner, "guard");
+        });
+        h.runAfterDelay(19, () -> {
+            first.setHealth(100);
+            first.setPos(owner.position().add(-2, 0, 0));
+        });
+        h.runAfterDelay(30, () -> {
+            h.assertTrue(destination.getHealth() == 100, "Recasting removes the former drone's attacks");
+            h.assertTrue(first.getHealth() == 100, "Expired replacement cannot hit a late arrival");
+            h.succeed();
+        });
     }
 
     private static void abilities(GameTestHelper h) {
