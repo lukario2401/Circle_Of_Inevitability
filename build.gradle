@@ -45,6 +45,10 @@ minecraft {
                 workingDir = layout.buildDirectory.dir('unshadowed-armor-gametest')
                 args '--tests', 'circle_of_inevitability:unshadowed_armor_*'
             }
+            if (providers.gradleProperty('grayFogArmorTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('gray-fog-armor-gametest')
+                args '--tests', 'circle_of_inevitability:gray_fog_armor_*'
+            }
             if (providers.gradleProperty('ritualTests').isPresent()) { args '--tests', 'circle_of_inevitability:ritual_*' }
             if (providers.gradleProperty('keyOfStarsTests').isPresent()) { args '--tests', 'circle_of_inevitability:key_of_stars_*' }
             if (providers.gradleProperty('cameraTests').isPresent()) { args '--tests', 'circle_of_inevitability:camera_*' }
@@ -116,7 +120,7 @@ tasks.withType(JavaCompile).configureEach {
 sourceSets {
     armorModelTest {
         java.srcDir 'tools/tests'
-        java.include 'InevitabilityArmorModelTest.java', 'UnshadowedArmorModelTest.java'
+        java.include 'InevitabilityArmorModelTest.java', 'UnshadowedArmorModelTest.java', 'GrayFogArmorModelTest.java'
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
     }
@@ -170,7 +174,16 @@ tasks.register('unshadowedArmorModelTest', JavaExec) {
     javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
 }
 
-tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest'), tasks.named('armorModelTest'), tasks.named('unshadowedArmorModelTest') }
+tasks.register('grayFogArmorModelTest', JavaExec) {
+    group = 'verification'
+    description = 'Bakes the Gray Fog armor rigs and checks slot isolation, coat tail sway and the figurine.'
+    dependsOn tasks.named('armorModelTestClasses')
+    classpath = sourceSets.armorModelTest.runtimeClasspath
+    mainClass = 'net.lukario.circleofinevitability.client.armor.GrayFogArmorModelTest'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
+}
+
+tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest'), tasks.named('armorModelTest'), tasks.named('unshadowedArmorModelTest'), tasks.named('grayFogArmorModelTest') }
 
 // Forge merges classes/resources into one directory. Resource-copy output cleanup must finish
 // before Java's up-to-date check; otherwise an asset-only edit can erase already-compiled mixins.

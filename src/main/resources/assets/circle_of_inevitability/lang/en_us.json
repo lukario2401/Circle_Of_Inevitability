@@ -1190,5 +1190,16 @@
   "item.circle_of_inevitability.unshadowed_core": "Sunfire Core",
   "tooltip.circle_of_inevitability.unshadowed.power": "Three Spears of Light strike nearby hostiles: 5 damage, 5 blocks. Undead take double and burn.",
   "tooltip.circle_of_inevitability.unshadowed.set": "A piece of the Vestments of the Unshadowed.",
-  "tooltip.circle_of_inevitability.unshadowed.full_set": "Full set: 7 damage, 6-block reach, faster strikes, immune to Blindness and Darkness. Repairs with Gold Blocks."
+  "tooltip.circle_of_inevitability.unshadowed.full_set": "Full set: 7 damage, 6-block reach, faster strikes, immune to Blindness and Darkness. Repairs with Gold Blocks.",
+  "item.circle_of_inevitability.gray_fog_helmet": "Seer's Top Hat",
+  "item.circle_of_inevitability.gray_fog_chestplate": "Magician's Tailcoat",
+  "item.circle_of_inevitability.gray_fog_leggings": "Clown's Trousers",
+  "item.circle_of_inevitability.gray_fog_boots": "Marionettist's Shoes",
+  "item.circle_of_inevitability.gray_fog_core": "Card of the Fool",
+  "tooltip.circle_of_inevitability.gray_fog.helmet": "Spirit Vision: mobs hunting you within 24 blocks glow, and so does anything invisible nearby. A chime warns you when a new one locks on.",
+  "tooltip.circle_of_inevitability.gray_fog.chestplate": "Paper Substitute: a hit that would kill you or take 40% of your health burns a paper figurine instead, and you blink away. Recharges in 60s.",
+  "tooltip.circle_of_inevitability.gray_fog.leggings": "Acrobatics: 20% chance to dodge a melee or projectile hit, then a burst of speed.",
+  "tooltip.circle_of_inevitability.gray_fog.boots": "Strings from Above: no fall damage. Hold sneak in midair to drift down slowly.",
+  "tooltip.circle_of_inevitability.gray_fog.full_set": "Full set, Above the Gray Fog: crouch still for a second to vanish into fog for up to 10s. Dodge chance 30%, figurine recharges in 40s. Repairs with Phantom Membrane.",
+  "message.circle_of_inevitability.gray_fog.substituted": "A paper figurine burned in your place."
 }
