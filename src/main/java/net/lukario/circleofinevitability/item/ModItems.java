@@ -42,6 +42,19 @@ public final class ModItems {
             () -> new SunBroochItem(properties("sun_brooch")
                     .rarity(Rarity.RARE)));
 
+    public static final RegistryObject<Item> INEVITABILITY_CORE = ITEMS.register("inevitability_core",
+            () -> new Item(properties("inevitability_core").rarity(Rarity.EPIC).fireResistant()));
+    public static final RegistryObject<Item> INEVITABILITY_HELMET = armor("inevitability_helmet", net.minecraft.world.item.equipment.ArmorType.HELMET);
+    public static final RegistryObject<Item> INEVITABILITY_CHESTPLATE = armor("inevitability_chestplate", net.minecraft.world.item.equipment.ArmorType.CHESTPLATE);
+    public static final RegistryObject<Item> INEVITABILITY_LEGGINGS = armor("inevitability_leggings", net.minecraft.world.item.equipment.ArmorType.LEGGINGS);
+    public static final RegistryObject<Item> INEVITABILITY_BOOTS = armor("inevitability_boots", net.minecraft.world.item.equipment.ArmorType.BOOTS);
+
+    private static RegistryObject<Item> armor(String name, net.minecraft.world.item.equipment.ArmorType type) {
+        return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
+                properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.InevitabilityArmor.MATERIAL,
+                type, net.lukario.circleofinevitability.item.armor.InevitabilityArmor.SET));
+    }
+
     public static final RegistryObject<BlockItem> RITUAL_TABLE = ITEMS.register("ritual_table", () ->
             new BlockItem(RitualTableBlock.TABLE.get(), properties("ritual_table").useBlockDescriptionPrefix()));
 

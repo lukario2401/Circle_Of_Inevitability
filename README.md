@@ -1,5 +1,8 @@
 # Circle Of Inevitability
 
+The [Vestments of the Inevitability](docs/INEVITABILITY_ARMOR.md) add four pieces of custom 3D armor,
+animated crimson tentacles that strike nearby hostiles, and late-game smithing upgrades.
+
 A Minecraft Forge mod by Luka (Lukario2401): a soul system (stage, tier, shards, Soul Essence, corruption)
 and beyonder characteristics to take on: Wanderer, Worm Of Time, Hand Of Order, Attendant Of Mysteries,
 Prince Of Abolition, Pale Emperor, Conqueror, Apocalypse (the Demoness), Dark Angel (the Hanged Man), Beauty Goddess (the Moon),

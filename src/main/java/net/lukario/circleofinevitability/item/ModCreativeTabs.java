@@ -41,6 +41,11 @@ public final class ModCreativeTabs {
                     .title(Component.translatable("creativetab.circle_of_inevitability.sealed_artifacts"))
                     .icon(() -> new ItemStack(ModItems.SUN_BROOCH.get()))
                     .displayItems((parameters, output) -> {
+                        output.accept(ModItems.INEVITABILITY_CORE.get());
+                        output.accept(ModItems.INEVITABILITY_HELMET.get());
+                        output.accept(ModItems.INEVITABILITY_CHESTPLATE.get());
+                        output.accept(ModItems.INEVITABILITY_LEGGINGS.get());
+                        output.accept(ModItems.INEVITABILITY_BOOTS.get());
                         for (var entry : ModItems.ITEMS.getEntries())
                             if (entry.get() instanceof SealedArtifactItem)
                                 output.accept(entry.get());

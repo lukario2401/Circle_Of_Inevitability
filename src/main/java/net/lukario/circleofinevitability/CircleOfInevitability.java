@@ -60,6 +60,7 @@ public class CircleOfInevitability
         DataPackRegistryEvent.NewRegistry.BUS.addListener(event ->
                 event.dataPackRegistry(RitualDeity.REGISTRY, RitualDeity.CODEC));
         ModItems.register(modEventBus);
+        net.lukario.circleofinevitability.item.armor.InevitabilityArmorGameTests.FUNCTIONS.register(modEventBus);
         ModCreativeTabs.register(modEventBus);
         net.lukario.circleofinevitability.camera.CameraGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.combat.FriendGameTests.FUNCTIONS.register(modEventBus);

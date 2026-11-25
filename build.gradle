@@ -36,6 +36,10 @@ minecraft {
         }
 
         register('gameTestServer') {
+            if (providers.gradleProperty('inevitabilityArmorTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('inevitability-armor-gametest')
+                args '--tests', 'circle_of_inevitability:inevitability_armor_*'
+            }
             if (providers.gradleProperty('ritualTests').isPresent()) { args '--tests', 'circle_of_inevitability:ritual_*' }
             if (providers.gradleProperty('keyOfStarsTests').isPresent()) { args '--tests', 'circle_of_inevitability:key_of_stars_*' }
             if (providers.gradleProperty('cameraTests').isPresent()) { args '--tests', 'circle_of_inevitability:camera_*' }
@@ -105,6 +109,12 @@ tasks.withType(JavaCompile).configureEach {
 
 // Standalone data and serialization checks; no Minecraft client or server needs to start.
 sourceSets {
+    armorModelTest {
+        java.srcDir 'tools/tests'
+        java.include 'InevitabilityArmorModelTest.java'
+        compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
+        runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
+    }
     damageFxTest {
         java.srcDir 'tools/tests'
         java.include 'DamageFxTest.java'
@@ -137,4 +147,21 @@ tasks.register('swingAnimationEditsTest', JavaExec) {
     javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
 }
 
-tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest') }
+tasks.register('armorModelTest', JavaExec) {
+    group = 'verification'
+    description = 'Bakes all four armor rigs and checks slot isolation, idle motion and attack endpoints.'
+    dependsOn tasks.named('armorModelTestClasses')
+    classpath = sourceSets.armorModelTest.runtimeClasspath
+    mainClass = 'net.lukario.circleofinevitability.client.armor.InevitabilityArmorModelTest'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
+}
+
+tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest'), tasks.named('armorModelTest') }
+
+// Forge merges classes/resources into one directory. Resource-copy output cleanup must finish
+// before Java's up-to-date check; otherwise an asset-only edit can erase already-compiled mixins.
+sourceSets.configureEach { sourceSet ->
+    tasks.named(sourceSet.compileJavaTaskName) {
+        dependsOn tasks.named(sourceSet.processResourcesTaskName)
+    }
+}

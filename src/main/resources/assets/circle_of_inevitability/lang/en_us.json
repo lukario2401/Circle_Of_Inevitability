@@ -1167,5 +1167,13 @@
   "subtitles.circle_of_inevitability.filthy_monarch.melee_impact": "Melee Impact sounds",
   "pathway.circle_of_inevitability.filthy_monarch": "Filthy Monarch",
   "hud.circle_of_inevitability.filthy_monarch.depravity": "Depravity %s/5",
-  "hud.circle_of_inevitability.filthy_monarch.offerings": "Offerings %s/5"
+  "hud.circle_of_inevitability.filthy_monarch.offerings": "Offerings %s/5",
+  "item.circle_of_inevitability.inevitability_helmet": "Inevitability Crown",
+  "item.circle_of_inevitability.inevitability_chestplate": "Inevitability Carapace",
+  "item.circle_of_inevitability.inevitability_leggings": "Inevitability Greaves",
+  "item.circle_of_inevitability.inevitability_boots": "Inevitability Sabatons",
+  "item.circle_of_inevitability.inevitability_core": "Sealed Inevitability Core",
+  "tooltip.circle_of_inevitability.inevitability.tentacles": "Four living tendrils lash nearby hostiles: 6 damage, 3 blocks.",
+  "tooltip.circle_of_inevitability.inevitability.set": "A piece of the Vestments of the Inevitability.",
+  "tooltip.circle_of_inevitability.inevitability.full_set": "Full set: 8 damage, 4-block reach, faster strikes. Repairs with Echo Shards."
 }

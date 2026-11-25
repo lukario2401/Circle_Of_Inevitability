@@ -1,0 +1,19 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "circle_of_inevitability:inevitability"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "circle_of_inevitability:inevitability"
+      }
+    ],
+    "humanoid_baby": [
+      {
+        "texture": "circle_of_inevitability:inevitability"
+      }
+    ]
+  }
+}
