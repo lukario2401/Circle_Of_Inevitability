@@ -103,10 +103,12 @@ public final class GrayFogArmorGameTests {
             h.assertTrue(p.getHealth()<20,"A small hit is not worth a figurine");
             h.assertTrue(GrayFogArmor.paperReadyAt(p)==0,"Figurine still ready");
             p.setHealth(20);p.invulnerableTime=0;
+            // The small hit already wore the coat like any armor; the figurine costs 3 on top of that.
+            int worn=p.getItemBySlot(EquipmentSlot.CHEST).getDamageValue();
             p.hurtServer(h.getLevel(),p.damageSources().mobAttack(attacker),12);
             h.assertTrue(p.getHealth()==20,"The figurine took a 60% hit; health="+p.getHealth());
             h.assertTrue(GrayFogArmor.paperReadyAt(p)>h.getLevel().getGameTime(),"The figurine is recharging");
-            h.assertTrue(p.getItemBySlot(EquipmentSlot.CHEST).getDamageValue()==3,"Burning the figurine costs coat durability");
+            h.assertTrue(p.getItemBySlot(EquipmentSlot.CHEST).getDamageValue()==worn+3,"Burning the figurine costs coat durability");
         });
         h.runAfterDelay(30,() -> {
             p.hurtServer(h.getLevel(),p.damageSources().mobAttack(attacker),12);
