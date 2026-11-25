@@ -57,11 +57,13 @@ item behavior are retained. The set bonus works without selecting a pathway.
 - `item/armor/InevitabilityArmor.java`: material, set matching, and two immutable attack profiles.
 - `item/armor/TentacleCombat.java`: reusable server tick/interrupt API. Supply an equipped source
   stack, a validated `Profile`, and a `BiPredicate<LivingEntity, LivingEntity>` target policy.
-  Call once per server tick and `cancel(wearer)` when the power is disabled. Cooldowns are shared
+  Call once per server tick and `cancel(wearer)` when the power is disabled. An optional `Impact`
+  scales damage and adds on-hit effects (see `UnshadowedArmor`). Cooldowns are shared
   per wearer to prevent equipment-swap exploits. Current armor integration is in `tickArmor`.
 - `item/armor/TentacleArmorItem.java`: shared item setup and set/slot identity. For a future set,
   provide its own client extension and material rather than using the Inevitability renderer.
-- `client/armor/`: client-only native geometry and Bezier tentacle animation. A short attack
+- `client/armor/`: client-only native geometry (shared rig baking and strike math in `ArmorRig`, one
+  `ArmorModelExtensions` per set) and Bezier tentacle animation. A short attack
   snapshot in the chestplate's `minecraft:custom_data.coi_tentacle_strike` uses normal equipment
   synchronization. It carries a timestamp, dimension, duration and target point. Other custom
   data is preserved. Expired snapshots are ignored and removed at recovery/cancellation; old

@@ -1180,7 +1180,15 @@
   "item.circle_of_inevitability.inevitability_leggings": "Inevitability Greaves",
   "item.circle_of_inevitability.inevitability_boots": "Inevitability Sabatons",
   "item.circle_of_inevitability.inevitability_core": "Sealed Inevitability Core",
-  "tooltip.circle_of_inevitability.inevitability.tentacles": "Four living tendrils lash nearby hostiles: 6 damage, 3 blocks.",
+  "tooltip.circle_of_inevitability.inevitability.power": "Four living tendrils lash nearby hostiles: 6 damage, 3 blocks.",
   "tooltip.circle_of_inevitability.inevitability.set": "A piece of the Vestments of the Inevitability.",
-  "tooltip.circle_of_inevitability.inevitability.full_set": "Full set: 8 damage, 4-block reach, faster strikes. Repairs with Echo Shards."
+  "tooltip.circle_of_inevitability.inevitability.full_set": "Full set: 8 damage, 4-block reach, faster strikes. Repairs with Echo Shards.",
+  "item.circle_of_inevitability.unshadowed_helmet": "Unshadowed Halo Helm",
+  "item.circle_of_inevitability.unshadowed_chestplate": "Unshadowed Cuirass",
+  "item.circle_of_inevitability.unshadowed_leggings": "Unshadowed Tassets",
+  "item.circle_of_inevitability.unshadowed_boots": "Unshadowed Sabatons",
+  "item.circle_of_inevitability.unshadowed_core": "Sunfire Core",
+  "tooltip.circle_of_inevitability.unshadowed.power": "Three Spears of Light strike nearby hostiles: 5 damage, 5 blocks. Undead take double and burn.",
+  "tooltip.circle_of_inevitability.unshadowed.set": "A piece of the Vestments of the Unshadowed.",
+  "tooltip.circle_of_inevitability.unshadowed.full_set": "Full set: 7 damage, 6-block reach, faster strikes, immune to Blindness and Darkness. Repairs with Gold Blocks."
 }

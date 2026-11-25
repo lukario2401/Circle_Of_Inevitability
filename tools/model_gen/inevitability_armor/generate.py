@@ -177,7 +177,7 @@ def generate():
     for item,name in [('helmet','Crown'),('chestplate','Carapace'),('leggings','Greaves'),('boots','Sabatons')]:
         lang['item.'+NS.replace(':','.')+'inevitability_'+item]='Inevitability '+name
     lang['item.circle_of_inevitability.inevitability_core']='Sealed Inevitability Core'
-    lang['tooltip.circle_of_inevitability.inevitability.tentacles']='Four living tendrils lash nearby hostiles: 6 damage, 3 blocks.'
+    lang['tooltip.circle_of_inevitability.inevitability.power']='Four living tendrils lash nearby hostiles: 6 damage, 3 blocks.'
     lang['tooltip.circle_of_inevitability.inevitability.set']='A piece of the Vestments of the Inevitability.'
     lang['tooltip.circle_of_inevitability.inevitability.full_set']='Full set: 8 damage, 4-block reach, faster strikes. Repairs with Echo Shards.'
     write(lang_path,lang)

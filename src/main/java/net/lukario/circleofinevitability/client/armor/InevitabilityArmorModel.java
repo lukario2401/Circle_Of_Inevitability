@@ -1,6 +1,6 @@
 package net.lukario.circleofinevitability.client.armor;
 
-import com.google.gson.*;
+import com.google.gson.JsonObject;
 import net.lukario.circleofinevitability.item.armor.InevitabilityArmor;
 import net.lukario.circleofinevitability.item.armor.TentacleCombat;
 import net.minecraft.client.Minecraft;
@@ -15,8 +15,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3f;
-import java.io.*;
-import java.util.*;
+import java.util.Map;
 
 /** Resource-pack editable armor rig with four independently animated, tapered, twelve-segment tentacles. */
 public final class InevitabilityArmorModel extends HumanoidModel<HumanoidRenderState> {
@@ -31,31 +30,12 @@ public final class InevitabilityArmorModel extends HumanoidModel<HumanoidRenderS
                 tendrils[i][j] = body.getChild("tendril_" + i + "_" + j);
     }
     public static LayerDefinition createLayer(EquipmentSlot slot) {
-        try (Reader r = Minecraft.getInstance().getResourceManager()
-                .getResourceOrThrow(InevitabilityArmor.id("armor/inevitability.rig.json")).openAsReader()) {
-            return createLayer(JsonParser.parseReader(r).getAsJsonObject(), slot);
-        } catch (IOException e) { throw new IllegalStateException("Cannot load Inevitability armor rig", e); }
+        return createLayer(ArmorRig.load(InevitabilityArmor.id("armor/inevitability.rig.json")), slot);
     }
     /** Pure rig baking entry point, also used by the standalone geometry regression test. */
     public static LayerDefinition createLayer(JsonObject rig, EquipmentSlot slot) {
         MeshDefinition mesh = new MeshDefinition();
-        Map<String, PartDefinition> parts = new HashMap<>();
-        parts.put("root", mesh.getRoot());
-        for (JsonElement element : rig.getAsJsonArray("bones")) {
-            JsonObject b = element.getAsJsonObject();
-            CubeListBuilder cubes = CubeListBuilder.create();
-            for (JsonElement ce : b.getAsJsonArray("cubes")) {
-                JsonObject c = ce.getAsJsonObject();
-                if (!c.get("slot").getAsString().equals(slot.getSerializedName())) continue;
-                JsonArray p = c.getAsJsonArray("origin"), s = c.getAsJsonArray("size"), uv = c.getAsJsonArray("uv");
-                cubes.texOffs(uv.get(0).getAsInt(), uv.get(1).getAsInt())
-                        .addBox(f(p,0), f(p,1), f(p,2), f(s,0), f(s,1), f(s,2));
-            }
-            JsonArray p = b.getAsJsonArray("pivot"), r = b.getAsJsonArray("rotation");
-            String name = b.get("name").getAsString();
-            parts.put(name, parts.get(b.get("parent").getAsString()).addOrReplaceChild(name, cubes,
-                    PartPose.offsetAndRotation(f(p,0),f(p,1),f(p,2),f(r,0),f(r,1),f(r,2))));
-        }
+        Map<String, PartDefinition> parts = ArmorRig.bake(rig, slot, mesh);
         if (slot == EquipmentSlot.CHEST) {
             for (int i = 0; i < TENTACLES; i++) for (int j = 0; j < SEGMENTS; j++) {
                 float width = 2.9f - j * .205f;
@@ -66,7 +46,6 @@ public final class InevitabilityArmorModel extends HumanoidModel<HumanoidRenderS
         }
         return LayerDefinition.create(mesh, 128, 64);
     }
-    private static float f(JsonArray a, int i) { return a.get(i).getAsFloat(); }
 
     @Override public void setupAnim(HumanoidRenderState state) {
         super.setupAnim(state);
@@ -80,27 +59,9 @@ public final class InevitabilityArmorModel extends HumanoidModel<HumanoidRenderS
     /** Evaluate a visual snapshot without accessing live entities or mutating the equipped item. */
     public void animateTentacles(HumanoidRenderState state, CompoundTag strike, long gameTime, String dimension) {
         if (slot != EquipmentSlot.CHEST) return;
-        float reach = 0;
-        Vec3 target = Vec3.ZERO;
-        if (!dimension.isEmpty() && strike.getStringOr("dimension", "").equals(dimension)) {
-            float elapsed = gameTime - strike.getLongOr("started", Long.MIN_VALUE / 2)
-                    + (state.ageInTicks - (float)Math.floor(state.ageInTicks));
-            int duration = strike.getIntOr("duration", 12), windup = strike.getIntOr("windup", 6);
-            if (elapsed >= 0 && elapsed < duration) {
-                reach = elapsed <= windup ? elapsed / windup : (duration - elapsed) / (duration - windup);
-                reach = reach * reach * (3 - 2 * reach);
-                double dx = strike.getDoubleOr("x", state.x) - state.x;
-                double dz = strike.getDoubleOr("z", state.z) - state.z;
-                double yaw = Math.toRadians(state.bodyRot);
-                // Inverse of the living renderer's Y rotation and mirrored model axes.
-                double scale = Math.max(.01, state.scale * state.ageScale);
-                Vector3f local = new Vector3f((float)((dx*Math.cos(yaw)+dz*Math.sin(yaw))*16/scale),
-                        (float)(24-(strike.getDoubleOr("y", state.y+1)-state.y)*16/scale),
-                        (float)((dx*Math.sin(yaw)-dz*Math.cos(yaw))*16/scale));
-                local.sub(body.x, body.y, body.z).rotateZ(-body.zRot).rotateY(-body.yRot).rotateX(-body.xRot);
-                target = new Vec3(local.x, local.y, local.z);
-            }
-        }
+        Vector3f local = new Vector3f();
+        float reach = ArmorRig.strike(state, strike, gameTime, dimension, body, local);
+        Vec3 target = new Vec3(local.x, local.y, local.z);
         for (int i = 0; i < TENTACLES; i++) {
             double side = i % 2 == 0 ? -1 : 1;
             double height = i < 2 ? 2 : 8;

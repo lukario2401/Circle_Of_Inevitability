@@ -49,10 +49,22 @@ public final class ModItems {
     public static final RegistryObject<Item> INEVITABILITY_LEGGINGS = armor("inevitability_leggings", net.minecraft.world.item.equipment.ArmorType.LEGGINGS);
     public static final RegistryObject<Item> INEVITABILITY_BOOTS = armor("inevitability_boots", net.minecraft.world.item.equipment.ArmorType.BOOTS);
 
+    public static final RegistryObject<Item> UNSHADOWED_CORE = ITEMS.register("unshadowed_core",
+            () -> new Item(properties("unshadowed_core").rarity(Rarity.EPIC).fireResistant()));
+    public static final RegistryObject<Item> UNSHADOWED_HELMET = unshadowed("unshadowed_helmet", net.minecraft.world.item.equipment.ArmorType.HELMET);
+    public static final RegistryObject<Item> UNSHADOWED_CHESTPLATE = unshadowed("unshadowed_chestplate", net.minecraft.world.item.equipment.ArmorType.CHESTPLATE);
+    public static final RegistryObject<Item> UNSHADOWED_LEGGINGS = unshadowed("unshadowed_leggings", net.minecraft.world.item.equipment.ArmorType.LEGGINGS);
+    public static final RegistryObject<Item> UNSHADOWED_BOOTS = unshadowed("unshadowed_boots", net.minecraft.world.item.equipment.ArmorType.BOOTS);
+
     private static RegistryObject<Item> armor(String name, net.minecraft.world.item.equipment.ArmorType type) {
         return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
                 properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.InevitabilityArmor.MATERIAL,
                 type, net.lukario.circleofinevitability.item.armor.InevitabilityArmor.SET));
+    }
+    private static RegistryObject<Item> unshadowed(String name, net.minecraft.world.item.equipment.ArmorType type) {
+        return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
+                properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.UnshadowedArmor.MATERIAL,
+                type, net.lukario.circleofinevitability.item.armor.UnshadowedArmor.SET));
     }
 
     public static final RegistryObject<BlockItem> RITUAL_TABLE = ITEMS.register("ritual_table", () ->

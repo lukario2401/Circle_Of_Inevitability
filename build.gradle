@@ -41,6 +41,10 @@ minecraft {
                 workingDir = layout.buildDirectory.dir('inevitability-armor-gametest')
                 args '--tests', 'circle_of_inevitability:inevitability_armor_*'
             }
+            if (providers.gradleProperty('unshadowedArmorTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('unshadowed-armor-gametest')
+                args '--tests', 'circle_of_inevitability:unshadowed_armor_*'
+            }
             if (providers.gradleProperty('ritualTests').isPresent()) { args '--tests', 'circle_of_inevitability:ritual_*' }
             if (providers.gradleProperty('keyOfStarsTests').isPresent()) { args '--tests', 'circle_of_inevitability:key_of_stars_*' }
             if (providers.gradleProperty('cameraTests').isPresent()) { args '--tests', 'circle_of_inevitability:camera_*' }
@@ -112,7 +116,7 @@ tasks.withType(JavaCompile).configureEach {
 sourceSets {
     armorModelTest {
         java.srcDir 'tools/tests'
-        java.include 'InevitabilityArmorModelTest.java'
+        java.include 'InevitabilityArmorModelTest.java', 'UnshadowedArmorModelTest.java'
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
     }
@@ -157,7 +161,16 @@ tasks.register('armorModelTest', JavaExec) {
     javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
 }
 
-tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest'), tasks.named('armorModelTest') }
+tasks.register('unshadowedArmorModelTest', JavaExec) {
+    group = 'verification'
+    description = 'Bakes the Unshadowed armor rigs and checks slot isolation, halo, spear orbit and strike endpoints.'
+    dependsOn tasks.named('armorModelTestClasses')
+    classpath = sourceSets.armorModelTest.runtimeClasspath
+    mainClass = 'net.lukario.circleofinevitability.client.armor.UnshadowedArmorModelTest'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
+}
+
+tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest'), tasks.named('armorModelTest'), tasks.named('unshadowedArmorModelTest') }
 
 // Forge merges classes/resources into one directory. Resource-copy output cleanup must finish
 // before Java's up-to-date check; otherwise an asset-only edit can erase already-compiled mixins.

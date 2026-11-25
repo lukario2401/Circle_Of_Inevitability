@@ -1,7 +1,9 @@
 # Circle Of Inevitability
 
 The [Vestments of the Inevitability](docs/INEVITABILITY_ARMOR.md) add four pieces of custom 3D armor,
-animated crimson tentacles that strike nearby hostiles, and late-game smithing upgrades.
+animated crimson tentacles that strike nearby hostiles, and late-game smithing upgrades. The Sun-pathway
+[Vestments of the Unshadowed](docs/UNSHADOWED_ARMOR.md) add a turning sun halo and three orbiting Spears of
+Light that purify undead.
 
 A Minecraft Forge mod by Luka (Lukario2401): a soul system (stage, tier, shards, Soul Essence, corruption)
 and beyonder characteristics to take on: Wanderer, Worm Of Time, Hand Of Order, Attendant Of Mysteries,

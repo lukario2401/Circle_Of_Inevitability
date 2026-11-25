@@ -34,6 +34,14 @@ public final class TentacleCombat {
                 throw new IllegalArgumentException("Invalid tentacle attack profile");
         }
     }
+    /** What a landed strike does beyond the base hit. Defaults reproduce the Inevitability tentacles. */
+    public interface Impact {
+        default float damage(LivingEntity wearer, LivingEntity target, float base) { return base; }
+        default void landed(ServerLevel level, LivingEntity wearer, LivingEntity target) {
+            level.playSound(null, wearer.blockPosition(), SoundEvents.SLIME_ATTACK, SoundSource.PLAYERS, .7f, .65f);
+        }
+    }
+    public static final Impact TENTACLES = new Impact() {};
     private static final class State {
         long readyAt, hitAt;
         UUID target;
@@ -59,19 +67,31 @@ public final class TentacleCombat {
     @SubscribeEvent public static void tickArmor(LivingEvent.LivingTickEvent event) {
         LivingEntity wearer = event.getEntity();
         if (!(wearer.level() instanceof ServerLevel)) return;
-        if (!InevitabilityArmor.wearing(wearer, EquipmentSlot.CHEST) || !wearer.isAlive() || wearer.isSpectator()
+        if (wearer.isAlive() && UnshadowedArmor.fullSet(wearer)) UnshadowedArmor.cleanse(wearer);
+        // One handler for every set: the per-wearer state is shared, so a set must never cancel another's strike.
+        boolean inevitability = InevitabilityArmor.wearing(wearer, EquipmentSlot.CHEST);
+        boolean unshadowed = !inevitability && UnshadowedArmor.wearing(wearer, EquipmentSlot.CHEST);
+        if (!(inevitability || unshadowed) || !wearer.isAlive() || wearer.isSpectator()
                 || Root.has(wearer, RootRestriction.ABILITIES) || Root.has(wearer, RootRestriction.ATTACK)) {
             cancel(wearer);
             return;
         }
-        tick(wearer, wearer.getItemBySlot(EquipmentSlot.CHEST),
+        ItemStack chest = wearer.getItemBySlot(EquipmentSlot.CHEST);
+        if (inevitability) tick(wearer, chest,
                 InevitabilityArmor.fullSet(wearer) ? InevitabilityArmor.FULL_SET : InevitabilityArmor.CHEST,
                 TentacleCombat::hostile);
+        else tick(wearer, chest, UnshadowedArmor.fullSet(wearer) ? UnshadowedArmor.FULL_SET : UnshadowedArmor.CHEST,
+                TentacleCombat::hostile, UnshadowedArmor.IMPACT);
     }
 
     /** Call once each server tick. One shared cooldown per wearer prevents swapping items to spam attacks. */
     public static void tick(LivingEntity wearer, ItemStack source, Profile profile,
                             BiPredicate<LivingEntity, LivingEntity> targets) {
+        tick(wearer, source, profile, targets, TENTACLES);
+    }
+    /** As above, with set-specific damage scaling and impact effects. */
+    public static void tick(LivingEntity wearer, ItemStack source, Profile profile,
+                            BiPredicate<LivingEntity, LivingEntity> targets, Impact impact) {
         if (!(wearer.level() instanceof ServerLevel level) || !wearer.isAlive()) return;
         long now = level.getGameTime();
         State state = STATES.computeIfAbsent(wearer, ignored -> new State());
@@ -84,9 +104,10 @@ public final class TentacleCombat {
                 var damage = wearer instanceof Player player ? wearer.damageSources().playerAttack(player)
                         : wearer.damageSources().mobAttack(wearer);
                 // Use the weaker of queued/current profiles if pieces were removed during windup.
-                if (target.hurtServer(level, damage, Math.min(profile.damage, state.profile.damage))) {
+                float amount = impact.damage(wearer, target, Math.min(profile.damage, state.profile.damage));
+                if (target.hurtServer(level, damage, amount)) {
                     source.hurtAndBreak(1, wearer, EquipmentSlot.CHEST);
-                    level.playSound(null, wearer.blockPosition(), SoundEvents.SLIME_ATTACK, SoundSource.PLAYERS, .7f, .65f);
+                    impact.landed(level, wearer, target);
                 }
             }
         }

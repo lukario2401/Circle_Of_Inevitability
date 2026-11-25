@@ -46,6 +46,11 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.INEVITABILITY_CHESTPLATE.get());
                         output.accept(ModItems.INEVITABILITY_LEGGINGS.get());
                         output.accept(ModItems.INEVITABILITY_BOOTS.get());
+                        output.accept(ModItems.UNSHADOWED_CORE.get());
+                        output.accept(ModItems.UNSHADOWED_HELMET.get());
+                        output.accept(ModItems.UNSHADOWED_CHESTPLATE.get());
+                        output.accept(ModItems.UNSHADOWED_LEGGINGS.get());
+                        output.accept(ModItems.UNSHADOWED_BOOTS.get());
                         for (var entry : ModItems.ITEMS.getEntries())
                             if (entry.get() instanceof SealedArtifactItem)
                                 output.accept(entry.get());
