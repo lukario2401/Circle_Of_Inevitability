@@ -5,7 +5,7 @@ a pointed crown, spiked pauldrons, clawed boots, and four living crimson tentacl
 uses a custom native humanoid rig; each inventory item also has its own volumetric model.
 No external animation library is required.
 
-![Front and back geometry preview](images/inevitability_armor_preview.png)
+![Front and back geometry preview](../images/inevitability_armor_preview.png)
 
 This is a generated geometry preview of the actual rig and idle tentacle curves, using flat material
 colors; Minecraft adds the pixel textures, lighting and movement. Regenerate it with

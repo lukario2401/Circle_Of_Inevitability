@@ -5,7 +5,7 @@ A Death-pathway companion to the [Inevitability](INEVITABILITY_ARMOR.md), [Unsha
 and drags it underground, but it starves them, wounds them and must be fed. Worn whole, it summons a Spirit Guide
 and slowly takes their life.
 
-![Front and back of the textured rig](images/death_armor_preview.png)
+![Front and back of the textured rig](../images/death_armor_preview.png)
 
 Textured preview of the rig at rest (regenerate it with `python tools/model_gen/death_armor/preview.py`).
 
@@ -77,14 +77,14 @@ Every number above is a public constant at the top of `item/armor/DeathArmor.jav
 `PULSE_DAMAGE`, `PULSE_TICKS`, `RINGS`, `MARK_LIMIT`, `CLAIM`, `CLAIMS`, `HUNGER`, `PANG_CHANCE_PER_PIECE`, `TOLL_TICKS`,
 `EBB_TICKS`, and the rest); `reach`, `pulseDamage`, `pulseTicks`, `pangChance`, `pangMax`, `tollRate` turn them
 into the per-piece values. The general parts live where any set or
-ability can use them, documented in the [spell kit](SPELL_KIT.md):
+ability can use them, documented in the [spell kit](../SPELL_KIT.md):
 
-- [`DragUnder`](SPELL_KIT.md#dragunder) (`combat/`): the arms, burial, crushing and the throw, and `escalates(...)` for
+- [`DragUnder`](../SPELL_KIT.md#dragunder) (`combat/`): the arms, burial, crushing and the throw, and `escalates(...)` for
   drags that hit harder every time they take the same target.
-- [`KillToll`](SPELL_KIT.md#killtoll) (`status/`): "feed it a kill or else", with warnings, a HUD clock, a rate for a
+- [`KillToll`](../SPELL_KIT.md#killtoll) (`status/`): "feed it a kill or else", with warnings, a HUD clock, a rate for a
   clock that runs faster, and pause on unequip.
-- [`MaxHealthDrain`](SPELL_KIT.md#maxhealthdrain) (`status/`): max health taken and given back, per source.
-- [`FollowerSummon`](SPELL_KIT.md#followers-that-guard-the-caster) (`combat/`) gained `targets(...)`, `onStrike(...)`
+- [`MaxHealthDrain`](../SPELL_KIT.md#maxhealthdrain) (`status/`): max health taken and given back, per source.
+- [`FollowerSummon`](../SPELL_KIT.md#followers-that-guard-the-caster) (`combat/`) gained `targets(...)`, `onStrike(...)`
   (what a strike looks like), `onHit(...)` and `isActive(...)` for summons that last while something is worn.
 - `status/Marks` and `SpellFx.overHead` for the marks, `status/Burial`, which now returns the dead to the surface.
 

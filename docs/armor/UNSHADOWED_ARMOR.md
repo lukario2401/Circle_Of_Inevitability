@@ -5,7 +5,7 @@ plate, a crimson tabard and cape, a sun halo of twelve rays that slowly turns be
 golden Spears of Light that orbit the wearer's waist. The worn armor uses its own native humanoid rig;
 each inventory item has a volumetric model derived from it.
 
-![Front and back geometry preview](images/unshadowed_armor_preview.png)
+![Front and back geometry preview](../images/unshadowed_armor_preview.png)
 
 Generated geometry preview of the rig and idle spears with flat material colors. Regenerate it with
 `python tools/model_gen/unshadowed_armor/preview.py`.

@@ -1,11 +1,11 @@
 # Circle Of Inevitability
 
-The [Vestments of the Inevitability](docs/INEVITABILITY_ARMOR.md) add four pieces of custom 3D armor,
+The [Vestments of the Inevitability](docs/armor/INEVITABILITY_ARMOR.md) add four pieces of custom 3D armor,
 animated crimson tentacles that strike nearby hostiles, and late-game smithing upgrades. The Sun-pathway
-[Vestments of the Unshadowed](docs/UNSHADOWED_ARMOR.md) add a turning sun halo and three orbiting Spears of
-Light that purify undead. The Fool-pathway [Vestments of the Gray Fog](docs/GRAY_FOG_ARMOR.md) give each
+[Vestments of the Unshadowed](docs/armor/UNSHADOWED_ARMOR.md) add a turning sun halo and three orbiting Spears of
+Light that purify undead. The Fool-pathway [Vestments of the Gray Fog](docs/armor/GRAY_FOG_ARMOR.md) give each
 piece its own power (Spirit Vision, a Paper Substitute, Acrobatics, no fall damage) and let the full set
-vanish into the gray fog. The Death-pathway [Vestments of Death](docs/DEATH_ARMOR.md) mark everything hostile
+vanish into the gray fog. The Death-pathway [Vestments of Death](docs/armor/DEATH_ARMOR.md) mark everything hostile
 nearby and drag it underground, summon a Spirit Guide when worn whole, and make you pay for it: endless hunger,
 sudden pains, a kill owed every few minutes, and a life that ebbs away. Every piece adds to both.
 
