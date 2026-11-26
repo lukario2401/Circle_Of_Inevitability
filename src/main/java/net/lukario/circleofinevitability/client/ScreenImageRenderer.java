@@ -164,8 +164,11 @@ public class ScreenImageRenderer {
             }
             if (alpha <= 0f) continue;
 
-            int drawX = Math.round(image.anchor.fractionX * (screenWidth - image.width)) + image.x;
-            int drawY = Math.round(image.anchor.fractionY * (screenHeight - image.height)) + image.y;
+            // ScreenImages.FULL_SCREEN (0 or less): stretched over the whole screen, whatever its size
+            int width = image.width <= 0 ? screenWidth : image.width;
+            int height = image.height <= 0 ? screenHeight : image.height;
+            int drawX = Math.round(image.anchor.fractionX * (screenWidth - width)) + image.x;
+            int drawY = Math.round(image.anchor.fractionY * (screenHeight - height)) + image.y;
 
             int color = ARGB.white(alpha); // 26.2: no setColor; the fade is the blit's colour argument
 
@@ -173,14 +176,14 @@ public class ScreenImageRenderer {
             if (info.frames() <= 1) {
                 // UV 0..w out of w -> draws the whole PNG, whatever its resolution
                 guiGraphics.blit(RenderPipelines.GUI_TEXTURED, image.texture, drawX, drawY, 0f, 0f,
-                        image.width, image.height, image.width, image.height, image.width, image.height, color);
+                        width, height, width, height, width, height, color);
             } else {
                 int frame = (int) ((image.age + partialTick) / info.frameTime()) % info.frames();
                 int columns = Math.max(1, info.width() / info.frameWidth());
                 int u = (frame % columns) * info.frameWidth();
                 int v = (frame / columns) * info.frameHeight();
                 guiGraphics.blit(RenderPipelines.GUI_TEXTURED, image.texture, drawX, drawY, u, v,
-                        image.width, image.height, info.frameWidth(), info.frameHeight(), info.width(), info.height(), color);
+                        width, height, info.frameWidth(), info.frameHeight(), info.width(), info.height(), color);
             }
         }
     }
