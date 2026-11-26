@@ -75,6 +75,14 @@ minecraft {
             if (providers.gradleProperty('omniscientEyeTests').isPresent()) {
                 args '--tests', 'circle_of_inevitability:omniscient_*'
             }
+            if (providers.gradleProperty('creepingHungerTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('creeping-hunger-gametest')
+                args '--tests', 'circle_of_inevitability:creeping_hunger_*'
+            }
+            if (providers.gradleProperty('artifactTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('artifact-gametest')
+                args '--tests', 'circle_of_inevitability:artifact_*'
+            }
             if (providers.gradleProperty('starDragonBossTests').isPresent()) {
                 args '--tests', 'circle_of_inevitability:star_dragon_boss_*'
             }

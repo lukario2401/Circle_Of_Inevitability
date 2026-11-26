@@ -1,6 +1,7 @@
 package net.lukario.circleofinevitability.item;
 
 import net.lukario.circleofinevitability.CircleOfInevitability;
+import net.lukario.circleofinevitability.item.artifacts.CreepingHunger;
 import net.lukario.circleofinevitability.item.artifacts.SunBroochItem;
 import net.lukario.circleofinevitability.ritual.RitualTableBlock;
 import net.lukario.circleofinevitability.ritual.SacrificialKnifeItem;
@@ -41,6 +42,10 @@ public final class ModItems {
     public static final RegistryObject<Item> SUN_BROOCH = ITEMS.register("sun_brooch",
             () -> new SunBroochItem(properties("sun_brooch")
                     .rarity(Rarity.RARE)));
+
+    /** Creeping Hunger, one item per tier: creeping_hunger_1 .. creeping_hunger_5 (item/artifacts/CreepingHunger). */
+    public static final List<RegistryObject<Item>> CREEPING_HUNGER = CreepingHunger.ARTIFACT.register(ITEMS,
+            name -> properties(name).rarity(Rarity.EPIC));
 
     public static final RegistryObject<Item> INEVITABILITY_CORE = ITEMS.register("inevitability_core",
             () -> new Item(properties("inevitability_core").rarity(Rarity.EPIC).fireResistant()));
@@ -101,13 +106,18 @@ public final class ModItems {
                     .component(DataComponents.LORE, new ItemLore(List.of(
                             Component.translatable("tooltip.circle_of_inevitability.sacrificial_knife"))))));
 
-    public static final RegistryObject<Item> MOB_BLOOD_VIAL = bloodVial("mob_blood_vial");
+    public static final RegistryObject<Item> MOB_BLOOD_VIAL = ITEMS.register("mob_blood_vial",
+            () -> new MobBloodVialItem(bloodVialProperties("mob_blood_vial")));
     public static final RegistryObject<Item> RITUAL_BLOOD_VIAL = bloodVial("ritual_blood_vial");
 
     private static RegistryObject<Item> bloodVial(String name) {
-        return ITEMS.register(name, () -> new Item(properties(name).stacksTo(16).craftRemainder(Items.GLASS_BOTTLE)
+        return ITEMS.register(name, () -> new Item(bloodVialProperties(name)));
+    }
+
+    private static Item.Properties bloodVialProperties(String name) {
+        return properties(name).stacksTo(16).craftRemainder(Items.GLASS_BOTTLE)
                 .component(DataComponents.LORE, new ItemLore(List.of(
-                        Component.translatable("tooltip.circle_of_inevitability." + name))))));
+                        Component.translatable("tooltip.circle_of_inevitability." + name))));
     }
 
     private ModItems() {}

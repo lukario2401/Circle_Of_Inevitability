@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/handheld",
+  "textures": {
+    "layer0": "circle_of_inevitability:item/creeping_hunger_5"
+  }
+}

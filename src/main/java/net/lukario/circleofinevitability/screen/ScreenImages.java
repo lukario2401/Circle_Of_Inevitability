@@ -16,6 +16,7 @@ import net.minecraft.world.entity.player.Player;
  *    ScreenImages.show(player, "my_pic", "attendant_stack_orb", 32);                      // center, 32px, stays
  *    ScreenImages.show(player, "my_pic", "attendant_stack_orb", 32, 60);                  // center, gone after 3s
  *    ScreenImages.show(player, "my_pic", "attendant_stack_orb", ScreenAnchor.TOP_RIGHT, -10, 10, 24, ScreenImages.FOREVER);
+ *    ScreenImages.showFullScreen(player, "my_tint", "my_vignette", 60);                  // whole screen, 3s
  *    ScreenImages.hide(player, "my_pic");            // fade out now
  *    ScreenImages.hide(player, "my_pic", 20);        // fade out in 1 second
  *    ScreenImages.hide(player, "my_*");              // everything whose id starts with "my_"
@@ -28,6 +29,13 @@ import net.minecraft.world.entity.player.Player;
 public class ScreenImages {
 
     public static final int FOREVER = -1;
+    /** As a width or height: stretched over the whole screen (a vignette, a tint). */
+    public static final int FULL_SCREEN = 0;
+
+    /** A picture stretched over the whole screen (an overlay or vignette), gone after durationTicks. */
+    public static void showFullScreen(Player player, String id, String image, int durationTicks) {
+        show(player, id, image, ScreenAnchor.CENTER, 0, 0, FULL_SCREEN, FULL_SCREEN, durationTicks);
+    }
 
     /** Centered, stays until hidden. */
     public static void show(Player player, String id, String image, int size) {

@@ -65,6 +65,62 @@ At 0 heat, dry carrying alone reaches 60 in about one minute. Three activations 
 sooner. Water cools a fully heated bearer below 60 in nine seconds, provided they do not activate it
 again. Normal food/exhaustion rules and peaceful difficulty can affect the hunger consequence.
 
+## Creeping Hunger
+
+**Item ids:** `circle_of_inevitability:creeping_hunger_1` through `creeping_hunger_5` (one item per tier)
+
+```text
+/give @s circle_of_inevitability:creeping_hunger_1
+```
+
+A living glove inspired by LOTM's Creeping Hunger: it devours the Beyonders its bearer kills and lends
+their powers to anyone, with no pathway, Sequence or spirituality needed. The price is its hunger.
+
+| Action | Game behavior |
+| --- | --- |
+| Kill a Beyonder while carrying it | Tiers I-II devour one of the victim's abilities at random. Tiers III-V open a wheel to choose one; abilities that cannot fit are greyed out, and when the glove is full you pick which stored ability it replaces. Esc takes nothing. |
+| Right-click | Casts the selected stored ability for free. Cooldown follows the ability's Sequence: 2 s for Sequence 9 up to 20 s for Sequence 0. A cast that finds nothing to act on costs nothing. |
+| Sneak + right-click | A wheel of the stored abilities: pick one to select it. Empty slots show which Sequences they still accept. **Discard...** frees a slot. |
+
+Abilities are saved on the glove itself, so they stay with it when it is dropped, traded or stored. Only
+abilities that can be copied (the same ones Key Of Stars and the Codex can learn) are taken.
+
+| Tier | Slots | Downsides (each tier adds one; all grow stronger) |
+| --- | --- | --- |
+| I | 5, Sequence 5 or weaker | Daily kill or die; corruption (1 per 60 s carried, up to 40) |
+| II | 7: one up to Sequence 4, six up to 5 | + hostile mobs within 8 blocks hunt you; corruption 1 per 45 s, up to 55 |
+| III | 9: two up to Sequence 2, one up to 4, six up to 5 | + blood thirst; you choose what it devours; mobs within 12; corruption up to 70 |
+| IV | 9: three up to Sequence 1, six up to 5 | + disorientation fits (about every 90 s); neutral mobs hunt you too, within 16; corruption up to 80 |
+| V | 11, any Sequence | Everything at full strength: fits about every 45 s and darken the world, mobs within 24, corruption up to 90 |
+
+Each tier's slots accept everything the tier below can hold.
+
+**Daily kill or die.** The glove must be fed: kill any mob at least once per in-game day (24000 ticks)
+of carrying it, or it kills you (`death.attack.circle_of_inevitability.creeping_hunger`). Warnings appear
+at 50%, 75% and 90% with a timer by the hotbar, and from 75% you starve (Hunger I; Hunger III from tier
+III). The clock only runs while it is carried: sealing it in a chest pauses it. Death resets it.
+
+**Corruption.** It adds to the soul's corruption (the red tint; harmful from 66) while carried and with
+every cast (1 per tier per cast), but never past the tier's cap. Only its own share is tracked: any
+cleanse (cleansing abilities, a milk bucket) removes it, putting the glove away drains 2 a second, and
+the soul's natural decay removes it over time too.
+
+**Mob aggro.** From tier II, every two seconds nearby hostile mobs target you; from tier IV neutral
+mobs (wolves, golems, bees...) join them. Your own pets, team and friends are spared.
+
+**Blood thirst.** From tier III, casting a stored ability makes you thirst: drink a **Mob Blood Vial**
+before that in-game day ends (at least 2 minutes). Collect one by killing a mob with an empty glass
+bottle in your off hand, then right-click it; vials are only drunk while you thirst. Past the deadline
+you are parched, carried or not: Hunger, Weakness and damage every 3 seconds, and the glove refuses to
+cast until you drink.
+
+**Disorientation.** From tier IV, carrying it sometimes brings a fit: veins cover the screen, Nausea and
+Slowness, a stumble, and at tier V Darkness.
+
+Creative and spectator players are spared every downside. All numbers are in `item/artifacts/CreepingHunger.java`.
+The art (icons per tier, wheel icons and the screen overlay) is regenerated with
+`python tools/item_art/creeping_hunger.py`.
+
 ## Adding another artifact
 
 The reusable implementation is in `item/artifacts/`:
@@ -100,6 +156,45 @@ The reusable implementation is in `item/artifacts/`:
    Add an entry to this file describing acquisition, targeting, costs, drawbacks and containment.
    Add focused real-server tests for the new gameplay.
 
+### Ability-storing, tiered artifacts (like Creeping Hunger)
+
+`item/artifacts/storing/` is a framework for artifacts that store abilities taken from kills, with tiers
+and downsides. A new one is a single declaration, with no new item class or event code:
+
+```java
+public static final StoringArtifact MY_RELIC = StoringArtifact.create("my_relic", "My Relic")
+        .tier(AbilitySlots.of(3, 7))                         // tier 1: three slots, Sequence 7 or weaker
+        .tier(AbilitySlots.of(1, 5).and(3, 7))               // tier 2: one up to Sequence 5, three up to 7
+        .tier(AbilitySlots.any(6))                           // tier 3: six of any Sequence
+        .chooseOnKillFrom(2)                                 // tier 2+: the bearer picks what to take
+        .cooldown(sequence -> 20 * (10 - sequence))          // optional, ticks per cast by Sequence
+        .drawback(new FeedOrDieDrawback(1, 24000, 3))        // each downside from some tier,
+        .drawback(new AggroDrawback(2, new int[]{0, 6, 10}, 3))   // values indexed by tier
+        .effects(new StoringArtifact.Effects() { ... });    // optional particles/sounds
+```
+
+Register it in `ModItems` with `MY_RELIC.register(ITEMS, name -> properties(name).rarity(Rarity.EPIC))`;
+that creates `my_relic_1`, `my_relic_2`, ... Then add for each tier `items/` and `models/item/` JSON and a
+texture, the lang keys `item.circle_of_inevitability.my_relic_<tier>`,
+`tooltip.circle_of_inevitability.my_relic.power` and `.containment`, and a damage type
+`data/circle_of_inevitability/damage_type/my_relic.json` with its `death.attack` message (drawbacks that
+hurt the bearer use it). The tooltip lists the slots and that tier's downsides by itself.
+
+| Piece | Responsibility |
+| --- | --- |
+| `StoringArtifact` | The declaration: tiers, slots, choose-from tier, cooldowns, drawbacks, effects, lore, registration. |
+| `StoringArtifactItem` | Shared item: casting the selected ability, the select/discard/devour/replace wheels, feeding on kills. |
+| `AbilitySlots` | Slot caps per tier and the fit check (the strongest ability takes the tightest slot that accepts it). |
+| `StoredAbilities` | The abilities saved on the stack (catalog ids), selection, add/replace/remove. |
+| `ArtifactDrawback` | The downside interface: `second`, `killed`, `cast`, `blocksCast`, `cleansed`, `bearerDied`. |
+| `FeedOrDieDrawback`, `CorruptionDrawback`, `AggroDrawback`, `BloodThirstDrawback`, `DisorientationDrawback` | Ready-made downsides with per-tier strengths. |
+| `StoringArtifacts` | Events: kills, the bearer's death, cleansing. |
+
+Tiers of one artifact share one family id: saved state and cooldown are per player and family, and
+only the highest carried tier receives the once-per-second carrying tick (`SealedArtifactItem.rank()`).
+A new downside implements `ArtifactDrawback`, keeps its values in `Bearer.state()` under its own key
+names, and reads its per-tier strength with `bearer.at(values)`.
+
 The Sun Brooch's original 32px icon can be regenerated with `python tools/item_art/sun_brooch.py`
 (Pillow required). This affects only that icon; it does not generate other artifacts' resources.
 
@@ -108,13 +203,19 @@ The Sun Brooch's original 32px icon can be regenerated with `python tools/item_a
 Build with `./gradlew build`. Run the artifact game tests with:
 
 ```text
-./gradlew runGameTestServer --args="--tests circle_of_inevitability:artifact_*"
+./gradlew runGameTestServer -PartifactTests
+./gradlew runGameTestServer -PcreepingHungerTests
 ```
 
 They check no-pathway activation, undead damage/reveal, neutral-animal safety, self cleansing,
 shared duplicate/offhand cooldowns, refused-use costs, persisted state placement, cooldown expiry,
 once-per-second duplicate heat, offhand carrying, heat penalties/caps, removal cooling, real-water cooling, creative
 exemption, ability-root blocking, walls and allied undead safety.
+The Creeping Hunger tests check every tier's slot limits (and that upgrading keeps what is stored),
+random and chosen devouring, replacing in a full glove, casting without a pathway, Sequence-based
+cooldowns, blood thirst and drinking Mob Blood, the daily kill or die clock (pausing when stored),
+corruption with cleansing and draining, mob aggro by tier, disorientation fits, and that two carried
+tiers tick once at the stronger tier's strength.
 
 For manual play, obtain the brooch in survival, use both hands, inspect the golden pulse and item
 texture, and wait for the heat thresholds. Enter water or stand in exposed rain to cool it, then
