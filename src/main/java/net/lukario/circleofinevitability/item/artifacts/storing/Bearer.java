@@ -27,6 +27,11 @@ public record Bearer(StoringArtifact artifact, ServerLevel level, ServerPlayer p
         return values[Math.clamp(tier - 1, 0, values.length - 1)];
     }
 
+    /** values[tier - 1], the last value for higher tiers and the first for tier 0. */
+    public static float at(float[] values, int tier) {
+        return values[Math.clamp(tier - 1, 0, values.length - 1)];
+    }
+
     public int at(int[] values) {
         return at(values, tier);
     }
