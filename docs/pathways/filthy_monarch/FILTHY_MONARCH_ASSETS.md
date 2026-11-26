@@ -2,11 +2,11 @@
 
 Presentation assets for all **35 abilities** in [the supplied design](FILTHY_MONARCH.md): six direct casts and 29 entries across four wheels. The asset library includes sound registrations, pathway HUD icon lookup and an operator preview command. All **35 abilities have combat implementations**, including unlocks, counters, summons, passives and key routing; see the [gameplay guide](FILTHY_MONARCH_GAMEPLAY.md). The supplied design is preserved as reference, including its unresolved balance questions.
 
-- 35 distinct transparent 32 × 32 ability icons, seven key icons, 35 ability HUD sprites and 13 status sprites at 16 × 16.
+- 35 distinct 32 × 32 ability icons and seven key icons on an octagonal abyss plate whose border colour marks the wheel (red basics, blue Devil Arts, violet Desire and Malice, blood Foul Tongue, olive Blood and Filth), plus 35 ability HUD sprites and 13 status sprites at 16 × 16. Icon art uses three-tone ramps, a near-black outline and a thin accent glow.
 - Depravity and Offerings strips for counts 0–5, plus the pathway icon.
-- 51 base models and 28 animation poses (79 model files), with seven compatible four-pose animations: Devil Form, Demon Form, Devil projection, liquid desire, filth phantom, grasping hand and shifting Abyss silhouette.
-- Two 64 × 64 material atlases; the Abyss atlas has four vertically stacked frames at four ticks per frame.
-- 16 transparent grayscale particle masks, tinted by `FilthyMonarchFx`.
+- 51 base models and 28 animation poses (79 model files), with seven compatible four-pose animations: Devil Form, Demon Form, Devil projection, liquid desire, filth phantom, grasping hand and shifting Abyss silhouette. Devil forms have digitigrade legs, curling horns, clawed hands with palm fire, a spade tail and flapping membrane wings; liquid forms melt into a mound with dripping arms and tendrils.
+- Two 128 × 128 material atlases with 16 painted 32 px materials (sulfur flame and fading flame tips, icy core, abyss tar, venetian red, blood, filth, scum, bone, wing membrane, magma-cracked ember, Devil glyphs, glowing eye, raw flesh and translucent desire liquid). The Abyss atlas has four vertically stacked frames at four ticks per frame whose noise scrolls one full period, so flames rise and liquids flow in a seamless loop.
+- Soft grayscale particle masks with an opaque core, tinted by `FilthyMonarchFx`.
 - 59 original mono 44.1 kHz Ogg Vorbis sound cues with English subtitles and registered `ModSounds.FILTHY_MONARCH` events.
 
 Pale sulfur blue `#7FD8FF`, icy core `#E6FAFF`, abyss black `#120A0E`, venetian red `#C80815`, congealed blood `#8A0F1A` and green-brown filth `#5C5A1E`. Fire remains blue and black, including Sword of Lava and Volcanic Eruption. Lava, sludge and sea are visual geometry; the presentation layer never edits blocks.
