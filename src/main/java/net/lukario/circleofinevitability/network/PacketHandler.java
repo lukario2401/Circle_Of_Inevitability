@@ -14,7 +14,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(11)
+            .networkProtocolVersion(12)
             .simpleChannel();
 
     public static void register() {
@@ -118,6 +118,13 @@ public class PacketHandler {
                 .decoder(CHudCounterPacket::new)
                 .consumerMainThread(CHudCounterPacket::handle)
                 .add();
+        // A scrollable pick list (menu/AbilityList), for more choices than a ring can show
+        INSTANCE.messageBuilder(COpenAbilityListPacket.class, NetworkDirection.PLAY_TO_CLIENT)
+                .encoder(COpenAbilityListPacket::encode).decoder(COpenAbilityListPacket::new)
+                .consumerMainThread(COpenAbilityListPacket::handle).add();
+        INSTANCE.messageBuilder(SAbilityListChoicePacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SAbilityListChoicePacket::encode).decoder(SAbilityListChoicePacket::new)
+                .consumerMainThread(SAbilityListChoicePacket::handle).add();
         INSTANCE.messageBuilder(COpenCodexPacket.class, NetworkDirection.PLAY_TO_CLIENT)
                 .encoder(COpenCodexPacket::encode).decoder(COpenCodexPacket::new)
                 .consumerMainThread(COpenCodexPacket::handle).add();

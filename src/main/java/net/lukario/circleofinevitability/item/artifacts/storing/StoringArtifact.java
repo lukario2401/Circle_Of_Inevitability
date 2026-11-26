@@ -32,6 +32,7 @@ import java.util.function.IntUnaryOperator;
  *           .tier(AbilitySlots.of(3, 7))                    // tier 1: three slots, Sequence 7 or weaker
  *           .tier(AbilitySlots.of(1, 5).and(3, 7))          // tier 2 ...
  *           .chooseOnKillFrom(2)                            // tier 2+: the bearer picks which ability to take
+ *           .picksPerKill(1, 2)                             // ...and at tier 2 up to two from one kill
  *           .drawback(new FeedOrDieDrawback(1, 24000))      // reusable downsides, each from some tier
  *           .drawback(new CorruptionDrawback(2, ...));
  *
@@ -58,6 +59,7 @@ public final class StoringArtifact {
     private final List<AbilitySlots> tiers = new ArrayList<>();
     private final List<ArtifactDrawback> drawbacks = new ArrayList<>();
     private int chooseFromTier = Integer.MAX_VALUE;
+    private int[] picksPerKill = {1};
     private IntUnaryOperator cooldownBySequence = sequence -> 20 * (2 + 2 * (9 - sequence));   // 2 s .. 20 s
     private Effects effects = new Effects() {};
 
@@ -89,6 +91,15 @@ public final class StoringArtifact {
     /** From this tier up the bearer chooses which of a kill's abilities to take; below it one is taken at random. */
     public StoringArtifact chooseOnKillFrom(int tier) {
         this.chooseFromTier = tier;
+        return this;
+    }
+
+    /**
+     * How many abilities the bearer may pick from one kill, per tier (only for tiers that choose; tiers that take at
+     * random always take one). picksPerKill(1, 1, 1, 2, 3): tier IV up to two, tier V up to three.
+     */
+    public StoringArtifact picksPerKill(int... perTier) {
+        this.picksPerKill = perTier.length == 0 ? new int[]{1} : perTier.clone();
         return this;
     }
 
@@ -136,6 +147,11 @@ public final class StoringArtifact {
         return tier >= chooseFromTier;
     }
 
+    /** How many abilities one kill gives at this tier: picksPerKill when it chooses, else 1. */
+    public int picksAt(int tier) {
+        return choosesOnKill(tier) ? Math.max(1, Bearer.at(picksPerKill, tier)) : 1;
+    }
+
     public int cooldownFor(int sequence) {
         return Math.max(0, cooldownBySequence.applyAsInt(sequence));
     }
@@ -175,9 +191,11 @@ public final class StoringArtifact {
         List<Component> lines = new ArrayList<>();
         lines.add(Component.translatable("tooltip.circle_of_inevitability." + id + ".power"));
         lines.add(Component.literal("Tier " + roman(tier) + " · " + slots(tier).describe()).withStyle(ChatFormatting.GOLD));
-        lines.add(Component.literal(choosesOnKill(tier)
-                ? "Kill a Beyonder while carrying it: choose one of their abilities to devour."
-                : "Kill a Beyonder while carrying it: it devours one of their abilities at random."));
+        int picks = picksAt(tier);
+        lines.add(Component.literal(!choosesOnKill(tier)
+                ? "Kill a Beyonder while carrying it: it devours one of their abilities at random."
+                : picks == 1 ? "Kill a Beyonder while carrying it: choose one of their abilities to devour."
+                : "Kill a Beyonder while carrying it: choose up to " + picks + " of their abilities to devour."));
         lines.add(Component.literal("Right-click: cast the selected ability. Sneak + right-click: choose or discard."));
         for (ArtifactDrawback drawback : drawbacksAt(tier))
             lines.add(Component.literal("• ").append(drawback.describe(tier)).withStyle(ChatFormatting.DARK_RED));

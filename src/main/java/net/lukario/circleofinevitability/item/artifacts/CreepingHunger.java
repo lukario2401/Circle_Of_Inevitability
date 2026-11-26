@@ -25,8 +25,8 @@ import net.minecraft.world.phys.Vec3;
  *  I    5, Sequence 5 or weaker                | daily kill or die, corruption
  *  II   7: 1 up to Sequence 4, 6 up to 5       | + hostile mobs hunt you
  *  III  9: 2 up to Seq 2, 1 up to 4, 6 up to 5 | + blood thirst after casting; you choose what to devour
- *  IV   9: 3 up to Sequence 1, 6 up to 5       | + disorientation fits; neutral mobs hunt you too
- *  V    11, any Sequence                       | everything at full strength, fits darken the world
+ *  IV   9: 3 up to Sequence 1, 6 up to 5       | + disorientation fits; neutral mobs hunt you too; 2 picks per kill
+ *  V    11, any Sequence                       | everything at full strength, fits darken the world; 3 picks per kill
  */
 public final class CreepingHunger {
     public static final String ID = "creeping_hunger";
@@ -39,6 +39,7 @@ public final class CreepingHunger {
             .tier(AbilitySlots.of(3, 1).and(6, 5))
             .tier(AbilitySlots.any(11))
             .chooseOnKillFrom(3)
+            .picksPerKill(1, 1, 1, 2, 3)                     // tier IV: up to two abilities from one kill, tier V: three
             .drawback(new FeedOrDieDrawback(1, 24000, 3))
             .drawback(new CorruptionDrawback(1,
                     new int[]{60, 45, 30, 20, 12},           // seconds carried per point

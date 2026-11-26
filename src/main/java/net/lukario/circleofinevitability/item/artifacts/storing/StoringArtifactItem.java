@@ -5,7 +5,7 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder.Beyonders;
 import net.lukario.circleofinevitability.combat.AbilityCatalog;
 import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.item.artifacts.SealedArtifactItem;
-import net.lukario.circleofinevitability.menu.AbilityMenu;
+import net.lukario.circleofinevitability.menu.AbilityList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,14 +18,13 @@ import java.util.List;
 
 /**
  * One tier of a StoringArtifact. Right-click casts the selected stored ability (free of spirituality, no Sequence
- * needed: the drawbacks are the price); sneak + right-click opens the wheel to select or discard. Kills feed it.
+ * needed: the drawbacks are the price); sneak + right-click opens the list to select or discard. Kills feed it.
  * Nothing here is specific to one artifact: declare a new one with StoringArtifact.
  */
 public class StoringArtifactItem extends SealedArtifactItem {
     public static final String EMPTY_ICON = "storing_artifact/empty";
     public static final String DISCARD_ICON = "storing_artifact/discard";
     public static final String STORED_ICON = "storing_artifact/stored";
-    private static final int WHEEL_RADIUS = 90;
 
     private final StoringArtifact artifact;
     private final int tier;
@@ -87,57 +86,62 @@ public class StoringArtifactItem extends SealedArtifactItem {
         return true;
     }
 
-    // ---------- the wheels
+    // ---------- the lists (menu/AbilityList: scrollable, so any number of abilities fits)
 
     @Override
     protected boolean sneakUse(ServerLevel level, ServerPlayer player, ItemStack stack) {
         StoredAbilities.clean(stack);
-        openSelectWheel(player, stack);
+        openSelectList(player, stack);
         return true;
     }
 
-    /** Stored abilities (pick one to select it), the free slots greyed out, and Discard. */
-    public void openSelectWheel(ServerPlayer player, ItemStack stack) {
+    /** Stored abilities (pick one to select it), the free slots greyed out, and Discard at the end. */
+    public void openSelectList(ServerPlayer player, ItemStack stack) {
         List<AbilityCatalog.Power> inside = StoredAbilities.powers(stack);
         int selected = StoredAbilities.selected(stack);
-        AbilityMenu wheel = AbilityMenu.create(artifact.id() + "_select")
-                .title(title() + " · " + inside.size() + "/" + slots().size() + " · pick the ability to cast")
-                .ring(WHEEL_RADIUS);
+        AbilityList list = AbilityList.create(artifact.id() + "_select")
+                .title(title() + " · " + inside.size() + "/" + slots().size() + " stored · pick the ability to cast");
         for (int i = 0; i < inside.size(); i++) {
-            int index = i;
             AbilityCatalog.Power power = inside.get(i);
-            wheel.option(icon(power), power.name(), 0, 0, (picker, level) -> {
-                        if (!stillCarried(picker, stack)) return;
-                        StoredAbilities.select(stack, index);
-                        picker.sendOverlayMessage(Component.literal(title() + ": " + power.name() + " is ready."));
-                    })
-                    .details(viewer -> (index == selected ? "selected · " : "") + "Sequence " + power.sequence());
+            list.row(icon(power), power.name(), "Sequence " + power.sequence() + (i == selected ? " · selected" : ""))
+                    .marked(i == selected);
         }
         List<Integer> free = slots().free(StoredAbilities.sequences(stack));
-        if (free != null) for (int cap : free)
-            wheel.option(EMPTY_ICON, "Empty", 0, 0, (picker, level) -> {})
-                    .details(viewer -> AbilitySlots.capLabel(cap)).lockedWhen(viewer -> true);
-        if (!inside.isEmpty())
-            wheel.option(DISCARD_ICON, "Discard...", 0, 0, (picker, level) -> {
-                if (stillCarried(picker, stack)) openDiscardWheel(picker, stack);
-            }).details(viewer -> "free a slot");
-        wheel.open(player);
+        if (free != null) for (int cap : free) list.row(EMPTY_ICON, "Empty slot", AbilitySlots.capLabel(cap)).locked(true);
+        int discard = list.rows().size();
+        if (!inside.isEmpty()) list.row(DISCARD_ICON, "Discard...", "free slots by letting abilities go");
+        list.onPick((picker, picks) -> {
+            if (!stillCarried(picker, stack)) return;
+            int index = picks.getFirst();
+            if (!inside.isEmpty() && index == discard) {
+                openDiscardList(picker, stack);
+                return;
+            }
+            if (index >= inside.size() || !StoredAbilities.contains(stack, inside.get(index).id())) return;
+            StoredAbilities.select(stack, StoredAbilities.indexOf(stack, inside.get(index).id()));
+            picker.sendOverlayMessage(Component.literal(title() + ": " + inside.get(index).name() + " is ready."));
+        }).open(player);
     }
 
-    public void openDiscardWheel(ServerPlayer player, ItemStack stack) {
+    /** Pick any number of stored abilities to let go of. */
+    public void openDiscardList(ServerPlayer player, ItemStack stack) {
         List<AbilityCatalog.Power> inside = StoredAbilities.powers(stack);
-        AbilityMenu wheel = AbilityMenu.create(artifact.id() + "_discard").title(title() + " · discard which ability?")
-                .ring(WHEEL_RADIUS);
-        for (int i = 0; i < inside.size(); i++) {
-            int index = i;
-            AbilityCatalog.Power power = inside.get(i);
-            wheel.option(icon(power), power.name(), 0, 0, (picker, level) -> {
-                if (!stillCarried(picker, stack) || !StoredAbilities.contains(stack, power.id())) return;
-                StoredAbilities.remove(stack, index);
-                picker.sendSystemMessage(Component.literal(title() + " lets go of " + power.name() + "."));
-            }).details(viewer -> "Sequence " + power.sequence());
-        }
-        wheel.open(player);
+        AbilityList list = AbilityList.create(artifact.id() + "_discard").title(title() + " · discard which abilities?")
+                .maxPicks(Math.max(1, inside.size())).confirmLabel("Discard");
+        for (AbilityCatalog.Power power : inside) list.row(icon(power), power.name(), "Sequence " + power.sequence());
+        list.onPick((picker, picks) -> {
+            if (!stillCarried(picker, stack)) return;
+            List<String> gone = new ArrayList<>();
+            for (int pick : picks) {
+                AbilityCatalog.Power power = inside.get(pick);
+                int now = StoredAbilities.indexOf(stack, power.id());
+                if (now < 0) continue;
+                StoredAbilities.remove(stack, now);
+                gone.add(power.name());
+            }
+            if (!gone.isEmpty())
+                picker.sendSystemMessage(Component.literal(title() + " lets go of " + String.join(", ", gone) + "."));
+        }).open(player);
     }
 
     // ---------- feeding
@@ -154,7 +158,7 @@ public class StoringArtifactItem extends SealedArtifactItem {
                 .toList());
         if (theirs.isEmpty()) return;
         if (artifact.choosesOnKill(tier)) {
-            openDevourWheel(player, stack, victim, theirs);
+            openDevourList(player, stack, victim, theirs);
             return;
         }
         List<AbilityCatalog.Power> fitting = theirs.stream()
@@ -169,42 +173,71 @@ public class StoringArtifactItem extends SealedArtifactItem {
         devoured(level, player, victim, taken, null);
     }
 
-    /** Tier choosesOnKill: the victim's abilities, the ones that cannot fit greyed out. */
-    public void openDevourWheel(ServerPlayer player, ItemStack stack, LivingEntity victim, List<AbilityCatalog.Power> theirs) {
+    /**
+     * Tiers that choose: the victim's abilities as a list; up to picksAt(tier) of them may be picked. The ones that can
+     * neither fit nor replace a stored one are greyed out. Picks that fit are devoured at once; each that needs room
+     * then asks which stored ability it replaces, one after another.
+     */
+    public void openDevourList(ServerPlayer player, ItemStack stack, LivingEntity victim, List<AbilityCatalog.Power> theirs) {
         String victimName = victim.getName().getString();
-        AbilityMenu wheel = AbilityMenu.create(artifact.id() + "_devour")
-                .title(title() + " · devour which ability of " + victimName + "? (Esc: none)").ring(WHEEL_RADIUS);
-        for (AbilityCatalog.Power power : theirs) {
-            wheel.option(icon(power), power.name(), 0, 0, (picker, level) -> {
-                        if (!stillCarried(picker, stack)) return;
-                        StoredAbilities.Result result = StoredAbilities.add(stack, slots(), power);
-                        if (result == StoredAbilities.Result.ADDED) devoured(level, picker, victim, power, null);
-                        else if (canReplaceAny(stack, power)) openReplaceWheel(picker, stack, victim, power);
-                    })
-                    .details(viewer -> "Sequence " + power.sequence() + " · " + fitLabel(stack, power))
-                    .lockedWhen(viewer -> StoredAbilities.check(stack, slots(), power) != StoredAbilities.Result.ADDED
+        int picks = artifact.picksAt(tier);
+        AbilityList list = AbilityList.create(artifact.id() + "_devour").maxPicks(picks).confirmLabel("Devour")
+                .title(title() + " · devour " + (picks == 1 ? "one" : "up to " + picks) + " of " + victimName + "'s abilities"
+                        + " · " + slotsLeft(stack));
+        for (AbilityCatalog.Power power : theirs)
+            list.row(icon(power), power.name(), "Sequence " + power.sequence() + " · " + fitLabel(stack, power))
+                    .locked(StoredAbilities.check(stack, slots(), power) != StoredAbilities.Result.ADDED
                             && !canReplaceAny(stack, power));
-        }
-        wheel.open(player);
-        player.sendSystemMessage(Component.literal(title() + " hungers for one of " + victimName + "'s abilities."));
+        list.onPick((picker, chosen) -> {
+            if (!stillCarried(picker, stack)) return;
+            List<AbilityCatalog.Power> needRoom = new ArrayList<>();
+            for (int pick : chosen) {
+                AbilityCatalog.Power power = theirs.get(pick);
+                if (StoredAbilities.add(stack, slots(), power) == StoredAbilities.Result.ADDED)
+                    devoured(picker.level(), picker, victim, power, null);
+                else if (!StoredAbilities.contains(stack, power.id())) needRoom.add(power);
+            }
+            replaceNext(picker, stack, victim, needRoom);
+        });
+        list.open(player);
+        player.sendSystemMessage(Component.literal(title() + " hungers for " + (picks == 1 ? "one" : "up to " + picks)
+                + " of " + victimName + "'s abilities."));
     }
 
-    /** No room: pick the stored ability it takes the place of (the ones it cannot replace greyed out). */
-    public void openReplaceWheel(ServerPlayer player, ItemStack stack, LivingEntity victim, AbilityCatalog.Power power) {
-        List<AbilityCatalog.Power> inside = StoredAbilities.powers(stack);
-        AbilityMenu wheel = AbilityMenu.create(artifact.id() + "_replace")
-                .title("Devour " + power.name() + " in place of...").ring(WHEEL_RADIUS);
-        for (int i = 0; i < inside.size(); i++) {
-            int index = i;
-            AbilityCatalog.Power old = inside.get(i);
-            wheel.option(icon(old), old.name(), 0, 0, (picker, level) -> {
-                        if (!stillCarried(picker, stack) || !StoredAbilities.contains(stack, old.id())) return;
-                        if (StoredAbilities.replace(stack, slots(), index, power)) devoured(level, picker, victim, power, old);
-                    })
-                    .details(viewer -> "Sequence " + old.sequence())
-                    .lockedWhen(viewer -> !StoredAbilities.canReplace(stack, slots(), index, power));
+    /** Asks, for the first of 'queue', which stored ability it replaces; then the rest, in turn. */
+    private void replaceNext(ServerPlayer player, ItemStack stack, LivingEntity victim, List<AbilityCatalog.Power> queue) {
+        if (queue.isEmpty()) return;
+        AbilityCatalog.Power power = queue.getFirst();
+        List<AbilityCatalog.Power> rest = queue.subList(1, queue.size());
+        if (!canReplaceAny(stack, power)) {
+            player.sendSystemMessage(Component.literal(title() + " has no room for " + power.name() + "."));
+            replaceNext(player, stack, victim, rest);
+            return;
         }
-        wheel.open(player);
+        openReplaceList(player, stack, victim, power, () -> replaceNext(player, stack, victim, rest));
+    }
+
+    /** No room: pick the stored ability 'power' takes the place of (the ones it cannot replace greyed out). */
+    public void openReplaceList(ServerPlayer player, ItemStack stack, LivingEntity victim, AbilityCatalog.Power power,
+                                Runnable then) {
+        List<AbilityCatalog.Power> inside = StoredAbilities.powers(stack);
+        AbilityList list = AbilityList.create(artifact.id() + "_replace")
+                .title("No room: devour " + power.name() + " (Sequence " + power.sequence() + ") in place of...");
+        for (int i = 0; i < inside.size(); i++) {
+            AbilityCatalog.Power old = inside.get(i);
+            list.row(icon(old), old.name(), "Sequence " + old.sequence())
+                    .locked(!StoredAbilities.canReplace(stack, slots(), i, power));
+        }
+        list.onPick((picker, picks) -> {
+            AbilityCatalog.Power old = inside.get(picks.getFirst());
+            int now = StoredAbilities.indexOf(stack, old.id());
+            if (stillCarried(picker, stack) && now >= 0 && StoredAbilities.replace(stack, slots(), now, power))
+                devoured(picker.level(), picker, victim, power, old);
+            then.run();
+        }).onCancel(picker -> {
+            picker.sendSystemMessage(Component.literal(title() + " lets " + power.name() + " go."));
+            then.run();
+        }).open(player);
     }
 
     private void devoured(ServerLevel level, ServerPlayer player, LivingEntity victim, AbilityCatalog.Power power,
