@@ -56,6 +56,11 @@ public final class ModCreativeTabs {
                         output.accept(ModItems.GRAY_FOG_CHESTPLATE.get());
                         output.accept(ModItems.GRAY_FOG_LEGGINGS.get());
                         output.accept(ModItems.GRAY_FOG_BOOTS.get());
+                        output.accept(ModItems.DEATH_CORE.get());
+                        output.accept(ModItems.DEATH_HELMET.get());
+                        output.accept(ModItems.DEATH_CHESTPLATE.get());
+                        output.accept(ModItems.DEATH_LEGGINGS.get());
+                        output.accept(ModItems.DEATH_BOOTS.get());
                         for (var entry : ModItems.ITEMS.getEntries())
                             if (entry.get() instanceof SealedArtifactItem)
                                 output.accept(entry.get());

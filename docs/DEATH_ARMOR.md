@@ -1,0 +1,91 @@
+# Vestments of Death
+
+A Death-pathway companion to the [Inevitability](INEVITABILITY_ARMOR.md), [Unshadowed](UNSHADOWED_ARMOR.md) and
+[Gray Fog](GRAY_FOG_ARMOR.md) sets, and the only one that bites back. It reaps everything hostile around its wearer
+and drags it underground, but it starves them, wounds them and must be fed. Worn whole, it summons a Spirit Guide
+and slowly takes their life.
+
+![Front and back of the textured rig](images/death_armor_preview.png)
+
+Textured preview of the rig at rest (regenerate it with `python tools/model_gen/death_armor/preview.py`).
+
+| Piece | Look |
+| --- | --- |
+| **Death Consul's Visage** | A deep reaper's hood whose point droops behind the head. Inside it, a scowling skull mask built bone by bone: real eye sockets with soul-fire eyes, a nose cavity, two rows of teeth on a hinged jaw, and a seam of soul-light splitting the forehead. Above it all the Pale Emperor's crown: a blackened circlet with nine bone spikes and a soul gem. |
+| **Pale Emperor's Mantle** | A black robe under an open ribcage, with the soul heart burning in an iron setting where the sternum would be. A chain droops between two soul clasps. Layered iron pauldrons with a fan of bone claws on the right shoulder and a small skull on the left. Tattered sleeves over iron bracers and finger bones, a soul lantern hanging at the left hip, and a cape torn into five strips. |
+| **Ferryman's Shroud** | An iron belt with a skull buckle and the Ferryman's obol on a chain. Grave-green panels hang in front and behind, the front one marked with the death rune (Yr). The legs are bound in old bandages under bone kneecaps and iron tassets. |
+| **Gravedigger's Treads** | Iron boots caked with grave dirt, with tattered cuffs, bone shin guards, three clawed toes and a heel spur. |
+
+What moves (`client/armor/DeathArmorModel.java`): the cape strips swing with the legs and flutter, the lantern and
+the obol swing on their chains, the shroud panels are pushed by the stride, the hood's point sways, the eyes
+flicker and the heart beats twice every 1.5 s. On every Reaping pulse the jaw drops, and the eyes and the heart flare.
+
+## Obtaining and repairing
+
+Craft **four Ferryman's Obols**:
+
+```text
+Bone Block    Wither Skeleton Skull   Bone Block
+Echo Shard    Nether Star             Echo Shard
+Bone Block    Wither Skeleton Skull   Bone Block
+```
+
+At a smithing table, combine a **Netherite Upgrade Smithing Template**, the matching **Netherite armor piece** and
+**one obol**. Repair with **Bone Blocks** in an anvil. The set is in the **Sealed Artifacts** creative tab.
+
+IDs: `circle_of_inevitability:death_helmet`, `death_chestplate`, `death_leggings`, `death_boots` and `death_core`.
+
+## Powers
+
+| | Effect |
+| --- | --- |
+| **Reaping** (Mantle) | Every 1.5 s (1 s with the full set) every hostile mob in sight within reach, and anything hunting you, takes 2 damage (3 with the full set). Distance does not change the damage. It changes the marks: within 2.5 blocks a pulse gives **3 marks**, within 5 blocks **2**, further out **1**. Reach is 6 blocks with the Mantle and 1 more for each other piece (9 with the full set). Allies, pets and passive mobs are never touched. Marks fade one at a time, one every 3 s you leave the mob alone. Tiny skulls over a mob's head show how many it carries. |
+| **Claimed by the underworld** | A mob with more than **6 marks** is seized by four arms of the dead. They drag it under the ground, where it takes **30 damage** in three crushes. If it survives, it is thrown out of the ground. Anything too big to bury is crushed where it stands. Whatever dies down there drops its loot on the surface. |
+| **Spirit Guide** (full set) | A small wraith floats at your shoulder. Every 1.5 s it strikes the nearest hostile within 4.5 blocks for 4 damage and gives it 2 marks. |
+
+## The price
+
+| | Effect |
+| --- | --- |
+| **Endless hunger** (any piece) | Hunger I while worn (Hunger II with the full set). |
+| **Pangs** (any piece) | About once every 30 s, a sudden pain for 1 to 4 damage through armor. A pang never takes your last half heart. |
+| **The toll** (any piece) | The Vestments must be fed **a kill every 5 minutes**. Any living thing you kill counts: a sword, an arrow, a pulse, the drag, the Spirit Guide. A **Toll** clock sits beside the hotbar. It warns you with 60 s and 30 s left, then with a heartbeat for each of the last 10, 5, 4, 3, 2 and 1 s. If the clock runs out, the armor **kills you**. Nothing saves you, not even a Totem of Undying. Taking the armor off pauses the clock where it is; putting it back on carries on from there, so it cannot be reset that way. The clock stops in Peaceful, where nothing can be killed, and dying resets it. |
+| **The ebb** (full set) | Your max health falls by half a heart every 15 s. With nothing left to give, the armor takes you. Take any piece off and it returns half a heart every 10 s. Dying also gives it all back. |
+
+Creative and spectator players carry no curse. Armor stands only display the set.
+
+Protection, toughness, knockback resistance, durability and enchantability match the other three sets.
+
+## Tuning and reuse
+
+Every number above is a public constant at the top of `item/armor/DeathArmor.java` (`REACH`, `PULSE_TICKS`,
+`RINGS`, `MARK_LIMIT`, `CLAIM`, `TOLL_TICKS`, `EBB_TICKS`, and the rest). The general parts live where any set or
+ability can use them, documented in the [spell kit](SPELL_KIT.md):
+
+- [`DragUnder`](SPELL_KIT.md#dragunder) (`combat/`): the arms, burial, crushing and the throw.
+- [`KillToll`](SPELL_KIT.md#killtoll) (`status/`): "feed it a kill or else", with warnings, a HUD clock and pause on unequip.
+- [`MaxHealthDrain`](SPELL_KIT.md#maxhealthdrain) (`status/`): max health taken and given back, per source.
+- [`FollowerSummon`](SPELL_KIT.md#followers-that-guard-the-caster) (`combat/`) gained `targets(...)`, `onHit(...)`
+  and `isActive(...)` for summons that last while something is worn.
+- `status/Marks` and `SpellFx.overHead` for the marks, `status/Burial`, which now returns the dead to the surface.
+
+## Implementation
+
+- `item/armor/DeathArmor.java`: material, set matching and every power and curse (its own event subscriber).
+- `client/armor/DeathArmorModel.java`: every animation, applied on top of each bone's baked pose.
+- `assets/circle_of_inevitability/armor/death.rig.json`: resource-pack editable rig. The model looks up `hood_tip`,
+  `jaw`, `eye_left`, `eye_right` (head) and `heart`, `lantern`, `cape_0`…`cape_4`, `shroud_front`, `shroud_back` and
+  `obol` (body). Keep those names.
+- `tools/model_gen/death_armor/generate.py`: deterministic generator for the rig, the painted atlas, the item models,
+  recipes, damage types, translations and tags. Every cube gets its own box-UV island in the atlas. Each face is
+  painted on its own, at twice Minecraft's usual texel density: bevelled edges, bone grain, cloth folds, bandage
+  windings, rivets, and decals (`skull_face`, `teeth`, `crack`, `coin`, `sigil`, `seam`, `runes`). Add a cube with
+  `cube(bone, slot, origin, size, material, decal)` and it is packed and painted for you.
+- Damage types `death_toll` (unstoppable) and `death_curse` (through armor), with their death messages.
+
+## Verification
+
+```text
+./gradlew build                      # includes deathArmorModelTest
+./gradlew runGameTestServer -PdeathArmorTests
+```

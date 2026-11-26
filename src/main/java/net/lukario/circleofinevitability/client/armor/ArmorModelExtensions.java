@@ -30,6 +30,8 @@ public final class ArmorModelExtensions implements IClientItemExtensions {
             return slot -> new UnshadowedArmorModel(UnshadowedArmorModel.createLayer(slot).bakeRoot(), slot);
         if (net.lukario.circleofinevitability.item.armor.GrayFogArmor.SET.equals(setId))
             return slot -> new GrayFogArmorModel(GrayFogArmorModel.createLayer(slot).bakeRoot(), slot);
+        if (net.lukario.circleofinevitability.item.armor.DeathArmor.SET.equals(setId))
+            return slot -> new DeathArmorModel(DeathArmorModel.createLayer(slot).bakeRoot(), slot);
         return slot -> new InevitabilityArmorModel(InevitabilityArmorModel.createLayer(slot).bakeRoot(), slot);
     }
     @Override public HumanoidModel<?> getHumanoidArmorModel(LivingEntityRenderState state, ItemStack stack,

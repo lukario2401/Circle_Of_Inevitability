@@ -8,6 +8,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingEvent;
 import net.minecraftforge.eventbus.api.listener.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -35,6 +36,7 @@ import net.minecraftforge.fml.common.Mod;
  * creative players and spectators.
  *
  * Saved with the entity: one that is under when the world closes still comes back up after it opens again.
+ * Something that dies while it is under is put back on the surface first, so its loot is not left in the ground.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -156,5 +158,12 @@ public final class Burial {
             depth = Math.min(deepest, tag.getDoubleOr(PULL, 0.0) * t * t * t);      // slowly at first, then faster
         }
         place(entity, tag.getDoubleOr(X, 0.0), tag.getDoubleOr(Y, 0.0) - Math.max(0.0, depth), tag.getDoubleOr(Z, 0.0));
+    }
+
+    /** Whatever dies under the ground is put back first, so its loot and experience land where it was taken. */
+    @SubscribeEvent
+    public static void onBurialDeath(LivingDeathEvent event) {
+        LivingEntity entity = event.getEntity();
+        if (!entity.level().isClientSide() && isBuried(entity)) release(entity);
     }
 }

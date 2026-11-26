@@ -20,15 +20,27 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-/** A reusable model that follows its caster and strikes the nearest visible enemy from its hover point. */
+/**
+ * A reusable model that follows its caster and strikes the nearest visible enemy from its hover point.
+ * {@link #onHit} adds something to every strike (marks, a slow, a heal for the owner); {@link #isActive} tells whether
+ * an owner's follower of that name is still out, for summons that should be there for as long as something lasts
+ * (summon it when it is missing, dismiss it when the reason ends).
+ */
 @Mod.EventBusSubscriber(modid = CircleOfInevitability.MOD_ID, bus = Mod.EventBusSubscriber.Bus.FORGE)
-public record FollowerSummon(ModelFx model, Vec3 offset, double range, int cooldownTicks, float damage, int durationTicks) {
+public record FollowerSummon(ModelFx model, Vec3 offset, double range, int cooldownTicks, float damage, int durationTicks,
+                             Hit hit, java.util.function.BiPredicate<LivingEntity, LivingEntity> targets) {
+    /** What else happens when the follower strikes, after the damage. */
+    public interface Hit { void landed(LivingEntity owner, LivingEntity target); }
+    private static final Hit NOTHING = (owner, target) -> {};
+    private static final java.util.function.BiPredicate<LivingEntity, LivingEntity> ANY_ENEMY = (owner, target) -> true;
     private record Slot(UUID owner, String name) {}
     private static final Map<Slot, Active> ACTIVE = new HashMap<>();
 
     public FollowerSummon {
         Objects.requireNonNull(model, "model");
         Objects.requireNonNull(offset, "offset");
+        Objects.requireNonNull(hit, "hit");
+        Objects.requireNonNull(targets, "targets");
         if (!Double.isFinite(offset.x) || !Double.isFinite(offset.y) || !Double.isFinite(offset.z))
             throw new IllegalArgumentException("Hover offset must be finite");
         if (!Double.isFinite(range) || range <= 0 || !Float.isFinite(damage) || damage <= 0
@@ -43,15 +55,35 @@ public record FollowerSummon(ModelFx model, Vec3 offset, double range, int coold
 
     /** Fixed world-axis offset in blocks from the caster's feet. The client follows between server ticks. */
     public static FollowerSummon hover(ModelFx model, Vec3 offset) {
-        return new FollowerSummon(model, offset, 3, 20, 4f, 200);
+        return new FollowerSummon(model, offset, 3, 20, 4f, 200, NOTHING, ANY_ENEMY);
     }
 
     public FollowerSummon strikes(double range, int cooldownTicks, float damage) {
-        return new FollowerSummon(model, offset, range, cooldownTicks, damage, durationTicks);
+        return new FollowerSummon(model, offset, range, cooldownTicks, damage, durationTicks, hit, targets);
     }
 
     public FollowerSummon lasts(int ticks) {
-        return new FollowerSummon(model, offset, range, cooldownTicks, damage, ticks);
+        return new FollowerSummon(model, offset, range, cooldownTicks, damage, ticks, hit, targets);
+    }
+
+    /** Runs after each strike lands on its target: FollowerSummon.drone(eye).onHit((owner, enemy) -> Marks.add(...)). */
+    public FollowerSummon onHit(Hit hit) {
+        return new FollowerSummon(model, offset, range, cooldownTicks, damage, durationTicks, hit, targets);
+    }
+
+    /**
+     * Narrows what it goes after, among the owner's enemies: (owner, candidate) -> true to strike it. A player's
+     * enemies are everything not on their side (cows and villagers too); TentacleCombat::hostile keeps it to monsters
+     * and whatever is hunting the owner.
+     */
+    public FollowerSummon targets(java.util.function.BiPredicate<LivingEntity, LivingEntity> targets) {
+        return new FollowerSummon(model, offset, range, cooldownTicks, damage, durationTicks, hit, targets);
+    }
+
+    /** True while this owner has a follower of that name out (not dismissed, expired or gone with its owner). */
+    public static boolean isActive(LivingEntity owner, String name) {
+        Active summon = ACTIVE.get(new Slot(owner.getUUID(), name));
+        return summon != null && summon.owner == owner && summon.expires > summon.level.getGameTime();
     }
 
     /** A recast replaces only this owner's follower with the same name. */
@@ -110,7 +142,7 @@ public record FollowerSummon(ModelFx model, Vec3 offset, double range, int coold
             LivingEntity nearest = null;
             double best = Double.POSITIVE_INFINITY;
             for (LivingEntity enemy : Spells.enemiesAround(owner, level, at, spell.range)) {
-                if (enemy.isInvulnerable() || enemy instanceof Player target
+                if (enemy.isInvulnerable() || !spell.targets.test(owner, enemy) || enemy instanceof Player target
                         && (target.isCreative() || owner instanceof Player caster && !caster.canHarmPlayer(target))) continue;
                 double distance = Spells.distanceToBody(enemy, at);
                 if (distance < best && Spells.canBeChosen(owner, enemy)
@@ -125,6 +157,7 @@ public record FollowerSummon(ModelFx model, Vec3 offset, double range, int coold
             }
             nextScan = level.getGameTime() + spell.cooldownTicks;
             Spells.strike(owner, nearest, spell.damage);
+            if (nearest.isAlive()) spell.hit.landed(owner, nearest);
         }
     }
 

@@ -49,6 +49,10 @@ minecraft {
                 workingDir = layout.buildDirectory.dir('gray-fog-armor-gametest')
                 args '--tests', 'circle_of_inevitability:gray_fog_armor_*'
             }
+            if (providers.gradleProperty('deathArmorTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('death-armor-gametest')
+                args '--tests', 'circle_of_inevitability:death_armor_*'
+            }
             if (providers.gradleProperty('ritualTests').isPresent()) { args '--tests', 'circle_of_inevitability:ritual_*' }
             if (providers.gradleProperty('keyOfStarsTests').isPresent()) { args '--tests', 'circle_of_inevitability:key_of_stars_*' }
             if (providers.gradleProperty('cameraTests').isPresent()) { args '--tests', 'circle_of_inevitability:camera_*' }
@@ -120,7 +124,7 @@ tasks.withType(JavaCompile).configureEach {
 sourceSets {
     armorModelTest {
         java.srcDir 'tools/tests'
-        java.include 'InevitabilityArmorModelTest.java', 'UnshadowedArmorModelTest.java', 'GrayFogArmorModelTest.java'
+        java.include 'InevitabilityArmorModelTest.java', 'UnshadowedArmorModelTest.java', 'GrayFogArmorModelTest.java', 'DeathArmorModelTest.java'
         compileClasspath += sourceSets.main.output + sourceSets.main.compileClasspath
         runtimeClasspath += sourceSets.main.output + sourceSets.main.runtimeClasspath
     }
@@ -183,7 +187,16 @@ tasks.register('grayFogArmorModelTest', JavaExec) {
     javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
 }
 
-tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest'), tasks.named('armorModelTest'), tasks.named('unshadowedArmorModelTest'), tasks.named('grayFogArmorModelTest') }
+tasks.register('deathArmorModelTest', JavaExec) {
+    group = 'verification'
+    description = 'Bakes the Death armor rigs and checks slot isolation, the atlas, and the cape, jaw, heart and shroud animations.'
+    dependsOn tasks.named('armorModelTestClasses')
+    classpath = sourceSets.armorModelTest.runtimeClasspath
+    mainClass = 'net.lukario.circleofinevitability.client.armor.DeathArmorModelTest'
+    javaLauncher = javaToolchains.launcherFor { languageVersion = JavaLanguageVersion.of(25) }
+}
+
+tasks.named('check') { dependsOn tasks.named('swingAnimationEditsTest'), tasks.named('damageFxTest'), tasks.named('armorModelTest'), tasks.named('unshadowedArmorModelTest'), tasks.named('grayFogArmorModelTest'), tasks.named('deathArmorModelTest') }
 
 // Forge merges classes/resources into one directory. Resource-copy output cleanup must finish
 // before Java's up-to-date check; otherwise an asset-only edit can erase already-compiled mixins.

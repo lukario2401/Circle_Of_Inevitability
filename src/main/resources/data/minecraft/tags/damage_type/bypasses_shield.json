@@ -1,6 +1,8 @@
 {
   "replace": false,
   "values": [
-    "circle_of_inevitability:inevitable"
+    "circle_of_inevitability:inevitable",
+    "circle_of_inevitability:death_toll",
+    "circle_of_inevitability:death_curse"
   ]
 }

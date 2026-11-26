@@ -10,7 +10,7 @@ import net.minecraft.world.item.equipment.ArmorMaterial;
 import net.minecraft.world.item.equipment.ArmorType;
 import java.util.List;
 
-/** Ordinary equippable armor for the mod's 3D sets (Inevitability, Unshadowed, Gray Fog); all Minecraft durability, enchantment and smithing behavior is retained. */
+/** Ordinary equippable armor for the mod's 3D sets (Inevitability, Unshadowed, Gray Fog, Death); all Minecraft durability, enchantment and smithing behavior is retained. */
 public class TentacleArmorItem extends Item {
     private final String setId;
     private final EquipmentSlot slot;
@@ -37,6 +37,7 @@ public class TentacleArmorItem extends Item {
         return switch (setId) {
             case UnshadowedArmor.SET -> ChatFormatting.GOLD;
             case GrayFogArmor.SET -> ChatFormatting.DARK_AQUA;
+            case DeathArmor.SET -> ChatFormatting.DARK_GREEN;
             default -> ChatFormatting.DARK_PURPLE;
         };
     }

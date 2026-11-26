@@ -46,6 +46,9 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Make something take more damage for a while (a curse) | [`Vulnerable`](#vulnerable) | `status/` |
 | Make a mob go after one chosen entity ("come at me"), or set mobs on each other | [`Taunt`](#taunt) | `status/` |
 | Drag something under the ground and give it back | [`Burial`](#burial) | `status/` |
+| Arms of the dead seize someone, drag them under, crush them there and fling out whoever lives (a finisher for marks) | [`DragUnder`](#dragunder) | `combat/` |
+| Take max health away bit by bit and give it back the same way (a curse that eats someone's life, armor that feeds on its wearer) | [`MaxHealthDrain`](#maxhealthdrain) | `status/` |
+| Something that must be fed a kill every so often or it punishes its bearer, with warnings and a clock on screen | [`KillToll`](#killtoll) | `status/` |
 | Let a player fly for a while | [`Flight`](#flight) | `status/` |
 | Carry a player fast along their look for a while, and know which enemies they passed (wings, a dive, a leap on the wind) | [`Glide`](#glide) | `status/` |
 | Spread someone over many small bodies: blows kill those instead, and only the last one falling lets damage through (a bat swarm, a flock of paper birds) | [`Swarm`](#swarm) | `status/` |
@@ -107,6 +110,7 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Know an enemy better and better (0 to 100%, one gauge per caster): every hit on it grows stronger the more you know, and it fades when left alone | [`Study`](#study) | `status/` |
 | Keep spells on paper: a pouch of scrolls, each one a stored cast that goes off for free when read; any spell can be one | [`Scrolls`](#scrolls) | `status/` |
 | A drone, spirit, eye or robot that follows the caster and damages nearby enemies | [`FollowerSummon`](#followers-that-guard-the-caster) | `combat/` |
+| A follower that is there for as long as something lasts (worn armor, a form), only goes after monsters, or marks what it hits | [`FollowerSummon.isActive` / `targets` / `onHit`](#followers-that-guard-the-caster) | `combat/` |
 | A few bodies circling a player (stars, blades, motes) that each stop a projectile and come back, and strike enemies that come close | [`Orbit`](#orbit-bodies-that-circle-and-guard) | `combat/` |
 | Launch one of those bodies yourself (a cluster flung, an asteroid thrown on a blow) and have it back later | [`Orbit.release`](#orbit-bodies-that-circle-and-guard) | `combat/` |
 | The projectiles of the other side near a spot, to slow, stop, hang or bend them | [`Spells.hostileShotsAround`](#1-spells-aiming-and-enemies) | `combat/` |
@@ -772,6 +776,20 @@ GUARD_EYE.summon(player, "star_dragon_guard_eye");
 The drone holds its pivot 0.65 blocks beside the caster and 1.55 blocks above their feet. Its position follows the caster even through a teleport in the same dimension. Turning in place keeps it in the same spot. For a spirit, robot or other companion with its own hover point, use `FollowerSummon.hover(model, new Vec3(x, y, z))`. The offset uses world axes. Both factories default to 4 damage, 3 blocks of range, a 20-tick cooldown and a 200-tick lifetime.
 
 Attacks count as the caster's spell damage and obey the spell kit's ally and targeting rules. Each caster can keep one follower per name. Recasting replaces that follower. Use `FollowerSummon.dismiss(player, "star_dragon_guard_eye")` to end it early. It also ends on expiry, death, logout or leaving the dimension.
+
+A follower that stays for as long as something lasts, goes only after monsters and does more than damage (the Vestments of Death's Spirit Guide, `item/armor/DeathArmor.java`):
+
+```java
+static final FollowerSummon GUIDE = FollowerSummon.hover(PaleEmperorFx.WRAITH.noKeys().scale(.4f), new Vec3(1.1, .75, .3))
+        .strikes(4.5, 30, 4f).lasts(20 * 60 * 60)
+        .targets(TentacleCombat::hostile)                       // a player's "enemies" include cows and villagers
+        .onHit((owner, target) -> Marks.add(target, owner, "my_marks", 2, 12, 60));
+
+// every tick while it should be there
+boolean out = FollowerSummon.isActive(player, "my_guide");
+if (wanted && !out) GUIDE.summon(player, "my_guide");
+else if (!wanted && out) FollowerSummon.dismiss(player, "my_guide");
+```
 
 ---
 
@@ -2287,6 +2305,58 @@ if (Burial.bury(target, 20, 40)) { ... }       // under in 1 second, stays for 2
 - Not buried: what is buried already, anything taller than `Burial.MAX_HEIGHT` (4) or wider than `MAX_WIDTH` (3), creative players and spectators. `Burial.canBury(target)` tells you beforehand.
 - `Burial.isBuried(entity)`, `ticksLeft(entity)`, `release(target)`.
 - Saved with the entity: one that is under when the world closes still comes back up when it opens again.
+- Whatever dies while it is under is put back on the surface first, so its loot and experience are not left in the ground.
+
+### DragUnder
+
+The whole scene around a `Burial`: arms of the dead (`PaleEmperorFx.UNDERWORLD_ARM`) burst out of the ground round someone, close on them and sink with them; they are crushed down there; whoever lives through it is flung back out of the ground.
+
+```java
+static final DragUnder CLAIM = DragUnder.of(30f)   // 30 damage while under, in 3 crushes (.crushes(n))
+        .sink(14).hold(36)                         // goes down in 0.7 s, stays down 1.8 s
+        .throwsUp(1.05)                            // flung out at this speed if it lives
+        .arms(4);
+
+if (CLAIM.drag(player, enemy)) { ... }             // false: already being dragged or buried, or dead
+DragUnder.isDragging(enemy)                        // from the arms rising until it is back up
+CLAIM.totalTicks()                                 // DragUnder.SEIZE + sink + hold
+```
+
+The damage is the owner's (`Spells.strikeThrough`: they get the kill, Domes and Substitutes do not stop it). Something too big to bury is seized and crushed where it stands, and not thrown. The Vestments of Death drag whatever carries more than 6 of their marks.
+
+### MaxHealthDrain
+
+Max health taken away bit by bit and given back the same way. Each id is its own drain (one attribute modifier), so several add up and each recovers on its own.
+
+```java
+Identifier id = InevitabilityArmor.id("my_curse");
+MaxHealthDrain.drain(player, id, 1);        // one more point gone; returns how much is gone in all
+MaxHealthDrain.recover(player, id, 1);      // one back; returns how much is still gone
+MaxHealthDrain.drained(player, id)
+MaxHealthDrain.clear(player, id);
+if (MaxHealthDrain.wouldEmpty(player, 1)) { ... }   // one more would leave less than half a heart: your move
+```
+
+Current health is cut to the new maximum at once. Saved with the entity (it survives logging out); a player who dies comes back whole. It never kills by itself: it stops at `MaxHealthDrain.FLOOR` (half a heart), and what happens then is yours.
+
+### KillToll
+
+Something that must be fed a kill every so often or it punishes whoever carries it: cursed armor, a thirsting blade, a pact.
+
+```java
+static final KillToll THIRST = KillToll.of("my_class_thirst", 6000)      // a kill every 5 minutes
+        .warnAt(1200, 600, 200)                                        // warn with 60, 30 and 10 s left
+        .hud("Thirst", 0xC03030)                                       // a clock beside the hotbar while it binds them
+        .onWarning((bearer, ticksLeft) -> ...)
+        .onFed(bearer -> ...)
+        .onExpired(bearer -> ...);                                     // the punishment
+
+THIRST.tick(player);     // every server tick while it binds them: the clock runs
+THIRST.pause(player);    // it no longer binds them (taken off): the clock leaves the screen
+THIRST.ticksLeft(player), THIRST.binds(player), THIRST.feed(player), THIRST.forget(player)
+```
+
+Any living thing the bearer kills while bound feeds it, however it died (a sword, an ability, a summon striking in their name). The clock only runs while `tick` is called: taking the thing off pauses it where it was, so it cannot be reset that way. After it expires it starts again full. Dying clears it. Saved with the entity.
 
 ### Flight
 

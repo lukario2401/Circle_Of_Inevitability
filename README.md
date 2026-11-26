@@ -5,7 +5,9 @@ animated crimson tentacles that strike nearby hostiles, and late-game smithing u
 [Vestments of the Unshadowed](docs/UNSHADOWED_ARMOR.md) add a turning sun halo and three orbiting Spears of
 Light that purify undead. The Fool-pathway [Vestments of the Gray Fog](docs/GRAY_FOG_ARMOR.md) give each
 piece its own power (Spirit Vision, a Paper Substitute, Acrobatics, no fall damage) and let the full set
-vanish into the gray fog.
+vanish into the gray fog. The Death-pathway [Vestments of Death](docs/DEATH_ARMOR.md) mark everything hostile
+nearby and drag it underground, summon a Spirit Guide when worn whole, and make you pay for it: endless hunger,
+sudden pains, a kill owed every five minutes, and a life that ebbs away.
 
 A Minecraft Forge mod by Luka (Lukario2401): a soul system (stage, tier, shards, Soul Essence, corruption)
 and beyonder characteristics to take on: Wanderer, Worm Of Time, Hand Of Order, Attendant Of Mysteries,

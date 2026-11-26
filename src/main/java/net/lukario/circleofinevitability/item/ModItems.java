@@ -63,6 +63,13 @@ public final class ModItems {
     public static final RegistryObject<Item> GRAY_FOG_LEGGINGS = grayFog("gray_fog_leggings", net.minecraft.world.item.equipment.ArmorType.LEGGINGS);
     public static final RegistryObject<Item> GRAY_FOG_BOOTS = grayFog("gray_fog_boots", net.minecraft.world.item.equipment.ArmorType.BOOTS);
 
+    public static final RegistryObject<Item> DEATH_CORE = ITEMS.register("death_core",
+            () -> new Item(properties("death_core").rarity(Rarity.EPIC).fireResistant()));
+    public static final RegistryObject<Item> DEATH_HELMET = death("death_helmet", net.minecraft.world.item.equipment.ArmorType.HELMET);
+    public static final RegistryObject<Item> DEATH_CHESTPLATE = death("death_chestplate", net.minecraft.world.item.equipment.ArmorType.CHESTPLATE);
+    public static final RegistryObject<Item> DEATH_LEGGINGS = death("death_leggings", net.minecraft.world.item.equipment.ArmorType.LEGGINGS);
+    public static final RegistryObject<Item> DEATH_BOOTS = death("death_boots", net.minecraft.world.item.equipment.ArmorType.BOOTS);
+
     private static RegistryObject<Item> armor(String name, net.minecraft.world.item.equipment.ArmorType type) {
         return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
                 properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.InevitabilityArmor.MATERIAL,
@@ -77,6 +84,11 @@ public final class ModItems {
         return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
                 properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.GrayFogArmor.MATERIAL,
                 type, net.lukario.circleofinevitability.item.armor.GrayFogArmor.SET));
+    }
+    private static RegistryObject<Item> death(String name, net.minecraft.world.item.equipment.ArmorType type) {
+        return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
+                properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.DeathArmor.MATERIAL,
+                type, net.lukario.circleofinevitability.item.armor.DeathArmor.SET));
     }
 
     public static final RegistryObject<BlockItem> RITUAL_TABLE = ITEMS.register("ritual_table", () ->
