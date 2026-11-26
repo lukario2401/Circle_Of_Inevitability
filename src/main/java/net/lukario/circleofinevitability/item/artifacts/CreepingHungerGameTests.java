@@ -17,7 +17,7 @@ import net.lukario.circleofinevitability.item.artifacts.storing.FeedOrDieDrawbac
 import net.lukario.circleofinevitability.item.artifacts.storing.StoredAbilities;
 import net.lukario.circleofinevitability.item.artifacts.storing.StoringArtifactItem;
 import net.lukario.circleofinevitability.item.artifacts.storing.StoringArtifacts;
-import net.lukario.circleofinevitability.menu.AbilityMenu;
+import net.lukario.circleofinevitability.menu.AbilityList;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -54,6 +54,8 @@ public final class CreepingHungerGameTests {
         FUNCTIONS.register("creeping_hunger_aggro", () -> CreepingHungerGameTests::aggro);
         FUNCTIONS.register("creeping_hunger_disorientation", () -> CreepingHungerGameTests::disorientation);
         FUNCTIONS.register("creeping_hunger_family_tick", () -> CreepingHungerGameTests::familyTick);
+        FUNCTIONS.register("creeping_hunger_multi_pick", () -> CreepingHungerGameTests::multiPick);
+        FUNCTIONS.register("creeping_hunger_lists", () -> CreepingHungerGameTests::lists);
     }
     private CreepingHungerGameTests() {}
 
@@ -153,9 +155,10 @@ public final class CreepingHungerGameTests {
         ItemStack glove = p.getMainHandItem();
         StoringArtifacts.killed(p.level(), p, beyonder(h, p, 7));
         h.assertTrue(StoredAbilities.ids(glove).isEmpty(), "Tier III waits for the bearer's choice");
-        AbilityMenu.handleChoice(p, CreepingHunger.ID + "_devour", 0);
+        h.assertTrue(AbilityList.openFor(p) != null && AbilityList.openFor(p).maxPicks() == 1, "Tier III picks one, from a list");
+        AbilityList.handleChoice(p, CreepingHunger.ID + "_devour", List.of(0));
         h.assertTrue(StoredAbilities.powers(glove).size() == 1, "The chosen ability is devoured");
-        // A full glove: the choice leads to the replace wheel.
+        // A full glove: the choice leads to the replace list.
         List<String> full = new ArrayList<>();
         AbilityCatalog.all().values().stream().filter(pw -> pw.sequence() >= 5 && pw.cast().copyable()
                 && !pw.cast().pathway().equals("Wanderer")).limit(9).forEach(pw -> full.add(pw.id()));
@@ -296,5 +299,66 @@ public final class CreepingHungerGameTests {
         h.assertTrue(SoulCore.getCorruption(p) == 51, "One tick, at tier V's rate and cap: " + SoulCore.getCorruption(p));
         h.assertTrue(drawback(FeedOrDieDrawback.class).hunger(bearer(p)) == 20, "Two tiers carried still hunger once");
         h.succeed();
+    }
+
+    private static void multiPick(GameTestHelper h) {
+        ServerPlayer four = player(h, 4);
+        StoringArtifacts.killed(four.level(), four, beyonder(h, four, 7));
+        String devour = CreepingHunger.ID + "_devour";
+        h.assertTrue(AbilityList.openFor(four).maxPicks() == 2, "Tier IV may pick two from one kill");
+        h.assertTrue(!AbilityList.handleChoice(four, devour, List.of(0, 1, 2)), "Three picks are refused at tier IV");
+        h.assertTrue(!AbilityList.handleChoice(four, devour, List.of(0, 0)), "The same ability cannot be picked twice");
+        h.assertTrue(AbilityList.handleChoice(four, devour, List.of(0, 1)) && StoredAbilities.powers(four.getMainHandItem()).size() == 2,
+                "Two picks devour two abilities");
+        ServerPlayer five = player(h, 5);
+        StoringArtifacts.killed(five.level(), five, beyonder(h, five, 7));
+        h.assertTrue(AbilityList.openFor(five).maxPicks() == 3, "Tier V may pick three");
+        h.assertTrue(AbilityList.handleChoice(five, devour, List.of(2, 0, 1)) && StoredAbilities.powers(five.getMainHandItem()).size() == 3,
+                "Three picks devour three abilities");
+        // A full glove: picks that need room ask which ability to replace, one after another.
+        ServerPlayer full = player(h, 4);
+        ItemStack glove = full.getMainHandItem();
+        List<String> ids = new ArrayList<>();
+        AbilityCatalog.all().values().stream().filter(pw -> pw.sequence() >= 5 && pw.cast().copyable()
+                && !pw.cast().pathway().equals("Wanderer")).limit(9).forEach(pw -> ids.add(pw.id()));
+        StoredAbilities.set(glove, ids);
+        StoringArtifacts.killed(full.level(), full, beyonder(h, full, 7));
+        h.assertTrue(AbilityList.handleChoice(full, devour, List.of(0, 1)), "Picks are accepted when full");
+        h.assertTrue(AbilityList.openFor(full) != null && AbilityList.openFor(full).id().equals(CreepingHunger.ID + "_replace"),
+                "The first needs room: which one does it replace?");
+        AbilityList.handleChoice(full, CreepingHunger.ID + "_replace", List.of(0));
+        h.assertTrue(AbilityList.openFor(full) != null && AbilityList.openFor(full).id().equals(CreepingHunger.ID + "_replace"),
+                "Then the second");
+        AbilityList.handleChoice(full, CreepingHunger.ID + "_replace", List.of());
+        List<String> after = StoredAbilities.ids(glove);
+        h.assertTrue(after.size() == 9 && !after.contains(ids.get(0)) && after.contains(ids.get(1)),
+                "One replaced, the second let go: " + after);
+        h.succeed();
+    }
+
+    private static void lists(GameTestHelper h) {
+        ServerPlayer p = player(h, 5);
+        ItemStack glove = p.getMainHandItem();
+        StoredAbilities.add(glove, tier(5).slots(), power("weak"));
+        StoredAbilities.add(glove, tier(5).slots(), power("strong"));
+        p.setShiftKeyDown(true);
+        h.assertTrue(tier(5).use(p.level(), p, InteractionHand.MAIN_HAND) == InteractionResult.SUCCESS, "Sneak-use opens the list");
+        AbilityList select = AbilityList.openFor(p);
+        h.assertTrue(select != null && select.rows().size() == 2 + 9 + 1, "Two stored, nine empty slots and Discard: " + (select == null ? 0 : select.rows().size()));
+        h.assertTrue(select.rows().get(1).marked() && select.rows().get(2).locked(), "The selection is marked, empty slots locked");
+        AbilityList.handleChoice(p, CreepingHunger.ID + "_select", List.of(0));
+        h.assertTrue(StoredAbilities.selectedPower(glove).id().equals(power("weak").id()), "Picking a row selects it");
+        h.assertTrue(item5Cooldown(p) == 0, "Selecting costs no cooldown");
+        tier(5).use(p.level(), p, InteractionHand.MAIN_HAND);
+        AbilityList.handleChoice(p, CreepingHunger.ID + "_select", List.of(AbilityList.openFor(p).rows().size() - 1));
+        h.assertTrue(AbilityList.openFor(p).id().equals(CreepingHunger.ID + "_discard") && AbilityList.openFor(p).maxPicks() == 2,
+                "Discard can let go of several at once");
+        AbilityList.handleChoice(p, CreepingHunger.ID + "_discard", List.of(0, 1));
+        h.assertTrue(StoredAbilities.ids(glove).isEmpty(), "Both discarded");
+        h.succeed();
+    }
+
+    private static int item5Cooldown(ServerPlayer p) {
+        return tier(5).cooldownLeft(p);
     }
 }

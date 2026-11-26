@@ -55,6 +55,13 @@ public final class StoredAbilities {
         return found;
     }
 
+    /** The index of the stored ability with this id in powers(stack), or -1. */
+    public static int indexOf(ItemStack stack, String id) {
+        List<AbilityCatalog.Power> inside = powers(stack);
+        for (int i = 0; i < inside.size(); i++) if (inside.get(i).id().equals(id)) return i;
+        return -1;
+    }
+
     public static boolean contains(ItemStack stack, String id) {
         return ids(stack).contains(id);
     }
