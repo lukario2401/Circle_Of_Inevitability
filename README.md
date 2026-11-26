@@ -7,7 +7,7 @@ Light that purify undead. The Fool-pathway [Vestments of the Gray Fog](docs/GRAY
 piece its own power (Spirit Vision, a Paper Substitute, Acrobatics, no fall damage) and let the full set
 vanish into the gray fog. The Death-pathway [Vestments of Death](docs/DEATH_ARMOR.md) mark everything hostile
 nearby and drag it underground, summon a Spirit Guide when worn whole, and make you pay for it: endless hunger,
-sudden pains, a kill owed every five minutes, and a life that ebbs away.
+sudden pains, a kill owed every few minutes, and a life that ebbs away. Every piece adds to both.
 
 A Minecraft Forge mod by Luka (Lukario2401): a soul system (stage, tier, shards, Soul Essence, corruption)
 and beyonder characteristics to take on: Wanderer, Worm Of Time, Hand Of Order, Attendant Of Mysteries,

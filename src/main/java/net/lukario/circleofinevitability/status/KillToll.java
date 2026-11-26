@@ -27,7 +27,9 @@ import java.util.Objects;
  *           .onExpired(bearer -> ...);                                          // the punishment
  *
  *   THIRST.tick(player);          // every server tick while it binds them (worn, held, sworn): the clock runs
- *   THIRST.ticksLeft(player)
+ *   THIRST.tick(player, 2);       // ...twice as fast (more of the cursed set worn, a deeper pact). Any rate > 0
+ *   THIRST.ticksLeft(player)      // what is left of its 'ticks', at rate 1
+ *   THIRST.ticksLeft(player, 2)   // real ticks left at that rate
  *   THIRST.feed(player);          // fed by hand (kills feed it by themselves)
  *   THIRST.pause(player);         // it no longer binds them (the armor came off): the clock leaves the screen
  *   THIRST.forget(player);        // the pact is over: the clock is gone (taking the armor off does NOT need this)
@@ -36,6 +38,8 @@ import java.util.Objects;
  * strikes in their name). The clock only runs while tick is called: stop calling it (the armor came off) and it
  * waits where it was; calling it again carries on from there, so taking it off cannot reset it. After it expires
  * it starts again full, so a punishment that fails (a creative player) does not repeat every tick. Dying clears it.
+ * Warnings and the HUD clock are in real time at the current rate: warnAt(200) warns with 10 real seconds left,
+ * however fast the clock runs, and the HUD clock is set again whenever the rate changes.
  *
  * Saved with the entity. Start the name with your class.
  */
@@ -45,8 +49,9 @@ public final class KillToll {
     public interface Warning { void warn(LivingEntity bearer, int ticksLeft); }
     public interface Event { void on(LivingEntity bearer); }
 
-    private static final String TAG = "circle_of_inevitability_kill_toll";    // name -> {Left, Seen}
-    private static final String LEFT = "Left";
+    private static final String TAG = "circle_of_inevitability_kill_toll";    // name -> {Left, Seen, Rate}
+    private static final String LEFT = "Left";                  // what is left of 'ticks', at rate 1
+    private static final String RATE = "Rate";                  // the rate it last ran at
     private static final String SEEN = "Seen";
     private static final String SHOWN = "Shown";                // its clock is on the bearer's screen
     private static final List<KillToll> ALL = new ArrayList<>();
@@ -90,28 +95,43 @@ public final class KillToll {
 
     /** Call every server tick while it binds 'bearer'. Counts down, warns, and punishes at 0. */
     public void tick(LivingEntity bearer) {
-        if (bearer.level().isClientSide()) return;
+        tick(bearer, 1);
+    }
+
+    /** As tick(bearer), with the clock running 'rate' times as fast (2 = it wants a kill in half the time). */
+    public void tick(LivingEntity bearer, double rate) {
+        if (bearer.level().isClientSide() || !(rate > 0) || !Double.isFinite(rate)) return;
         long now = bearer.level().getGameTime();
         CompoundTag tag = tag(bearer, true);
-        boolean resumed = !bound(tag, now);
-        int left = tag.getIntOr(LEFT, ticks) - 1;
+        boolean resumed = !bound(tag, now) || tag.getDoubleOr(RATE, 1) != rate;
+        double left = tag.getDoubleOr(LEFT, ticks) - rate;
         tag.putLong(SEEN, now);
-        if (left <= 0) {
-            tag.putInt(LEFT, ticks);
-            showHud(bearer, ticks);
+        tag.putDouble(RATE, rate);
+        if (left <= 1e-9) {
+            tag.putDouble(LEFT, ticks);
+            showHud(bearer, real(ticks, rate));
             onExpired.on(bearer);
             return;
         }
-        tag.putInt(LEFT, left);
-        if (resumed || left % 200 == 0) showHud(bearer, left);
-        for (int warning : warnAt) if (left == warning) onWarning.warn(bearer, left);
+        tag.putDouble(LEFT, left);
+        double real = left / rate, before = real + 1;          // real ticks left now, and one tick ago
+        if (resumed || Math.floor(before / 200) != Math.floor(real / 200)) showHud(bearer, real(left, rate));
+        for (int warning : warnAt) if (before > warning && real <= warning) onWarning.warn(bearer, warning);
     }
 
-    /** Ticks left before it punishes; the full time if it is not running. */
+    /** What is left of its 'ticks' (at rate 1) before it punishes; the full time if it is not running. */
     public int ticksLeft(LivingEntity bearer) {
         CompoundTag tag = tag(bearer, false);
-        return tag == null ? ticks : tag.getIntOr(LEFT, ticks);
+        return tag == null ? ticks : (int)Math.ceil(tag.getDoubleOr(LEFT, ticks) - 1e-9);
     }
+
+    /** Real ticks left if it runs at 'rate'. */
+    public int ticksLeft(LivingEntity bearer, double rate) {
+        CompoundTag tag = tag(bearer, false);
+        return real(tag == null ? ticks : tag.getDoubleOr(LEFT, ticks), rate);
+    }
+
+    private static int real(double left, double rate) { return (int)Math.ceil(left / rate - 1e-9); }
 
     /** True while tick is being called for this bearer (it binds them right now). */
     public boolean binds(LivingEntity bearer) {
@@ -122,8 +142,8 @@ public final class KillToll {
     /** A kill: the clock starts again full. */
     public void feed(LivingEntity bearer) {
         CompoundTag tag = tag(bearer, true);
-        tag.putInt(LEFT, ticks);
-        if (bound(tag, bearer.level().getGameTime())) showHud(bearer, ticks);
+        tag.putDouble(LEFT, ticks);
+        if (bound(tag, bearer.level().getGameTime())) showHud(bearer, real(ticks, tag.getDoubleOr(RATE, 1)));
         onFed.on(bearer);
     }
 

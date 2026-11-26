@@ -783,6 +783,7 @@ A follower that stays for as long as something lasts, goes only after monsters a
 static final FollowerSummon GUIDE = FollowerSummon.hover(PaleEmperorFx.WRAITH.noKeys().scale(.4f), new Vec3(1.1, .75, .3))
         .strikes(4.5, 30, 4f).lasts(20 * 60 * 60)
         .targets(TentacleCombat::hostile)                       // a player's "enemies" include cows and villagers
+        .onStrike((owner, target, from) -> ...)                 // what each strike looks like, from the hover point
         .onHit((owner, target) -> Marks.add(target, owner, "my_marks", 2, 12, 60));
 
 // every tick while it should be there
@@ -2352,8 +2353,9 @@ static final KillToll THIRST = KillToll.of("my_class_thirst", 6000)      // a ki
         .onExpired(bearer -> ...);                                     // the punishment
 
 THIRST.tick(player);     // every server tick while it binds them: the clock runs
+THIRST.tick(player, 2);  // ...twice as fast (more of a cursed set worn); warnings and the HUD clock stay in real time
 THIRST.pause(player);    // it no longer binds them (taken off): the clock leaves the screen
-THIRST.ticksLeft(player), THIRST.binds(player), THIRST.feed(player), THIRST.forget(player)
+THIRST.ticksLeft(player), THIRST.ticksLeft(player, rate), THIRST.binds(player), THIRST.feed(player), THIRST.forget(player)
 ```
 
 Any living thing the bearer kills while bound feeds it, however it died (a sword, an ability, a summon striking in their name). The clock only runs while `tick` is called: taking the thing off pauses it where it was, so it cannot be reset that way. After it expires it starts again full. Dying clears it. Saved with the entity.

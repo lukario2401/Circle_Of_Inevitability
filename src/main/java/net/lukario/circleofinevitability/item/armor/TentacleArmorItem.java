@@ -16,13 +16,20 @@ public class TentacleArmorItem extends Item {
     private final EquipmentSlot slot;
     public TentacleArmorItem(Properties properties, ArmorMaterial material, ArmorType type, String setId) {
         super(properties.humanoidArmor(material, type).fireResistant()
-                .component(DataComponents.LORE, new ItemLore(List.of(
-                        Component.translatable(powerKey(setId, type)).withStyle(color(setId)),
-                        Component.translatable("tooltip.circle_of_inevitability." + setId + ".full_set").withStyle(ChatFormatting.GRAY)))));
+                .component(DataComponents.LORE, new ItemLore(lore(setId, type))));
         this.setId = setId;
         this.slot = type.getSlot();
     }
-    /** The Gray Fog set gives every piece its own power; the other sets describe the chestplate's strikes. */
+    /** The power line, then (for Death) the curse every piece carries, then the full-set line. */
+    private static List<Component> lore(String setId, ArmorType type) {
+        String prefix = "tooltip.circle_of_inevitability." + setId + ".";
+        Component power = Component.translatable(powerKey(setId, type)).withStyle(color(setId));
+        Component full = Component.translatable(prefix + "full_set").withStyle(ChatFormatting.GRAY);
+        if (DeathArmor.SET.equals(setId))
+            return List.of(power, Component.translatable(prefix + "curse").withStyle(ChatFormatting.DARK_RED), full);
+        return List.of(power, full);
+    }
+    /** The Gray Fog set gives every piece its own power, Death the same Reaping on every piece; the other sets describe the chestplate's strikes. */
     private static String powerKey(String setId, ArmorType type) {
         String prefix = "tooltip.circle_of_inevitability." + setId + ".";
         if (GrayFogArmor.SET.equals(setId)) return prefix + switch (type) {
@@ -31,7 +38,7 @@ public class TentacleArmorItem extends Item {
             case LEGGINGS -> "leggings";
             default -> "boots";
         };
-        return prefix + (type == ArmorType.CHESTPLATE ? "power" : "set");
+        return prefix + (type == ArmorType.CHESTPLATE || DeathArmor.SET.equals(setId) ? "power" : "set");
     }
     private static ChatFormatting color(String setId) {
         return switch (setId) {

@@ -18,7 +18,7 @@ Textured preview of the rig at rest (regenerate it with `python tools/model_gen/
 
 What moves (`client/armor/DeathArmorModel.java`): the cape strips swing with the legs and flutter, the lantern and
 the obol swing on their chains, the shroud panels are pushed by the stride, the hood's point sways, the eyes
-flicker and the heart beats twice every 1.5 s. On every Reaping pulse the jaw drops, and the eyes and the heart flare.
+flicker and the heart beats twice every 1.5 s. On every Reaping pulse the jaw drops, and the eyes and the heart flare; each piece reacts to its own pulse.
 
 ## Obtaining and repairing
 
@@ -37,19 +37,31 @@ IDs: `circle_of_inevitability:death_helmet`, `death_chestplate`, `death_leggings
 
 ## Powers
 
+Every piece carries the full power and the full curse. The more pieces you wear, the stronger both get:
+
+| Pieces worn | 1 | 2 | 3 | 4 (full set) |
+| --- | --- | --- | --- | --- |
+| Reaping reach | 4.5 blocks | 6 | 7.5 | 9 |
+| Reaping damage | 1.5 | 2 | 2.5 | 3 |
+| Reaping pulse | every 2.5 s | 2 s | 1.5 s | 1 s |
+| Hunger | I | I | II | III |
+| Pangs | about every 40 s, up to 2 damage | 20 s, up to 3 | 13 s, up to 4 | 10 s, up to 5 |
+| The toll: a kill every | 10 min | 6 min 40 s | 5 min | 4 min |
+| Spirit Guide and the ebb | | | | yes |
+
 | | Effect |
 | --- | --- |
-| **Reaping** (Mantle) | Every 1.5 s (1 s with the full set) every hostile mob in sight within reach, and anything hunting you, takes 2 damage (3 with the full set). Distance does not change the damage. It changes the marks: within 2.5 blocks a pulse gives **3 marks**, within 5 blocks **2**, further out **1**. Reach is 6 blocks with the Mantle and 1 more for each other piece (9 with the full set). Allies, pets and passive mobs are never touched. Marks fade one at a time, one every 3 s you leave the mob alone. Tiny skulls over a mob's head show how many it carries. |
+| **Reaping** (any piece) | Every pulse hits every hostile mob in sight within reach, plus anything hunting you, for the same damage whatever the distance. Distance changes the marks: within 2.5 blocks a pulse gives **3 marks**, within 5 blocks **2**, further out **1**. Allies, pets and passive mobs are never touched. Marks fade one at a time, one every 3 s you leave the mob alone. Tiny skulls over a mob's head show how many it carries. Every worn piece shows the pulse: the jaw drops, the eyes and heart flare. |
 | **Claimed by the underworld** | A mob with more than **6 marks** is seized by four arms of the dead. They drag it under the ground, where it takes **30 damage** in three crushes. If it survives, it is thrown out of the ground. Anything too big to bury is crushed where it stands. Whatever dies down there drops its loot on the surface. |
-| **Spirit Guide** (full set) | A small wraith floats at your shoulder. Every 1.5 s it strikes the nearest hostile within 4.5 blocks for 4 damage and gives it 2 marks. |
+| **Spirit Guide** (full set) | A small wraith floats at your shoulder. Every 1.25 s it hurls a glowing soul skull, jaw open and trailing soul fire, at the nearest hostile within 7 blocks: 6 damage and 2 marks. It never attacks passive mobs. |
 
 ## The price
 
 | | Effect |
 | --- | --- |
-| **Endless hunger** (any piece) | Hunger I while worn (Hunger II with the full set). |
-| **Pangs** (any piece) | About once every 30 s, a sudden pain for 1 to 4 damage through armor. A pang never takes your last half heart. |
-| **The toll** (any piece) | The Vestments must be fed **a kill every 5 minutes**. Any living thing you kill counts: a sword, an arrow, a pulse, the drag, the Spirit Guide. A **Toll** clock sits beside the hotbar. It warns you with 60 s and 30 s left, then with a heartbeat for each of the last 10, 5, 4, 3, 2 and 1 s. If the clock runs out, the armor **kills you**. Nothing saves you, not even a Totem of Undying. Taking the armor off pauses the clock where it is; putting it back on carries on from there, so it cannot be reset that way. The clock stops in Peaceful, where nothing can be killed, and dying resets it. |
+| **Endless hunger** (any piece) | Hunger while worn, stronger with more pieces (see the table). |
+| **Pangs** (any piece) | Now and then a sudden pain hits through armor, more often and harder with more pieces. A pang never takes your last half heart. |
+| **The toll** (any piece) | The Vestments must be fed a kill in time (see the table). Any living thing you kill counts: a sword, an arrow, a pulse, the drag, the Spirit Guide. A **Toll** clock beside the hotbar shows the real time left at the pieces you are wearing. It speeds up when you put more on and slows down when you take some off. It warns you with 60 s and 30 s left, then with a heartbeat for each of the last 10, 5, 4, 3, 2 and 1 s. If the clock runs out, the armor **kills you**. Nothing saves you, not even a Totem of Undying. Taking every piece off pauses the clock where it is; putting one back on carries on from there, so it cannot be reset that way. The clock stops in Peaceful, where nothing can be killed, and dying resets it. |
 | **The ebb** (full set) | Your max health falls by half a heart every 15 s. With nothing left to give, the armor takes you. Take any piece off and it returns half a heart every 10 s. Dying also gives it all back. |
 
 Creative and spectator players carry no curse. Armor stands only display the set.
@@ -58,15 +70,18 @@ Protection, toughness, knockback resistance, durability and enchantability match
 
 ## Tuning and reuse
 
-Every number above is a public constant at the top of `item/armor/DeathArmor.java` (`REACH`, `PULSE_TICKS`,
-`RINGS`, `MARK_LIMIT`, `CLAIM`, `TOLL_TICKS`, `EBB_TICKS`, and the rest). The general parts live where any set or
+Every number above is a public constant at the top of `item/armor/DeathArmor.java` (`REACH`/`REACH_PER_PIECE`,
+`PULSE_DAMAGE`, `PULSE_TICKS`, `RINGS`, `MARK_LIMIT`, `CLAIM`, `HUNGER`, `PANG_CHANCE_PER_PIECE`, `TOLL_TICKS`,
+`EBB_TICKS`, and the rest); `reach`, `pulseDamage`, `pulseTicks`, `pangChance`, `pangMax`, `tollRate` turn them
+into the per-piece values. The general parts live where any set or
 ability can use them, documented in the [spell kit](SPELL_KIT.md):
 
 - [`DragUnder`](SPELL_KIT.md#dragunder) (`combat/`): the arms, burial, crushing and the throw.
-- [`KillToll`](SPELL_KIT.md#killtoll) (`status/`): "feed it a kill or else", with warnings, a HUD clock and pause on unequip.
+- [`KillToll`](SPELL_KIT.md#killtoll) (`status/`): "feed it a kill or else", with warnings, a HUD clock, a rate for a
+  clock that runs faster, and pause on unequip.
 - [`MaxHealthDrain`](SPELL_KIT.md#maxhealthdrain) (`status/`): max health taken and given back, per source.
-- [`FollowerSummon`](SPELL_KIT.md#followers-that-guard-the-caster) (`combat/`) gained `targets(...)`, `onHit(...)`
-  and `isActive(...)` for summons that last while something is worn.
+- [`FollowerSummon`](SPELL_KIT.md#followers-that-guard-the-caster) (`combat/`) gained `targets(...)`, `onStrike(...)`
+  (what a strike looks like), `onHit(...)` and `isActive(...)` for summons that last while something is worn.
 - `status/Marks` and `SpellFx.overHead` for the marks, `status/Burial`, which now returns the dead to the surface.
 
 ## Implementation

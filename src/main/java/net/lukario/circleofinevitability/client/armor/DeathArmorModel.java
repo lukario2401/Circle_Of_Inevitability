@@ -23,7 +23,7 @@ import net.minecraft.world.item.component.CustomData;
  *       in the ribcage beats, and flares on every Reaping pulse.</li>
  *   <li>Shroud: the front and back panels are pushed by the legs, the obol swings on its chain.</li>
  * </ul>
- * The pulse is read from the worn mantle's {@link DeathArmor#REAP_KEY} (game time), so every viewer sees it.
+ * The pulse is read from each worn piece's {@link DeathArmor#REAP_KEY} (game time), so every viewer sees it.
  */
 public final class DeathArmorModel extends HumanoidModel<HumanoidRenderState> {
     public static final int CAPE_STRIPS = 5;
@@ -65,7 +65,14 @@ public final class DeathArmorModel extends HumanoidModel<HumanoidRenderState> {
         super.setupAnim(state);
         Minecraft minecraft = Minecraft.getInstance();
         var level = minecraft == null ? null : minecraft.level;
-        long reapAt = state.chestEquipment.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
+        // Every worn piece carries the pulse; each model reads its own, so a lone Visage still drops its jaw.
+        var stack = switch (slot) {
+            case HEAD -> state.headEquipment;
+            case LEGS -> state.legsEquipment;
+            case FEET -> state.feetEquipment;
+            default -> state.chestEquipment;
+        };
+        long reapAt = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
                 .copyTag().getLongOr(DeathArmor.REAP_KEY, Long.MIN_VALUE / 2);
         float sincePulse = level == null ? Float.MAX_VALUE
                 : level.getGameTime() - reapAt + (state.ageInTicks - (float)Math.floor(state.ageInTicks));

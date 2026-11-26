@@ -5,6 +5,8 @@ import net.lukario.circleofinevitability.CircleOfInevitability;
 import net.lukario.circleofinevitability.combat.DragUnder;
 import net.lukario.circleofinevitability.combat.FollowerSummon;
 import net.lukario.circleofinevitability.item.ModItems;
+import net.lukario.circleofinevitability.root.Root;
+import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Burial;
 import net.lukario.circleofinevitability.status.KillToll;
 import net.lukario.circleofinevitability.status.Marks;
@@ -39,6 +41,8 @@ public final class DeathArmorGameTests {
     static {
         FUNCTIONS.register("death_armor_equipment", () -> DeathArmorGameTests::equipment);
         FUNCTIONS.register("death_armor_reaping", () -> DeathArmorGameTests::reaping);
+        FUNCTIONS.register("death_armor_any_piece", () -> DeathArmorGameTests::anyPiece);
+        FUNCTIONS.register("death_armor_spirit_guide", () -> DeathArmorGameTests::spiritGuide);
         FUNCTIONS.register("death_armor_claim", () -> DeathArmorGameTests::claim);
         FUNCTIONS.register("death_armor_curse", () -> DeathArmorGameTests::curse);
         FUNCTIONS.register("death_armor_toll", () -> DeathArmorGameTests::toll);
@@ -117,21 +121,62 @@ public final class DeathArmorGameTests {
         h.succeed();
     }
 
-    /** Same damage at any distance, more marks up close, nothing for a mob out of reach. */
+    /** Same damage at any distance, more marks up close, nothing for a mob out of reach; no Mantle needed. */
     private static void reaping(GameTestHelper h) {
-        var p = player(h, EquipmentSlot.CHEST);
+        var p = player(h, EquipmentSlot.HEAD);
+        p.setItemSlot(EquipmentSlot.FEET, new ItemStack(item(EquipmentSlot.FEET)));
         var near = zombie(h, p, 1.5, 100);
         var far = zombie(h, p, 5.5, 100);
         var outside = zombie(h, p, -7.5, 100);
-        h.runAfterDelay(DeathArmor.PULSE_TICKS + 2, () -> {
+        h.assertTrue(DeathArmor.reach(2) > 5.5 && DeathArmor.reach(2) < 7.5, "Two pieces reach the far mob, not the outside one");
+        h.runAfterDelay(DeathArmor.pulseTicks(2) + 2, () -> {
             h.assertTrue(near.getHealth() < 100 && Math.abs(near.getHealth() - far.getHealth()) < .01f,
                     "Near and far take the same damage: " + near.getHealth() + " / " + far.getHealth());
             h.assertTrue(outside.getHealth() == 100, "Out of reach is spared");
             int nearMarks = Marks.count(near, p, DeathArmor.MARK), farMarks = Marks.count(far, p, DeathArmor.MARK);
             // One or two pulses may have landed by now, depending on where the wearer's pulse clock stood.
             h.assertTrue(farMarks >= 1 && nearMarks == 3 * farMarks, "Closer means more marks: " + nearMarks + " / " + farMarks);
-            h.assertTrue(p.getItemBySlot(EquipmentSlot.CHEST).getOrDefault(DataComponents.CUSTOM_DATA,
-                    net.minecraft.world.item.component.CustomData.EMPTY).copyTag().contains(DeathArmor.REAP_KEY), "The pulse is shown on the Mantle");
+            for (var slot : List.of(EquipmentSlot.HEAD, EquipmentSlot.FEET))
+                h.assertTrue(p.getItemBySlot(slot).getOrDefault(DataComponents.CUSTOM_DATA,
+                        net.minecraft.world.item.component.CustomData.EMPTY).copyTag().contains(DeathArmor.REAP_KEY), "Every worn piece shows the pulse");
+            h.succeed();
+        });
+    }
+
+    /** A single piece of any kind pulses, and every piece added makes the pulse stronger. */
+    private static void anyPiece(GameTestHelper h) {
+        for (int pieces = 1; pieces < 4; pieces++) {
+            h.assertTrue(DeathArmor.reach(pieces + 1) > DeathArmor.reach(pieces), "More pieces reach further");
+            h.assertTrue(DeathArmor.pulseDamage(pieces + 1) > DeathArmor.pulseDamage(pieces), "More pieces hit harder");
+            h.assertTrue(DeathArmor.pulseTicks(pieces + 1) < DeathArmor.pulseTicks(pieces), "More pieces pulse sooner");
+        }
+        var p = player(h, EquipmentSlot.FEET);
+        var husk = zombie(h, p, 2, 100);
+        h.runAfterDelay(DeathArmor.pulseTicks(1) + 2, () -> {
+            float lost = 100 - husk.getHealth();
+            // At most two pulses fit in the wait; a husk's own armor softens each a little.
+            h.assertTrue(lost > 0 && lost <= 2 * DeathArmor.pulseDamage(1) + .01f && Marks.count(husk, p, DeathArmor.MARK) > 0,
+                    "The boots alone reap and mark, for one piece's damage: lost " + lost);
+            h.succeed();
+        });
+    }
+
+    /** The full set's Spirit Guide hurls soul skulls at hostiles (marking them) and leaves passive mobs alone. */
+    private static void spiritGuide(GameTestHelper h) {
+        var p = player(h, null);
+        equipSet(p);
+        // Hold the Reaping pulse back so whatever the husk loses is the guide's.
+        Root.apply(p, 400, RootRestriction.ABILITIES);
+        var husk = zombie(h, p, 4, 200);
+        Mob pig = h.spawnWithNoFreeWill(EntityTypes.PIG, 1, 2, 1);
+        pig.setNoGravity(true);
+        pig.setPos(p.getX() - 2, p.getY(), p.getZ());
+        h.addCleanup(ok -> pig.discard());
+        h.runAfterDelay(DeathArmor.SPIRIT_GUIDE.cooldownTicks() + 10, () -> {
+            h.assertTrue(FollowerSummon.isActive(p, DeathArmor.GUIDE), "The guide is out");
+            h.assertTrue(husk.getHealth() <= 200 - DeathArmor.SPIRIT_GUIDE.damage() + .01f, "The guide strikes the hostile: " + husk.getHealth());
+            h.assertTrue(Marks.count(husk, p, DeathArmor.MARK) >= 2, "Its soul skulls mark");
+            h.assertTrue(pig.getHealth() == pig.getMaxHealth(), "Passive mobs are left alone");
             h.succeed();
         });
     }
@@ -157,18 +202,29 @@ public final class DeathArmorGameTests {
         });
     }
 
-    /** Hunger while worn, and a pang can hurt but never take the last half heart. */
+    /** Hunger while worn, worse with every piece; a pang can hurt but never take the last half heart. */
     private static void curse(GameTestHelper h) {
+        for (int pieces = 1; pieces < 4; pieces++) {
+            h.assertTrue(DeathArmor.hungerAmplifier(pieces + 1) >= DeathArmor.hungerAmplifier(pieces), "Hunger never eases with more pieces");
+            h.assertTrue(DeathArmor.pangChance(pieces + 1) > DeathArmor.pangChance(pieces), "More pieces, more pangs");
+            h.assertTrue(DeathArmor.pangMax(pieces + 1) > DeathArmor.pangMax(pieces), "More pieces, harder pangs");
+            h.assertTrue(DeathArmor.tollTicks(pieces + 1) < DeathArmor.tollTicks(pieces), "More pieces, a hungrier toll");
+        }
+        h.assertTrue(DeathArmor.hungerAmplifier(4) > DeathArmor.hungerAmplifier(1), "The full set starves you worse than one piece");
         var p = player(h, EquipmentSlot.FEET);
+        var full = player(h, null);
+        equipSet(full);
         h.runAfterDelay(2, () -> {
             h.assertTrue(p.hasEffect(MobEffects.HUNGER), "Any piece brings endless hunger");
+            h.assertTrue(p.getEffect(MobEffects.HUNGER).getAmplifier() == DeathArmor.hungerAmplifier(1)
+                    && full.getEffect(MobEffects.HUNGER).getAmplifier() == DeathArmor.hungerAmplifier(4), "Hunger by pieces worn");
             p.setHealth(20);
-            h.assertTrue(DeathArmor.pang(p, h.getLevel()) && p.getHealth() < 20, "A pang hurts");
+            h.assertTrue(DeathArmor.pang(p, h.getLevel(), DeathArmor.pangMax(4)) && p.getHealth() < 20, "A pang hurts");
             p.setHealth(2.5f);
-            for (int i = 0; i < 10; i++) DeathArmor.pang(p, h.getLevel());
+            for (int i = 0; i < 10; i++) DeathArmor.pang(p, h.getLevel(), DeathArmor.pangMax(4));
             h.assertTrue(p.isAlive() && p.getHealth() >= 1 - 1e-3, "Pangs never kill: " + p.getHealth());
             p.setHealth(1);
-            h.assertTrue(!DeathArmor.pang(p, h.getLevel()), "At half a heart there is nothing to take");
+            h.assertTrue(!DeathArmor.pang(p, h.getLevel(), DeathArmor.pangMax(4)), "At half a heart there is nothing to take");
             h.succeed();
         });
     }
@@ -184,6 +240,12 @@ public final class DeathArmorGameTests {
         h.assertTrue(test.ticksLeft(p) == 4 && warned[0] == 1, "Counts down and warns: " + test.ticksLeft(p));
         for (int i = 0; i < 4; i++) test.tick(p);
         h.assertTrue(expired[0] == 1 && test.ticksLeft(p) == 10, "Expires once and starts again full");
+        int[] fastWarned = {0};
+        KillToll fast = KillToll.of("death_armor_test_fast_toll", 20).warnAt(5).onWarning((b, left) -> fastWarned[0]++);
+        h.addCleanup(ok -> fast.forget(p));
+        for (int i = 0; i < 5; i++) fast.tick(p, 2);
+        h.assertTrue(fast.ticksLeft(p) == 10 && fast.ticksLeft(p, 2) == 5 && fastWarned[0] == 1,
+                "A clock at rate 2 runs twice as fast and warns in real time: " + fast.ticksLeft(p) + ", " + fastWarned[0]);
         var prey = zombie(h, p, 2, 4);
         h.runAfterDelay(3, () -> {
             int before = DeathArmor.TOLL.ticksLeft(p);

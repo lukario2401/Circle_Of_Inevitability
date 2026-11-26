@@ -49,12 +49,14 @@ import java.util.Map;
 /**
  * Vestments of Death (Death pathway). Power with a price on every side.
  * <ul>
- *   <li>Reaping (the Mantle): every pulse, hostiles nearby are struck for the same damage and marked; the closer they
- *       stand, the more marks a pulse gives. Each worn piece widens the reach. Past {@link #MARK_LIMIT} marks the
+ *   <li>Reaping (every piece): every pulse, hostiles nearby are struck for the same damage and marked; the closer they
+ *       stand, the more marks a pulse gives. Each piece worn reaches further, hits harder and pulses sooner
+ *       ({@link #reach}, {@link #pulseDamage}, {@link #pulseTicks}). Past {@link #MARK_LIMIT} marks the
  *       underworld drags them under ({@link DragUnder}): crushed down there, flung out again if they live.</li>
- *   <li>The curse (any piece): endless Hunger; sudden pangs that hurt but never kill; and the toll ({@link KillToll}):
- *       it must be fed a kill every {@link #TOLL_TICKS} ticks. It warns, and then it takes the wearer instead.</li>
- *   <li>Full set: a Spirit Guide ({@link FollowerSummon}) fights beside the wearer and its strikes mark too, but
+ *   <li>The curse (any piece, worse with every piece): endless Hunger; sudden pangs that hurt but never kill; and the
+ *       toll ({@link KillToll}): it must be fed a kill in time ({@link #tollRate}). It warns, and then it takes the
+ *       wearer instead.</li>
+ *   <li>Full set: a Spirit Guide ({@link FollowerSummon}) fights beside the wearer, hurling soul skulls that mark too, but
  *       the wearer's max health ebbs away ({@link MaxHealthDrain}) until they die or take a piece off. Off, it
  *       slowly comes back.</li>
  * </ul>
@@ -70,14 +72,14 @@ public final class DeathArmor {
             ResourceKey.create(EquipmentAssets.ROOT_ID, InevitabilityArmor.id(SET)));
 
     // ---------- Reaping ----------
-    /** Game time of the last Reaping pulse that hit something, kept on the Mantle: the model drops its jaw. */
+    /** Game time of the last Reaping pulse that hit something, kept on every worn piece: the models react to it. */
     public static final String REAP_KEY = "coi_death_reap";
     public static final String MARK = "circle_of_inevitability_death_mark";
-    /** Reach with the Mantle alone; every other piece adds {@link #REACH_PER_PIECE}. */
-    public static final double REACH = 6, REACH_PER_PIECE = 1;
-    public static final int PULSE_TICKS = 30, PULSE_TICKS_FULL_SET = 20;
+    /** Every piece pulses; each one worn adds to the pulse. 1 piece: 4.5 blocks, 1.5 damage, every 2.5 s. 4: 9, 3, 1 s. */
+    public static final double REACH = 3, REACH_PER_PIECE = 1.5;
     /** Every mob in reach takes the same; distance only changes how many marks it gets. */
-    public static final float PULSE_DAMAGE = 2, PULSE_DAMAGE_FULL_SET = 3;
+    public static final float PULSE_DAMAGE = 1, PULSE_DAMAGE_PER_PIECE = .5f;
+    public static final int PULSE_TICKS = 60, PULSE_TICKS_PER_PIECE = 10;
     /** Marks a pulse gives within each distance, nearest ring first. Anything further in reach gets one. */
     public record Ring(double within, int marks) {}
     public static final List<Ring> RINGS = List.of(new Ring(2.5, 3), new Ring(5, 2));
@@ -89,15 +91,20 @@ public final class DeathArmor {
     private static final ModelFx MARK_SKULL = PaleEmperorFx.SKULL.noKeys().scale(.09f).fade(2, 6);
 
     // ---------- The curse ----------
-    public static final int TOLL_TICKS = 6000;
+    /** The toll's clock: it runs {@link #tollRate} times as fast as time, so 1 piece wants a kill every 10 minutes
+     *  and the full set every 4. */
+    public static final int TOLL_TICKS = 24000;
     public static final KillToll TOLL = KillToll.of("death_armor_toll", TOLL_TICKS)
             .warnAt(1200, 600, 200, 100, 80, 60, 40, 20)
             .hud("Toll", 0x9CFFD2)
             .onWarning(DeathArmor::warn)
             .onFed(DeathArmor::fed)
             .onExpired(DeathArmor::takeWearer);
-    /** Chance each second of a sudden pang, and how much it can hurt. A pang never takes the last half heart. */
-    public static final float PANG_CHANCE = 1 / 30f, PANG_MIN = 1, PANG_MAX = 4;
+    /** Chance each second of a sudden pang, per piece worn, and how much it can hurt: 1 up to 1 + pieces. A pang
+     *  never takes the last half heart. 1 piece: about every 40 s, up to 2 damage; full set: about every 10 s, up to 5. */
+    public static final float PANG_CHANCE_PER_PIECE = 1 / 40f, PANG_MIN = 1, PANG_MAX_PER_PIECE = 1;
+    /** Hunger amplifier by pieces worn (index = pieces): Hunger I, I, II, III. */
+    public static final int[] HUNGER = {0, 0, 0, 1, 2};
     public static final ResourceKey<DamageType> TOLL_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, InevitabilityArmor.id("death_toll"));
     public static final ResourceKey<DamageType> CURSE_DAMAGE = ResourceKey.create(Registries.DAMAGE_TYPE, InevitabilityArmor.id("death_curse"));
 
@@ -105,9 +112,13 @@ public final class DeathArmor {
     public static final String GUIDE = "death_armor_spirit_guide";
     public static final FollowerSummon SPIRIT_GUIDE = FollowerSummon.hover(
                     PaleEmperorFx.WRAITH.noKeys().scale(.4f).fade(12, 10), new Vec3(1.1, .75, .3))
-            .strikes(4.5, 30, 4f).lasts(20 * 60 * 60)
+            .strikes(7, 25, 6f).lasts(20 * 60 * 60)
             .targets(TentacleCombat::hostile)
+            .onStrike(DeathArmor::soulSkull)
             .onHit((owner, target) -> mark(owner, target, 2));
+    /** The Spirit Guide's soul skull: flies from the guide to its target in this many ticks. */
+    public static final int SKULL_FLIGHT = 4;
+    private static final ModelFx SOUL_SKULL = PaleEmperorFx.SKULL.noKeys().scale(.16f).glow().fade(0, 2);
     public static final Identifier EBB = InevitabilityArmor.id("death_armor_ebb");
     /** Full set: one point of max health every EBB_TICKS; off, one point back every RECOVER_TICKS. */
     public static final int EBB_TICKS = 300, RECOVER_TICKS = 200;
@@ -145,10 +156,10 @@ public final class DeathArmor {
             return;
         }
         long now = level.getGameTime();
-        if (wearing(wearer, EquipmentSlot.CHEST) && !Root.has(wearer, RootRestriction.ABILITIES) && !Root.has(wearer, RootRestriction.ATTACK)
-                && (wearer.tickCount + wearer.getId()) % (full ? PULSE_TICKS_FULL_SET : PULSE_TICKS) == 0)
-            reap(wearer, level, pieces, full, now);
-        if (cursable(wearer)) curse(wearer, level, full);
+        if (!Root.has(wearer, RootRestriction.ABILITIES) && !Root.has(wearer, RootRestriction.ATTACK)
+                && (wearer.tickCount + wearer.getId()) % pulseTicks(pieces) == 0)
+            reap(wearer, level, pieces, now);
+        if (cursable(wearer)) curse(wearer, level, pieces);
         else TOLL.pause(wearer);
         companion(wearer, full && cursable(wearer));
         ebb(wearer, level, full && cursable(wearer));
@@ -167,9 +178,9 @@ public final class DeathArmor {
     // =========================
 
     /** One pulse: everything hostile in reach is struck for the same damage and marked by distance. */
-    static void reap(LivingEntity wearer, ServerLevel level, int pieces, boolean full, long now) {
+    static void reap(LivingEntity wearer, ServerLevel level, int pieces, long now) {
         double reach = reach(pieces);
-        float damage = full ? PULSE_DAMAGE_FULL_SET : PULSE_DAMAGE;
+        float damage = pulseDamage(pieces);
         boolean any = false;
         for (LivingEntity target : level.getEntitiesOfClass(LivingEntity.class, wearer.getBoundingBox().inflate(reach),
                 other -> reapable(wearer, other, reach))) {
@@ -181,13 +192,18 @@ public final class DeathArmor {
             if (target.isAlive()) mark(wearer, target, marksAt(Math.sqrt(wearer.distanceToSqr(target))));
         }
         if (!any) return;
-        ItemStack mantle = wearer.getItemBySlot(EquipmentSlot.CHEST);
-        CustomData.update(DataComponents.CUSTOM_DATA, mantle, tag -> tag.putLong(REAP_KEY, now));
-        ParticleShapes.ring(level, ParticleTypes.SOUL_FIRE_FLAME, wearer.position().add(0, .15, 0), .6, 28, .25);
+        for (EquipmentSlot slot : InevitabilityArmor.SLOTS) if (wearing(wearer, slot))
+            CustomData.update(DataComponents.CUSTOM_DATA, wearer.getItemBySlot(slot), tag -> tag.putLong(REAP_KEY, now));
+        ParticleShapes.ring(level, ParticleTypes.SOUL_FIRE_FLAME, wearer.position().add(0, .15, 0), .6, 12 + pieces * 6, .12 + pieces * .05);
         level.playSound(null, wearer.blockPosition(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.PLAYERS, .9f, .7f);
     }
 
-    public static double reach(int pieces) { return REACH + Math.max(0, pieces - 1) * REACH_PER_PIECE; }
+    /** Blocks the pulse reaches with this many pieces worn. */
+    public static double reach(int pieces) { return REACH + pieces * REACH_PER_PIECE; }
+    /** What every mob in reach takes from one pulse with this many pieces worn. */
+    public static float pulseDamage(int pieces) { return PULSE_DAMAGE + pieces * PULSE_DAMAGE_PER_PIECE; }
+    /** Ticks between pulses with this many pieces worn. */
+    public static int pulseTicks(int pieces) { return Math.max(1, PULSE_TICKS - pieces * PULSE_TICKS_PER_PIECE); }
 
     /** Hostile species and anything hunting the wearer, never allies, in sight and in reach. */
     static boolean reapable(LivingEntity wearer, LivingEntity target, double reach) {
@@ -219,22 +235,51 @@ public final class DeathArmor {
         return marks;
     }
 
+    /** The Spirit Guide hurls a glowing soul skull, jaw open, along a trail of soul fire; it bursts on its target. */
+    static void soulSkull(LivingEntity owner, LivingEntity target, Vec3 from) {
+        if (!(owner.level() instanceof ServerLevel level)) return;
+        Vec3 to = target.position().add(0, target.getBbHeight() * .6, 0);
+        Vec3 path = to.subtract(from);
+        float distance = (float)path.length();
+        ModelFx skull = SOUL_SKULL.lifetime(SKULL_FLIGHT + 2)
+                .key(0, ModelFx.pose().frame(2).scale(.6f))
+                .key(SKULL_FLIGHT, ModelFx.pose().frame(2).forward(distance).scale(1.1f), ModelFx.Ease.IN);
+        ParticleShapes.modelFacing(level, skull, from, path);
+        ParticleShapes.line(level, ParticleTypes.SOUL_FIRE_FLAME, from, to, 2.5);
+        level.sendParticles(ParticleTypes.SOUL, to.x, to.y, to.z, 10, .25, .3, .25, .05);
+        level.sendParticles(ParticleTypes.SCULK_SOUL, to.x, to.y, to.z, 4, .2, .2, .2, .03);
+        level.playSound(null, owner.blockPosition(), SoundEvents.VEX_CHARGE, SoundSource.PLAYERS, .7f, .6f);
+        level.playSound(null, target.blockPosition(), SoundEvents.SOUL_ESCAPE.value(), SoundSource.PLAYERS, 1f, 1.2f);
+    }
+
     // =========================
     // The curse
     // =========================
 
-    static void curse(LivingEntity wearer, ServerLevel level, boolean full) {
-        Spells.keepEffect(wearer, MobEffects.HUNGER, full ? 1 : 0, 80);
-        if (level.getDifficulty() != Difficulty.PEACEFUL) TOLL.tick(wearer);
+    /** Every piece worn deepens the curse: more hunger, more and harder pangs, a hungrier toll. */
+    static void curse(LivingEntity wearer, ServerLevel level, int pieces) {
+        Spells.keepEffect(wearer, MobEffects.HUNGER, hungerAmplifier(pieces), 80);
+        if (level.getDifficulty() != Difficulty.PEACEFUL) TOLL.tick(wearer, tollRate(pieces));
         else TOLL.pause(wearer);
-        if ((wearer.tickCount + wearer.getId()) % 20 == 0 && wearer.getRandom().nextFloat() < PANG_CHANCE) pang(wearer, level);
+        if ((wearer.tickCount + wearer.getId()) % 20 == 0 && wearer.getRandom().nextFloat() < pangChance(pieces))
+            pang(wearer, level, pangMax(pieces));
     }
 
-    /** A sudden pain that cannot kill: capped so at least half a heart is always left. */
-    public static boolean pang(LivingEntity wearer, ServerLevel level) {
+    public static int hungerAmplifier(int pieces) { return HUNGER[Math.clamp(pieces, 0, HUNGER.length - 1)]; }
+    /** Chance each second of a pang with this many pieces worn. */
+    public static float pangChance(int pieces) { return pieces * PANG_CHANCE_PER_PIECE; }
+    /** The most one pang can hurt with this many pieces worn. */
+    public static float pangMax(int pieces) { return PANG_MIN + pieces * PANG_MAX_PER_PIECE; }
+    /** How fast the toll's clock runs: 1 piece 10 minutes, 2 about 6.7, 3 five, the full set 4. */
+    public static double tollRate(int pieces) { return pieces + 1; }
+    /** Real ticks the toll allows with this many pieces worn, from full. */
+    public static int tollTicks(int pieces) { return (int)Math.ceil(TOLL_TICKS / tollRate(pieces)); }
+
+    /** A sudden pain of up to 'max' that cannot kill: capped so at least half a heart is always left. */
+    public static boolean pang(LivingEntity wearer, ServerLevel level, float max) {
         float spare = wearer.getHealth() + wearer.getAbsorptionAmount() - 1;
         if (spare <= 0) return false;
-        float amount = Math.min(spare, PANG_MIN + wearer.getRandom().nextFloat() * (PANG_MAX - PANG_MIN));
+        float amount = Math.min(spare, PANG_MIN + wearer.getRandom().nextFloat() * Math.max(0, max - PANG_MIN));
         DamageSource source = new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(CURSE_DAMAGE));
         wearer.invulnerableTime = 0;
         boolean[] hurt = {false};
