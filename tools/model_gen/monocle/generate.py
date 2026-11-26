@@ -76,7 +76,6 @@ def item_model():
     lens = box((4.4, 4.8, 7.9), (11.6, 13.2, 8.1), 'lens')
     lens['faces']['north']['uv'] = lens['faces']['south']['uv'] = uv('lens')
     e.append(lens)
-    e.append(box((7.4, 8.4, 7.75), (8.6, 9.6, 8.25), 'iris'))     # the eye that looks back
     # A chain hanging from the rim, swinging out to a clasp.
     for k in range(7):
         t = k / 6

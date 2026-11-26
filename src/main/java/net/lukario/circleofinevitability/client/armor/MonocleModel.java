@@ -17,7 +17,7 @@ import net.minecraft.world.item.component.CustomData;
  */
 public final class MonocleModel extends HumanoidModel<HumanoidRenderState> {
     // Atlas regions, kept in sync with the generator.
-    private static final int[] GOLD = {0, 0}, LENS = {16, 0}, CHAIN = {32, 0}, STRING = {48, 0}, WOOD = {0, 16}, IRIS = {16, 16};
+    private static final int[] GOLD = {0, 0}, LENS = {16, 0}, CHAIN = {32, 0}, STRING = {48, 0}, WOOD = {0, 16};
     private final ModelPart strings;
 
     public MonocleModel(ModelPart root) {
@@ -43,7 +43,6 @@ public final class MonocleModel extends HumanoidModel<HumanoidRenderState> {
                 .addBox(-3.9f, -4.8f, -4.7f, .5f, 2.9f, .5f)
                 .addBox(-.6f, -4.8f, -4.7f, .5f, 2.9f, .5f);
         at(monocle, LENS).addBox(-3.45f, -4.75f, -4.5f, 2.9f, 2.8f, .15f);
-        at(monocle, IRIS).addBox(-2.3f, -3.6f, -4.56f, .6f, .6f, .1f);
         // The chain sags from the bottom of the rim back to the right ear.
         for (int k = 0; k < 6; k++) {
             float t = k / 5f;
