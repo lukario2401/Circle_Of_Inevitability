@@ -3,6 +3,6 @@
   "minVersion": "0.8.7",
   "package": "net.lukario.circleofinevitability.client.mixin",
   "compatibilityLevel": "JAVA_21",
-  "client": ["CameraMixin", "CameraPickMixin", "MouseHandlerMixin"],
+  "client": ["CameraMixin", "CameraPickMixin", "MouseHandlerMixin", "MinecraftResizeMixin"],
   "injectors": { "defaultRequire": 1 }
 }
