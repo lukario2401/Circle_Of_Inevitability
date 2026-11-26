@@ -62,8 +62,8 @@ def validate(root):
         for name in animation['frames']:assert topology(models[name])==topology(models[base]),name
         assert len({json.dumps(models[n]['elements'],sort_keys=True) for n in animation['frames']})>=3,base
     with Image.open(root/'textures/model_fx/filthy_monarch/abyss_atlas.png') as im:
-        assert im.size==(64,256)
-        assert len({im.crop((0,f*64,64,(f+1)*64)).tobytes() for f in range(4)})==4
+        assert im.size==(128,512)
+        assert len({im.crop((0,f*128,128,(f+1)*128)).tobytes() for f in range(4)})==4
     assert json.loads((root/'textures/model_fx/filthy_monarch/abyss_atlas.png.mcmeta').read_text())['animation']['frametime']==4
     events=json.loads((root/'sounds.json').read_text());lang=json.loads((root/'lang/en_us.json').read_text())
     java=(REPO/'src/main/java/net/lukario/circleofinevitability/sounds/ModSounds.java').read_text()

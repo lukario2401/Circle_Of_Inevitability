@@ -41,7 +41,7 @@ def generate(root,skip_audio=False):
               'sounds':SOUNDS,'ability_models':ABILITY_MODELS,'models':records,
               'animations':{n:{'frames':[f'{n}_{i}' for i in range(4)],'pivot_pixels':[8,0,8]}
                             for n in ANIMATED},
-              'texture_animations':{'abyss_atlas':{'frames':4,'size':[64,64],'frametime':4}},
+              'texture_animations':{'abyss_atlas':{'frames':4,'size':[128,128],'frametime':4}},
               'shared_files':{'sounds.json':['filthy_monarch.'+n for n in SOUNDS],'lang/en_us.json':list(lang)},
               'files':{p.relative_to(root).as_posix():hashlib.sha256(p.read_bytes()).hexdigest() for p in sorted(files)}}
     write_json(root/'filthy_monarch/asset_manifest.json',manifest)
