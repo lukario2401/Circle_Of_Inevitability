@@ -138,22 +138,23 @@ grow with time worn; so does the price.
 | Time worn | Power |
 | --- | --- |
 | From the start: **Spirit Vision** | Night Vision; living things within 20 blocks glow; whatever you look at (up to 40 blocks, through walls) is read on the action bar: health, whether it is hunting you or is a friend, its Pathway and Sequence, and whether its strings are held. **Gaze** (key, default **B**) reads a target within 24 blocks in full in chat, including its abilities, and makes it glow for 30 s. 3 s cooldown. |
-| 5 minutes: **Mystery Prying** | Ores within 7 blocks shimmer purple, for the wearer only. **Foresight**: a hit of a third of your max health or more is seen coming and never lands, once a minute. |
-| 10 minutes: **Spirit Body Threads** | Gaze on a mob (not a friend, at most 100 max health) pulls its threads: it becomes your marionette for 60 s (status/Marionette, up to its usual cap). 30 s cooldown. Sneak + Gaze still reads instead. A marionette control bar now hangs above *your* head. |
+| 2.5 minutes: **Mystery Prying** | Ores within 7 blocks shimmer purple, for the wearer only. **Foresight**: a hit of a third of your max health or more is seen coming and never lands, once a minute. |
+| 5 minutes: **Spirit Body Threads** | Gaze on a mob (not a friend, at most 100 max health) pulls its threads: it becomes your marionette for 60 s (status/Marionette, up to its usual cap). 30 s cooldown. Sneak + Gaze still reads instead. A marionette control bar now hangs above *your* head. |
 
 **Losing yourself.** "Lost" time rises by one second for every second the Monocle is worn and falls by one second
-for every second it is not (carried in the inventory or stored, it does nothing). Each Gaze adds 5 s and each pull of
-threads 30 s. From 2 minutes your body starts acting on its own: the chance each second grows from 1 in 60 to 1 in 3
+for every second it is not (carried in the inventory or stored, it does nothing). Each Gaze adds 3 s and each pull of
+threads 15 s. A "Worn" counter left of the hotbar shows the seconds worn out of 600 (and counts
+back down while it is off). From 1 minute your body starts acting on its own: the chance each second grows from 1 in 60 to 1 in 3
 at the end. What it does gets worse as you go:
 
 | Lost | Acts that can happen |
 | --- | --- |
-| 2 min+ | glance somewhere else, twitch an arm, mutter (only you hear it) |
-| 5 min+ | + a stumbling step, a jump, switching the held hotbar slot |
-| 10 min+ | + staring straight up, wandering off, dropping what you hold, laughing (players within 16 blocks see it) |
-| 15 min+ | + striking whatever is nearest within 3.5 blocks, friend or foe |
+| 1 min+ | glance somewhere else, twitch an arm, mutter (only you hear it) |
+| 2.5 min+ | + a stumbling step, a jump, switching the held hotbar slot |
+| 5 min+ | + staring straight up, wandering off, dropping what you hold, laughing (players within 16 blocks see it) |
+| 7.5 min+ | + striking whatever is nearest within 3.5 blocks, friend or foe |
 
-Warnings and a "Yourself" timer appear at 50%, 75% and 90%. At **20 minutes** the Monocle kills its wearer
+Warnings and a "Yourself" timer appear at 50%, 75% and 90%. At **10 minutes** the Monocle kills its wearer
 (`death.attack.circle_of_inevitability.monocle`); death resets the clock. Creative and spectator wearers still
 progress (to try the powers) but never act on their own or die of it.
 

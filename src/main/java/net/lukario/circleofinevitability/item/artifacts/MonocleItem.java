@@ -73,13 +73,13 @@ public final class MonocleItem extends SealedArtifactItem {
             Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, ID));
 
     /** Seconds of wearing. */
-    public static final int STAGE_TWO = 300, STAGE_THREE = 600, LOSS_STARTS = 120, DEATH = 1200;
+    public static final int STAGE_TWO = 150, STAGE_THREE = 300, LOSS_STARTS = 60, DEATH = 600;
     public static final double VISION_RANGE = 20, READ_RANGE = 40, GAZE_RANGE = 24, ORE_RANGE = 7;
     public static final int GAZE_COOLDOWN = 60, THREADS_COOLDOWN = 600, MARIONETTE_TICKS = 1200;
     public static final float THREADS_MAX_HEALTH = 100, FORESIGHT_SHARE = 1 / 3f;
     public static final int FORESIGHT_RECHARGE = 1200;
     /** Seconds of loss a gaze adds: looking into others costs a piece of yourself. */
-    public static final int GAZE_COST = 5, THREADS_COST = 30;
+    public static final int GAZE_COST = 3, THREADS_COST = 15;
     /** On the worn stack, for the model (the strings above the head from stage III). */
     public static final String STAGE_KEY = "coi_monocle_stage";
 
@@ -145,6 +145,7 @@ public final class MonocleItem extends SealedArtifactItem {
         int before = lost(player);
         int lost = Math.clamp(before + (worn ? 1 : -1), 0, DEATH);
         setLost(player, lost);
+        showWorn(player, before, lost);
         if (!worn) {
             if (state(player, ID).getIntOr(WARNED, 0) > 0) HudTimer.hide(player, "monocle_lost");
             state(player, ID).putInt(WARNED, 0);
@@ -162,6 +163,13 @@ public final class MonocleItem extends SealedArtifactItem {
         }
         warn(player, lost);
         if (player.getRandom().nextFloat() < actChance(lost)) actOnItsOwn(level, player, lost);
+    }
+
+    /** "Worn 205/600": seconds worn (what is left of it while recovering), next to the hotbar. */
+    private static void showWorn(ServerPlayer player, int before, int lost) {
+        if (lost > 0) net.lukario.circleofinevitability.combat.HudCounter.show(player, "monocle_worn", "", "Worn (s)", lost, DEATH,
+                lost >= DEATH * 3 / 4 ? 0xC0392B : lost >= LOSS_STARTS ? 0xB07CE0 : 0xD6AC4A);
+        else if (before > 0) net.lukario.circleofinevitability.combat.HudCounter.hide(player, "monocle_worn");
     }
 
     private static void markStage(ItemStack stack, int stage) {
@@ -210,6 +218,7 @@ public final class MonocleItem extends SealedArtifactItem {
 
     private static void reset(ServerPlayer player) {
         setLost(player, 0);
+        net.lukario.circleofinevitability.combat.HudCounter.hide(player, "monocle_worn");
         state(player, ID).putInt(WARNED, 0);
         HudTimer.hide(player, "monocle_lost");
     }
