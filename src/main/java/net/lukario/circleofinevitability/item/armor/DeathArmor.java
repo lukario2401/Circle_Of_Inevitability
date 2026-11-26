@@ -87,7 +87,9 @@ public final class DeathArmor {
     public static final int MARK_LIMIT = 6;
     /** One mark wears off every this many ticks while the wearer is not marking it. */
     public static final int MARK_DROP = 60;
-    public static final DragUnder CLAIM = DragUnder.of(30f).sink(14).hold(36).throwsUp(1.05).arms(4);
+    /** The underworld remembers: a mob's 2nd claim crushes for 2x, its 3rd for 3x, and so on. */
+    public static final String CLAIMS = "death_armor_claims";
+    public static final DragUnder CLAIM = DragUnder.of(30f).sink(14).hold(36).throwsUp(1.05).arms(4).escalates(CLAIMS);
     private static final ModelFx MARK_SKULL = PaleEmperorFx.SKULL.noKeys().scale(.09f).fade(2, 6);
 
     // ---------- The curse ----------
@@ -226,9 +228,14 @@ public final class DeathArmor {
         if (marks > MARK_LIMIT) {
             Marks.clear(target, wearer, MARK);
             ParticleShapes.clearModels(level, target, MARK);
-            if (CLAIM.drag(wearer, target) && wearer instanceof ServerPlayer player)
-                player.sendOverlayMessage(Component.translatable("message.circle_of_inevitability." + SET + ".claimed",
-                        target.getDisplayName()));
+            if (CLAIM.drag(wearer, target) && wearer instanceof ServerPlayer player) {
+                int times = DragUnder.timesDragged(target, CLAIMS);
+                player.sendOverlayMessage(times > 1
+                        ? Component.translatable("message.circle_of_inevitability." + SET + ".claimed_again",
+                                target.getDisplayName(), times)
+                        : Component.translatable("message.circle_of_inevitability." + SET + ".claimed",
+                                target.getDisplayName()));
+            }
             return 0;
         }
         SpellFx.overHead(level, target, MARK_SKULL.lifetime(MARK_DROP + 10), marks, MARK);

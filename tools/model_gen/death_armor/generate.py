@@ -694,15 +694,16 @@ def lang():
         entries[f'item.circle_of_inevitability.{SET}_{item}'] = name
     entries[f'item.circle_of_inevitability.{SET}_core'] = "Ferryman's Obol"
     t = f'tooltip.circle_of_inevitability.{SET}.'
-    entries[t+'power'] = "Reaping: nearby hostiles are struck and marked again and again, the closest the most; past 6 marks the dead drag them underground. Every piece worn reaches further, hits harder and pulses faster."
+    entries[t+'power'] = "Reaping: nearby hostiles are struck and marked again and again, the closest the most; past 6 marks the dead drag them underground, harder every time they come back for the same one. Every piece worn reaches further, hits harder and pulses faster."
     entries.pop(t+'set', None)
     entries[t+'curse'] = 'Cursed, worse with every piece: endless hunger and sudden pains, and it must be fed a kill in time (10 minutes with one piece, 4 with the full set) or it takes you instead.'
-    entries[t+'full_set'] = 'Full set: a Spirit Guide hurls soul skulls at hostiles and marks them, but your life ebbs away until you take a piece off. Repairs with Bone Blocks.'
+    entries[t+'full_set'] = 'Full set: a Spirit Guide hurls soul skulls at hostiles and marks them, but your life ebbs away until you take a piece off.'
     m = f'message.circle_of_inevitability.{SET}.'
     entries[m+'hungry'] = 'The Vestments of Death hunger. Feed them a kill within %s.'
     entries[m+'starving'] = 'The Vestments of Death are starving: %s left.'
     entries[m+'fed'] = 'The Vestments of Death are fed.'
     entries[m+'claimed'] = 'The underworld claims %s.'
+    entries[m+'claimed_again'] = 'The underworld claims %s again (x%s damage).'
     entries[m+'ebbing'] = 'Your life ebbs into the Vestments of Death.'
     entries[m+'toll_hud'] = 'Toll'
     entries[f'death.attack.circle_of_inevitability.death_toll'] = '%1$s was taken by their own Vestments of Death'

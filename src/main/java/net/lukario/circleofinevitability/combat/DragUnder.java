@@ -27,44 +27,64 @@ import java.util.UUID;
  *   static final DragUnder CLAIM = DragUnder.of(30f)      // 30 damage under the ground, in three crushes
  *           .sink(14).hold(36)                            // goes down in 0.7 s, stays down 1.8 s
  *           .throwsUp(1.0)                                // and is flung out at this speed if it lives
- *           .arms(4);                                     // how many arms come for it
+ *           .arms(4)                                      // how many arms come for it
+ *           .escalates("my_claims");                      // optional: the 2nd drag of the same target hits 2x, ...
  *
  *   if (CLAIM.drag(player, enemy)) { ... }                // false: it is being dragged already, or cannot be
  *
  * The damage is the owner's (they get the kill), lands through Domes and Substitutes, and is split into crushes
  * while it is under. Whatever dies down there leaves its loot on the surface (status/Burial puts it back first).
+ * With escalates(tally), every target remembers how often this tally has dragged it (kept on the target, saved
+ * with it): its n-th drag deals n times the damage. {@link #timesDragged} reads the count.
  * Something too big to bury (Burial.MAX_HEIGHT/MAX_WIDTH) is still seized and crushed where it stands, and not
  * thrown. Uses the Pale Emperor's underworld arms (PaleEmperorFx.UNDERWORLD_ARM).
  */
-public record DragUnder(float damage, int sinkTicks, int holdTicks, double throwSpeed, int arms, int crushes) {
+public record DragUnder(float damage, int sinkTicks, int holdTicks, double throwSpeed, int arms, int crushes,
+                        String tally) {
     /** The tick the arms close on it, after they burst out of the ground. */
     public static final int SEIZE = 10;
     private static final double ARM_DEPTH = 3.4;
     private static final Set<UUID> DRAGGING = new HashSet<>();
+    private static final String TALLY_PREFIX = "circle_of_inevitability_dragged_";
 
     public DragUnder {
         if (!Float.isFinite(damage) || damage < 0 || sinkTicks < 1 || holdTicks < 1 || !Double.isFinite(throwSpeed)
-                || arms < 0 || crushes < 1)
+                || arms < 0 || crushes < 1 || (tally != null && tally.isBlank()))
             throw new IllegalArgumentException("Invalid drag");
     }
 
-    public static DragUnder of(float damage) { return new DragUnder(damage, 14, 36, 1.0, 4, 3); }
-    public DragUnder sink(int ticks) { return new DragUnder(damage, ticks, holdTicks, throwSpeed, arms, crushes); }
-    public DragUnder hold(int ticks) { return new DragUnder(damage, sinkTicks, ticks, throwSpeed, arms, crushes); }
-    public DragUnder throwsUp(double speed) { return new DragUnder(damage, sinkTicks, holdTicks, speed, arms, crushes); }
-    public DragUnder arms(int count) { return new DragUnder(damage, sinkTicks, holdTicks, throwSpeed, count, crushes); }
-    public DragUnder crushes(int count) { return new DragUnder(damage, sinkTicks, holdTicks, throwSpeed, arms, count); }
+    public static DragUnder of(float damage) { return new DragUnder(damage, 14, 36, 1.0, 4, 3, null); }
+    public DragUnder sink(int ticks) { return new DragUnder(damage, ticks, holdTicks, throwSpeed, arms, crushes, tally); }
+    public DragUnder hold(int ticks) { return new DragUnder(damage, sinkTicks, ticks, throwSpeed, arms, crushes, tally); }
+    public DragUnder throwsUp(double speed) { return new DragUnder(damage, sinkTicks, holdTicks, speed, arms, crushes, tally); }
+    public DragUnder arms(int count) { return new DragUnder(damage, sinkTicks, holdTicks, throwSpeed, count, crushes, tally); }
+    public DragUnder crushes(int count) { return new DragUnder(damage, sinkTicks, holdTicks, throwSpeed, arms, count, tally); }
+    /** Each drag of the same target under this tally hits harder: the n-th one deals n times the damage. */
+    public DragUnder escalates(String tally) { return new DragUnder(damage, sinkTicks, holdTicks, throwSpeed, arms, crushes, tally); }
+
+    /** How many times drags under this tally have taken the target (0 if never). */
+    public static int timesDragged(LivingEntity target, String tally) {
+        return target.getPersistentData().getIntOr(TALLY_PREFIX + tally, 0);
+    }
+
+    /** The damage this drag would deal to the target now: the base damage, times its next drag number if escalating. */
+    public float damageFor(LivingEntity target) {
+        return tally == null ? damage : damage * (timesDragged(target, tally) + 1);
+    }
 
     /** Ticks from the drag starting to the target being back on the surface. */
     public int totalTicks() { return SEIZE + sinkTicks + holdTicks; }
 
     public static boolean isDragging(LivingEntity target) { return DRAGGING.contains(target.getUUID()); }
 
-    /** Starts the drag. False if the target is already being dragged or buried, or is not alive. */
+    /** Starts the drag. False if the target is already being dragged or buried, or is not alive.
+     *  An escalating drag counts this one against the target as it starts. */
     public boolean drag(LivingEntity owner, LivingEntity target) {
         if (!(target.level() instanceof ServerLevel level) || !target.isAlive() || Burial.isBuried(target)
                 || !DRAGGING.add(target.getUUID()))
             return false;
+        float total = damageFor(target);
+        if (tally != null) target.getPersistentData().putInt(TALLY_PREFIX + tally, timesDragged(target, tally) + 1);
         Vec3 ground = target.position();
         Root.apply(target, SEIZE + 2, RootRestriction.EVERYTHING);
         armsRise(level, ground, target.getBbWidth());
@@ -81,7 +101,7 @@ public record DragUnder(float damage, int sinkTicks, int holdTicks, double throw
         });
         for (int i = 0; i < crushes; i++) {
             int at = SEIZE + sinkTicks + (holdTicks - 4) * i / crushes;
-            Later.run(level, at, () -> crush(owner, target, level));
+            Later.run(level, at, () -> crush(owner, target, level, total / crushes));
         }
         Later.run(level, totalTicks(), () -> {
             DRAGGING.remove(target.getUUID());
@@ -94,12 +114,12 @@ public record DragUnder(float damage, int sinkTicks, int holdTicks, double throw
         return true;
     }
 
-    private void crush(LivingEntity owner, LivingEntity target, ServerLevel level) {
+    private void crush(LivingEntity owner, LivingEntity target, ServerLevel level, float amount) {
         if (!target.isAlive() || target.level() != level) return;
         Vec3 at = Burial.isBuried(target) ? target.position().add(0, target.getBbHeight() + .4, 0) : target.position();
         level.sendParticles(ParticleTypes.SCULK_SOUL, at.x, at.y + .3, at.z, 6, .4, .2, .4, .03);
         level.playSound(null, target.blockPosition(), SoundEvents.SKELETON_HURT, SoundSource.HOSTILE, .9f, .5f);
-        Spells.strikeThrough(owner, target, damage / crushes);
+        Spells.strikeThrough(owner, target, amount);
     }
 
     /** Back on the surface and flung up and a little away, with a burst of soil and souls. */

@@ -87,7 +87,9 @@ public final class ModItems {
     }
     private static RegistryObject<Item> death(String name, net.minecraft.world.item.equipment.ArmorType type) {
         return ITEMS.register(name, () -> new net.lukario.circleofinevitability.item.armor.TentacleArmorItem(
-                properties(name).rarity(Rarity.EPIC), net.lukario.circleofinevitability.item.armor.DeathArmor.MATERIAL,
+                properties(name).rarity(Rarity.EPIC)
+                        .component(net.minecraft.core.component.DataComponents.UNBREAKABLE, net.minecraft.util.Unit.INSTANCE),
+                net.lukario.circleofinevitability.item.armor.DeathArmor.MATERIAL,
                 type, net.lukario.circleofinevitability.item.armor.DeathArmor.SET));
     }
 

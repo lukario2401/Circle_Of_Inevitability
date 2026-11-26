@@ -106,7 +106,8 @@ public final class DeathArmorGameTests {
         for (var slot : InevitabilityArmor.SLOTS) {
             ItemStack stack = p.getItemBySlot(slot);
             h.assertTrue(stack.get(DataComponents.EQUIPPABLE).slot() == slot, "Correct equipment slot: " + slot);
-            h.assertTrue(stack.has(DataComponents.ENCHANTABLE) && stack.has(DataComponents.REPAIRABLE), "Vanilla enchanting and repair components");
+            h.assertTrue(stack.has(DataComponents.ENCHANTABLE), "Vanilla enchanting component");
+            h.assertTrue(stack.has(DataComponents.UNBREAKABLE) && !stack.isDamageableItem(), "Unbreakable: " + slot);
         }
         var bases = List.of(Items.NETHERITE_HELMET, Items.NETHERITE_CHESTPLATE, Items.NETHERITE_LEGGINGS, Items.NETHERITE_BOOTS);
         for (int i = 0; i < 4; i++) {
@@ -116,7 +117,9 @@ public final class DeathArmorGameTests {
                     new ItemStack(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE), base, new ItemStack(ModItems.DEATH_CORE.get()));
             var recipe = h.getLevel().getServer().getRecipeManager().getRecipeFor(net.minecraft.world.item.crafting.RecipeType.SMITHING, input, h.getLevel()).orElseThrow();
             ItemStack result = recipe.value().assemble(input);
-            h.assertTrue(result.is(item(InevitabilityArmor.SLOTS[i])) && result.getDamageValue() == 9, "Smithing creates Death armor and keeps damage");
+            h.assertTrue(result.is(item(InevitabilityArmor.SLOTS[i])), "Smithing creates Death armor");
+            h.assertTrue(result.has(DataComponents.UNBREAKABLE) && !result.isDamageableItem() && !result.isBarVisible(),
+                    "Even from a worn Netherite piece it is unbreakable");
         }
         h.succeed();
     }
@@ -181,7 +184,7 @@ public final class DeathArmorGameTests {
         });
     }
 
-    /** Past the limit it is dragged under, crushed, and thrown back out if it lives. */
+    /** Past the limit it is dragged under, crushed, and thrown back out if it lives; the next claim crushes twice as hard. */
     private static void claim(GameTestHelper h) {
         var p = player(h, null);
         var survivor = zombie(h, p, 3, 200);
@@ -198,6 +201,25 @@ public final class DeathArmorGameTests {
                     "It took the full crushing: " + survivor.getHealth());
             h.assertTrue(!Burial.isBuried(survivor) && !DragUnder.isDragging(survivor), "And is back on the surface");
             h.assertTrue(survivor.getDeltaMovement().y > .3 || survivor.getY() > startY + .3, "Thrown out of the ground");
+            h.assertTrue(DragUnder.timesDragged(survivor, DeathArmor.CLAIMS) == 1, "The underworld remembers it");
+            h.assertTrue(DeathArmor.CLAIM.damageFor(survivor) == 2 * DeathArmor.CLAIM.damage(), "Its next claim is worth 2x");
+        });
+        float[] before = new float[2];
+        h.runAfterDelay(done + 30, () -> {
+            before[0] = 200 - survivor.getHealth();
+            before[1] = survivor.getHealth();
+            h.assertTrue(DeathArmor.mark(p, survivor, DeathArmor.MARK_LIMIT + 1) == 0 && DragUnder.isDragging(survivor),
+                    "Claimed a second time");
+        });
+        h.runAfterDelay(2 * done + 32, () -> {
+            float first = before[0], second = before[1] - survivor.getHealth();
+            // Each figure also holds the fall after the throw, a few points at most.
+            float crush = DeathArmor.CLAIM.damage();
+            h.assertTrue(survivor.isAlive() && first >= crush - .01f && first < 1.5f * crush
+                            && second >= 2 * crush - .01f && second < 2.5f * crush,
+                    "The second claim crushes twice as hard: " + first + " then " + second);
+            h.assertTrue(DragUnder.timesDragged(survivor, DeathArmor.CLAIMS) == 2
+                    && DeathArmor.CLAIM.damageFor(survivor) == 3 * DeathArmor.CLAIM.damage(), "And the third would be 3x");
             h.succeed();
         });
     }

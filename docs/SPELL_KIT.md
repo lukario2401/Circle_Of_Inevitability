@@ -2316,14 +2316,17 @@ The whole scene around a `Burial`: arms of the dead (`PaleEmperorFx.UNDERWORLD_A
 static final DragUnder CLAIM = DragUnder.of(30f)   // 30 damage while under, in 3 crushes (.crushes(n))
         .sink(14).hold(36)                         // goes down in 0.7 s, stays down 1.8 s
         .throwsUp(1.05)                            // flung out at this speed if it lives
-        .arms(4);
+        .arms(4)
+        .escalates("my_claims");                   // optional: the n-th drag of the same target deals n x damage
 
 if (CLAIM.drag(player, enemy)) { ... }             // false: already being dragged or buried, or dead
 DragUnder.isDragging(enemy)                        // from the arms rising until it is back up
 CLAIM.totalTicks()                                 // DragUnder.SEIZE + sink + hold
+DragUnder.timesDragged(enemy, "my_claims")         // how often that tally has dragged it (saved on the target)
+CLAIM.damageFor(enemy)                             // what its next drag would deal: 30, then 60, 90, 120...
 ```
 
-The damage is the owner's (`Spells.strikeThrough`: they get the kill, Domes and Substitutes do not stop it). Something too big to bury is seized and crushed where it stands, and not thrown. The Vestments of Death drag whatever carries more than 6 of their marks.
+The damage is the owner's (`Spells.strikeThrough`: they get the kill, Domes and Substitutes do not stop it). Something too big to bury is seized and crushed where it stands, and not thrown. Each tally keeps its own count, so two abilities escalating under different names do not feed each other. The Vestments of Death drag whatever carries more than 6 of their marks, escalating under `death_armor_claims`.
 
 ### MaxHealthDrain
 

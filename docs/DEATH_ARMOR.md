@@ -20,7 +20,7 @@ What moves (`client/armor/DeathArmorModel.java`): the cape strips swing with the
 the obol swing on their chains, the shroud panels are pushed by the stride, the hood's point sways, the eyes
 flicker and the heart beats twice every 1.5 s. On every Reaping pulse the jaw drops, and the eyes and the heart flare; each piece reacts to its own pulse.
 
-## Obtaining and repairing
+## Obtaining
 
 Craft **four Ferryman's Obols**:
 
@@ -31,7 +31,8 @@ Bone Block    Wither Skeleton Skull   Bone Block
 ```
 
 At a smithing table, combine a **Netherite Upgrade Smithing Template**, the matching **Netherite armor piece** and
-**one obol**. Repair with **Bone Blocks** in an anvil. The set is in the **Sealed Artifacts** creative tab.
+**one obol**. Every piece is **Unbreakable**: it never loses durability, even when made from a worn Netherite piece.
+The set is in the **Sealed Artifacts** creative tab.
 
 IDs: `circle_of_inevitability:death_helmet`, `death_chestplate`, `death_leggings`, `death_boots` and `death_core`.
 
@@ -52,7 +53,9 @@ Every piece carries the full power and the full curse. The more pieces you wear,
 | | Effect |
 | --- | --- |
 | **Reaping** (any piece) | Every pulse hits every hostile mob in sight within reach, plus anything hunting you, for the same damage whatever the distance. Distance changes the marks: within 2.5 blocks a pulse gives **3 marks**, within 5 blocks **2**, further out **1**. Allies, pets and passive mobs are never touched. Marks fade one at a time, one every 3 s you leave the mob alone. Tiny skulls over a mob's head show how many it carries. Every worn piece shows the pulse: the jaw drops, the eyes and heart flare. |
-| **Claimed by the underworld** | A mob with more than **6 marks** is seized by four arms of the dead. They drag it under the ground, where it takes **30 damage** in three crushes. If it survives, it is thrown out of the ground. Anything too big to bury is crushed where it stands. Whatever dies down there drops its loot on the surface. |
+| **Claimed by the underworld** | A mob with more than **6 marks** is seized by four arms of the dead. They drag it under the ground, where it takes **30 damage** in three crushes. If it survives, it is thrown out of the ground. The underworld
+remembers every mob it has claimed: the second claim of the same mob crushes for **2×** (60), the third for **3×**
+(90), the fourth for **4×** (120), and so on. The count stays with the mob, even across saves. Anything too big to bury is crushed where it stands. Whatever dies down there drops its loot on the surface. |
 | **Spirit Guide** (full set) | A small wraith floats at your shoulder. Every 1.25 s it hurls a glowing soul skull, jaw open and trailing soul fire, at the nearest hostile within 7 blocks: 6 damage and 2 marks. It never attacks passive mobs. |
 
 ## The price
@@ -66,17 +69,18 @@ Every piece carries the full power and the full curse. The more pieces you wear,
 
 Creative and spectator players carry no curse. Armor stands only display the set.
 
-Protection, toughness, knockback resistance, durability and enchantability match the other three sets.
+Protection, toughness, knockback resistance and enchantability match the other three sets; unlike them, it never breaks.
 
 ## Tuning and reuse
 
 Every number above is a public constant at the top of `item/armor/DeathArmor.java` (`REACH`/`REACH_PER_PIECE`,
-`PULSE_DAMAGE`, `PULSE_TICKS`, `RINGS`, `MARK_LIMIT`, `CLAIM`, `HUNGER`, `PANG_CHANCE_PER_PIECE`, `TOLL_TICKS`,
+`PULSE_DAMAGE`, `PULSE_TICKS`, `RINGS`, `MARK_LIMIT`, `CLAIM`, `CLAIMS`, `HUNGER`, `PANG_CHANCE_PER_PIECE`, `TOLL_TICKS`,
 `EBB_TICKS`, and the rest); `reach`, `pulseDamage`, `pulseTicks`, `pangChance`, `pangMax`, `tollRate` turn them
 into the per-piece values. The general parts live where any set or
 ability can use them, documented in the [spell kit](SPELL_KIT.md):
 
-- [`DragUnder`](SPELL_KIT.md#dragunder) (`combat/`): the arms, burial, crushing and the throw.
+- [`DragUnder`](SPELL_KIT.md#dragunder) (`combat/`): the arms, burial, crushing and the throw, and `escalates(...)` for
+  drags that hit harder every time they take the same target.
 - [`KillToll`](SPELL_KIT.md#killtoll) (`status/`): "feed it a kill or else", with warnings, a HUD clock, a rate for a
   clock that runs faster, and pause on unequip.
 - [`MaxHealthDrain`](SPELL_KIT.md#maxhealthdrain) (`status/`): max health taken and given back, per source.
