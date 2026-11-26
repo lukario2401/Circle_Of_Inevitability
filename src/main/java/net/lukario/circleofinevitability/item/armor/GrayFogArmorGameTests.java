@@ -62,6 +62,9 @@ public final class GrayFogArmorGameTests {
     }
     private static Mob zombie(GameTestHelper h,ServerPlayer p,double distance) {
         Mob m=h.spawnWithNoFreeWill(EntityTypes.ZOMBIE,1,2,1);m.setNoGravity(true);
+        // spawnWithNoFreeWill only clears the goal selector: the zombie's target selector would still
+        // pick the nearby player on its own. NoAI keeps targets to what the test sets explicitly.
+        m.setNoAi(true);
         m.getPersistentData().putBoolean("circle_of_inevitability_beyonder_rolled",true);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_mobs.BeyonderMobs.clear(m);
         m.setPos(p.getX()+distance,p.getY(),p.getZ());
