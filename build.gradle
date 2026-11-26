@@ -79,6 +79,10 @@ minecraft {
                 workingDir = layout.buildDirectory.dir('creeping-hunger-gametest')
                 args '--tests', 'circle_of_inevitability:creeping_hunger_*'
             }
+            if (providers.gradleProperty('monocleTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('monocle-gametest')
+                args '--tests', 'circle_of_inevitability:monocle_*'
+            }
             if (providers.gradleProperty('artifactTests').isPresent()) {
                 workingDir = layout.buildDirectory.dir('artifact-gametest')
                 args '--tests', 'circle_of_inevitability:artifact_*'

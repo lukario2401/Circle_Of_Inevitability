@@ -14,7 +14,7 @@ public class PacketHandler {
 
     private static final SimpleChannel INSTANCE = ChannelBuilder.named(
                     Identifier.fromNamespaceAndPath(CircleOfInevitability.MOD_ID, "main"))
-            .networkProtocolVersion(12)
+            .networkProtocolVersion(13)
             .simpleChannel();
 
     public static void register() {
@@ -22,6 +22,12 @@ public class PacketHandler {
                 .encoder(SKeyPressSpawnEntityPacket::encode)
                 .decoder(SKeyPressSpawnEntityPacket::new)
                 .consumerMainThread(SKeyPressSpawnEntityPacket::handle)
+                .add();
+
+        INSTANCE.messageBuilder(SMonocleGazePacket.class, NetworkDirection.PLAY_TO_SERVER)
+                .encoder(SMonocleGazePacket::encode)
+                .decoder(SMonocleGazePacket::new)
+                .consumerMainThread(SMonocleGazePacket::handle)
                 .add();
 
         INSTANCE.messageBuilder(SAbilityKeyPacket.class, NetworkDirection.PLAY_TO_SERVER)

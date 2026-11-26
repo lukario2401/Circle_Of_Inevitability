@@ -9,6 +9,7 @@ import net.lukario.circleofinevitability.client.ClientPathwayData;
 import net.lukario.circleofinevitability.client.Keybindings;
 import net.lukario.circleofinevitability.combat.AbilityCombos;
 import net.lukario.circleofinevitability.item.custom.abilitys.DashKeybindClient;
+import net.lukario.circleofinevitability.client.MonocleKeybindClient;
 import net.lukario.circleofinevitability.item.custom.abilitys.star_burst.StarBurstKeybindClient;
 import net.lukario.circleofinevitability.network.PacketHandler;
 import net.lukario.circleofinevitability.network.SLegacyAbilityPacket;
@@ -58,6 +59,9 @@ public class ClientForgeHandler {
         boolean burstPressed = CameraChordInput.click(StarBurstKeybindClient.STAR_BURST_KEY);
         if (gameplay && !detached && minecraft.hasSingleplayerServer() && (dashPressed || burstPressed)) {
             PacketHandler.sendToServer(new SLegacyAbilityPacket(dashPressed, burstPressed));
+        }
+        if (CameraChordInput.click(MonocleKeybindClient.GAZE_KEY) && gameplay && !detached) {
+            PacketHandler.sendToServer(new net.lukario.circleofinevitability.network.SMonocleGazePacket());
         }
         pollAbilityKeys(minecraft);
         CameraChordInput.finishTick();

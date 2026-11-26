@@ -74,6 +74,7 @@ public class CircleOfInevitability
         net.lukario.circleofinevitability.network.AbilityComboGameTest.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.item.artifacts.SealedArtifactGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.item.artifacts.CreepingHungerGameTests.FUNCTIONS.register(modEventBus);
+        net.lukario.circleofinevitability.item.artifacts.MonocleGameTests.FUNCTIONS.register(modEventBus);
         SnakeOfMercuryGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.omniscient_eye.OmniscientEyeGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossGameTests.FUNCTIONS.register(modEventBus);

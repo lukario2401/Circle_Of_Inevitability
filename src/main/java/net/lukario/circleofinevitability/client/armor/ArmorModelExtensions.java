@@ -25,6 +25,10 @@ public final class ArmorModelExtensions implements IClientItemExtensions {
     public static ArmorModelExtensions forSet(java.util.function.Supplier<String> setId) {
         return new ArmorModelExtensions(slot -> factory(setId.get()).apply(slot));
     }
+    /** The Monocle sealed artifact (a helmet-slot item, not an armor set). */
+    public static ArmorModelExtensions monocle() {
+        return new ArmorModelExtensions(slot -> MonocleModel.create());
+    }
     private static Function<EquipmentSlot, HumanoidModel<?>> factory(String setId) {
         if (net.lukario.circleofinevitability.item.armor.UnshadowedArmor.SET.equals(setId))
             return slot -> new UnshadowedArmorModel(UnshadowedArmorModel.createLayer(slot).bakeRoot(), slot);

@@ -47,6 +47,11 @@ public final class ModItems {
     public static final List<RegistryObject<Item>> CREEPING_HUNGER = CreepingHunger.ARTIFACT.register(ITEMS,
             name -> properties(name).rarity(Rarity.EPIC));
 
+    /** The Monocle, worn in the helmet slot (item/artifacts/MonocleItem). */
+    public static final RegistryObject<Item> MONOCLE = ITEMS.register("monocle",
+            () -> new net.lukario.circleofinevitability.item.artifacts.MonocleItem(properties("monocle")
+                    .rarity(Rarity.EPIC)));
+
     public static final RegistryObject<Item> INEVITABILITY_CORE = ITEMS.register("inevitability_core",
             () -> new Item(properties("inevitability_core").rarity(Rarity.EPIC).fireResistant()));
     public static final RegistryObject<Item> INEVITABILITY_HELMET = armor("inevitability_helmet", net.minecraft.world.item.equipment.ArmorType.HELMET);
