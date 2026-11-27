@@ -190,7 +190,8 @@ public final class CreepingHungerGameTests {
             for (int t = 2; t <= 5; t++)
                 h.assertTrue(CreepingHunger.ARTIFACT.cooldownFor(t, sequence) <= CreepingHunger.ARTIFACT.cooldownFor(t - 1, sequence),
                         "Higher tiers never cool down slower");
-            h.assertTrue(CreepingHunger.ARTIFACT.cooldownFor(5, sequence) == 30, "Tier V cools down in 1.5 s");
+            int top = sequence == 0 ? 50 : sequence <= 2 ? 30 : sequence <= 4 ? 10 : 5;
+            h.assertTrue(CreepingHunger.ARTIFACT.cooldownFor(5, sequence) == top, "Tier V cooldown for Sequence " + sequence);
         }
         h.assertTrue(CreepingHunger.ARTIFACT.cooldownFor(1, 0) == 400 && CreepingHunger.ARTIFACT.cooldownFor(1, 9) == 40,
                 "Tier I keeps 20 s for Sequence 0 and 2 s for Sequence 9");

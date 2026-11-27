@@ -28,8 +28,8 @@ import net.minecraft.world.phys.Vec3;
  *  IV   9: 3 up to Sequence 1, 6 up to 5       | + disorientation fits; neutral mobs hunt you too; 2 picks per kill
  *  V    11, any Sequence                       | everything at full strength, fits darken the world; 3 picks per kill
  *
- * Cast cooldown (Sequence 9 .. Sequence 0): I 2 .. 20 s, II 1.9 .. 15.4 s, III 1.75 .. 10.75 s, IV 1.65 .. 6.15 s,
- * V 1.5 s for everything.
+ * Cast cooldown (Sequence 9 .. Sequence 0): I 2 .. 20 s, II 1.55 .. 15.65 s, III 1.15 .. 11.25 s, IV 0.7 .. 6.9 s,
+ * V 0.25 s (Seq 5-9), 0.5 s (Seq 3-4), 1.5 s (Seq 1-2), 2.5 s (Seq 0).
  */
 public final class CreepingHunger {
     public static final String ID = "creeping_hunger";
@@ -43,7 +43,7 @@ public final class CreepingHunger {
             .tier(AbilitySlots.any(11))
             .chooseOnKillFrom(3)
             .picksPerKill(1, 1, 1, 2, 3)                     // tier IV: up to two abilities from one kill, tier V: three
-            .topTierCooldown(30)                             // tier V: 1.5 s for any Sequence; tiers II-IV slide there
+            .topTierCooldown(sequence -> sequence == 0 ? 50 : sequence <= 2 ? 30 : sequence <= 4 ? 10 : 5)   // tier V; II-IV slide there
             .drawback(new FeedOrDieDrawback(1, 24000, 3))
             .drawback(new CorruptionDrawback(1,
                     new int[]{60, 45, 30, 20, 12},           // seconds carried per point
