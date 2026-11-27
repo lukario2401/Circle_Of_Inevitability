@@ -79,7 +79,7 @@ their powers to anyone, with no pathway, Sequence or spirituality needed. The pr
 | Action | Game behavior |
 | --- | --- |
 | Kill a Beyonder while carrying it | Tiers I-II devour one of the victim's abilities at random. Tiers III-V open a scrollable list of the victim's abilities to choose from: one at tier III, up to two at tier IV, up to three at tier V (tick them, then **Devour**). Abilities that cannot fit are greyed out; when the glove is full, a list per extra pick asks which stored ability it replaces. Esc takes nothing. |
-| Right-click | Casts the selected stored ability for free. Cooldown follows the ability's Sequence: 2 s for Sequence 9 up to 20 s for Sequence 0. A cast that finds nothing to act on costs nothing. |
+| Right-click | Casts the selected stored ability for free. Cooldown follows the ability's Sequence and shrinks with tier (Sequence 9 .. Sequence 0): tier I 2 .. 20 s, II 1.9 .. 15.4 s, III 1.75 .. 10.75 s, IV 1.65 .. 6.15 s, V 1.5 s for everything. A cast that finds nothing to act on costs nothing. |
 | Sneak + right-click | A scrollable list of the stored abilities: click one to select it. Empty slots show which Sequences they still accept. **Discard...** opens a list where you tick any number to free. |
 
 Abilities are saved on the glove itself, so they stay with it when it is dropped, traded or stored. Only
@@ -210,6 +210,7 @@ public static final StoringArtifact MY_RELIC = StoringArtifact.create("my_relic"
         .chooseOnKillFrom(2)                                 // tier 2+: the bearer picks what to take
         .picksPerKill(1, 1, 2)                               // optional: how many per kill, by tier
         .cooldown(sequence -> 20 * (10 - sequence))          // optional, ticks per cast by Sequence
+        .topTierCooldown(30)                                 // optional: last tier's cooldown; tiers between slide to it
         .drawback(new FeedOrDieDrawback(1, 24000, 3))        // each downside from some tier,
         .drawback(new AggroDrawback(2, new int[]{0, 6, 10}, 3))   // values indexed by tier
         .effects(new StoringArtifact.Effects() { ... });    // optional particles/sounds

@@ -61,6 +61,7 @@ public final class StoringArtifact {
     private int chooseFromTier = Integer.MAX_VALUE;
     private int[] picksPerKill = {1};
     private IntUnaryOperator cooldownBySequence = sequence -> 20 * (2 + 2 * (9 - sequence));   // 2 s .. 20 s
+    private int topTierCooldown = -1;                                                          // -1: same at every tier
     private Effects effects = new Effects() {};
 
     private StoringArtifact(String id, String name) {
@@ -114,6 +115,15 @@ public final class StoringArtifact {
         return this;
     }
 
+    /**
+     * The last tier's cooldown in ticks, whatever the Sequence. Tier 1 keeps the Sequence curve and the tiers between
+     * slide evenly from it to this, so higher tiers recover faster. Leave it out to use the Sequence curve at every tier.
+     */
+    public StoringArtifact topTierCooldown(int ticks) {
+        this.topTierCooldown = ticks;
+        return this;
+    }
+
     public StoringArtifact effects(Effects effects) {
         this.effects = effects;
         return this;
@@ -152,13 +162,19 @@ public final class StoringArtifact {
         return choosesOnKill(tier) ? Math.max(1, Bearer.at(picksPerKill, tier)) : 1;
     }
 
-    public int cooldownFor(int sequence) {
-        return Math.max(0, cooldownBySequence.applyAsInt(sequence));
+    /** Ticks of cooldown after this tier casts a stored ability of that Sequence. */
+    public int cooldownFor(int tier, int sequence) {
+        int base = Math.max(0, cooldownBySequence.applyAsInt(sequence));
+        if (topTierCooldown < 0 || tiers.size() < 2) return base;
+        double progress = Math.clamp((tier - 1) / (double) (tiers.size() - 1), 0.0, 1.0);
+        return Math.max(0, (int) Math.round(base + (topTierCooldown - base) * progress));
     }
 
+    /** The longest cooldown any tier can give (the item's cooldown bar is drawn against it). */
     public int maxCooldown() {
         int most = 0;
-        for (int sequence = 0; sequence <= 9; sequence++) most = Math.max(most, cooldownFor(sequence));
+        for (int tier = 1; tier <= Math.max(1, tiers.size()); tier++)
+            for (int sequence = 0; sequence <= 9; sequence++) most = Math.max(most, cooldownFor(tier, sequence));
         return most;
     }
 

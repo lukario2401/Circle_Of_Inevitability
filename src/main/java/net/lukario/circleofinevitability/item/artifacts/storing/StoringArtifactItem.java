@@ -51,7 +51,7 @@ public class StoringArtifactItem extends SealedArtifactItem {
     @Override
     protected int cooldownFor(ServerPlayer player, ItemStack stack) {
         AbilityCatalog.Power power = StoredAbilities.selectedPower(stack);
-        return power == null ? 0 : artifact.cooldownFor(power.sequence());
+        return power == null ? 0 : artifact.cooldownFor(tier, power.sequence());
     }
 
     @Override
