@@ -47,6 +47,10 @@ public final class ModItems {
     public static final List<RegistryObject<Item>> CREEPING_HUNGER = CreepingHunger.ARTIFACT.register(ITEMS,
             name -> properties(name).rarity(Rarity.EPIC));
 
+    /** The Red Priest, the Uniqueness of the Conqueror Pathway: a war spear (item/artifacts/RedPriest). */
+    public static final RegistryObject<Item> RED_PRIEST = net.lukario.circleofinevitability.item.artifacts.RedPriest.UNIQUENESS
+            .register(ITEMS, properties(net.lukario.circleofinevitability.item.artifacts.RedPriest.ID).rarity(Rarity.EPIC));
+
     /** The Monocle, worn in the helmet slot (item/artifacts/MonocleItem). */
     public static final RegistryObject<Item> MONOCLE = ITEMS.register("monocle",
             () -> new net.lukario.circleofinevitability.item.artifacts.MonocleItem(properties("monocle")

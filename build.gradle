@@ -83,6 +83,10 @@ minecraft {
                 workingDir = layout.buildDirectory.dir('monocle-gametest')
                 args '--tests', 'circle_of_inevitability:monocle_*'
             }
+            if (providers.gradleProperty('redPriestTests').isPresent()) {
+                workingDir = layout.buildDirectory.dir('red-priest-gametest')
+                args '--tests', 'circle_of_inevitability:red_priest_*'
+            }
             if (providers.gradleProperty('artifactTests').isPresent()) {
                 workingDir = layout.buildDirectory.dir('artifact-gametest')
                 args '--tests', 'circle_of_inevitability:artifact_*'

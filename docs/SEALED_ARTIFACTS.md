@@ -162,6 +162,48 @@ All numbers are constants in `item/artifacts/MonocleItem.java`. The worn model i
 its texture, the 3D item model and the equipment asset come from `python tools/model_gen/monocle/generate.py`.
 Tests: `./gradlew runGameTestServer -PmonocleTests`.
 
+## The Red Priest (Uniqueness)
+
+**Item id:** `circle_of_inevitability:red_priest_uniqueness`
+
+```text
+/give @s circle_of_inevitability:red_priest_uniqueness
+```
+
+The Uniqueness of the Conqueror Pathway, a "tier 6" sealed artifact: a crimson and gold war spear (12 attack
+damage, +1.5 reach, a stabbing swing). Carried, it lends **every Conqueror ability** plus four of its own,
+cast every **0.2 s** for no spirituality. Use casts the selected ability; **sneak + use** opens the picker, which
+shows your corruption and locks what your level cannot reach yet. While you carry it you take **90% less damage**,
+deal **double damage**, and every kill **heals you by the victim's maximum health**.
+
+| Own ability | Sequence | Cooldown | Effect |
+| --- | --- | --- | --- |
+| Iron Blood | 4 | 8 s | Heal a third of your health and put out fire. Works even when nothing else heals you. |
+| Storm of War | 2 | 3 s | A storm where you look (40 blocks): 8 lightning strikes of 16 damage that ignite, then a gale (8 damage and a push). |
+| Conquest | 1 | 5 s | Everything hostile in sight (20 blocks) or within 5 kneels: a quarter of its max health (8% for bosses), Slowness and Weakness. Mobs left under 30% serve you for 30 s. |
+| Crimson Dominion | 0 | 20 s | The sky bleeds; 24 burning spears (30 damage) rain around you, then 4 loyal soldiers (two Centurions, two Warlords) rise and fight for you for 45 s. |
+
+**Corruption** (0 to 100, shown left of the hotbar) grows by 1 every 8 s carried and a little per cast
+(0.05 for Sequence 5-9 abilities up to 0.5 for Sequence 0). Put away, it fades by 0.5 a second, unless it has
+reached Extreme: from then the spear is **bound** (it cannot be dropped, stored or thrown; if lost it returns
+to you, and stale copies crumble).
+
+| Level | From | Abilities | Downsides (each adds to the ones above) |
+| --- | --- | --- | --- |
+| Low | 0 | Sequence 3-9 | Shadow soldiers rise and hunt you (Levies; 1 every 60 s, at most 2). Neutral mobs and golems within 12 blocks attack you. You cannot sleep. Each cast costs a little blood (0.25 to 3 HP by Sequence). Your blood sometimes ignites; water burns. |
+| Medium | 25 | | You glow, and monsters within 24 blocks hunt you. Whispers of war: drums, clashes, horns, red flashes and phantom soldiers that vanish when struck. Legionaries join the waves. |
+| High | 50 | Sequence 1-2 | The storm follows you. Other healing is halved. Villagers will not trade. Centurions. |
+| Extreme | 75 | Sequence 0 | Bound for good. Lightning finds you; the ground ignites; your pets turn on you; only kills and abilities heal you. **You lose yourself**: acts on their own and swallowed inputs (10% to 30%). Warlords; up to 8 soldiers. |
+| 100 | 100 | | **Final conquest**: a 3 minute clock (each kill buys 10 s). At zero it kills you, takes the spear, and a Usurper bearing your name rises carrying it for 10 minutes. Kill it to get the spear back. |
+
+Death resets the corruption. Creative and spectator players gain corruption but suffer none of the downsides.
+Timings: about 10 minutes carried reaches Extreme, and about 13 minutes reaches 100.
+
+All numbers are in `item/artifacts/RedPriest.java`; the four abilities are in
+`blasphemy_slate/beyonder_characteristics/conqueror/ConquerorHigher.java`. The spear model and textures come from
+`python tools/model_gen/red_priest/spear.py`, the soldier rig and skins from `shadow_soldier.py`, and the HUD icon,
+war flash and ability icons from `gui.py`. Tests: `./gradlew runGameTestServer -PredPriestTests`.
+
 ## Adding another artifact
 
 The reusable implementation is in `item/artifacts/`:
@@ -243,6 +285,35 @@ The server re-checks every answer (count, duplicates, locked rows), so `onPick` 
 A new downside implements `ArtifactDrawback`, keeps its values in `Bearer.state()` under its own key
 names, and reads its per-tier strength with `bearer.at(values)`.
 
+### Uniquenesses (like the Red Priest)
+
+`item/artifacts/uniqueness/` is a framework for tier 6 artifacts that lend a whole Pathway and corrupt their
+bearer. A new one is a declaration in one file:
+
+```java
+public static final Uniqueness MY_UNIQUENESS = Uniqueness.create("my_uniqueness", "The Name")
+        .pathway("Conqueror")                                    // lends every catalog ability of this Pathway
+        .power(UniquePower.of("my/power", "Name", "my/icon", 2, 20 * 3, "Description", MyAbilities::cast))
+        .level("Low", 0, 0xD8B060).level("High", 50, 0xE8452A)  // corruption levels: name, from, colour
+        .gate(sequence -> sequence <= 2 ? 1 : 0)                 // level needed by Sequence
+        .noReturnFrom(1)                                         // bound from this level (optional)
+        .corruption(1 / 8.0, sequence -> .1, .5)                 // per second carried, per cast, faded per second away
+        .cooldown(4).damageTaken(.1f).damageDealt(2f).killHeal(1f)   // all optional
+        .weapon(12, -2.6f, 1.5f)                                 // optional: damage, speed, extra reach
+        .hudIcon("my/corruption")
+        .drawback(new HuntedDrawback(1, new int[]{0, 24}))       // values indexed by level
+        .effects(new Uniqueness.Effects() { ... });              // optional particles/sounds
+```
+
+Register it with `MY_UNIQUENESS.register(ITEMS, properties("my_uniqueness").rarity(Rarity.EPIC))`, then add the
+item and model JSON, the lang keys (`item...`, `tooltip...<id>.power`, `.containment`) and a damage type named
+after the id. Ready-made downsides live in `uniqueness/drawbacks/` (shadow soldiers, provoker's aura, war never
+rests, blood price, burning blood, hunted, whispers, the storm, lose yourself, final conquest); a new one
+implements `UniquenessDrawback`, whose hooks (`second`, `cast`, `blocksCast`, `killed`, `healed`,
+`refusesSleep`, `refusesMenu`, `swallows`, `died`) are all optional. `Wielder` gives each hook the corruption,
+level, saved state and `at(values)` for per-level numbers. Shadow soldiers (`ShadowSoldier.rise`) can be raised
+by anything: hunters, loyal allies, illusions, or a Usurper.
+
 The Sun Brooch's original 32px icon can be regenerated with `python tools/item_art/sun_brooch.py`
 (Pillow required). This affects only that icon; it does not generate other artifacts' resources.
 
@@ -254,6 +325,7 @@ Build with `./gradlew build`. Run the artifact game tests with:
 ./gradlew runGameTestServer -PartifactTests
 ./gradlew runGameTestServer -PcreepingHungerTests
 ./gradlew runGameTestServer -PmonocleTests
+./gradlew runGameTestServer -PredPriestTests
 ```
 
 They check no-pathway activation, undead damage/reveal, neutral-animal safety, self cleansing,

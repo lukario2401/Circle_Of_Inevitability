@@ -46,6 +46,8 @@ public class CircleOfInevitability
 
         net.lukario.circleofinevitability.boss.star_dragon.StarDragonBossRegistry.ENTITIES.register(modEventBus);
         Mounts.ENTITIES.register(modEventBus);
+        net.lukario.circleofinevitability.item.artifacts.uniqueness.ShadowSoldiers.ENTITIES.register(modEventBus);
+        net.lukario.circleofinevitability.item.artifacts.RedPriestGameTests.FUNCTIONS.register(modEventBus);
         MountGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodGameTests.FUNCTIONS.register(modEventBus);
         net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.thunder_god.ThunderGodHigherGameTests.FUNCTIONS.register(modEventBus);
