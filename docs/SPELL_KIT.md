@@ -100,6 +100,8 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | A hit that nothing softens at all: no raised shield, armor, Protection or Resistance (a decree, an execution) | [`Spells.strikeTrue`](#1-spells-aiming-and-enemies) | `combat/` |
 | "Burns evil and undead" in one call | [`Spells.isEvil`](#1-spells-aiming-and-enemies) | `combat/` |
 | Particles only one player sees (a trail for the hunter) | `ParticleShapes.spawnFor(viewer, particle, at, velocity)` | `particles/fx/` |
+| A model only one player sees (an eye over what they watch) | `ParticleShapes.modelFor(viewer, model, at, yaw, pitch, roll)`, `modelOnFor(viewer, model, entity, offset, yaw, pitch, roll)` | `particles/fx/` |
+| An outline round an entity that only one player sees (true sight, a hunter's quarry) | `SpellFx.markFor(viewer, entity, color, ticks)` | `combat/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
 | One key, many spells: a round menu where each has its own Sequence, cost and cooldown, and a sneak press casts the last pick again | [`AbilityWheel`](#abilitywheel-many-spells-on-one-key) | `menu/` |
 | Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |
@@ -1297,6 +1299,7 @@ Visual only. Nothing here hurts anyone. Colors are ARGB (`0xAARRGGBB`); the alph
 | `SpellFx.overHead(sl, entity, model, count, tag)` | A ring of small models over a head, one for each mark (see below) |
 | `SpellFx.tether(sl, line, entityA, entityB, ticks)` | A line that keeps joining two entities |
 | `SpellFx.tether(sl, line, () -> pointA, () -> pointB, ticks)` | The same between any two moving points |
+| `SpellFx.markFor(viewer, entity, color, ticks)` | An outline of the entity's box that only `viewer` sees, through walls, redrawn every 5 ticks until it ends, the entity dies or leaves |
 
 Ready-made parts to build your own from: `SpellFx.RUNE_CIRCLE`, `SHOCK_RING`, `FIRE_BLAST`, `FLAMES` (models) and `FIRE_EMBER`, `FIRE_SMOKE` (particles).
 

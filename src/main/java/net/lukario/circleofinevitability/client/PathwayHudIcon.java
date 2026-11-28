@@ -43,6 +43,7 @@ public class PathwayHudIcon {
         ICONS.put("Star Dragon", icon("star_dragon"));                  // shows once the Pathway exists (docs/pathways/star_dragon/STAR_DRAGON.md)
         ICONS.put("Hand Of Order", icon("hand_of_order"));              // docs/pathways/HAND_OF_ORDER.md
         ICONS.put("Key Of Stars", icon("key_of_stars"));                // shows once the Pathway exists (docs/pathways/KEY_OF_STARS.md)
+        ICONS.put("Observer", icon("observer"));                        // shows once the Pathway exists (docs/pathways/observer/OBSERVER.md)
     }
 
     private static Identifier icon(String fileName) {

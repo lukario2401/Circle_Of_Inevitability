@@ -5,6 +5,7 @@ import net.lukario.circleofinevitability.particles.fx.ParticleFx;
 import net.lukario.circleofinevitability.particles.fx.ParticleShapes;
 import net.lukario.circleofinevitability.particles.fx.SlashFx;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -26,6 +27,7 @@ import java.util.function.Supplier;
  *   SpellFx.fireBurst(sl, center, 3.5);                           // an explosion of fire
  *   SpellFx.tether(sl, THREAD, player, target, 100);              // a line that keeps joining two entities for 5 seconds
  *   SpellFx.tether(sl, THREAD, () -> SpellFx.handOf(player, sl), () -> SpellFx.topOf(target, sl), 100);   // ...hand to head
+ *   SpellFx.markFor(viewer, enemy, 0xFFB8B0FF, 60);               // an outline round an entity that only 'viewer' sees
  *
  * Colors are ARGB (0xAARRGGBB); the alpha is how strong it is.
  * The models are the shared ones from models/model_fx/ (see docs/MODEL_FX.md).
@@ -199,6 +201,54 @@ public final class SpellFx {
             double angle = Math.PI * 2 * i / count;
             Vec3 offset = new Vec3(Math.cos(angle) * radius, entity.getBbHeight() + 0.45, Math.sin(angle) * radius);
             ParticleShapes.modelOn(sl, one, entity, offset, 0f, 0f, 0f);
+        }
+    }
+
+    // =========================
+    // Marks only one player sees
+    // =========================
+
+    private static final ParticleFx MARK_DOT = ParticleFx.of("fx/glow")
+            .size(0.06f).endSize(0.05f).lifetime(7, 0).gravity(0f).friction(0f).glow();
+
+    /**
+     * An outline of small glowing points round an entity's box that only 'viewer' sees, redrawn every 5 ticks for
+     * 'ticks' ticks (the "only you see it" of a sight ability: True Sight's outlines, a prayer heard, a hunter's
+     * quarry). It stops early when the entity dies or leaves the viewer's world. Particles are drawn through walls,
+     * so the outline shows behind blocks too.
+     *
+     *   SpellFx.markFor(viewer, enemy, 0xFFB8B0FF, 60);
+     */
+    public static void markFor(ServerPlayer viewer, Entity entity, int color, int ticks) {
+        if (!(viewer.level() instanceof ServerLevel sl) || entity == null) return;
+        ParticleFx dot = MARK_DOT.color(color).endColor(color & 0x00FFFFFF);
+        for (int t = 0; t < Math.max(1, ticks); t += 5) {
+            Later.run(sl, t, () -> {
+                if (!entity.isAlive() || entity.level() != viewer.level() || viewer.hasDisconnected()) return;
+                outline(viewer, dot, entity);
+            });
+        }
+    }
+
+    /** One drawing of the outline: the four upright edges of its box and a ring round its top and its feet. */
+    private static void outline(ServerPlayer viewer, ParticleFx dot, Entity entity) {
+        net.minecraft.world.phys.AABB box = entity.getBoundingBox().inflate(0.08);
+        double w = box.getXsize(), h = box.getYsize(), d = box.getZsize();
+        int up = Math.max(2, (int) Math.ceil(h / 0.3));
+        int across = Math.max(2, (int) Math.ceil(Math.max(w, d) / 0.3));
+        for (double[] corner : new double[][]{{box.minX, box.minZ}, {box.maxX, box.minZ}, {box.minX, box.maxZ}, {box.maxX, box.maxZ}}) {
+            for (int i = 0; i <= up; i++) {
+                ParticleShapes.spawnFor(viewer, dot, new Vec3(corner[0], box.minY + h * i / up, corner[1]), Vec3.ZERO);
+            }
+        }
+        for (double y : new double[]{box.minY, box.maxY}) {
+            for (int i = 1; i < across; i++) {
+                double f = (double) i / across;
+                ParticleShapes.spawnFor(viewer, dot, new Vec3(box.minX + w * f, y, box.minZ), Vec3.ZERO);
+                ParticleShapes.spawnFor(viewer, dot, new Vec3(box.minX + w * f, y, box.maxZ), Vec3.ZERO);
+                ParticleShapes.spawnFor(viewer, dot, new Vec3(box.minX, y, box.minZ + d * f), Vec3.ZERO);
+                ParticleShapes.spawnFor(viewer, dot, new Vec3(box.maxX, y, box.minZ + d * f), Vec3.ZERO);
+            }
         }
     }
 

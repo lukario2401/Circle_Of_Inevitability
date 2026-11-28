@@ -18,7 +18,8 @@ import net.minecraftforge.registries.RegistryObject;
  * tools/model_gen/beauty_goddess/sounds.py, the Hand Of God ones by tools/model_gen/hand_of_god/sounds.py, the Abomination ones by
  * tools/model_gen/abomination/sounds.py, the Prince Of Abolition ones by tools/model_gen/prince_of_abolition/sounds.py, the
  * Knowledge Emperor ones by tools/model_gen/knowledge_emperor/sounds.py, the Illuminator ones by
- * tools/model_gen/illuminator/sounds.py, the Star Dragon ones by tools/model_gen/star_dragon/sounds.py and the Key Of Stars
+ * tools/model_gen/illuminator/sounds.py, the Star Dragon ones by tools/model_gen/star_dragon/sounds.py, the Observer ones by
+ * tools/model_gen/observer/sounds.py (the OBSERVER map) and the Key Of Stars
  * ones by tools/model_gen/key_of_stars/sounds.py, which write
  * the .ogg files, sounds.json and the subtitles' names.
  */
@@ -913,6 +914,42 @@ public final class ModSounds {
     public static final RegistryObject<SoundEvent> STAR_DRAGON_STARGAZING = sound("star_dragon.stargazing");
     /** A heavy step. */
     public static final RegistryObject<SoundEvent> STAR_DRAGON_DENSE_STEP = sound("star_dragon.dense_step");
+
+    // ---------- Observer (tools/model_gen/observer/sounds.py writes the files, sounds.json and the subtitles)
+
+    /**
+     * The Observer's sounds by name: event "observer.<name>". Play one with ModSounds.observer("bloom"). A new sound:
+     * its function in tools/model_gen/observer/sounds.py, run it, and its name in this list.
+     */
+    public static final java.util.Map<String, RegistryObject<SoundEvent>> OBSERVER = group("observer",
+            "totem_ritual", "totem_rise", "territory_chime", "territory_end", "borrow", "gale", "earth_spike",
+            "water_lash", "thorn_snare", "beast_call", "ink_servants", "servant_strike", "painting_world_open",
+            "painting_world_close", "world_barrier", "true_sight", "many_angles", "read_intent", "observed",
+            "seen_through", "painting", "painting_quick", "canvas_hang", "painting_seen", "painting_fade", "riot",
+            "madness_collapse", "itching", "golden_sun", "sun_burn", "exorcise", "boat_storm", "wave",
+            "self_portrait", "portrait_echo", "giant_fall", "giant_impact", "painted_mark", "mark_drive",
+            "hide_enter", "hide_exit", "painted_face", "manifest", "manifest_fade", "knight_strike", "archer_shot",
+            "fantasy_double", "phase_in", "phase_out", "wings_unfold", "wings_buzz", "wings_fold",
+            "painted_lightning", "passage", "hostel_lodge", "hostel_release", "shadow_form", "shadow_form_end",
+            "ascension", "string_pluck", "taut_chord_draw", "taut_chord_play", "resonance", "resonance_add",
+            "resonance_burst", "harmony", "dissonance", "shadow_blade", "shadow_rise", "fold_space",
+            "foregone_write", "foregone_fall", "foregone_survival", "ward_spent", "revival_ritual", "higher_revival",
+            "bloom", "bloom_flower", "fall_silent", "silenced", "wake", "erase", "erase_return", "unmade",
+            "spirit_chime", "prayer");
+
+    /** One of the Observer's sounds (see OBSERVER). A name that is not there is a mistake in the code: it throws. */
+    public static SoundEvent observer(String name) {
+        RegistryObject<SoundEvent> sound = OBSERVER.get(name);
+        if (sound == null) throw new IllegalArgumentException("No Observer sound called " + name);
+        return sound.get();
+    }
+
+    /** Several sounds of one Pathway at once: prefix.name for every name, in a map by name. */
+    private static java.util.Map<String, RegistryObject<SoundEvent>> group(String prefix, String... names) {
+        java.util.Map<String, RegistryObject<SoundEvent>> map = new java.util.LinkedHashMap<>();
+        for (String name : names) map.put(name, sound(prefix + "." + name));
+        return java.util.Collections.unmodifiableMap(map);
+    }
 
     // ---------- Hand Of Order (tools/model_gen/hand_of_order/sounds.py, docs/pathways/HAND_OF_ORDER.md)
     /** A word: Halt. */
