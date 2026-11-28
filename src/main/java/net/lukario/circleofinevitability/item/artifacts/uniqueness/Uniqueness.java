@@ -51,6 +51,7 @@ import java.util.function.IntUnaryOperator;
  *           .corruption(1 / 8.0, sequence -> .05, .5)              // per second carried, per cast, recovered per second away
  *           .cooldown(4).damageTaken(.1f).damageDealt(2f).killHeal(1f)
  *           .weapon(10, -2.6f, 1.5f)                               // optional: a melee weapon too
+ *           .spear()                                               // optional: held and swung like a spear
  *           .drawback(new SomeDrawback(...));
  *
  *   // ModItems: public static final RegistryObject<Item> MY_ONE = MyOne.MY_ONE.register(ITEMS, properties("my_one").rarity(...));
@@ -97,6 +98,7 @@ public final class Uniqueness {
     private int cooldown = 4;
     private float damageTaken = 1f, damageDealt = 1f, killHeal = 0f;
     private float attackDamage = -1, attackSpeed, extraReach;
+    private boolean spear;
     private String hudIcon = "";
     private Effects effects = new Effects() {};
     private List<UniquePower> powers;
@@ -163,6 +165,11 @@ public final class Uniqueness {
         return this;
     }
 
+    /** Held and swung like a vanilla spear: raised arm, stabbing attacks. */
+    public Uniqueness spear() { this.spear = true; return this; }
+
+    public boolean isSpear() { return spear; }
+
     /** The picture next to the corruption counter on the HUD (textures/gui/<image>.png). */
     public Uniqueness hudIcon(String image) { this.hudIcon = image; return this; }
 
@@ -224,17 +231,16 @@ public final class Uniqueness {
         return Math.clamp(gate.applyAsInt(sequence), 0, Math.max(0, levels.size() - 1));
     }
 
-    /** Everything it lends: the Pathway's abilities (weakest Sequence first), then the ones written for it. */
+    /** Everything it lends, strongest Sequence first: at each Sequence its own abilities, then the Pathway's. */
     public List<UniquePower> powers() {
         if (powers == null) {
-            List<UniquePower> list = new ArrayList<>();
+            List<UniquePower> list = new ArrayList<>(extraPowers);
             for (String pathway : pathways)
                 AbilityCatalog.all().values().stream()
                         .filter(p -> p.cast().pathway().equals(pathway) && p.cast().copyable())
-                        .sorted(Comparator.comparingInt((AbilityCatalog.Power p) -> -p.sequence()).thenComparing(AbilityCatalog.Power::name))
+                        .sorted(Comparator.comparing(AbilityCatalog.Power::name))
                         .forEach(p -> list.add(UniquePower.fromCatalog(p)));
-            list.addAll(extraPowers);
-            list.sort(Comparator.comparingInt((UniquePower p) -> -p.sequence()));
+            list.sort(Comparator.comparingInt(UniquePower::sequence));   // stable: own abilities stay first
             powers = List.copyOf(list);
         }
         return powers;
@@ -281,10 +287,13 @@ public final class Uniqueness {
         return new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(damageType()));
     }
 
-    /** The selected ability's id (shared by every copy on this player), or the first ability. */
+    /** The selected ability (shared by every copy on this player), or else the strongest one the corruption reaches. */
     public UniquePower selected(ServerPlayer player) {
         UniquePower power = power(state(player).getStringOr(SELECTED, ""));
-        return power != null ? power : powers().isEmpty() ? null : powers().getFirst();
+        if (power != null) return power;
+        int now = levelAt(corruption(player));
+        for (UniquePower each : powers()) if (requiredLevel(each.sequence()) <= now) return each;
+        return powers().isEmpty() ? null : powers().getLast();
     }
 
     public void select(ServerPlayer player, UniquePower power) {

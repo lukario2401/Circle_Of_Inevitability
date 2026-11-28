@@ -25,7 +25,8 @@ import net.minecraft.world.phys.Vec3;
  * The Red Priest: the Uniqueness of the Conqueror Pathway, a war spear. Every number lives here; the mechanics are the
  * reusable Uniqueness framework (item/artifacts/uniqueness). docs/SEALED_ARTIFACTS.md describes it for players.
  *
- * Carried, it lends every Conqueror ability plus Iron Blood (4), Storm of War (2), Conquest (1) and Crimson Dominion (0),
+ * Carried, it lends every Conqueror ability plus Iron Blood (4); Storm of War, Hailstorm, War Cyclone (2); Conquest,
+ * Banner of Conquest, Subjugation (1); Crimson Dominion, Spear of Judgement and Endless War (0),
  * cast every 0.2 s for no spirituality; the wielder takes 90% less damage, deals double, and each kill heals them by the
  * victim's maximum health. Its corruption grows 1 point every 8 s carried (and a little per cast):
  *
@@ -62,6 +63,24 @@ public final class RedPriest {
             .power(UniquePower.of("red_priest/crimson_dominion", "Crimson Dominion", "red_priest/crimson_dominion", 0, 20 * 20,
                     "Red Priest: the sky bleeds, burning spears rain on your enemies, and a legion of shadow soldiers rises for you.",
                     ConquerorHigher::crimsonDominion))
+            .power(UniquePower.of("red_priest/hailstorm", "Hailstorm", "red_priest/hailstorm", 2, 20 * 4,
+                    "Weather Warlock: ice falls over where you look for 4 s, battering, slowing and freezing everyone in it.",
+                    ConquerorHigher::hailstorm))
+            .power(UniquePower.of("red_priest/war_cyclone", "War Cyclone", "red_priest/war_cyclone", 2, 20 * 6,
+                    "Weather Warlock: a whirlwind drags enemies in and grinds them for 5 s, then flings them away.",
+                    ConquerorHigher::warCyclone))
+            .power(UniquePower.of("red_priest/banner_of_conquest", "Banner of Conquest", "red_priest/banner_of_conquest", 1, 20 * 25,
+                    "Conqueror: raise a war banner for 20 s. Within 12 blocks you and your allies gain Strength II, Speed and Resistance; enemies are weakened, slowed and revealed.",
+                    ConquerorHigher::bannerOfConquest))
+            .power(UniquePower.of("red_priest/subjugation", "Subjugation", "red_priest/subjugation", 1, 20 * 8,
+                    "Conqueror: break the one you look at for 40% of its health (12% for bosses). A mob left under half serves you for 60 s.",
+                    ConquerorHigher::subjugation))
+            .power(UniquePower.of("red_priest/spear_of_judgement", "Spear of Judgement", "red_priest/spear_of_judgement", 0, 20 * 12,
+                    "Red Priest: hurl a giant burning spear through everything in a line (60 damage), bursting in fire where it lands.",
+                    ConquerorHigher::spearOfJudgement))
+            .power(UniquePower.of("red_priest/endless_war", "Endless War", "red_priest/endless_war", 0, 20 * 60,
+                    "Red Priest: for 30 s you gain Strength II and Speed II, and everyone you kill rises again as your shadow soldier (up to 8).",
+                    ConquerorHigher::endlessWar))
             .level("Low", 0, 0xD8B060)
             .level("Medium", 25, 0xE8902E)
             .level("High", 50, 0xE8452A)
@@ -76,6 +95,7 @@ public final class RedPriest {
             .damageDealt(2f)
             .killHeal(1f)                                                                     // the victim's max health
             .weapon(12, -2.6f, 1.5f)                                                          // a spear: reach +1.5
+            .spear()                                                                          // held and stabbed like one
             .hudIcon("red_priest/corruption")
             .drawback(SOLDIERS)
             .drawback(new ProvokerAuraDrawback(new int[]{12, 16, 24, 32}, HIGH, EXTREME))

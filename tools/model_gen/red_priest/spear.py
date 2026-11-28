@@ -232,11 +232,11 @@ def model():
             'ground': {'translation': [0, 2, 0], 'scale': [0.35, 0.35, 0.35]},
             'fixed': {'rotation': [0, 0, -45], 'scale': [0.5, 0.5, 0.5]},
             'head': {'translation': [0, 10, 0], 'scale': [0.6, 0.6, 0.6]},
-            # Held upright at the side, the blade above the head (tuned in game).
-            'thirdperson_righthand': {'rotation': [90, 90, -15], 'translation': [-4, 4, 1], 'scale': [1.4, 1.4, 1.4]},
-            'thirdperson_lefthand': {'rotation': [90, -90, 15], 'translation': [-4, 4, 1], 'scale': [1.4, 1.4, 1.4]},
-            'firstperson_righthand': {'rotation': [-10, 90, 25], 'translation': [1.5, 3.2, 0.5], 'scale': [0.45, 0.45, 0.45]},
-            'firstperson_lefthand': {'rotation': [-10, -90, -25], 'translation': [1.5, 3.2, 0.5], 'scale': [0.45, 0.45, 0.45]},
+            # Held like the vanilla spears (the arm pose is ArmPose.SPEAR): point forward and up, grip in the fist.
+            'thirdperson_righthand': {'rotation': [5, 270, 5], 'translation': [0, 2, 2], 'scale': [0.85, 0.85, 0.85]},
+            'thirdperson_lefthand': {'rotation': [5, -270, -5], 'translation': [0, 2, 2], 'scale': [0.85, 0.85, 0.85]},
+            'firstperson_righthand': {'rotation': [-20, 90, 10], 'translation': [5, 0, -1], 'scale': [0.55, 0.55, 0.55]},
+            'firstperson_lefthand': {'rotation': [-20, -90, -10], 'translation': [5, 0, -1], 'scale': [0.55, 0.55, 0.55]},
         },
     }
 

@@ -35,6 +35,7 @@ public final class RedPriestGameTests {
         FUNCTIONS.register("red_priest_downsides", () -> RedPriestGameTests::downsides);
         FUNCTIONS.register("red_priest_soldiers", () -> RedPriestGameTests::soldiers);
         FUNCTIONS.register("red_priest_final_conquest", () -> RedPriestGameTests::finalConquest);
+        FUNCTIONS.register("red_priest_abilities", () -> RedPriestGameTests::abilities);
     }
     private RedPriestGameTests() {}
 
@@ -98,6 +99,12 @@ public final class RedPriestGameTests {
         h.assertTrue(U.powers().stream().anyMatch(power -> power.name().contains("Hunter's Trap")), "It lends the Conqueror's keys");
         h.assertTrue(U.power("red_priest/iron_blood") != null && U.power("red_priest/crimson_dominion") != null,
                 "And its own abilities");
+        h.assertTrue(U.powers().getFirst().sequence() == 0 && U.powers().getFirst().id().startsWith("red_priest/"),
+                "The picker lists the strongest Sequence first, its own abilities leading");
+        for (int i = 1; i < U.powers().size(); i++)
+            h.assertTrue(U.powers().get(i - 1).sequence() <= U.powers().get(i).sequence(), "Sorted from Sequence 0 down to 9");
+        h.assertTrue(U.powers().stream().filter(power -> power.sequence() <= 2 && power.id().startsWith("red_priest/")).count() >= 9,
+                "At least three of its own abilities at each of Sequence 2, 1 and 0");
         ServerPlayer p = player(h, true);
         Mob zombie = h.spawn(EntityTypes.ZOMBIE, new BlockPos(1, 1, 3));
         zombie.setNoAi(true);
@@ -193,5 +200,31 @@ public final class RedPriestGameTests {
         h.assertTrue(p.getInventory().getNonEquipmentItems().stream().noneMatch(s -> s.getItem() instanceof UniquenessItem), "It took the spear");
         usurpers.getFirst().unmake();
         h.succeed();
+    }
+
+    private static void abilities(GameTestHelper h) {
+        ServerPlayer p = player(h, true);
+        h.assertTrue(U.requiredLevel(U.selected(p).sequence()) == RedPriest.LOW, "At Low the default pick is one you can cast");
+        U.setCorruption(p, 80);
+        Mob zombie = h.spawn(EntityTypes.ZOMBIE, new BlockPos(1, 1, 2));
+        zombie.setNoAi(true);
+        p.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, zombie.getEyePosition());
+        U.select(p, U.power("red_priest/subjugation"));
+        U.item().use(p.level(), p, InteractionHand.MAIN_HAND);
+        h.assertTrue(zombie.getHealth() < zombie.getMaxHealth() * .5f, "Subjugation breaks the one you look at");
+        U.select(p, U.power("red_priest/endless_war"));
+        U.state(p).putLong("ready_at", 0);
+        U.item().use(p.level(), p, InteractionHand.MAIN_HAND);
+        h.assertTrue(net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.conqueror.ConquerorHigher.endlessWarActive(p),
+                "Endless War rages");
+        Spells.strike(p, zombie, 1000);
+        h.runAfterDelay(20, () -> {
+            var risen = p.level().getEntitiesOfClass(ShadowSoldier.class, p.getBoundingBox().inflate(16),
+                    s -> s.loyal() && p.getUUID().equals(s.owner()));
+            h.assertTrue(risen.size() == 1, "The fallen rises again as your soldier");
+            risen.forEach(ShadowSoldier::unmake);
+            U.reset(p);
+            h.succeed();
+        });
     }
 }

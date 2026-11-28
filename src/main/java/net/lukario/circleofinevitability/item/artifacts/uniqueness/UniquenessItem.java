@@ -36,9 +36,22 @@ public class UniquenessItem extends SealedArtifactItem {
     private final Uniqueness uniqueness;
 
     public UniquenessItem(Properties properties, Uniqueness uniqueness) {
-        super(properties.component(DataComponents.SWING_ANIMATION, new SwingAnimation(SwingAnimationType.STAB, 8)),
+        super(uniqueness.isSpear() ? properties.component(DataComponents.SWING_ANIMATION, new SwingAnimation(SwingAnimationType.STAB, 8)) : properties,
                 uniqueness.id(), Math.max(1, uniqueness.cooldown() + 20 * 60), uniqueness.lore());
         this.uniqueness = uniqueness;
+    }
+
+    /** A spear is held like the vanilla ones: arm raised and forward, the point following your gaze. Runs inside the
+     *  Item constructor, before 'uniqueness' is set, so it is only read when a frame is drawn. */
+    @Override
+    public void initializeClient(java.util.function.Consumer<net.minecraftforge.client.extensions.common.IClientItemExtensions> consumer) {
+        consumer.accept(new net.minecraftforge.client.extensions.common.IClientItemExtensions() {
+            @Override
+            public net.minecraft.client.model.HumanoidModel.ArmPose getArmPose(net.minecraft.world.entity.LivingEntity entity,
+                    net.minecraft.world.InteractionHand hand, ItemStack stack) {
+                return uniqueness != null && uniqueness.isSpear() ? net.minecraft.client.model.HumanoidModel.ArmPose.SPEAR : null;
+            }
+        });
     }
 
     public Uniqueness uniqueness() { return uniqueness; }

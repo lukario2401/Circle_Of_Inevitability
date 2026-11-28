@@ -1,5 +1,5 @@
 """Small pictures for the Red Priest uniqueness: the HUD corruption sigil, the red war flash (full screen) and the
-icons of its four own abilities (32x32, the ability list's size).
+icons of its own abilities (32x32, the ability list's size).
 
 Run from any directory: python tools/model_gen/red_priest/gui.py   (Pillow required)
 Writes textures/gui/red_priest/*.png.
@@ -72,12 +72,54 @@ def crimson_dominion(d):
     d.arc([3, 3, 28, 28], 200, 340, fill=CRIMSON, width=2)
 
 
+def hailstorm(d):
+    d.ellipse([6, 5, 26, 13], fill=(120, 130, 150))
+    for x, y in ((10, 16), (16, 19), (22, 15), (13, 23), (20, 24)):
+        d.polygon([(x, y - 2), (x + 2, y), (x, y + 2), (x - 2, y)], fill=(200, 235, 255), outline=(120, 180, 220))
+
+
+def war_cyclone(d):
+    for i, (w, y) in enumerate(((20, 7), (16, 12), (12, 17), (8, 22), (4, 26))):
+        d.arc([16 - w // 2 + i, y - 2, 16 + w // 2 + i, y + 3], 0, 300, fill=(220, 220, 230) if i % 2 == 0 else GOLD, width=2)
+
+
+def banner_of_conquest(d):
+    d.line([(10, 5), (10, 27)], fill=(150, 110, 50), width=2)
+    d.polygon([(11, 6), (24, 6), (24, 18), (17, 15), (11, 18)], fill=CRIMSON, outline=BLOOD)
+    d.polygon([(14, 12), (14, 9), (16, 11), (17.5, 8), (19, 11), (21, 9), (21, 12)], fill=GOLD)
+    d.point([(10, 4)], fill=GOLD)
+
+
+def subjugation(d):
+    d.polygon([(10, 9), (10, 5), (13, 7), (16, 4), (19, 7), (22, 5), (22, 9)], fill=GOLD)
+    d.ellipse([11, 10, 21, 19], fill=(60, 40, 44))
+    d.polygon([(8, 27), (11, 19), (21, 19), (24, 27)], fill=(60, 40, 44))
+    d.line([(6, 14), (26, 24)], fill=CRIMSON, width=2)
+
+
+def spear_of_judgement(d):
+    d.line([(6, 26), (22, 10)], fill=(150, 30, 30), width=2)
+    d.polygon([(21, 7), (27, 5), (25, 11), (22, 12), (20, 10)], fill=EMBER, outline=GOLD)
+    for x, y in ((8, 21), (11, 26), (5, 18)):
+        d.point([(x, y)], fill=EMBER)
+
+
+def endless_war(d):
+    for x, h in ((9, 10), (16, 14), (23, 10)):
+        d.ellipse([x - 3, 25 - h - 6, x + 3, 25 - h], fill=(40, 20, 24), outline=CRIMSON)
+        d.rectangle([x - 3, 25 - h, x + 3, 26], fill=(40, 20, 24), outline=CRIMSON)
+        d.point([(x - 1, 25 - h - 3), (x + 1, 25 - h - 3)], fill=(255, 60, 60))
+    d.line([(4, 27), (28, 27)], fill=EMBER, width=1)
+
+
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     corruption().save(OUT / 'corruption.png')
     war_flash().save(OUT / 'war_flash.png')
     for name, fn in (('iron_blood', iron_blood), ('storm_of_war', storm_of_war), ('conquest', conquest),
-                     ('crimson_dominion', crimson_dominion)):
+                     ('crimson_dominion', crimson_dominion), ('hailstorm', hailstorm), ('war_cyclone', war_cyclone),
+                     ('banner_of_conquest', banner_of_conquest), ('subjugation', subjugation),
+                     ('spear_of_judgement', spear_of_judgement), ('endless_war', endless_war)):
         icon(fn).save(OUT / f'{name}.png')
     print('wrote', OUT)
 

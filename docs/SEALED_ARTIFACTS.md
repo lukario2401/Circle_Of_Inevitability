@@ -171,17 +171,23 @@ Tests: `./gradlew runGameTestServer -PmonocleTests`.
 ```
 
 The Uniqueness of the Conqueror Pathway, a "tier 6" sealed artifact: a crimson and gold war spear (12 attack
-damage, +1.5 reach, a stabbing swing). Carried, it lends **every Conqueror ability** plus four of its own,
-cast every **0.2 s** for no spirituality. Use casts the selected ability; **sneak + use** opens the picker, which
-shows your corruption and locks what your level cannot reach yet. While you carry it you take **90% less damage**,
+damage, +1.5 reach, held and stabbed like a vanilla spear). Carried, it lends **every Conqueror ability** plus ten of
+its own, cast every **0.2 s** for no spirituality. Use casts the selected ability; **sneak + use** opens the picker,
+which lists Sequence 0 first, shows your corruption and locks what your level cannot reach yet. While you carry it you take **90% less damage**,
 deal **double damage**, and every kill **heals you by the victim's maximum health**.
 
 | Own ability | Sequence | Cooldown | Effect |
 | --- | --- | --- | --- |
-| Iron Blood | 4 | 8 s | Heal a third of your health and put out fire. Works even when nothing else heals you. |
-| Storm of War | 2 | 3 s | A storm where you look (40 blocks): 8 lightning strikes of 16 damage that ignite, then a gale (8 damage and a push). |
-| Conquest | 1 | 5 s | Everything hostile in sight (20 blocks) or within 5 kneels: a quarter of its max health (8% for bosses), Slowness and Weakness. Mobs left under 30% serve you for 30 s. |
 | Crimson Dominion | 0 | 20 s | The sky bleeds; 24 burning spears (30 damage) rain around you, then 4 loyal soldiers (two Centurions, two Warlords) rise and fight for you for 45 s. |
+| Spear of Judgement | 0 | 12 s | A giant burning spear thrown through everything in a line (48 blocks, 60 damage, sets ablaze), bursting at the end (30 damage within 5 blocks). |
+| Endless War | 0 | 60 s | For 30 s: Strength II and Speed II, and everyone you kill rises again as your loyal shadow soldier for 60 s (rank by its max health, up to 8). |
+| Conquest | 1 | 5 s | Everything hostile in sight (20 blocks) or within 5 kneels: a quarter of its max health (8% for bosses), Slowness and Weakness. Mobs left under 30% serve you for 30 s. |
+| Banner of Conquest | 1 | 25 s | A war banner where you stand for 20 s: within 12 blocks you and your allies get Strength II, Speed and Resistance; enemies get Weakness II, Slowness and Glowing. |
+| Subjugation | 1 | 8 s | The enemy you look at (24 blocks) loses 40% of its max health (12% for bosses) and is pinned; a mob left under half serves you for 60 s (up to 3). |
+| Storm of War | 2 | 3 s | A storm where you look (40 blocks): 8 lightning strikes of 16 damage that ignite, then a gale (8 damage and a push). |
+| Hailstorm | 2 | 4 s | Ice falls over where you look (40 blocks, radius 8) for 4 s: 3 damage every quarter second, Slowness III and freezing. |
+| War Cyclone | 2 | 6 s | A whirlwind where you look (32 blocks) drags enemies within 9 blocks in for 5 s, grinding those at its heart, then flings them (10 damage). |
+| Iron Blood | 4 | 8 s | Heal a third of your health and put out fire. Works even when nothing else heals you. |
 
 **Corruption** (0 to 100, shown left of the hotbar) grows by 1 every 8 s carried and a little per cast
 (0.05 for Sequence 5-9 abilities up to 0.5 for Sequence 0). Put away, it fades by 0.5 a second, unless it has
@@ -300,6 +306,7 @@ public static final Uniqueness MY_UNIQUENESS = Uniqueness.create("my_uniqueness"
         .corruption(1 / 8.0, sequence -> .1, .5)                 // per second carried, per cast, faded per second away
         .cooldown(4).damageTaken(.1f).damageDealt(2f).killHeal(1f)   // all optional
         .weapon(12, -2.6f, 1.5f)                                 // optional: damage, speed, extra reach
+        .spear()                                                 // optional: held and stabbed like a vanilla spear
         .hudIcon("my/corruption")
         .drawback(new HuntedDrawback(1, new int[]{0, 24}))       // values indexed by level
         .effects(new Uniqueness.Effects() { ... });              // optional particles/sounds
