@@ -58,5 +58,6 @@ final class SKeyPressAbilitySixUsed {
         knowledgeEmperorRetellings(player,level,serverLevel,false);
         illuminatorAlchemy(player,level,serverLevel,false);
         starDragonStarShepherd(player,level,serverLevel,false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerStrings(player, level, serverLevel, false);
     }
 }

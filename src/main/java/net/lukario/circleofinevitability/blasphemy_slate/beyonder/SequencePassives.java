@@ -159,10 +159,12 @@ public final class SequencePassives {
         custom("Star Dragon", 2, StarDragon::radiance);                                         // Radiant Angel: Radiance
 
         // ---- Observer (docs/pathways/observer/OBSERVER.md). Also in Observer itself: Spirit Sense's chime (Sequence 9),
-        // Reporter's Hands' faster attacks (8), Fiction and Reality's shorter illusions (6, an EffectDuration rule).
+        // Reporter's Hands' faster attacks (8), Fiction and Reality's shorter illusions (6, an EffectDuration rule),
+        // Featherfall (5), Demigod Body (4), Shadow Body (2), Eyes Everywhere (1) and Sublunary Sight (0).
         custom("Observer", 9, net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer::spiritSense);                                                  // Shaman: Spirit Sense
         effect("Observer", 8, MobEffects.SPEED, 0);                                             // Reporter: Reporter's Hands
         custom("Observer", 7, net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer::paintersEye);                                                  // Painter: Painter's Eye
+        custom("Observer", 3, net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer::prayersHeard);                                                // String Player: Prayers Heard
     }
 
     // =========================

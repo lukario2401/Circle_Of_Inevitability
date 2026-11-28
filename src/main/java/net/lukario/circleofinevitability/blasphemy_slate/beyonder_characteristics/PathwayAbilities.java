@@ -480,7 +480,7 @@ public final class PathwayAbilities {
                     (player, level, sl) -> StarDragon.starDragonStarShepherd(player, level, sl, true)),
             new Ability("Star Dragon", 7, "Cosmos", 2, SNEAK, STEALABLE,                           // stolen: no wheel, its last (or a random) entry
                     (player, level, sl) -> StarDragon.starDragonCosmos(player, level, sl, true)),
-            // ---- Observer (docs/pathways/observer/OBSERVER.md): keys 1 to 4 so far; stolen, a wheel casts its last (or a random) entry ----
+            // ---- Observer (docs/pathways/observer/OBSERVER.md): stolen, a wheel casts its last (or a random) entry ----
             new Ability("Observer", 1, "Territory", 9, SNEAK, STEALABLE,
                     (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerTerritory(player, level, sl, true)),
             new Ability("Observer", 2, "Sight", 8, SNEAK, STEALABLE,
@@ -488,7 +488,13 @@ public final class PathwayAbilities {
             new Ability("Observer", 3, "Canvas", 7, SNEAK, STEALABLE,
                     (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerCanvas(player, level, sl, true)),
             new Ability("Observer", 4, "Fiction", 7, SNEAK, STEALABLE,
-                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerFiction(player, level, sl, true)));
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerFiction(player, level, sl, true)),
+            new Ability("Observer", 5, "Dimension", 5, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerDimension(player, level, sl, true)),
+            new Ability("Observer", 6, "Strings", 3, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerStrings(player, level, sl, true)),
+            new Ability("Observer", 7, "Sublunary", 1, SNEAK, STEALABLE,
+                    (player, level, sl) -> net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerSublunary(player, level, sl, true)));
 
 
 

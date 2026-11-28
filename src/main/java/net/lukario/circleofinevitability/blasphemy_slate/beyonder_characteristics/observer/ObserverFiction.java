@@ -12,6 +12,7 @@ import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.Chosen;
 import net.lukario.circleofinevitability.status.Concealment;
 import net.lukario.circleofinevitability.status.Construct;
+import net.lukario.circleofinevitability.status.DamageLink;
 import net.lukario.circleofinevitability.status.Taunt;
 import net.lukario.circleofinevitability.status.Unnoticed;
 import net.minecraft.core.Direction;
@@ -19,9 +20,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EntityTypes;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -35,8 +38,7 @@ import java.util.UUID;
 
 /**
  * Key 4, the Fiction wheel (docs/pathways/observer/OBSERVER.md, "Key 4: Fiction"): Painted Mark and Hide in Painting
- * (Painter 7), Painted Face, Manifest Knight and Manifest Archer (Literature Enthusiast 6). Fantasy Double (Observer 1)
- * is the second half.
+ * (Painter 7), Painted Face, Manifest Knight and Manifest Archer (Literature Enthusiast 6), Fantasy Double (Observer 1).
  */
 final class ObserverFiction {
 
@@ -110,6 +112,20 @@ final class ObserverFiction {
     static final double LEASH = 40.0;
     static final String FIGURE_TAG = "observer_figure_tag";
     static final String FIGURE_SHOT = "observer_figure_shot";
+
+    // =========================
+    // Fantasy Double (Observer 1)
+    // A fabricated self stands where you stand, with your name and gear, for DOUBLE_TICKS, and every enemy within
+    // DOUBLE_TAUNT hunts it. You are hidden for DOUBLE_HIDDEN (Concealment). The connection stays: DOUBLE_SHARE of what
+    // it takes is dealt to you (status/DamageLink). One at a time.
+    // =========================
+    static final int DOUBLE_SEQUENCE = Observer.OBSERVER;
+    static final int DOUBLE_COST = 30000;
+    static final int DOUBLE_TICKS = 400;
+    static final int DOUBLE_HIDDEN = 200;
+    static final double DOUBLE_TAUNT = 24.0;
+    static final float DOUBLE_SHARE = 0.2f;
+    static final String DOUBLES = "observer_fantasy_double";
 
     /** Who is wearing a Painted Face (to take the look away when it ends). */
     private static final Map<UUID, LivingEntity> FACES = new HashMap<>();
@@ -385,11 +401,59 @@ final class ObserverFiction {
     }
 
     // =========================
+    // Fantasy Double
+    // =========================
+
+    private static final EquipmentSlot[] GEAR = {EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS,
+            EquipmentSlot.FEET, EquipmentSlot.MAINHAND, EquipmentSlot.OFFHAND};
+
+    static AbilityWheel.Result fantasyDouble(ServerPlayer player, ServerLevel sl) {
+        String tag = ObserverFx.tagFor("fantasy_double");
+        Mob dbl = Construct.of(EntityTypes.HUSK)
+                .health(player.getMaxHealth()).damage(4f).speed(1.0f).lasts(DOUBLE_TICKS).leash(LEASH).shown()
+                .limit(DOUBLES, 1)
+                .onEnd((construct, why) -> {
+                    if (construct.level() instanceof ServerLevel level) ObserverFx.fantasyDoubleEnd(level, construct, tag);
+                    ObserverFx.statusEnd(player, Status.FANTASY_DOUBLE);
+                })
+                .build(player, sl, player.position(), player.getYRot());
+        if (dbl == null) {
+            Spells.tell(player, Component.literal("There is no room for your double here."));
+            return AbilityWheel.Result.REFUSED;
+        }
+        for (EquipmentSlot slot : GEAR) {
+            ItemStack worn = player.getItemBySlot(slot);
+            if (!worn.isEmpty()) dbl.setItemSlot(slot, worn.copy());
+        }
+        dbl.setCustomName(player.getName());
+        dbl.setCustomNameVisible(true);
+        dbl.getPersistentData().putString(FIGURE_TAG, tag);
+        DamageLink.redirect(dbl, player, DOUBLE_SHARE, DOUBLE_TICKS);
+        Concealment.hide(player, DOUBLE_HIDDEN);
+        ObserverFx.fantasyDouble(sl, player, dbl, DOUBLE_TICKS, tag);
+        ObserverFx.status(player, Status.FANTASY_DOUBLE, DOUBLE_TICKS);
+        huntDouble(player, sl, dbl);
+        return AbilityWheel.Result.DONE;
+    }
+
+    /** Every enemy near hunts the double. */
+    private static void huntDouble(ServerPlayer player, ServerLevel sl, Mob dbl) {
+        for (LivingEntity enemy : Spells.enemiesAround(player, sl, dbl.position(), DOUBLE_TAUNT)) {
+            if (enemy instanceof Mob && enemy != dbl) Taunt.apply(enemy, dbl, 30);
+        }
+    }
+
+    // =========================
     // Once a second, for an Observer
     // =========================
 
     static void tick(ServerPlayer player, ServerLevel sl) {
         faces();
+        for (Mob dbl : Construct.ofOwner(player, DOUBLES)) {
+            if (!dbl.isAlive() || dbl.level() != sl) continue;
+            huntDouble(player, sl, dbl);
+            ObserverFx.fantasyLink(sl, dbl, player);
+        }
         if (!player.getPersistentData().contains(HIDE_TAG)) return;
         boolean out = !isHidden(player) || !Concealment.isHidden(player);        // its time, or something broke it
         if (!out) {

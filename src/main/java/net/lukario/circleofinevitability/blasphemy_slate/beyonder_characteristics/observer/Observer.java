@@ -11,7 +11,12 @@ import net.lukario.circleofinevitability.combat.Painting;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Territory;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
+import net.lukario.circleofinevitability.root.Freeze;
+import net.lukario.circleofinevitability.root.Root;
+import net.lukario.circleofinevitability.root.RootRestriction;
 import net.lukario.circleofinevitability.status.EffectDuration;
+import net.lukario.circleofinevitability.status.Exposed;
+import net.lukario.circleofinevitability.status.FallGuard;
 import net.lukario.circleofinevitability.status.Madness;
 import net.lukario.circleofinevitability.status.Nocturnality;
 import net.lukario.circleofinevitability.status.Observation;
@@ -44,13 +49,19 @@ import java.util.function.BiConsumer;
  * wheel in the Star Dragon pattern: sneak + key opens the wheel to choose an entry, the key alone fires the last pick.
  * No entry has a cooldown; spirituality and the limits in the plan are the only bounds.
  *
- *   1 Territory  Totem Territory, Borrowed Power (Shaman 9)                         ObserverTerritory
+ *   1 Territory  Totem Territory, Borrowed Power (Shaman 9),                        ObserverTerritory
+ *                Ink Servants, Painting World (Pixie 5)
  *   2 Sight      True Sight, Many Angles (Reporter 8), Read Intent (Painter 7)      ObserverSight
  *   3 Canvas     Riot of Colours, Itching House, Golden Sun (Painter 7),            ObserverCanvas
  *                Boat in a Storm, Self Portrait, Giant's Fist (Literature Enthusiast 6)
  *   4 Fiction    Painted Mark, Hide in Painting (Painter 7),                        ObserverFiction
- *                Painted Face, Manifest Knight, Manifest Archer (Literature Enthusiast 6)
- *   5 Dimension, 6 Strings, 7 Sublunary, and Ink Servants, Painting World, Fantasy Double: the second half (not built)
+ *                Painted Face, Manifest Knight, Manifest Archer (Literature Enthusiast 6), Fantasy Double (Observer 1)
+ *   5 Dimension  Phase, Pixie Wings, Painted Lightning (Pixie 5),                   ObserverDimension
+ *                Dimensional Passage, Hostel, Shadow Form (Visitor 4)
+ *   6 Strings    Taut Chord, Resonance, Harmony, Dissonance (String Player 3),      ObserverStrings
+ *                Shadow From Above, Fold Space (Dimensional Shadow 2)
+ *   7 Sublunary  Foregone Loss, Foregone Survival, Higher Revival (Observer 1),     ObserverSublunary
+ *                Bloom, Fall Silent, Erase (Sublunary Eye 0)
  *
  * Two rules carry it. Observation (status/Observation): whoever you keep in your crosshair for 2 seconds gains a level,
  * up to 3, and each level does more (it cannot hide, your hits lead it and do more, it cannot teleport). Paintings
@@ -92,6 +103,16 @@ public class Observer {
     static final double HANDS_ATTACK_SPEED = 0.2;           // Reporter's Hands (8): 20% faster attacks (and Speed I)
     static final double PAINTER_EYE_RADIUS = 16.0;          // Painter's Eye (7): others' Paintings and Traps this close
     static final float FICTION_SHORTER = 0.6f;              // Fiction and Reality (6): these effects last 40% shorter
+    static final double FEATHER_FALL = -0.15;               // Featherfall (5): sneaking in the air, you fall no faster
+    static final double DEMIGOD_HEALTH = 4.0;               // Demigod Body (4): two more hearts...
+    static final float DEMIGOD_TELEPORT_ROOT = 0.5f;        // ...and Teleport roots last half as long
+    static final double PRAYER_RANGE = 48.0;                // Prayers Heard (3): an ally this close...
+    static final float PRAYER_HEALTH = 0.3f;                // ...under this much health prays...
+    static final int PRAYER_REST = 200;                     // ...at most this often each
+    static final double EYES_OBSERVATION = 2.0;             // Eyes Everywhere (1): Observation builds twice as fast
+    static final double SUBLUNARY_SEE = 64.0;               // Sublunary Sight (0): every living thing this close...
+    static final double SUBLUNARY_EXPOSE = 32.0;            // ...nothing hidden this close...
+    static final float SUBLUNARY_FORESEEN = 0.8f;           // ...and attacks on you do 20% less
 
     // Territory bonus for the owner standing in it (combat/Territory)
     static final float TERRITORY_COST = 0.85f;              // casts 15% cheaper...
@@ -103,8 +124,10 @@ public class Observer {
     // =========================
     static final String SENSE_READY = "observer_sense_ready";
     static final String TOLD_PAINTINGS = "observer_painter_eye_told";
+    static final String PRAYED = "observer_prayed_until";
 
     private static final Identifier HANDS_ID = Physique.id("observer_reporter_hands");
+    private static final Identifier DEMIGOD_ID = Physique.id("observer_demigod_body");
 
     // =========================
     // Costs: every wheel entry goes through costFor
@@ -165,6 +188,15 @@ public class Observer {
                     ObserverTerritory.BORROW_SEQUENCE, ObserverTerritory.BORROW_COST, 0, ObserverTerritory::borrowedPower)
             .description("Ask what is around you for power. What you look at decides the craft: water lashes, plants snare, open sky brings a gale, other blocks raise spikes. 50% stronger inside your Territory.")
             .costBy((player, cost) -> costFor(player, cost, "borrowed_power"))
+            .entry("ink_servants", ObserverFx.WHEEL_INK_SERVANTS, "Ink Servants",
+                    ObserverTerritory.SERVANT_SEQUENCE, ObserverTerritory.SERVANT_COST, 0, ObserverTerritory::inkServants)
+            .description("Three servants of ink circle you for 60 seconds and strike the nearest enemy. They reach twice as far in your Territory or Painting World.")
+            .costBy((player, cost) -> costFor(player, cost, "ink_servants"))
+            .entry("painting_world", ObserverFx.WHEEL_PAINTING_WORLD, "Painting World",
+                    ObserverTerritory.WORLD_SEQUENCE, ObserverTerritory.WORLD_COST, 0, ObserverTerritory::paintingWorld)
+            .description("Open a pocket world where you aim: enemies inside cannot walk out or teleport, and your Paintings take them at once. Cast again from inside to end it.")
+            .free(player -> ObserverTerritory.inWorld(player, player))           // ending it from inside
+            .costBy((player, cost) -> costFor(player, cost, "painting_world"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 
     static final AbilityWheel SIGHT = AbilityWheel.create("observer_sight", "Sight")
@@ -232,7 +264,7 @@ public class Observer {
             .costBy((player, cost) -> costFor(player, cost, "hide_in_painting"))
             .entry("painted_face", ObserverFx.WHEEL_PAINTED_FACE, "Painted Face",
                     ObserverFiction.FACE_SEQUENCE, ObserverFiction.FACE_COST, 0, ObserverFiction::paintedFace)
-            .description("Cosmetics from the Painting: you (or the ally you aim at) become Unnoticed and your name is hidden, until the disguised one hits something.")
+            .description("Cosmetics from the Painting: you (or the ally you aim at) become Unnoticed (mobs forget you, abilities pass you over), until the disguised one hits something.")
             .costBy((player, cost) -> costFor(player, cost, "painted_face"))
             .entry("manifest_knight", ObserverFx.WHEEL_MANIFEST_KNIGHT, "Manifest Knight",
                     ObserverFiction.KNIGHT_SEQUENCE, ObserverFiction.KNIGHT_COST, 0, ObserverFiction::manifestKnight)
@@ -242,6 +274,104 @@ public class Observer {
                     ObserverFiction.ARCHER_SEQUENCE, ObserverFiction.ARCHER_COST, 0, ObserverFiction::manifestArcher)
             .description("Bring an imagined archer into reality: it shoots your enemies from behind the Knight. Two at a time.")
             .costBy((player, cost) -> costFor(player, cost, "manifest_archer"))
+            .entry("fantasy_double", ObserverFx.WHEEL_FANTASY_DOUBLE, "Fantasy Double",
+                    ObserverFiction.DOUBLE_SEQUENCE, ObserverFiction.DOUBLE_COST, 0, ObserverFiction::fantasyDouble)
+            .description("A double of you takes your place and every enemy hunts it while you vanish. A fifth of what it takes reaches you.")
+            .costBy((player, cost) -> costFor(player, cost, "fantasy_double"))
+            .onCast((player, sl, entry) -> afterCast(player, entry.key()));
+
+    static final AbilityWheel DIMENSION = AbilityWheel.create("observer_dimension", "Dimension")
+            .pathway(PATHWAY).radius(72)
+            .selectThenFire().noCooldowns()
+            .entry("phase", ObserverFx.WHEEL_PHASE, "Phase",
+                    ObserverDimension.PHASE_SEQUENCE, ObserverDimension.PHASE_COST, 0, ObserverDimension::phase)
+            .description("Slip between the Spirit World and reality: invisible, untouchable and flying. Any attack, item or cast brings you back. Costs spirituality every second.")
+            .free(ObserverDimension::isPhased)                                    // coming back
+            .notCopyable()
+            .costBy((player, cost) -> ObserverDimension.phaseCost(player, costFor(player, cost, "phase")))
+            .entry("pixie_wings", ObserverFx.WHEEL_PIXIE_WINGS, "Pixie Wings",
+                    ObserverDimension.WINGS_SEQUENCE, ObserverDimension.WINGS_COST, 0, ObserverDimension::pixieWings)
+            .description("Dragonfly wings: fly for 60 seconds with no fall damage after. Press again to fold them.")
+            .free(ObserverDimension::hasWings)                                    // folding them
+            .costBy((player, cost) -> costFor(player, cost, "pixie_wings"))
+            .entry("painted_lightning", ObserverFx.WHEEL_PAINTED_LIGHTNING, "Painted Lightning",
+                    ObserverDimension.BOLT_SEQUENCE, ObserverDimension.BOLT_COST, 0, ObserverDimension::paintedLightning)
+            .description("Three bolts painted on your sleeve fly at once: instant, undodgeable, each jumping to a second enemy and holding the ones it hits.")
+            .costBy((player, cost) -> costFor(player, cost, "painted_lightning"))
+            .entry("dimensional_passage", ObserverFx.WHEEL_DIMENSIONAL_PASSAGE, "Dimensional Passage",
+                    ObserverDimension.PASSAGE_SEQUENCE, ObserverDimension.PASSAGE_COST, 0, ObserverDimension::dimensionalPassage)
+            .description("Step through the higher Dimension: through the wall in front of you, or a blink toward where you look.")
+            .costBy((player, cost) -> costFor(player, cost, "dimensional_passage"))
+            .entry("hostel", ObserverFx.WHEEL_HOSTEL, "Hostel",
+                    ObserverDimension.HOSTEL_SEQUENCE, ObserverDimension.HOSTEL_COST, 0, ObserverDimension::hostel)
+            .description("Take a weakened creature (below half health) into the Dimension in your body. With nothing in sight, let the oldest guest out to fight for you.")
+            .notCopyable()
+            .costBy((player, cost) -> costFor(player, ObserverDimension.hostelCost(player, cost), "hostel"))
+            .entry("shadow_form", ObserverFx.WHEEL_SHADOW_FORM, "Shadow Form",
+                    ObserverDimension.SHADOW_SEQUENCE, ObserverDimension.SHADOW_COST, 0, ObserverDimension::shadowForm)
+            .description("Become the Dimensional Shadow: faster and tougher, rising in Ascension (more damage, longer strings). Incomplete forms drive you mad. Press again to end it.")
+            .free(ObserverDimension::inShadowForm)                                // ending it
+            .notCopyable()
+            .costBy((player, cost) -> costFor(player, ObserverDimension.shadowCost(player, cost), "shadow_form"))
+            .onCast((player, sl, entry) -> afterCast(player, entry.key()));
+
+    static final AbilityWheel STRINGS = AbilityWheel.create("observer_strings", "Strings")
+            .pathway(PATHWAY).radius(72)
+            .selectThenFire().noCooldowns()
+            .entry("taut_chord", ObserverFx.WHEEL_TAUT_CHORD, "Taut Chord",
+                    ObserverStrings.CHORD_SEQUENCE, ObserverStrings.CHORD_COST, 0, ObserverStrings::tautChord)
+            .description("Strings to every enemy in sight: pulled together, held, then played for heavy damage.")
+            .costBy((player, cost) -> costFor(player, cost, "taut_chord"))
+            .entry("resonance", ObserverFx.WHEEL_RESONANCE, "Resonance",
+                    ObserverStrings.RESONANCE_SEQUENCE, ObserverStrings.RESONANCE_COST, 0, ObserverStrings::resonance)
+            .description("Pluck one enemy's string: each of your ability hits on it adds a Resonance, and it bursts in a circle with silence at five or when time runs out.")
+            .costBy((player, cost) -> costFor(player, cost, "resonance"))
+            .entry("harmony", ObserverFx.WHEEL_HARMONY, "Harmony",
+                    ObserverStrings.HARMONY_SEQUENCE, ObserverStrings.HARMONY_COST, 0, ObserverStrings::harmony)
+            .description("A chord for your allies: healing and a cleanse, and the next ability each of them casts is free and stronger.")
+            .costBy((player, cost) -> costFor(player, cost, "harmony"))
+            .entry("dissonance", ObserverFx.WHEEL_DISSONANCE, "Dissonance",
+                    ObserverStrings.DISSONANCE_SEQUENCE, ObserverStrings.DISSONANCE_COST, 0, ObserverStrings::dissonance)
+            .description("A broken chord round you: players are silenced, mobs miss and slow down, and the enemy's marionettes and constructs are shaken loose.")
+            .costBy((player, cost) -> costFor(player, cost, "dissonance"))
+            .entry("shadow_from_above", ObserverFx.WHEEL_SHADOW_FROM_ABOVE, "Shadow From Above",
+                    ObserverStrings.SHADOW_SEQUENCE, ObserverStrings.SHADOW_COST, 0, ObserverStrings::shadowFromAbove)
+            .description("A blade of a higher shadow appears inside the enemy you look at, through walls: damage no shield or ward stops. At the ground, blades rise in a circle.")
+            .costBy((player, cost) -> costFor(player, cost, "shadow_from_above"))
+            .entry("fold_space", ObserverFx.WHEEL_FOLD_SPACE, "Fold Space",
+                    ObserverStrings.FOLD_SEQUENCE, ObserverStrings.FOLD_COST, 0, ObserverStrings::foldSpace)
+            .description("Fold the plane: stand beside the enemy or spot you aim at, striking and holding everything along the way.")
+            .costBy((player, cost) -> costFor(player, cost, "fold_space"))
+            .onCast((player, sl, entry) -> afterCast(player, entry.key()));
+
+    static final AbilityWheel SUBLUNARY = AbilityWheel.create("observer_sublunary", "Sublunary")
+            .pathway(PATHWAY).radius(72)
+            .selectThenFire().noCooldowns()
+            .entry("foregone_loss", ObserverFx.WHEEL_FOREGONE_LOSS, "Foregone Loss",
+                    ObserverSublunary.LOSS_SEQUENCE, ObserverSublunary.LOSS_COST, 0, ObserverSublunary::foregoneLoss)
+            .description("Write the ending of an enemy you have Seen Through: it cannot heal and takes more damage, and when the time ends it falls if it is weak enough.")
+            .costBy((player, cost) -> costFor(player, cost, "foregone_loss"))
+            .entry("foregone_survival", ObserverFx.WHEEL_FOREGONE_SURVIVAL, "Foregone Survival",
+                    ObserverSublunary.SURVIVAL_SEQUENCE, ObserverSublunary.SURVIVAL_COST, 0, ObserverSublunary::foregoneSurvival)
+            .description("Write an ally's ending the other way (or your own): cleansed, and the next death does not happen.")
+            .costBy((player, cost) -> costFor(player, cost, "foregone_survival"))
+            .entry("higher_revival", ObserverFx.WHEEL_HIGHER_REVIVAL, "Higher Revival",
+                    ObserverSublunary.REVIVAL_SEQUENCE, ObserverSublunary.REVIVAL_COST, 0, ObserverSublunary::higherRevival)
+            .description("An 8 second ritual hidden in Phase: a ward no dispel can touch. When you would die you return hidden, at your Totem if you have one.")
+            .notCopyable()
+            .costBy((player, cost) -> costFor(player, cost, "higher_revival"))
+            .entry("bloom", ObserverFx.WHEEL_BLOOM, "Bloom",
+                    ObserverSublunary.BLOOM_SEQUENCE, ObserverSublunary.BLOOM_COST, 0, ObserverSublunary::bloom)
+            .description("When you see, the flowers bloom: every ally you can see is healed, cleansed, shielded and cannot be silenced, as long as you see them.")
+            .costBy((player, cost) -> costFor(player, cost, "bloom"))
+            .entry("fall_silent", ObserverFx.WHEEL_FALL_SILENT, "Fall Silent",
+                    ObserverSublunary.SILENT_SEQUENCE, ObserverSublunary.SILENT_COST, 0, ObserverSublunary::fallSilent)
+            .description("When you do not see, they fall silent: every enemy out of your sight cannot act or attack. Silent the whole time: erased for a while.")
+            .costBy((player, cost) -> costFor(player, cost, "fall_silent"))
+            .entry("erase", ObserverFx.WHEEL_ERASE, "Erase",
+                    ObserverSublunary.ERASE_SEQUENCE, ObserverSublunary.ERASE_COST, 0, ObserverSublunary::erase)
+            .description("Rub an enemy you have Seen Through out of the world for a while. At nothing: unmake everything the enemy conjured where you aim.")
+            .costBy((player, cost) -> costFor(player, cost, "erase"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 
     static {
@@ -265,6 +395,18 @@ public class Observer {
         });
         // Riot of Colours: madness at its height ends in slumber
         Madness.onBreak(ObserverCanvas::riotBreaks);
+        // inside the Painter's own Painting World a Painting is taken at once
+        Painting.addStareRule((viewer, hung, ticks) -> hung.kind().startsWith("observer_")
+                && ObserverTerritory.inWorld(hung.owner(), viewer) ? 0 : ticks);
+        // Demigod Body (4): Teleport roots last half as long
+        Root.addDurationScale((target, restriction) -> restriction == RootRestriction.TELEPORT && target instanceof Player player
+                && isObserver(player, VISITOR) ? DEMIGOD_TELEPORT_ROOT : 1f);
+        // Shadow Body (2): nothing holds you in place or freezes you
+        Root.addImmunity((entity, restriction) -> (restriction == RootRestriction.MOVE || restriction == RootRestriction.JUMP)
+                && entity instanceof Player player && isObserver(player, DIMENSIONAL_SHADOW));
+        Freeze.addImmunity(entity -> entity instanceof Player player && isObserver(player, DIMENSIONAL_SHADOW));
+        // Eyes Everywhere (1): Observation builds twice as fast
+        Observation.addSpeed(viewer -> viewer instanceof Player player && isObserver(player, OBSERVER) ? EYES_OBSERVATION : 1.0);
     }
 
     // =========================
@@ -291,6 +433,21 @@ public class Observer {
         if (ready(player, bypassClassCheck, PAINTER)) FICTION.press(player);
     }
 
+    /** Key 5: the Dimension wheel. */
+    public static void observerDimension(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (ready(player, bypassClassCheck, PIXIE)) DIMENSION.press(player);
+    }
+
+    /** Key 6: the Strings wheel. */
+    public static void observerStrings(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (ready(player, bypassClassCheck, STRING_PLAYER)) STRINGS.press(player);
+    }
+
+    /** Key 7: the Sublunary wheel. */
+    public static void observerSublunary(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
+        if (ready(player, bypassClassCheck, OBSERVER)) SUBLUNARY.press(player);
+    }
+
     // =========================
     // Events
     // =========================
@@ -306,9 +463,16 @@ public class Observer {
             if (player.tickCount % 20 == 0) bodyTick(player);
             if (!(player instanceof ServerPlayer viewer) || !SoulCore.getPathway(player).equals(PATHWAY)) return;
             if (player.tickCount % OBSERVATION_CHECK == 0 && grown(player, SHAMAN)) watch(viewer, sl);
+            if (isObserver(player, PIXIE)) featherfall(viewer, sl);
             if (player.tickCount % 10 == 0) ObserverSight.tick(viewer, sl);
             if (player.tickCount % 20 == 0) ObserverFiction.tick(viewer, sl);
             if (player.tickCount % 10 == 0) ObserverFiction.archers(viewer, sl);
+            if (player.tickCount % 10 == 0) ObserverDimension.tick(viewer, sl);
+            if (player.tickCount % 10 == 0) sights(viewer, sl);
+            if (player.tickCount % 20 == 0) {
+                ObserverStrings.tick(sl);
+                ObserverTerritory.servantsTick(viewer, sl);
+            }
         }
 
         @SubscribeEvent
@@ -317,6 +481,9 @@ public class Observer {
             if (hurt.level().isClientSide()) return;
             ObserverTerritory.hurt(event);
             ObserverFiction.hurt(event);
+            ObserverDimension.hurt(event);
+            ObserverStrings.hurt(event);
+            foreseen(event);
         }
 
         @SubscribeEvent
@@ -360,6 +527,9 @@ public class Observer {
         public static void onObserverLogout(PlayerEvent.PlayerLoggedOutEvent event) {
             Observation.forget(event.getEntity());
             ObserverFiction.clearState(event.getEntity());
+            ObserverStrings.forget(event.getEntity());
+            ObserverSublunary.clearState(event.getEntity());
+            ObserverTerritory.closeWorld(event.getEntity());
         }
     }
 
@@ -436,10 +606,62 @@ public class Observer {
         player.getPersistentData().putString(TOLD_PAINTINGS, now.toString());
     }
 
-    /** Once a second, for every player: Reporter's Hands' faster attacks. */
+    /** Once a second, for every player: Reporter's Hands' faster attacks, Demigod Body's hearts. */
     static void bodyTick(Player player) {
         Physique.keep(player, Attributes.ATTACK_SPEED, HANDS_ID, HANDS_ATTACK_SPEED, AttributeModifier.Operation.ADD_MULTIPLIED_BASE,
                 isObserver(player, REPORTER));
+        Physique.keep(player, Attributes.MAX_HEALTH, DEMIGOD_ID, DEMIGOD_HEALTH, AttributeModifier.Operation.ADD_VALUE,
+                isObserver(player, VISITOR));
+    }
+
+    /** Pixie (5), every tick: Featherfall. No fall damage, and sneaking in the air you drift down slowly. */
+    private static void featherfall(ServerPlayer player, ServerLevel sl) {
+        if (player.tickCount % 20 == 0) FallGuard.protect(player, 30);
+        if (!player.isShiftKeyDown() || player.onGround() || player.getAbilities().flying || player.isInWater()) return;
+        Vec3 motion = player.getDeltaMovement();
+        if (motion.y >= FEATHER_FALL) return;
+        player.setDeltaMovement(motion.x, FEATHER_FALL, motion.z);
+        player.hurtMarked = true;
+        player.fallDistance = 0f;
+        if (player.tickCount % 2 == 0) ObserverFx.featherfall(sl, player);
+    }
+
+    /** String Player (3), once a second: Prayers Heard. An ally near in need prays, and you see them through walls. */
+    public static void prayersHeard(Player player) {
+        if (!(player instanceof ServerPlayer viewer) || !(player.level() instanceof ServerLevel sl)) return;
+        long now = sl.getGameTime();
+        for (LivingEntity ally : Spells.alliesAround(player, sl, player.position(), PRAYER_RANGE)) {
+            if (ally == player || !(ally instanceof Player) && !net.lukario.circleofinevitability.status.Marionette.isMarionetteOf(ally, player)) continue;
+            if (ally.getHealth() >= ally.getMaxHealth() * PRAYER_HEALTH) continue;
+            if (ally.getPersistentData().getLongOr(PRAYED + player.getUUID(), 0L) > now) continue;
+            ally.getPersistentData().putLong(PRAYED + player.getUUID(), now + PRAYER_REST);
+            ObserverFx.prayer(viewer, ally);
+        }
+    }
+
+    /** Every 10 ticks: Eyes Everywhere (1) in the Territory, Sublunary Sight (0) round you. */
+    private static void sights(ServerPlayer viewer, ServerLevel sl) {
+        if (isObserver(viewer, SUBLUNARY_EYE)) {
+            for (LivingEntity one : Spells.livingAround(viewer, sl, viewer.position(), SUBLUNARY_SEE)) {
+                ObserverFx.sublunarySight(viewer, one);
+                if (one.distanceTo(viewer) <= SUBLUNARY_EXPOSE && Spells.isEnemy(viewer, one)) Exposed.apply(one, 25);
+            }
+            return;
+        }
+        if (isObserver(viewer, OBSERVER) && Territory.isOpen(viewer) && Territory.center(viewer) != null) {
+            for (LivingEntity one : Spells.livingAround(viewer, sl, Territory.center(viewer), Territory.radius(viewer))) {
+                if (Territory.inside(viewer, one)) ObserverFx.eyesEverywhere(viewer, one);
+            }
+        }
+    }
+
+    /** Sublunary Sight (0): what is aimed at you was foreseen and does less. */
+    private static void foreseen(LivingHurtEvent event) {
+        if (!(event.getEntity() instanceof Player player) || !isObserver(player, SUBLUNARY_EYE)) return;
+        Entity from = event.getSource().getEntity();
+        if (from == null || from == player || !(player.level() instanceof ServerLevel sl)) return;
+        event.setAmount(event.getAmount() * SUBLUNARY_FORESEEN);
+        ObserverFx.foreseen(sl, player, from.getBoundingBox().getCenter());
     }
 
     // =========================
@@ -480,6 +702,9 @@ public class Observer {
         ObserverTerritory.clearState(player);
         ObserverSight.clearState(player);
         ObserverFiction.clearState(player);
+        ObserverDimension.clearState(player);
+        ObserverStrings.forget(player);
+        ObserverSublunary.clearState(player);
         if (!SoulCore.getPathway(player).equals(PATHWAY)) return;
         for (Status status : Status.values()) ObserverFx.statusEnd(player, status);   // a clock left running before death
     }

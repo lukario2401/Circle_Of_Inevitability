@@ -13,6 +13,7 @@ import net.lukario.circleofinevitability.status.DeathWard;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.lukario.circleofinevitability.status.Marks;
 import net.lukario.circleofinevitability.status.Observation;
+import net.lukario.circleofinevitability.status.Phase;
 import net.lukario.circleofinevitability.status.Substitute;
 import net.lukario.circleofinevitability.status.Unnoticed;
 import net.minecraft.core.Holder;
@@ -118,7 +119,7 @@ final class ObserverSight {
         Vec3 at = player.position();
         for (LivingEntity one : Spells.livingAround(player, sl, at, TRUE_SIGHT_RANGE)) {
             boolean hiding = Concealment.isHidden(one) || Unnoticed.isUnnoticed(one) || one.hasEffect(MobEffects.INVISIBILITY);
-            if (hiding) ObserverFx.trueSightSees(player, one);
+            if (hiding && Phase.seenBy(player, one)) ObserverFx.trueSightSees(player, one);
             if (Marionette.isMarionette(one)) {
                 UUID master = Marionette.masterId(one);
                 Entity holder = master == null ? null : sl.getEntity(master);
@@ -140,7 +141,8 @@ final class ObserverSight {
 
     /** True Sight: no illusion takes on you while it is open. */
     static void effect(MobEffectEvent.Applicable event) {
-        if (!(event.getEntity() instanceof Player player) || player.level().isClientSide() || !isTrueSight(player)) return;
+        if (!(event.getEntity() instanceof Player player) || player.level().isClientSide()) return;
+        if (!isTrueSight(player) && !Observer.isObserver(player, Observer.SUBLUNARY_EYE)) return;
         for (Holder<MobEffect> illusion : ILLUSIONS) {
             if (event.getEffectInstance().is(illusion)) {
                 event.setResult(Result.DENY);
@@ -244,7 +246,7 @@ final class ObserverSight {
     // =========================
 
     static void tick(ServerPlayer player, ServerLevel sl) {
-        if (isTrueSight(player)) {
+        if (isTrueSight(player) || Observer.isObserver(player, Observer.SUBLUNARY_EYE)) {   // a passive from Sublunary Eye (0)
             for (Holder<MobEffect> illusion : ILLUSIONS) player.removeEffect(illusion);
             trueSightLooks(player, sl);
         } else if (player.getPersistentData().contains(TRUE_TAG)) {
