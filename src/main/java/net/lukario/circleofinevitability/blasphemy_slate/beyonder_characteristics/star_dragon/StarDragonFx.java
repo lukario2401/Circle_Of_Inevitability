@@ -1972,7 +1972,8 @@ public final class StarDragonFx {
         }
         Vec3 toward = from.subtract(viewer.position()).normalize();
         ParticleShapes.spawnFor(viewer, TWINKLE.lifetime(30, 0), feet.add(toward.scale(1.4)).add(0, 0.4, 0), Vec3.ZERO);
-        soundFor(viewer, viewer.position(), ModSounds.STAR_DRAGON_INTUITION, 0.7f, 1.0f);
+        if (StarDragonToggles.on(viewer, StarDragonToggles.WARNING))      // /stardragonpassive warning off: silent
+            soundFor(viewer, viewer.position(), ModSounds.STAR_DRAGON_INTUITION, 0.7f, 1.0f);
     }
 
     /** Star's Embrace (Star Sacrificer): a fall softened: a puff of starlight where they land. */

@@ -626,6 +626,7 @@ public class StarDragon {
     /** Radiant Angel (2), once a second: Radiance. Enemies near you are burned (only a glow is drawn, no light blocks). */
     public static void radiance(LivingEntity player) {
         if (!(player.level() instanceof ServerLevel sl)) return;
+        if (!StarDragonToggles.on(player, StarDragonToggles.RADIANCE)) return;  // /stardragonpassive radiance off
         StarDragonFx.radianceAura(sl, player, RADIANCE_RADIUS);
         for (LivingEntity enemy : Spells.enemiesAround(player, sl, player.position(), RADIANCE_RADIUS)) {
             hit(player, enemy, RADIANCE_BURN * (enemy.is(EntityTypeTags.UNDEAD) ? 2f : 1f));
