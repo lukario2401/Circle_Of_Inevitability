@@ -58,5 +58,6 @@ final class SKeyPressAbilityThreeUsed {
         knowledgeEmperorSpells(player,level,serverLevel,false);
         illuminatorAppraise(player,level,serverLevel,false);
         starDragonNavigator(player,level,serverLevel,false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerCanvas(player, level, serverLevel, false);
     }
 }

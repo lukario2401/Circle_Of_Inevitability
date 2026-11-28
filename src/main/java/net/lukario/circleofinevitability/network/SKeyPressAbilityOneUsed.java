@@ -58,5 +58,6 @@ final class SKeyPressAbilityOneUsed {
         illuminatorCompoundFlask(player,level,serverLevel,false);
         starDragonAstronomy(player,level,serverLevel,false);
         SnakeOfMercury.premonition(player, level, serverLevel, false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerTerritory(player, level, serverLevel, false);
     }
 }

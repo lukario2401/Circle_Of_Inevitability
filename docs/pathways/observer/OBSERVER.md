@@ -2,9 +2,26 @@
 
 The Observer Pathway is the Sublunary Eye Pathway of Lord of the Mysteries (the High-Dimensional Overseer's Pathway, also called the Painter or Pixie Pathway): Shaman (9), Reporter (8), Painter (7), Literature Enthusiast (6), Pixie (5), Visitor (4), String Player (3), Dimensional Shadow (2), Observer (1), Sublunary Eye (0). Source: the Sublunary Eye Pathway and Sublunary Eye Pathway/Abilities pages of the Lord of the Mysteries wiki.
 
-The abilities are not written as code yet; their looks, sounds and pictures are (see "Looks, sounds and pictures" at the end). This file is the plan: what every ability does, the numbers to start from, which existing parts of the spell kit build it, and which new reusable parts are worth writing first. When the code is written, move "Planned" to "What is built" (see BEAUTY_GODDESS.md).
+The first half is built: Sequences 9 to 6, keys 1 to 4 (Territory, Sight, Canvas, Fiction), the two rules (Observation, Paintings), the Territory and the passives up to Literature Enthusiast. See "What is built" right below. Keys 5 to 7, Ink Servants, Painting World and Fantasy Double are still the plan. Every look, sound and picture is made (see "Looks, sounds and pictures" at the end). The rest of this file is the plan: what every ability does, the numbers to start from, which parts of the spell kit build it.
 
 Pathway name in code: `"Observer"` (the Sequence 1 name, as Hand Of God is for the Twilight Giant Pathway).
+
+## What is built
+
+| Part | Where | Notes |
+|---|---|---|
+| Keys 1 to 4 | `Observer.observerTerritory / observerSight / observerCanvas / observerFiction` | Wheels `observer_territory`, `observer_sight`, `observer_canvas`, `observer_fiction`, all `selectThenFire().noCooldowns()`. Keys 5 to 7 do nothing yet. |
+| Totem Territory, Borrowed Power (9) | `ObserverTerritory` | The ritual is a 3 second `Countdown`; it is paid when the totem rises, so a broken ritual costs nothing. Radius 16, 20 at 7, 28 at 4, 40 at 2 (enemies inside cannot hide), 64 at 0. A `Dome` shell from 6. Borrowed Power picks the craft by the block or creature in view (12 blocks): water, ice and snow lash; leaves, wood, grass and crops snare; any other block raises spikes; open sky (or nothing in view outdoors) is a gale; indoors with nothing in view, spikes. |
+| True Sight, Many Angles (8), Read Intent (7) | `ObserverSight` | Read Intent also reads hung Paintings (anyone's), hidden Traps and Domes. Dossier depth 1 at 7 and 6, 2 at 5 and 4, 3 from 3. |
+| Riot of Colours, Itching House, Golden Sun (7), Boat in a Storm, Self Portrait, Giant's Fist (6) | `ObserverCanvas` | Riot of Colours is not spent when it takes someone: it keeps hanging, takes each enemy once, and every second a struck enemy keeps looking adds a Madness (the "prolonged exposure"). The field Paintings' canvas hangs as long as the field lasts (12, 10 and 90 seconds). The Self Portrait echoes casts that are not the Observer's own sight, fiction or Paintings (those would replace your own canvases), within 64 blocks; recasting it while it hangs looks through it (camera preset `observer_self_portrait`, 10 s, free). |
+| Painted Mark, Hide in Painting (7), Painted Face, Manifest Knight, Manifest Archer (6) | `ObserverFiction` | A driven mob is walked to the spot for 5 seconds (its own will keeps pulling it back). The figures are `Construct`s on a husk body, hidden under the Knight or Archer model; the Archer's arrows are ability hits from you (10 at Sequence 6, so 5 at 50%), every 1.5 seconds, and it steps back behind the Knight from an enemy within 6 blocks. Painted Face does not hide the name tag yet. |
+| Observation | `status/Observation` (reusable) | Built from the crosshair every 5 ticks (`Observer.watch`). The eyes and the watched player's status picture come from its listener. |
+| Paintings | `combat/Painting` (reusable) | Stare and limit rules as planned; Observation cuts 0.5 s a level (a `Painting.addStareRule`). |
+| Gaze, Territory | `combat/Gaze`, `combat/Territory` (reusable) | Territory's owner bonus is `Territory.addCostScale` (15% off, 30% at 0) and `Territory.addRegen` (30%). |
+| Passives 9 to 6 | `SequencePassives` and `Observer` | Spirit Sense (night vision in the dark, the hunted chime), Reporter's Hands (Speed I, 20% faster attacks), Painter's Eye (others' Paintings and hidden Traps within 16 blocks show, and a Painting new to you says who made it in the action bar), Fiction and Reality (Blindness, Nausea, Darkness 40% shorter). |
+| Game tests | `ObserverGameTests` | `./gradlew runGameTestServer -PobserverTests` |
+
+Not built yet: keys 5 to 7, Ink Servants and Painting World on key 1, Fantasy Double on key 4, the Gallery (folding Paintings), Phase, Manifest, Hostel and the sealed Death Ward, the passives from Pixie (5) up, and Beyonder mobs of this Pathway.
 
 ## Theme
 

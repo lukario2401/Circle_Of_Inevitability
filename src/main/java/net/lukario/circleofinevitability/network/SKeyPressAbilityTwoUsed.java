@@ -58,5 +58,6 @@ final class SKeyPressAbilityTwoUsed {
         knowledgeEmperorWeakPointStrike(player,level,serverLevel,false);
         illuminatorSurvey(player,level,serverLevel,false);
         starDragonStarSacrifice(player,level,serverLevel,false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerSight(player, level, serverLevel, false);
     }
 }

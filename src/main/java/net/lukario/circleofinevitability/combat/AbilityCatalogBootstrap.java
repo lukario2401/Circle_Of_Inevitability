@@ -44,6 +44,7 @@ final class AbilityCatalogBootstrap {
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.prince_of_abolition.PrinceOfAbolitionSovereign",
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.snake_of_mercury.SnakeOfMercuryPowers",
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.star_dragon.StarDragon",
+"net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer",
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimeAuthority",
 "net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.worm_of_time.WormOfTimePowers"
 })try{Class.forName(name);}catch(ClassNotFoundException e){throw new IllegalStateException(e);}

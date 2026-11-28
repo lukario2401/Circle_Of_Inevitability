@@ -859,6 +859,7 @@ public class DarkAngel {
             case KnowledgeEmperor.PATHWAY -> 0xB0C070E8;
             case Illuminator.PATHWAY -> 0xB0D9A441;
             case StarDragon.PATHWAY -> 0xB06A5CFF;
+            case net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.PATHWAY -> 0xB06C5CE7;
             case PATHWAY -> 0xB0D0283C;
             default -> HangedManFx.SOUL;
         };
