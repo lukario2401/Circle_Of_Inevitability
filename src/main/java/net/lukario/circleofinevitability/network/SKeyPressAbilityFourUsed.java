@@ -58,5 +58,6 @@ final class SKeyPressAbilityFourUsed {
         knowledgeEmperorScrolls(player,level,serverLevel,false);
         illuminatorWorkshop(player,level,serverLevel,false);
         starDragonTidalScholar(player,level,serverLevel,false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerFiction(player, level, serverLevel, false);
     }
 }

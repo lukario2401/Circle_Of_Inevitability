@@ -102,6 +102,10 @@ Nothing needs registering. Call them from your ability method. The 3D models the
 | Particles only one player sees (a trail for the hunter) | `ParticleShapes.spawnFor(viewer, particle, at, velocity)` | `particles/fx/` |
 | A model only one player sees (an eye over what they watch) | `ParticleShapes.modelFor(viewer, model, at, yaw, pitch, roll)`, `modelOnFor(viewer, model, entity, offset, yaw, pitch, roll)` | `particles/fx/` |
 | An outline round an entity that only one player sees (true sight, a hunter's quarry) | `SpellFx.markFor(viewer, entity, color, ticks)` | `combat/` |
+| Who is looking at a point or an entity, and a stare that has to be held (pictures that take whoever looks, "do not look at it") | `Gaze.looking`, `Gaze.lookingAt`, `Gaze.watchers`, `Gaze.stare` (see its class comment) | `combat/` |
+| "I have studied you": levels one watcher builds on one enemy by keeping it in sight (it cannot hide, hits lead it and do more, it cannot teleport) | `Observation.watch`, `raise`, `level`, `spend`, `addListener` (see its class comment) | `status/` |
+| A picture hung in the world that takes hold of the enemy who keeps it in view, fading over its life; or a field that works from the moment it hangs | `Painting.of(kind)...hang(owner, sl, spot, facing, max)`, `Painting.near`, `Painting.addStareRule` (see its class comment) | `combat/` |
+| One home ground per owner with a bonus inside it (cheaper casts, faster spirituality, an intruder alarm) | `Territory.at(ground, r)...open(owner, sl)`, `Territory.inside`, `Territory.addCostScale`, `Territory.addRegen` (see its class comment) | `combat/` |
 | Do something a few ticks from now | `Later.run(sl, ticks, () -> ...)` (already there) | `combat/` |
 | One key, many spells: a round menu where each has its own Sequence, cost and cooldown, and a sneak press casts the last pick again | [`AbilityWheel`](#abilitywheel-many-spells-on-one-key) | `menu/` |
 | Every ability of every Pathway as a list, to pick one or cast one by its place | [`PathwayAbilities`](#another-pathways-abilities-listing-casting-and-stealing-them) | `blasphemy_slate/beyonder_characteristics/` |

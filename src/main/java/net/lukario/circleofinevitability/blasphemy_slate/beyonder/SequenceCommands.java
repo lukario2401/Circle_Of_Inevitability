@@ -30,7 +30,7 @@ public class SequenceCommands {
     public static final List<String> PATHWAYS = List.of(
             "Filthy Monarch", "Nature Walker", "Author", "White Angel", "Omniscient Eye", "Wanderer", "Worm Of Time", "Hand Of Order", "Attendant Of Mysteries", "Frenzied Mage", "Pale Emperor",
             "Conqueror", "Apocalypse", "Dark Angel", "Beauty Goddess", "Hand Of God", "God Of Decay","Knight Of Misfortune",
-            "Thunder God", "Abomination", "Prince Of Abolition", "Knowledge Emperor", "Illuminator", "Star Dragon", "Key Of Stars", "Snake Of Mercury");
+            "Thunder God", "Abomination", "Prince Of Abolition", "Knowledge Emperor", "Illuminator", "Star Dragon", "Key Of Stars", "Snake Of Mercury", "Observer");
 
     @SubscribeEvent
     public static void onRegisterSequenceCommands(RegisterCommandsEvent event) {

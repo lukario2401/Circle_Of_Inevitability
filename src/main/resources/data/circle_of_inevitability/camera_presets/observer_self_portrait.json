@@ -1,0 +1,8 @@
+{
+  "motion": { "mode": "fixed" },
+  "collision": { "mode": "solid" },
+  "duration": 200,
+  "manual_exit": true,
+  "cancel_on_damage": true,
+  "display": { "fov": 70, "return_ticks": 8 }
+}
