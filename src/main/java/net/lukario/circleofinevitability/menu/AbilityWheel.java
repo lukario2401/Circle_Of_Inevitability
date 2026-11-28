@@ -49,6 +49,10 @@ import java.util.function.ToDoubleFunction;
  * - .noCooldownsWhen(player -> ...): while it says true for a player, none of the wheel's entries has a cooldown.
  * - .cooldownBy((player, ticks) -> ...): every entry's cooldown worked out when it starts (30% shorter while blessed).
  * - .notCopyable() after an entry: Record, Replication and the echoes (combat/Casts) never copy it.
+ * - .noCooldowns(): none of the wheel's entries ever has a cooldown (spirituality is the only limit).
+ * - .selectThenFire(): sneak + key opens the wheel and a pick only SELECTS the entry (nothing is cast); the key
+ *   alone fires the selected entry at its normal cost. Call wheel.press(player) from the key for either mode:
+ *     SPELLS.press(player);   // selectThenFire: sneak = choose, plain = fire. Otherwise: sneak = quickCast, plain = open.
  *
  * Cast through Beyonder.castUnbound (a stolen ability) there is no screen: the last pick is cast at once,
  * or a random entry if there is none.
@@ -154,6 +158,7 @@ public final class AbilityWheel {
     private ToDoubleFunction<Player> quickCastCostBy; // ...or this, read from the player (null: quickCastCost)
     private Predicate<Player> noCooldowns;           // true: no entry has a cooldown for this player
     private CooldownRule cooldownBy;                 // null: every entry's own cooldown
+    private boolean selectThenFire;                  // true: picks only select, the plain key fires (press)
     private Predicate<ServerPlayer> castsWhileSilenced; // true: picks from the wheel go through a root's ABILITIES
     private AbilityMenu menu;                        // built the first time it is opened
 
@@ -222,6 +227,60 @@ public final class AbilityWheel {
     public AbilityWheel noCooldownsWhen(Predicate<Player> when) {
         this.noCooldowns = when;
         return this;
+    }
+
+    /** None of the entries ever has a cooldown, for anyone: spirituality is the only limit. */
+    public AbilityWheel noCooldowns() {
+        return noCooldownsWhen(player -> true);
+    }
+
+    /**
+     * Sneak + key chooses, the key alone fires: picking from the wheel only selects the entry (it becomes the last
+     * pick, nothing is cast or paid), and press(player) without sneaking casts it at its normal cost. With nothing
+     * selected yet the plain key opens the wheel to choose.
+     */
+    public AbilityWheel selectThenFire() {
+        this.selectThenFire = true;
+        return this;
+    }
+
+    public boolean selectsThenFires() { return selectThenFire; }
+
+    /**
+     * The wheel's key was pressed: what it does depends on how the wheel is set up. selectThenFire: sneak opens
+     * the wheel to choose, plain fires the selected entry (fire). Otherwise: sneak casts the last pick again
+     * (quickCast), plain opens the wheel.
+     */
+    public void press(Player player) {
+        if (selectThenFire) {
+            if (player.isShiftKeyDown() && !Beyonder.isCastingUnbound(player)) open(player);
+            else fire(player);
+        } else if (player.isShiftKeyDown()) quickCast(player);
+        else open(player);
+    }
+
+    /**
+     * Casts the selected entry (the last pick) at its normal cost, with every check. With nothing selected (or the
+     * selection above the player's Sequence) the wheel opens to choose. Cast unbound it behaves like open.
+     */
+    public void fire(Player player) {
+        if (!(player instanceof ServerPlayer serverPlayer)) return;
+        Entry entry = lastPick(player);
+        if (entry == null || !unlocked(player, entry) || Beyonder.isCastingUnbound(player)) {
+            open(player);
+            return;
+        }
+        cast(serverPlayer, entry);
+    }
+
+    /** Makes this entry the selected one (the last pick) without casting it, and says so above the hotbar. */
+    public void select(ServerPlayer player, Entry entry) {
+        if (!unlocked(player, entry)) {
+            player.sendSystemMessage(Component.literal(entry.name + " needs Sequence " + entry.sequence + "."));
+            return;
+        }
+        player.getPersistentData().putString(id + "_last", entry.key);
+        player.sendOverlayMessage(Component.literal(title + ": " + entry.name + " selected"));
     }
 
     /**
@@ -436,7 +495,10 @@ public final class AbilityWheel {
         AbilityMenu built = AbilityMenu.create(id).title(title).ring(radius);
         if (castsWhileSilenced != null) built.castsWhileSilenced(castsWhileSilenced);
         for (Entry entry : entries) {
-            built.option(entry.icon, entry.name, 0, 0, (player, sl) -> cast(player, entry))
+            built.option(entry.icon, entry.name, 0, 0, (player, sl) -> {
+                        if (selectThenFire) select(player, entry);
+                        else cast(player, entry);
+                    })
                     .details(player -> details(player, entry))
                     .description(player -> entry.description)
                     .lockedWhen(player -> !unlocked(player, entry));

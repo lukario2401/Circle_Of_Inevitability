@@ -164,8 +164,8 @@ public class StarDragon {
     // Cooldown keys (combat/Cooldowns)
     /** false: this Pathway's single keys have no cooldown (combat/Cooldowns.addFree): spirituality is their only limit. */
     public static final boolean KEY_COOLDOWNS = false;
-    /** A sneak recast from any of this Pathway's wheels: no cooldown, this many times the cost. */
-    public static final float QUICK_CAST_COST = 3f;
+    // The three wheels (keys 2, 5, 7): sneak + key opens the wheel to choose an entry, the key alone fires the chosen
+    // one at its normal cost, and no wheel entry has a cooldown (AbilityWheel.selectThenFire / noCooldowns).
 
     static final String CD_CHART = "star_dragon_chart";
     static final String CD_GLIMPSE = "star_dragon_glimpse";
@@ -221,7 +221,7 @@ public class StarDragon {
 
     private static final AbilityWheel SACRIFICE = AbilityWheel.create("star_dragon_sacrifice", "Star Sacrifice")
             .radius(72)
-            .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .selectThenFire().noCooldowns()
             .entry("gravity_abnormality", StarDragonFx.WHEEL_GRAVITY_ABNORMALITY, "Gravity Abnormality",
                     StarDragonGravity.ABNORMALITY_SEQUENCE, StarDragonGravity.ABNORMALITY_COST,
                     StarDragonGravity.ABNORMALITY_COOLDOWN, StarDragonGravity::gravityAbnormality)
@@ -245,7 +245,7 @@ public class StarDragon {
 
     private static final AbilityWheel HEAVYBRINGER = AbilityWheel.create("star_dragon_heavybringer", "Heavybringer")
             .radius(72)
-            .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .selectThenFire().noCooldowns()
             .entry("heavybringing", StarDragonFx.WHEEL_HEAVYBRINGING, "Heavybringing",
                     StarDragonGravity.HEAVYBRINGING_SEQUENCE, StarDragonGravity.HEAVYBRINGING_COST,
                     StarDragonGravity.HEAVYBRINGING_COOLDOWN, StarDragonGravity::heavybringing)
@@ -270,7 +270,7 @@ public class StarDragon {
 
     private static final AbilityWheel COSMOS = AbilityWheel.create("star_dragon_cosmos", "Cosmos")
             .radius(84)
-            .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
+            .selectThenFire().noCooldowns()
             .entry("fusion_cluster", StarDragonFx.WHEEL_FUSION_CLUSTER, "Fusion Cluster",
                     StarDragonSky.FUSION_SEQUENCE, StarDragonSky.FUSION_COST, StarDragonSky.FUSION_COOLDOWN,
                     StarDragonSky::fusionCluster)
@@ -499,12 +499,11 @@ public class StarDragon {
 
     // =========================
     // Ability 2 - Star Sacrifice: the wheel (StarDragonGravity, StarDragonVoid, StarDragonRays)
-    // Normal: the wheel. Sneak: the last pick again, without the wheel (no cooldown, QUICK_CAST_COST times the cost).
+    // Sneak: the wheel, to choose. Normal: the chosen entry fires (no cooldown, its normal cost).
     // =========================
     public static void starDragonStarSacrifice(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, SACRIFICE_SEQUENCE)) return;
-        if (player.isShiftKeyDown()) SACRIFICE.quickCast(player);
-        else SACRIFICE.open(player);
+        SACRIFICE.press(player);                              // sneak: choose, plain: fire the choice
     }
 
     // =========================
@@ -530,8 +529,7 @@ public class StarDragon {
     // =========================
     public static void starDragonHeavybringer(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, HEAVYBRINGER_SEQUENCE)) return;
-        if (player.isShiftKeyDown()) HEAVYBRINGER.quickCast(player);
-        else HEAVYBRINGER.open(player);
+        HEAVYBRINGER.press(player);                              // sneak: choose, plain: fire the choice
     }
 
     // =========================
@@ -545,12 +543,11 @@ public class StarDragon {
 
     // =========================
     // Ability 7 - Cosmos: the wheel (StarDragonSky, StarDragonForms, StarDragonGravity, StarDragonVoid)
-    // Normal: the wheel. Sneak: the last pick again, without the wheel (no cooldown, QUICK_CAST_COST times the cost).
+    // Sneak: the wheel, to choose. Normal: the chosen entry fires (no cooldown, its normal cost).
     // =========================
     public static void starDragonCosmos(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, COSMOS_SEQUENCE)) return;
-        if (player.isShiftKeyDown()) COSMOS.quickCast(player);
-        else COSMOS.open(player);
+        COSMOS.press(player);                              // sneak: choose, plain: fire the choice
     }
 
     // =========================
