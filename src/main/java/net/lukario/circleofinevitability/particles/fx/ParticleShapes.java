@@ -311,6 +311,28 @@ public final class ParticleShapes {
     }
 
     // =========================
+    // Models only one player sees (a mark only its owner sees, what True Sight shows)
+    // =========================
+
+    /**
+     * Like model(...), but only 'viewer' sees it: an eye over a watched enemy, a picture only the caster sees.
+     * Models are drawn through nothing, so for that player it shows wherever it is in sight range.
+     */
+    public static void modelFor(ServerPlayer viewer, ModelFx model, Vec3 position, float yaw, float pitch, float roll) {
+        if (!(viewer.level() instanceof ServerLevel serverLevel)) return;
+        serverLevel.sendParticles(viewer, model.rotated(yaw, pitch, roll), true, true, position.x, position.y, position.z,
+                0, 0.0, 0.0, 0.0, 1.0);
+    }
+
+    /** Like modelOn(...) (stuck to an entity, going where it goes), but only 'viewer' sees it. */
+    public static void modelOnFor(ServerPlayer viewer, ModelFx model, Entity entity, Vec3 offset, float yaw, float pitch, float roll) {
+        if (!(viewer.level() instanceof ServerLevel serverLevel)) return;
+        Vec3 at = entity.position().add(offset);
+        serverLevel.sendParticles(viewer, model.following(entity, offset).rotated(yaw, pitch, roll), true, true,
+                at.x, at.y, at.z, 0, 0.0, 0.0, 0.0, 1.0);
+    }
+
+    // =========================
     // Models the server moves (a homing raven, a ghost that chases someone: see combat/Seeker)
     // =========================
 

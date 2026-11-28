@@ -45,15 +45,28 @@ NORMALS = {'north': (0, 0, -1), 'south': (0, 0, 1), 'east': (1, 0, 0), 'west': (
 def load(assets, name):
     with open(os.path.join(assets, 'models/model_fx', name + '.json')) as f:
         model = json.load(f)
-    tex_id = model['textures']['0'].split(':')[1]
-    tex = Image.open(os.path.join(assets, 'textures', tex_id + '.png')).convert('RGBA')
-    return model, np.asarray(tex).astype(float)
+    texs = {}
+    for key, ref in model['textures'].items():                # every texture the faces name ("0", "1"...)
+        path = os.path.join(assets, 'textures', ref.split(':')[1] + '.png')
+        if key == 'particle' or not os.path.exists(path):
+            continue
+        img = Image.open(path).convert('RGBA')
+        meta = path + '.mcmeta'
+        if os.path.exists(meta):                              # an animated texture: its first frame
+            with open(meta) as f:
+                anim = json.load(f).get('animation', {})
+            fw = anim.get('width', img.size[0])
+            fh = anim.get('height', fw)
+            img = img.crop((0, 0, fw, min(fh, img.size[1])))
+        texs['#' + key] = np.asarray(img).astype(float)
+    return model, texs
 
 
-def quads(model, tex, steps=6):
+def quads(model, texs, steps=6):
     """Every face cut into small coloured quads: (points[4] in model space, normal, rgba)."""
     out = []
-    th, tw = tex.shape[0], tex.shape[1]
+    if not isinstance(texs, dict):
+        texs = {'#0': texs}
     for el in model['elements']:
         f, t = el['from'], el['to']
         R, o = np.eye(3), np.zeros(3)
@@ -65,6 +78,8 @@ def quads(model, tex, steps=6):
             c = [R @ (p - o) + o for p in c]
             n = R @ np.array(NORMALS[face], float)
             u0, v0, u1, v1 = data['uv']
+            tex = texs.get(data.get('texture', '#0'), texs.get('#0'))
+            th, tw = tex.shape[0], tex.shape[1]
             for i in range(steps):
                 for j in range(steps):
                     a, b = i / steps, (i + 1) / steps
