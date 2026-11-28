@@ -112,10 +112,13 @@ public final class AbominationWraith {
             .castsWhileSilenced(Abomination::castsThroughHush)
             .entry("mirror_step", AbominationFx.WHEEL_MIRROR_STEP, "Mirror Step", MIRROR_SEQUENCE,
                     MIRROR_COST, MIRROR_COOLDOWN, AbominationWraith::mirrorStep)
+            .description("Step into a nearby reflection (water, ice, glass, polished metal) and come out of the one you aim at, unseen on the way.")
             .entry("possession", AbominationFx.WHEEL_POSSESSION, "Possession", POSSESSION_SEQUENCE,
                     POSSESSION_COST, POSSESSION_COOLDOWN, AbominationWraith::possession)
+            .description("Leave your body and ride inside the mob you look at: see through its eyes and steer it. Costs spirituality every second; the key again steps out.")
             .entry("ghost_host", AbominationFx.WHEEL_GHOST_HOST, "Ghost Host", GHOSTS_SEQUENCE,
-                    GHOSTS_COST, GHOSTS_COOLDOWN, AbominationWraith::ghostHost);
+                    GHOSTS_COST, GHOSTS_COOLDOWN, AbominationWraith::ghostHost)
+            .description("Ghosts rise from the Spirit World and fight for you for a while, passing through walls. Nearby vexes and phantoms that are not yours are taken over instead.");
 
     // =========================
     // Ability 5 - Wraith

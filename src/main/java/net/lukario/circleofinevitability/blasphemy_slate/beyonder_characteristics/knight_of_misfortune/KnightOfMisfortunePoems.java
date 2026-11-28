@@ -115,14 +115,19 @@ public final class KnightOfMisfortunePoems {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("tranquilize", KnightOfMisfortuneFx.WHEEL_TRANQUILIZE, "Tranquilize", TRANQUILIZE_SEQUENCE,
                     TRANQUILIZE_COST, TRANQUILIZE_COOLDOWN, KnightOfMisfortunePoems::tranquilize)
+            .description("You and your allies are calmed (fear, nausea, blindness, darkness and taunts end); the one you look at shows what is wrong with it.")
             .entry("lullaby", KnightOfMisfortuneFx.WHEEL_LULLABY, "Lullaby", LULLABY_SEQUENCE,
                     LULLABY_COST, LULLABY_COOLDOWN, KnightOfMisfortunePoems::lullaby)
+            .description("A cone of sleep: enemies in it fall asleep and wake when hurt. A sneaking player stays awake but blank: no abilities, no sprint.")
             .entry("pacify", KnightOfMisfortuneFx.WHEEL_PACIFY, "Pacify", PACIFY_SEQUENCE,
                     PACIFY_COST, PACIFY_COOLDOWN, KnightOfMisfortunePoems::pacify)
+            .description("The one you look at loses the will to fight: it cannot attack or use abilities and crawls. Blows do not end it.")
             .entry("fear", KnightOfMisfortuneFx.WHEEL_FEAR, "Fear", FEAR_SEQUENCE,
                     FEAR_COST, FEAR_COOLDOWN, KnightOfMisfortunePoems::fear)
+            .description("A cone of dread: mobs run, and players are slowed and cannot sprint toward you.")
             .entry("agitating", KnightOfMisfortuneFx.WHEEL_AGITATING, "Agitating", AGITATE_SEQUENCE,
                     AGITATE_COST, AGITATE_COOLDOWN, KnightOfMisfortunePoems::agitating)
+            .description("Stir the one you look at: a mob attacks whatever is nearest, friend or foe, it takes more damage from everything, and what is wrong with it shows.")
             .castsWhileSilenced(player -> KnightOfMisfortune.isKnight(player, RESONANCE_SEQUENCE))   // resonated: no voice
             .onCast(KnightOfMisfortunePoems::resonance);
 

@@ -619,12 +619,16 @@ public class BeautyGoddess {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("invisibility", BeautyGoddessFx.WHEEL_INVISIBILITY, "Invisibility Potion", INVISIBILITY_SEQUENCE,
                     INVISIBILITY_COST, INVISIBILITY_COOLDOWN, BeautyGoddess::invisibilityPotion)
+            .description("Drink a potion: unseen and untouchable for a while. Attacking ends it.")
             .entry("fire_breathing", BeautyGoddessFx.WHEEL_FIRE_BREATHING, "Fire Breathing Potion", BREATH_SEQUENCE,
                     BREATH_COST, BREATH_COOLDOWN, BeautyGoddess::fireBreathingPotion)
+            .description("Drink a potion and breathe a cone of fire for a few seconds, burning everything in front of you.")
             .entry("sun_water", BeautyGoddessFx.WHEEL_SUN_WATER, "Sun Water", SUN_SEQUENCE,
                     SUN_COST, SUN_COOLDOWN, BeautyGoddess::sunWater)
+            .description("Throw Sun Water where you aim: undead are scorched hard and set burning, everything else is hurt less and dazzled.")
             .entry("shadow", BeautyGoddessFx.WHEEL_SHADOW, "Shadow Potion", SHADOW_SEQUENCE,
-                    SHADOW_COST, SHADOW_COOLDOWN, BeautyGoddess::shadowPotion);
+                    SHADOW_COST, SHADOW_COOLDOWN, BeautyGoddess::shadowPotion)
+            .description("Drink a potion and become a shadow on the ground: unseen, untouchable and fast for a while.");
 
     public static void beautyGoddessPotions(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, POTIONS_SEQUENCE)) return;
@@ -1078,12 +1082,16 @@ public class BeautyGoddess {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("door", BeautyGoddessFx.WHEEL_DOOR, "Door of Summoning", DOOR_SEQUENCE,
                     DOOR_COST, DOOR_COOLDOWN, BeautyGoddess::doorOfSummoning)
+            .description("Open a Door of Summoning where you aim: creatures step out one by one and fight for you, and sometimes something stranger comes through.")
             .entry("creation", BeautyGoddessFx.WHEEL_CREATION, "Creation", CREATION_SEQUENCE,
                     CREATION_COST, CREATION_COOLDOWN, BeautyGoddess::creation)
+            .description("Plant a seed where you aim: plants grow around it and it heals you and your allies standing inside for a while.")
             .entry("beauty", BeautyGoddessFx.WHEEL_BEAUTY, "Beauty", BEAUTY_SEQUENCE,
                     BEAUTY_COST, BEAUTY_COOLDOWN, BeautyGoddess::beauty)
+            .description("Your beauty captivates every enemy around you: they stare and drift toward you, and take more damage while they stare.")
             .entry("blood_moon", BeautyGoddessFx.WHEEL_BLOOD_MOON, "Blood Moon", BLOOD_MOON_SEQUENCE,
-                    BLOOD_MOON_COST, BLOOD_MOON_COOLDOWN, BeautyGoddess::bloodMoon);
+                    BLOOD_MOON_COST, BLOOD_MOON_COOLDOWN, BeautyGoddess::bloodMoon)
+            .description("A Blood Moon rises over where you aim for a minute: enemies under it take damage every second and the monsters turn on each other, while you and your allies gain Regeneration and Strength.");
 
     public static void beautyGoddessMoonWheel(Player player, Level level, ServerLevel sl, boolean bypassClassCheck) {
         if (!ready(player, bypassClassCheck, MOON_WHEEL_SEQUENCE)) return;

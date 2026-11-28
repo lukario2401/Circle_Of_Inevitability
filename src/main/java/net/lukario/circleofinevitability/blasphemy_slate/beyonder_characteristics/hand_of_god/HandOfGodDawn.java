@@ -133,14 +133,18 @@ public final class HandOfGodDawn {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("light_of_dawn", HandOfGodFx.WHEEL_LIGHT_OF_DAWN, "Light of Dawn", LIGHT_SEQUENCE,
                     LIGHT_COST, LIGHT_COOLDOWN, HandOfGodDawn::lightOfDawn)
+            .description("Dawn floods the ground around you: hidden enemies are forced out, evil and undead burn and weaken, and you and your allies are cleansed and healed every second.")
             .entry("dawn_armor", HandOfGodFx.WHEEL_DAWN_ARMOR, "Dawn Armor", ARMOR_SEQUENCE,
                     ARMOR_COST, ARMOR_COOLDOWN, HandOfGodDawn::dawnArmor)
+            .description("Weightless plates of light: less damage, no knockback and a layer of absorption. From Silver Knight it stays until you cast it again and its layer regrows.")
             .free(player -> lastingArmor(player) && ConjuredArmor.isWorn(player, ARMOR))         // taking it off
             .entry("sword_of_dawn", HandOfGodFx.WHEEL_SWORD_OF_DAWN, "Sword of Dawn", SWORD_SEQUENCE,
                     SWORD_COST, SWORD_COOLDOWN, HandOfGodDawn::swordOfDawn)
+            .description("Draw a greatsword of light: every hit purifies (the target takes more damage, stacking) and burns evil, and a full swing throws a crescent. From Silver Knight it stays until put away.")
             .free(player -> lastingSword(player) && ConjuredWeapon.isDrawn(player, SWORD))       // putting it away
             .entry("hurricane_of_light", HandOfGodFx.WHEEL_HURRICANE, "Hurricane of Light", HURRICANE_SEQUENCE,
-                    HURRICANE_COST, HURRICANE_COOLDOWN, HandOfGodDawn::hurricaneOfLight);
+                    HURRICANE_COST, HURRICANE_COOLDOWN, HandOfGodDawn::hurricaneOfLight)
+            .description("The Sword of Dawn gathers the light into a hurricane that rolls ahead, hurting and throwing every enemy it reaches (harder if evil). From Glory it is twice as big and decays.");
 
     // =========================
     // Ability 4 - Dawn

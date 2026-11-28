@@ -74,7 +74,40 @@ public final class Author {
 
     private static void entry(AbilityWheel wheel, String id, String name, int sequence, int cost) {
         wheel.entry(id, "ability_menus/author/" + id, name, sequence, cost, 0,
-                (p, sl) -> perform(p, sl, id)).notCopyable();
+                (p, sl) -> perform(p, sl, id)).notCopyable().description(description(id));
+    }
+
+    /** The wheel's hover text for each entry (shown when the mouse is over its icon). */
+    static String description(String id) {
+        return switch (id) {
+            case "observe" -> "Watch the enemy you aim at for up to 2 seconds to gain Insight on it (up to 5). Other Author powers spend that Insight.";
+            case "spectator_state" -> "Calm composure for 8 seconds: less damage from mob melee, and your next completed Observe gains an extra Insight.";
+            case "awe" -> "Frighten the enemy you aim at for 3 seconds. With 2 Insight on it, also deals mental damage.";
+            case "frenzy" -> "Spend 2 Insight: the enemy you aim at falters on its attacks for 6 seconds, and a mob loses its current target.";
+            case "psychoanalysis" -> "Spend 3 Insight on an enemy: heavy mental damage and Weakness.";
+            case "placate" -> "Calm yourself and nearby allies: fear, sleep and frenzy end, health is restored, and you resist mental control for a moment.";
+            case "suggestion" -> "Spend 2 Insight to plant a pendulum on an enemy: its next attack on you deals less damage.";
+            case "sleep" -> "Spend 3 Insight: after a short induction the enemy falls asleep for 5 seconds, until it is hurt.";
+            case "psychological_invisibility" -> "Become Unnoticed for 8 seconds: mobs forget you and aimed powers cannot choose you. Your body is still there; attacking ends it.";
+            case "battle_hypnosis" -> "Spend 3 Insight: the enemy is rooted and cannot attack for a few seconds (shorter on players and bosses). Damage breaks it.";
+            case "dream_entry" -> "Link into the dream of a sleeping or Exposed enemy, marking it for Nightmare.";
+            case "nightmare" -> "Through a Dream Link: after a short warning, heavy mental damage and fear. Uses up the link.";
+            case "dream_maze" -> "A dream maze where you aim: enemies inside are slowed and falter on their attacks.";
+            case "dream_anchor" -> "A support field around you: you and your allies take less damage and are woken and freed from fear on entry.";
+            case "dragon_form" -> "Your Mind Dragon form: less damage taken, more reach, flight and stronger claws, with a fear pulse on entry. Strain builds until it ends.";
+            case "mind_storm" -> "A storm of thought in a cone ahead: three pulses of mental damage, the first adding Insight on everyone hit.";
+            case "manipulate" -> "Spend 5 Insight to turn an ordinary hostile mob into your puppet for 12 seconds. Players and bosses deal you less damage instead.";
+            case "virtual_persona" -> "A mental double orbits you and intercepts one Author mental control aimed at you, then shatters.";
+            case "mind_walk" -> "Spend 3 Insight to walk the mind link: after a moment you appear next to the target.";
+            case "discern" -> "For 10 seconds Observe gains extra Insight, and enemies' delayed effects warn you just before they resolve.";
+            case "foreshadow" -> "Spend 3 Insight on an enemy: its next direct attack on you triggers a heavy mental counter.";
+            case "plot_twist" -> "Script your own story: the next direct hit on you is halved and you step back to safety.";
+            case "fate_script" -> "Spend 5 Insight on an enemy: your next direct hit on it within 10 seconds deals a large burst of mental damage.";
+            case "envision" -> "Imagine a jade and gold blade: your melee hits deal more damage, and every third hit sends out a thought slash.";
+            case "life_creation" -> "Imagine a drake into being: it fights for you for 20 seconds.";
+            case "sea_of_minds" -> "A domain of the collective subconscious: Insight builds on visible enemies and allies heal, and at 5 Insight enemies take a burst of mental damage.";
+            default -> "";
+        };
     }
 
     /** Called at common setup, rather than lazily after someone first casts. */

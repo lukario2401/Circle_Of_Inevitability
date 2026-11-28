@@ -167,21 +167,27 @@ public final class KnowledgeEmperorRetellings {
             .cooldownBy(KnowledgeEmperor::cooldownFor)
             .entry("sleeping_beauty", KnowledgeEmperorFx.WHEEL_SLEEPING_BEAUTY, "Sleeping Beauty", BEAUTY_SEQUENCE,
                     BEAUTY_COST, BEAUTY_COOLDOWN, KnowledgeEmperorRetellings::sleepingBeauty)
+            .description("A golden spindle turns: nearby enemies fall asleep, and the blow that wakes one does half again as much. Bosses and players are only slowed hard. Weaker the more often it was told recently.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("avalon", KnowledgeEmperorFx.WHEEL_AVALON, "Avalon", AVALON_SEQUENCE,
                     AVALON_COST, AVALON_COOLDOWN, KnowledgeEmperorRetellings::avalon)
+            .description("The Isle of the Blessed rises as mist around you: allies heal and are cleansed, enemies are slowed and cannot heal. Weaker the more often it was told recently.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("achilles_heel", KnowledgeEmperorFx.WHEEL_ACHILLES_HEEL, "Achilles' Heel", HEEL_SEQUENCE,
                     HEEL_COST, HEEL_COOLDOWN, KnowledgeEmperorRetellings::achillesHeel)
+            .description("Find the single weak spot: the enemy you look at is Understood, takes more damage and your hits on it go through armor. Weaker the more often it was told recently.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("pandoras_box", KnowledgeEmperorFx.WHEEL_PANDORAS_BOX, "Pandora's Box", BOX_SEQUENCE,
                     BOX_COST, BOX_COOLDOWN, KnowledgeEmperorRetellings::pandorasBox)
+            .description("A different misfortune falls on every nearby enemy, then hope on you and your allies. Weaker the more often it was told recently.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("foresight", KnowledgeEmperorFx.WHEEL_FORESIGHT, "Foresight", FORESIGHT_SEQUENCE,
                     FORESIGHT_COST, FORESIGHT_COOLDOWN, KnowledgeEmperorRetellings::foresight)
+            .description("See ghosts of the blows to come: the next few hits are dodged.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("prophecy_of_ruin", KnowledgeEmperorFx.WHEEL_PROPHECY_OF_RUIN, "Prophecy of Ruin", PROPHECY_SEQUENCE,
                     PROPHECY_COST, PROPHECY_COOLDOWN, KnowledgeEmperorRetellings::prophecyOfRuin)
+            .description("Pronounce a fate on an enemy: after a countdown, ruin that nothing stops. Half against the stronger, and a tenth comes back on you.")
             .costBy(KnowledgeEmperor::costFor)
             .onCast((player, sl, entry) -> KnowledgeEmperor.afterCast(player, entry.cost()));
 

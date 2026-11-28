@@ -100,13 +100,16 @@ public final class IlluminatorWorkshop {
                     ? Math.round(ticks * Illuminator.CRAFTSMAN_COOLDOWN) : ticks)
             .entry("clockwork_rifle", IlluminatorFx.WHEEL_CLOCKWORK_RIFLE, "Clockwork Rifle", RIFLE_SEQUENCE,
                     RIFLE_COST, RIFLE_COOLDOWN, IlluminatorWorkshop::clockworkRifle)
+            .description("A brass rifle fires a volley at what your crosshair is on. Against an enemy you Appraised, the rounds carry its weakness.")
             .costBy((player, cost) -> Illuminator.costFor(player,
                     Illuminator.wearsMechanicalBody(player) ? Math.round(cost * ARM_CANNON_COST) : cost, "clockwork_rifle", Group.WORKSHOP))
             .entry("spirit_cannon", IlluminatorFx.WHEEL_SPIRIT_CANNON, "Spirit Cannon", CANNON_SEQUENCE,
                     CANNON_COST, CANNON_COOLDOWN, IlluminatorWorkshop::spiritCannon)
+            .description("A brass cannon unfolds where you aim and fires at the nearest enemy every 2 seconds.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "spirit_cannon", Group.WORKSHOP))
             .entry("mystic_brooch", IlluminatorFx.WHEEL_MYSTIC_BROOCH, "Mystic Brooch", BROOCH_SEQUENCE,
                     BROOCH_COST, BROOCH_COOLDOWN, IlluminatorWorkshop::mysticBrooch)
+            .description("Pin a brooch on yourself, or on the ally you look at: it soaks up the next 60 damage, then bursts.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "mystic_brooch", Group.WORKSHOP))
             .onCast((player, sl, entry) -> {
                 Illuminator.afterCast(player, entry.key());

@@ -31,12 +31,18 @@ public final class OmniscientEye {
             .rule("unmaking",Construct::isConstruct)
             .rule("decay",e->e.getMaxHealth()>=100);
     public static final AbilityWheel ARTS=AbilityWheel.create("omniscient_eye_mystic_arts","Mystic Arts")
-            .entry("analyze","ability_menus/omniscient_eye/analyze","Analyze",6,1500,0,OmniscientEye::analyze).notCopyable()
+            .entry("analyze","ability_menus/omniscient_eye/analyze","Analyze",6,1500,0,OmniscientEye::analyze)
+            .description("Focus on the enemy you look at for 2 seconds (1 from Sequence 5): it is weakened and marked, taking 15% more damage from you for 20 seconds.").notCopyable()
             .entry("mirror_curse","ability_menus/omniscient_eye/mirror_curse","Mirror Curse",5,3500,500,OmniscientEye::mirror)
+            .description("A mirror curse on the enemy you look at: damage based on the health it is missing (capped against bosses), then bleeding.")
             .entry("vile_thoughts","ability_menus/omniscient_eye/vile_thoughts","Vile Thoughts",5,3000,400,OmniscientEye::vile)
+            .description("Fill the enemy's mind with vile thoughts: nausea, fear and many of its attacks falter. Extra damage against constructs and summons.")
             .entry("improvise","ability_menus/omniscient_eye/improvise","Improvise",5,4500,600,OmniscientEye::improvise)
+            .description("Improvise a counter to the enemy's weakness: a matching elemental hit or status, unmaking a summon, spreading lightning or a plain force hit.")
             .entry("living_tome","ability_menus/omniscient_eye/living_tome","Living Tome",5,5000,900,OmniscientEye::tome)
-            .entry("golden_armor_art","ability_menus/omniscient_eye/golden_armor_art","Golden Armor Art",4,6000,800,OmniscientEye::armor);
+            .description("Animate a tome of pages and ink that fights for you for 30 seconds. When it is destroyed it blinds nearby enemies.")
+            .entry("golden_armor_art","ability_menus/omniscient_eye/golden_armor_art","Golden Armor Art",4,6000,800,OmniscientEye::armor)
+            .description("Golden armor on you or the ally you aim at: 40% less damage, absorption and no knockback for 30 seconds.");
     static {
         OmniscientEyeHigher.initialize();
         Spells.addCostScale(p->SoulCore.getPathway(p).equals(PATHWAY) && Beyonder.hasSequence(p,5)

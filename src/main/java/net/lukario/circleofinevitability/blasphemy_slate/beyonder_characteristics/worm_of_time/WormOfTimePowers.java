@@ -140,19 +140,30 @@ public final class WormOfTimePowers {
     private static final AbilityWheel DECEIT = AbilityWheel.create("worm_of_time_deceit", "Thought and Deceit")
             .quickCastCooldown(false).quickCastCost(3f)
             .entry("swindle", icon("swindle"), "Swindler's Charm", 8, 500, 160, WormOfTimePowers.guarded(WormOfTimePowers::swindle))
+            .description("Swindler's Charm: for six seconds you are unnoticed, mobs lose interest and spells cannot target you directly. Attacking ends it.")
             .entry("intent", icon("intent"), "Steal Intent", 5, 2000, 160, WormOfTimePowers.guarded(WormOfTimePowers::intent))
+            .description("Steal the intent of the one you aim at: it briefly cannot attack, use items or abilities, and a mob loses its target.")
             .entry("dream", icon("dream"), "Steal Dream", 5, 2400, 240, WormOfTimePowers.guarded(WormOfTimePowers::dream))
+            .description("Steal a dream: the target falls into a short sleep that breaks if hurt, and you steal some of its spirituality.")
             .entry("deceive", icon("deceive"), "Mentor of Deceit", 3, 6000, 300, WormOfTimePowers.guarded(WormOfTimePowers::deceive))
-            .entry("attack", icon("attack"), "Steal Attack", 5, 2400, 240, WormOfTimePowers.guarded(WormOfTimePowers::stealAttack));
+            .description("Deceive every enemy around you: their attacks falter and their abilities are briefly interrupted.")
+            .entry("attack", icon("attack"), "Steal Attack", 5, 2400, 240, WormOfTimePowers.guarded(WormOfTimePowers::stealAttack))
+            .description("Take a stance for four seconds: the next hit on you is cancelled and its damage goes back to the attacker.");
 
     private static final AbilityWheel DESTINY = AbilityWheel.create("worm_of_time_destiny", "Parasite and Destiny")
             .quickCastCooldown(false).quickCastCost(3f)
-            .entry("swarm", icon("swarm"), "Worms of Time", 4, 6000, 400, WormOfTimePowers.guarded(WormOfTimePowers::swarm)).notCopyable()
-            .entry("avatar", icon("avatar"), "Create Avatar", 3, 9000, 200, WormOfTimePowers.guarded(WormOfTimePowers::avatar)).notCopyable()
-            .entry("recall", icon("recall"), "Recall Avatars", 3, 0, 0, WormOfTimePowers.guarded(WormOfTimePowers::recall)).notCopyable()
+            .entry("swarm", icon("swarm"), "Worms of Time", 4, 6000, 400, WormOfTimePowers.guarded(WormOfTimePowers::swarm))
+            .description("Your body breaks into worms of time for a while, shrugging off harm as a swarm.").notCopyable()
+            .entry("avatar", icon("avatar"), "Create Avatar", 3, 9000, 200, WormOfTimePowers.guarded(WormOfTimePowers::avatar))
+            .description("Create a spectral avatar that fights on its own for a minute and stays near you.").notCopyable()
+            .entry("recall", icon("recall"), "Recall Avatars", 3, 0, 0, WormOfTimePowers.guarded(WormOfTimePowers::recall))
+            .description("Recall all your avatars, recovering a little health from each.").notCopyable()
             .entry("fate", icon("fate"), "Steal Fate", 2, 15000, 500, WormOfTimePowers.guarded(WormOfTimePowers::fate))
+            .description("Steal the fate of the enemy you aim at: take up to three of its good effects, it falters, and you gain Luck II.")
             .entry("exchange", icon("exchange"), "Exchange Positions", 2, 12000, 240, WormOfTimePowers.guarded(WormOfTimePowers::exchange))
-            .entry("succession", icon("succession"), "Avatar Succession", 1, 24000, 1200, WormOfTimePowers.guarded(WormOfTimePowers::succession)).notCopyable();
+            .description("Swap places with the enemy you aim at.")
+            .entry("succession", icon("succession"), "Avatar Succession", 1, 24000, 1200, WormOfTimePowers.guarded(WormOfTimePowers::succession))
+            .description("For thirty seconds, a fatal hit consumes one of your avatars instead: you move to it and recover to 40% health.").notCopyable();
 
     /** Recheck ownership when a delayed menu choice arrives, including after a respec or gamemode change. */
     static AbilityWheel.Cast guarded(AbilityWheel.Cast action) {

@@ -181,21 +181,29 @@ public final class PrinceOfAbolitionSovereign {
             .noCooldownsWhen(PrinceOfAbolition::noCooldowns)
             .entry("ruin", PrinceOfAbolitionFx.WHEEL_RUIN, "Ruin", RUIN_SEQUENCE,
                     RUIN_COST, RUIN_COOLDOWN, PrinceOfAbolitionSovereign::ruin)
+            .description("A black-and-gold beam strikes every enemy in a line, and a rot sets in that eats deeper every second until cleansed.")
             .entry("frenzy", PrinceOfAbolitionFx.WHEEL_FRENZY, "Frenzy", FRENZY_SEQUENCE,
                     FRENZY_COST, FRENZY_COOLDOWN, PrinceOfAbolitionSovereign::frenzy)
+            .description("Twelve black bolts burst out, each curving onto a different nearby enemy and Disordering what it hits.")
             .entry("entropy", PrinceOfAbolitionFx.WHEEL_ENTROPY, "Entropy", ENTROPY_SEQUENCE,
                     ENTROPY_COST, ENTROPY_COOLDOWN, PrinceOfAbolitionSovereign::entropy)
+            .description("Order comes undone in a field where you aim: enemies stumble, their shots fly wide and their damage swings. Exploit and Magnify cost nothing inside it.")
             .entry("abolition", PrinceOfAbolitionFx.WHEEL_ABOLITION, "Abolition", ABOLITION_SEQUENCE,
                     ABOLITION_COST, ABOLITION_COOLDOWN, PrinceOfAbolitionSovereign::abolition)
+            .description("A sphere around you slips out of the real world: nothing crosses its shell either way, not blows, projectiles or attention.")
             .free(player -> Dome.isRaised(player, ABOLITION_DOME))                    // cast again: closes it, free
             .entry("exile", PrinceOfAbolitionFx.WHEEL_EXILE, "Exile", EXILE_SEQUENCE,
                     EXILE_COST, EXILE_COOLDOWN, PrinceOfAbolitionSovereign::exile)
+            .description("Throw one thing out of the world for a while: an enemy (unseen, unable to act), an ally (saved from what was coming), or yourself, coming back where you aim.")
             .entry("inversion", PrinceOfAbolitionFx.WHEEL_INVERSION, "Inversion", INVERSION_SEQUENCE,
                     INVERSION_COST, INVERSION_COOLDOWN, PrinceOfAbolitionSovereign::inversion)
+            .description("Everything around you turns into its opposite: enemy blows on your side heal you, their healing hurts them, and their good effects turn bad.")
             .entry("coronation", PrinceOfAbolitionFx.WHEEL_CORONATION, "Coronation", CORONATION_SEQUENCE,
                     CORONATION_COST, CORONATION_COOLDOWN, PrinceOfAbolitionSovereign::coronation)
+            .description("The mausoleums crown you: their bonus grows, Majesty pulses out of you, and you cannot be knocked back. Needs one standing.")
             .entry("decree", PrinceOfAbolitionFx.WHEEL_DECREE, "Decree", DECREE_SEQUENCE,
-                    DECREE_COST, DECREE_COOLDOWN, PrinceOfAbolitionSovereign::decree);
+                    DECREE_COST, DECREE_COOLDOWN, PrinceOfAbolitionSovereign::decree)
+            .description("Speak one word: the enemy you look at takes damage nothing stops, more for every standing mausoleum, and a non-boss left low dies.");
 
     // =========================
     // Ability 7 - Sovereign

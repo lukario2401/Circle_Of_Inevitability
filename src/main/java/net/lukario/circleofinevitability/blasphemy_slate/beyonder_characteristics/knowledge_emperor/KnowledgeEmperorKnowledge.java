@@ -195,28 +195,36 @@ public final class KnowledgeEmperorKnowledge {
             .cooldownBy(KnowledgeEmperor::cooldownFor)
             .entry("informatization", KnowledgeEmperorFx.WHEEL_INFORMATIZATION, "Informatization", INFO_SEQUENCE,
                     INFO_COST, INFO_COOLDOWN, KnowledgeEmperorKnowledge::informatization)
+            .description("Become a stream of information: unhurt, unchosen, unheld and fast, while a false copy stands where you were and bursts when enemies reach it.")
             .costBy(KnowledgeEmperor::costFor)
             .free(player -> isInformatized(player) && Beyonder.hasSequence(player, EMPEROR_INFO_SEQUENCE))   // the flow
             .entry("erase", KnowledgeEmperorFx.WHEEL_ERASE, "Erase", ERASE_SEQUENCE,
                     ERASE_COST, ERASE_COOLDOWN, KnowledgeEmperorKnowledge::erase)
+            .description("Delete every boon and ward from the enemy you look at, or erase a summon outright.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("knowledge_overload", KnowledgeEmperorFx.WHEEL_KNOWLEDGE_OVERLOAD, "Knowledge Overload", OVERLOAD_SEQUENCE,
                     OVERLOAD_COST, OVERLOAD_COOLDOWN, KnowledgeEmperorKnowledge::knowledgeOverload)
+            .description("A flood of useless knowledge stops the enemy's mind, then hurts it. At 100% Study it detonates.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("lance_of_knowledge", KnowledgeEmperorFx.WHEEL_LANCE_OF_KNOWLEDGE, "Lance of Knowledge", LANCE_SEQUENCE,
                     LANCE_COST, LANCE_COOLDOWN, KnowledgeEmperorKnowledge::lanceOfKnowledge)
+            .description("Throw a white spear that bursts where it lands, forcing its knowledge into nearby minds (nausea).")
             .costBy(KnowledgeEmperor::costFor)
             .entry("condense_knowledge", KnowledgeEmperorFx.WHEEL_CONDENSE_KNOWLEDGE, "Condense Knowledge", CONDENSE_SEQUENCE,
                     CONDENSE_COST, CONDENSE_COOLDOWN, KnowledgeEmperorKnowledge::condenseKnowledge)
+            .description("Gather all your Study on nearby enemies into light that becomes spirituality and strength. With none, your next hit counts as full Study.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("embodiment_of_knowledge", KnowledgeEmperorFx.WHEEL_EMBODIMENT, "Embodiment of Knowledge", EMBODIMENT_SEQUENCE,
                     EMBODIMENT_COST, EMBODIMENT_COOLDOWN, KnowledgeEmperorKnowledge::embodiment)
+            .description("Hide as your own information: unseen, unread and unstudied until it runs out or you cast something.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("indoctrination", KnowledgeEmperorFx.WHEEL_INDOCTRINATION, "Indoctrination", INDOCTRINATION_SEQUENCE,
                     INDOCTRINATION_COST, INDOCTRINATION_COOLDOWN, KnowledgeEmperorKnowledge::indoctrination)
+            .description("Allied Hermits are blessed with spirituality and shorter cooldowns; enemies are stunned with knowledge and Understood.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("divine_kingdom", KnowledgeEmperorFx.WHEEL_DIVINE_KINGDOM, "Divine Kingdom", KINGDOM_SEQUENCE,
                     KINGDOM_COST, KINGDOM_COOLDOWN, KnowledgeEmperorKnowledge::divineKingdom)
+            .description("The Knowledge Moor: nothing hides inside, enemy Study grows, your casts cost half and spirituality flows three times as fast. Cast again to end it.")
             .costBy(KnowledgeEmperor::costFor)
             .free(player -> Zone.isOpen(player, KINGDOM))                                                   // ending it
             .onCast((player, sl, entry) -> KnowledgeEmperor.afterCast(player, entry.cost()));

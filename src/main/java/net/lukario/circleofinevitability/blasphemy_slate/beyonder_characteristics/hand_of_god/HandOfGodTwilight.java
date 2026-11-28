@@ -201,21 +201,29 @@ public final class HandOfGodTwilight {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("mercury", HandOfGodFx.WHEEL_MERCURY, "Mercury Liquefaction", MERCURY_SEQUENCE,
                     MERCURY_COST, MERCURY_COOLDOWN, HandOfGodTwilight::mercuryLiquefaction)
+            .description("Melt into unseen, untouchable silver. Aimed at an ally you become their armor; at an enemy you coat and choke it; otherwise you slide where you aim, wrapping enemies you pass. Cast again to re-form.")
             .free(player -> MERCURY.containsKey(player.getUUID()))             // re-forming early
             .entry("silver_rapier", HandOfGodFx.WHEEL_RAPIER, "Silver Rapier", RAPIER_SEQUENCE,
                     RAPIER_COST, RAPIER_COOLDOWN, HandOfGodTwilight::silverRapier)
+            .description("Rapiers form around the enemy you look at and stab it from every side at once: nowhere to dodge.")
             .entry("light_concealment", HandOfGodFx.WHEEL_LIGHT_CONCEALMENT, "Light Concealment", LIGHT_SEQUENCE,
                     LIGHT_COST, LIGHT_COOLDOWN, HandOfGodTwilight::lightConcealment)
+            .description("Step into a light near you and out of the light you aim at, hidden on the way. By day the open sky counts as a light.")
             .entry("twilight_sword", HandOfGodFx.WHEEL_TWILIGHT_SWORD, "Twilight Sword", SWORD_SEQUENCE,
                     SWORD_COST, SWORD_COOLDOWN, HandOfGodTwilight::twilightSword)
+            .description("A sword of Glory falls from the void onto where you aim: heavy damage to every enemy around it that ignores protection and death wards, and it decays them.")
             .entry("divine_right_hand", HandOfGodFx.WHEEL_DIVINE_HAND, "Divine Right Hand", HAND_SEQUENCE,
                     HAND_COST, HAND_COOLDOWN, HandOfGodTwilight::divineRightHand)
+            .description("A hand of Twilight seizes the enemy you aim at, squeezes it, then flings it away and decays it. Aimed at the ground or a boss, it slams down and buries everything nearby.")
             .entry("passage_of_time", HandOfGodFx.WHEEL_PASSAGE_OF_TIME, "Passage of Time", TIME_SEQUENCE,
                     TIME_COST, TIME_COOLDOWN, HandOfGodTwilight::passageOfTime)
+            .description("A clock spreads around you and freezes every enemy in it in time. Damage they take while frozen is written down and lands again, multiplied, when time resumes.")
             .entry("decay", HandOfGodFx.WHEEL_DECAY, "Decay", DECAY_SEQUENCE,
                     DECAY_COST, DECAY_COOLDOWN, HandOfGodTwilight::decay)
+            .description("Twilight shines where you aim: enemies in it rot (no healing, wither, weakness, gear wears out), and their health sinks lower every second they stay.")
             .entry("divine_kingdom", HandOfGodFx.WHEEL_DIVINE_KINGDOM, "Divine Kingdom", KINGDOM_SEQUENCE,
                     KINGDOM_COST, KINGDOM_COOLDOWN, HandOfGodTwilight::divineKingdom)
+            .description("A frozen kingdom of Twilight around you: enemies are slowed, weakened, cannot heal and deal far less damage, while you and your allies gain Strength, Resistance and Regeneration. Cast again to end it.")
             .free(player -> Zone.isOpen(player, KINGDOM_ZONE));                // ending it early
 
     // =========================

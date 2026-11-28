@@ -122,15 +122,19 @@ public final class IlluminatorAstronomy {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("star_of_curses", IlluminatorFx.WHEEL_STAR_OF_CURSES, "Star of Curses", CURSE_SEQUENCE,
                     CURSE_COST, CURSE_COOLDOWN, IlluminatorAstronomy::starOfCurses)
+            .description("A ray of starlight hits the enemy you look at. Hit it again soon after and it climbs a ladder of curses: Weakness, then bleeding Trauma, then Mutation.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "star_of_curses", Group.ASTRONOMY))
             .entry("blessing_of_stars", IlluminatorFx.WHEEL_BLESSING_OF_STARS, "Blessing of Stars", BLESSING_SEQUENCE,
                     BLESSING_COST, BLESSING_COOLDOWN, IlluminatorAstronomy::blessingOfStars)
+            .description("Starlight gathers where you aim: enemies inside are pressed down and hurt by heavy gravity, while you and your allies become weightless and quick.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "blessing_of_stars", Group.ASTRONOMY))
             .entry("false_constellations", IlluminatorFx.WHEEL_FALSE_CONSTELLATIONS, "False Constellations", SKY_SEQUENCE,
                     SKY_COST, SKY_COOLDOWN, IlluminatorAstronomy::falseConstellations)
+            .description("A fake starry sky where you aim: your side inside cannot be picked out from far away, and a Meteor Shower under it hits much harder.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "false_constellations", Group.ASTRONOMY))
             .entry("meteor_shower", IlluminatorFx.WHEEL_METEOR_SHOWER, "Meteor Shower", METEOR_SEQUENCE,
                     METEOR_COST, METEOR_COOLDOWN, IlluminatorAstronomy::meteorShower)
+            .description("Meteors rain around where you aim, each with a warning ring, hurting and shoving enemies where they land. Allies take nothing.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "meteor_shower", Group.ASTRONOMY))
             .onCast((player, sl, entry) -> Illuminator.afterCast(player, entry.key()));
 

@@ -225,21 +225,26 @@ public class StarDragon {
             .entry("gravity_abnormality", StarDragonFx.WHEEL_GRAVITY_ABNORMALITY, "Gravity Abnormality",
                     StarDragonGravity.ABNORMALITY_SEQUENCE, StarDragonGravity.ABNORMALITY_COST,
                     StarDragonGravity.ABNORMALITY_COOLDOWN, StarDragonGravity::gravityAbnormality)
+            .description("Change gravity where you aim. At the ground, enemies are Pressed (slowed, no jumping, shots drop). Aimed up, they are Lifted off the ground and cannot walk.")
             .costBy((player, cost) -> costFor(player, cost, "gravity_abnormality"))
             .entry("electromagnetic_attraction", StarDragonFx.WHEEL_ELECTROMAGNETIC_ATTRACTION, "Electromagnetic Attraction",
                     StarDragonGravity.MAGNET_SEQUENCE, StarDragonGravity.MAGNET_COST, StarDragonGravity.MAGNET_COOLDOWN,
                     StarDragonGravity::electromagneticAttraction)
+            .description("The enemy you look at and another near it are drawn together and collide, both hurt and staggered. Alone, you are drawn to it and land a hammer-like blow.")
             .costBy((player, cost) -> costFor(player, cost, "electromagnetic_attraction"))
             .entry("cosmic_void", StarDragonFx.WHEEL_COSMIC_VOID, "Cosmic Void",
                     StarDragonVoid.VOID_SEQUENCE, StarDragonVoid.VOID_COST, StarDragonVoid.VOID_COOLDOWN, StarDragonVoid::cosmicVoid)
+            .description("The enemy you look at falls into a half-real void: blind, slowed and unable to find the way out. Its body can still be hurt, and enough damage breaks it out.")
             .costBy((player, cost) -> costFor(player, cost, "cosmic_void"))
             .entry("weakening_ray", StarDragonFx.WHEEL_WEAKENING_RAY, "Weakening Ray",
                     StarDragonRays.WEAKENING_SEQUENCE, StarDragonRays.WEAKENING_COST, StarDragonRays.WEAKENING_COOLDOWN,
                     StarDragonRays::weakeningRay)
+            .description("A thin dark-green ray from your eyes: the first enemy on it is hurt and Weakened (it bleeds and cannot heal until cleansed).")
             .costBy((player, cost) -> costFor(player, cost, "weakening_ray"))
             .entry("sunlight_ray", StarDragonFx.WHEEL_SUNLIGHT_RAY, "Sunlight Ray",
                     StarDragonRays.SUNLIGHT_SEQUENCE, StarDragonRays.SUNLIGHT_COST, StarDragonRays.SUNLIGHT_COOLDOWN,
                     StarDragonRays::sunlightRay)
+            .description("Sunlight gathers in your hands, then a wide ray burns every enemy on it (twice as hard on undead) and blinds them. Half cost in daylight under open sky.")
             .costBy((player, cost) -> costFor(player, StarDragonRays.sunlightCost(player, cost), "sunlight_ray"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 
@@ -249,22 +254,27 @@ public class StarDragon {
             .entry("heavybringing", StarDragonFx.WHEEL_HEAVYBRINGING, "Heavybringing",
                     StarDragonGravity.HEAVYBRINGING_SEQUENCE, StarDragonGravity.HEAVYBRINGING_COST,
                     StarDragonGravity.HEAVYBRINGING_COOLDOWN, StarDragonGravity::heavybringing)
+            .description("Become a source of gravity: everything nearby slides toward you, hidden enemies are exposed, projectiles bend to you, and those close are Heavy and cannot teleport.")
             .costBy((player, cost) -> costFor(player, cost, "heavybringing"))
             .entry("fate_convergence", StarDragonFx.WHEEL_FATE_CONVERGENCE, "Fate Convergence",
                     StarDragonVoid.FATE_SEQUENCE, StarDragonVoid.FATE_COST, StarDragonVoid.FATE_COOLDOWN,
                     StarDragonVoid::fateConvergence)
+            .description("Fate bends around you: enemies nearby fall under Misfortune (misfires, stumbles), while allies get Luck and their first hit taken is halved.")
             .costBy((player, cost) -> costFor(player, cost, "fate_convergence"))
             .entry("heavy_sphere", StarDragonFx.WHEEL_HEAVY_SPHERE, "Heavy Sphere",
                     StarDragonGravity.SPHERE_SEQUENCE, StarDragonGravity.SPHERE_COST, StarDragonGravity.SPHERE_COOLDOWN,
                     StarDragonGravity::heavySphere)
+            .description("The air around the enemy you look at turns dense: a sphere nobody but your side can cross, that stops projectiles, with no teleporting or hiding inside.")
             .costBy((player, cost) -> costFor(player, cost, "heavy_sphere"))
             .entry("series_of_rays", StarDragonFx.WHEEL_SERIES_OF_RAYS, "Series of Rays",
                     StarDragonRays.SERIES_SEQUENCE, StarDragonRays.SERIES_COST, StarDragonRays.SERIES_COOLDOWN,
                     StarDragonRays::seriesOfRays)
+            .description("Fire a fan of Weakening Rays at the enemy you look at. Enough stacks melt its skin for damage over time.")
             .costBy((player, cost) -> costFor(player, cost, "series_of_rays"))
             .entry("remote_sight", StarDragonFx.WHEEL_REMOTE_SIGHT, "Remote Sight",
                     StarDragonVoid.SIGHT_SEQUENCE, StarDragonVoid.SIGHT_COST, StarDragonVoid.SIGHT_COOLDOWN,
                     StarDragonVoid::remoteSight)
+            .description("Perceive far past your sight for a while: living things through walls, passages and where ender pearls are going. Chat names how many there are and the strongest.")
             .costBy((player, cost) -> costFor(player, cost, "remote_sight"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 
@@ -274,36 +284,44 @@ public class StarDragon {
             .entry("fusion_cluster", StarDragonFx.WHEEL_FUSION_CLUSTER, "Fusion Cluster",
                     StarDragonSky.FUSION_SEQUENCE, StarDragonSky.FUSION_COST, StarDragonSky.FUSION_COOLDOWN,
                     StarDragonSky::fusionCluster)
+            .description("Confined fusion clusters condense around you, then fly at the enemy you look at, bursting where they hit.")
             .costBy((player, cost) -> costFor(player, cost, "fusion_cluster"))
             .entry("radiant_angel_form", StarDragonFx.WHEEL_RADIANT_ANGEL_FORM, "Radiant Angel Form",
                     StarDragonForms.ANGEL_SEQUENCE, StarDragonForms.ANGEL_COST, StarDragonForms.ANGEL_COOLDOWN,
                     StarDragonForms::radiantAngelForm)
+            .description("Your Mythical Creature Form: a being of starlight with six pairs of wings. Fly, Strength II and Resistance II, and your glow burns nearby enemies. Cast again to turn back.")
             .free(StarDragonForms::isRadiantAngel)                                // turning back
             .costBy((player, cost) -> costFor(player, cost, "radiant_angel_form"))
             .entry("time_dilation", StarDragonFx.WHEEL_TIME_DILATION, "Gravitational Time Dilation",
                     StarDragonGravity.DILATION_SEQUENCE, StarDragonGravity.DILATION_COST, StarDragonGravity.DILATION_COOLDOWN,
                     StarDragonGravity::timeDilation)
+            .description("Gravity drags on time where you aim: enemies in the field move at about a quarter speed, strike slowly and fall slowly.")
             .costBy((player, cost) -> costFor(player, cost, "time_dilation"))
             .entry("planetfall", StarDragonFx.WHEEL_PLANETFALL, "Planetfall",
                     StarDragonSky.PLANET_SEQUENCE, StarDragonSky.PLANET_COST, StarDragonSky.PLANET_COOLDOWN,
                     StarDragonSky::planetfall)
+            .description("A huge asteroid lowers through the sky onto where you aim, then lands: massive damage, everything thrown outward, and cracks of light burn the ground.")
             .costBy((player, cost) -> costFor(player, cost, "planetfall"))
             .entry("star_dragon_form", StarDragonFx.WHEEL_STAR_DRAGON_FORM, "Star Dragon Form",
                     StarDragonForms.DRAGON_SEQUENCE, StarDragonForms.DRAGON_COST, StarDragonForms.DRAGON_COOLDOWN,
                     StarDragonForms::starDragonForm)
+            .description("Your Mythical Creature Form: a colossal dragon of starlight. Fly and take less damage, and an asteroid circles you that is launched at enemies when you strike.")
             .free(StarDragonForms::isDragon)                                      // turning back
             .costBy((player, cost) -> costFor(player, cost, "star_dragon_form"))
             .entry("neutron_star", StarDragonFx.WHEEL_NEUTRON_STAR, "Neutron Star",
                     StarDragonGravity.NEUTRON_SEQUENCE, StarDragonGravity.NEUTRON_COST, StarDragonGravity.NEUTRON_COOLDOWN,
                     StarDragonGravity::neutronStar)
+            .description("Your body takes the density of a neutron star: nothing moves, roots or freezes you, you take much less damage, and nearby enemies are crushed down.")
             .costBy((player, cost) -> costFor(player, cost, "neutron_star"))
             .entry("singularity", StarDragonFx.WHEEL_SINGULARITY, "Singularity",
                     StarDragonGravity.SINGULARITY_SEQUENCE, StarDragonGravity.SINGULARITY_COST,
                     StarDragonGravity.SINGULARITY_COOLDOWN, StarDragonGravity::singularity)
+            .description("Self-sacrifice: gather, held in place, then a black hole opens where you aim and drags every nearby enemy in, crushing those at its core.")
             .costBy((player, cost) -> costFor(player, cost, "singularity"))
             .entry("quantum_uncertainty", StarDragonFx.WHEEL_QUANTUM_UNCERTAINTY, "Quantum Uncertainty",
                     StarDragonVoid.QUANTUM_SEQUENCE, StarDragonVoid.QUANTUM_COST, StarDragonVoid.QUANTUM_COOLDOWN,
                     StarDragonVoid::quantumUncertainty)
+            .description("A field of uncertainty around you: enemies in it often miss, and enemy teleports ending in it land at a random spot.")
             .costBy((player, cost) -> costFor(player, cost, "quantum_uncertainty"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 

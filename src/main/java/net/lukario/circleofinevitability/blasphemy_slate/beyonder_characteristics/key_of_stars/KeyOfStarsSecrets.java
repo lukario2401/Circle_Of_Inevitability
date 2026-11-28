@@ -144,20 +144,25 @@ public final class KeyOfStarsSecrets {
             .cooldownBy(KeyOfStars::cooldownFor)
             .entry("space_concealment", KeyOfStarsFx.WHEEL_SPACE_CONCEALMENT, "Space Concealment", SECRETS_SEQUENCE,
                     CONCEAL_COST, CONCEAL_COOLDOWN, KeyOfStarsSecrets::spaceConcealment)
+            .description("Split a sphere of space off from the world: nothing outside sees or shoots in, allies inside are hidden and healed, and enemies inside are Starlit and kept in but for one Door. Cast again to shut the Door.")
             .costBy(KeyOfStars::wheelCostFor)
             .free(KeyOfStarsSecrets::canShutDoor)                                // shutting the Door: free
             .entry("transfiguration", KeyOfStarsFx.WHEEL_TRANSFIGURATION, "Transfiguration", SECRETS_SEQUENCE,
                     TRANSFIG_COST, TRANSFIG_COOLDOWN, KeyOfStarsSecrets::transfiguration)
+            .description("You become layers of illusory Doors: every hit tears one and you appear 3 blocks aside, unhurt.")
             .costBy(KeyOfStars::wheelCostFor)
             .notCopyable()                                                       // its layers end on this Pathway's tick
             .entry("exile", KeyOfStarsFx.WHEEL_EXILE, "Exile", SECRETS_SEQUENCE, EXILE_COST, EXILE_COOLDOWN,
                     KeyOfStarsSecrets::exile)
+            .description("A Starlit or held enemy is swallowed by Doors into a space-time storm, and comes back hurt.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("pocket_space", KeyOfStarsFx.WHEEL_POCKET_SPACE, "Pocket Space", SECRETS_SEQUENCE, POCKET_COST,
                     POCKET_COOLDOWN, KeyOfStarsSecrets::pocketSpace)
+            .description("Open a Door to your own concealed space: your Ender Chest, anywhere.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("space_tearing", KeyOfStarsFx.WHEEL_SPACE_TEARING, "Space Tearing", TEARING_SEQUENCE, TEARING_COST,
                     TEARING_COOLDOWN, KeyOfStarsSecrets::spaceTearing)
+            .description("Space tears around an enemy: a heavy hit to everyone near it, then a space-time storm burns them.")
             .costBy(KeyOfStars::wheelCostFor);
 
     // =========================

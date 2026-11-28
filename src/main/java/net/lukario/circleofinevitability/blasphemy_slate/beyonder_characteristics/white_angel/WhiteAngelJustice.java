@@ -48,6 +48,7 @@ public final class WhiteAngelJustice {
               0,
               0,
               WhiteAngelJustice::define)
+          .description("Choose your principle of Justice: Mercy, Retribution, Purity or Order. It decides what counts as guilt.")
           .notCopyable()
           .entry(
               "justice_halo",
@@ -57,6 +58,7 @@ public final class WhiteAngelJustice {
               8000,
               0,
               WhiteAngelJustice::halo)
+          .description("A halo of Justice: guilty enemies deal less, take more damage and at high Guilt cannot heal. From Sequence 2 new violations bring trials.")
           .free(p -> Zone.isOpen(p, HALO))
           .entry(
               "judgment",
@@ -66,6 +68,7 @@ public final class WhiteAngelJustice {
               6000,
               0,
               WhiteAngelJustice::judgment)
+          .description("After a warning, judge the guilty enemy you aim at: it is condemned and its two most recent keys are sealed. The innocent cannot be judged.")
           .notCopyable()
           .entry(
               "faith_appraisal",
@@ -74,7 +77,8 @@ public final class WhiteAngelJustice {
               3,
               1500,
               0,
-              WhiteAngelJustice::appraise);
+              WhiteAngelJustice::appraise)
+          .description("Appraise the enemy you aim at: its weaknesses are reported, you gain an attack mark, and your allies see its guilt.");
   private static final AbilityMenu PRINCIPLES = principles();
 
   static {

@@ -146,21 +146,27 @@ public final class HandOfOrderVerdicts {
             .cooldownBy(HandOfOrder::cooldownFor)
             .entry("imprison", HandOfOrderFx.WHEEL_IMPRISON, "Imprison", IMPRISON_SEQUENCE,
                     IMPRISON_COST, IMPRISON_COOLDOWN, HandOfOrderVerdicts::imprison)
+            .description("The enemy you look at is held completely once the walls close. Cast again at one you hold to release it (free). From Imperative Mage it is a sealed cell where stand-ins fail.")
             .costBy(HandOfOrder::costFor)
             .entry("exile", HandOfOrderFx.WHEEL_EXILE, "Exile", EXILE_SEQUENCE,
                     EXILE_COST, EXILE_COOLDOWN, HandOfOrderVerdicts::exile)
+            .description("Throw the enemy you look at far away from you and slow it. From Imperative Mage it is sent into a void for a while instead and comes back on the same spot.")
             .costBy(HandOfOrder::costFor)
             .entry("death", HandOfOrderFx.WHEEL_DEATH, "Death", DEATH_SEQUENCE,
                     DEATH_COST, DEATH_COOLDOWN, HandOfOrderVerdicts::death)
+            .description("Rush before the enemy you look at and strike its head: damage nothing softens or dodges, and it is stunned. From Disciplinary Paladin it hits its latest wound even harder.")
             .costBy(HandOfOrder::costFor)
             .entry("maintain_secrecy", HandOfOrderFx.WHEEL_MAINTAIN_SECRECY, "Maintain Secrecy", SECRECY_SEQUENCE,
                     SECRECY_COST, SECRECY_COOLDOWN, HandOfOrderVerdicts::maintainSecrecy)
+            .description("The enemy you look at must obey and reveal nothing: a player cannot use abilities; a mob loses its special attacks and forgets you.")
             .costBy(HandOfOrder::costFor)
             .entry("deprivation", HandOfOrderFx.WHEEL_DEPRIVATION, "Deprivation", DEPRIVATION_SEQUENCE,
                     DEPRIVATION_COST, DEPRIVATION_COOLDOWN, HandOfOrderVerdicts::deprivation)
+            .description("The enemy you look at loses the power it used last for a while: a player's last ability key is sealed, a mob loses its special attacks.")
             .costBy(HandOfOrder::costFor)
             .entry("execution", HandOfOrderFx.WHEEL_EXECUTION, "Execution", EXECUTION_SEQUENCE,
                     EXECUTION_COST, EXECUTION_COOLDOWN, HandOfOrderVerdicts::execution)
+            .description("Raise the fist over the enemy you look at; if you are not hurt before it lands, it takes damage nothing softens, and below a health threshold it is simply killed.")
             .costBy(HandOfOrder::costFor);
 
     // =========================

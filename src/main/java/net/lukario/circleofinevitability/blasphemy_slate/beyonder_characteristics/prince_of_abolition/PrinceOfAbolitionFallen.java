@@ -191,25 +191,34 @@ public final class PrinceOfAbolitionFallen {
             .noCooldownsWhen(PrinceOfAbolition::noCooldowns)
             .entry("raise_mausoleum", PrinceOfAbolitionFx.WHEEL_RAISE_MAUSOLEUM, "Raise Mausoleum", RAISE_SEQUENCE,
                     RAISE_COST, RAISE_COOLDOWN, PrinceOfAbolitionFallen::raiseMausoleum)
+            .description("A mausoleum rises where you look: more attack and defense near it, a Sanctuary, and it brings you back once. Each one more costs more.")
             .costBy((player, cost) -> cost + RAISE_MORE * PrinceOfAbolitionMausoleums.owned(player))
             .entry("corrosion", PrinceOfAbolitionFx.WHEEL_CORROSION, "Corrosion", CORROSION_SEQUENCE,
                     CORROSION_COST, CORROSION_COOLDOWN, PrinceOfAbolitionFallen::corrosion)
+            .description("Everyone around you turns dark and greedy: enemies lose their discipline and miss, and a rot sets in that eats deeper every second until cleansed.")
             .entry("step", PrinceOfAbolitionFx.WHEEL_STEP, "Step", STEP_SEQUENCE,
                     STEP_COST, STEP_COOLDOWN, PrinceOfAbolitionFallen::step)
+            .description("Vanish into a gold door and step out of the mausoleum you look at (or the nearest one).")
             .entry("majesty", PrinceOfAbolitionFx.WHEEL_MAJESTY, "Majesty", MAJESTY_SEQUENCE,
                     MAJESTY_COST, MAJESTY_COOLDOWN, PrinceOfAbolitionFallen::majesty)
+            .description("Your presence presses down: nearby enemies kneel (no jumping, sprinting or attacking), longer for every two standing orders.")
             .entry("bestowment", PrinceOfAbolitionFx.WHEEL_BESTOWMENT, "Bestowment", BESTOW_SEQUENCE,
                     BESTOW_COST, BESTOW_COOLDOWN, PrinceOfAbolitionFallen::bestowment)
+            .description("Bestow a feeling on the enemy you look at, picked by what it is: Sluggish, Anxious, Defeated, Rash or Avaricious.")
             .entry("exploit", PrinceOfAbolitionFx.WHEEL_EXPLOIT, "Exploit", EXPLOIT_SEQUENCE,
                     EXPLOIT_COST, EXPLOIT_COOLDOWN, PrinceOfAbolitionFallen::exploit)
+            .description("Exploit a state: in the air, you hang and fly a while; at an enemy, its buffs, wards and hiding end early; otherwise your own good effects are stretched.")
             .free(PrinceOfAbolitionSovereign::inOwnEntropy)
             .entry("magnify", PrinceOfAbolitionFx.WHEEL_MAGNIFY, "Magnify", MAGNIFY_SEQUENCE,
                     MAGNIFY_COST, MAGNIFY_COOLDOWN, PrinceOfAbolitionFallen::magnify)
+            .description("Your next blow or ability is magnified: more reach, much more damage, and a weakened non-boss dies on the spot. A Connected enemy in view is seized.")
             .free(PrinceOfAbolitionSovereign::inOwnEntropy)
             .entry("mausoleum_salvo", PrinceOfAbolitionFx.WHEEL_MAUSOLEUM_SALVO, "Mausoleum Salvo", SALVO_SEQUENCE,
                     SALVO_COST, SALVO_COOLDOWN, PrinceOfAbolitionFallen::salvo)
+            .description("Every standing mausoleum fires a gold beam at the enemy you look at.")
             .entry("mausoleum_blast", PrinceOfAbolitionFx.WHEEL_MAUSOLEUM_BLAST, "Mausoleum Blast", BLAST_SEQUENCE,
-                    BLAST_COST, BLAST_COOLDOWN, PrinceOfAbolitionFallen::blast);
+                    BLAST_COST, BLAST_COOLDOWN, PrinceOfAbolitionFallen::blast)
+            .description("Every mausoleum near you bursts: heavy damage around each one, throwing enemies away. The mausoleums are gone.");
 
     // =========================
     // Ability 6 - The Fallen

@@ -79,11 +79,58 @@ public final class NatureWalker {
         State(LivingEntity owner) { this.owner=owner;level=(ServerLevel)owner.level();sequence=sequence(owner); }
     }
 
+    /** The wheel's hover text for each spell (shown when the mouse is over its icon). */
+    static String description(String id) {
+        return switch (id) {
+            case "thorn_seed" -> "Throw a seed that plants a Thornling: enemies near it are pricked, slowed and bleed while it stands.";
+            case "heartfruit_seed" -> "Plant a Heartfruit sapling. Its fruit heals whoever eats it (you or an ally standing close) and gives Regeneration.";
+            case "treatment" -> "Heal the ally you aim at (or yourself) and cleanse every harmful effect. Badly hurt targets are healed far more and protected.";
+            case "soul_suture" -> "Mend an ally (or yourself): end every curse and mind effect and clear Madness. Aimed at a close enemy it cuts instead, silencing it.";
+            case "seed_catalyzation" -> "Your Growths near where you aim bloom at once and thorned vines burst out, hurting and rooting nearby enemies. With none near, a Thornling blooms there.";
+            case "quicken_life" -> "Channel an aura around you: your Growths and crops grow fast, allies regenerate and enemies slow. You cannot move; press again to stop.";
+            case "command_flora" -> "Nearby small arthropods become your marionettes, and your Growths focus the enemy you aim at, dealing more damage to it.";
+            case "weather_ritual" -> "Change the local weather where you aim. Clear skies: call rain that douses fire, speeds Growths and regenerates allies. Rain: clear it, cleansing blindness and giving Speed.";
+            case "reap" -> "A scythe sweep in front of you: damage, harvest your Growths in the cone for their effects and spirituality, and mark hit enemies as Reaped.";
+            case "cross_breed" -> "Turn the mob you aim at into a Hybrid marionette with more health and a trait from one of your nearby Growths (which is consumed).";
+            case "toxin_bloom" -> "A cone of toxin from your hair: Poison and Weakness. Later it also leaves a poisonous Sporebed and adds Madness.";
+            case "underground_travel" -> "Sink into the ground, hidden and unhurt, and travel along your look in hops, bursting out to hurt and root enemies. From Sequence 1, Nature Walk: through earth, wood or water, or between your Growths.";
+            case "swamp" -> "The ground where you aim turns to mire: enemies sink deeper and slower, cannot jump, and are buried once.";
+            case "wrath_of_nature" -> "Name the enemies in sight as adversaries: each suffers a hazard every second that fits the ground around it.";
+            case "child_of_the_oak" -> "Bark covers you. On soil it is wood (less damage, regrowing absorption); on rock it is stone (even less damage, no knockback).";
+            case "stone_golem" -> "A stone golem rises where you aim and fights for you: tough, strong and immune to knockback.";
+            case "bear_form" -> "Become a bear twice your size: more reach and health, less damage taken, heavy claws and a roar that frightens weak mobs. Weakness afterwards.";
+            case "stone_bird" -> "A flying stone bird with ruby eyes fights for you; what it hits glows for your allies.";
+            case "mud_golem" -> "A slow, tough mud golem whose blows slow and weigh enemies down. It heals in your Swamp or in water.";
+            case "steel_golem" -> "A huge steel golem with very high health and damage and no knockback.";
+            case "life_aura" -> "An aura of life around you: allies regenerate and speed up, your brood heals, Growths grow fast, and enemies mutate and gain Madness.";
+            case "mutate" -> "Mutate the enemy you aim at and add Madness. One already at full mutation blooms: heavy damage and everything near it is rooted.";
+            case "brood_form" -> "Your Mythical Creature Form, a mass of flesh, wheat and vines: bigger, mutating every enemy nearby. Madness builds until it breaks. Complete from Sequence 2.";
+            case "evil_spirits" -> "The recently dead around you rise as Evil Spirits that fight for you.";
+            case "descent_of_death" -> "Death descends where you aim: enemies rot, cannot heal and corrode, you heal from every bite, and your Growths inside advance.";
+            case "return_to_earth" -> "Everything evil or undead around you takes heavy damage and is buried. Others are only made Heavy.";
+            case "maternal_embrace" -> "An earthen coffin closes on the enemy you aim at: held, sealed, cannot heal and takes more damage, then let out weakened.";
+            case "blossoming_land" -> "Land blooms around where you aim: Growths grow fast, Heartfruit sprouts, allies regenerate and gain absorption.";
+            case "barren_land" -> "Land goes barren around where you aim: enemies cannot heal, are weakened, starve and decay.";
+            case "desolation" -> "All life drains in a wide aura around you: enemies rot and lose health every second, undead return to the earth, nothing heals, and Madness grows.";
+            case "root_eruption" -> "The ground cracks where you aim, then roots erupt: heavy damage, rooted, Madness, and weak mobs may die outright.";
+            case "seed_of_rebirth" -> "Ward yourself or an aimed ally: the next death turns them into a seed instead, and they bloom back with 60% health, healing allies nearby.";
+            case "world_of_nature" -> "Your realm: a sphere enemies cannot leave. Allies regenerate and grow stronger, enemies slow, go mad and sprout thorns under them.";
+            case "verdant_barrier" -> "A wall of wheat, flowers and trees across your view that enemies and their projectiles cannot cross. It regrows when it stops something.";
+            case "great_harvest" -> "Harvest everything near you: enemies under a quarter health die (bosses take heavy damage), the rest are Reaped, your Growths yield fully, and allies heal.";
+            case "awaken" -> "Awaken one of your constructs, hybrids or Growths: a construct gets double health and damage and never runs out; a Growth becomes a Mother Tree.";
+            case "earthquake" -> "The earth shakes: every enemy nearby falters, slows and is made Heavy, and a rift opens along your look that hurts and buries those on it.";
+            case "embrace_of_the_earth" -> "Pierce the enemy in front of you for a quarter of its max health that nothing softens, healed to you; it cannot heal and corrodes.";
+            case "bountiful_earth" -> "Your Divine Kingdom of life and death: allies regenerate, resist and get a free death ward; enemies rot, cannot heal and mutate.";
+            default -> "";
+        };
+    }
+
     static {
         for (Spell spell:SPELLS) {
             AbilityWheel wheel=wheelFor(spell.key());
             wheel.entry(spell.id(),"ability_menus/nature_walker/"+spell.id(),label(spell.id()),spell.sequence(),
                     spell.cost(),spell.cooldown(),(p,sl)->perform(p,spell.id()))
+                    .description(description(spell.id()))
                     // These casts own live boards, companions or pathway-only lifecycle state.
                     .notCopyable();
             if (spell.id().equals("quicken_life")) wheel.free(p -> quickening(p));

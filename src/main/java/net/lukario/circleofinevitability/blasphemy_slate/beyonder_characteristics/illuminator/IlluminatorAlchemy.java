@@ -179,19 +179,24 @@ public final class IlluminatorAlchemy {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("living_doll", IlluminatorFx.WHEEL_LIVING_DOLL, "Living Doll", DOLL_SEQUENCE,
                     DOLL_COST, DOLL_COOLDOWN, IlluminatorAlchemy::livingDoll)
+            .description("A doll rises out of the block you stand on and fights for you. What it is made of decides what it is: stone is tough, straw is fast, iron throws bolts, dust blinds, frost slows.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "living_doll", Group.ALCHEMY))
             .entry("golem", IlluminatorFx.WHEEL_GOLEM, "Golem", GOLEM_SEQUENCE,
                     GOLEM_COST, GOLEM_COOLDOWN, IlluminatorAlchemy::golem)
+            .description("Brass and iron fly together into a golem that fights for you and keeps calling nearby mobs to itself. One at a time (two from Arcane Scholar).")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "golem", Group.ALCHEMY))
             .entry("mechanical_body", IlluminatorFx.WHEEL_MECHANICAL_BODY, "Mechanical Body", MECH_SEQUENCE,
                     MECH_COST, MECH_COOLDOWN, IlluminatorAlchemy::mechanicalBody)
+            .description("Brass plates clamp on: Resistance, absorption, Night Vision, cybernetic eyes, the arm cannon and a jetpack (jump twice to fly). Cast again to take it off.")
             .free(Illuminator::wearsMechanicalBody)                                // taking it off, or the steam: free
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "mechanical_body", Group.ALCHEMY))
             .entry("dissociation", IlluminatorFx.WHEEL_DISSOCIATION, "Dissociation", DISSOCIATION_SEQUENCE,
                     DISSOCIATION_COST, DISSOCIATION_COOLDOWN, IlluminatorAlchemy::dissociation)
+            .description("A misty beam from your eye passes through blocks and dissolves what it touches: hiding and substitutes end, shields drop, armor wears down and fragile constructs fall apart.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "dissociation", Group.ALCHEMY))
             .entry("knowledge_spirit", IlluminatorFx.WHEEL_KNOWLEDGE_SPIRIT, "Knowledge Spirit", SPIRIT_SEQUENCE,
                     SPIRIT_COST, SPIRIT_COOLDOWN, IlluminatorAlchemy::knowledgeSpirit)
+            .description("Fly as drifting pages into the mind of the enemy you look at and step out beside it. It is Eroded: sick, weaker, and its abilities cost more.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "knowledge_spirit", Group.ALCHEMY))
             .onCast((player, sl, entry) -> Illuminator.afterCast(player, entry.key()));
 

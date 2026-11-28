@@ -155,21 +155,27 @@ public final class HandOfOrderOrder {
             .cooldownBy(HandOfOrder::cooldownFor)
             .entry("balance", HandOfOrderFx.WHEEL_BALANCE, "Balance", BALANCE_SEQUENCE,
                     BALANCE_COST, BALANCE_COOLDOWN, HandOfOrderOrder::balance)
+            .description("The enemy you look at, if stronger than you, has its advantages (max health and more) lowered to yours for a while. Weaker enemies are left alone.")
             .costBy(HandOfOrder::costFor)
             .entry("divide_battlefield", HandOfOrderFx.WHEEL_DIVIDE_BATTLEFIELD, "Divide the Battlefield", DIVIDE_SEQUENCE,
                     DIVIDE_COST, DIVIDE_COOLDOWN, HandOfOrderOrder::divideBattlefield)
+            .description("A ring around you that nothing of the enemy's crosses either way. Enemies far stronger than you (and bosses) are thrown out first and cannot come back while it stands.")
             .costBy(HandOfOrder::costFor)
             .entry("law_no_return", HandOfOrderFx.WHEEL_LAW_NO_RETURN, "Law: No Return", NO_RETURN_SEQUENCE,
                     NO_RETURN_COST, NO_RETURN_COOLDOWN, HandOfOrderOrder::lawNoReturn)
+            .description("A Decree around you: no resurrection and no marionettes inside, with the Decrees' Violation ladder.")
             .costBy(HandOfOrder::decreeCostFor)
             .entry("order_proxy", HandOfOrderFx.WHEEL_ORDER_PROXY, "Order Proxy", PROXY_SEQUENCE,
                     PROXY_COST, PROXY_COOLDOWN, HandOfOrderOrder::orderProxy)
+            .description("Become Order's proxy: Strength IV, Resistance III, Speed II, roots and silence fall off, no Rule binds you, and abilities are free with no cooldown. Afterwards you are weakened, slowed and drained.")
             .costBy(HandOfOrder::costFor)
             .entry("quell_disorder", HandOfOrderFx.WHEEL_QUELL_DISORDER, "Quell Disorder", QUELL_SEQUENCE,
                     QUELL_COST, QUELL_COOLDOWN, HandOfOrderOrder::quellDisorder)
+            .description("Undo what nearby enemies made with abilities (concealment, strings, substitutes, death wards, links) and end their zones, Decrees and domes. You and your allies are cleansed.")
             .costBy(HandOfOrder::costFor)
             .entry("court_of_judgment", HandOfOrderFx.WHEEL_COURT_OF_JUDGMENT, "Court of Judgment", COURT_SEQUENCE,
                     COURT_COST, COURT_COOLDOWN, HandOfOrderOrder::courtOfJudgment)
+            .description("Hold court around you: new clauses are written as it goes, and each breach is judged harder, from a warning to damage, holding, the Sword of Judgment and finally death. Cast again to adjourn.")
             .costBy(HandOfOrder::costFor);
 
     // =========================

@@ -142,15 +142,19 @@ public final class KnowledgeEmperorStars {
             .cooldownBy(KnowledgeEmperor::cooldownFor)
             .entry("starlight_cage", KnowledgeEmperorFx.WHEEL_STARLIGHT_CAGE, "Starlight Cage", CAGE_SEQUENCE,
                     CAGE_COST, CAGE_COOLDOWN, KnowledgeEmperorStars::starlightCage)
+            .description("Starlight flies to the enemy you look at and sets into amber around it and everyone near it: held until the amber breaks or melts.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("stellar_self", KnowledgeEmperorFx.WHEEL_STELLAR_SELF, "Stellar Self", STELLAR_SEQUENCE,
                     STELLAR_COST, STELLAR_COOLDOWN, KnowledgeEmperorStars::stellarSelf)
+            .description("Break into starlight and flow through any gap to where you aim, unhurt on the way. The flash blinds those you leave behind.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("star_fall", KnowledgeEmperorFx.WHEEL_STAR_FALL, "Star Fall", FALL_SEQUENCE,
                     FALL_COST, FALL_COOLDOWN, KnowledgeEmperorStars::starFall)
+            .description("Five small stars fall around where you aim, each bursting where it lands. The enemies you know best are hit first.")
             .costBy(KnowledgeEmperor::costFor)
             .entry("star_guard", KnowledgeEmperorFx.WHEEL_STAR_GUARD, "Star Guard", GUARD_SEQUENCE,
                     GUARD_COST, GUARD_COOLDOWN, KnowledgeEmperorStars::starGuard)
+            .description("Four stars circle you: each stops a projectile and comes back, and an enemy that comes close is struck.")
             .costBy(KnowledgeEmperor::costFor)
             .onCast((player, sl, entry) -> KnowledgeEmperor.afterCast(player, entry.cost()));
 

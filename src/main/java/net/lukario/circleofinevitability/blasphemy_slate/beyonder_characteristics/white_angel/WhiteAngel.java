@@ -94,6 +94,7 @@ public final class WhiteAngel {
               900,
               0,
               WhiteAngel::holyLight)
+          .description("Call down a blade of holy light where you aim: it strikes the enemies there, hardest on the one you aimed at. From Sequence 5 it hits harder and finishes weakened evil.")
           .entry(
               "sun_halo",
               icon("sun_halo"),
@@ -102,9 +103,12 @@ public final class WhiteAngel {
               700,
               0,
               (p, sl) -> field(p, sl, "halo", Beyonder.hasSequence(p, 5) ? 16 : 12, 400))
+          .description("A halo of sunlight around you for a while: it is day inside, and your allies are warded while evil is purified. Cast again to end it.")
           .free(p -> Zone.isOpen(p, PREFIX + "halo"))
           .entry("holy_oath", icon("holy_oath"), "Holy Oath", 7, 600, 0, WhiteAngel::oath)
+          .description("Swear a holy oath: Strength and Speed for you (and nearby allies from Sequence 4).")
           .entry("cleave", icon("cleave"), "Cleave of Purification", 7, 500, 0, WhiteAngel::cleave)
+          .description("Your weapon is coated with purification for a few hits: extra damage, much more against evil and undead, and it exposes them.")
           .entry(
               "fire_of_light",
               icon("fire_of_light"),
@@ -112,10 +116,12 @@ public final class WhiteAngel {
               7,
               1100,
               0,
-              WhiteAngel::fire);
+              WhiteAngel::fire)
+          .description("Holy fire burns where you aim: enemies (even hidden ones) are exposed, burned and set alight, while allies inside are fire resistant and brave.");
   public static final AbilityWheel NOTARY =
       wheel("notary", "Notarization")
           .entry("contract", icon("contract"), "Contract", 6, 1500, 0, WhiteAngel::contract)
+          .description("Bind the one you aim at in a pact: it cannot harm you, and breaking it brings golden flame. Players must accept. From Sequence 3, aimed at nothing it binds nearby hostile mobs.")
           .notCopyable()
           .entry(
               "authenticate",
@@ -125,9 +131,12 @@ public final class WhiteAngel {
               800,
               0,
               WhiteAngel::authenticate)
+          .description("\"God says it is authentic!\": conjured things near you are unmade, and nearby enemies are exposed and revealed.")
           .entry("amplify", icon("amplify"), "Amplify", 6, 600, 0, WhiteAngel::amplify)
+          .description("\"God says it's effective!\": the next ability of the ally you aim at (or yours) is amplified.")
           .costBy((p, c) -> Beyonder.hasSequence(p, 0) ? c / 4 : c)
           .entry("nullify", icon("nullify"), "Nullify", 6, 700, 0, WhiteAngel::nullify)
+          .description("\"God says it's ineffective!\": destroy a hostile projectile where you aim, else weaken an enemy shell, else strip an enemy's boons and seal its last key.")
           .costBy((p, c) -> Beyonder.hasSequence(p, 0) ? c / 4 : c);
   public static final AbilityWheel RADIANCE =
       wheel("radiance", "Radiance")
@@ -139,6 +148,7 @@ public final class WhiteAngel {
               3000,
               0,
               WhiteAngel::purification)
+          .description("Purify the enemy you aim at after 3 seconds: its boons and statuses are stripped; a player loses spirituality and its strongest key is sealed. Aimed at an ally (or nothing), they are cleansed.")
           .entry(
               "domain",
               icon("domain"),
@@ -147,6 +157,7 @@ public final class WhiteAngel {
               4000,
               0,
               (p, sl) -> field(p, sl, "domain", 14, 300))
+          .description("An Unshadowed Domain around you: forced daylight, and your allies inside are warded and strengthened. Cast again to end it.")
           .free(p -> Zone.isOpen(p, PREFIX + "domain"))
           .entry(
               "flaring_sun",
@@ -156,7 +167,9 @@ public final class WhiteAngel {
               4500,
               0,
               WhiteAngelRadiance::flaringSun)
+          .description("A warning sigil, then a sun flares where you aim, burning everything inside and leaving a burning afterglow.")
           .entry("spear", icon("spear"), "Unshadowed Spear", 4, 3000, 0, WhiteAngelRadiance::spear)
+          .description("Throw a travelling spear of light that pierces enemies. From Sequence 2 it also blocks teleporting.")
           .entry(
               "white_ray",
               icon("white_ray"),
@@ -165,6 +178,7 @@ public final class WhiteAngel {
               3500,
               0,
               WhiteAngelRadiance::whiteRay)
+          .description("After a warning, a pure white ray pierces everything in a line.")
           .entry(
               "holy_equipment",
               icon("holy_equipment"),
@@ -172,7 +186,8 @@ public final class WhiteAngel {
               4,
               3500,
               0,
-              WhiteAngelRadiance::equipment);
+              WhiteAngelRadiance::equipment)
+          .description("Holy armor and a mace of light: less damage taken and regrowing absorption. From Sequence 3 it is shared with nearby allies and protects their minds.");
 
   static {
     Cooldowns.addFree(Cooldowns.keysStartingWith(PREFIX));
