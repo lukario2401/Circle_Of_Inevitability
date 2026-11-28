@@ -1,7 +1,9 @@
 package net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer;
 
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder.SoulCore;
+import net.lukario.circleofinevitability.combat.Casts;
 import net.lukario.circleofinevitability.combat.Countdown;
+import net.lukario.circleofinevitability.combat.FollowerSummon;
 import net.lukario.circleofinevitability.combat.Gaze;
 import net.lukario.circleofinevitability.combat.Painting;
 import net.lukario.circleofinevitability.combat.Spells;
@@ -9,9 +11,23 @@ import net.lukario.circleofinevitability.combat.Territory;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
+import net.lukario.circleofinevitability.status.Concealment;
+import net.lukario.circleofinevitability.status.ConjuredArmor;
 import net.lukario.circleofinevitability.status.Construct;
+import net.lukario.circleofinevitability.status.DeathWard;
+import net.lukario.circleofinevitability.status.Dispel;
+import net.lukario.circleofinevitability.status.Exile;
+import net.lukario.circleofinevitability.status.Falter;
+import net.lukario.circleofinevitability.status.Flight;
+import net.lukario.circleofinevitability.status.Form;
+import net.lukario.circleofinevitability.status.Hostel;
+import net.lukario.circleofinevitability.status.Marionette;
+import net.lukario.circleofinevitability.status.NoHeal;
 import net.lukario.circleofinevitability.status.Observation;
+import net.lukario.circleofinevitability.status.Phase;
+import net.lukario.circleofinevitability.status.Silence;
 import net.lukario.circleofinevitability.status.Unnoticed;
+import net.minecraft.commands.arguments.EntityAnchorArgument;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,6 +50,14 @@ public final class ObserverGameTests {
         FUNCTIONS.register("observer_painting_stare", () -> ObserverGameTests::paintingStare);
         FUNCTIONS.register("observer_territory", () -> ObserverGameTests::territory);
         FUNCTIONS.register("observer_wheels", () -> ObserverGameTests::wheels);
+        FUNCTIONS.register("observer_phase", () -> ObserverGameTests::phase);
+        FUNCTIONS.register("observer_hostel", () -> ObserverGameTests::hostel);
+        FUNCTIONS.register("observer_sealed_ward", () -> ObserverGameTests::sealedWard);
+        FUNCTIONS.register("observer_dimension", () -> ObserverGameTests::dimension);
+        FUNCTIONS.register("observer_strings", () -> ObserverGameTests::strings);
+        FUNCTIONS.register("observer_sublunary", () -> ObserverGameTests::sublunary);
+        FUNCTIONS.register("observer_painting_world", () -> ObserverGameTests::paintingWorld);
+        FUNCTIONS.register("observer_passives", () -> ObserverGameTests::passives);
     }
 
     private ObserverGameTests() {}
@@ -53,9 +77,25 @@ public final class ObserverGameTests {
             Observation.forget(p);
             Countdown.cancel(p);
             for (var mob : Construct.ofOwner(p, ObserverFiction.KNIGHTS)) Construct.end(mob);
+            Phase.leave(p);
+            if (Form.isIn(p, ObserverDimension.SHADOW_FORM)) Form.end(p);
+            Hostel.empty(p);
+            ObserverTerritory.closeWorld(p);
+            for (int i = 0; i < 3; i++) FollowerSummon.dismiss(p, ObserverTerritory.SERVANT + i);
+            ObserverSublunary.clearState(p);
+            DeathWard.disarm(p);
             p.discard();
         });
         return p;
+    }
+
+    /** Faces 'p' toward 'at' (the crosshair on it). */
+    private static void face(ServerPlayer p, Vec3 at) {
+        p.lookAt(EntityAnchorArgument.Anchor.EYES, at);
+    }
+
+    private static void full(ServerPlayer p) {
+        SoulCore.setSpiritualityQuietly(p, Float.MAX_VALUE);
     }
 
     private static Zombie zombie(GameTestHelper h, double x, double z) {
@@ -184,5 +224,158 @@ public final class ObserverGameTests {
             h.assertTrue(Painting.of(p, "observer_riot_of_colours").size() == 1, "The Riot hangs once painted");
             h.succeed();
         });
+    }
+
+    /** Phase hides and lets you fly; another cast brings you back; pressed again it ends, free. */
+    private static void phase(GameTestHelper h) {
+        ServerPlayer p = player(h, 5);
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("phase")) == AbilityWheel.Result.DONE
+                && Phase.isPhased(p) && Concealment.isHidden(p) && Flight.has(p), "Into the Phase: hidden and flying");
+        full(p);
+        Casts.wheelCast(p, Observer.SIGHT, Observer.SIGHT.entry("true_sight"));
+        h.assertTrue(!Phase.isPhased(p) && !Concealment.isHidden(p), "A cast brings you back");
+        full(p);
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("phase")) == AbilityWheel.Result.DONE, "In again");
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("phase")) == AbilityWheel.Result.FREE
+                && !Phase.isPhased(p), "Pressed again: back, free");
+        h.succeed();
+    }
+
+    /** A weakened mob is lodged and let out again as a summon. */
+    private static void hostel(GameTestHelper h) {
+        ServerPlayer p = player(h, 4);
+        Zombie z = zombie(h, 1.5, 2.5);
+        z.setHealth(4f);
+        face(p, z.getBoundingBox().getCenter());
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("hostel")) == AbilityWheel.Result.DONE
+                && z.isRemoved() && Hostel.count(p) == 1, "Lodged: " + Hostel.count(p));
+        p.setXRot(-90f);                                                        // nothing in sight
+        full(p);
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("hostel")) == AbilityWheel.Result.DONE
+                && Hostel.count(p) == 0, "Let out");
+        h.assertTrue(!h.getLevel().getEntitiesOfClass(Zombie.class, p.getBoundingBox().inflate(6), Marionette::isSummoned).isEmpty(),
+                "It fights for you as a summon");
+        h.succeed();
+    }
+
+    /** A sealed ward is past dispelling; Foregone Survival will not replace it. */
+    private static void sealedWard(GameTestHelper h) {
+        ServerPlayer p = player(h, 1);
+        DeathWard.armSealed(p, "test", 200, 0.8f, 20, null);
+        Dispel.statuses(p);
+        h.assertTrue(DeathWard.isArmed(p) && DeathWard.isSealed(p), "Dispel does not take it off");
+        p.setXRot(-90f);
+        h.assertTrue(Observer.SUBLUNARY.cast(p, Observer.SUBLUNARY.entry("foregone_survival")) == AbilityWheel.Result.REFUSED,
+                "A higher ending is already written");
+        DeathWard.disarm(p);
+        h.assertTrue(Observer.SUBLUNARY.cast(p, Observer.SUBLUNARY.entry("foregone_survival")) == AbilityWheel.Result.DONE
+                && DeathWard.isArmedBy(p, ObserverSublunary.SURVIVAL), "Foregone Survival on yourself");
+        Dispel.statuses(p);
+        h.assertTrue(!DeathWard.isArmed(p), "That one can be dispelled");
+        h.succeed();
+    }
+
+    /** Wings fold free, the Shadow Form ends free, Painted Lightning strikes. */
+    private static void dimension(GameTestHelper h) {
+        ServerPlayer p = player(h, 4);
+        Zombie z = zombie(h, 1.5, 2.5);
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("pixie_wings")) == AbilityWheel.Result.DONE
+                && Flight.has(p), "Wings: flying");
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("pixie_wings")) == AbilityWheel.Result.FREE
+                && !Flight.has(p), "Folded, free");
+        full(p);
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("shadow_form")) == AbilityWheel.Result.DONE
+                && ObserverDimension.inShadowForm(p), "Shadow Form");
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("shadow_form")) == AbilityWheel.Result.FREE
+                && !ObserverDimension.inShadowForm(p), "Ended, free");
+        full(p);
+        face(p, z.getBoundingBox().getCenter());
+        String why = "aimed at " + Spells.aimEnemy(p, h.getLevel(), 32) + ", max " + z.getMaxHealth();
+        h.assertTrue(Observer.DIMENSION.cast(p, Observer.DIMENSION.entry("painted_lightning")) == AbilityWheel.Result.DONE, "Bolts");
+        h.runAfterDelay(2, () -> {
+            h.assertTrue(z.getHealth() < z.getMaxHealth() || !z.isAlive(), "The bolt struck: " + z.getHealth() + " " + why);
+            h.succeed();
+        });
+    }
+
+    /** Resonance gathers and bursts; Taut Chord plays; Dissonance shakes; Harmony goes off. */
+    private static void strings(GameTestHelper h) {
+        ServerPlayer p = player(h, 3);
+        Zombie z = zombie(h, 1.5, 2.5);
+        z.getAttribute(net.minecraft.world.entity.ai.attributes.Attributes.MAX_HEALTH).setBaseValue(1000);
+        z.setHealth(1000f);
+        face(p, z.getBoundingBox().getCenter());
+        h.assertTrue(Observer.STRINGS.cast(p, Observer.STRINGS.entry("resonance")) == AbilityWheel.Result.DONE, "Plucked");
+        for (int i = 0; i < ObserverStrings.RESONANCE_MAX; i++) {
+            z.invulnerableTime = 0;
+            Spells.strike(p, z, 1f);
+        }
+        float afterHits = z.getHealth();
+        full(p);
+        h.assertTrue(Observer.STRINGS.cast(p, Observer.STRINGS.entry("dissonance")) == AbilityWheel.Result.DONE
+                && Falter.chance(z) > 0f, "Dissonance: its blows go wide");
+        full(p);
+        h.assertTrue(Observer.STRINGS.cast(p, Observer.STRINGS.entry("harmony")) == AbilityWheel.Result.DONE, "Harmony");
+        full(p);
+        h.assertTrue(Observer.STRINGS.cast(p, Observer.STRINGS.entry("taut_chord")) == AbilityWheel.Result.DONE, "Strings drawn");
+        h.runAfterDelay(3, () -> h.assertTrue(z.getHealth() <= afterHits - ObserverStrings.RESONANCE_DAMAGE * 4,
+                "Five Resonances burst: " + afterHits + " -> " + z.getHealth()));
+        h.runAfterDelay(ObserverFx.TAUT_PLAYS + 3, () -> {
+            h.assertTrue(z.getHealth() < afterHits - ObserverStrings.RESONANCE_DAMAGE * 4 - 1, "The chord was played: " + z.getHealth());
+            h.succeed();
+        });
+    }
+
+    /** The endings need Observation 3; Erase takes it out of the world; Bloom shields you; Fall Silent hushes what is behind you. */
+    private static void sublunary(GameTestHelper h) {
+        ServerPlayer p = player(h, 0);
+        Zombie z = zombie(h, 1.5, 2.5);
+        face(p, z.getBoundingBox().getCenter());
+        h.assertTrue(Observer.SUBLUNARY.cast(p, Observer.SUBLUNARY.entry("foregone_loss")) == AbilityWheel.Result.REFUSED,
+                "Not watched long enough: nothing is spent");
+        Observation.raise(p, z, 3);
+        h.assertTrue(Observer.SUBLUNARY.cast(p, Observer.SUBLUNARY.entry("foregone_loss")) == AbilityWheel.Result.DONE
+                && NoHeal.isApplied(z), "Its ending is written");
+        full(p);
+        h.assertTrue(Observer.SUBLUNARY.cast(p, Observer.SUBLUNARY.entry("erase")) == AbilityWheel.Result.DONE
+                && Exile.isExiled(z), "Rubbed out");
+        Exile.bringBack(z);
+        full(p);
+        h.assertTrue(Observer.SUBLUNARY.cast(p, Observer.SUBLUNARY.entry("bloom")) == AbilityWheel.Result.DONE, "Bloom");
+        full(p);
+        face(p, p.getEyePosition().add(z.getEyePosition().subtract(p.getEyePosition()).scale(-1)));   // the zombie behind you
+        h.assertTrue(Observer.SUBLUNARY.cast(p, Observer.SUBLUNARY.entry("fall_silent")) == AbilityWheel.Result.DONE
+                && Silence.isSilenced(z), "Out of sight: silent");
+        h.runAfterDelay(ObserverFx.EYE_OPEN + 2, () -> {
+            h.assertTrue(ConjuredArmor.isWorn(p, ObserverSublunary.BLOOM_ARMOR), "The Bloom's shield is on you");
+            h.succeed();
+        });
+    }
+
+    /** The pocket world holds an enemy; cast again from inside it ends, free. Ink Servants come. */
+    private static void paintingWorld(GameTestHelper h) {
+        ServerPlayer p = player(h, 5);
+        Zombie z = zombie(h, 2.5, 2.5);
+        p.setXRot(90f);                                                         // at your feet
+        h.assertTrue(Observer.TERRITORY.cast(p, Observer.TERRITORY.entry("painting_world")) == AbilityWheel.Result.DONE
+                && ObserverTerritory.inWorld(p, z) && ObserverTerritory.inWorld(p, p), "The world stands round both");
+        h.assertTrue(Observer.TERRITORY.cast(p, Observer.TERRITORY.entry("painting_world")) == AbilityWheel.Result.FREE
+                && !ObserverTerritory.inWorld(p, z), "Ended from inside, free");
+        full(p);
+        h.assertTrue(Observer.TERRITORY.cast(p, Observer.TERRITORY.entry("ink_servants")) == AbilityWheel.Result.DONE
+                && FollowerSummon.isActive(p, ObserverTerritory.SERVANT + 0), "The servants circle you");
+        h.succeed();
+    }
+
+    /** Passives 5 to 0: hearts, no holds, Observation twice as fast. */
+    private static void passives(GameTestHelper h) {
+        ServerPlayer p = player(h, 0);
+        Observer.bodyTick(p);
+        h.assertTrue(Math.abs(p.getMaxHealth() - 24f) < 0.01f, "Demigod Body: two more hearts: " + p.getMaxHealth());
+        h.assertTrue(Root.isImmune(p, RootRestriction.MOVE), "Shadow Body: nothing holds you");
+        Zombie z = zombie(h, 1.5, 2.5);
+        Observation.watch(p, z, Observation.BUILD_TICKS / 2);
+        h.assertTrue(Observation.level(p, z) == 1, "Eyes Everywhere: twice as fast");
+        h.succeed();
     }
 }

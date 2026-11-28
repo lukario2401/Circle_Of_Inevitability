@@ -58,5 +58,6 @@ final class SKeyPressAbilityFiveUsed {
         knowledgeEmperorStars(player,level,serverLevel,false);
         illuminatorAstronomy(player,level,serverLevel,false);
         starDragonHeavybringer(player,level,serverLevel,false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerDimension(player, level, serverLevel, false);
     }
 }

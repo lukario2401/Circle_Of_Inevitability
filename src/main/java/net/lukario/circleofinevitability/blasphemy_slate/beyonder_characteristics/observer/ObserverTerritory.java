@@ -4,6 +4,8 @@ import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristic
 import net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.ObserverFx.Status;
 import net.lukario.circleofinevitability.combat.Countdown;
 import net.lukario.circleofinevitability.combat.Dome;
+import net.lukario.circleofinevitability.combat.Enclosure;
+import net.lukario.circleofinevitability.combat.FollowerSummon;
 import net.lukario.circleofinevitability.combat.Later;
 import net.lukario.circleofinevitability.combat.Spells;
 import net.lukario.circleofinevitability.combat.Territory;
@@ -11,6 +13,7 @@ import net.lukario.circleofinevitability.combat.Zone;
 import net.lukario.circleofinevitability.menu.AbilityWheel;
 import net.lukario.circleofinevitability.root.Root;
 import net.lukario.circleofinevitability.root.RootRestriction;
+import net.lukario.circleofinevitability.status.Decree;
 import net.lukario.circleofinevitability.status.Exposed;
 import net.lukario.circleofinevitability.status.Marionette;
 import net.minecraft.network.chat.Component;
@@ -27,6 +30,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -35,7 +39,7 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
 /**
  * Key 1, the Territory wheel (docs/pathways/observer/OBSERVER.md, "Key 1: Territory"): Totem Territory and Borrowed
- * Power, the Shaman's. Ink Servants and Painting World (Pixie) are the second half.
+ * Power (Shaman 9), Ink Servants and Painting World (Pixie 5).
  */
 final class ObserverTerritory {
 
@@ -88,6 +92,44 @@ final class ObserverTerritory {
     static final int SNARE_TICKS = 50;
     static final float SNARE_DAMAGE = 2f;
     static final int BEAST_TICKS = 300;
+
+    // =========================
+    // Ink Servants (Pixie 5)
+    // Three servants circle you for SERVANT_TICKS; each strikes the nearest enemy within SERVANT_RANGE every
+    // SERVANT_EVERY for SERVANT_DAMAGE, twice as far inside your Territory or Painting World. Casting again replaces them.
+    // =========================
+    static final int SERVANT_SEQUENCE = Observer.PIXIE;
+    static final int SERVANT_COST = 2000;
+    static final int SERVANT_TICKS = 1200;
+    static final double SERVANT_RANGE = 6.0;
+    static final int SERVANT_EVERY = 30;
+    static final float SERVANT_DAMAGE = 8f;
+    static final String SERVANT = "observer_ink_servant_";              // + 0, 1, 2 (combat/FollowerSummon names)
+    static final String SERVANTS_UNTIL = "observer_servants_until";
+
+    // =========================
+    // Painting World (Pixie 5)
+    // A canvas opens where you aim (WORLD_AIM) and a pocket world of WORLD_RADIUS round it stands for WORLD_TICKS
+    // (combat/Enclosure): enemies inside cannot walk out (they come back in at the other side) and cannot teleport.
+    // Paintings are taken at once inside it. Cast again from inside: it ends (free). Complete from Dimensional
+    // Shadow (2): WORLD_RADIUS_SHADOW, WORLD_TICKS_SHADOW and Rules against the enemy (no passage, no hiding: Decree);
+    // from Observer (1): WORLD_RADIUS_OBSERVER, WORLD_TICKS_OBSERVER.
+    // =========================
+    static final int WORLD_SEQUENCE = Observer.PIXIE;
+    static final int WORLD_COST = 3000;
+    static final double WORLD_AIM = 16.0;
+    static final double WORLD_RADIUS = 10.0;
+    static final int WORLD_TICKS = 300;
+    static final double WORLD_RADIUS_SHADOW = 28.0;
+    static final int WORLD_TICKS_SHADOW = 900;
+    static final double WORLD_RADIUS_OBSERVER = 36.0;
+    static final int WORLD_TICKS_OBSERVER = 1200;
+    static final String WORLD = "observer_painting_world";              // the Enclosure's and the Decree's name
+
+    /** Where each owner's Painting World stands. */
+    private record World(Vec3 center, double radius, double height, String tag) {}
+
+    private static final java.util.Map<java.util.UUID, World> WORLDS = new java.util.HashMap<>();
 
     // =========================
     // Totem Territory
@@ -329,8 +371,106 @@ final class ObserverTerritory {
         return AbilityWheel.Result.DONE;
     }
 
+    // =========================
+    // Ink Servants
+    // =========================
+
+    static AbilityWheel.Result inkServants(ServerPlayer player, ServerLevel sl) {
+        for (int i = 0; i < 3; i++) {
+            FollowerSummon.hover(ObserverFx.INK_SERVANT, ObserverFx.servantOffset(i))
+                    .strikes(SERVANT_RANGE * 2, SERVANT_EVERY, SERVANT_DAMAGE)
+                    .lasts(SERVANT_TICKS)
+                    .targets((owner, target) -> target.distanceTo(owner) <= SERVANT_RANGE * (boosted(owner) ? 2 : 1))
+                    .onStrike((owner, target, from) -> ObserverFx.servantStrike(sl, from, target))
+                    .summon(player, SERVANT + i);
+        }
+        player.getPersistentData().putLong(SERVANTS_UNTIL, sl.getGameTime() + SERVANT_TICKS);
+        ObserverFx.inkServantsArrive(sl, player);
+        ObserverFx.status(player, Status.INK_SERVANTS, SERVANT_TICKS);
+        return AbilityWheel.Result.DONE;
+    }
+
+    /** Inside its owner's Territory or Painting World: the servants reach twice as far. */
+    private static boolean boosted(LivingEntity owner) {
+        return Territory.isOpen(owner) && Territory.inside(owner, owner) || inWorld(owner, owner);
+    }
+
+    /** Once a second: servants whose time is up dissolve. */
+    static void servantsTick(ServerPlayer player, ServerLevel sl) {
+        if (!player.getPersistentData().contains(SERVANTS_UNTIL)) return;
+        if (Observer.isActive(player, SERVANTS_UNTIL) && FollowerSummon.isActive(player, SERVANT + 0)) return;
+        player.getPersistentData().remove(SERVANTS_UNTIL);
+        for (int i = 0; i < 3; i++) FollowerSummon.dismiss(player, SERVANT + i);
+        ObserverFx.inkServantsLeave(sl, player);
+        ObserverFx.statusEnd(player, Status.INK_SERVANTS);
+    }
+
+    // =========================
+    // Painting World
+    // =========================
+
+    /** True while 'entity' is inside 'owner's Painting World. */
+    static boolean inWorld(LivingEntity owner, Entity entity) {
+        World world = WORLDS.get(owner.getUUID());
+        if (world == null || !Enclosure.isOpen(owner, WORLD) || entity.level() != owner.level()) return false;
+        Vec3 at = entity.position();
+        double dx = at.x - world.center().x, dz = at.z - world.center().z;
+        return dx * dx + dz * dz <= world.radius() * world.radius() && at.y >= world.center().y - 2
+                && at.y <= world.center().y + world.height();
+    }
+
+    static AbilityWheel.Result paintingWorld(ServerPlayer player, ServerLevel sl) {
+        if (inWorld(player, player)) {
+            closeWorld(player);
+            return AbilityWheel.Result.FREE;
+        }
+        boolean complete = Observer.grown(player, Observer.DIMENSIONAL_SHADOW);
+        boolean observer = Observer.grown(player, Observer.OBSERVER);
+        double radius = observer ? WORLD_RADIUS_OBSERVER : complete ? WORLD_RADIUS_SHADOW : WORLD_RADIUS;
+        int ticks = observer ? WORLD_TICKS_OBSERVER : complete ? WORLD_TICKS_SHADOW : WORLD_TICKS;
+        double height = complete ? Math.min(radius, 24) : Math.min(radius * 0.8, 10);
+        Vec3 center = Spells.groundAt(player, sl, Spells.aimPoint(player, sl, WORLD_AIM));
+        closeWorld(player);
+        String tag = ObserverFx.tagFor("painting_world");
+        WORLDS.put(player.getUUID(), new World(center, radius, height, tag));
+        ObserverFx.paintingWorld(sl, center, radius, ticks, complete, tag);
+        Enclosure.at(center, radius)
+                .height(height)
+                .lasts(ticks)
+                .keeps(one -> Spells.isEnemy(player, one))
+                .every(10)
+                .onInside(enemy -> {
+                    Root.apply(enemy, 15, RootRestriction.TELEPORT);
+                    ObserverFx.status(enemy, Status.TRAPPED, 25);
+                })
+                .onLoop((enemy, from, to) -> ObserverFx.worldBarrierHit(sl, from))
+                .onEnd(() -> {
+                    World world = WORLDS.get(player.getUUID());
+                    if (world != null && world.tag().equals(tag)) WORLDS.remove(player.getUUID());
+                    ObserverFx.paintingWorldEnd(sl, center, radius, tag);
+                    Decree.close(player, WORLD);
+                })
+                .open(player, sl, WORLD);
+        if (complete) {
+            Decree.at(center, radius)
+                    .height(height)
+                    .lasts(ticks)
+                    .forbid(Decree.Rule.PASSAGE, Decree.Rule.CONCEALMENT)
+                    .binds(one -> Spells.isEnemy(player, one))
+                    .write(player, sl, WORLD);
+        }
+        return AbilityWheel.Result.DONE;
+    }
+
+    static void closeWorld(LivingEntity player) {
+        if (Enclosure.isOpen(player, WORLD)) Enclosure.close(player, WORLD);
+        if (Decree.isWritten(player, WORLD)) Decree.close(player, WORLD);
+        WORLDS.remove(player.getUUID());
+    }
+
     static void clearState(Player player) {
         player.getPersistentData().remove(RITUAL);
         player.getPersistentData().remove(RITUAL_BROKEN);
+        player.getPersistentData().remove(SERVANTS_UNTIL);
     }
 }

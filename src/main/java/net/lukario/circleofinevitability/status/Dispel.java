@@ -64,7 +64,7 @@ public final class Dispel {
             Substitute.disarm(entity);
             taken++;
         }
-        if (DeathWard.isArmed(entity)) {
+        if (DeathWard.isArmed(entity) && !DeathWard.isSealed(entity)) {      // a sealed ward is past dispelling
             DeathWard.disarm(entity);
             taken++;
         }

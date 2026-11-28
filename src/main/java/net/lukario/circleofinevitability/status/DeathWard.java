@@ -36,7 +36,7 @@ import java.util.UUID;
  * For GRACE_TICKS afterwards nothing can hurt them, so whatever killed them does not simply do it again.
  * Arming again replaces the old ward. Not saved: wards are gone after a server restart or when the player logs out.
  * Inside a Decree that forbids resurrection (status/Decree, RESURRECTION) arming does nothing and an armed ward is
- * spent without saving them; each is a Violation.
+ * spent without saving them; each is a Violation. A sealed ward (armSealed) is neither: see there.
  *
  * The guide with examples for all of these tools: docs/SPELL_KIT.md
  */
@@ -52,7 +52,8 @@ public final class DeathWard {
     /** How long someone who was just saved cannot be hurt (ticks). */
     public static int GRACE_TICKS = 40;
 
-    private record Ward(String ability, long expires, float health, Revive onRevive, java.util.function.BooleanSupplier condition, int grace) {}
+    private record Ward(String ability, long expires, float health, Revive onRevive, java.util.function.BooleanSupplier condition, int grace,
+                        boolean sealed) {}
 
     private static final Map<UUID, Ward> WARDS = new HashMap<>();
     private static final String GRACE_TAG = "circle_of_inevitability_death_ward_grace";   // on the saved entity: the game time it ends
@@ -80,12 +81,31 @@ public final class DeathWard {
 
     public static Object armWhen(LivingEntity entity, String ability, int ticks, float healthFraction, int graceTicks,
                                  java.util.function.BooleanSupplier condition, Revive onRevive) {
+        return arm(entity, ability, ticks, healthFraction, graceTicks, condition, onRevive, false);
+    }
+
+    /**
+     * A sealed ward: a revival arranged through something higher. Dispel does not take it off (status/Dispel) and a
+     * Decree against resurrection neither stops arming it nor voids it. Only the void, /kill, Spells.strikeThrough and
+     * disarm(...) get past it. Returns the token for disarmIf.
+     */
+    public static Object armSealed(LivingEntity entity, String ability, int ticks, float healthFraction, int graceTicks, Revive onRevive) {
+        return arm(entity, ability, ticks, healthFraction, graceTicks, () -> true, onRevive, true);
+    }
+
+    /** True when the armed ward is a sealed one. */
+    public static boolean isSealed(Entity entity) {
+        return isArmed(entity) && WARDS.get(entity.getUUID()).sealed();
+    }
+
+    private static Object arm(LivingEntity entity, String ability, int ticks, float healthFraction, int graceTicks,
+                              java.util.function.BooleanSupplier condition, Revive onRevive, boolean sealed) {
         if (!(entity.level() instanceof ServerLevel sl) || ticks <= 0) return null;
-        if (Decree.violate(entity, Decree.Rule.RESURRECTION)) return null;    // "Resurrection of the dead is prohibited here!"
+        if (!sealed && Decree.violate(entity, Decree.Rule.RESURRECTION)) return null;    // "Resurrection of the dead is prohibited here!"
         long now = sl.getGameTime();
         WARDS.values().removeIf(old -> old.expires() < now);        // the ones that faded unused
         Ward ward = new Ward(ability, now + ticks, Math.clamp(healthFraction, 0, 1), onRevive,
-                java.util.Objects.requireNonNull(condition), Math.max(0, graceTicks));
+                java.util.Objects.requireNonNull(condition), Math.max(0, graceTicks), sealed);
         WARDS.put(entity.getUUID(), ward);
         return ward;
     }
@@ -142,7 +162,7 @@ public final class DeathWard {
         boolean prior = WARDS.get(entity.getUUID()) == ALLOWED_SNAPSHOTS.get(entity.getUUID());
         if (event.getSource().is(DamageTypeTags.BYPASSES_INVULNERABILITY) && !prior) return false;
         if (Spells.isPiercing(entity) && !prior) return false;                 // Spells.strikeThrough: no ward saves from it (it stays armed)
-        if (Decree.violate(entity, Decree.Rule.RESURRECTION)) {      // a Law: No Return: the ward is void, the dead stay dead
+        if (!WARDS.get(entity.getUUID()).sealed() && Decree.violate(entity, Decree.Rule.RESURRECTION)) {      // a Law: No Return: the ward is void, the dead stay dead
             WARDS.remove(entity.getUUID());
             return false;
         }

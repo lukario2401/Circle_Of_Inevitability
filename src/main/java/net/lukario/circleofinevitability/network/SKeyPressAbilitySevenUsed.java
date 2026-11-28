@@ -58,5 +58,6 @@ final class SKeyPressAbilitySevenUsed {
         knowledgeEmperorKnowledge(player,level,serverLevel,false);
         illuminatorCivilization(player,level,serverLevel,false);
         starDragonCosmos(player,level,serverLevel,false);
+        net.lukario.circleofinevitability.blasphemy_slate.beyonder_characteristics.observer.Observer.observerSublunary(player, level, serverLevel, false);
     }
 }
