@@ -145,15 +145,19 @@ public final class HandOfOrderDecrees {
             .cooldownBy(HandOfOrder::cooldownFor)
             .entry("prohibition_passage", HandOfOrderFx.WHEEL_PROHIBITION_PASSAGE, "Prohibition: Passage", PROHIBITION_SEQUENCE,
                     PROHIBITION_COST, PROHIBITION_COOLDOWN, HandOfOrderDecrees::prohibitPassage)
+            .description("Decree around you: no teleporting, flying, gliding or levitating inside. Each Violation is punished harder than the last. Cast again quickly to add a layer.")
             .costBy(HandOfOrder::decreeCostFor)
             .entry("prohibition_concealment", HandOfOrderFx.WHEEL_PROHIBITION_CONCEALMENT, "Prohibition: Concealment", PROHIBITION_SEQUENCE,
                     PROHIBITION_COST, PROHIBITION_COOLDOWN, HandOfOrderDecrees::prohibitConcealment)
+            .description("Decree around you: no hiding inside, and the hidden are pulled out. From Imperative Mage no stand-ins either. Cast again quickly to add a layer.")
             .costBy(HandOfOrder::decreeCostFor)
             .entry("imperative_reality", HandOfOrderFx.WHEEL_IMPERATIVE_REALITY, "Imperative: Reality", REALITY_SEQUENCE,
                     REALITY_COST, REALITY_COOLDOWN, HandOfOrderDecrees::imperativeReality)
+            .description("\"Weaken Mysticism, enhance Reality\": inside the Decree, ability damage is halved and abilities cost more for everyone but you, while plain blows hit harder.")
             .costBy(HandOfOrder::decreeCostFor)
             .entry("contract", HandOfOrderFx.WHEEL_CONTRACT, "Contract", CONTRACT_SEQUENCE,
                     CONTRACT_COST, CONTRACT_COOLDOWN, HandOfOrderDecrees::contract)
+            .description("The enemy you look at signs a Contract: every attack it makes on you is cancelled and counts as a Violation, punished harder each time. Striking it yourself tears the Contract.")
             .costBy(HandOfOrder::costFor);
 
     // =========================

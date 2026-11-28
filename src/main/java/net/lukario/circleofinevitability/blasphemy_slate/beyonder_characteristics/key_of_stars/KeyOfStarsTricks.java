@@ -127,24 +127,31 @@ public final class KeyOfStarsTricks {
             .cooldownBy(KeyOfStars::cooldownFor)
             .entry("flash", KeyOfStarsFx.WHEEL_FLASH, "Flash", TRICKS_SEQUENCE, FLASH_COST, FLASH_COOLDOWN,
                     KeyOfStarsTricks::flash)
+            .description("A blinding flash in a cone: enemies are blinded and mobs lose track of you for a moment.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("black_screen", KeyOfStarsFx.WHEEL_BLACK_SCREEN, "Black Screen", TRICKS_SEQUENCE, SCREEN_COST,
                     SCREEN_COOLDOWN, KeyOfStarsTricks::blackScreen)
+            .description("A dark curtain a few blocks ahead: a mob that would see you through it loses you.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("loud_noise", KeyOfStarsFx.WHEEL_LOUD_NOISE, "Loud Noise", TRICKS_SEQUENCE, NOISE_COST, NOISE_COOLDOWN,
                     KeyOfStarsTricks::loudNoise)
+            .description("A bang where you aim: enemies nearby are slowed, and mobs forget you and go to look.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("frost_ray", KeyOfStarsFx.WHEEL_FROST_RAY, "Frost Ray", TRICKS_SEQUENCE, FROST_COST, FROST_COOLDOWN,
                     KeyOfStarsTricks::frostRay)
+            .description("A ray of frost: damage, Slowness III and freezing, and the fire on what it hits goes out.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("gale", KeyOfStarsFx.WHEEL_GALE, "Gale", TRICKS_SEQUENCE, GALE_COST, GALE_COOLDOWN,
                     KeyOfStarsTricks::gale)
+            .description("A gale in a cone: enemies are shoved back, their arrows blown aside and their fire put out.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("tumble", KeyOfStarsFx.WHEEL_TUMBLE, "Tumble", TRICKS_SEQUENCE, TUMBLE_COST, TUMBLE_COOLDOWN,
                     KeyOfStarsTricks::tumble)
+            .description("A greased circle where you aim: enemies in it slip, get shoved and stagger now and then.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("escape_trick", KeyOfStarsFx.WHEEL_ESCAPE_TRICK, "Escape Trick", TRICKS_SEQUENCE, ESCAPE_COST,
                     ESCAPE_COOLDOWN, KeyOfStarsTricks::escapeTrick)
+            .description("Right after another trick (the diversion), a long shift toward where you look; otherwise a small hop.")
             .costBy(KeyOfStars::wheelCostFor)
             .free(KeyOfStars::freeTravel)                                        // Door of Doors (or an Alternate World): free
             .onCast((player, sl, entry) -> {

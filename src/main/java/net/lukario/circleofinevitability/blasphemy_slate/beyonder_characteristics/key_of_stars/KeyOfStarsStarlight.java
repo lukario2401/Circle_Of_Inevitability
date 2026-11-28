@@ -144,27 +144,34 @@ public final class KeyOfStarsStarlight {
             .cooldownBy(KeyOfStars::cooldownFor)
             .entry("toy_box", KeyOfStarsFx.WHEEL_TOY_BOX, "Toy Box", STARLIGHT_SEQUENCE, TOY_COST, TOY_COOLDOWN,
                     KeyOfStarsStarlight::toyBox)
+            .description("A veil where you aim: small enemies in it become wind-up toys, the rest are slowed.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("space_fragmentation", KeyOfStarsFx.WHEEL_SPACE_FRAGMENTATION, "Space Fragmentation",
                     KEY_OF_STARS_SEQUENCE, FRAGMENTATION_COST, FRAGMENTATION_COOLDOWN, KeyOfStarsStarlight::spaceFragmentation)
+            .description("Nine planets circle where you aim; their gravity drags and shreds enemies, then they collapse.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("starlight_seal", KeyOfStarsFx.WHEEL_STARLIGHT_SEAL, "Starlight Seal", KEY_OF_STARS_SEQUENCE, SEAL_COST,
                     SEAL_COOLDOWN, KeyOfStarsStarlight::starlightSeal)
+            .description("Seal a caught enemy: no abilities, no teleports. Aimed at an ally, their connections are sealed instead.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("labyrinth", KeyOfStarsFx.WHEEL_LABYRINTH, "Space-Time Labyrinth", KEY_OF_STARS_SEQUENCE,
                     LABYRINTH_COST, LABYRINTH_COOLDOWN, KeyOfStarsStarlight::labyrinth)
+            .description("A space-time maze: enemies in it are slowed, cannot teleport, and every way out leads back in.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("alternate_world", KeyOfStarsFx.WHEEL_ALTERNATE_WORLD, "Alternate World", DOOR_SEQUENCE, WORLD_COST,
                     WORLD_COOLDOWN, KeyOfStarsStarlight::alternateWorld)
+            .description("A kingdom of Doors around you: no exits for enemies, free travel for you and yours, and roots and Seals on enemies last twice as long. Cast again to end it.")
             .costBy(KeyOfStars::wheelCostFor)
             .free(player -> Enclosure.isOpen(player, WORLD))                     // ending it early: free
             .notCopyable()                                                       // its rules are this Pathway's
             .entry("omnipresence", KeyOfStarsFx.WHEEL_OMNIPRESENCE, "Omnipresence", DOOR_SEQUENCE, OMNI_COST,
                     OMNI_COOLDOWN, KeyOfStarsStarlight::omnipresence)
+            .description("Six afterimages circle you, repeat every ability you cast and take the hits meant for you.")
             .costBy(KeyOfStars::wheelCostFor)
             .notCopyable()                                                       // its echoes are this Pathway's
             .entry("close_the_door", KeyOfStarsFx.WHEEL_CLOSE_THE_DOOR, "Close the Door", DOOR_SEQUENCE, CLOSE_COST,
                     CLOSE_COOLDOWN, KeyOfStarsStarlight::closeTheDoor)
+            .description("Every enemy near you loses its travel, its Seals and roots double, and the hidden are forced out.")
             .costBy(KeyOfStars::wheelCostFor);
 
     static void open(Player player) {

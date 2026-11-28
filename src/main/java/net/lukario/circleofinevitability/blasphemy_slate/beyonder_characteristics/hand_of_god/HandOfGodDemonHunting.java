@@ -185,12 +185,16 @@ public final class HandOfGodDemonHunting {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("eye", HandOfGodFx.WHEEL_EYE, "Eye of Demon Hunting", EYE_SEQUENCE,
                     EYE_COST, EYE_COOLDOWN, HandOfGodDemonHunting::eyeOfDemonHunting)
+            .description("For a while, evil and undead nearby glow through walls. The enemy you look at is read in chat and takes more damage until the eye closes.")
             .entry("alchemy", HandOfGodFx.WHEEL_ALCHEMY, "Alchemy", ALCHEMY_SEQUENCE,
                     ALCHEMY_COST, ALCHEMY_COOLDOWN, HandOfGodDemonHunting::alchemy)
+            .description("Brew a coating for your weapon that counters what you look at: exorcism for spirits, freeze for fire creatures, burning for arthropods, lightning for water or metal armor, purification for evil, decay for the big.")
             .entry("mind_concealment", HandOfGodFx.WHEEL_MIND_CONCEALMENT, "Mind Concealment", MIND_SEQUENCE,
                     MIND_COST, MIND_COOLDOWN, HandOfGodDemonHunting::mindConcealment)
+            .description("Your intentions cannot be read: mobs forget you and abilities cannot choose you. You can still be seen and hurt; attacking ends it.")
             .entry("giant_form", HandOfGodFx.WHEEL_GIANT_FORM, "Giant Form", GIANT_SEQUENCE,
                     GIANT_COST, GIANT_COOLDOWN, HandOfGodDemonHunting::giantForm)
+            .description("Become the one-eyed Giant: bigger, more reach, Strength III and Resistance II, and your strides shake and slow enemies. Madness builds until the form breaks. Cast again to end it.")
             .free(GiantForm::isGiant);                                          // the key again ends it
 
     // =========================

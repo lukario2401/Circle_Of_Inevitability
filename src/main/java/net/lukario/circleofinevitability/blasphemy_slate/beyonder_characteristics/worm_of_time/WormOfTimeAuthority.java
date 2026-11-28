@@ -46,14 +46,23 @@ public final class WormOfTimeAuthority {
             .radius(90)
             .quickCastCooldown(false).quickCastCost(3f)
             .entry("loophole", WormOfTimePowers.icon("loophole"), "Exploit Loophole", 2, 12000, 400, WormOfTimePowers.guarded(WormOfTimeAuthority::loophole))
+            .description("Exploit a loophole: break ordinary roots and harmful effects and stay unbound for three seconds. Works even while silenced.")
             .entry("aging", WormOfTimePowers.icon("aging"), "Steal Lifespan", 1, 18000, 200, WormOfTimePowers.guarded(WormOfTimeAuthority::aging))
-            .entry("slow", WormOfTimePowers.icon("slow"), "Slow Time", 1, 16000, 400, WormOfTimePowers.guarded(WormOfTimeAuthority::slow)).notCopyable()
-            .entry("stop", WormOfTimePowers.icon("stop"), "Ancient Clock", 1, 30000, 600, WormOfTimePowers.guarded(WormOfTimeAuthority::stop)).notCopyable()
+            .description("Steal the lifespan of the enemy you aim at: true damage, you heal part of it, and it decays, weakens and slows.")
+            .entry("slow", WormOfTimePowers.icon("slow"), "Slow Time", 1, 16000, 400, WormOfTimePowers.guarded(WormOfTimeAuthority::slow))
+            .description("Time slows around you: enemies and their projectiles are slowed, and enemies get Mining Fatigue.").notCopyable()
+            .entry("stop", WormOfTimePowers.icon("stop"), "Ancient Clock", 1, 30000, 600, WormOfTimePowers.guarded(WormOfTimeAuthority::stop))
+            .description("An ancient clock stops time nearby for three seconds: enemies cannot act or move, and hostile projectiles hang in the air.").notCopyable()
             .entry("haste", WormOfTimePowers.icon("haste"), "Accelerate Time", 1, 16000, 400, WormOfTimePowers.guarded(WormOfTimeAuthority::haste))
-            .entry("rewind", WormOfTimePowers.icon("rewind"), "Reverse Time", 1, 24000, 600, WormOfTimePowers.guarded(WormOfTimeAuthority::rewind)).notCopyable()
+            .description("Accelerate time: you and nearby allies get Speed II and Haste II, and nearby enemies' good effects run out faster.")
+            .entry("rewind", WormOfTimePowers.icon("rewind"), "Reverse Time", 1, 24000, 600, WormOfTimePowers.guarded(WormOfTimeAuthority::rewind))
+            .description("Reverse your own time a few seconds: you return to where you were, as you were.").notCopyable()
             .entry("history", WormOfTimePowers.icon("history"), "Curtain of History", 1, 8000, 120, WormOfTimePowers.guarded(WormOfTimeAuthority::history))
-            .entry("error", WormOfTimePowers.icon("error"), "Error: Leave Reality", 0, 40000, 600, WormOfTimePowers.guarded(WormOfTimeAuthority::error)).notCopyable()
-            .entry("misdirect", WormOfTimePowers.icon("misdirect"), "Error: Misdirection", 0, 35000, 500, WormOfTimePowers.guarded(WormOfTimeAuthority::misdirect));
+            .description("Lift the Curtain of History: learn the most recent cast by someone else nearby, with a clock where it happened.")
+            .entry("error", WormOfTimePowers.icon("error"), "Error: Leave Reality", 0, 40000, 600, WormOfTimePowers.guarded(WormOfTimeAuthority::error))
+            .description("Leave reality for three seconds: you cannot interact and cannot be attacked, then return where you were.").notCopyable()
+            .entry("misdirect", WormOfTimePowers.icon("misdirect"), "Error: Misdirection", 0, 35000, 500, WormOfTimePowers.guarded(WormOfTimeAuthority::misdirect))
+            .description("For five seconds, up to three incoming hits are cancelled and redirected to the enemy you chose.");
 
     public static void authority(Player p, Level level, ServerLevel sl, boolean bypass) {
         if (!WormOfTimePowers.ready(p, bypass, 2)) return;

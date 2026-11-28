@@ -130,12 +130,16 @@ public final class AbominationZombie {
             .castsWhileSilenced(Abomination::castsThroughHush)
             .entry("raise_the_dead", AbominationFx.WHEEL_RAISE_THE_DEAD, "Raise the Dead", RAISE_SEQUENCE,
                     RAISE_COST, RAISE_COOLDOWN, AbominationZombie::raiseTheDead)
+            .description("Zombies claw out of the ground where you aim and fight for you. Enemies that recently fell near the spot rise too, as what they were.")
             .entry("grave_chill", AbominationFx.WHEEL_GRAVE_CHILL, "Grave Chill", CHILL_SEQUENCE,
                     CHILL_COST, CHILL_COOLDOWN, AbominationZombie::graveChill)
+            .description("A cold mist follows you: enemies in it are slowed more and more, then frozen in ice once.")
             .entry("undying_flesh", AbominationFx.WHEEL_UNDYING_FLESH, "Undying Flesh", UNDYING_SEQUENCE,
                     UNDYING_COST, UNDYING_COOLDOWN, AbominationZombie::undyingFlesh)
+            .description("Your body forgets pain for a while: less damage (even less from projectiles), no knockback, immune to bleeding and poison, and steady regeneration.")
             .entry("death_sentence", AbominationFx.WHEEL_DEATH_SENTENCE, "Death Sentence", SENTENCE_SEQUENCE,
-                    SENTENCE_COST, SENTENCE_COOLDOWN, AbominationZombie::deathSentence);
+                    SENTENCE_COST, SENTENCE_COOLDOWN, AbominationZombie::deathSentence)
+            .description("Sentence the enemy you look at: a countdown starts, and if it is still alive and near you at 0 it loses a large share of its max health. If that kills it, it rises for you.");
 
     // =========================
     // Ability 4 - Zombie

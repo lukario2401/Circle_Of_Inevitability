@@ -181,12 +181,12 @@ public class Observer {
             .selectThenFire().noCooldowns()
             .entry("totem_territory", ObserverFx.WHEEL_TOTEM_TERRITORY, "Totem Territory",
                     ObserverTerritory.TOTEM_SEQUENCE, ObserverTerritory.TOTEM_COST, 0, ObserverTerritory::totemTerritory)
-            .description("Stand still for 3 seconds: a totem rises and your Territory opens. Inside it your casts cost less, your spirituality returns faster and every enemy that walks in is announced.")
+            .description("Stand still for a 3 second ritual and a watching totem rises: your Territory. Inside it spirituality returns faster, abilities cost less, and enemies that enter are announced and glow for you.")
             .notCopyable()
             .costBy((player, cost) -> costFor(player, cost, "totem_territory"))
             .entry("borrowed_power", ObserverFx.WHEEL_BORROWED_POWER, "Borrowed Power",
                     ObserverTerritory.BORROW_SEQUENCE, ObserverTerritory.BORROW_COST, 0, ObserverTerritory::borrowedPower)
-            .description("Ask what you look at for power: open sky gives a Gale, stone Earth Spikes, water a Lash, plants a Thorn Snare, a creature fights for you. Stronger inside your Territory.")
+            .description("Ask what is around you for power. What you look at decides the craft: water lashes, plants snare, open sky brings a gale, other blocks raise spikes. 50% stronger inside your Territory.")
             .costBy((player, cost) -> costFor(player, cost, "borrowed_power"))
             .entry("ink_servants", ObserverFx.WHEEL_INK_SERVANTS, "Ink Servants",
                     ObserverTerritory.SERVANT_SEQUENCE, ObserverTerritory.SERVANT_COST, 0, ObserverTerritory::inkServants)
@@ -204,16 +204,16 @@ public class Observer {
             .selectThenFire().noCooldowns()
             .entry("true_sight", ObserverFx.WHEEL_TRUE_SIGHT, "True Sight",
                     ObserverSight.TRUE_SIGHT_SEQUENCE, ObserverSight.TRUE_SIGHT_COST, 0, ObserverSight::trueSight)
-            .description("See the true nature of things for a while: the hidden, strings, links, wards and traps. Illusions cannot touch you. Press again to end it.")
+            .description("See the true nature of things nearby (only you): hidden enemies are outlined, illusions end on you, strings, links, wards and traps show. Press again to end it.")
             .free(ObserverSight::isTrueSight)                                     // ending it early
             .costBy((player, cost) -> costFor(player, cost, "true_sight"))
             .entry("many_angles", ObserverFx.WHEEL_MANY_ANGLES, "Many Angles",
                     ObserverSight.ANGLES_SEQUENCE, ObserverSight.ANGLES_COST, 0, ObserverSight::manyAngles)
-            .description("Every living thing near glows through walls with a line to what it is watching, and each enemy shown gains a level of Observation.")
+            .description("Every living thing nearby glows through walls with a line to what it is looking at (red if it is you), and each enemy shown gains a level of Observation.")
             .costBy((player, cost) -> costFor(player, cost, "many_angles"))
             .entry("read_intent", ObserverFx.WHEEL_READ_INTENT, "Read Intent",
                     ObserverSight.READ_SEQUENCE, ObserverSight.READ_COST, 0, ObserverSight::readIntent)
-            .description("Read the enemy you look at (its Dossier, and a level of Observation), or what a Painting, trap or dome was made to do.")
+            .description("Read what the thing you look at was made to do. An enemy: its Dossier in chat and a level of Observation. A Painting, Trap, Zone, Dome or construct: who made it, what it does and how long it has left.")
             .costBy((player, cost) -> costFor(player, cost, "read_intent"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 
@@ -222,29 +222,29 @@ public class Observer {
             .selectThenFire().noCooldowns()
             .entry("riot_of_colours", ObserverFx.WHEEL_RIOT_OF_COLOURS, "Riot of Colours",
                     ObserverCanvas.RIOT_SEQUENCE, ObserverCanvas.RIOT_COST, 0, ObserverCanvas::riotOfColours)
-            .description("Paint a riot of colour: an enemy who keeps looking at it is sickened and goes mad, and collapses asleep at the height of it.")
+            .description("Hang a Painting: whoever looks at it gets Nausea, falters and gains Madness, more every second they keep looking, until they collapse into sleep.")
             .costBy((player, cost) -> costFor(player, cost, "riot_of_colours"))
             .entry("itching_house", ObserverFx.WHEEL_ITCHING_HOUSE, "Itching House",
                     ObserverCanvas.ITCHING_SEQUENCE, ObserverCanvas.ITCHING_COST, 0, ObserverCanvas::itchingHouse)
-            .description("Paint a grey house in the rain: whoever stares at it is seized by an itch, weakened, clumsy and unable to sprint.")
+            .description("Hang a Painting: whoever looks at it is struck by irresistible itching, weakened, faltering, slowed and unable to sprint.")
             .costBy((player, cost) -> costFor(player, cost, "itching_house"))
             .entry("golden_sun", ObserverFx.WHEEL_GOLDEN_SUN, "Golden Sun",
                     ObserverCanvas.SUN_SEQUENCE, ObserverCanvas.SUN_COST, 0, ObserverCanvas::goldenSun)
-            .description("Hang a golden sun: allies near it are warmed and cleansed, evil and undead burn and cannot heal, summons of the enemy are unmade.")
+            .description("A field Painting of a golden sun: allies inside are warmed and cleansed, evil and undead burn and cannot heal, and enemy summons are unmade.")
             .costBy((player, cost) -> costFor(player, cost, "golden_sun"))
             .entry("boat_in_a_storm", ObserverFx.WHEEL_BOAT_IN_A_STORM, "Boat in a Storm",
                     ObserverCanvas.STORM_SEQUENCE, ObserverCanvas.STORM_COST, 0, ObserverCanvas::boatInAStorm)
-            .description("Hang a storm at sea: fire goes out, allies resist fire, and waves slow and shove back enemies near it.")
+            .description("A field Painting of a stormy sea: fires go out and allies are fire resistant, while enemies are slowed and shoved back by a wave every second.")
             .costBy((player, cost) -> costFor(player, cost, "boat_in_a_storm"))
             .entry("self_portrait", ObserverFx.WHEEL_SELF_PORTRAIT, "Self Portrait",
                     ObserverCanvas.PORTRAIT_SEQUENCE, ObserverCanvas.PORTRAIT_COST, 0, ObserverCanvas::selfPortrait)
-            .description("Hang a portrait of yourself: every ability you cast is repeated from it at half strength. Cast again to look through it.")
+            .description("Hang a portrait of yourself: every ability you cast is repeated from it at half power. Cast again while it hangs to look through it.")
             .free(ObserverCanvas::hasPortrait)                                    // looking through the one that hangs
             .notCopyable()
             .costBy((player, cost) -> costFor(player, cost, "self_portrait"))
             .entry("giants_fist", ObserverFx.WHEEL_GIANTS_FIST, "Giant's Fist",
                     ObserverCanvas.FIST_SEQUENCE, ObserverCanvas.FIST_COST, 0, ObserverCanvas::giantsFist)
-            .description("Paint a giant: whoever stares at it is smashed by its real fist, made heavy and held in place.")
+            .description("Hang a Painting of a giant: whoever looks at it is smashed by a huge fist, heavily damaged, made Heavy and rooted.")
             .costBy((player, cost) -> costFor(player, cost, "giants_fist"))
             .onCast((player, sl, entry) -> afterCast(player, entry.key()));
 
@@ -253,26 +253,26 @@ public class Observer {
             .selectThenFire().noCooldowns()
             .entry("painted_mark", ObserverFx.WHEEL_PAINTED_MARK, "Painted Mark",
                     ObserverFiction.MARK_SEQUENCE, ObserverFiction.MARK_COST, 0, ObserverFiction::paintedMark)
-            .description("Paint a mark on a creature. Cast again to drive it: a mob walks where you aim or attacks who you aim at, a player is dragged.")
+            .description("Paint a mark on the creature you look at. Cast again while it is marked to drive it: a mob walks where you aim or attacks who you aim at; a player is drawn toward where you aim.")
             .notCopyable()
             .costBy((player, cost) -> costFor(player, ObserverFiction.markCost(player, cost), "painted_mark"))
             .entry("hide_in_painting", ObserverFx.WHEEL_HIDE_IN_PAINTING, "Hide in Painting",
                     ObserverFiction.HIDE_SEQUENCE, ObserverFiction.HIDE_COST, 0, ObserverFiction::hideInPainting)
-            .description("Step into a painting on a wall or the ground: hidden and untouchable while you hold still. Press again, cast or attack to step out.")
+            .description("Step into a canvas on a nearby wall or the ground: hidden and untouchable but held in place, with upkeep. Press again to step out.")
             .free(ObserverFiction::isHidden)                                      // stepping out
             .notCopyable()
             .costBy((player, cost) -> costFor(player, cost, "hide_in_painting"))
             .entry("painted_face", ObserverFx.WHEEL_PAINTED_FACE, "Painted Face",
                     ObserverFiction.FACE_SEQUENCE, ObserverFiction.FACE_COST, 0, ObserverFiction::paintedFace)
-            .description("Paint a face on yourself or an ally: unnoticed for 60 seconds, forgotten by mobs and passed over by abilities, until it hits something.")
+            .description("Cosmetics from the Painting: you (or the ally you aim at) become Unnoticed (mobs forget you, abilities pass you over), until the disguised one hits something.")
             .costBy((player, cost) -> costFor(player, cost, "painted_face"))
             .entry("manifest_knight", ObserverFx.WHEEL_MANIFEST_KNIGHT, "Manifest Knight",
                     ObserverFiction.KNIGHT_SEQUENCE, ObserverFiction.KNIGHT_COST, 0, ObserverFiction::manifestKnight)
-            .description("An imagined knight steps out of the page and holds the line in front of you. Stronger the higher your Sequence.")
+            .description("Bring an imagined knight of ink and paper into reality: it holds the line in front of you for a while. One at a time.")
             .costBy((player, cost) -> costFor(player, cost, "manifest_knight"))
             .entry("manifest_archer", ObserverFx.WHEEL_MANIFEST_ARCHER, "Manifest Archer",
                     ObserverFiction.ARCHER_SEQUENCE, ObserverFiction.ARCHER_COST, 0, ObserverFiction::manifestArcher)
-            .description("An imagined archer shoots your enemies from behind your Knight. Two at a time, stronger the higher your Sequence.")
+            .description("Bring an imagined archer into reality: it shoots your enemies from behind the Knight. Two at a time.")
             .costBy((player, cost) -> costFor(player, cost, "manifest_archer"))
             .entry("fantasy_double", ObserverFx.WHEEL_FANTASY_DOUBLE, "Fantasy Double",
                     ObserverFiction.DOUBLE_SEQUENCE, ObserverFiction.DOUBLE_COST, 0, ObserverFiction::fantasyDouble)

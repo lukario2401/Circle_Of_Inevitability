@@ -35,6 +35,7 @@ public final class WhiteAngelSun {
               12000,
               0,
               WhiteAngelSun::envoy)
+          .description("Become the Solar Envoy: Sunbird flight, less damage taken, cleansing, and a field that burns and reveals enemies. Costs spirituality each second.")
           .free(p -> Zone.isOpen(p, ENVOY))
           .entry(
               "praise_the_sun",
@@ -44,6 +45,7 @@ public final class WhiteAngelSun {
               8000,
               0,
               WhiteAngelSun::praise)
+          .description("Dash along a safe route, damaging enemies on the way, and become briefly invulnerable, hidden and anchored against pulls and roots.")
           .entry(
               "holy_kingdom",
               WhiteAngel.icon("holy_kingdom"),
@@ -52,6 +54,7 @@ public final class WhiteAngelSun {
               40000,
               0,
               WhiteAngelSun::kingdom)
+          .description("Your Holy Kingdom: evil cannot hide, use stand-ins or resurrect, small evil mobs are unmade and larger ones lose health every second. Costs spirituality each second.")
           .free(p -> Zone.isOpen(p, KINGDOM))
           .notCopyable()
           .entry(
@@ -62,6 +65,7 @@ public final class WhiteAngelSun {
               15000,
               0,
               WhiteAngelSun::servant)
+          .description("Grant Fervor to your allies, or channel five seconds to convert a hostile mob into one of your believers.")
           .notCopyable()
           .entry(
               "pure_white_light",
@@ -71,7 +75,9 @@ public final class WhiteAngelSun {
               25000,
               0,
               WhiteAngelSun::whiteLight)
+          .description("After a two second warning, pure white light strips enemy protections, destroys constructs and summons, closes enemy zones and shells, and fully cleanses allies.")
           .entry("sun", WhiteAngel.icon("sun"), "Sun", 0, 50000, 0, WhiteAngelSun::sun)
+          .description("Become the Sun: each second it strikes the guilty and evil around you, enemy abilities cost double, and daylight lingers after it is lowered.")
           .free(p -> Zone.isOpen(p, SUN))
           .notCopyable();
 

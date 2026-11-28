@@ -866,17 +866,23 @@ public class Apocalypse {
             .quickCastCooldown(false)                            // sneak recast: no cooldown
             .entry("snare", "ability_menus/apocalypse/silk_snare", "Silk Snare", 6,
                     SILK_LOW_COST, SILK_LOW_COOLDOWN, Apocalypse::silkSnare)
+            .description("Throw a wad of silk that opens into an almost unseen web. Whoever walks in is held, then slowed hard while they stay on it.")
             .entry("swing", "ability_menus/apocalypse/web_swing", "Web Swing", 6,
                     SILK_LOW_COST, SILK_LOW_COOLDOWN, Apocalypse::webSwing)
+            .description("Shoot silk at what you look at. A block or a heavy mob draws you to it; a light mob is yanked to you. No fall damage when you land.")
             .entry("trip", "ability_menus/apocalypse/trip_web", "Trip-web", 5,
                     SILK_MEDIUM_COST, SILK_MEDIUM_COOLDOWN, Apocalypse::tripWeb)
+            .description("Two casts: the first ties one end of a trip-web where you aim, the second (free) ties the other end. The first enemy to cross the line falls, is hurt, and it snaps.")
             .free(Apocalypse::tyingTripWeb)                      // the second end is free
             .entry("cocoon", "ability_menus/apocalypse/cocoon", "Cocoon", 5,
                     SILK_MEDIUM_COST, SILK_MEDIUM_COOLDOWN, Apocalypse::cocoon)
+            .description("Wrap the enemy you look at in silk and hold it. With no enemy there, you wrap yourself: rooted, but taking much less damage and mending.")
             .entry("threads", "ability_menus/apocalypse/threads_of_life", "Threads of Life", 4,
                     SILK_HIGH_COST, SILK_HIGH_COOLDOWN, Apocalypse::threadsOfLife)
+            .description("Red threads drain the enemy you look at, healing you by what it loses. A mob the threads would kill rises as your stone-skinned servant instead.")
             .entry("fate", "ability_menus/apocalypse/web_of_fate", "Web of Fate", 3,
                     SILK_VERY_HIGH_COST, SILK_VERY_HIGH_COOLDOWN, Apocalypse::webOfFate)
+            .description("A great web hangs over where you aim: enemies under it are slowed, seen through walls and share every hit any one of them takes. Cast again under it to pull them all to the middle.")
             .free(Apocalypse::fateHangs)                         // the recast that draws it in is free
             .onCast((player, sl, entry) -> leaveMirrorWorld(player, sl));
 
@@ -1453,6 +1459,20 @@ public class Apocalypse {
     // Icons are in assets/circle_of_inevitability/textures/gui/ability_menus/apocalypse/ (named as the keys)
     static final AbilityWheel CATASTROPHES = catastropheWheel();
 
+    /** The Catastrophe wheel's hover text for each disaster. */
+    private static String disasterDescription(String key) {
+        return switch (key) {
+            case "earthquake" -> "Break the ground where you aim and throw enemies upward; those on the ground are staggered.";
+            case "hailstorm" -> "Pelt the area where you aim with hail that hurts and slows enemies.";
+            case "tornado" -> "A moving tornado pulls enemies into its funnel, grinding and then throwing them.";
+            case "ice_age" -> "Freeze the ground where you aim: enemies are hurt, weakened and slowed, and frozen solid if they stay.";
+            case "black_death" -> "Raise a plague cloud that hurts and weakens, growing with every victim.";
+            case "black_flame_rain" -> "Rain cursed black fire over the area where you aim: every drop burns and curses.";
+            case "doomsday_sky" -> "Call down a barrage of meteors, black flame and lightning over a wide area.";
+            default -> "";
+        };
+    }
+
     private static AbilityWheel catastropheWheel() {
         AbilityWheel wheel = AbilityWheel.create("apocalypse_catastrophe", "Catastrophe")
                 .radius(84)                                      // seven: a little wider
@@ -1462,7 +1482,8 @@ public class Apocalypse {
                     disaster.cost(), disaster.cooldown(), (player, sl) -> {
                         castDisaster(player, sl, disaster);
                         return AbilityWheel.Result.DONE;
-                    }).description("Drains your mirrors within 12 blocks of impact: +15% power per full shard, up to +45%.");
+                    }).description(disasterDescription(disaster.key())
+                            + " Drains your mirrors within 12 blocks of impact: +15% power per full shard, up to +45%.");
         }
         return wheel.onCast((player, sl, entry) -> leaveMirrorWorld(player, sl));
     }

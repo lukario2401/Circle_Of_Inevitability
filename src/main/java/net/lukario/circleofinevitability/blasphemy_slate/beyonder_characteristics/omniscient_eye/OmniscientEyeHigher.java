@@ -26,20 +26,33 @@ public final class OmniscientEyeHigher {
     public static final String FORM="omniscient_bookshelf", KINGDOM="omniscient_kingdom";
     public static final AbilityWheel FATE=AbilityWheel.create("omniscient_eye_fate","Fate and Cognizing").pathway(OmniscientEye.PATHWAY)
         .entry("prophecy","ability_menus/omniscient_eye/prophecy","Prophecy",4,8000,800,OmniscientEyeHigher::prophecy)
+        .description("For a while your projectiles aim ahead of where enemies will be, and ghosts warn you of attacks coming.")
         .entry("bookshelf_form","ability_menus/omniscient_eye/bookshelf_form","Bookshelf Form",4,9000,1200,OmniscientEyeHigher::bookshelf)
+        .description("Become a living bookshelf: less damage, more max health and Resistance, while nearby enemies are read and their powers studied.")
             .free(p->Form.isIn(p,FORM)).notCopyable()
         .entry("cognize","ability_menus/omniscient_eye/cognize","Cognize",3,10000,600,OmniscientEyeHigher::cognize)
+        .description("Reveal every enemy in a wide cone ahead, read their defenses and powers, and study and mark them.")
         .entry("leverage","ability_menus/omniscient_eye/leverage","Leverage",3,12000,700,OmniscientEyeHigher::leverage)
-        .entry("decipher","ability_menus/omniscient_eye/decipher","Decipher",3,9000,500,OmniscientEyeHigher::decipher);
+        .description("Strip the defenses of the enemy you look at: it takes 30% more damage and is made Heavy. A marked non-boss is held for 2 seconds.")
+        .entry("decipher","ability_menus/omniscient_eye/decipher","Decipher",3,9000,500,OmniscientEyeHigher::decipher)
+        .description("Decipher what binds you: flip a hostile dome in your aim, else close a hostile zone or trap, else free a bound or sealed body.");
     public static final AbilityWheel OMNISCIENCE=AbilityWheel.create("omniscient_eye_omniscience","Omniscience").pathway(OmniscientEye.PATHWAY)
         .entry("evade_disaster","ability_menus/omniscient_eye/evade_disaster","Evade Disaster",2,14000,900,OmniscientEyeHigher::evade)
+        .description("For 15 seconds you are free of bindings and harmful effects, warded from damage with no source, and may escape a single huge hit.")
         .entry("wise_counsel","ability_menus/omniscient_eye/wise_counsel","Wise Counsel",2,16000,1200,OmniscientEyeHigher::counsel)
+        .description("An aura of counsel for your allies: cheaper casts, prediction, and less damage from enemies you have marked.")
         .entry("omniscience","ability_menus/omniscient_eye/omniscience","Omniscience",1,20000,600,OmniscientEyeHigher::omniscience)
+        .description("Inspect far through walls, or your latest connected enemy: its location, defenses and powers, with heavy study and a strong mark.")
         .entry("exploit","ability_menus/omniscient_eye/exploit","Exploit",1,22000,800,OmniscientEyeHigher::exploit)
+        .description("Exploit the first flaw the enemy has: a summon, ward, concealment, fire creature, evil or undead, armor, healing, Beyonder power or an old wound.")
         .entry("redefine","ability_menus/omniscient_eye/redefine","Redefine",1,18000,1000,OmniscientEyeHigher::redefine)
+        .description("Redefine the rules. On an enemy: its last key is sealed (a mob loses its abilities). On an aimed ally: their next cast is free and hits harder.")
         .entry("calamity_of_knowledge","ability_menus/omniscient_eye/calamity_of_knowledge","Calamity of Knowledge",0,40000,1800,OmniscientEyeHigher::calamity)
-        .entry("open_source","ability_menus/omniscient_eye/open_source","Open Source",0,25000,2400,OmniscientEyeHigher::openSource).notCopyable()
+        .description("Every marked enemy nearby is overwhelmed: Madness, heavy max-health damage (less on bosses) and worn armor. Unmarked ones get nausea.")
+        .entry("open_source","ability_menus/omniscient_eye/open_source","Open Source",0,25000,2400,OmniscientEyeHigher::openSource)
+        .description("Lend the last ability you performed to up to three allied players, for one use within 60 seconds.").notCopyable()
         .entry("tower_of_omniscience","ability_menus/omniscient_eye/tower_of_omniscience","Tower of Omniscience",0,60000,3600,OmniscientEyeHigher::tower)
+        .description("Your moving Divine Kingdom: enemies inside are revealed, marked and instantly studied when they cast, allies cast cheaper, and enemy Madness grows.")
             .free(p->Zone.isOpen(p,KINGDOM)).notCopyable();
 
     static {

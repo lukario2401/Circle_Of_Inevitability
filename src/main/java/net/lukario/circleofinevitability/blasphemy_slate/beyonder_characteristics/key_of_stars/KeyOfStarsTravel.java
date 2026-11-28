@@ -153,21 +153,26 @@ public final class KeyOfStarsTravel {
             .cooldownBy(KeyOfStars::cooldownFor)
             .entry("travelers_door", KeyOfStarsFx.WHEEL_TRAVELERS_DOOR, "Traveler's Door", TRAVEL_SEQUENCE, DOOR_COST,
                     DOOR_COOLDOWN, KeyOfStarsTravel::travelersDoor)
+            .description("Step through a Door into the Spirit World and out of another where you aim (or at a Star Anchor). The further, the longer you wait inside; allies touching you come along.")
             .costBy(KeyOfStars::wheelCostFor)
             .free(KeyOfStars::freeTravel)                                       // an Alternate World's Open Doors
             .entry("blink", KeyOfStarsFx.WHEEL_BLINK, "Blink", TRAVEL_SEQUENCE, BLINK_COST, BLINK_COOLDOWN,
                     KeyOfStarsTravel::blink)
+            .description("Hop toward where you look, up to three in a row. Each hop dodges the next hit.")
             .costBy(KeyOfStars::wheelCostFor)
             .free(player -> KeyOfStars.freeTravel(player) || chainOpen(player) || KeyOfStarsStarlight.isOmnipresent(player))
             .entry("invisible_hand", KeyOfStarsFx.WHEEL_INVISIBLE_HAND, "Invisible Hand", TRAVEL_SEQUENCE, HAND_COST,
                     HAND_COOLDOWN, KeyOfStarsTravel::invisibleHand)
+            .description("An unseen hand yanks the creature you look at to your feet and Starlits it; loose things fly to you.")
             .costBy(KeyOfStars::wheelCostFor)
             .entry("star_anchor", KeyOfStarsFx.WHEEL_STAR_ANCHOR, "Star Anchor", TRAVEL_SEQUENCE, ANCHOR_COST,
                     ANCHOR_COOLDOWN, KeyOfStarsTravel::starAnchor)
+            .description("Save this place as an Anchor to come back to with Traveler's Door. Cast again on it to lift it.")
             .costBy(KeyOfStars::wheelCostFor)
             .free(KeyOfStarsTravel::onOwnAnchor)                                // lifting one: free, no cooldown
             .entry("wandering", KeyOfStarsFx.WHEEL_WANDERING, "Wandering", WANDERING_SEQUENCE, WANDERING_COST,
                     WANDERING_COOLDOWN, KeyOfStarsTravel::wandering)
+            .description("Become a trail of starlight in the Astral World: through blocks and creatures, unseen and unhurt. Press the key again to step out.")
             .costBy(KeyOfStars::wheelCostFor)
             .notCopyable();                                                      // it flies on this Pathway's tick and key
 

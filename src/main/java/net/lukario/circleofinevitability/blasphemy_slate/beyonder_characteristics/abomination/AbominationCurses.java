@@ -156,16 +156,22 @@ public final class AbominationCurses {
             .castsWhileSilenced(Abomination::castsThroughHush)
             .entry("curse_by_connection", AbominationFx.WHEEL_CURSE_BY_CONNECTION, "Curse by Connection", CONNECTION_SEQUENCE,
                     CONNECTION_COST, CONNECTION_COOLDOWN, AbominationCurses::curseByConnection)
+            .description("Curse an enemy you recently hit, chained, cursed or sentenced, wherever it is in the world: Misfortune and more damage taken. Picks the one you look at, else the last one.")
             .entry("cursed_artifact", AbominationFx.WHEEL_CURSED_ARTIFACT, "Cursed Artifact", RELIC_SEQUENCE,
                     RELIC_COST, RELIC_COOLDOWN, AbominationCurses::cursedArtifact)
+            .description("Place a relic only you can see. The first enemy to step near it is cursed with Misfortune, silenced, and becomes your connection. A few can stand at once.")
             .entry("rite_of_silence", AbominationFx.WHEEL_RITE_OF_SILENCE, "Rite of Silence", RITE_SEQUENCE,
                     RITE_COST, RITE_COOLDOWN, AbominationCurses::riteOfSilence)
+            .description("A rite of silence over where you aim: enemies inside cannot use abilities, and mobs cannot attack.")
             .entry("bane_mist", AbominationFx.WHEEL_BANE_MIST, "Bane Mist", MIST_SEQUENCE,
                     MIST_COST, MIST_COOLDOWN, AbominationCurses::baneMist)
+            .description("A bloody mist where you aim darkens the sky: mobs in it fight each other, players are frightened and slowed, and everyone's luck sinks deeper the longer they stay.")
             .entry("ancient_blight", AbominationFx.WHEEL_ANCIENT_BLIGHT, "Ancient Blight", BLIGHT_SEQUENCE,
                     BLIGHT_COST, BLIGHT_COOLDOWN, AbominationCurses::ancientBlight)
+            .description("The enemy you look at carries an ancient curse that keeps jumping to the nearest enemies, its Misfortune one level deeper at every jump.")
             .entry("abomination_form", AbominationFx.WHEEL_ABOMINATION_FORM, "Abomination Form", FORM_SEQUENCE,
                     FORM_COST, FORM_COOLDOWN, AbominationCurses::abominationForm)
+            .description("Your Mythical Creature Form: a doll bound by thorny vines with Strength III and less damage taken. Nearby enemies lose luck, attackers are cursed, and when it ends every curse you laid comes due as a calamity.")
             .free(AbominationCurses::inForm);                        // in the form, the pick ends it (free)
 
     // =========================

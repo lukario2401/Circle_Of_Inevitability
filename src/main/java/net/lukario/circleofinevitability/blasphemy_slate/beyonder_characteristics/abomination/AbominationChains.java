@@ -153,14 +153,19 @@ public final class AbominationChains {
             .castsWhileSilenced(Abomination::castsThroughHush)
             .entry("animate_objects", AbominationFx.WHEEL_ANIMATE_OBJECTS, "Animate Objects", ANIMATE_SEQUENCE,
                     ANIMATE_COST, ANIMATE_COOLDOWN, AbominationChains::animateObjects)
+            .description("Loose things around you (dropped items, projectiles, armor stands, boats, minecarts) rise on purple strings and are hurled at enemies in sight. Arrows turn around and become yours.")
             .entry("grave_shackles", AbominationFx.WHEEL_GRAVE_SHACKLES, "Grave Shackles", SHACKLES_SEQUENCE,
                     SHACKLES_COST, SHACKLES_COOLDOWN, AbominationChains::graveShackles)
+            .description("Black chains rise around nearby enemies: they are held in place, then share each other's pain for a while (part of every hit one takes, the others take too).")
             .entry("thorned_mausoleum", AbominationFx.WHEEL_THORNED_MAUSOLEUM, "Thorned Mausoleum", MAUSOLEUM_SEQUENCE,
                     MAUSOLEUM_COST, MAUSOLEUM_COOLDOWN, AbominationChains::thornedMausoleum)
+            .description("A sphere of black thorns closes around where you aim. Only allies can cross it; allies inside take less damage, enemies inside are slowed, cannot heal and bleed.")
             .entry("coffin_of_ages", AbominationFx.WHEEL_COFFIN_OF_AGES, "Coffin of Ages", COFFIN_SEQUENCE,
                     COFFIN_COST, COFFIN_COOLDOWN, AbominationChains::coffinOfAges)
+            .description("Seal the enemy you aim at in a coffin: asleep, held and untouchable, and it wakes cursed and taking more damage. Aimed at nothing: seal yourself, then rise healed and cleansed in a burst of thorns.")
             .entry("thorn_garden", AbominationFx.WHEEL_THORN_GARDEN, "Thorn Garden", GARDEN_SEQUENCE,
-                    GARDEN_COST, GARDEN_COOLDOWN, AbominationChains::thornGarden);
+                    GARDEN_COST, GARDEN_COOLDOWN, AbominationChains::thornGarden)
+            .description("A garden of thorns and roses grows where you aim. Enemies in it are slowed more and more, then held, and bleed; you and your allies heal and gain Absorption.");
 
     // =========================
     // Ability 6 - Chains

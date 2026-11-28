@@ -200,25 +200,33 @@ public final class KnightOfMisfortuneDarkness {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("sword_of_darkness", KnightOfMisfortuneFx.WHEEL_SWORD_OF_DARKNESS, "Sword of Darkness", SWORD_SEQUENCE,
                     SWORD_COST, SWORD_COOLDOWN, KnightOfMisfortuneDarkness::swordOfDarkness)
+            .description("A bone sword in your hand: a full swing that lands sends a tide of Darkness forward that submerges and melts everything in its cone. Pick it again to let it go.")
             .free(player -> ConjuredWeapon.isDrawn(player, SWORD))                          // letting it go
             .entry("nightmare_world", KnightOfMisfortuneFx.WHEEL_NIGHTMARE_WORLD, "Nightmare World", WORLD_SEQUENCE,
                     WORLD_COST, WORLD_COOLDOWN, KnightOfMisfortuneDarkness::nightmareWorld)
+            .description("A dream world around you: enemies cannot leave, are slowed and dulled and slide into sleep, while allies are shielded from harmful effects. Pick it again to wake it.")
             .free(player -> Dome.isRaised(player, WORLD_DOME))                              // waking it
             .entry("concealed_state", KnightOfMisfortuneFx.WHEEL_CONCEALED_STATE, "Concealed State", CONCEAL_SEQUENCE,
                     CONCEAL_COST, CONCEAL_COOLDOWN, KnightOfMisfortuneDarkness::concealedState)
+            .description("Take the one you aim at out of the world: hidden, untouchable, held and blind. On an ally it only hides them; at nothing it hides you; on someone hidden it tears them out.")
             .entry("secret_concealment", KnightOfMisfortuneFx.WHEEL_SECRET_CONCEALMENT, "Secret Concealment", SECRET_SEQUENCE,
                     SECRET_COST, SECRET_COOLDOWN, KnightOfMisfortuneDarkness::secretConcealment)
+            .description("A veil around you: your side inside is unnoticed and cannot be picked by any ability from outside.")
             .free(player -> Zone.isOpen(player, SECRET_ZONE))                               // lifting the veil
             .entry("concealed_world", KnightOfMisfortuneFx.WHEEL_CONCEALED_WORLD, "Concealed World", CW_SEQUENCE,
                     CW_COST, CW_COOLDOWN, KnightOfMisfortuneDarkness::concealedWorld)
+            .description("A sealed sphere around you: nothing crosses it, not even projectiles, and nothing outside can pick anyone inside. Pick it again to open it.")
             .free(player -> Dome.isRaised(player, CW_DOME))                                 // opening it
             .entry("mantle_of_darkness", KnightOfMisfortuneFx.WHEEL_MANTLE_OF_DARKNESS, "Mantle of Darkness", MANTLE_SEQUENCE,
                     MANTLE_COST, MANTLE_COOLDOWN, KnightOfMisfortuneDarkness::mantleOfDarkness)
+            .description("Your body half-dissolves into Darkness: stronger, faster and tougher, a quarter of all damage shed, and two shadow arms follow every swing.")
             .free(player -> ConjuredWeapon.isDrawn(player, MANTLE))                         // taking it off
             .entry("eternal_rest", KnightOfMisfortuneFx.WHEEL_ETERNAL_REST, "Eternal Rest", REST_SEQUENCE,
                     REST_COST, REST_COOLDOWN, KnightOfMisfortuneDarkness::eternalRest)
+            .description("The word of Darkness: a sleeper simply stops; anyone else (not a boss) loses a large share of its health and falls into an Eternal Slumber. Aimed at nothing, it wards you against your next death.")
             .entry("destination_of_all_things", KnightOfMisfortuneFx.WHEEL_DESTINATION_OF_ALL_THINGS, "Destination of All Things",
-                    DESTINATION_SEQUENCE, DESTINATION_COST, DESTINATION_COOLDOWN, KnightOfMisfortuneDarkness::destination);
+                    DESTINATION_SEQUENCE, DESTINATION_COST, DESTINATION_COOLDOWN, KnightOfMisfortuneDarkness::destination)
+            .description("A black sphere where you aim draws everything in and dissolves it, harder the longer it stays. You cannot die while you stand in it.");
 
     // =========================
     // Ability 7 - Darkness and Concealment

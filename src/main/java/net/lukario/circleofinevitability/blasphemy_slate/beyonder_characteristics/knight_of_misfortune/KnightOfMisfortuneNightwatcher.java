@@ -136,13 +136,17 @@ public final class KnightOfMisfortuneNightwatcher {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("night_domain", KnightOfMisfortuneFx.WHEEL_NIGHT_DOMAIN, "Night Domain", DOMAIN_SEQUENCE,
                     DOMAIN_COST, DOMAIN_COOLDOWN, KnightOfMisfortuneNightwatcher::nightDomain)
+            .description("A tide of Darkness around you: night falls inside, you and your allies are strengthened, and enemies rot and gather Misfortune the longer they stay. Pick it again to lift it.")
             .free(player -> Zone.isOpen(player, DOMAIN_ZONE))                               // lifting it
             .entry("hair_entanglement", KnightOfMisfortuneFx.WHEEL_HAIR_ENTANGLEMENT, "Hair Entanglement", HAIR_SEQUENCE,
                     HAIR_COST, HAIR_COOLDOWN, KnightOfMisfortuneNightwatcher::hairEntanglement)
+            .description("A cone of hair binds the enemies it catches. Whoever is not hurt while held falls asleep when the hairs let go.")
             .entry("curse_of_misfortune", KnightOfMisfortuneFx.WHEEL_CURSE_OF_MISFORTUNE, "Curse of Misfortune", CURSE_SEQUENCE,
                     CURSE_COST, CURSE_COOLDOWN, KnightOfMisfortuneNightwatcher::curseOfMisfortune)
+            .description("The one you look at carries several levels of Misfortune. From Knight of Misfortune it is an area curse that keeps deepening; from Darkness, a Catastrophe.")
             .entry("demonic_wolf", KnightOfMisfortuneFx.WHEEL_DEMONIC_WOLF, "Demonic Wolf Form", WOLF_SEQUENCE,
                     WOLF_COST, WOLF_COOLDOWN, KnightOfMisfortuneNightwatcher::demonicWolf)
+            .description("Your Mythical Creature Form: an eight-legged wolf, stronger, longer reach and a tearing bite, with upkeep and rising madness. Pick it again to leave it.")
             .free(KnightOfMisfortuneNightwatcher::isWolf);                                  // leaving it
 
     // =========================

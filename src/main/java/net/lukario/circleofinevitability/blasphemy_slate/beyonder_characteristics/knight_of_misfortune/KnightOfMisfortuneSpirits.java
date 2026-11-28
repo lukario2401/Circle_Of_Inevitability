@@ -119,14 +119,18 @@ public final class KnightOfMisfortuneSpirits {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("terror_banshee", KnightOfMisfortuneFx.WHEEL_TERROR_BANSHEE, "Terror Banshee", BANSHEE_SEQUENCE,
                     BANSHEE_COST, BANSHEE_COOLDOWN, KnightOfMisfortuneSpirits::terrorBanshee)
+            .description("A wailing spirit floats at your shoulder and shrieks now and then: nearby enemies are frightened, blinded and slowed.")
             .entry("earthen_spirit", KnightOfMisfortuneFx.WHEEL_EARTHEN_SPIRIT, "Earthen Spirit", EARTH_SEQUENCE,
                     EARTH_COST, EARTH_COOLDOWN, KnightOfMisfortuneSpirits::earthenSpirit)
+            .description("Fuse with the earth: hidden, untouchable and very fast while you stay on dirt, stone or sand. Pick it again to rise where you aim.")
             .free(player -> KnightOfMisfortune.isActive(player, EARTH_UNTIL))                // rising out of it
             .entry("gale_spirit", KnightOfMisfortuneFx.WHEEL_GALE_SPIRIT, "Gale Spirit", GALE_SEQUENCE,
                     GALE_COST, GALE_COOLDOWN, KnightOfMisfortuneSpirits::galeSpirit)
+            .description("A wind spirit lifts you and you can fly for a while, but cannot strike with a weapon. Pick it again to come down.")
             .free(player -> KnightOfMisfortune.isActive(player, GALE_UNTIL))                 // coming down
             .entry("command_spirits", KnightOfMisfortuneFx.WHEEL_COMMAND_SPIRITS, "Command Spirits", COMMAND_SEQUENCE,
-                    COMMAND_COST, COMMAND_COOLDOWN, KnightOfMisfortuneSpirits::commandSpirits);
+                    COMMAND_COST, COMMAND_COOLDOWN, KnightOfMisfortuneSpirits::commandSpirits)
+            .description("The undead and animals around you fall asleep, then the nearest wake as yours for a while, returning to the darkness when it ends.");
 
     // =========================
     // Ability 5 - Spirit Commanding

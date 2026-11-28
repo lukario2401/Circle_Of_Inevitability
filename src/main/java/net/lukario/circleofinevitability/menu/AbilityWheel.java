@@ -24,13 +24,19 @@ import java.util.function.ToDoubleFunction;
  *
  *   private static final AbilityWheel SPELLS = AbilityWheel.create("my_pathway_spells", "Spells")
  *           .entry("fire",  "my_pathway/fire",  "Fireball", 6, 1250, 40,  MyPathway::fireball)
+ *           .description("Throw a fireball that bursts where it lands, setting everything near it alight.")
  *           .entry("storm", "my_pathway/storm", "Storm",    4, 5000, 200, MyPathway::storm)
+ *           .description("A storm over where you aim: lightning strikes the enemies under it every second.")
  *           .onCast((player, sl, entry) -> addStack(player, sl));        // after every cast that went off
  *
  *   // in the key's ability, once the Pathway and the Sequence of the key are checked:
  *   if (player.isShiftKeyDown()) SPELLS.quickCast(player);              // the last pick (no last pick: the wheel)
  *   else SPELLS.open(player);
  *
+ * - .description("..."): right after an entry, what it does. It is shown as a tooltip when the mouse is over the
+ *   entry's icon in the wheel. Give every entry one (a wheel with an entry that has none logs a warning the
+ *   first time it is opened). One or two plain sentences; the cost and cooldown are already shown under the icon.
+ *   .description(player -> "...") works out the text when the wheel opens (one that changes with the Sequence).
  * - key:      the entry's name in the save data. Keep it once players have used it (the last pick is saved by it).
  * - icon:     PNG in assets/circle_of_inevitability/textures/gui/ without ".png", as for AbilityMenu.
  * - sequence: the Sequence it unlocks at. cost: spirituality. cooldown: ticks before it can be cast again.
@@ -116,7 +122,8 @@ public final class AbilityWheel {
         private Predicate<ServerPlayer> free;
         private CostRule costBy;
         private boolean copyable = true;
-        private String description = "";
+        private java.util.function.Function<ServerPlayer, String> description = player -> "";
+        private boolean described;
 
         private Entry(String key, String icon, String name, int sequence, int cost, int cooldown, Cast cast) {
             this.key = key;
@@ -136,6 +143,13 @@ public final class AbilityWheel {
         public int cooldown() { return cooldown; }
         /** False for an entry that only works for its own Pathway: combat/Casts never copies it (see notCopyable). */
         public boolean copyable() { return copyable; }
+        /** The hover text for this player now ("" = none). */
+        public String description(ServerPlayer player) {
+            String text = description.apply(player);
+            return text == null ? "" : text;
+        }
+        /** True once .description(...) was given for this entry. */
+        public boolean described() { return described; }
 
         private boolean isFree(ServerPlayer player) {
             return free != null && free.test(player);
@@ -184,9 +198,19 @@ public final class AbilityWheel {
         return this;
     }
 
-    /** Hover text for the entry added last. */
+    /** What the entry added last does: shown as a tooltip when the mouse is over its icon in the wheel. */
     public AbilityWheel description(String text) {
-        if (!entries.isEmpty()) entries.get(entries.size() - 1).description = text;
+        String fixed = text == null ? "" : text;
+        return description(player -> fixed);
+    }
+
+    /** The same, worked out for the player each time the wheel opens (text that changes with the Sequence...). */
+    public AbilityWheel description(java.util.function.Function<ServerPlayer, String> text) {
+        if (!entries.isEmpty()) {
+            Entry entry = entries.get(entries.size() - 1);
+            entry.description = text == null ? player -> "" : text;
+            entry.described = text != null;
+        }
         return this;
     }
 
@@ -500,9 +524,14 @@ public final class AbilityWheel {
                         else cast(player, entry);
                     })
                     .details(player -> details(player, entry))
-                    .description(player -> entry.description)
+                    .description(entry::description)
                     .lockedWhen(player -> !unlocked(player, entry));
         }
+        List<String> undescribed = new ArrayList<>();
+        for (Entry entry : entries) if (!entry.described) undescribed.add(entry.key);
+        if (!undescribed.isEmpty())
+            net.lukario.circleofinevitability.CircleOfInevitability.LOGGER.warn(
+                    "Ability wheel '{}' has entries with no .description(...) (no hover text): {}", id, undescribed);
         menu = built;
         return menu;
     }

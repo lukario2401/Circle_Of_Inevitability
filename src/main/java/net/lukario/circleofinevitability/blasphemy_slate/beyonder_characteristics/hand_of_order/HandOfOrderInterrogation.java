@@ -92,12 +92,15 @@ public final class HandOfOrderInterrogation {
             .cooldownBy(HandOfOrder::cooldownFor)
             .entry("psychic_lashing", HandOfOrderFx.WHEEL_PSYCHIC_LASHING, "Psychic Lashing", LASHING_SEQUENCE,
                     LASHING_COST, LASHING_COOLDOWN, HandOfOrderInterrogation::psychicLashing)
+            .description("For a few hits, every real swing adds damage that no armor stops and staggers the target.")
             .costBy(HandOfOrder::costFor)
             .entry("psychic_piercing", HandOfOrderFx.WHEEL_PSYCHIC_PIERCING, "Psychic Piercing", PIERCING_SEQUENCE,
                     PIERCING_COST, PIERCING_COOLDOWN, HandOfOrderInterrogation::psychicPiercing)
+            .description("A beam from your eyes pierces the first few enemies in line, through armor. Marionettes and summons take much more.")
             .costBy(HandOfOrder::costFor)
             .entry("whip_of_pain", HandOfOrderFx.WHEEL_WHIP_OF_PAIN, "Whip of Pain", WHIP_SEQUENCE,
                     WHIP_COST, WHIP_COOLDOWN, HandOfOrderInterrogation::whipOfPain)
+            .description("Whip the enemy you look at: damage through armor, then it trembles (slowed, weakened, no sprinting). Its concealment ends, it cannot hide for a while, and you learn every effect on it.")
             .costBy(HandOfOrder::costFor);
 
     // =========================

@@ -205,28 +205,36 @@ public final class IlluminatorCivilization {
             .quickCastCooldown(false).quickCastCost(QUICK_CAST_COST)
             .entry("rewrite_principles", IlluminatorFx.WHEEL_REWRITE_PRINCIPLES, "Rewrite Principles", PRINCIPLES_SEQUENCE,
                     PRINCIPLES_COST, PRINCIPLES_COOLDOWN, IlluminatorCivilization::rewritePrinciples)
+            .description("The earth bears no weight where you aim: enemies lose gravity, float off the ground and are slowed. Your side is light on its feet, and enemy fire and explosions do not hurt it.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "rewrite_principles", Group.CIVILIZATION))
             .entry("colossus", IlluminatorFx.WHEEL_COLOSSUS, "Colossus", COLOSSUS_SEQUENCE,
                     COLOSSUS_COST, COLOSSUS_COOLDOWN, IlluminatorCivilization::colossus)
+            .description("A mech of brass and steam forms around you. Cast again while it stands to fire the Fusion Beam.")
             .free(IlluminatorCivilization::colossusStands)                        // the Fusion Beam: free, its own cooldown
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "colossus", Group.CIVILIZATION))
             .entry("scrolls_of_civilization", IlluminatorFx.WHEEL_SCROLLS_OF_CIVILIZATION, "Scrolls of Civilization", SCROLLS_SEQUENCE,
                     SCROLLS_COST, SCROLLS_COOLDOWN, IlluminatorCivilization::scrollsOfCivilization)
+            .description("Murals of history form a ring around you that stops projectiles, then fly out and immerse the enemies they reach.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "scrolls_of_civilization", Group.CIVILIZATION))
             .entry("mathematical_maze", IlluminatorFx.WHEEL_MATHEMATICAL_MAZE, "Mathematical Maze", MAZE_SEQUENCE,
                     MAZE_COST, MAZE_COOLDOWN, IlluminatorCivilization::mathematicalMaze)
+            .description("An enemy is held in a lattice of equations and cannot use abilities. Aimed at an ally, they are Enlightened instead.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "mathematical_maze", Group.CIVILIZATION))
             .entry("masterwork", IlluminatorFx.WHEEL_MASTERWORK, "Masterwork", MASTERWORK_SEQUENCE,
                     MASTERWORK_COST, MASTERWORK_COOLDOWN, IlluminatorCivilization::masterwork)
+            .description("Play a symphony: allies grow stronger and enemies slower, until you cast anything else.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "masterwork", Group.CIVILIZATION))
             .entry("reality_knowledge", IlluminatorFx.WHEEL_REALITY_KNOWLEDGE, "Reality Knowledge", REALITY_SEQUENCE,
                     REALITY_COST, REALITY_COOLDOWN, IlluminatorCivilization::realityKnowledge)
+            .description("Knowledge rejects the enemy you look at: it cannot use abilities, and a mob can only fight in melee.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "reality_knowledge", Group.CIVILIZATION))
             .entry("illusory_book", IlluminatorFx.WHEEL_ILLUSORY_BOOK, "Illusory Book", BOOK_SEQUENCE,
                     BOOK_COST, BOOK_COOLDOWN, IlluminatorCivilization::illusoryBook)
+            .description("The enemy you look at and two near it are written into a book, gone from the world for a while.")
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "illusory_book", Group.CIVILIZATION))
             .entry("mechanical_heaven", IlluminatorFx.WHEEL_MECHANICAL_HEAVEN, "Mechanical Heaven", HEAVEN_SEQUENCE,
                     HEAVEN_COST, HEAVEN_COOLDOWN, IlluminatorCivilization::mechanicalHeaven)
+            .description("Your Divine Kingdom: constructs are stronger and endless, allies' abilities cheaper, and enemies slowed, their gear worn, their cooldowns longer and their projectiles turned to static.")
             .free(player -> Zone.isOpen(player, HEAVEN))                         // casting it again ends it: free
             .costBy((player, cost) -> Illuminator.costFor(player, cost, "mechanical_heaven", Group.CIVILIZATION))
             .onCast((player, sl, entry) -> Illuminator.afterCast(player, entry.key()));

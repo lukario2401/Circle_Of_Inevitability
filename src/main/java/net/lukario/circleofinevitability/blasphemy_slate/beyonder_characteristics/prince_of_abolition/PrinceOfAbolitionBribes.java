@@ -108,15 +108,20 @@ public final class PrinceOfAbolitionBribes {
             .quickCastCooldown(false).quickCastCostBy(PrinceOfAbolition::recastCost)
             .noCooldownsWhen(PrinceOfAbolition::noCooldowns)
             .entry("weaken", PrinceOfAbolitionFx.WHEEL_WEAKEN, "Weaken", BRIBE_SEQUENCE,
-                    WEAKEN_COST, WEAKEN_COOLDOWN, (player, sl) -> bribe(player, sl, Bribe.WEAKEN)).costBy(PrinceOfAbolitionBribes::connectedCost)
+                    WEAKEN_COST, WEAKEN_COOLDOWN, (player, sl) -> bribe(player, sl, Bribe.WEAKEN))
+            .description("Bribe the enemy you look at: its attacks are weaker and it takes more damage from you. Holding gold or an emerald in your off hand makes it last longer and spread.").costBy(PrinceOfAbolitionBribes::connectedCost)
             .entry("charm", PrinceOfAbolitionFx.WHEEL_CHARM, "Charm", BRIBE_SEQUENCE,
-                    CHARM_COST, CHARM_COOLDOWN, (player, sl) -> bribe(player, sl, Bribe.CHARM)).costBy(PrinceOfAbolitionBribes::connectedCost)
+                    CHARM_COST, CHARM_COOLDOWN, (player, sl) -> bribe(player, sl, Bribe.CHARM))
+            .description("Bribe the enemy you look at: it cannot bring itself to fight you, and now and then turns on its own side.").costBy(PrinceOfAbolitionBribes::connectedCost)
             .entry("arrogance", PrinceOfAbolitionFx.WHEEL_ARROGANCE, "Arrogance", BRIBE_SEQUENCE,
-                    ARROGANCE_COST, ARROGANCE_COOLDOWN, (player, sl) -> bribe(player, sl, Bribe.ARROGANCE)).costBy(PrinceOfAbolitionBribes::connectedCost)
+                    ARROGANCE_COST, ARROGANCE_COOLDOWN, (player, sl) -> bribe(player, sl, Bribe.ARROGANCE))
+            .description("Bribe the enemy you look at: it underestimates you and many of its attacks miss.").costBy(PrinceOfAbolitionBribes::connectedCost)
             .entry("connect", PrinceOfAbolitionFx.WHEEL_CONNECT, "Connect", BRIBE_SEQUENCE,
                     CONNECT_COST, CONNECT_COOLDOWN, PrinceOfAbolitionBribes::connect)
+            .description("A thin black thread ties you to the enemy you look at: it glows, your aimed abilities reach it three times as far, and your other Bribes on it cost half.")
             .entry("coin_shot", PrinceOfAbolitionFx.WHEEL_COIN_SHOT, "Coin Shot", BRIBE_SEQUENCE,
-                    COIN_COST, COIN_COOLDOWN, PrinceOfAbolitionBribes::coinShot);
+                    COIN_COST, COIN_COOLDOWN, PrinceOfAbolitionBribes::coinShot)
+            .description("Flick a coin like a bullet: instant damage to the first enemy in line, then it ricochets once to the nearest other enemy.");
 
     // =========================
     // Ability 3 - Bribe
